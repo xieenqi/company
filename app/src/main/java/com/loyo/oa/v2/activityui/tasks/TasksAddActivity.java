@@ -318,7 +318,7 @@ public class TasksAddActivity extends BaseActivity {
         switch (v.getId()) {
 
             case R.id.img_title_left:
-                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
+                onBackPressed();
                 break;
 
             //提交任务

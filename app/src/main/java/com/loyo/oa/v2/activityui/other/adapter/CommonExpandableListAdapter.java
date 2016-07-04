@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.beans.WorkReportRecord;
@@ -24,6 +25,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.activityui.project.adapter.BasePagingGroupDataAdapter_;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -239,5 +241,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         Intent intent = new Intent((Activity) mContext, DiscussionActivity_.class);
         intent.putExtra("attachementUUid", attachmentUUid);
         ((Activity) mContext).startActivityForResult(intent, DiscussionActivity.REQUEST_PREVIEW_DISCUSS);
+        ((Activity) mContext).overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 }

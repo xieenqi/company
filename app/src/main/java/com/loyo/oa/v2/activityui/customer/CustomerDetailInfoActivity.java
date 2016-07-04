@@ -91,8 +91,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     ViewGroup layout_sale_activity;
     @ViewById
     ViewGroup layout_visit;
-//    @ViewById
-//    ViewGroup layout_purchase;
     @ViewById
     ViewGroup layout_task;
     @ViewById
@@ -104,8 +102,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     TextView tv_sale_number;
     @ViewById
     TextView tv_visit_times;
-//    @ViewById
-//    TextView tv_purchase_count;
     @ViewById
     TextView tv_task_count;
     @ViewById
@@ -166,13 +162,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 isLock = customer.lock;
                 mCustomer = customer;
                 getMembersRoot();
-                cancelLoading();
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                cancelLoading();
                 finish();
             }
         });
@@ -182,6 +176,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 获取参与人权限
      */
     void getMembersRoot() {
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getMembersRoot(new RCallback<MembersRoot>() {
                     @Override
@@ -256,7 +251,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_sale_number.setOnTouchListener(Global.GetTouch());
         layout_sale_activity.setOnTouchListener(Global.GetTouch());
         layout_visit.setOnTouchListener(Global.GetTouch());
-//        layout_purchase.setOnTouchListener(Global.GetTouch());
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
 
@@ -546,14 +540,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 _class = SignInListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;
                 break;
-//            /*购买意向*/
-//            case R.id.layout_purchase:
-//                bundle.putBoolean("isMyUser", isMyUser);
-//                bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
-//                bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
-//                _class = DemandsManageActivity.class;
-//                requestCode = FinalVariables.REQUEST_PREVIEW_DEMANDS;
-//                break;
             /*任务计划*/
             case R.id.layout_task:
                 bundle.putBoolean("isMyUser", isMyUser);
