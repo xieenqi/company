@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.setting;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -54,7 +55,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public ViewGroup img_title_left;
     public ViewGroup layout_setpassword, layout_update, layout_feedback, layout_profile;
     public ViewGroup layout_check_update;
-    public Intent    mIntentCheckUpdate;
+    public Intent mIntentCheckUpdate;
+    public static ExitAppCallback callback;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -126,18 +128,20 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         if (app.hasNewVersion) {
             tv_new_version.setVisibility(View.VISIBLE);
         }
+        callback = new ExitAppCallback() {
+            @Override
+            public void onExit(Activity SettingActivity) {
+                exit();
+            }
+        };
     }
 
-    @Override
-    public void onBackPressed() {
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
-    }
 
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
-                finish();
+                onBackPressed();
                 break;
             case R.id.btn_setting_exit:
                 exit();
@@ -281,6 +285,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             }
         });
         ExitActivity.getInstance().finishAllActivity();
-        app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
+        app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_LEFT, true, null);
+    }
+
+    public interface ExitAppCallback {
+        void onExit(Activity SettingActivity);
     }
 }

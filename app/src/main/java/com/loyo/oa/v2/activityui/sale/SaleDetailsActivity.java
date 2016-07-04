@@ -76,7 +76,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     private TextView text_stagename;
     private TextView director;
     private ImageView iv_wfstatus;
-    private boolean isDelete = true;
+    private boolean isDelete = true, isEdit = true;
     private double totalMoney;//意向产品总金额
     private boolean isTeam;//是否是团队的详情
 
@@ -220,8 +220,9 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
      * 数据绑定
      */
     public void bindData() {
+
         //机会 是否 是创建者
-        if (MainApp.user.id.equals(mSaleDetails.creatorId) && mSaleDetails.prob != 100 && !isTeam) {
+        if (MainApp.user.id.equals(mSaleDetails.creatorId) && mSaleDetails.prob != 100 && !isTeam || MainApp.user.isSuperUser) {
             img_title_right.setVisibility(View.VISIBLE);
             ll_stage.setEnabled(true);
             ll_product.setEnabled(true);
@@ -230,6 +231,8 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             ll_stage.setEnabled(false);
             ll_product.setEnabled(false);
         }
+        if (MainApp.user.isSuperUser)
+            isEdit = false;
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
         salesAmount.setText("" + Utils.setValueDouble(mSaleDetails.estimatedAmount));
@@ -288,11 +291,10 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                     break;
                 case 3:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status3);
-                    if (!isTeam) {//非团队才有权限
+                    if (!isTeam || MainApp.user.isSuperUser) {//非团队才有权限
                         img_title_right.setVisibility(View.VISIBLE);
-                        ll_product.setEnabled(true);
-                        ll_stage.setEnabled(true);
-                        isDelete = false;
+//                        ll_product.setEnabled(true);//屏蔽快捷编辑赢单审批
+//                        ll_stage.setEnabled(true);
                     }
                     break;
                 case 4:
@@ -323,6 +325,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             case R.id.img_title_right:
                 Intent intent = new Intent(mContext, SaleEditViewActivity.class);
                 intent.putExtra("isDelete", isDelete);
+                intent.putExtra("isEdit", isEdit);
                 startActivityForResult(intent, EDIT_POP_WINDOW);
                 break;
             //意向产品

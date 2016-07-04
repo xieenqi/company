@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.commonview;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,23 +20,22 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 
 /**
  * 新版选人搜索
  * Created by yyy on 16/1/11.
  */
-public class SelectDetUserSerach extends Activity {
+public class SelectDetUserSerach extends BaseActivity {
 
 
     private TextView tv_selectuser_search;
@@ -86,7 +84,9 @@ public class SelectDetUserSerach extends Activity {
 
             @Override
             public void afterTextChanged(final Editable s) {
-                //doSearch();
+                if (!TextUtils.isEmpty(s.toString())) {
+                    doSearch();
+                }
             }
         });
 
@@ -188,7 +188,7 @@ public class SelectDetUserSerach extends Activity {
         }
 
         if (resultData.size() == 0) {
-            Toast.makeText(this,"未搜索到相关结果",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "未搜索到相关结果", Toast.LENGTH_SHORT).show();
         }
 
         adapter.notifyDataSetChanged();

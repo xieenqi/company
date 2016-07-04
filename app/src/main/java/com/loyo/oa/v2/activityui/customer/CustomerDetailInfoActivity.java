@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
@@ -36,15 +35,12 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.Date;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -209,7 +205,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null == mCustomer) {
             return;
         }
-
+        //推送过来的公海客户
+//        if (1 == customerType && !mCustomer.lock) {
+//            customerType = 3;
+//        }
         /*超级管理员,我的客户,Web权限控制判断*/
         if (MainApp.user.isSuperUser() && customerType == 3) {
             img_public.setVisibility(View.VISIBLE);

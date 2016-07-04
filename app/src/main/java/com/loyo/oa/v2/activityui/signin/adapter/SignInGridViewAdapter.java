@@ -130,7 +130,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                 final Attachment attachment = mListData.get(position);
                 final boolean isImage = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
 
-                if (isImage) {
+                if (isImage) {//预览图片
                     ImageLoader.getInstance().loadImage(mIsAdd ? attachment.getUrl() : setImgUrl(attachment.getUrl()), MainApp.options_3,
                             new BitmapUtil.ImageLoadingListener_ClickShowImg(imageView, position,
                                     mListData, R.drawable.default_image, mIsAdd));

@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.discuss.hait.HaitActivity;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -26,12 +25,10 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -130,13 +127,15 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_back:
-                finish();
+                onBackPressed();
                 break;
             case R.id.tv_edit:
-                Intent intent = new Intent(this, HaitActivity.class);
-//                intent.putExtra(ExtraAndResult.EXTRA_TYPE, "");
-//                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
-                startActivity(intent);
+//                Intent intent = new Intent(this, HaitMyActivity.class);
+////                intent.putExtra(ExtraAndResult.EXTRA_TYPE, "");
+////                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                app.startActivity(this, HaitMyActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             default:
 
@@ -242,12 +241,13 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    Intent intent = new Intent(MyDiscussActivity.this, DiscussDetActivity.class);
+                    Intent intent = new Intent(MyDiscussActivity.this, DiscussDetialActivity.class);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.summaryId);
                     startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
+                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }
             });
             switch (itemData.bizType) {

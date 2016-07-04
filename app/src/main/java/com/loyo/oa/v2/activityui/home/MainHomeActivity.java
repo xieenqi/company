@@ -12,10 +12,8 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.discuss.hait.HaitActivity;
 import com.loyo.oa.v2.activityui.home.cusview.SlidingMenu;
 import com.loyo.oa.v2.activityui.home.fragment.HomeFragment;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
@@ -33,6 +31,7 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -216,7 +215,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         if (null != MainApp.jpushData) {
             Intent intent = new Intent();
             if ("discuss".equals(MainApp.jpushData.operationType)) {
-                intent.setClass(MainHomeActivity.this, HaitActivity.class);//推送讨论
+                intent.setClass(MainHomeActivity.this, HaitMyActivity.class);//推送讨论
                 startActivity(intent);
                 MainApp.jpushData = null;
                 return;

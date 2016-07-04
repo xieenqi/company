@@ -646,7 +646,6 @@ public class  WfinstanceInfoActivity extends BaseActivity {
                     return;
                 } else if (comment.isEmpty() && type == 1) {
                     comment = "同意";
-                    return;
                 }
                 popupWindow.dismiss();
                 setData_wfinstance_approve(type, comment);

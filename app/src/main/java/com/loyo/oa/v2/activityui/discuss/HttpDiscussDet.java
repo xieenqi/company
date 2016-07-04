@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.discuss;
 
+import com.loyo.oa.v2.activityui.discuss.bean.HttpCrecter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
