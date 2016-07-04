@@ -1,10 +1,10 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.ui.activity.attendance.HttpAttendanceDetial;
-import com.loyo.oa.v2.ui.activity.attendance.HttpAttendanceList;
-import com.loyo.oa.v2.ui.activity.attendance.bean.AttendanceList;
-import com.loyo.oa.v2.ui.activity.attendance.bean.AttendanceRecord;
-import com.loyo.oa.v2.ui.activity.attendance.ValidateInfo;
+import com.loyo.oa.v2.activityui.attendance.HttpAttendanceDetial;
+import com.loyo.oa.v2.activityui.attendance.HttpAttendanceList;
+import com.loyo.oa.v2.activityui.attendance.bean.AttendanceList;
+import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import java.util.HashMap;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -22,7 +22,6 @@ import retrofit.http.QueryMap;
  * 时间 : 15/9/15.
  */
 public interface IAttendance {
-
 
     /**
      * 验证是否能打卡

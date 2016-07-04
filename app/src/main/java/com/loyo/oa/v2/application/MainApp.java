@@ -13,11 +13,11 @@ import android.support.multidex.MultiDex;
 
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.other.bean.CellInfo;
-import com.loyo.oa.v2.ui.activity.customer.bean.Department;
-import com.loyo.oa.v2.ui.activity.customer.bean.Industry;
-import com.loyo.oa.v2.ui.activity.other.bean.User;
-import com.loyo.oa.v2.ui.activity.other.bean.UserGroupData;
+import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.bean.Industry;
+import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;

@@ -2,11 +2,11 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
-import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
-import com.loyo.oa.v2.ui.activity.customer.bean.Product;
-import com.loyo.oa.v2.ui.activity.other.bean.SaleStage;
-import com.loyo.oa.v2.ui.activity.other.bean.User;
-import com.loyo.oa.v2.ui.activity.sale.bean.CommonTag;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.customer.bean.Product;
+import com.loyo.oa.v2.activityui.other.bean.SaleStage;
+import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 
 import java.util.ArrayList;
 

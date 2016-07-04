@@ -58,7 +58,7 @@
         android:windowSoftInputMode="adjustUnspecified|stateHidden">
         <!--android:theme="@style/AppStartLoadTranslucent"-->
         <activity
-            android:name=".ui.activity.home.LauncherActivity_"
+            android:name=".activityui.home.LauncherActivity_"
             android:label="@string/app_name"
             android:launchMode="standard"
             android:screenOrientation="portrait"
@@ -76,18 +76,18 @@
 
         <!-- 启动欢迎页面 -->
         <activity
-            android:name=".ui.activity.login.WelcomeActivity"
+            android:name=".activityui.login.WelcomeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
-            android:name=".ui.activity.setting.ResetPasswordActivity_"
+            android:name=".activityui.setting.ResetPasswordActivity_"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.setting.VerifyAccountActivity_"
+            android:name=".activityui.setting.VerifyAccountActivity_"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -104,256 +104,256 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.work.WorkReportReviewActivity_"
+            android:name=".activityui.work.WorkReportReviewActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.CommonTagSelectActivity_"
+            android:name=".activityui.customer.CommonTagSelectActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.NearByCustomersActivity_"
+            android:name=".activityui.customer.NearByCustomersActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.NearByCustomersMapActivity"
+            android:name=".activityui.customer.NearByCustomersMapActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activity.signin.LegworksListActivity_"
+            android:name=".activityui.signin.LegworksListActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.signin.SignInListActivity_"
+            android:name=".activityui.signin.SignInListActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.CustomerDetailInfoActivity_"
+            android:name=".activityui.customer.CustomerDetailInfoActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.CustomerContactManageActivity_"
+            android:name=".activityui.customer.CustomerContactManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.attendance.AttendanceActivity_"
+            android:name=".activityui.attendance.AttendanceActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.attendance.AttendanceAddActivity_"
+            android:name=".activityui.attendance.AttendanceAddActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.attendance.PreviewAttendanceActivity_"
+            android:name=".activityui.attendance.PreviewAttendanceActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.contact.ContactsDepartmentActivity_"
+            android:name=".activityui.contact.ContactsDepartmentActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.project.ProjectManageActivity_"
+            android:name=".activityui.project.ProjectManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.project.ProjectInfoActivity_"
+            android:name=".activityui.project.ProjectInfoActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.project.ProjectDescriptionActivity_"
+            android:name=".activityui.project.ProjectDescriptionActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.login.LoginActivity"
+            android:name=".activityui.login.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.login.LoginBQQActivity"
+            android:name=".activityui.login.LoginBQQActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.signin.SignInActivity"
+            android:name=".activityui.signin.SignInActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.other.DepartmentUserActivity"
+            android:name=".activityui.other.DepartmentUserActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/FragmentActivityTheme"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.signin.SignInfoActivity"
+            android:name=".activityui.signin.SignInfoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.signin.SignInManagerActivity_"
+            android:name=".activityui.signin.SignInManagerActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.other.BulletinManagerActivity_"
+            android:name=".activityui.other.BulletinManagerActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.customer.CustomerBaseInfoEditActivity_"
+            android:name=".activityui.customer.CustomerBaseInfoEditActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.customer.CustomerAddActivity_"
+            android:name=".activityui.customer.CustomerAddActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.customer.CustomerInfoActivity_"
+            android:name=".activityui.customer.CustomerInfoActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.customer.CustomerLabelActivity_"
+            android:name=".activityui.customer.CustomerLabelActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.customer.SaleActivitiesManageActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".ui.activity.customer.DemandsManageActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".ui.activity.customer.DemandsAddActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".ui.activity.tasks.TasksManageActivity_"
+            android:name=".activityui.customer.SaleActivitiesManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.tasks.TasksAddActivity_"
-            android:launchMode="singleTop"
+            android:name=".activityui.customer.DemandsManageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.contact.ContactsActivity"
+            android:name=".activityui.customer.DemandsAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".activityui.tasks.TasksManageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.tasks.TasksInfoActivity_"
+            android:name=".activityui.tasks.TasksAddActivity_"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".activityui.contact.ContactsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.tasks.TasksInfoActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.tasks.ChildTaskMnageActivity_"
+            android:name=".activityui.tasks.ChildTaskMnageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.tasks.ChildTaskResponserSelectActivity_"
+            android:name=".activityui.tasks.ChildTaskResponserSelectActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.contact.ContactInfoActivity_"
+            android:name=".activityui.contact.ContactInfoActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.contact.ContactInfoEditActivity_"
+            android:name=".activityui.contact.ContactInfoEditActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <!-- 子任务的添加 -->
         <activity
-            android:name=".ui.activity.tasks.ChildTaskAddActivity_"
+            android:name=".activityui.tasks.ChildTaskAddActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <!-- 子任务的 编辑 -->
         <activity
-            android:name=".ui.activity.tasks.ChildTaskEdit"
+            android:name=".activityui.tasks.ChildTaskEdit"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <!-- 任务编辑页面 -->
         <activity
-            android:name=".ui.activity.tasks.TasksEditActivity_"
+            android:name=".activityui.tasks.TasksEditActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.work.WorkReportsManageActivity"
+            android:name=".activityui.work.WorkReportsManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.work.WorkReportsInfoActivity_"
+            android:name=".activityui.work.WorkReportsInfoActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.work.WorkReportAddActivity_"
+            android:name=".activityui.work.WorkReportAddActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.wfinstance.WfInstanceManageActivity"
+            android:name=".activityui.wfinstance.WfInstanceManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <!-- 部门选择页面 -->
         <activity
-            android:name=".ui.activity.wfinstance.DepartmentChooseActivity"
+            android:name=".activityui.wfinstance.DepartmentChooseActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.wfinstance.WfinstanceInfoActivity_"
+            android:name=".activityui.wfinstance.WfinstanceInfoActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.setting.SettingActivity"
+            android:name=".activityui.setting.SettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.setting.SettingPasswordActivity_"
+            android:name=".activityui.setting.SettingPasswordActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <!-- 设置账号页面 -->
         <activity
-            android:name=".ui.activity.setting.EditUserMobileActivity"
+            android:name=".activityui.setting.EditUserMobileActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
-            android:name=".ui.activity.customer.CustomerContractAddActivity"
+            android:name=".activityui.customer.CustomerContractAddActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.SaleActivitiesAddActivity"
+            android:name=".activityui.customer.SaleActivitiesAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
@@ -362,44 +362,44 @@
             android:launchMode="singleTop"
             android:theme="@style/dialog_get_img_StyleBottom"/>
         <activity
-            android:name=".ui.activity.other.SelectEditDeleteActivity"
+            android:name=".activityui.other.SelectEditDeleteActivity"
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom"/>
         <activity
-            android:name=".ui.activity.other.DepartmentActivity"
+            android:name=".activityui.other.DepartmentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.signin.SignInManagerFromCustomer"
+            android:name=".activityui.signin.SignInManagerFromCustomer"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <!-- 任务审核 -->
         <activity
-            android:name=".ui.activity.tasks.TasksInfoScoreActivity_"
+            android:name=".activityui.tasks.TasksInfoScoreActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.customer.CustomerSearchActivity"
+            android:name=".activityui.customer.CustomerSearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
-            android:name=".ui.activity.other.DepartmentUserSearchActivity"
+            android:name=".activityui.other.DepartmentUserSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <!-- 任务的搜索 -->
         <activity
-            android:name=".ui.activity.tasks.TasksSearchActivity"
+            android:name=".activityui.tasks.TasksSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>
         <activity
-            android:name=".ui.activity.work.WorkReportsSearchActivity"
+            android:name=".activityui.work.WorkReportsSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>
         <activity
-            android:name=".ui.activity.wfinstance.WfinstanceSearchActivity"
+            android:name=".activityui.wfinstance.WfinstanceSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>
@@ -408,112 +408,112 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.Dialog"/>
         <activity
-            android:name=".ui.activity.attachment.AttachmentRightActivity_"
+            android:name=".activityui.attachment.AttachmentRightActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.commonview.FeedbackActivity_"
+            android:name=".activityui.commonview.FeedbackActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.attachment.AttachmentActivity_"
+            android:name=".activityui.attachment.AttachmentActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.commonview.DiscussionActivity_"
+            android:name=".activityui.commonview.DiscussionActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".ui.activity.work.WorkReportModelSelectManageActivity_"
+            android:name=".activityui.work.WorkReportModelSelectManageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.tasks.TaskModelSelectManageActivity_"
+            android:name=".activityui.tasks.TaskModelSelectManageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.other.PreviewImageListActivity"
+            android:name=".activityui.other.PreviewImageListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.other.PreviewOfficeActivity"
+            android:name=".activityui.other.PreviewOfficeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.other.BulletinAddActivity_"
+            android:name=".activityui.other.BulletinAddActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.project.ProjectAddActivity_"
+            android:name=".activityui.project.ProjectAddActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.tasks.TaskListActivity_"
+            android:name=".activityui.tasks.TaskListActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.project.ProjectSearchActivity"
+            android:name=".activityui.project.ProjectSearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.customer.CustomerRepeat"
+            android:name=".activityui.customer.CustomerRepeat"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.signin.SigninSelectCustomer"
+            android:name=".activityui.signin.SigninSelectCustomer"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.commonview.SelectDetUserActivity"
+            android:name=".activityui.commonview.SelectDetUserActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.commonview.SelectDetUserSerach"
+            android:name=".activityui.commonview.SelectDetUserSerach"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.home.MainHomeActivity"
+            android:name=".activityui.home.MainHomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.IOSched"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
         <activity
-            android:name=".ui.activity.customer.CustomerManagerActivity"
+            android:name=".activityui.customer.CustomerManagerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
         <activity
-            android:name=".ui.activity.wfinstance.WfInAddActivity"
+            android:name=".activityui.wfinstance.WfInAddActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
         <activity
-            android:name=".ui.activity.wfinstance.WfInTypeSelectActivity"
+            android:name=".activityui.wfinstance.WfInTypeSelectActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
         <activity
-            android:name=".ui.activity.wfinstance.ProcessSelectActivity"
+            android:name=".activityui.wfinstance.ProcessSelectActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
         <activity
-            android:name=".ui.activity.wfinstance.WfInEditActivity"
+            android:name=".activityui.wfinstance.WfInEditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
-        <activity android:name=".ui.activity.commonview.SelectDetUserActivity2"></activity>
+        <activity android:name=".activityui.commonview.SelectDetUserActivity2"></activity>
 
         <service
             android:name=".service.InitDataService_"
@@ -658,65 +658,65 @@
             android:value="2d8b80512b2c5a6110c177828b56bc01"/>
         <!-- 我的讨论界面 -->
         <activity
-            android:name=".ui.activity.discuss.MyDiscussActivity"
+            android:name=".activityui.discuss.MyDiscussActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activity.discuss.hait.HaitActivity"
+            android:name=".activityui.discuss.hait.HaitActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activity.discuss.DiscussDetActivity"
+            android:name=".activityui.discuss.DiscussDetActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <!--销售机会 -->
         <activity
-            android:name=".ui.activity.sale.SaleOpportunitiesManagerActivity"
+            android:name=".activityui.sale.SaleOpportunitiesManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.sale.AddMySaleActivity"
+            android:name=".activityui.sale.AddMySaleActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".ui.activity.sale.SaleStageActivity"
+            android:name=".activityui.sale.SaleStageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.sale.IntentionProductActivity"
+            android:name=".activityui.sale.IntentionProductActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.sale.AddIntentionProductActivity"
+            android:name=".activityui.sale.AddIntentionProductActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.customer.SaleManageActivity"
+            android:name=".activityui.customer.SaleManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.customer.FollowContactSelectActivity"
+            android:name=".activityui.customer.FollowContactSelectActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.sale.SaleDetailsActivity"
+            android:name=".activityui.sale.SaleDetailsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.sale.SaleEditViewActivity"
+            android:name=".activityui.sale.SaleEditViewActivity"
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom"
             />
         <activity
-            android:name=".ui.activity.other.PreviewImageAddActivity"
+            android:name=".activityui.other.PreviewImageAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>

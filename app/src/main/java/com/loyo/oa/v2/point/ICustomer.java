@@ -1,22 +1,22 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.ui.activity.sale.bean.CommonTag;
-import com.loyo.oa.v2.ui.activity.customer.bean.Contact;
-import com.loyo.oa.v2.ui.activity.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import com.loyo.oa.v2.activityui.customer.bean.Contact;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.ui.activity.customer.bean.CustomerExtraData;
-import com.loyo.oa.v2.ui.activity.customer.bean.CustomerRepeatList;
+import com.loyo.oa.v2.activityui.customer.bean.CustomerExtraData;
+import com.loyo.oa.v2.activityui.customer.bean.CustomerRepeatList;
 import com.loyo.oa.v2.beans.Demand;
-import com.loyo.oa.v2.ui.activity.customer.bean.Industry;
+import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.beans.LegWork;
-import com.loyo.oa.v2.ui.activity.customer.bean.MembersRoot;
-import com.loyo.oa.v2.ui.activity.customer.bean.NearCount;
+import com.loyo.oa.v2.activityui.customer.bean.MembersRoot;
+import com.loyo.oa.v2.activityui.customer.bean.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.ui.activity.customer.bean.Product;
+import com.loyo.oa.v2.activityui.customer.bean.Product;
 import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.beans.SaleActivity;
-import com.loyo.oa.v2.ui.activity.other.bean.SaleStage;
-import com.loyo.oa.v2.ui.activity.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.other.bean.SaleStage;
+import com.loyo.oa.v2.activityui.customer.bean.Tag;
 
 import java.util.ArrayList;
 import java.util.HashMap;

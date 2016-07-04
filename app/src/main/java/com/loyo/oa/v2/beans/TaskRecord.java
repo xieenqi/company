@@ -1,5 +1,5 @@
 package com.loyo.oa.v2.beans;
-import com.loyo.oa.v2.ui.activity.tasks.bean.CornBody;
+import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
 
 import java.io.Serializable;
 

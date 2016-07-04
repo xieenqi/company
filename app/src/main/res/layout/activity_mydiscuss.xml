@@ -6,7 +6,7 @@
                 android:background="@color/white"
                 android:clipToPadding="true"
                 android:fitsSystemWindows="true"
-                tools:context=".ui.activity.discuss.MyDiscussActivity">
+                tools:context=".activityui.discuss.MyDiscussActivity">
 
     <include
         android:id="@+id/actionbar"

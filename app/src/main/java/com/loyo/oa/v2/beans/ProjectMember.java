@@ -2,9 +2,9 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
-import com.loyo.oa.v2.ui.activity.customer.bean.Department;
-import com.loyo.oa.v2.ui.activity.other.bean.User;
-import com.loyo.oa.v2.ui.activity.project.HttpProject;
+import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.tool.ListUtil;
 
 import java.util.ArrayList;

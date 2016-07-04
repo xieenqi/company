@@ -9,8 +9,8 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.bean.CityModel;
-import com.loyo.oa.v2.ui.activity.customer.bean.DistrictModel;
+import com.loyo.oa.v2.activityui.customer.bean.CityModel;
+import com.loyo.oa.v2.activityui.customer.bean.DistrictModel;
 import com.loyo.oa.v2.beans.ProvinceModel;
 import com.loyo.oa.v2.tool.XmlParserSelectCity;
 import com.loyo.oa.v2.customview.wheel.OnWheelChangedListener;

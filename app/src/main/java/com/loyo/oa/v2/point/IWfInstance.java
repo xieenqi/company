@@ -1,10 +1,10 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.beans.WfInstanceRecord;
-import com.loyo.oa.v2.ui.activity.wfinstance.bean.BizForm;
+import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.ui.activity.wfinstance.bean.WfTemplate;
+import com.loyo.oa.v2.activityui.wfinstance.bean.WfTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;

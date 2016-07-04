@@ -9,7 +9,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
-import com.loyo.oa.v2.ui.activity.other.bean.API_error;
+import com.loyo.oa.v2.activityui.other.bean.API_error;
 
 import org.apache.http.Header;
 

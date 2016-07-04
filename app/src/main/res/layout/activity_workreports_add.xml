@@ -150,7 +150,7 @@
                             android:textSize="15sp"/>
 
 
-                        <com.loyo.oa.v2.ui.activity.commonview.SwitchView
+                        <com.loyo.oa.v2.activityui.commonview.SwitchView
                             android:id="@+id/crm_switch"
                             android:layout_width="50dp"
                             android:layout_height="wrap_content"

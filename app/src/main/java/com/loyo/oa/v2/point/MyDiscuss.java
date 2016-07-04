@@ -1,8 +1,8 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.ui.activity.discuss.HttpDiscussDet;
-import com.loyo.oa.v2.ui.activity.discuss.HttpDiscussItem;
-import com.loyo.oa.v2.ui.activity.discuss.HttpMyDiscussItem;
+import com.loyo.oa.v2.activityui.discuss.HttpDiscussDet;
+import com.loyo.oa.v2.activityui.discuss.HttpDiscussItem;
+import com.loyo.oa.v2.activityui.discuss.HttpMyDiscussItem;
 import com.loyo.oa.v2.beans.PaginationX;
 
 import java.util.HashMap;

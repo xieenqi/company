@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.bean.ContactLeftExtras;
-import com.loyo.oa.v2.ui.activity.customer.bean.ExtraData;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
 import com.loyo.oa.v2.tool.DateTool;
 import java.util.ArrayList;
 

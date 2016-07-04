@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.ui.activity.discuss.bean.Discussion;
+import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 
 import java.util.HashMap;

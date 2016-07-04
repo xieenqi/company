@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.loyo.oa.v2.ui.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.ui.activity.other.bean.User;
+import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 
