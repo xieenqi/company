@@ -456,7 +456,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.tasks.TaskListActivity_"
+            android:name=".activityui.customer.TaskListActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
@@ -725,6 +725,6 @@
             android:value="56f0a2a367e58e2176002ad6"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="应用宝"/>
+            android:value="ukuaiqi"/>
     </application>
 </manifest>

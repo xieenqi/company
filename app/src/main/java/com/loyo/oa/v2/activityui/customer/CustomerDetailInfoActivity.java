@@ -13,10 +13,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
-import com.loyo.oa.v2.activityui.tasks.TaskListActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.beans.Customer;
@@ -35,12 +35,15 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.Date;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -461,7 +464,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 if (isPutOcen) {
                     app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
                 } else {
-                    finish();
+                    onBackPressed();
                 }
                 break;
             case R.id.img_title_right:
@@ -601,7 +604,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             if (isPutOcen) {
                 app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
             } else {
-                finish();
+                onBackPressed();
             }
             return true;
         }

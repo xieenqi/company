@@ -50,6 +50,5 @@ public class ContactsDepartmentActivity extends BaseFragmentActivity {
     @Click(R.id.layout_back)
     void onClick(final View v) {
         onBackPressed();
-//        app.finishActivity(this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_CANCELED, null);
     }
 }

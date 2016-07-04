@@ -101,7 +101,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
      */
     @Click(R.id.layout_add)
     void createNewSignIn() {
-        if(null != permission && !permission.isEnable()){
+        if (null != permission && !permission.isEnable()) {
             showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
                     .setNoCancelOnclick(new View.OnClickListener() {
                         @Override
@@ -109,10 +109,10 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
                             generalPopView.dismiss();
                         }
                     });
-        }else{
+        } else {
             Bundle b = new Bundle();
             b.putSerializable("data", mCustomer);
-            app.startActivityForResult(this, SignInActivity.class, MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_CREATE_LEGWORK, b);
+            app.startActivityForResult(this, SignInActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_LEGWORK, b);
         }
     }
 
@@ -184,6 +184,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         intent.putExtra("mCustomer", mCustomer);
         intent.putExtra(ExtraAndResult.EXTRA_STATUS, true);
         startActivity(intent);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     @Override
