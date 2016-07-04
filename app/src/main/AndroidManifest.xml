@@ -238,14 +238,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.customer.DemandsManageActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".activityui.customer.DemandsAddActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
             android:name=".activityui.tasks.TasksManageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

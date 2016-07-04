@@ -91,8 +91,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     ViewGroup layout_sale_activity;
     @ViewById
     ViewGroup layout_visit;
-    @ViewById
-    ViewGroup layout_purchase;
+//    @ViewById
+//    ViewGroup layout_purchase;
     @ViewById
     ViewGroup layout_task;
     @ViewById
@@ -104,8 +104,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     TextView tv_sale_number;
     @ViewById
     TextView tv_visit_times;
-    @ViewById
-    TextView tv_purchase_count;
+//    @ViewById
+//    TextView tv_purchase_count;
     @ViewById
     TextView tv_task_count;
     @ViewById
@@ -256,7 +256,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_sale_number.setOnTouchListener(Global.GetTouch());
         layout_sale_activity.setOnTouchListener(Global.GetTouch());
         layout_visit.setOnTouchListener(Global.GetTouch());
-        layout_purchase.setOnTouchListener(Global.GetTouch());
+//        layout_purchase.setOnTouchListener(Global.GetTouch());
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
 
@@ -453,7 +453,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call, R.id.ll_sale})
+            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call, R.id.ll_sale})
     void onClick(final View view) {
         Bundle bundle = new Bundle();
         Class<?> _class = null;
@@ -546,14 +546,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 _class = SignInListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;
                 break;
-            /*购买意向*/
-            case R.id.layout_purchase:
-                bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
-                bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
-                _class = DemandsManageActivity.class;
-                requestCode = FinalVariables.REQUEST_PREVIEW_DEMANDS;
-                break;
+//            /*购买意向*/
+//            case R.id.layout_purchase:
+//                bundle.putBoolean("isMyUser", isMyUser);
+//                bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
+//                bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
+//                _class = DemandsManageActivity.class;
+//                requestCode = FinalVariables.REQUEST_PREVIEW_DEMANDS;
+//                break;
             /*任务计划*/
             case R.id.layout_task:
                 bundle.putBoolean("isMyUser", isMyUser);
