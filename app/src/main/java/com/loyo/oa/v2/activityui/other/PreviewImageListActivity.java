@@ -166,13 +166,15 @@ public class PreviewImageListActivity extends BaseActivity {
             Attachment attachment = mNewAttachments.get(position);
             File imgFile = attachment.getFile();
             LogUtil.d("预览图片的url：" + attachment.getUrl());
-            if (imgFile != null) {
+            ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
+
+            //先取本地图片 有问题，暂注释掉。
+            /*if (imgFile != null) {
+                LogUtil.d("imgFile == null");
                 photoView.setImageURI(Uri.fromFile(imgFile));
             } else {
-
                 ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
-
-            }
+            }*/
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             return photoView;
         }

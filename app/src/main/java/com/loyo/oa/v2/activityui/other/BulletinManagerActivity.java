@@ -22,6 +22,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.RoundImageView;
@@ -99,7 +100,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     /**
      * 获取通知列表
      */
-    @UiThread
     void getData() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
@@ -108,7 +108,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         app.getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
             @Override
             public void success(final PaginationX<Bulletin> pagination, final Response response) {
-                HttpErrorCheck.checkResponse(response);
                 HttpErrorCheck.checkResponse(response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
@@ -152,7 +151,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     @Click(R.id.img_title_left)
     void onClick(final View v) {
         onBackPressed();
-//        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
 

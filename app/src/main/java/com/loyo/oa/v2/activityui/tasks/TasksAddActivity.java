@@ -215,7 +215,7 @@ public class TasksAddActivity extends BaseActivity {
         switch_approve.setState(true);
         isCopy = mTask != null ? true : false;
         members.users = mTask.getMembers().users; //参与人
-        newUser = mTask.getResponsiblePerson();  //负责人
+        newUser = mTask.getResponsiblePerson();   //负责人
 
     }
 
