@@ -103,10 +103,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private MoreWindowCase mMoreWindowcase;
     private ValidateInfo validateInfo = new ValidateInfo();
 
-    public HomeApplicationFragment(RoundImageView heading) {
-        this.heading = heading;
-    }
-
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
@@ -164,18 +160,11 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         }
     };
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        LogUtil.d(requestCode + "，，，，，，！！！！！！！！！！！，，，，，，，接受 、、、、、、、、@@@@@@@@@@@@@@@@@@@@@@@、、、、、、、、" + resultCode);
-//        if (requestCode == 1) {
-//            requestNumber();
-//        }
-//    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        this.heading = getArguments().getParcelable("view");
         initData();
     }
 

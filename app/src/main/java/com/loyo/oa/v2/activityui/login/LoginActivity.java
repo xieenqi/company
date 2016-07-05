@@ -179,7 +179,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 LogUtil.d("login ：" + Config_project.isRelease);
                 break;
             case R.id.tv_qqLogin://企业qq登陆
-                app.startActivity(this, LoginBQQActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
+                app.startActivity(this, LoginBQQActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
                 break;
             case R.id.tv_resetPassword://忘记密码
                 app.startActivity(this, VerifyAccountActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
@@ -283,7 +283,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
                         //app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
                         //app.startActivity(LoginActivity.this, NewMainActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
-                        app.startActivity(LoginActivity.this, MainHomeActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                        app.startActivity(LoginActivity.this, MainHomeActivity.class, MainApp.ENTER_TYPE_RIGHT, true, new Bundle());
                     }
                 });
             }

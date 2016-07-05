@@ -12,6 +12,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
@@ -19,15 +21,18 @@ import android.widget.ImageView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.LogUtil;
 
+import java.io.Serializable;
+
 
 /**
  * 圆形ImageView，可设置最多两个宽度不同且颜色不同的圆形边框。
  * imagecontrol:border_inside_color="#a8d4e9"
- imagecontrol:border_outside_color="#a8d4e9"
- imagecontrol:border_thickness="0dp"
+ * imagecontrol:border_outside_color="#a8d4e9"
+ * imagecontrol:border_thickness="0dp"
+ *
  * @author Alan
  */
-public class RoundImageView extends ImageView {
+public class RoundImageView extends ImageView implements Parcelable {//实现接口为了作为对象传递
 
     private String tag = "RoundImageView";
     private int mBorderThickness = 0;
@@ -222,9 +227,18 @@ public class RoundImageView extends ImageView {
         paint.setColor(color);
         /* 设置paint的　style　为STROKE：空心 */
         paint.setStyle(Paint.Style.STROKE);
-		/* 设置paint的外框宽度 */
+        /* 设置paint的外框宽度 */
         paint.setStrokeWidth(mBorderThickness);
         canvas.drawCircle(defaultWidth / 2, defaultHeight / 2, radius, paint);
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
 }
