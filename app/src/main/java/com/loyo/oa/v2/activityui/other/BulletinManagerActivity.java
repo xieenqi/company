@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -29,18 +28,14 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -99,7 +94,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     /**
      * 获取通知列表
      */
-    @UiThread
     void getData() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
@@ -108,7 +102,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         app.getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
             @Override
             public void success(final PaginationX<Bulletin> pagination, final Response response) {
-                HttpErrorCheck.checkResponse(response);
                 HttpErrorCheck.checkResponse(response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
@@ -152,7 +145,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     @Click(R.id.img_title_left)
     void onClick(final View v) {
         onBackPressed();
-//        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
 

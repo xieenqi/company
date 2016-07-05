@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.other;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,16 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.HackyViewPager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.io.File;
 import java.util.ArrayList;
+
 import uk.co.senab.photoview.PhotoView;
 
 /**
@@ -31,21 +33,21 @@ public class PreviewImageListActivity extends BaseActivity {
     private ViewPager mViewPager;
     private ArrayList<Attachment> mNewAttachments = null;
     private ImageView delete;
-    private ImageView  back;
-    private TextView   showNum;
+    private ImageView back;
+    private TextView showNum;
 
     private int mPosition;
     private int mNewPosition = 0;
     private int showPosition;
     private boolean isEdit;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
 
         @Override
-        public void handleMessage(Message msg){
-            if(msg.what == 0x01){
-                showPosition = mPosition+1;
-                showNum.setText(showPosition+"/"+mNewAttachments.size());
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x01) {
+                showPosition = mPosition + 1;
+                showNum.setText(showPosition + "/" + mNewAttachments.size());
             }
         }
     };
@@ -73,7 +75,7 @@ public class PreviewImageListActivity extends BaseActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               onBackPressed();
+                onBackPressed();
             }
         });
 
@@ -165,14 +167,16 @@ public class PreviewImageListActivity extends BaseActivity {
             PhotoView photoView = new PhotoView(container.getContext());
             Attachment attachment = mNewAttachments.get(position);
             File imgFile = attachment.getFile();
-            LogUtil.d("预览图片的url：" + attachment.getUrl());
-            if (imgFile != null) {
+            LogUtil.d("myPager预览图片的url：" + attachment.getUrl());
+            ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
+
+            //先取本地图片 有问题，暂注释掉。
+            /*if (imgFile != null) {
+                LogUtil.d("imgFile == null");
                 photoView.setImageURI(Uri.fromFile(imgFile));
             } else {
-
                 ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
-
-            }
+            }*/
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             return photoView;
         }
