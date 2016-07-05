@@ -319,7 +319,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
 
             case R.id.img_title_left:
-                finish();
+                onBackPressed();
                 break;
             //弹出菜单
             case R.id.img_title_right:

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -22,12 +23,14 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -75,11 +78,11 @@ public class AttachmentActivity extends BaseActivity {
     @AfterViews
     void init() {
         super.setTitle("附件");
-        if(fromPage == Common.CUSTOMER_PAGE){
+        if (fromPage == Common.CUSTOMER_PAGE) {
             if (!isMyUser) {
                 tv_upload.setVisibility(View.GONE);
             }
-        }else{
+        } else {
             if (isOver) {
                 tv_upload.setVisibility(View.GONE);
             }
@@ -137,7 +140,7 @@ public class AttachmentActivity extends BaseActivity {
             adapter.setData(mListAttachment);
             adapter.notifyDataSetChanged();
         }
-        if(uploadNum == uploadSize){
+        if (uploadNum == uploadSize) {
             DialogHelp.cancelLoading();
         }
     }
@@ -198,7 +201,7 @@ public class AttachmentActivity extends BaseActivity {
                         return;
                     }
                     uploadSize = 0;
-                    uploadNum  = pickPhots.size();
+                    uploadNum = pickPhots.size();
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(this, uri);
@@ -222,27 +225,27 @@ public class AttachmentActivity extends BaseActivity {
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(File file){
-        if(uploadSize == 0){
+     */
+    private void newUploadAttachement(File file) {
+        if (uploadSize == 0) {
             DialogHelp.showLoading(mContext, "正在上传", true);
         }
         uploadSize++;
         TypedFile typedFile = new TypedFile("image/*", file);
         TypedString typedUuid = new TypedString(uuid);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType,typedFile,
-        new RCallback<Attachment>() {
-            @Override
-            public void success(final Attachment attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                getAttachments();
-            }
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                new RCallback<Attachment>() {
+                    @Override
+                    public void success(final Attachment attachments, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        getAttachments();
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 }

@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsSubdivisionsFragment;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
 import org.androidannotations.annotations.AfterViews;
@@ -50,6 +49,6 @@ public class ContactsDepartmentActivity extends BaseFragmentActivity {
 
     @Click(R.id.layout_back)
     void onClick(final View v) {
-        app.finishActivity(this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_CANCELED, null);
+        onBackPressed();
     }
 }

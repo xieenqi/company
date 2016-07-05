@@ -88,7 +88,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
 
     @Override
     public void onBackPressed() {
-        app.finishActivity(this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
     }
 
     private void iniIntent() {

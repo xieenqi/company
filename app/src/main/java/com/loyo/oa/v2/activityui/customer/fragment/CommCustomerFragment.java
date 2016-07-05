@@ -208,6 +208,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_COMM);
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                 startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+                mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
     }

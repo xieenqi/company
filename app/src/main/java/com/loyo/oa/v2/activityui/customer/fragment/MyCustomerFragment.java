@@ -55,7 +55,7 @@ import retrofit.client.Response;
  * 【我的客户】列表
  * Created by yyy on 16/6/1.
  */
-public class MyCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2{
+public class MyCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     private Intent mIntent;
     private View mView;
@@ -92,15 +92,15 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private ArrayList<Tag> mTags;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
 
-            switch(msg.what){
+            switch (msg.what) {
                 //时间筛选
                 case CustomerManagerActivity.CUSTOMER_TIME:
                     tagPostion = msg.getData().getInt("data");
-                    switch (tagPostion){
+                    switch (tagPostion) {
                         case 0:
                             filed = "lastActAt";
                             order = "desc";
@@ -163,7 +163,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         getData();
     }
 
-    public void initView(View view){
+    public void initView(View view) {
         permission = (Permission) getArguments().getSerializable("permission");
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
 
@@ -203,7 +203,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private void bindData() {
 
         if (null == adapter) {
-            adapter = new MyCustomerAdapter(getActivity(),mCustomers);
+            adapter = new MyCustomerAdapter(getActivity(), mCustomers);
             listView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
@@ -215,11 +215,12 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Intent intent = new Intent();
-                    intent.putExtra("Id", mCustomers.get(position-1).getId());
-                    intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
-                    intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                    startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
+                Intent intent = new Intent();
+                intent.putExtra("Id", mCustomers.get(position - 1).getId());
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
+                intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
+                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
     }
@@ -348,60 +349,60 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     }
 
 
-   private View.OnClickListener click = new View.OnClickListener(){
-       @Override
-       public void onClick(View v) {
+    private View.OnClickListener click = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
 
-           switch (v.getId()) {
-               //新建客户
-               case R.id.btn_add:
-                   mIntent = new Intent();
-                   mIntent.setClass(getActivity(), CustomerAddActivity_.class);
-                   startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
-                   break;
+            switch (v.getId()) {
+                //新建客户
+                case R.id.btn_add:
+                    mIntent = new Intent();
+                    mIntent.setClass(getActivity(), CustomerAddActivity_.class);
+                    startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                    break;
 
-               //时间
-               case R.id.cus_screen1:
-                   saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true);
-                   saleCommPopupView.showAsDropDown(screen1);
-                   openPopWindow(tagImage1);
-                   saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                       @Override
-                       public void onDismiss() {
-                           closePopupWindow(tagImage1);
-                       }
-                   });
-                   break;
+                //时间
+                case R.id.cus_screen1:
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true);
+                    saleCommPopupView.showAsDropDown(screen1);
+                    openPopWindow(tagImage1);
+                    saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            closePopupWindow(tagImage1);
+                        }
+                    });
+                    break;
 
-               //标签
-               case R.id.cus_screen2:
-                   screenTagPopupView = new ScreenTagPopupView(getActivity(),mTags,mHandler);
-                   screenTagPopupView.showAsDropDown(screen2);
-                   openPopWindow(tagImage2);
-                   screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                       @Override
-                       public void onDismiss() {
-                           closePopupWindow(tagImage2);
-                       }
-                   });
-                   break;
+                //标签
+                case R.id.cus_screen2:
+                    screenTagPopupView = new ScreenTagPopupView(getActivity(), mTags, mHandler);
+                    screenTagPopupView.showAsDropDown(screen2);
+                    openPopWindow(tagImage2);
+                    screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            closePopupWindow(tagImage2);
+                        }
+                    });
+                    break;
 
-               //附近的客户
-               case R.id.layout_near_customers:
-                   Bundle bundle = new Bundle();
-                   bundle.putString("position", position);
-                   bundle.putSerializable("nearCount", nearCount);
-                   bundle.putInt("type", CustomerManagerActivity.NEARCUS_SELF);//团队2 个人1
-                   app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_ZOOM_IN, false, bundle);
-                   break;
-           }
-       }
-   };
+                //附近的客户
+                case R.id.layout_near_customers:
+                    Bundle bundle = new Bundle();
+                    bundle.putString("position", position);
+                    bundle.putSerializable("nearCount", nearCount);
+                    bundle.putInt("type", CustomerManagerActivity.NEARCUS_SELF);//团队2 个人1
+                    app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
+        switch (resultCode) {
             //客户详情操作回调
             case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
                 getData();

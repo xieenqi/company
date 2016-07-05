@@ -139,7 +139,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
                 LogUtil.d("User数据:" + MainApp.gson.toJson(myUserList.get(position - 1)));
                 Bundle b = new Bundle();
                 b.putSerializable("user", myUserList.get(position - 1));
-                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
+                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
 
             }
         });
@@ -151,7 +151,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
                 LogUtil.d("User数据:" + MainApp.gson.toJson(MainApp.user));
                 Bundle b = new Bundle();
                 b.putSerializable("user", MainApp.user);
-                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
+                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
         });
     }

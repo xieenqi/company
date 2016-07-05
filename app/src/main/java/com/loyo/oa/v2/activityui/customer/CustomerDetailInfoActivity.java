@@ -13,10 +13,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
-import com.loyo.oa.v2.activityui.tasks.TaskListActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.beans.Customer;
@@ -35,12 +35,15 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.Date;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -89,8 +92,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_visit;
     @ViewById
-    ViewGroup layout_purchase;
-    @ViewById
     ViewGroup layout_task;
     @ViewById
     ViewGroup layout_attachment;
@@ -101,8 +102,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     TextView tv_sale_number;
     @ViewById
     TextView tv_visit_times;
-    @ViewById
-    TextView tv_purchase_count;
     @ViewById
     TextView tv_task_count;
     @ViewById
@@ -163,13 +162,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 isLock = customer.lock;
                 mCustomer = customer;
                 getMembersRoot();
-                cancelLoading();
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                cancelLoading();
                 finish();
             }
         });
@@ -179,6 +176,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 获取参与人权限
      */
     void getMembersRoot() {
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getMembersRoot(new RCallback<MembersRoot>() {
                     @Override
@@ -253,7 +251,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_sale_number.setOnTouchListener(Global.GetTouch());
         layout_sale_activity.setOnTouchListener(Global.GetTouch());
         layout_visit.setOnTouchListener(Global.GetTouch());
-        layout_purchase.setOnTouchListener(Global.GetTouch());
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
 
@@ -450,7 +447,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call, R.id.ll_sale})
+            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call, R.id.ll_sale})
     void onClick(final View view) {
         Bundle bundle = new Bundle();
         Class<?> _class = null;
@@ -461,7 +458,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 if (isPutOcen) {
                     app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
                 } else {
-                    finish();
+                    onBackPressed();
                 }
                 break;
             case R.id.img_title_right:
@@ -543,14 +540,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 _class = SignInListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;
                 break;
-            /*购买意向*/
-            case R.id.layout_purchase:
-                bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
-                bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
-                _class = DemandsManageActivity.class;
-                requestCode = FinalVariables.REQUEST_PREVIEW_DEMANDS;
-                break;
             /*任务计划*/
             case R.id.layout_task:
                 bundle.putBoolean("isMyUser", isMyUser);
@@ -601,7 +590,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             if (isPutOcen) {
                 app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
             } else {
-                finish();
+                onBackPressed();
             }
             return true;
         }

@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.tasks;
+package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
+import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -25,13 +28,16 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -114,7 +120,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             Bundle b = new Bundle();
             b.putString(ExtraAndResult.EXTRA_ID, mCustomer.id);
             b.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
-            app.startActivityForResult(this, TasksAddActivity_.class, MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_CREATE_TASK, b);
+            app.startActivityForResult(this, TasksAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_TASK, b);
         }
     }
 
@@ -161,6 +167,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      * 获取列表
      */
     private void getData() {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("startAt", "2014-01-01");
         map.put("endAt", DateTool.getEndAt_ofDay(app.df5));
@@ -173,16 +180,17 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             @Override
             public void onCompleted() {
                 lv.onRefreshComplete();
+                cancelLoading();
             }
 
             @Override
             public void onError(final Throwable e) {
                 lv.onRefreshComplete();
+                cancelLoading();
             }
 
             @Override
             public void onNext(final PaginationX<TaskRecord> paginationX) {
-                lv.onRefreshComplete();
                 taskPaginationX = paginationX;
                 lv.onRefreshComplete();
                 if (isTopAdd) {
@@ -191,6 +199,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
                 tasks.addAll(paginationX.getRecords());
                 pagingGroupDatas = PagingGroupData_.convertGroupData(tasks);
                 bindData();
+                cancelLoading();
             }
         });
     }
@@ -224,7 +233,8 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             default:
                 break;
         }
-        onPullDownToRefresh(lv);
+        //回到页面已经在请求数据不需要再手动请求数据了（默认获取第一页数据）
+        isTopAdd = true;
     }
 
     @Override

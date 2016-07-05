@@ -167,7 +167,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         switch (v.getId()) {
 
             case R.id.img_title_left:
-                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
+                onBackPressed();
                 break;
 
             case R.id.img_title_right:
