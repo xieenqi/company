@@ -246,7 +246,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         } else {
             deptSort();
         }
-        LogUtil.dee("size:"+data.size());
     }
 
     /**
