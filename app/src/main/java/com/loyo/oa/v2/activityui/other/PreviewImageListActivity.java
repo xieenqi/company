@@ -1,14 +1,17 @@
 package com.loyo.oa.v2.activityui.other;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -19,6 +22,8 @@ import com.loyo.oa.v2.customview.HackyViewPager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -163,12 +168,35 @@ public class PreviewImageListActivity extends BaseActivity {
 
         @Override
         public View instantiateItem(final ViewGroup container, final int position) {
+            View view = LayoutInflater.from(PreviewImageListActivity.this).inflate(R.layout.item_picture_preview, null);
+            ImageView img = (ImageView) view.findViewById(R.id.iv_img);
+            final ProgressBar pro = (ProgressBar) view.findViewById(R.id.pb_progress);
 
             PhotoView photoView = new PhotoView(container.getContext());
             Attachment attachment = mNewAttachments.get(position);
             File imgFile = attachment.getFile();
             LogUtil.d("myPager预览图片的url：" + attachment.getUrl());
-            ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
+            ImageLoader.getInstance().displayImage(attachment.getUrl(), img, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String s, View view) {
+                    pro.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+                }
+
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    pro.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onLoadingCancelled(String s, View view) {
+
+                }
+            });
 
             //先取本地图片 有问题，暂注释掉。
             /*if (imgFile != null) {
@@ -177,8 +205,8 @@ public class PreviewImageListActivity extends BaseActivity {
             } else {
                 ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
             }*/
-            container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            return photoView;
+            container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            return view;
         }
 
         @Override
