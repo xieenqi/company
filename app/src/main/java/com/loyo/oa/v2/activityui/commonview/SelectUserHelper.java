@@ -449,13 +449,13 @@ public class SelectUserHelper {
                     } catch (Exception e) {
                         e.printStackTrace();
                         data.setDeptName("暂无");
-                    }
-                    try {
-                        data.setDeptName(user.depts.get(0).getTitle());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        data.setDeptName("暂无");
-                    }
+                    }//此处设置部门的名字
+//                    try {
+//                        data.setDeptName(user.depts.get(0).getTitle());
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        data.setDeptName("暂无");
+//                    }
                     userDatas.add(data);
                 }
             }
@@ -492,13 +492,13 @@ public class SelectUserHelper {
                     } catch (Exception e) {
                         e.printStackTrace();
                         data.setDeptName("暂无");
-                    }
-                    try {
-                        data.setDeptName(user.depts.get(0).getTitle());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        data.setDeptName("暂无");
-                    }
+                    }//此处设置部门的名字
+//                    try {
+//                        data.setDeptName(user.depts.get(0).getTitle());
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        data.setDeptName("暂无");
+//                    }
                     userDatas.add(data);
                 }
             }

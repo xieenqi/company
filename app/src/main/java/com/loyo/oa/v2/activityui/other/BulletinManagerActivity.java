@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -22,7 +21,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.RoundImageView;
@@ -30,18 +28,14 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
