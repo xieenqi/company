@@ -104,6 +104,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private ArrayList<SaleTeamScreen> stageData = new ArrayList<>();
     private String[] sort = {"按最近创建时间", "按照最近更新", "按照最高金额"};
 
+    private boolean isOk   = true;
     private boolean isPull = false;
     private boolean isKind;
     private int requestPage = 1;
@@ -203,9 +204,23 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         listView.setOnRefreshListener(this);
         listView.setEmptyView(emptyView);
 
+        showLoading("");
         mDeptSource = Common.getLstDepartment();
-        deptSort();
-        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x02);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(isOk){
+                    if(data.size() == 0){
+                        wersi();
+                    }else{
+                        isOk = false;
+                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x01);
+                        getData();
+                    }
+                }
+            }
+        }).start();
+
 
         /**
          * 列表监听
@@ -221,6 +236,14 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
             }
         });
 
+    }
+
+    public void wersi() {
+        if (MainApp.user.isSuperUser()) {
+            setUser(mDeptSource);
+        } else {
+            deptSort();
+        }
     }
 
 
@@ -334,9 +357,9 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     /**
      * 组装部门格式
      */
-    private void setUser() {
+    private void setUser(List<Department> values) {
         data.clear();
-        for (Department department : newDeptSource) {
+        for (Department department : values) {
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setId(department.getId());
             saleTeamScreen.setName(department.getName());
@@ -358,7 +381,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 }
             }
         }
-        setUser();
+        setUser(newDeptSource);
     }
 
     @Override
