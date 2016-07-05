@@ -76,7 +76,7 @@ public class SaleStageActivity extends BaseActivity {
         ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
         lv_list = (ListView) findViewById(R.id.lv_list);

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
@@ -36,8 +37,10 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -147,6 +150,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                 mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
                 mIntent.setClass(getActivity(), SaleDetailsActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
     }
@@ -286,11 +290,10 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
                 //新建机会
                 case R.id.btn_add:
-
                     mIntent = new Intent();
                     mIntent.setClass(getActivity(), AddMySaleActivity.class);
                     startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
-
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
 
                 //销售阶段

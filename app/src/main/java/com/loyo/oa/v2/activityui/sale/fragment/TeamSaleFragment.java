@@ -104,7 +104,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private ArrayList<SaleTeamScreen> stageData = new ArrayList<>();
     private String[] sort = {"按最近创建时间", "按照最近更新", "按照最高金额"};
 
-    private boolean isOk   = true;
+    private boolean isOk = true;
     private boolean isPull = false;
     private boolean isKind;
     private int requestPage = 1;
@@ -209,10 +209,10 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(isOk){
-                    if(data.size() == 0){
+                while (isOk) {
+                    if (data.size() == 0) {
                         wersi();
-                    }else{
+                    } else {
                         isOk = false;
                         saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x01);
                         getData();
@@ -233,6 +233,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 mIntent.putExtra("id", adapterSaleTeam.getData().get(position - 1).getId());
                 mIntent.setClass(getActivity(), SaleDetailsActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
 

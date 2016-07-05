@@ -248,7 +248,8 @@ public class MainApp extends Application {
     }
 
     void init_DisplayImageOptions() {
-        options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).considerExifParams(true).displayer(new RoundedBitmapDisplayer(20)).build();
+        options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).
+                considerExifParams(true).displayer(new RoundedBitmapDisplayer(20)).build();
 
         options_3 = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).considerExifParams(true).build();
     }
@@ -279,7 +280,10 @@ public class MainApp extends Application {
                 .imageScaleType(ImageScaleType.EXACTLY)// 图片缩放方式
                 .build();
 
-        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context).defaultDisplayImageOptions(defaultOptions).threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory().diskCacheFileNameGenerator(new Md5FileNameGenerator()).discCache(new UnlimitedDiscCache(cacheDir))//自定义缓存路径
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context).
+                defaultDisplayImageOptions(defaultOptions).threadPriority(Thread.NORM_PRIORITY - 2).
+                denyCacheImageMultipleSizesInMemory().diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .discCache(new UnlimitedDiscCache(cacheDir))//自定义缓存路径
                 //.discCache(new UnlimitedDiscCache(new File("CRMcacheDir")))
                 // .diskCacheSize(50 * 1024 * 1024) // 50 Mb
                 .memoryCacheExtraOptions(800, 800).tasksProcessingOrder(QueueProcessingType.LIFO);

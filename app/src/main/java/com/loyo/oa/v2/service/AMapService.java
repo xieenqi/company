@@ -348,7 +348,7 @@ public class AMapService extends Service {
         final String address = location.getAddress();
 
         ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude + "," + latitude, System.currentTimeMillis() / 1000)));
-        HashMap<String, Object> jsonObject = new HashMap<>();
+        final HashMap<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("tracklogs", trackLogs);
 
         app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
@@ -371,9 +371,12 @@ public class AMapService extends Service {
                 ldbManager.addLocateData(data);
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "2|" + app.df1.format(new Date()));
                 //fixes bugly1043 空指针异常 v3.1.1 ykb 07-15
-                String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
                 UMengTools.sendCustomErroInfo(getApplicationContext(), location);
-                Global.ProcException(new Exception(userName + " 轨迹上报失败:" + error.getMessage()));
+                String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
+                if (null != MainApp.user)
+                    Global.ProcException(new Exception(" 轨迹上【搜集】报失败:" + error.getMessage() +
+                            " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(jsonObject)
+                            + "用户：" + app.gson.toJson(MainApp.user)));
                 isCache = true;
                 super.failure(error);
             }
@@ -388,7 +391,7 @@ public class AMapService extends Service {
             List<LocateData> datas = ldbManager.getAllLocateDatas();
             TrackLog[] trackLogs = buildTrackLogs(datas);
             if (null != trackLogs && trackLogs.length > 0) {
-                HashMap<String, Object> tracklogsMap = new HashMap<>();
+                final HashMap<String, Object> tracklogsMap = new HashMap<>();
                 tracklogsMap.put("tracklogs", trackLogs);
                 app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(tracklogsMap, new RCallback<Object>() {
                     @Override
@@ -401,6 +404,10 @@ public class AMapService extends Service {
                     @Override
                     public void failure(RetrofitError error) {
                         super.failure(error);
+                        if (null != MainApp.user)
+                            Global.ProcException(new Exception(" 缓存》轨迹上【搜集】报失败:" + error.getMessage() +
+                                    " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(tracklogsMap)
+                                    + "用户：" + app.gson.toJson(MainApp.user)));
 
                     }
                 });
