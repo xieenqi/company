@@ -25,10 +25,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-import java.io.File;
 import java.util.ArrayList;
-
-import uk.co.senab.photoview.PhotoView;
 
 /**
  * 【附件列表】预览图片
@@ -171,10 +168,10 @@ public class PreviewImageListActivity extends BaseActivity {
             View view = LayoutInflater.from(PreviewImageListActivity.this).inflate(R.layout.item_picture_preview, null);
             ImageView img = (ImageView) view.findViewById(R.id.iv_img);
             final ProgressBar pro = (ProgressBar) view.findViewById(R.id.pb_progress);
-
-            PhotoView photoView = new PhotoView(container.getContext());
             Attachment attachment = mNewAttachments.get(position);
-            File imgFile = attachment.getFile();
+
+//            PhotoView photoView = new PhotoView(container.getContext());
+//            File imgFile = attachment.getFile();
             LogUtil.d("myPager预览图片的url：" + attachment.getUrl());
             ImageLoader.getInstance().displayImage(attachment.getUrl(), img, new ImageLoadingListener() {
                 @Override
