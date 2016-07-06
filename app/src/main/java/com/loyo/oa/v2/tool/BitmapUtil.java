@@ -502,6 +502,7 @@ public class BitmapUtil {
                 if (newAttachment.get(i).equals(attachments.get(position))) {
                     newPosistion = i;
                 }
+                LogUtil.d("bimap预览的图片：" + newAttachment.get(i).url);
             }
 
             Bundle bundle = new Bundle();

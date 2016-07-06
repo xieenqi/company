@@ -184,6 +184,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      */
     private void create() {
         startActivityForResult(new Intent(mActivity, SignInActivity.class), FinalVariables.REQUEST_CREATE_LEGWORK);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**
