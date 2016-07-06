@@ -3,7 +3,7 @@
                 xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/gray878"
                 android:clipToPadding="true"
                 android:fitsSystemWindows="true"
     >
@@ -61,11 +61,12 @@
             <LinearLayout
                 android:id="@+id/layout_phone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="86dp"
-                android:layout_marginTop="@dimen/dimen_30"
+                android:layout_height="50dp"
+                android:paddingLeft="@dimen/margin_other_view"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@color/white"
+                >
 
 
                 <TextView
@@ -87,16 +88,17 @@
 
             </LinearLayout>
 
+            <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
                 android:id="@+id/layout_weixin"
+                android:paddingLeft="@dimen/margin_other_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="86dp"
-                android:layout_marginTop="@dimen/dimen_20"
+                android:layout_height="50dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal"
+                android:background="@color/white"
+                >
 
                 <TextView
                     android:id="@+id/tv_weixin_title"
@@ -118,14 +120,18 @@
 
             </LinearLayout>
 
+            <include layout="@layout/include_solid_line_left"/>
+
             <LinearLayout
                 android:id="@+id/layout_sex"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="86dp"
-                android:layout_marginTop="@dimen/dimen_20"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="@dimen/margin_other_view"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@color/white"
+                >
 
                 <TextView
                     android:id="@+id/tv_sex_title"
@@ -147,13 +153,14 @@
 
             </LinearLayout>
 
+            <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
                 android:id="@+id/layout_birthday"
+                android:paddingLeft="@dimen/margin_other_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="86dp"
-                android:layout_marginTop="@dimen/dimen_20"
+                android:layout_height="50dp"
+                android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -176,13 +183,15 @@
 
             </LinearLayout>
 
+            <include layout="@layout/include_solid_line_left"/>
+
             <LinearLayout
                 android:id="@+id/layout_age"
+                android:paddingLeft="@dimen/margin_other_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="86dp"
-                android:layout_marginTop="@dimen/dimen_20"
+                android:layout_height="50dp"
                 android:gravity="center_vertical"
+                android:background="@color/white"
                 android:orientation="horizontal">
 
                 <TextView
@@ -204,25 +213,27 @@
                     />
 
             </LinearLayout>
+            <include layout="@layout/include_solid_line_left"/>
         </LinearLayout>
     </ScrollView>
 
     <LinearLayout
         android:id="@+id/layout_action"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dimen_5"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
-
+        android:orientation="horizontal"
+        android:background="@color/white"
+        >
 
         <LinearLayout
             android:id="@+id/layout_call"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -238,7 +249,6 @@
 
         </LinearLayout>
 
-
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
@@ -247,13 +257,13 @@
             android:background="@color/work_info_solid"
             />
 
-
         <LinearLayout
             android:id="@+id/layout_msg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
