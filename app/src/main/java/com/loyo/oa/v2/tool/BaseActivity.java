@@ -97,6 +97,26 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         tintManager.setTintColor(getResources().getColor(R.color.title_bg1));
     }
 
+    /**
+     * 状态栏是否浮现在activity之上
+     * true否 false 是
+     *
+     * @param enable
+     */
+    public void fullStatusBar(boolean enable) {
+        if (enable) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+            getWindow().setAttributes(lp);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        } else {
+            WindowManager.LayoutParams attr = getWindow().getAttributes();
+            attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setAttributes(attr);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+    }
+
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -368,7 +388,11 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
      * 加载loading的方法
      */
     public void showLoading(String msg) {
-        DialogHelp.showLoading(this, msg, true);
+        try {
+            DialogHelp.showLoading(this, msg, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void showLoading(String msg, boolean Cancelable) {
