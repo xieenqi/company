@@ -21,7 +21,7 @@ android {
     signingConfigs {
         debug {
             storeFile file('D:\\android\\key\\loyo_share.keystore')
-////          storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
+//            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
@@ -31,7 +31,7 @@ android {
             storeFile file('D:\\android\\key\\loyo_share.keystore')
             // keyPassword 'Loyo2012'
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
-////          storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
+//            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
@@ -75,13 +75,14 @@ android {
         }
     }
 
-    //jenkins 构建文件输出   android.applicationVariants.all { variant ->
-    variant.outputs.each { output ->
-        def today = new Date().format('yyyyMMdd-HH');
-        def file = output.outputFile
-        output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
+    //jenkins 构建文件输出
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def today = new Date().format('yyyyMMdd-HH');
+            def file = output.outputFile
+            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
+        }
     }
-}
 
 //  productFlavors {
 //        ukuaiqi {}
@@ -91,47 +92,47 @@ android {
 //        }
 //    }
 
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.google.code.gson:gson:2.3'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile files('libs/android-async-http-1.4.6.jar')
-    compile files('libs/universal-image-loader-1.9.3.jar')
-    compile files('libs/android-viewbadger.jar')
-    compile files('libs/bugly_1.2.3.6_release.jar')//崩溃统计搜集
-    //高德地图
-    compile files('libs/Android_Map_V2.5.0.jar')
-    compile files('libs/MapApiServices.jar')
-    compile files('libs/AMap_Location_v2.3.0_20160112.jar')//最新定位
-    compile files('libs/ormlite-android-4.49-SNAPSHOT.jar')
-    compile files('libs/ormlite-core-4.49-SNAPSHOT.jar')
-    compile files('libs/loyo-annotation.jar')
-    compile 'com.github.chrisbanes.photoview:library:1.2.3'
-    compile files('libs/wup-1.0.0-SNAPSHOT.jar')
-    compile files('libs/jg_filter_sdk_1.1.jar')
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'joda-time:joda-time:2.3'
-    //图片选择
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'io.reactivex:rxjava:1.0.14'
-    compile 'io.reactivex:rxandroid:1.0.1'
-    //菜单
-    compile 'com.yalantis:contextmenu:1.0.4'
-    //激光推送
-    compile files('libs/jpush-android-2.1.3.jar')
-    compile "org.androidannotations:androidannotations-api:$AAVersion"
-    //友盟统计
-    compile files('libs/umeng-analytics-v5.6.4.jar')
-    compile files('libs/slidingmenulibary.jar')
-}
-productFlavors {
-}
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'libs')
+        compile 'com.android.support:appcompat-v7:23.1.1'
+        compile 'com.android.support:recyclerview-v7:23.1.1'
+        compile 'com.google.code.gson:gson:2.3'
+        compile 'com.squareup.retrofit:retrofit:1.9.0'
+        compile files('libs/android-async-http-1.4.6.jar')
+        compile files('libs/universal-image-loader-1.9.3.jar')
+        compile files('libs/android-viewbadger.jar')
+        compile files('libs/bugly_1.2.3.6_release.jar')//崩溃统计搜集
+        //高德地图
+        compile files('libs/Android_Map_V2.5.0.jar')
+        compile files('libs/MapApiServices.jar')
+        compile files('libs/AMap_Location_v2.3.0_20160112.jar')//最新定位
+        compile files('libs/ormlite-android-4.49-SNAPSHOT.jar')
+        compile files('libs/ormlite-core-4.49-SNAPSHOT.jar')
+        compile files('libs/loyo-annotation.jar')
+        compile 'com.github.chrisbanes.photoview:library:1.2.3'
+        compile files('libs/wup-1.0.0-SNAPSHOT.jar')
+        compile files('libs/jg_filter_sdk_1.1.jar')
+        compile 'com.nineoldandroids:library:2.4.0'
+        compile 'joda-time:joda-time:2.3'
+        //图片选择
+        compile 'com.squareup.picasso:picasso:2.5.2'
+        compile 'io.reactivex:rxjava:1.0.14'
+        compile 'io.reactivex:rxandroid:1.0.1'
+        //菜单
+        compile 'com.yalantis:contextmenu:1.0.4'
+        //激光推送
+        compile files('libs/jpush-android-2.1.3.jar')
+        compile "org.androidannotations:androidannotations-api:$AAVersion"
+        //友盟统计
+        compile files('libs/umeng-analytics-v5.6.4.jar')
+        compile files('libs/slidingmenulibary.jar')
+    }
+    productFlavors {
+    }
 
-lintOptions {
-    abortOnError false
-}
+    lintOptions {
+        abortOnError false
+    }
 }
 
 repositories {
