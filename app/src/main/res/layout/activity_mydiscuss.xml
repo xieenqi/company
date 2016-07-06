@@ -6,13 +6,13 @@
                 android:background="@color/white"
                 android:clipToPadding="true"
                 android:fitsSystemWindows="true"
-                tools:context="com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss">
+                tools:context=".activityui.discuss.MyDiscussActivity">
 
     <include
         android:id="@+id/actionbar"
         layout="@layout/include_common_title_2"></include>
 
-    <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView
+    <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView
         android:id="@+id/lv_discuss"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

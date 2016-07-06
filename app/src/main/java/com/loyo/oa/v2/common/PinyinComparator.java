@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.common;
 
 
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.activityui.other.bean.User;
 
 import java.util.Comparator;
 

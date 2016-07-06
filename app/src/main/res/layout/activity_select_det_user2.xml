@@ -6,7 +6,7 @@
               android:clipToPadding="true"
               android:fitsSystemWindows="true"
               android:orientation="vertical"
-              tools:context="com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2">
+              tools:context=".activityui.commonview.SelectDetUserActivity2">
 
     <include layout="@layout/include_title"/>
 
@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <com.loyo.oa.v2.tool.customview.HorizontalScrollListView
+            <com.loyo.oa.v2.customview.HorizontalScrollListView
                 android:id="@+id/lv_selectUser"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

@@ -5,7 +5,7 @@ import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.CellInfo;
+import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 
 import java.util.Date;
 
@@ -44,5 +44,10 @@ public class UMengTools {
         }
     }
 
+    /**
+     * 上传轨迹失败原因友盟收集
+     */
+    public static void sendCustomTrajectory() {
 
+    }
 }

@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import com.loyo.oa.v2.activity.ActivityPreviewImageAdd;
+import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -145,7 +145,7 @@ public class UploadImgUtil {
             bundle.putSerializable("data", newAttachment);
             bundle.putInt("position", newPosistion);
             bundle.putBoolean("isEdit", isEdit);
-            MainApp.getMainApp().startActivityForResult((Activity) mContext, ActivityPreviewImageAdd.class,
+            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageAddActivity.class,
                     MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
 
         }

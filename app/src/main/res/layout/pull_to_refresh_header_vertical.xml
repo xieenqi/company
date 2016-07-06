@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
 
-                <com.loyo.oa.v2.tool.customview.PowerImageView
+                <com.loyo.oa.v2.customview.PowerImageView
                     android:id="@+id/pull_to_refresh_image"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="@dimen/dimen_25"

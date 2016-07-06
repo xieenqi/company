@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.tool;
 
-import com.loyo.oa.v2.beans.CityModel;
-import com.loyo.oa.v2.beans.DistrictModel;
+import com.loyo.oa.v2.activityui.customer.bean.CityModel;
+import com.loyo.oa.v2.activityui.customer.bean.DistrictModel;
 import com.loyo.oa.v2.beans.ProvinceModel;
 
 import org.xml.sax.Attributes;

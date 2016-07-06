@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import com.loyo.oa.v2.activity.ActivityPreviewImageList;
+import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -502,14 +502,14 @@ public class BitmapUtil {
                 if (newAttachment.get(i).equals(attachments.get(position))) {
                     newPosistion = i;
                 }
-                LogUtil.d("yula预览的图片：" + newAttachment.get(i).url);
+                LogUtil.d("bimap预览的图片：" + newAttachment.get(i).url);
             }
 
             Bundle bundle = new Bundle();
             bundle.putSerializable("data", newAttachment);
             bundle.putInt("position", newPosistion);
             bundle.putBoolean("isEdit", isEdit);
-            MainApp.getMainApp().startActivityForResult((Activity) mContext, ActivityPreviewImageList.class,
+            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
                     MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
 
         }

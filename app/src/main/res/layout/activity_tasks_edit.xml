@@ -351,7 +351,7 @@
                         android:textSize="15sp"
                         />
 
-                    <com.loyo.oa.v2.activity.commonview.SwitchView
+                    <com.loyo.oa.v2.activityui.commonview.SwitchView
                         android:id="@+id/switch_approve"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="50dp"

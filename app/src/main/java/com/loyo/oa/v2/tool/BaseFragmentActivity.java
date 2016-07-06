@@ -20,12 +20,12 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.GeneralPopView;
 
 public class BaseFragmentActivity extends FragmentActivity {
 
@@ -150,6 +150,12 @@ public class BaseFragmentActivity extends FragmentActivity {
         }
 
         super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
     @Override

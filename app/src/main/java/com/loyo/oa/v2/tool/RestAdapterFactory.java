@@ -3,7 +3,7 @@ package com.loyo.oa.v2.tool;
 import android.os.Build;
 
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.CellInfo;
+import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.common.Global;
 
 import java.lang.ref.SoftReference;

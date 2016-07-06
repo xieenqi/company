@@ -21,9 +21,9 @@ import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.tool.customview.filterview.DropDownMenu;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView;
+import com.loyo.oa.v2.customview.filterview.DropDownMenu;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 
 import java.util.ArrayList;
 
@@ -243,20 +243,10 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /*if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
-            return;
-        }*/
-
         if (resultCode == 0x09) {
             GetData();
         }
 
-        /*switch (requestCode) {
-            case REQUEST_CREATE:
-            case REQUEST_REVIEW:
-                GetData();
-                break;
-        }*/
     }
 
     /**

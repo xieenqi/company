@@ -8,16 +8,15 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
-import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.CellInfo;
-import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.Industry;
-import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.beans.UserGroupData;
+import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.bean.Industry;
+import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
@@ -41,6 +40,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -207,6 +207,7 @@ public class MainApp extends Application {
 
 
     void init() {
+        CrashReport.initCrashReport(getApplicationContext(), "900037071", Config_project.is_developer_mode);  //初始化bugly SDK  900001993
         Configuration config = getResources().getConfiguration();
         config.locale = Locale.CHINA;
         getBaseContext().getResources().updateConfiguration(config, null);
@@ -247,24 +248,25 @@ public class MainApp extends Application {
     }
 
     void init_DisplayImageOptions() {
-        options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).considerExifParams(true).displayer(new RoundedBitmapDisplayer(20)).build();
+        options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).
+                considerExifParams(true).displayer(new RoundedBitmapDisplayer(20)).build();
 
         options_3 = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).considerExifParams(true).build();
     }
 
-    void init_StrictMode() {
-        if (Config_project.is_developer_mode) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    //                    .detectAll()
-                    .detectDiskReads().detectDiskWrites().detectNetwork()   // or .detectAll() for all detectable problems
-                    .penaltyLog()
-                            //                    .penaltyDialog()
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    //                    .detectAll()
-                    .detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
-        }
-    }
+//    void init_StrictMode() {
+//        if (Config_project.is_developer_mode) {
+//            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                    //                    .detectAll()
+//                    .detectDiskReads().detectDiskWrites().detectNetwork()   // or .detectAll() for all detectable problems
+//                    .penaltyLog()
+//                            //                    .penaltyDialog()
+//                    .build());
+//            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                    //                    .detectAll()
+//                    .detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
+//        }
+//    }
 
     public static void initImageLoader(Context context) {
 
@@ -278,7 +280,10 @@ public class MainApp extends Application {
                 .imageScaleType(ImageScaleType.EXACTLY)// 图片缩放方式
                 .build();
 
-        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context).defaultDisplayImageOptions(defaultOptions).threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory().diskCacheFileNameGenerator(new Md5FileNameGenerator()).discCache(new UnlimitedDiscCache(cacheDir))//自定义缓存路径
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context).
+                defaultDisplayImageOptions(defaultOptions).threadPriority(Thread.NORM_PRIORITY - 2).
+                denyCacheImageMultipleSizesInMemory().diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .discCache(new UnlimitedDiscCache(cacheDir))//自定义缓存路径
                 //.discCache(new UnlimitedDiscCache(new File("CRMcacheDir")))
                 // .diskCacheSize(50 * 1024 * 1024) // 50 Mb
                 .memoryCacheExtraOptions(800, 800).tasksProcessingOrder(QueueProcessingType.LIFO);
@@ -582,23 +587,6 @@ public class MainApp extends Application {
             }
         }
     }
-
-    //Goog分析
-//    private Tracker mTracker;
-//
-//    /**
-//     * Gets the default {@link Tracker} for this {@link Application}.
-//     *
-//     * @return tracker
-//     */
-//    synchronized public Tracker getDefaultTracker() {
-//        if (mTracker == null) {
-//            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-//            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-//            mTracker = analytics.newTracker(R.xml.global_tracker);
-//        }
-//        return mTracker;
-//    }
 
 
     @Override

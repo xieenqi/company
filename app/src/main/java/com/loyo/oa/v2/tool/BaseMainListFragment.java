@@ -13,7 +13,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 
 public abstract class BaseMainListFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 

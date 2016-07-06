@@ -401,41 +401,6 @@
 
                 <include layout="@layout/include_solid_line_left"/>
 
-
-                <RelativeLayout
-                    android:id="@+id/layout_purchase"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_48"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/tv_purchase_title"
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="购买意向"/>
-
-                    <TextView
-                        android:id="@+id/tv_purchase_count"
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_12"
-                        android:layout_toRightOf="@+id/tv_purchase_title"
-                        android:gravity="center"
-                        android:text="(0)"
-                        android:textColor="@color/text99"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/dimen_4"
-                        android:src="@drawable/right_arrow"/>
-                </RelativeLayout>
-
                 <RelativeLayout
                     android:id="@+id/ll_sale"
                     android:layout_width="match_parent"

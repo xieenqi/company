@@ -15,6 +15,8 @@ import com.loyo.oa.v2.service.TrackLogRecevier;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
+import com.loyo.oa.v2.activityui.other.bean.Company;
+import com.loyo.oa.v2.activityui.other.bean.User;
 
 import org.joda.time.DateTime;
 

@@ -1,14 +1,14 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
-import com.loyo.oa.v2.activity.sale.bean.SaleFild;
-import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
-import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
-import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
-import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
-import com.loyo.oa.v2.activity.sale.bean.SaleStage;
-import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
-import com.loyo.oa.v2.beans.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
+import com.loyo.oa.v2.activityui.sale.bean.SaleFild;
+import com.loyo.oa.v2.activityui.sale.bean.SaleMyList;
+import com.loyo.oa.v2.activityui.sale.bean.SaleOpportunityAdd;
+import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
+import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
+import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
+import com.loyo.oa.v2.activityui.sale.bean.SaleTeamList;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.beans.PaginationX;
 
 import java.util.ArrayList;

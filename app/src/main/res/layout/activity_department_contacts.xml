@@ -10,7 +10,7 @@
 
     <include layout="@layout/include_common_title_search"/>
 
-    <com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip
+    <com.loyo.oa.v2.customview.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="46dp"

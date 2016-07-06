@@ -1,15 +1,11 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.attendance.HttpAttendanceDetial;
-import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
-import com.loyo.oa.v2.beans.AttendanceList;
-import com.loyo.oa.v2.beans.AttendancePhoto;
-import com.loyo.oa.v2.beans.AttendanceRecord;
-import com.loyo.oa.v2.beans.ValidateInfo;
-
-import java.util.ArrayList;
+import com.loyo.oa.v2.activityui.attendance.HttpAttendanceDetial;
+import com.loyo.oa.v2.activityui.attendance.HttpAttendanceList;
+import com.loyo.oa.v2.activityui.attendance.bean.AttendanceList;
+import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import java.util.HashMap;
-
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -26,10 +22,6 @@ import retrofit.http.QueryMap;
  * 时间 : 15/9/15.
  */
 public interface IAttendance {
-
-
-    @GET("/attendance")
-    void getAttendancePhoto(Callback<ArrayList<AttendancePhoto>> callback);
 
     /**
      * 验证是否能打卡

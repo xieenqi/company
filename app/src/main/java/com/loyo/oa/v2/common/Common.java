@@ -3,12 +3,12 @@ package com.loyo.oa.v2.common;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
-import com.loyo.oa.v2.activity.project.HttpProject;
+import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.ContactsGroup;
-import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.beans.UserGroupData;
+import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
+import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.ListUtil;
@@ -403,7 +403,6 @@ public final class Common {
     }
 
     public static ArrayList<User> getListUser(String DeptId) {
-
         ArrayList<User> users = new ArrayList<>();
 
         for (UserGroupData groupData : getLstUserGroupData()) {

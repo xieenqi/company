@@ -1,5 +1,10 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
+import com.loyo.oa.v2.activityui.tasks.bean.TaskReviewComment;
+import com.loyo.oa.v2.activityui.work.bean.Reviewer;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;

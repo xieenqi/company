@@ -30,6 +30,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -192,6 +193,9 @@ public class AMapService extends Service {
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
                 " 定位信息：" + aMapLocation.getErrorInfo() + "--" + aMapLocation.getLocationDetail());
+        if (isCache) {//上传缓存的地址数据
+            uploadCacheLocation();
+        }
         if (isEmptyStr(address)) {//正常定位 没有获取到地址 就拼接一个地址
             StringBuilder addressBuilder = new StringBuilder();
             combineAddress(aMapLocation.getProvince(), addressBuilder);
@@ -211,7 +215,7 @@ public class AMapService extends Service {
             LogUtil.d("当前位置偏移量很大，直接return");
             return;
         }
-        if (Global.isConnected()) {
+        if (Global.isConnected()) {//检查是否有网络
             if (isEmptyStr(address)) {
                 aMapLocation.setAddress("未知地址");
             }
@@ -324,15 +328,12 @@ public class AMapService extends Service {
         }
         if (Global.isConnected()) {
             uploadLocation(aMapLocation);
-            if (isCache) {
-                uploadCacheLocation();
-            }
         } else {
             isCache = true;
             LocateData data = buildLocateData(aMapLocation);
             ldbManager.addLocateData(data);
         }
-//        uploadLocation(aMapLocation);
+//        uploadLocation(aMapLocation);、
     }
 
 
@@ -347,7 +348,7 @@ public class AMapService extends Service {
         final String address = location.getAddress();
 
         ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude + "," + latitude, System.currentTimeMillis() / 1000)));
-        HashMap<String, Object> jsonObject = new HashMap<>();
+        final HashMap<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("tracklogs", trackLogs);
 
         app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
@@ -364,14 +365,19 @@ public class AMapService extends Service {
 
             @Override
             public void failure(RetrofitError error) {
-                LogUtil.d(TAG + " uploadLocation,轨迹上报失败");
+//                HttpErrorCheck.checkError(error);
+                LogUtil.d(TAG + " 【 轨迹 】,轨迹上报失败");
                 LocateData data = buildLocateData(location);
                 ldbManager.addLocateData(data);
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "2|" + app.df1.format(new Date()));
                 //fixes bugly1043 空指针异常 v3.1.1 ykb 07-15
+                UMengTools.sendCustomErroInfo(getApplicationContext(), location);
                 String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
-
-                Global.ProcException(new Exception(userName + " 轨迹上报失败:" + error.getMessage()));
+                if (null != MainApp.user)
+                    Global.ProcException(new Exception(" 轨迹上【搜集】报失败:" + error.getMessage() +
+                            " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(jsonObject)
+                            + "用户：" + app.gson.toJson(MainApp.user)));
+                isCache = true;
                 super.failure(error);
             }
         });
@@ -385,14 +391,24 @@ public class AMapService extends Service {
             List<LocateData> datas = ldbManager.getAllLocateDatas();
             TrackLog[] trackLogs = buildTrackLogs(datas);
             if (null != trackLogs && trackLogs.length > 0) {
-                HashMap<String, Object> tracklogsMap = new HashMap<>();
+                final HashMap<String, Object> tracklogsMap = new HashMap<>();
                 tracklogsMap.put("tracklogs", trackLogs);
                 app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(tracklogsMap, new RCallback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("轨迹上传成功： ", response);
+                        HttpErrorCheck.checkResponse("【缓存轨迹】上传成功： ", response);
                         isCache = false;
                         ldbManager.clearAllLocateDatas();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        if (null != MainApp.user)
+                            Global.ProcException(new Exception(" 缓存》轨迹上【搜集】报失败:" + error.getMessage() +
+                                    " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(tracklogsMap)
+                                    + "用户：" + app.gson.toJson(MainApp.user)));
+
                     }
                 });
             }

@@ -4,7 +4,7 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
-    <com.loyo.oa.v2.tool.customview.SingleRowWheelView
+    <com.loyo.oa.v2.customview.SingleRowWheelView
         android:id="@+id/wheel_view_wv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

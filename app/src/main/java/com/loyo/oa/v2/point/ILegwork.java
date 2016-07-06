@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.beans.LegWork;
-import com.loyo.oa.v2.beans.PaginationLegWork;
+import com.loyo.oa.v2.activityui.signin.bean.PaginationLegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 
 import java.util.HashMap;

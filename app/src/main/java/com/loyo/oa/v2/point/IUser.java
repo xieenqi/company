@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.other.bean.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;

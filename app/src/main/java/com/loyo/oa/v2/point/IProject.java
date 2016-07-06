@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.project.ProjectAddActivity;
-import com.loyo.oa.v2.activity.project.HttpProject;
+import com.loyo.oa.v2.activityui.project.ProjectAddActivity;
+import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
@@ -35,9 +35,15 @@ public interface IProject {
     @PUT("/project/{id}")
     void Update(@Path("id") String id, @Body ProjectAddActivity.ProjectTransObj body, Callback<Project> callback);
 
+
+    //1:工作报告, 2:任务, 12:快捷审批
     @GET("/project/{id}/records/{bizType}")
-//1:工作报告, 2:任务, 12:快捷审批
     void getProjectSubs(@Path("id") String id, @Path("bizType") int bizType, @QueryMap HashMap<String, Object> map, Callback<Pagination> callback);
+
+    //1:工作报告, 2:任务, 12:快捷审批
+    @GET("/project/{id}/records/{bizType}/mobile/simplify")
+    void getProjectNewSubs(@Path("id") String id, @Path("bizType") int bizType, @QueryMap HashMap<String, Object> map, Callback<Pagination> callback);
+
 
     @POST("/project")
     void Create(@Body ProjectAddActivity.ProjectTransObj body,

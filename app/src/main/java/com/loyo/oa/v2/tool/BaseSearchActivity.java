@@ -21,25 +21,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
-import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
-import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.beans.TaskRecord;
+import com.loyo.oa.v2.beans.WfInstanceRecord;
+import com.loyo.oa.v2.beans.WorkReportRecord;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.fragment.TaskManagerFragment;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.activityui.tasks.fragment.TaskManagerFragment;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -413,69 +414,66 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             layout_discuss.setVisibility(View.GONE);
             time.setVisibility(View.VISIBLE);
             //审批
-            if (o instanceof WfInstance) {
-                WfInstance wfInstance = (WfInstance) o;
+            if (o instanceof WfInstanceRecord) {
+                WfInstanceRecord wfInstance = (WfInstanceRecord) o;
                 if (wfInstance.title != null) {
                     title.setText(wfInstance.title);
                 }
                 time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
-                if (wfInstance.creator != null) {
-                    content.setText(String.format("申请人 %s", wfInstance.creator.getRealname()));
+                if (null != wfInstance.nextExecutorName) {
+                    content.setText(String.format("申请人 %s", wfInstance.nextExecutorName));
                 }
-                //                ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
+                //ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
 
             }
             //任务
-            else if (o instanceof Task) {
-                Task task = (Task) o;
+            else if (o instanceof TaskRecord) {
+                TaskRecord task = (TaskRecord) o;
                 try {
-                    //                time.setText("任务截止时间: " + DateTool.formateServerDate(task.getCreatedAt(), app.df3));
-                    time.setText("任务截止时间: " + app.df3.format(new Date(task.getCreatedAt())));
+                    if(task.planendAt == 0){
+                        time.setText("任务截止时间: 无");
+                    }else{
+                        time.setText("任务截止时间: " + MainApp.getMainApp().df3.format(new Date(task.planendAt * 1000)) + "");
+                    }
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
-                //                ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
-                if (null != task.getResponsiblePerson() && !TextUtils.isEmpty(task.getResponsiblePerson().getRealname())) {
-                    content.setText("负责人: " + task.getResponsiblePerson().getRealname());
+                //ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
+                if (null != task.responsibleName) {
+                    content.setText("负责人: " + task.responsibleName);
                 }
-                if (!TextUtils.isEmpty(task.getTitle())) {
-                    title.setText(task.getTitle());
+                if (!TextUtils.isEmpty(task.title)) {
+                    title.setText(task.title);
                 }
 
             }
             //报告
-            else if (o instanceof WorkReport) {
-                final WorkReport workReport = (WorkReport) o;
-                if (null != workReport.reviewer && null != workReport.reviewer.user && !TextUtils.isEmpty(workReport.reviewer.user.getName())) {
-                    content.setText("点评: " + workReport.reviewer.user.getName());
+            else if (o instanceof WorkReportRecord) {
+                final WorkReportRecord workReport = (WorkReportRecord) o;
+                if (null != workReport.reviewerName) {
+                    content.setText("点评: " + workReport.reviewerName);
                 }
-                StringBuilder reportTitle = new StringBuilder(workReport.creator.name + "提交 ");
-                String reportDate = "";
+                StringBuilder reportTitle = new StringBuilder(workReport.title);
                 String reportType = "";
                 switch (workReport.type) {
                     case WorkReport.DAY:
                         reportType = " 日报";
-                        reportDate = app.df4.format(new Date(workReport.beginAt * 1000));
                         break;
                     case WorkReport.WEEK:
                         reportType = " 周报";
-                        reportDate = app.df4.format(new Date(workReport.beginAt * 1000)) + "-" + app.df4.format(new Date(workReport.endAt * 1000));
                         break;
                     case WorkReport.MONTH:
                         reportType = " 月报";
-                        reportDate = DateTool.toDateStr(workReport.beginAt * 1000, "yyyy.MM");
                         break;
                 }
-                reportTitle.append(reportDate + reportType);
+                reportTitle.append(reportType);
                 if (workReport.isDelayed) {
                     reportTitle.append(" (补签)");
                 }
-
                 title.setText(reportTitle);
-
                 String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
                 time.setText(end);
-                //                ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
+                //ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
 
             }
             //项目

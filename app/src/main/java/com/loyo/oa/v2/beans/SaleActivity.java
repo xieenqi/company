@@ -1,5 +1,8 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 

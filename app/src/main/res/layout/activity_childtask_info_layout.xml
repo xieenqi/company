@@ -8,13 +8,13 @@
 
     <include layout="@layout/include_childtask_title_layout"/>
 
-    <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+    <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
         android:id="@+id/lv_child_task"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="2dp"
         android:divider="@null">
-    </com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView>
+    </com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView>
 
 
 </LinearLayout>

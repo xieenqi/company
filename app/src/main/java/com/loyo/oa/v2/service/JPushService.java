@@ -6,15 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import com.loyo.oa.v2.activity.home.ActivityMainHome;
+
+import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.Iterator;
+
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -82,7 +86,7 @@ public class JPushService extends BroadcastReceiver {
 //                App.notiflyNews = null;
             ExitActivity.getInstance().finishAllActivity();
             Intent in = new Intent();
-            in.setClass(context, ActivityMainHome.class);
+            in.setClass(context, MainHomeActivity.class);
             in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             context.startActivity(in);
             //清除所有通知

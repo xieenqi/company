@@ -7,7 +7,6 @@ import java.io.Serializable;
 /**
  * Created by Administrator on 2014/12/18 0018.
  */
-//@Deprecated
 public class Pagination implements Serializable {
     private int pageIndex;// (int64, optional): ,//当前页
     private int pageSize;// (int64, optional): ,//当前页记录数

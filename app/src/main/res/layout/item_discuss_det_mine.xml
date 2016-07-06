@@ -65,7 +65,7 @@
     <!--android:textColor="#fff"-->
     <!--android:textSize="@dimen/text_sp16" />-->
 
-    <!--<com.loyo.oa.v2.tool.customview.RoundImageView-->
+    <!--<com.loyo.oa.v2.customview.RoundImageView-->
     <!--android:id="@+id/iv_mine_avatar"-->
     <!--android:layout_width="@dimen/dimen_40"-->
     <!--android:layout_height="@dimen/dimen_40"-->
@@ -122,7 +122,7 @@
 
         </RelativeLayout>
 
-        <com.loyo.oa.v2.tool.customview.RoundImageView
+        <com.loyo.oa.v2.customview.RoundImageView
             android:id="@+id/iv_mine_avatar"
             android:layout_width="@dimen/dimen_40"
             android:layout_height="@dimen/dimen_40"
