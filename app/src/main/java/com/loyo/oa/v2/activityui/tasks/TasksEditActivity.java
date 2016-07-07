@@ -470,11 +470,13 @@ public class TasksEditActivity extends BaseActivity {
             /*编辑负责人*/
             case R.id.layout_responsiblePerson:
                 SelectDetUserActivity2.startThisForOnly(TasksEditActivity.this, null);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
             /*编辑参与人*/
             case R.id.tv_toUsers:
                 SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
 

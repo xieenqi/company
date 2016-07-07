@@ -65,6 +65,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         Intent intent = new Intent();
         intent.setClass(mActivity, WfInTypeSelectActivity.class);
         startActivityForResult(intent, REQUEST_CREATE);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**
@@ -76,7 +77,6 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         Bundle mBundle = new Bundle();
         mBundle.putInt("from", BaseActivity.WFIN_MANAGE);
         app.startActivity(mActivity, WfinstanceSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-
     }
 
     @Override
@@ -100,6 +100,8 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         intent.putExtra(ExtraAndResult.EXTRA_ID, ((WfInstanceRecord) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
     }
 
     @Override

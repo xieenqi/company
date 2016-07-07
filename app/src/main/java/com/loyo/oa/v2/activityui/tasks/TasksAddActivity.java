@@ -299,7 +299,7 @@ public class TasksAddActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra("data", task);
                 setResult(0x09, intent);
-                finish();
+                onBackPressed();
                 if (isCopy)
                     TasksInfoActivity.instance.finish();
             }
@@ -383,11 +383,13 @@ public class TasksAddActivity extends BaseActivity {
             //负责人选项
             case R.id.layout_responsiblePerson:
                 SelectDetUserActivity2.startThisForOnly(TasksAddActivity.this, null);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
             //参与人选项
             case R.id.tv_toUsers:
                 SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
             case R.id.layout_del:

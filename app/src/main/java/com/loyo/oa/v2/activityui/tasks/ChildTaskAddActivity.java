@@ -147,7 +147,7 @@ public class ChildTaskAddActivity extends BaseActivity {
                 break;
 
             case R.id.img_title_left:
-                MainApp.getMainApp().finishActivity(this, MainApp.ENTER_TYPE_TOP, RESULT_OK, null);
+                MainApp.getMainApp().finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, null);
 
                 break;
             case R.id.img_title_right:

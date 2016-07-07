@@ -388,6 +388,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         bundle.putInt("bizType", 1);
         int status = Integer.parseInt(mWorkReport.reviewer.status);
         DiscussDetialActivity.startThisActivity(this, 1, mWorkReport.attachmentUUId, status, MSG_DISCUSSION);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**
