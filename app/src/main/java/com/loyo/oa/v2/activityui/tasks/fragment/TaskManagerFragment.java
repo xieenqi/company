@@ -65,6 +65,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<TaskRecord> 
         Intent intent = new Intent();
         intent.setClass(mActivity, TasksAddActivity_.class);
         startActivityForResult(intent, REQUEST_CREATE);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**
@@ -78,6 +79,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<TaskRecord> 
         intent.setClass(mActivity, TasksSearchActivity.class);
         intent.putExtras(mBundle);
         startActivityForResult(intent, REQUEST_REVIEW);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     @Override
@@ -86,6 +88,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<TaskRecord> 
         intent.putExtra(ExtraAndResult.EXTRA_ID, ((TaskRecord) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, TasksInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     @Override

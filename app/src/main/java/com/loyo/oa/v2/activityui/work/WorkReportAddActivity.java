@@ -511,6 +511,7 @@ public class WorkReportAddActivity extends BaseActivity {
             /*点评人*/
             case R.id.layout_reviewer:
                 SelectDetUserActivity2.startThisForOnly(WorkReportAddActivity.this, null);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
             /*抄送人*/

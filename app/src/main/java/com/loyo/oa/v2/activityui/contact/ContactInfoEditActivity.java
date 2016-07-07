@@ -206,6 +206,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 //                    intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
                 //                }
                 startActivityForResult(intent, REQUEST_IMAGE);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
             case R.id.layout_birthday:
                 pickDate();

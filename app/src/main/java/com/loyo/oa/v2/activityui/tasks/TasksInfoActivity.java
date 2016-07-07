@@ -770,7 +770,6 @@ public class TasksInfoActivity extends BaseActivity {
                             break;
                     }
                 }
-
                 startActivityForResult(intent, REQUEST_EDIT_DELETE);
                 break;
 
@@ -975,6 +974,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putInt("status", mTask.getStatus());
         bundle.putInt("bizType", 2);
         DiscussDetialActivity.startThisActivity(this, 2, mTask.getAttachmentUUId(), mTask.getStatus(), MSG_DISCUSSION);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**
