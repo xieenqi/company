@@ -14,6 +14,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
 
 /**
  * 【侧边栏】fragment
@@ -101,16 +102,28 @@ public class MenuFragment extends BaseFragment {
         ll_exit.setOnTouchListener(touch);
     }
 
+    long downTime = 0, upTime = 0;
+    int moveIndex;
     View.OnTouchListener touch = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
+            LogUtil.d(" 动作： " + event.getAction());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    downTime = System.currentTimeMillis();
                     v.setBackgroundColor(getResources().getColor(R.color.white10));
                     break;
+                case MotionEvent.ACTION_MOVE:
+                    moveIndex++;
+                    break;
                 case MotionEvent.ACTION_UP:
+                    upTime = System.currentTimeMillis();
                     v.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    onClickView(v);
+                    if ((upTime - downTime) < 90) {
+                        onClickView(v);
+                    }
+                    LogUtil.d(downTime + " 事xx件mm查 " + downTime + " xxxx " + (upTime - downTime));
                     break;
             }
             return gesture.onTouchEvent(event);//返回手势识别触发的事件
