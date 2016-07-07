@@ -26,6 +26,7 @@ import java.io.Serializable;
 
 /**
  * 圆形ImageView，可设置最多两个宽度不同且颜色不同的圆形边框。
+ * xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
  * imagecontrol:border_inside_color="#a8d4e9"
  * imagecontrol:border_outside_color="#a8d4e9"
  * imagecontrol:border_thickness="0dp"
