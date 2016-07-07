@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.home;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -12,8 +13,10 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.loyo.oa.v2.activityui.home.cusview.SlidingMenu;
 import com.loyo.oa.v2.activityui.home.fragment.HomeFragment;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
@@ -31,7 +34,6 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -54,13 +56,16 @@ public class MainHomeActivity extends SlidingFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
+        fullStatusBar(false);
         if (savedInstanceState != null) {
             String FRAGMENTS_TAG = "Android:support:fragments";
             savedInstanceState.remove(FRAGMENTS_TAG);
         }
         startService(new Intent(this, RushTokenService.class));
         onInitSlideMenu();
+        tintManager.setTintColor(Color.parseColor("#33000000"));
     }
+
 
     @Override
     protected void onStart() {
@@ -105,7 +110,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         sm.setMode(SlidingMenu.LEFT);
         setBehindContentView(R.layout.fragment_home_left_menu);
         // 控制是否slidingmenu可开有滑动手势。
-        sm.setSlidingEnabled(false);
+        sm.setSlidingEnabled(true);
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);// TOUCHMODE_NONE
         // 设置阴影宽度。
         sm.setShadowWidthRes(R.dimen.dimen_15);
@@ -116,7 +121,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 .replace(R.id.left_menu_frame, menuFragment).commit();
         // 偏移
         sm.setBehindOffsetRes(R.dimen.dimen_10);
-        sm.setBehindOffset(metric.widthPixels / 4);
+        sm.setBehindOffset(metric.widthPixels / 7);
         sm.setBehindScrollScale(0);
         // 设置多少进出slidingmenu消失
         sm.setFadeDegree(0.25f);

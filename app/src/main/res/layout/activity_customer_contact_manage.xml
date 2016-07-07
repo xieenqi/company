@@ -24,24 +24,17 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/layout_add"
         android:layout_below="@+id/contact_manage_top"
-        android:background="@color/white"
+        android:background="@color/activity_bg"
         >
 
         <LinearLayout
+            android:id="@+id/layout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/activity_bg"
-            android:orientation="vertical">
+            android:background="@color/white"
+            android:divider="@null"
+            android:orientation="vertical"/>
 
-            <LinearLayout
-                android:id="@+id/layout_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:divider="@null"
-                android:orientation="vertical"/>
-
-        </LinearLayout>
     </ScrollView>
 
     <RelativeLayout
