@@ -23,6 +23,8 @@
                 android:layout_marginBottom="@dimen/dimen_10"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:background="@drawable/sidebar_item_bj"
+                android:clickable="true"
                 android:paddingLeft="43dp">
 
                 <com.loyo.oa.v2.customview.RoundImageView
@@ -78,6 +80,8 @@
                 android:id="@+id/ll_user"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
+                android:background="@drawable/sidebar_item_bj"
+                android:clickable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >
@@ -104,6 +108,8 @@
                 android:id="@+id/ll_pwd"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
+                android:background="@drawable/sidebar_item_bj"
+                android:clickable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >
@@ -130,6 +136,8 @@
                 android:id="@+id/ll_feed_back"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
+                android:background="@drawable/sidebar_item_bj"
+                android:clickable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >
@@ -156,6 +164,8 @@
                 android:id="@+id/ll__update"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
+                android:background="@drawable/sidebar_item_bj"
+                android:clickable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >
@@ -182,6 +192,8 @@
                 android:id="@+id/ll_version"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
+                android:background="@drawable/sidebar_item_bj"
+                android:clickable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >
@@ -234,6 +246,8 @@
                 android:id="@+id/ll_exit"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
+                android:background="@drawable/sidebar_item_bj"
+                android:clickable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >

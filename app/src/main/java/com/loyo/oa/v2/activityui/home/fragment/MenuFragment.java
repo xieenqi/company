@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.home.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -19,7 +18,7 @@ import com.loyo.oa.v2.tool.BaseFragment;
 /**
  * 【侧边栏】fragment
  */
-public class MenuFragment extends BaseFragment implements View.OnClickListener, View.OnTouchListener {
+public class MenuFragment extends BaseFragment implements View.OnClickListener {
     private GestureDetector gesture; //手势识别
     private float minDistance = 120;//手势滑动最小距离
     private float minVelocity = 200;//手势滑动最小速度
@@ -105,11 +104,11 @@ public class MenuFragment extends BaseFragment implements View.OnClickListener, 
         tv_member = (TextView) view.findViewById(R.id.tv_member);
         tv_version_info = (TextView) view.findViewById(R.id.tv_version_info);
         iv_new_version = (ImageView) view.findViewById(R.id.iv_new_version);
+
 //        for (ViewGroup ele : items) {
 //            ele.setOnClickListener(this);
-//            ele.setOnTouchListener(this);
+//            ele.setOnTouchListener(this);sidebar
 //        }
-        ll_user.setOnTouchListener(this);
     }
 
     @Override
@@ -117,18 +116,6 @@ public class MenuFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                v.setBackgroundColor(Color.parseColor("#ffffff"));
-                break;
-            case MotionEvent.ACTION_UP:
-                v.setBackgroundColor(Color.parseColor("#000000"));
-                break;
-        }
-        return false;
-    }
 
     //设置手势识别监听器
     private class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
