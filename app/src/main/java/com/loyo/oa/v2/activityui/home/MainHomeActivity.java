@@ -125,6 +125,18 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         sm.setBehindScrollScale(0);
         // 设置多少进出slidingmenu消失
         sm.setFadeDegree(0.25f);
+        sm.setOnOpenListener(new SlidingMenu.OnOpenListener() {
+            @Override
+            public void onOpen() {
+                mHomeFragment.setHeadVisibility(true);
+            }
+        });
+        sm.setOnCloseListener(new SlidingMenu.OnCloseListener() {
+            @Override
+            public void onClose() {
+                mHomeFragment.setHeadVisibility(false);
+            }
+        });
     }
 
     //打开侧滑
@@ -142,19 +154,19 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
     }
 
-    public void changeFragment(int flag, int index) {
-        selectIndex = index;
-        switch (flag) {
-            case R.id.change_activity:
-                if (mHomeFragment == null) {
-                    mHomeFragment = new HomeFragment();
-                }
-                changeContent(mHomeFragment);
-                break;
-            default:
-                break;
-        }
-    }
+//    public void changeFragment(int flag, int index) {
+//        selectIndex = index;
+//        switch (flag) {
+//            case R.id.change_activity:
+//                if (mHomeFragment == null) {
+//                    mHomeFragment = new HomeFragment();
+//                }
+//                changeContent(mHomeFragment);
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 
     private void changeContent(Fragment fragment) {
         if (selectCurrentFragment != fragment) {
