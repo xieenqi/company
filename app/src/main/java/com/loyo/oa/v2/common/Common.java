@@ -386,7 +386,6 @@ public final class Common {
     }
 
     public static ArrayList<Department> getLstDepartment(String superDeptId) {
-//        LogUtil.d("state："+System.currentTimeMillis());
         ArrayList<Department> deptList = new ArrayList<>();
 
         if (TextUtils.isEmpty(superDeptId)) {
@@ -398,7 +397,6 @@ public final class Common {
                 }
             }
         }
-//        LogUtil.d("end："+System.currentTimeMillis());
         return deptList;
     }
 
@@ -426,51 +424,6 @@ public final class Common {
         return users;
     }
 
-    public static String getDeptsUsersName(String deptIds, String userIds) {
-        StringBuilder sb = null;
-
-        if (!StringUtil.isEmpty(deptIds)) {
-            String[] detps = deptIds.split(",");
-
-            for (Department d : getLstDepartment()) {
-                for (String dept : detps) {
-                    if (TextUtils.equals(dept, d.getId())) {
-                        if (sb == null) {
-                            sb = new StringBuilder();
-                            sb.append(d.getName());
-                        } else {
-                            sb.append(",").append(d.getName());
-                        }
-
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (!StringUtil.isEmpty(userIds)) {
-            String[] users = userIds.split(",");
-
-            for (UserGroupData userGroup : getLstUserGroupData()) {
-                for (User u : userGroup.getLstUser()) {
-                    for (String userId : users) {
-                        if (userId.equals(u.id)) {
-                            if (sb == null) {
-                                sb = new StringBuilder();
-                                sb.append(u.getRealname());
-                            } else {
-                                sb.append(",").append(u.getRealname());
-                            }
-
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return sb == null ? "" : sb.toString();
-    }
 
     public static User getSuper() {
         User superior = new User();
