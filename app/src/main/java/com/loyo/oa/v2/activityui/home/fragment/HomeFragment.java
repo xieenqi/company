@@ -111,6 +111,10 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         ll_network.setVisibility(available ? View.GONE : View.VISIBLE);
     }
 
+    public void setHeadVisibility(boolean hide) {
+        heading.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

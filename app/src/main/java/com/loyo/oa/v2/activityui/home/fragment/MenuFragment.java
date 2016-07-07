@@ -18,15 +18,14 @@ import com.loyo.oa.v2.tool.BaseFragment;
 /**
  * 【侧边栏】fragment
  */
-public class MenuFragment extends BaseFragment implements View.OnClickListener {
+public class MenuFragment extends BaseFragment {
     private GestureDetector gesture; //手势识别
     private float minDistance = 120;//手势滑动最小距离
     private float minVelocity = 200;//手势滑动最小速度
-    private LinearLayout ll_root, ll_user, ll_pwd, ll_feed_back, ll__update, ll_version, ll_exit;
+    private LinearLayout ll_user, ll_pwd, ll_feed_back, ll__update, ll_version, ll_exit;
     private RoundImageView riv_head;
     private TextView tv_name, tv_member, tv_version_info;
     private ImageView iv_new_version;
-    private ViewGroup[] items = {ll_root, ll_user, ll_pwd, ll_feed_back, ll__update, ll_version, ll_exit};
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,15 +43,6 @@ public class MenuFragment extends BaseFragment implements View.OnClickListener {
         );
 //        如果Fragment里面有ScrollView，而且其中还包含子控件，则需要再为ScrollView里面的子控件单独设置setOnTouchListener，
 // 设置和view一样，因为ScrollView的触碰事件会先响应，而里面的子控件的触碰事件则不会再响应了
-        ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
-        ll_root.setOnTouchListener(new View.OnTouchListener() {
-                                       @Override
-                                       public boolean onTouch(View v, MotionEvent event) {
-                                           return gesture.onTouchEvent(event);//返回手势识别触发的事件
-                                       }
-                                   }
-
-        );
         initView(view);
         return view;
     }
@@ -92,7 +82,6 @@ public class MenuFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void initView(View view) {
-        ll_root = (LinearLayout) view.findViewById(R.id.ll_root);
         ll_user = (LinearLayout) view.findViewById(R.id.ll_user);
         ll_pwd = (LinearLayout) view.findViewById(R.id.ll_pwd);
         ll_feed_back = (LinearLayout) view.findViewById(R.id.ll_feed_back);
@@ -104,15 +93,52 @@ public class MenuFragment extends BaseFragment implements View.OnClickListener {
         tv_member = (TextView) view.findViewById(R.id.tv_member);
         tv_version_info = (TextView) view.findViewById(R.id.tv_version_info);
         iv_new_version = (ImageView) view.findViewById(R.id.iv_new_version);
-
-//        for (ViewGroup ele : items) {
-//            ele.setOnClickListener(this);
-//            ele.setOnTouchListener(this);sidebar
-//        }
+        ll_user.setOnTouchListener(touch);
+        ll_pwd.setOnTouchListener(touch);
+        ll_feed_back.setOnTouchListener(touch);
+        ll__update.setOnTouchListener(touch);
+        ll_version.setOnTouchListener(touch);
+        ll_exit.setOnTouchListener(touch);
     }
 
-    @Override
-    public void onClick(View v) {
+    View.OnTouchListener touch = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.setBackgroundColor(getResources().getColor(R.color.white10));
+                    break;
+                case MotionEvent.ACTION_UP:
+                    v.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    onClickView(v);
+                    break;
+            }
+            return gesture.onTouchEvent(event);//返回手势识别触发的事件
+        }
+    };
+
+    /**
+     * 拦截触摸事件 的ACTION_UP实现点击事件
+     *
+     * @param v
+     */
+    private void onClickView(View v) {
+        switch (v.getId()) {
+            case R.id.ll_user:
+                Toast("fddnfg");
+                break;
+            case R.id.ll_pwd:
+                break;
+            case R.id.ll_feed_back:
+                break;
+            case R.id.ll__update:
+                break;
+            case R.id.ll_version:
+                break;
+            case R.id.ll_exit:
+                Toast("退出");
+                break;
+        }
 
     }
 

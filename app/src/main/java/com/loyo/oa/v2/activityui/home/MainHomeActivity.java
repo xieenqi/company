@@ -125,6 +125,18 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         sm.setBehindScrollScale(0);
         // 设置多少进出slidingmenu消失
         sm.setFadeDegree(0.25f);
+        sm.setOnOpenListener(new SlidingMenu.OnOpenListener() {
+            @Override
+            public void onOpen() {
+                mHomeFragment.setHeadVisibility(true);
+            }
+        });
+        sm.setOnCloseListener(new SlidingMenu.OnCloseListener() {
+            @Override
+            public void onClose() {
+                mHomeFragment.setHeadVisibility(false);
+            }
+        });
     }
 
     //打开侧滑
