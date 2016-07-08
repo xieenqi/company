@@ -229,6 +229,8 @@ public class BulletinAddActivity extends BaseActivity {
         if (null != data) {
             pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
             init_gridView_photo();
+        } else {
+            Toast("请重新选择");
         }
     }
 

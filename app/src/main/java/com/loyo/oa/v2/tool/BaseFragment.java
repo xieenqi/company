@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.customview.GeneralPopView;
 
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {
 
@@ -16,6 +18,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     protected Activity mActivity;
     protected OnLoadSuccessCallback callback;
     protected int mId;
+    public GeneralPopView generalPopView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,16 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         DialogHelp.cancelLoading();
     }
 
+    /**
+     * 通用提示弹出框init
+     */
+    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
+        generalPopView = new GeneralPopView(getActivity(), isKind);
+        generalPopView.show();
+        generalPopView.setMessage(message);
+        generalPopView.setCanceledOnTouchOutside(isOut);
+        return generalPopView;
+    }
 
     int mTouchViewGroupId;
 

@@ -1,5 +1,9 @@
 package com.loyo.oa.v2.activityui.home.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -11,10 +15,37 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.FeedbackActivity_;
+import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
+import com.loyo.oa.v2.activityui.login.LoginActivity;
+import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.setting.SettingPasswordActivity_;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.service.CheckUpdateService;
+import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
+import com.loyo.oa.v2.tool.Utils;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【侧边栏】fragment
@@ -27,6 +58,9 @@ public class MenuFragment extends BaseFragment {
     private RoundImageView riv_head;
     private TextView tv_name, tv_member, tv_version_info;
     private ImageView iv_new_version;
+    private Intent rushTokenIntent;
+    public static ExitAppCallback callback;
+    private Intent mIntentCheckUpdate;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,30 +134,42 @@ public class MenuFragment extends BaseFragment {
         ll__update.setOnTouchListener(touch);
         ll_version.setOnTouchListener(touch);
         ll_exit.setOnTouchListener(touch);
+        try {
+            PackageInfo pi = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            tv_version_info.setText("(当前v" + pi.versionName + ")");
+        } catch (PackageManager.NameNotFoundException e) {
+            Global.ProcException(e);
+        }
+
+        callback = new ExitAppCallback() {
+            @Override
+            public void onExit(Activity SettingActivity) {
+                exit();
+            }
+        };
+        rushTokenIntent = new Intent(getActivity(), RushTokenService.class);
     }
 
-    float downTime = 0, upTime = 0;
+    float downX = 0, upX = 0;
     int moveIndex;
     View.OnTouchListener touch = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
-            LogUtil.d(" 动作： " + event.getAction());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    downTime = event.getX();
+                    downX = event.getX();
                     v.setBackgroundColor(getResources().getColor(R.color.white10));
                     break;
                 case MotionEvent.ACTION_MOVE:
                     moveIndex++;
                     break;
                 case MotionEvent.ACTION_UP:
-                    upTime = event.getX();
+                    upX = event.getX();
                     v.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    if ((upTime - downTime) < 90) {
+                    if (Math.abs(upX - downX) < 2) {
                         onClickView(v);
                     }
-                    LogUtil.d(downTime + " 事xx件mm查 " + downTime + " xxxx " + (upTime - downTime));
+                    LogUtil.d(downX + " 事xx件mm查 " + downX + " xxxx " + (upX - downX));
                     break;
             }
             return gesture.onTouchEvent(event);//返回手势识别触发的事件
@@ -138,23 +184,124 @@ public class MenuFragment extends BaseFragment {
     private void onClickView(View v) {
         switch (v.getId()) {
             case R.id.ll_user:
-                Toast("fddnfg");
+                updateUserinfo();
                 break;
             case R.id.ll_pwd:
+                app.startActivity(getActivity(), SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.ll_feed_back:
+                app.startActivity(getActivity(), FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.ll__update:
+                if (Utils.isNetworkAvailable(getActivity())) {
+                    Global.Toast("开始更新");
+                    rushHomeData();
+                    initService();
+                } else {
+                    Toast("请检查您的网络连接");
+                }
+                LogUtil.d("是否有新颁布"+app.hasNewVersion);
                 break;
             case R.id.ll_version:
+                if (PackageManager.PERMISSION_GRANTED ==
+                        getActivity().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
+                    mIntentCheckUpdate = new Intent(getActivity(), CheckUpdateService.class);
+                    mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
+                    getActivity().startService(mIntentCheckUpdate);
+                } else {
+                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    generalPopView.setSureOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+                            Utils.doSeting(getActivity());
+                        }
+                    });
+                    generalPopView.setCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+                        }
+                    });
+                }
                 break;
             case R.id.ll_exit:
-                Toast("退出");
+                exit();
                 break;
         }
 
     }
 
+    /**
+     * 获取个人资料
+     */
+    void updateUserinfo() {
+        showLoading("");
+        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
+            @Override
+            public void success(final User user, final Response response) {
+                HttpErrorCheck.checkResponse("获取个人资料修改", response);
+                String json = MainApp.gson.toJson(user);
+                MainApp.user = user;
+                DBManager.Instance().putUser(json);
+                Bundle b = new Bundle();
+                b.putSerializable("user", MainApp.user);
+                app.startActivity(getActivity(), ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    /**
+     * 更新 组织架构
+     */
+    void initService() {
+        InitDataService_.intent(getActivity()).start();
+    }
+
+    /**
+     * 刷新token 防止token过期
+     */
+    void rushHomeData() {
+        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
+            @Override
+            public void success(final User user, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (app.hasNewVersion) {
+            iv_new_version.setVisibility(View.VISIBLE);
+        }
+        LogUtil.d("是否有新颁布"+app.hasNewVersion);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mIntentCheckUpdate != null) {
+            try {
+                getActivity().stopService(mIntentCheckUpdate);
+            } catch (Exception ex) {
+                Global.ProcException(ex);
+            }
+        }
+    }
 
     //设置手势识别监听器
     private class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -165,6 +312,7 @@ public class MenuFragment extends BaseFragment {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            LogUtil.d("滑动速度：" + velocityX);
             if ((e1.getX() - e2.getX() > minDistance) && Math.abs(velocityX) > minVelocity) {
                 close();
                 return true;
@@ -176,5 +324,29 @@ public class MenuFragment extends BaseFragment {
         }
     }
 
+    public interface ExitAppCallback {
+        void onExit(Activity SettingActivity);
+    }
 
+    void exit() {
+        //清楚token与用户资料
+        MainApp.setToken(null);
+        MainApp.user = null;
+        getActivity().stopService(rushTokenIntent);
+        RushTokenService.cancelJc();
+
+        //清楚本地登录状态
+        SharedUtil.clearInfo(getActivity());
+        JPushInterface.stopPush(app);
+        Set<String> complanTag = new HashSet<>();
+        JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), "", complanTag, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                LogUtil.d("激光推送已经成功停止（注销）状态" + i);
+                //设置别名 为空
+            }
+        });
+        ExitActivity.getInstance().finishAllActivity();
+        app.startActivity(getActivity(), LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
+    }
 }
