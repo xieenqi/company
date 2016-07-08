@@ -35,6 +35,9 @@ public class ExtraAndResult {
 
     public static final String IS_TEAM = "is_team";
 
+    public static final String IS_ORGANIZATION_UPDATE = "is_organization_update";//组织架构是否更新
+    public static final String APP_START = "app_start";
+
     public static final int TYPE_SELECT_SINGLE = 1;
     public static final int TYPE_SELECT_MULTUI = 0;
     public static final int TYPE_SELECT_EDT = 2;

@@ -22,6 +22,7 @@ import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.setting.SettingPasswordActivity_;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -151,7 +152,6 @@ public class MenuFragment extends BaseFragment {
     }
 
     float downX = 0, upX = 0;
-    int moveIndex;
     View.OnTouchListener touch = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -161,7 +161,6 @@ public class MenuFragment extends BaseFragment {
                     v.setBackgroundColor(getResources().getColor(R.color.white10));
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    moveIndex++;
                     break;
                 case MotionEvent.ACTION_UP:
                     upX = event.getX();
@@ -193,6 +192,8 @@ public class MenuFragment extends BaseFragment {
                 app.startActivity(getActivity(), FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.ll__update:
+                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, "all");
+                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
                 if (Utils.isNetworkAvailable(getActivity())) {
                     Global.Toast("开始更新");
                     rushHomeData();
@@ -200,7 +201,7 @@ public class MenuFragment extends BaseFragment {
                 } else {
                     Toast("请检查您的网络连接");
                 }
-                LogUtil.d("是否有新颁布"+app.hasNewVersion);
+                LogUtil.d("是否有新颁布" + app.hasNewVersion);
                 break;
             case R.id.ll_version:
                 if (PackageManager.PERMISSION_GRANTED ==
@@ -288,7 +289,7 @@ public class MenuFragment extends BaseFragment {
         if (app.hasNewVersion) {
             iv_new_version.setVisibility(View.VISIBLE);
         }
-        LogUtil.d("是否有新颁布"+app.hasNewVersion);
+        LogUtil.d("是否有新颁布" + app.hasNewVersion);
     }
 
     @Override
