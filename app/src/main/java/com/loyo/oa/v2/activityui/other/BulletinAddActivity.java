@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -29,14 +30,17 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.customview.CusGridView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -151,7 +155,7 @@ public class BulletinAddActivity extends BaseActivity {
                                         new RCallback<Attachment>() {
                                             @Override
                                             public void success(final Attachment attachments, final Response response) {
-                                                if(attachments != null){
+                                                if (attachments != null) {
                                                     mAttachment.add(attachments);
                                                 }
                                                 uploadSize++;
@@ -222,8 +226,10 @@ public class BulletinAddActivity extends BaseActivity {
 
     @OnActivityResult(SelectPicPopupWindow.GET_IMG)
     void onPhotoResult(final Intent data) {
-        pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
-        init_gridView_photo();
+        if (null != data) {
+            pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
+            init_gridView_photo();
+        }
     }
 
 

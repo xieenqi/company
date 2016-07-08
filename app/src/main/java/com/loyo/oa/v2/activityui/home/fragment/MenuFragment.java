@@ -102,7 +102,7 @@ public class MenuFragment extends BaseFragment {
         ll_exit.setOnTouchListener(touch);
     }
 
-    long downTime = 0, upTime = 0;
+    float downTime = 0, upTime = 0;
     int moveIndex;
     View.OnTouchListener touch = new View.OnTouchListener() {
         @Override
@@ -111,14 +111,14 @@ public class MenuFragment extends BaseFragment {
             LogUtil.d(" 动作： " + event.getAction());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    downTime = System.currentTimeMillis();
+                    downTime = event.getX();
                     v.setBackgroundColor(getResources().getColor(R.color.white10));
                     break;
                 case MotionEvent.ACTION_MOVE:
                     moveIndex++;
                     break;
                 case MotionEvent.ACTION_UP:
-                    upTime = System.currentTimeMillis();
+                    upTime = event.getX();
                     v.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     if ((upTime - downTime) < 90) {
                         onClickView(v);

@@ -207,7 +207,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 showMoreWindow(v);
             }
         });
-        if (null != MainApp.user && null != MainApp.user.avatar) {
+        if (null != MainApp.user && null != MainApp.user.avatar && null != heading) {
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }
     }
