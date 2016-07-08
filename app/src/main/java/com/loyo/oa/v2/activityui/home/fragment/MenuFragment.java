@@ -1,10 +1,14 @@
 package com.loyo.oa.v2.activityui.home.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -39,6 +43,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -63,6 +68,28 @@ public class MenuFragment extends BaseFragment {
     public static ExitAppCallback callback;
     private Intent mIntentCheckUpdate;
 
+    //个人信息 和版本信息
+    private BroadcastReceiver userInfoAndVersionInfo = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String info = intent.getStringExtra(ExtraAndResult.EXTRA_DATA);
+            if ("version".equals(info)) {
+                if (app.hasNewVersion) {
+                    iv_new_version.setVisibility(View.VISIBLE);
+                }
+            } else if ("user".equals(info)) {
+                User user = MainApp.user;
+                if (null != user) {
+                    if (null != user.avatar && null != riv_head) {
+                        ImageLoader.getInstance().displayImage(MainApp.user.avatar, riv_head);
+                    }
+                    tv_name.setText(user.getRealname());
+                    tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
+                }
+            }
+        }
+    };
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_home_menu, container,
@@ -79,6 +106,9 @@ public class MenuFragment extends BaseFragment {
         );
 //        如果Fragment里面有ScrollView，而且其中还包含子控件，则需要再为ScrollView里面的子控件单独设置setOnTouchListener，
 // 设置和view一样，因为ScrollView的触碰事件会先响应，而里面的子控件的触碰事件则不会再响应了
+
+        //注册拉去组织架构的广播
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(userInfoAndVersionInfo, new IntentFilter(ExtraAndResult.ACTION_USER_VERSION));
         initView(view);
         return view;
     }
@@ -286,10 +316,7 @@ public class MenuFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (app.hasNewVersion) {
-            iv_new_version.setVisibility(View.VISIBLE);
-        }
-        LogUtil.d("是否有新颁布" + app.hasNewVersion);
+
     }
 
     @Override
@@ -302,6 +329,7 @@ public class MenuFragment extends BaseFragment {
                 Global.ProcException(ex);
             }
         }
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(userInfoAndVersionInfo);
     }
 
     //设置手势识别监听器
