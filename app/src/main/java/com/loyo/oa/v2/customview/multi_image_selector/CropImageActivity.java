@@ -13,6 +13,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.multi_image_selector.crop.ClipSquareImageView;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -57,12 +58,13 @@ public class CropImageActivity extends BaseActivity {
         try {//先压缩图片一次
             clipSquareIV.setBackgroundColor(getResources().getColor(R.color.black30));
             Bitmap reBitmap = BitmapFactory.decodeFile(imgPath);
+            Bitmap  newBitmap= BitmapUtil.compressImage(reBitmap);
             LogUtil.d("压缩 前 大小：" + reBitmap.getByteCount());
-            Utils.writeImage(reBitmap, imgPath, 20);
+//            Utils.writeImage(reBitmap, imgPath, 20);
             clipSquareIV.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            LogUtil.d("压缩后大小：" + reBitmap.getByteCount());
+            LogUtil.d("压缩后大小：" + newBitmap.getByteCount());
 
-            clipSquareIV.setImageBitmap(reBitmap);
+            clipSquareIV.setImageBitmap(newBitmap);
 //       ImageLoader.getInstance().displayImage("file://"+imgPath,clipSquareIV);
         } catch (OutOfMemoryError e) {
             e.printStackTrace();
