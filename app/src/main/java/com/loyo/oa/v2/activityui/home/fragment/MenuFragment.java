@@ -195,7 +195,7 @@ public class MenuFragment extends BaseFragment {
                 case MotionEvent.ACTION_UP:
                     upX = event.getX();
                     v.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    if (Math.abs(upX - downX) < 2) {
+                    if (Math.abs(upX - downX) < 50) {
                         onClickView(v);
                     }
                     LogUtil.d(downX + " 事xx件mm查 " + downX + " xxxx " + (upX - downX));
