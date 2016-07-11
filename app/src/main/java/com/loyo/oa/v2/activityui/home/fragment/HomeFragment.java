@@ -65,12 +65,12 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         title.get(0).setOnClickListener(new MyOnClickListener(0));// 设置响应
         title.get(1).setOnClickListener(new MyOnClickListener(1));
 
-//        heading.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                MainApp.getMainApp().startActivity(getActivity(), SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-//            }
-//        });
+        heading.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainHomeActivity) getActivity()).showMenu();
+            }
+        });
     }
 
     /**
