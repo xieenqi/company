@@ -400,6 +400,9 @@ public class ContactsDepartmentFragment extends BaseFragment {
          * 获取全公司与部门平级的人员
          * */
         ArrayList<Department> allDepet = Common.getLstDepartment();
+        if (!(allDepet.size() > 0)) {
+            return;
+        }
         Department commy = allDepet.get(0);
         for (User users : commy.getUsers()) {
             commyUsers.add(users);

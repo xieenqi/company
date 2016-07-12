@@ -133,18 +133,22 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 //新建任务
                 case BaseActivity.TASKS_ADD:
                     startActivityForResult(new Intent(getActivity(), TasksAddActivity_.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //申请审批
                 case BaseActivity.WFIN_ADD:
                     startActivityForResult(new Intent(getActivity(), WfInTypeSelectActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //提交报告
                 case BaseActivity.WORK_ADD:
                     startActivityForResult(new Intent(getActivity(), WorkReportAddActivity_.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //新建客户
                 case BaseActivity.TASKS_ADD_CUSTOMER:
                     startActivityForResult(new Intent(getActivity(), CustomerAddActivity_.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //考勤打卡
                 case BaseActivity.ATTENT_ADD:
@@ -153,14 +157,17 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 //拜访签到
                 case BaseActivity.SIGNIN_ADD:
                     startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //新建机会
                 case BaseActivity.SALE_ADD:
                     startActivityForResult(new Intent(getActivity(), AddMySaleActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //写跟进
                 case BaseActivity.FOLLOW_ADD:
                     startActivityForResult(new Intent(getActivity(), SaleActivitiesAddActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
             }
         }
@@ -339,6 +346,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     Toast.makeText(getActivity(), "您今天已经打卡完毕", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity(), AttendanceActivity_.class);
                     startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }
             }
 
