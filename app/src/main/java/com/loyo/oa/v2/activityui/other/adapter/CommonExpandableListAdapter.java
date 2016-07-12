@@ -166,7 +166,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 } else {
                     isOk = false;
                     textColor = R.color.tasklist_gray;
-                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(), "yyyy.MM.dd HH:mm"));
+                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"));
                     if (nowTime > task.planendAt && task.status == Task.STATUS_PROCESSING) {
                         timeOut.setVisibility(View.VISIBLE);
                     } else {

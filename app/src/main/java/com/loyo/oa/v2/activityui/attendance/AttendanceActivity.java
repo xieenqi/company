@@ -74,8 +74,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
         setTouchView(-1);
         tv_title_1.setText("我的考勤");
         img_title_left.setOnTouchListener(Global.GetTouch());
-//        findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
-//        findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
 
         //超级管理员判断
         if(!MainApp.user.isSuperUser()){
@@ -160,7 +158,7 @@ public class AttendanceActivity extends BaseFragmentActivity {
         RotateAnimation rotateAnimation = new RotateAnimation(ROTATE_START, ROTATE_END, Animation.RELATIVE_TO_SELF, ROTATE_PIVOT_X,// X轴
                 Animation.RELATIVE_TO_SELF, ROTATE_PIVOT_Y);// y轴
         rotateAnimation.setDuration(ROTATE_TIME);
-        rotateAnimation.setFillAfter(true);             //保留在终止位置
+        rotateAnimation.setFillAfter(true);               //保留在终止位置
         rotateAnimation.setFillEnabled(true);
         rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 
@@ -186,7 +184,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-
                 changeCategoryView();
                 String content = ATTENDANCE_FILTER_STRS[position];
                 tv_title_1.setText(content);

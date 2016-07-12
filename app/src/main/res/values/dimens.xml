@@ -33,6 +33,7 @@
     <dimen name="text_sp12">12sp</dimen>
     <dimen name="text_sp11">11sp</dimen>
     <dimen name="text_sp10">10sp</dimen>
+    <dimen name="text_sp8">8sp</dimen>
 
 
     <!--新版标注-->
