@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
@@ -30,11 +29,9 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -55,6 +52,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     private StringBuffer loseReasonBuffer;
     private String stageId;
     private String stageName;
+    private String fromPath;
     private ArrayList<CommonTag> loseResons;
 
     private LinearLayout ll_product;
@@ -155,14 +153,14 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         mIntent = getIntent();
         selectId = mIntent.getStringExtra("id");
         isTeam = mIntent.getBooleanExtra(ExtraAndResult.IS_TEAM, false);
-        String fromPath = mIntent.getStringExtra("formPath");
-        if (!TextUtils.isEmpty(fromPath) && fromPath.equals("审批")) {
+        fromPath = mIntent.getStringExtra("formPath");
+        /*        if (!TextUtils.isEmpty(fromPath) && fromPath.equals("审批")) {
             //审批过来不准编辑
             iv_wfstatus.setEnabled(false);
             img_title_right.setVisibility(View.INVISIBLE);
             ll_product.setEnabled(false);
             ll_stage.setEnabled(false);
-        }
+        }*/
     }
 
     /**
@@ -231,6 +229,14 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             ll_stage.setEnabled(false);
             ll_product.setEnabled(false);
         }
+        //已通过的审批 任何人都不能删除
+        if(mSaleDetails.wfState == 0 && mSaleDetails.prob == 100){
+            iv_wfstatus.setEnabled(false);
+            img_title_right.setVisibility(View.INVISIBLE);
+            ll_product.setEnabled(false);
+            ll_stage.setEnabled(false);
+        }
+
         if (MainApp.user.isSuperUser)
             isEdit = false;
         title.setText(mSaleDetails.getName());

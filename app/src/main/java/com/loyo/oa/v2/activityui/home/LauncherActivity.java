@@ -51,6 +51,7 @@ public class LauncherActivity extends Activity {
 
             }
         });
+        SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START,"open");
     }
 
     /**

@@ -35,6 +35,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     private int mTouchViewGroupId = -1;
     public GeneralPopView generalPopView;
     final String Tag = "BaseFragmentActivity";
+    public SystemBarTintManager tintManager;
 
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -85,13 +86,33 @@ public class BaseFragmentActivity extends FragmentActivity {
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         ExitActivity.getInstance().addActivity(this);
         // 创建状态栏的管理实例
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager = new SystemBarTintManager(this);
         // 激活状态栏设置
         tintManager.setStatusBarTintEnabled(true);
         // 激活导航栏设置
         tintManager.setNavigationBarTintEnabled(true);
         // 设置一个颜色给系统栏
         tintManager.setTintColor(Color.parseColor("#2c9dfc"));
+    }
+
+    /**
+     * 状态栏是否浮现在activity之上
+     * true否 false 是
+     *
+     * @param enable
+     */
+    public void fullStatusBar(boolean enable) {
+        if (enable) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+            getWindow().setAttributes(lp);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        } else {
+            WindowManager.LayoutParams attr = getWindow().getAttributes();
+            attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setAttributes(attr);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
     }
 
     @Override

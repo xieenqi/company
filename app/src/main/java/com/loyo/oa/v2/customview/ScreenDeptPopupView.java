@@ -147,21 +147,19 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
             Common.getAllUsersByDeptId(depementData.get(position).getId(), deptAllUser);
         for (int i = 0; i < deptAllUser.size(); i++) {
             saleTeamScreen = new SaleTeamScreen();
-            //第一条数据为全体人员
-            if (i == 0) {
-                saleTeamScreen.setName("全部人员");
-                saleTeamScreen.setId(depementData.get(position).getId());
-                if (fromPage == CUSTOMER) {
-                    saleTeamScreen.setxPath(depementData.get(position).getId());
-                } else {
-                    saleTeamScreen.setxPath(depementData.get(position).getxPath());
-                }
-            } else {
-                saleTeamScreen.setName(deptAllUser.get(i).getRealname());
-                saleTeamScreen.setId(deptAllUser.get(i).getId());
-            }
+            saleTeamScreen.setName(deptAllUser.get(i).getRealname());
+            saleTeamScreen.setId(deptAllUser.get(i).getId());
             userData.add(saleTeamScreen);
         }
+        saleTeamScreen = new SaleTeamScreen();
+        saleTeamScreen.setName("全部人员");
+        saleTeamScreen.setId(depementData.get(position).getId());
+        if (fromPage == CUSTOMER) {
+            saleTeamScreen.setxPath(depementData.get(position).getId());
+        } else {
+            saleTeamScreen.setxPath(depementData.get(position).getxPath());
+        }
+        userData.add(0,saleTeamScreen);
     }
 
     /*暂时弃用*/

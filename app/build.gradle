@@ -20,18 +20,18 @@ android {
     }
     signingConfigs {
         debug {
-          storeFile file('D:\\android\\key\\loyo_share.keystore')
-//          storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
+            storeFile file('D:\\android\\key\\loyo_share.keystore')
+//            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-          storeFile file('D:\\android\\key\\loyo_share.keystore')
-         // keyPassword 'Loyo2012'
+            storeFile file('D:\\android\\key\\loyo_share.keystore')
+            // keyPassword 'Loyo2012'
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
-//          storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
+//            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
@@ -44,7 +44,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 2016070501
-        versionName '1.3.2'
+        versionName '1.3.2t'
     }
 
     buildTypes {
@@ -84,6 +84,7 @@ android {
         }
     }
 
+
 /*    productFlavors {
         ukuaiqi {}
         应用宝 {}
@@ -91,6 +92,7 @@ android {
             flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
         }
     }*/
+
 
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')

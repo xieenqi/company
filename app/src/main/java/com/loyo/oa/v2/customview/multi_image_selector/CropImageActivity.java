@@ -5,14 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.multi_image_selector.crop.ClipSquareImageView;
+import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BitmapUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -52,8 +54,12 @@ public class CropImageActivity extends BaseActivity {
 
         tv_edit.setOnTouchListener(Global.GetTouch());
         layout_back.setOnTouchListener(Global.GetTouch());
-        try {
-            clipSquareIV.setImageBitmap(BitmapFactory.decodeFile(imgPath));
+        try {//先压缩图片一次
+            clipSquareIV.setBackgroundColor(getResources().getColor(R.color.black30));
+            Bitmap reBitmap = BitmapFactory.decodeFile(imgPath);
+            Bitmap newBitmap = BitmapUtil.comp(reBitmap);
+            clipSquareIV.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            clipSquareIV.setImageBitmap(newBitmap);
 //       ImageLoader.getInstance().displayImage("file://"+imgPath,clipSquareIV);
         } catch (OutOfMemoryError e) {
             e.printStackTrace();
@@ -70,16 +76,22 @@ public class CropImageActivity extends BaseActivity {
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_back:
-                app.finishActivity(this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
+                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
             case R.id.tv_edit:
+                showLoading("裁剪中");
                 Bitmap bitmap = clipSquareIV.clip();
+                if (null == bitmap) {
+                    cancelLoading();
+                    return;
+                }
                 int index = imgPath.lastIndexOf("/");
                 String name = imgPath.substring(index + 1);
                 imgPath = imgPath.replace(name, "temp_" + name);
                 Utils.writeImage(bitmap, imgPath, 50); //不压缩就填100 压缩率是(100-参数)%
                 Intent intent = new Intent();
                 intent.putExtra("imgPath", imgPath);
+                cancelLoading();
                 app.finishActivity(this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
                 break;
         }

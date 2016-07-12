@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
@@ -240,10 +241,22 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     }
 
     public void wersi() {
-        if (MainApp.user.isSuperUser()) {
+        //为超管或权限为全公司 展示全公司成员
+        if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
             setUser(mDeptSource);
-        } else {
+        }
+        //权限为部门 展示我的部门
+        else if(MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD){
             deptSort();
+        }
+        //权限为个人 展示自己
+        else if(MainApp.user.role.getDataRange() == Role.SELF){
+            data.clear();
+            saleTeamScreen = new SaleTeamScreen();
+            saleTeamScreen.setId(MainApp.user.getId());
+            saleTeamScreen.setName(MainApp.user.name);
+            saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
+            data.add(saleTeamScreen);
         }
     }
 

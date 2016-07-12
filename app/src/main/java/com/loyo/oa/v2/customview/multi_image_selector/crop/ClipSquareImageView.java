@@ -18,6 +18,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import com.loyo.oa.v2.common.Global;
+
 /**
  * Created by H3c on 12/13/14.
  */
@@ -66,7 +68,7 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
 
     @Override
     public void onGlobalLayout() {
-        if(isIniting) {
+        if (isIniting) {
             return;
         }
         // 调整视图位置
@@ -81,7 +83,7 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
         super.setScaleType(ScaleType.MATRIX);
         Drawable drawable = getDrawable();
 
-        if(drawable == null) {
+        if (drawable == null) {
             return;
         }
 
@@ -89,7 +91,7 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
         final float viewHeight = getHeight();
         final int drawableWidth = drawable.getIntrinsicWidth();
         final int drawableHeight = drawable.getIntrinsicHeight();
-        if(viewWidth < viewHeight) {
+        if (viewWidth < viewHeight) {
             borderlength = (int) (viewWidth - 2 * BORDERDISTANCE);
         } else {
             borderlength = (int) (viewHeight - 2 * BORDERDISTANCE);
@@ -97,7 +99,7 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
 
         float screenScale = 1f;
         // 小于屏幕的图片会被撑满屏幕
-        if(drawableWidth <= drawableHeight) {// 竖图片
+        if (drawableWidth <= drawableHeight) {// 竖图片
             screenScale = (float) borderlength / drawableWidth;
         } else {// 横图片
             screenScale = (float) borderlength / drawableHeight;
@@ -105,16 +107,16 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
 
         defaultMatrix.setScale(screenScale, screenScale);
 
-        if(drawableWidth <= drawableHeight) {// 竖图片
+        if (drawableWidth <= drawableHeight) {// 竖图片
             float heightOffset = (viewHeight - drawableHeight * screenScale) / 2.0f;
-            if(viewWidth <= viewHeight) {// 竖照片竖屏幕
+            if (viewWidth <= viewHeight) {// 竖照片竖屏幕
                 defaultMatrix.postTranslate(BORDERDISTANCE, heightOffset);
             } else {// 竖照片横屏幕
                 defaultMatrix.postTranslate((viewWidth - borderlength) / 2.0f, heightOffset);
             }
         } else {
             float widthOffset = (viewWidth - drawableWidth * screenScale) / 2.0f;
-            if(viewWidth <= viewHeight) {// 横照片，竖屏幕
+            if (viewWidth <= viewHeight) {// 横照片，竖屏幕
                 defaultMatrix.postTranslate(widthOffset, (viewHeight - borderlength) / 2.0f);
             } else {// 横照片，横屏幕
                 defaultMatrix.postTranslate(widthOffset, BORDERDISTANCE);
@@ -128,7 +130,7 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
      * Resets the Matrix back to FIT_CENTER, and then displays it.s
      */
     private void resetMatrix() {
-        if(dragMatrix == null) {
+        if (dragMatrix == null) {
             return;
         }
 
@@ -174,11 +176,11 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
         public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
             float scale = getScale();
             float scaleFactor = scaleGestureDetector.getScaleFactor();
-            if(getDrawable() != null && ((scale < maxScale && scaleFactor > 1.0f) || (scale > minScale && scaleFactor < 1.0f))){
-                if(scaleFactor * scale < minScale){
+            if (getDrawable() != null && ((scale < maxScale && scaleFactor > 1.0f) || (scale > minScale && scaleFactor < 1.0f))) {
+                if (scaleFactor * scale < minScale) {
                     scaleFactor = minScale / scale;
                 }
-                if(scaleFactor * scale > maxScale){
+                if (scaleFactor * scale > maxScale) {
                     scaleFactor = maxScale / scale;
                 }
                 dragMatrix.postScale(scaleFactor, scaleFactor, getWidth() / 2, getHeight() / 2);
@@ -193,7 +195,8 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
         }
 
         @Override
-        public void onScaleEnd(ScaleGestureDetector scaleGestureDetector) {}
+        public void onScaleEnd(ScaleGestureDetector scaleGestureDetector) {
+        }
 
         public boolean onTouchEvent(MotionEvent event) {
             if (gestureDetector.onTouchEvent(event)) {
@@ -383,16 +386,16 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
         // 判断移动或缩放后，图片显示是否超出裁剪框边界
         final float heightBorder = (viewHeight - borderlength) / 2;
         final float weightBorder = (viewWidth - borderlength) / 2;
-        if(rect.top > heightBorder){
+        if (rect.top > heightBorder) {
             deltaY = heightBorder - rect.top;
         }
-        if(rect.bottom < (viewHeight - heightBorder)){
+        if (rect.bottom < (viewHeight - heightBorder)) {
             deltaY = viewHeight - heightBorder - rect.bottom;
         }
-        if(rect.left > weightBorder){
+        if (rect.left > weightBorder) {
             deltaX = weightBorder - rect.left;
         }
-        if(rect.right < viewWidth - weightBorder){
+        if (rect.right < viewWidth - weightBorder) {
             deltaX = viewWidth - weightBorder - rect.right;
         }
         // Finally actually translate the matrix
@@ -404,8 +407,7 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
     /**
      * 获取图片相对Matrix的距离
      *
-     * @param matrix
-     *            - Matrix to map Drawable against
+     * @param matrix - Matrix to map Drawable against
      * @return RectF - Displayed Rectangle
      */
     private RectF getDisplayRect(Matrix matrix) {
@@ -415,7 +417,6 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
             matrix.mapRect(displayRect);
             return displayRect;
         }
-
         return null;
     }
 
@@ -424,10 +425,17 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
      *
      * @return
      */
-    public Bitmap clip(){
+    public Bitmap clip() {
         Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         draw(canvas);
-        return Bitmap.createBitmap(bitmap, (getWidth() - borderlength) / 2, (getHeight() - borderlength) / 2, borderlength, borderlength);
+        Bitmap newBitmap = null;
+        try {
+            newBitmap = Bitmap.createBitmap(bitmap, (getWidth() - borderlength) / 2, (getHeight() - borderlength) / 2, borderlength, borderlength);
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            Global.Toast("图片太大");
+        }
+        return newBitmap;
     }
 }

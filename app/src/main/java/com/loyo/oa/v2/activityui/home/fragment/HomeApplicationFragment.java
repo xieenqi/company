@@ -31,6 +31,7 @@ import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -115,6 +116,11 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     listView.onRefreshComplete();
                 }
                 launch();
+                //更新侧边栏信息
+                Intent in = new Intent();
+                in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+                in.putExtra(ExtraAndResult.EXTRA_DATA, "user");
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(in);
             }
         }
     };
@@ -127,18 +133,22 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 //新建任务
                 case BaseActivity.TASKS_ADD:
                     startActivityForResult(new Intent(getActivity(), TasksAddActivity_.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //申请审批
                 case BaseActivity.WFIN_ADD:
                     startActivityForResult(new Intent(getActivity(), WfInTypeSelectActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //提交报告
                 case BaseActivity.WORK_ADD:
                     startActivityForResult(new Intent(getActivity(), WorkReportAddActivity_.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //新建客户
                 case BaseActivity.TASKS_ADD_CUSTOMER:
                     startActivityForResult(new Intent(getActivity(), CustomerAddActivity_.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //考勤打卡
                 case BaseActivity.ATTENT_ADD:
@@ -147,14 +157,17 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 //拜访签到
                 case BaseActivity.SIGNIN_ADD:
                     startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //新建机会
                 case BaseActivity.SALE_ADD:
                     startActivityForResult(new Intent(getActivity(), AddMySaleActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //写跟进
                 case BaseActivity.FOLLOW_ADD:
                     startActivityForResult(new Intent(getActivity(), SaleActivitiesAddActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
             }
         }
@@ -207,7 +220,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 showMoreWindow(v);
             }
         });
-        if (null != MainApp.user && null != MainApp.user.avatar) {
+        if (null != MainApp.user && null != MainApp.user.avatar && null != heading) {
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }
     }
@@ -333,6 +346,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     Toast.makeText(getActivity(), "您今天已经打卡完毕", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity(), AttendanceActivity_.class);
                     startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }
             }
 

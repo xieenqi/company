@@ -73,7 +73,6 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
             layout_add.setVisibility(View.GONE);
         }
         layout_add.setOnTouchListener(Global.GetTouch());
-        getData();
 
         //超级管理员\权限判断
         if (!MainApp.user.isSuperUser()) {
@@ -84,6 +83,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
                 Toast("发布公告权限,code错误:0402");
             }
         }
+        getData();
     }
 
     @Override
@@ -143,6 +143,10 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
      * 获取列表
      */
     private void getData() {
+        if (null == mCustomer) {
+            Toast("参数不完整");
+            onBackPressed();
+        }
         HashMap<String, Object> map = new HashMap<>();
         //        map.put("userId", 0);
         map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);

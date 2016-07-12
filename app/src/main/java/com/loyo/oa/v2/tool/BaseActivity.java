@@ -367,7 +367,11 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
      * 加载loading的方法
      */
     public void showLoading(String msg) {
-        DialogHelp.showLoading(this, msg, true);
+        try {
+            DialogHelp.showLoading(this, msg, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void showLoading(String msg, boolean Cancelable) {

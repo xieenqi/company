@@ -76,7 +76,6 @@ public class ContactInfoActivity extends BaseActivity {
     private StringBuffer myDeptName;
     private int defaultAvatar;
 
-
     @AfterViews
     void initViews() {
         layout_call.setOnTouchListener(Global.GetTouch());
@@ -99,7 +98,7 @@ public class ContactInfoActivity extends BaseActivity {
             case R.id.tv_edit:
                 Bundle b = new Bundle();
                 b.putSerializable("user", user);
-                app.startActivityForResult(this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_BUTTOM, ExtraAndResult.REQUEST_CODE, b);
+                app.startActivityForResult(this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, b);
                 break;
             case R.id.layout_call:
                 call();
@@ -108,7 +107,6 @@ public class ContactInfoActivity extends BaseActivity {
                 sendSms();
                 break;
             default:
-
                 break;
         }
     }
@@ -117,7 +115,6 @@ public class ContactInfoActivity extends BaseActivity {
      * 更新登录用户资料
      */
     void getUserInfo() {
-
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
             public void success(final User users, final Response response) {

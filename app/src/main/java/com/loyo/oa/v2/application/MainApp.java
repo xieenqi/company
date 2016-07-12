@@ -245,6 +245,14 @@ public class MainApp extends Application {
             Global.ProcDebugException(ex);
             ex.printStackTrace();
         }
+        setOriginData();
+    }
+
+    /**
+     * 设置缓存的组织架构数据
+     */
+    void setOriginData() {
+        lstDepartment = DBManager.Instance().getOrganization();
     }
 
     void init_DisplayImageOptions() {
@@ -284,8 +292,8 @@ public class MainApp extends Application {
                 defaultDisplayImageOptions(defaultOptions).threadPriority(Thread.NORM_PRIORITY - 2).
                 denyCacheImageMultipleSizesInMemory().diskCacheFileNameGenerator(new Md5FileNameGenerator())
                 .discCache(new UnlimitedDiscCache(cacheDir))//自定义缓存路径
-                //.discCache(new UnlimitedDiscCache(new File("CRMcacheDir")))
-                // .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+                        //.discCache(new UnlimitedDiscCache(new File("CRMcacheDir")))
+                        // .diskCacheSize(50 * 1024 * 1024) // 50 Mb
                 .memoryCacheExtraOptions(800, 800).tasksProcessingOrder(QueueProcessingType.LIFO);
 
         if (Config_project.is_developer_mode) {

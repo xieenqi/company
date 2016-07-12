@@ -258,6 +258,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
     }
 
     /**

@@ -23,11 +23,9 @@ import android.widget.RadioButton;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
-import com.loyo.oa.v2.activityui.setting.SettingActivity;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.customview.RoundImageView;
 
 import java.util.ArrayList;
 
@@ -70,7 +68,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         heading.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainApp.getMainApp().startActivity(getActivity(), SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                ((MainHomeActivity) getActivity()).showMenu();
             }
         });
     }
@@ -109,6 +107,10 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
      */
     protected void onNetworkChanged(boolean available) {
         ll_network.setVisibility(available ? View.GONE : View.VISIBLE);
+    }
+
+    public void setHeadVisibility(boolean hide) {
+        heading.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.loyo.oa.v2.common;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
+
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
@@ -13,6 +14,7 @@ import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -189,18 +191,19 @@ public final class Common {
 
         SparseArray<ArrayList<Department>> maps = new SparseArray<>();//相当于 map 全部字母表 下的部门列表
         ArrayList<ContactsGroup> contactsGroups = new ArrayList<>();
-        for (char index = '#'; index <= 'Z'; index += (char) 1) {
-            ArrayList<Department> departments = new ArrayList<>();//相同首字母 部门集合
-            for (Department department : departmentList) {//遍历组织架构
-                if (department == null) {
-                    continue;
-                }
-                if (department.getId().equals(department.getSuperiorId())) {
-                    companyId = department.getId();
-                    continue;
-                }
+        try {
+            for (char index = '#'; index <= 'Z'; index += (char) 1) {
+                ArrayList<Department> departments = new ArrayList<>();//相同首字母 部门集合
+                for (Department department : departmentList) {//遍历组织架构
+                    if (department == null) {
+                        continue;
+                    }
+                    if (department.getId().equals(department.getSuperiorId())) {
+                        companyId = department.getId();
+                        continue;
+                    }
 
-                try {
+
                     if ((department.getSuperiorId()).equals(companyId)) {
                         String groupName_current = department.getGroupName();
                         if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
@@ -209,15 +212,15 @@ public final class Common {
                             departments.add(0, department);
                         }
                     }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
+
+                }
+                if (!departments.isEmpty()) {
+                    maps.put(index, departments);
                 }
             }
-            if (!departments.isEmpty()) {
-                maps.put(index, departments);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         if (maps.size() > 0) {
             for (int i = 0; i < maps.size(); i++) {
                 ContactsGroup group = new ContactsGroup();
@@ -386,7 +389,6 @@ public final class Common {
     }
 
     public static ArrayList<Department> getLstDepartment(String superDeptId) {
-//        LogUtil.d("state："+System.currentTimeMillis());
         ArrayList<Department> deptList = new ArrayList<>();
 
         if (TextUtils.isEmpty(superDeptId)) {
@@ -398,7 +400,6 @@ public final class Common {
                 }
             }
         }
-//        LogUtil.d("end："+System.currentTimeMillis());
         return deptList;
     }
 
@@ -426,51 +427,6 @@ public final class Common {
         return users;
     }
 
-    public static String getDeptsUsersName(String deptIds, String userIds) {
-        StringBuilder sb = null;
-
-        if (!StringUtil.isEmpty(deptIds)) {
-            String[] detps = deptIds.split(",");
-
-            for (Department d : getLstDepartment()) {
-                for (String dept : detps) {
-                    if (TextUtils.equals(dept, d.getId())) {
-                        if (sb == null) {
-                            sb = new StringBuilder();
-                            sb.append(d.getName());
-                        } else {
-                            sb.append(",").append(d.getName());
-                        }
-
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (!StringUtil.isEmpty(userIds)) {
-            String[] users = userIds.split(",");
-
-            for (UserGroupData userGroup : getLstUserGroupData()) {
-                for (User u : userGroup.getLstUser()) {
-                    for (String userId : users) {
-                        if (userId.equals(u.id)) {
-                            if (sb == null) {
-                                sb = new StringBuilder();
-                                sb.append(u.getRealname());
-                            } else {
-                                sb.append(",").append(u.getRealname());
-                            }
-
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return sb == null ? "" : sb.toString();
-    }
 
     public static User getSuper() {
         User superior = new User();
@@ -495,21 +451,20 @@ public final class Common {
         ArrayList<User> myUsers = new ArrayList<>();
         ArrayList<User> userAllList = new ArrayList<>();
         int positions = 0;
-
+        try {
         /*全部人员获取*/
-        for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-            try {
+            for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
                 for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
                     userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
                 }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         /*获取我的部门下标*/
         for (int i = 0; i < getLstDepartment().size(); i++) {
-            if(null == MainApp.user.depts)
+            if (null == MainApp.user.depts)
                 continue;
             for (int j = 0; j < MainApp.user.depts.size(); j++) {
                 if (getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())) {

@@ -10,10 +10,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IMain;
@@ -145,6 +147,11 @@ public class CheckUpdateService extends Service {
                             stopSelf();
                         }
 
+                        //通知侧边栏有新版本
+                        Intent in = new Intent();
+                        in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+                        in.putExtra(ExtraAndResult.EXTRA_DATA, "version");
+                        LocalBroadcastManager.getInstance(CheckUpdateService.this).sendBroadcast(in);
                     } else {
                         if (isToast) {
                             Global.Toast("你的软件已经是最新版本");

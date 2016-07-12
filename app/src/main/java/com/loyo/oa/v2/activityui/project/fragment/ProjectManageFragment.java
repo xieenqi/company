@@ -140,6 +140,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         Intent intent = new Intent();
         intent.setClass(mActivity, ProjectAddActivity_.class);
         startActivityForResult(intent, REQUEST_CREATE);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**
@@ -151,8 +152,9 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
         intent.setClass(mActivity, ProjectInfoActivity_.class);
-        intent.putExtra("projectId", ((Project)adapter.getChild(groupPosition, childPosition)).id);
+        intent.putExtra("projectId", ((Project) adapter.getChild(groupPosition, childPosition)).id);
         startActivityForResult(intent, REQUEST_REVIEW);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     @Override

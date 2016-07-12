@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -108,7 +109,7 @@ public class SettingPasswordActivity extends BaseActivity {
         showGeneralDialog(false, false, "修改密码成功，你需要重新登录哦~").setNoCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SettingActivity.callback.onExit(SettingPasswordActivity.this);
+                MenuFragment.callback.onExit(SettingPasswordActivity.this);
             }
         }).setCancelable(false);
     }

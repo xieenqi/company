@@ -272,6 +272,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         intent.putExtra("projectTitle", mProject.title);
         intent.putExtra("type", WorkReportAddActivity.TYPE_PROJECT);
         startActivityForResult(intent, REQUEST_CREATE);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**
@@ -283,6 +284,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         Intent intent = new Intent(mActivity, _class);
         intent.putExtra(key, data);
         startActivityForResult(intent, REQUEST_REVIEW);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**

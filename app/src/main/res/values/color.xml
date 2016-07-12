@@ -5,8 +5,10 @@
     <color name="province_line_border">#C7C7C7</color>
     <color name="white60">#4dffffff</color>
     <color name="white95">#e6ffffff</color>
+    <color name="white10">#10ffffff</color>
     <color name="white">#FFFFFF</color>
     <color name="black30">#4c000000</color>
+    <color name="gray878">#F2F2F2</color>
 
     <!-- 白色 -->
     <color name="ivory">#FFFFF0</color>

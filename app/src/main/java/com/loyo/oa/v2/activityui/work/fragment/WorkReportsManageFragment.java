@@ -56,6 +56,8 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         Intent intent = new Intent();
         intent.setClass(mActivity, WorkReportAddActivity_.class);
         startActivityForResult(intent, REQUEST_CREATE);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
     }
 
     /**
@@ -69,6 +71,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         intent.putExtras(mBundle);
         intent.setClass(mActivity, WorkReportsSearchActivity.class);
         startActivityForResult(intent, REQUEST_REVIEW);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     @Override
@@ -91,6 +94,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         intent.putExtra(ExtraAndResult.EXTRA_ID, ((WorkReportRecord) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, WorkReportsInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     @Override

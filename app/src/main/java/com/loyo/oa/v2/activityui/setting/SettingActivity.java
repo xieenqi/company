@@ -148,7 +148,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             /*修改密码*/
             case R.id.layout_setpassword:
-                app.startActivity(this, SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+
                 break;
             /*更新组织架构*/
             case R.id.layout_update:
@@ -198,7 +198,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     /**
-     * 刷新首页红点数据
+     * 刷新token 防止token过期
      */
     void rushHomeData() {
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
@@ -227,7 +227,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 String json = MainApp.gson.toJson(user);
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
-
                 Bundle b = new Bundle();
                 b.putSerializable("user", MainApp.user);
                 app.startActivity(SettingActivity.this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
