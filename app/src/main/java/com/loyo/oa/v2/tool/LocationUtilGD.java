@@ -3,13 +3,11 @@ package com.loyo.oa.v2.tool;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
-
 import java.util.Date;
 
 /**
@@ -59,7 +57,6 @@ public class LocationUtilGD {
 //            Global.Toast("你没有配置定位权限");
             DialogHelp.cancelLoading();
         }
-
     }
 
 
@@ -111,7 +108,6 @@ public class LocationUtilGD {
 
     public interface AfterLocation {
         void OnLocationGDSucessed(String address, double longitude, double latitude, String radius);
-
         void OnLocationGDFailed();
     }
 

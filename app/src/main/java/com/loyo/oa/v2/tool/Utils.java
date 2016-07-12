@@ -29,6 +29,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -75,13 +76,20 @@ import rx.Observable;
  * 时间 : 15/8/6.
  */
 public class Utils {
-    static ProgressDialog progressDialog;
 
+    static ProgressDialog progressDialog;
     static ProgressDialog progressDialogAtt;
+    static WindowManager windowManager;
 
     protected Utils() {
         throw new UnsupportedOperationException(); // 防止子类调用
     }
+
+    public static WindowManager getWindowHW(Context mContext){
+        windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        return windowManager;
+    }
+
 
     /**
      * ScroView嵌套listView，手动计算ListView高度

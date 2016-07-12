@@ -114,7 +114,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                         String timeFu = years + "." + String.format("%02d", (month + 1)) + "." + day + " " + hour + ":" + minutes;
                         try {
                             if (!isOver && Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy.MM.dd HH:mm"))
-                                    < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(), "yyyy.MM.dd HH:mm"))) {
+                                    < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"))) {
                                 Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
                             } else {
                                 listener.onDateTimeChanged(years, month, day, hour, minutes);

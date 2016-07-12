@@ -3,7 +3,12 @@ package com.loyo.oa.v2.activityui.attendance.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,11 +21,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.activityui.attendance.PreviewAttendanceActivity_;
+import com.loyo.oa.v2.activityui.attendance.adapter.CustomerDataManager;
+import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
+import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attendance.bean.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
@@ -31,7 +38,9 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CustomRecyclerView;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -40,17 +49,17 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.GeneralPopView;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -62,19 +71,19 @@ import retrofit.client.Response;
  */
 public class AttendanceListFragment extends BaseFragment implements View.OnClickListener,LocationUtilGD.AfterLocation {
 
-    private ViewGroup imgTimeLeft;
-    private ViewGroup imgTimeRight;
     private Boolean inEnable;
     private Boolean outEnable;
     private Button   btn_add;
+    private CustomRecyclerView recyclerView;
     private ListView lv;
-    private TextView tv_time;
     private TextView tv_count_title;
     private TextView tv_later;         //迟到
     private TextView tv_leave_early;   //早退
     private TextView tv_leave_overtime;//加班
     private TextView tv_unattendance;  //未打卡
     private TextView tv_field_work;    //外勤
+    private TextView data_time_tv;     //时间显示
+
     private AttendanceList attendanceList;
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private HashMap<String, Object> map = new HashMap<>();
@@ -82,7 +91,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private ValidateInfo validateInfo = new ValidateInfo();
     private AttendanceListAdapter adapter;
     private GeneralPopView generalPopView;
+    private LinearLayoutManager layoutManager;
+    private CustomerDataManager customerDataManager;
 
+    private DataSelectAdapter dataSelectAdapter;
+    private ArrayList<DataSelect> dataSelects;
+
+    private int scorllW;
+    private int windowW;
     private int qtime, page = 1;
     private int type;                    //我的考勤【1】 团队考勤【2】
     private boolean isPullDowne = true;  //是否下拉刷新 默认是
@@ -92,75 +108,136 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private Calendar cal;
     private View mView;
 
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+
+        }
+    };
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
-
             mView = inflater.inflate(R.layout.fragment_attendance_list, container, false);
-            tv_time = (TextView) mView.findViewById(R.id.tv_time);
-            tv_count_title = (TextView) mView.findViewById(R.id.tv_count_title);
-            tv_later = (TextView) mView.findViewById(R.id.tv_later);
-            tv_leave_early = (TextView) mView.findViewById(R.id.tv_leave_early);
-            tv_unattendance = (TextView) mView.findViewById(R.id.tv_un_attendance);
-            tv_field_work = (TextView) mView.findViewById(R.id.tv_field_work);
-            tv_leave_overtime = (TextView) mView.findViewById(R.id.tv_leave_overtime);
-            btn_add = (Button) mView.findViewById(R.id.btn_add);
-            imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
-            imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
-            imgTimeLeft.setOnTouchListener(Global.GetTouch());
-            imgTimeRight.setOnTouchListener(Global.GetTouch());
-            btn_add.setOnTouchListener(Global.GetTouch());
-            imgTimeLeft.setOnClickListener(this);
-            imgTimeRight.setOnClickListener(this);
-            btn_add.setOnClickListener(this);
-
-            lv = (ListView) mView.findViewById(R.id.listView_attendance);
-
-            cal = Calendar.getInstance(Locale.CHINA);
-            if (null != getArguments()) {
-                if (getArguments().containsKey("type")) {
-                    type = getArguments().getInt("type");
-                }
-            }
-            initTimeStr(System.currentTimeMillis());
-            qtime = type == 1 ? DateTool.getBeginAt_ofMonth() : (int) (System.currentTimeMillis() / 1000);
-
-            getData(page);
-
-            lv.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                        // 判断是否滚动到底部
-                        if (view.getLastVisiblePosition() == view.getCount() - 1) {
-                            //加载更多功能的代码
-                            // Toast("到底部啦");
-                            if (type == 2) {
-                                loadMore();
-                            }
-                        }
-                        if (view.getLastVisiblePosition() == 0) {
-                            Toast("到 顶部 啦");
-                            page = 1;
-                            isPullDowne = true;
-                        }
-                    }
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                }
-            });
+            initUI();
         }
-        btn_add.setVisibility(1==type?View.VISIBLE:View.GONE);
+        btn_add.setVisibility(1 == type ? View.VISIBLE : View.GONE);
         return mView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void initUI(){
+        recyclerView = (CustomRecyclerView) mView.findViewById(R.id.recy_data_select);
+        tv_count_title = (TextView) mView.findViewById(R.id.tv_count_title);
+        tv_later = (TextView) mView.findViewById(R.id.tv_later);
+        tv_leave_early = (TextView) mView.findViewById(R.id.tv_leave_early);
+        tv_unattendance = (TextView) mView.findViewById(R.id.tv_un_attendance);
+        tv_field_work = (TextView) mView.findViewById(R.id.tv_field_work);
+        tv_leave_overtime = (TextView) mView.findViewById(R.id.tv_leave_overtime);
+        data_time_tv = (TextView) mView.findViewById(R.id.data_time_tv);
+        lv = (ListView) mView.findViewById(R.id.listView_attendance);
+        btn_add = (Button) mView.findViewById(R.id.btn_add);
+        btn_add.setOnTouchListener(Global.GetTouch());
+        btn_add.setOnClickListener(this);
+        cal = Calendar.getInstance(Locale.CHINA);
+        if (null != getArguments()) {
+            if (getArguments().containsKey("type")) {
+                type = getArguments().getInt("type");
+            }
+        }
+        DataSelectInit();
+        initTimeStr(System.currentTimeMillis());
+        getData(page);
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    // 判断是否滚动到底部
+                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                        //加载更多功能的代码
+                        // Toast("到底部啦");
+                        if (type == 2) {
+                            loadMore();
+                        }
+                    }
+                    if (view.getLastVisiblePosition() == 0) {
+                        page = 1;
+                        isPullDowne = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                scorllW += dx;
+                LogUtil.dee("scorllW:"+scorllW);
+                if(windowW == scorllW){
+                    Toast("滑动到了 屏幕宽度");
+                }
+            }
+        });
+    }
+
+    /**
+     * 时间选择控件初始化
+     * */
+    public void DataSelectInit(){
+
+        if(type == 2){
+            dataSelects = DateTool.getYearAllofDay(2015,2016);
+            Collections.reverse(dataSelects);
+            dataSelects.remove(dataSelects.size()-1);
+            windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
+            data_time_tv.setText(dataSelects.get(0).yearMonDay);
+            layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            //customerDataManager = new CustomerDataManager(1, StaggeredGridLayoutManager.HORIZONTAL);
+            //customerDataManager.setSpeedRatio(0.5);
+            recyclerView.setLayoutManager(layoutManager);
+            dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2);
+            recyclerView.setAdapter(dataSelectAdapter);
+        }else{
+            dataSelects = DateTool.getYearAllofMonth(2015,2016);
+            data_time_tv.setText(dataSelects.get(0).yearMonDay);
+            Collections.reverse(dataSelects);
+            windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
+            layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            recyclerView.setLayoutManager(layoutManager);
+            dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,1);
+            recyclerView.setAdapter(dataSelectAdapter);
+        }
+
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                dataSelectAdapter.selectPosition(position);
+                dataSelectAdapter.notifyDataSetChanged();
+                data_time_tv.setText(dataSelects.get(position).yearMonDay);
+                qtime =  Integer.parseInt(dataSelects.get(position).mapOftime);
+                getData(page);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
     }
 
     /**
@@ -179,7 +256,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 time = app.df12.format(new Date(mills));
                 break;
         }
-        tv_time.setText(time);
+        // 顶部显示的 当前时间
+        // tv_time.setText(time);
     }
 
     /**
@@ -205,42 +283,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        page = 1;
         switch (view.getId()) {
-
             case R.id.btn_add:
                 getValidateInfo();
-                break;
-
-            case R.id.img_time_left:
-                switch (type) {
-                    case 1:
-                        previousMonth();
-                        break;
-                    case 2:
-                        previousDay();
-                        break;
-                }
-                break;
-
-            case R.id.img_time_right:
-                switch (type) {
-                    case 1:
-                        if (checkTime(qtime, app.df13)) {
-                            nextMonth();
-                        } else {
-                            Toast("不能查看未来考勤！");
-                        }
-                        break;
-                    case 2:
-                        if (checkTime(qtime, app.df12)) {
-                            nextDay();
-                        } else {
-                            Toast("不能查看未来考勤！");
-                        }
-
-                        break;
-                }
                 break;
         }
     }
@@ -444,99 +489,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         });
     }
 
-
-    /**
-     * 前一月
-     */
-    private void previousMonth() {
-        if (cal.get(Calendar.MONTH) == cal.getActualMinimum(Calendar.MONTH)) {
-            cal.set((cal.get(Calendar.YEAR) - 1), cal.getActualMaximum(Calendar.MONTH), 1);
-        } else {
-            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
-        }
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        refreshData();
-    }
-
-    /**
-     * 后一月
-     */
-    private void nextMonth() {
-        if (cal.get(Calendar.MONTH) == cal.getActualMaximum(Calendar.MONTH)) {
-            cal.set((cal.get(Calendar.YEAR) + 1), cal.getActualMinimum(Calendar.MONTH), 1);
-        } else {
-            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
-        }
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        refreshData();
-    }
-
-    /**
-     * 前一天
-     */
-    private void previousDay() {
-
-        if (cal.get(Calendar.DAY_OF_MONTH) == cal.getActualMinimum(Calendar.DAY_OF_MONTH)) {
-            if (cal.get(Calendar.MONTH) == cal.getActualMinimum(Calendar.MONTH)) {
-                cal.set((cal.get(Calendar.YEAR) - 1), cal.getActualMaximum(Calendar.MONTH), cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-            } else {
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
-                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-            }
-        } else {
-            cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1);
-        }
-
-        refreshData();
-    }
-
-    /**
-     * 后一天
-     */
-    private void nextDay() {
-        if (cal.get(Calendar.DAY_OF_MONTH) == cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-            if (cal.get(Calendar.MONTH) == cal.getActualMaximum(Calendar.MONTH)) {
-                cal.set((cal.get(Calendar.YEAR) + 1), cal.getActualMinimum(Calendar.MONTH), 1);
-            } else {
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-            }
-        } else {
-            cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
-        }
-        refreshData();
-    }
-
-    /**
-     * 刷新数据
-     */
-    private void refreshData() {
-        qtime = (int) (cal.getTime().getTime() / 1000);
-        initTimeStr(cal.getTime().getTime());
-        getData(page);
-    }
-
-    /**
-     * 检查时间是否超出了现在时间
-     */
-    private boolean checkTime(int time, SimpleDateFormat format) {
-        java.util.Calendar c1 = java.util.Calendar.getInstance();
-        java.util.Calendar c2 = java.util.Calendar.getInstance();
-        String currentTime = format.format(System.currentTimeMillis());
-        String nextTime = format.format((long) time * 1000);
-        try {
-            c1.setTime(format.parse(nextTime));//获得的时间
-            c2.setTime(format.parse(currentTime));//系统当前时间
-            int resultTime = c1.compareTo(c2);
-            if (resultTime < 0) {
-                return true;
-            }
-        } catch (Exception e) {
-
-        }
-        return false;
-    }
-
     /**
      * 加载跟多 xnq
      */
@@ -590,7 +542,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     }
 
     private int getDateTime(long qtime) {
-        LogUtil.d("查询【】时间：" + app.df4.format(new Date((qtime * 1000))));
         return Integer.valueOf(app.df4.format(new Date((qtime * 1000))).replace(".", ""));
     }
 
@@ -604,6 +555,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         map.put("qtime", qtime);
         map.put("pageIndex", page);
         map.put("pageSize", 20);
+        LogUtil.dee("map:"+MainApp.gson.toJson(map));
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
