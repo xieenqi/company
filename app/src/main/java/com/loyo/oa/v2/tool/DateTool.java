@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 
@@ -12,6 +13,7 @@ import org.joda.time.DateTime;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -38,32 +40,6 @@ public class DateTool {
      */
     public static final long DAY_MILLIS = HOUR_MILLIS * TIME_HOURSES;
 
-    /**
-     * yyyyMMdd
-     */
-    public static final String DATE_DEFAULT_FORMATE = "yyyyMMdd";
-
-    /**
-     * yyyyMMdd HH:mm
-     */
-    public static final String DATE_DEFAULT_FORMATE2 = "yyyyMMdd HH:mm";
-
-    /**
-     * yyyy-MM-dd
-     */
-    public static final String DATE_DEFAULT_FORMATE1 = "yyyy.MM.dd";
-
-    public static final String DATE_FORMATE_DAY = "MM.dd";
-
-    /**
-     * 自定义日期格式1，为周报月报服务
-     */
-    public static final String DATE_FORMATE_CUSTOM_1 = "yyyy年MM月dd日";
-
-    /**
-     * yyyy年MM月dd日HH时mm分
-     */
-    public static final String DATE_FORMATE_CUSTOM_2 = "yyyy年MM月dd日HH时mm分";
 
     /**
      * yyyy-MM-dd HH:mm:ss 2010-05-11 17:22:26
@@ -74,23 +50,14 @@ public class DateTool {
      */
     public static final String DATE_FORMATE_AT_MINUTES = "yyyy-MM-dd HH:mm";
 
-    public static final String DATE_FORMATE_MINUTES = "yyyy-MM-dd_HH-mm-ss";
-
     /**
      * dd-MM-yyyy, hh:mm
      */
     public static final String DATE_FORMATE_TRANSACTION = "MM.dd HH:mm";
     /**
-     * MM/dd HH:mm
-     */
-    public static final String DATE_FORMATE_DAY_HOUR_MINUTE = "MM/dd HH:mm";
-    /**
      * HH:mm
      */
     public static final String DATE_FORMATE_HOUR_MINUTE = "HH:mm";
-    public static final String DATE_FORMATE_HOUR_MINUTE_SECOND = "HH:mm:ss";
-
-    public static final String DATE_FORMATE_CHINE = "yyyy年MM月dd日 hh时mm分";
 
     public static final String DATE_FORMATE_SPLITE_BY_POINT = "yyyy.MM.dd HH:mm";
 
@@ -100,9 +67,76 @@ public class DateTool {
         throw new UnsupportedOperationException(); // 防止子类调用
     }
 
-    public static String toDateStr(long time, String dateFormat) {
-        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.getDefault());
-        return format.format(new Date(time));
+
+    /**
+     * 【我的考勤 我的拜访 团队拜访】获取年份 月份
+     * */
+    public static ArrayList<DataSelect> getYearAllofMonth(int startYear,int endYear){
+        ArrayList<DataSelect> arrayList = new ArrayList<>();
+        SimpleDateFormat yearSf    = new SimpleDateFormat("yyyy");
+        SimpleDateFormat monthSf = new SimpleDateFormat("MM");
+        DataSelect dataSelect = null;
+        long nowTimelongs = Long.parseLong(getDataTwo(getNowTime(DATE_FORMATE_SPLITE_BY_POINT),DATE_FORMATE_SPLITE_BY_POINT));
+
+        Calendar calendar    = Calendar.getInstance();
+        Calendar calendarEnd = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, startYear);
+        calendar.set(Calendar.MONTH, 0);
+        calendarEnd.set(Calendar.YEAR, endYear);
+        calendarEnd.set(Calendar.MONTH, (Integer.parseInt(monthSf.format(nowTimelongs)) - 1));
+
+        while(calendar.getTime().getTime() <= calendarEnd.getTime().getTime()){
+            dataSelect = new DataSelect();
+            dataSelect.top  = monthSf.format(calendar.getTime());
+            dataSelect.bottom  = yearSf.format(calendar.getTime());
+            dataSelect.yearMonDay = yearSf.format(calendar.getTime())+"年"+monthSf.format(calendar.getTime())+"月";
+            dataSelect.mapOftime = String.valueOf(calendar.getTime().getTime()).substring(0,10);
+            arrayList.add(dataSelect);
+            calendar.add(Calendar.MONTH, 1);
+        }
+
+        return arrayList;
+    }
+
+
+    /**
+     * 【团队考勤】获取年月日
+     * 月份0~11，计算时要减1位
+     * */
+    public static ArrayList<DataSelect> getYearAllofDay(int startYear,int endYear){
+
+        SimpleDateFormat yearSf = new SimpleDateFormat("yyyy");
+        SimpleDateFormat monthSf = new SimpleDateFormat("MM");
+        SimpleDateFormat daySf    = new SimpleDateFormat("dd");
+
+        ArrayList<DataSelect> arrayList = new ArrayList();
+        DataSelect dataSelect = null;
+        long nowTimelongs = Long.parseLong(getDataTwo(getNowTime(DATE_FORMATE_SPLITE_BY_POINT),DATE_FORMATE_SPLITE_BY_POINT));
+
+        Calendar calendar = Calendar.getInstance();
+        Calendar calendarEnd = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, startYear);
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, 0);
+
+        calendarEnd.set(Calendar.YEAR, endYear);
+        calendarEnd.set(Calendar.MONTH, (Integer.parseInt(monthSf.format(nowTimelongs)) - 1));
+        calendarEnd.set(Calendar.DAY_OF_MONTH, Integer.parseInt(daySf.format(nowTimelongs)));
+
+        while(calendar.getTime().getTime() <= calendarEnd.getTime().getTime()){
+            dataSelect = new DataSelect();
+            dataSelect.top  = daySf.format(calendar.getTime());
+            dataSelect.bottom  = monthSf.format(calendar.getTime())+"月";
+            dataSelect.yearMonDay = yearSf.format(calendar.getTime())+"年"+monthSf.format(calendar.getTime())
+                     +"月"+daySf.format(calendar.getTime())
+                     +" "+getWeekStr(calendar.getTime().getTime());
+            dataSelect.mapOftime = String.valueOf(calendar.getTime().getTime()).substring(0,10);
+
+            arrayList.add(dataSelect);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return arrayList;
     }
 
     public static Long getDateToTimestamp(String strTime, DateFormat sdfOut) {
@@ -113,20 +147,6 @@ public class DateTool {
             Global.ProcException(e);
         }
         return timestamp;
-    }
-
-    public static String getDate(String dateString, String dateFormat1,
-                                 String dateFormat2) {
-        SimpleDateFormat sdf1 = new SimpleDateFormat(dateFormat1, Locale.getDefault());
-        SimpleDateFormat sdf2 = new SimpleDateFormat(dateFormat2, Locale.getDefault());
-        String strDate = "";
-        try {
-            Date date = sdf1.parse(dateString);
-            strDate = sdf2.format(date);
-        } catch (ParseException e) {
-            Global.ProcException(e);
-        }
-        return strDate;
     }
 
     //最好改用formateServerDate
@@ -149,53 +169,10 @@ public class DateTool {
         return strDate;
     }
 
-    //格式化服务器返回的时间
-    public static String formateServerDate(String dateString, DateFormat sdf1) {
-//        try {
-//            if (dateString.endsWith("+08:00")) {
-//                return sdf1.format(MainApp.getMainApp().df_api_get2.parse(dateString));
-//            } else if (dateString.toUpperCase().endsWith("Z")) {
-//                return sdf1.format(MainApp.getMainApp().df_api.parse(dateString));
-//            } else {
-//                return sdf1.format(MainApp.getMainApp().df_api_get.parse(dateString));
-//            }
-//        } catch (Exception ex) {
-//            DateTime dt = DateTime.parse(dateString);
-//            Global.ProcException(ex);
-//        }
-        return sdf1.format(DateTime.parse(dateString).toDate());
-    }
 
-    public static Date getDate(String dateString, String dateFormat) {
-        SimpleDateFormat sdf1 = new SimpleDateFormat(dateFormat, Locale.getDefault());
-        Date date = null;
-        try {
-            date = sdf1.parse(dateString);
-        } catch (ParseException e) {
-            Global.ProcException(e);
-        }
-        return date;
-    }
-
-    public static String getDate(int day, int hour, int minute, int second, int milliSecond) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + day);
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.SECOND, second);
-        cal.set(Calendar.MINUTE, minute);
-        cal.set(Calendar.MILLISECOND, milliSecond);
-
-        Date date = new Date(cal.getTimeInMillis());
-        return simpleDateFormat.format(date);
-    }
 
     public static String getMMDD(long time) {
         return new SimpleDateFormat("MM.dd", Locale.getDefault()).format(new Date(time));
-    }
-
-    public static String getDateOfAll(long time) {
-        return new SimpleDateFormat("YYYY-MM-dd HH:mm", Locale.getDefault()).format(new Date(time));
     }
 
     public static int get_DAY_OF_WEEK(Date date) {
@@ -265,6 +242,8 @@ public class DateTool {
         long millis = calendar.getTimeInMillis();
         return millis;
     }
+
+
 
     /**
      * @param sdfOut
@@ -376,7 +355,7 @@ public class DateTool {
      */
     public static long getSomeWeekBeginAt(int year,int month,int day) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year,month,day);
+        calendar.set(year, month, day);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -550,6 +529,25 @@ public class DateTool {
 
 
     /**
+     * 特殊格式转时间戳
+     */
+    public static String getDataTwo(String time, String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs,
+                Locale.CHINA);
+        Date date;
+        String times = null;
+        try {
+            date = sdr.parse(time);
+            long l = date.getTime();
+            String stf = String.valueOf(l);
+            times = stf.substring(0, 13);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return times;
+    }
+
+    /**
      * 自定义格式转时间戳
      */
     public static String getDataOne(String time, String timeGs) {
@@ -587,8 +585,8 @@ public class DateTool {
     /**
      * 获取当前时间
      */
-    public static String getNowTime() {
-        SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_SPLITE_BY_POINT);
+    public static String getNowTime(String dataFormate) {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(dataFormate);
         return sDateFormat.format(new java.util.Date());
     }
 
