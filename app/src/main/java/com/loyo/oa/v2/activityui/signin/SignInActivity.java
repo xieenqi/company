@@ -262,7 +262,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
-                LogUtil.dll("failure code:" + error.getResponse().getStatus());
             }
         });
     }

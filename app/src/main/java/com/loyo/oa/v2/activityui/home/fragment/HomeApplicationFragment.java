@@ -31,6 +31,7 @@ import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -115,6 +116,11 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     listView.onRefreshComplete();
                 }
                 launch();
+                //更新侧边栏信息
+                Intent in = new Intent();
+                in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+                in.putExtra(ExtraAndResult.EXTRA_DATA, "user");
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(in);
             }
         }
     };
@@ -207,7 +213,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 showMoreWindow(v);
             }
         });
-        if (null != MainApp.user && null != MainApp.user.avatar) {
+        if (null != MainApp.user && null != MainApp.user.avatar && null != heading) {
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }
     }

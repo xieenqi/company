@@ -67,6 +67,7 @@ public class WelcomeActivity extends Activity {
                     buttonOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(final View v) {
+                            SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "openOne");
                             Intent intent = new Intent();
                             intent.setClass(WelcomeActivity.this,
                                     TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainHomeActivity.class);

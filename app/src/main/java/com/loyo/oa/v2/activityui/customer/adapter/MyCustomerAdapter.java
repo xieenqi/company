@@ -8,11 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -20,14 +22,16 @@ import java.util.Date;
  * 【我的客户】适配器
  * Created by yyy on 16/6/2.
  */
-public class MyCustomerAdapter extends BaseAdapter{
+public class MyCustomerAdapter extends BaseAdapter {
 
     private ArrayList<Customer> mCustomers;
     private Context mContext;
+    private LayoutInflater inflater;
 
-    public MyCustomerAdapter(final Context context, ArrayList<Customer> customers){
+    public MyCustomerAdapter(final Context context, ArrayList<Customer> customers) {
         mCustomers = customers;
-        mContext  = context;
+        mContext = context;
+        inflater = LayoutInflater.from(mContext);
     }
 
     @Override
@@ -49,7 +53,7 @@ public class MyCustomerAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         final Customer customer = mCustomers.get(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_common_customer, null, false);
+            convertView = inflater.inflate(R.layout.item_common_customer, null, false);
         }
 
         TextView tv_title = ViewHolder.get(convertView, R.id.tv_title);

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyCustomerFragment;
@@ -32,6 +33,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -217,7 +219,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         if (SaleItemStatus.length != 1) {
             layout_title_action.setOnTouchListener(Global.GetTouch());
         }
-
+        rotateAnimation = initArrowAnimation();
         getStageData();
     }
 
@@ -232,7 +234,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                 changeChild(position);
             }
         });
-        rotateAnimation = initArrowAnimation();
+
     }
 
     /**
