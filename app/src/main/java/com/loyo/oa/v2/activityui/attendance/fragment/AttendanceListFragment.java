@@ -83,7 +83,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private TextView tv_unattendance;  //未打卡
     private TextView tv_field_work;    //外勤
     private TextView data_time_tv;     //时间显示
-
     private AttendanceList attendanceList;
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private HashMap<String, Object> map = new HashMap<>();
@@ -93,10 +92,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private GeneralPopView generalPopView;
     private LinearLayoutManager layoutManager;
     private CustomerDataManager customerDataManager;
-
     private DataSelectAdapter dataSelectAdapter;
     private ArrayList<DataSelect> dataSelects;
-
     private int scorllW;
     private int windowW;
     private int qtime, page = 1;
@@ -104,16 +101,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private boolean isPullDowne = true;  //是否下拉刷新 默认是
     private int outKind;                 //0上班  1下班  2加班
     private long checkdateTime;
-
     private Calendar cal;
     private View mView;
-
-    private Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg){
-
-        }
-    };
 
 
     @Nullable

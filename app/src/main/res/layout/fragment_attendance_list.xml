@@ -31,15 +31,6 @@
                 android:textColor="@color/text33"
                 android:textSize="@dimen/text_sp18" />
 
-            <TextView
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10"
-                android:text="星期五"
-                android:textColor="@color/text33"
-                android:textSize="@dimen/text_sp18" />
-
         </LinearLayout>
 
         <include layout="@layout/include_solid_line" />

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
+import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.SignInfoActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInListAdapter;
@@ -23,7 +26,9 @@ import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CustomRecyclerView;
 import com.loyo.oa.v2.point.ILegwork;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -33,9 +38,11 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -45,50 +52,42 @@ import retrofit.client.Response;
 
 
 /**
- * 客户拜访－【我的拜访】  列表
+ * 【我的拜访】 列表
  */
 
 @SuppressLint("ValidFragment")
 public class SignInOfUserFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    private ViewGroup imgTimeLeft;
-    private ViewGroup imgTimeRight;
     private ViewGroup layout_nodata;
     private PullToRefreshListView lv;
-    private TextView tv_time;
     private Button btn_add;
+    private TextView data_time_tv;
 
     private ArrayList<LegWork> legWorks = new ArrayList<>();
     private SignInListAdapter adapter;
-    private long endAt, teamAt = 0;
+    private boolean isTopAdd;
+    private int windowW;
     private String startTime,endTime;
-    private Calendar cal;
     private View mView;
     private PaginationX<LegWork> workPaginationX = new PaginationX<>(20);
 
-    private boolean isTopAdd;
+    private LinearLayoutManager layoutManager;
+    private DataSelectAdapter dataSelectAdapter;
+    private ArrayList<DataSelect> dataSelects;
+
     private User mUser;
-    private String currentTime, nextTime;
+    private CustomRecyclerView recyclerView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_signin, container, false);
-
-            tv_time = (TextView) mView.findViewById(R.id.tv_time);
-
-            imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
-            imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
             layout_nodata = (ViewGroup) mView.findViewById(R.id.layout_nodata);
-
-            imgTimeLeft.setOnTouchListener(Global.GetTouch());
-            imgTimeRight.setOnTouchListener(Global.GetTouch());
-            imgTimeLeft.setOnClickListener(this);
-            imgTimeRight.setOnClickListener(this);
-
             lv = (PullToRefreshListView) mView.findViewById(R.id.listView_legworks);
+            recyclerView = (CustomRecyclerView) mView.findViewById(R.id.recy_data_select);
 
+            data_time_tv = (TextView) mView.findViewById(R.id.data_time_tv);
             btn_add = (Button) mView.findViewById(R.id.btn_add);
             btn_add.setOnTouchListener(Global.GetTouch());
             btn_add.setOnClickListener(this);
@@ -104,24 +103,17 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 }
             });
 
-            cal = Calendar.getInstance(Locale.CHINA);
             if (null != getArguments()) {
                 if (getArguments().containsKey("user")) {
                     mUser = (User) getArguments().getSerializable("user");
-                    teamAt = getArguments().getLong(ExtraAndResult.EXTRA_DATA);
-                    endAt = teamAt;
                 }
             }
 
             if (!mUser.isCurrentUser()) {
                 btn_add.setVisibility(View.GONE);
             }
-            if (teamAt == 0) {
-                initTimeStr(System.currentTimeMillis());
-                endAt = DateTool.getEndAt_ofDay();
-            } else {
-                initTimeStr(teamAt);
-            }
+            dataSelectInit();
+            initTimeStr(0);
             getData();
         }
         return mView;
@@ -132,47 +124,50 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         super.onViewCreated(view, savedInstanceState);
     }
 
+    public void dataSelectInit(){
+        dataSelects = DateTool.getYearAllofDay(2015,2016);
+        Collections.reverse(dataSelects);
+        dataSelects.remove(dataSelects.size() - 1);
+        windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
+        data_time_tv.setText(dataSelects.get(0).yearMonDay);
+        layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(layoutManager);
+        dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2);
+        recyclerView.setAdapter(dataSelectAdapter);
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                dataSelectAdapter.selectPosition(position);
+                dataSelectAdapter.notifyDataSetChanged();
+                data_time_tv.setText(dataSelects.get(position).yearMonDay);
+                initTimeStr(position);
+                onPullDownToRefresh(lv);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
+    }
 
     /**
      * 初始化时间显示
      * 获取某天开始时间和结束时间
-     * @param mills
      */
-    private void initTimeStr(long mills) {
-        String time = app.df12.format(new Date(mills));
-        String startTimestr = app.df5.format(new Date(mills)) + " 00:00:00";
-        String endTimestr = app.df5.format(new Date(mills)) + " 23:59:59";
-        startTime = DateTool.getDataOne(startTimestr,DateTool.DATE_FORMATE_ALL);
-        endTime = DateTool.getDataOne(endTimestr,DateTool.DATE_FORMATE_ALL);
-        tv_time.setText(time);
-    }
+    private void initTimeStr(int position) {
 
+        String startTimestr = DateTool.timet(dataSelects.get(position).mapOftime, "yyyy-MM-dd")+" 00:00:00";
+        String endTimestr = DateTool.timet(dataSelects.get(position).mapOftime,"yyyy-MM-dd")+ " 23:59:59";
+        startTime = DateTool.getDataOne(startTimestr, DateTool.DATE_FORMATE_ALL);
+        endTime = DateTool.getDataOne(endTimestr,DateTool.DATE_FORMATE_ALL);
+    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_time_left:
-                previousDay();
-                break;
-            case R.id.img_time_right:
-                java.util.Calendar c1 = java.util.Calendar.getInstance();
-                java.util.Calendar c2 = java.util.Calendar.getInstance();
-                currentTime = app.df12.format(System.currentTimeMillis());
-                nextTime = app.df12.format(endAt);
-                try {
-                    c1.setTime(app.df12.parse(nextTime));//获得的时间
-                    c2.setTime(app.df12.parse(currentTime));//系统当前时间
-                    int resultTime = c1.compareTo(c2);
-                    if (resultTime < 0) {
-                        nextDay();
-                    } else {
-                        Toast("不能查看未来拜访数据!");
-                    }
-                } catch (Exception e) {
-
-                }
-
-                break;
             case R.id.btn_add:
                 create();
                 break;
@@ -185,64 +180,6 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
     private void create() {
         startActivityForResult(new Intent(mActivity, SignInActivity.class), FinalVariables.REQUEST_CREATE_LEGWORK);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-    }
-
-    /**
-     * 前一天
-     */
-    private void previousDay() {
-        initCalendar();
-        if (cal.get(Calendar.DAY_OF_MONTH) == cal.getActualMinimum(Calendar.DAY_OF_MONTH)) {
-            if (cal.get(Calendar.MONTH) == cal.getActualMinimum(Calendar.MONTH)) {
-                cal.set((cal.get(Calendar.YEAR) - 1), cal.getActualMaximum(Calendar.MONTH), cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-            } else {
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
-                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-            }
-        } else {
-            cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1);
-        }
-        refreshData();
-    }
-
-    /**
-     * 后一天
-     */
-    private void nextDay() {
-        initCalendar();
-        if (cal.get(Calendar.DAY_OF_MONTH) == cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-            if (cal.get(Calendar.MONTH) == cal.getActualMaximum(Calendar.MONTH)) {
-                cal.set((cal.get(Calendar.YEAR) + 1), cal.getActualMinimum(Calendar.MONTH), 1);
-            } else {
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-            }
-        } else {
-            int dd = cal.get(Calendar.DAY_OF_MONTH);
-            cal.set(Calendar.DAY_OF_MONTH, ++dd);
-        }
-
-        refreshData();
-    }
-
-    /**
-     * 刷新数据
-     */
-    private void refreshData() {
-        endAt = cal.getTime().getTime();
-        //nextTime=app.df12.format(new Date(endAt));
-        initTimeStr(cal.getTime().getTime());
-        onPullDownToRefresh(lv);
-    }
-
-    /**
-     * 团队查看个人初始化日历对象
-     */
-    private void initCalendar() {
-        if (teamAt != 0) {
-            cal.setTimeInMillis(endAt);
-            teamAt = 0;
-        }
     }
 
     /**
@@ -273,8 +210,6 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", mUser.id);
-        /*map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
-        map.put("endAt", endAt / 1000);*/
         map.put("startAt", Long.parseLong(startTime));
         map.put("endAt",  Long.parseLong(endTime));
         map.put("custId", "");
