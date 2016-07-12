@@ -81,4 +81,11 @@ public class DialogHelp {
             tipTextView.setText(msg);
         }
     }
+
+    public static boolean isShow() {
+        if (null == loadingDialog) {
+            return false;
+        }
+        return loadingDialog.isShowing();
+    }
 }
