@@ -59,6 +59,8 @@ public class JPushService extends BroadcastReceiver {
             if (7 == pushMsgData.silentType) {
                 TrackRule.InitTrackRule();
             } else if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新8组织架构与9个人信息
+                if (!getUserInfo(pushMsgData))
+                    pushMsgData.silentType = 8;//更改别人的信息制动转成 更新8组织架构
                 //缓存要更新组织架构的信息
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, 8 == pushMsgData.silentType ? "all" : "one");
                 LogUtil.d("更新数据激光推送：更新8组织架构与9个人信息 ");
@@ -144,6 +146,23 @@ public class JPushService extends BroadcastReceiver {
         return sb.toString();
     }
 
+    /**
+     * 更改个人信息 区分是个人 还是别人【9】
+     *
+     * @param pushMsgData
+     * @return
+     */
+    private boolean getUserInfo(HttpJpushNotification pushMsgData) {
+        if (null == pushMsgData.buzzIds || !(pushMsgData.buzzIds.size() > 0)) {
+            return false;
+        }
+        for (String ele : pushMsgData.buzzIds) {
+            if (MainApp.user.id.equals(ele)) {
+                return true;
+            }
+        }
+        return false;
+    }
     //send msg to SelectCityMain
     //    private void processCustomMessage(Context context, Bundle bundle) {
     //        if (SelectCityMain.isForeground) {
