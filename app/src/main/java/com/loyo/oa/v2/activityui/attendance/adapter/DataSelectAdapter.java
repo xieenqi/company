@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
@@ -25,6 +28,7 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
     private int selectPosition;
     private int type;
     private boolean itemLock;
+    private ScaleAnimation animation;
 
    public DataSelectAdapter(Context mContext,ArrayList<DataSelect> data,int windowW,int type){
         this.mContext = mContext;
@@ -37,6 +41,11 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
     public MViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View mView = View.inflate(mContext,R.layout.item_data_select,null);
         MViewHolder holder = new MViewHolder(mView);
+
+        animation =new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setDuration(120);//设置动画持续时间
+
         return holder;
     }
 
@@ -85,6 +94,7 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
             }
             holder.num.setTextColor(mContext.getResources().getColor(R.color.white));
             holder.num.setBackground(mContext.getResources().getDrawable(R.drawable.shape_count_gd));
+            holder.num.setAnimation(animation);
         } else {
             if(position == 0){
                 holder.num.setBackground(mContext.getResources().getDrawable(R.drawable.shape_count_top));

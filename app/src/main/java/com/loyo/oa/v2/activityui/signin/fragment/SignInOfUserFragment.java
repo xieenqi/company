@@ -125,7 +125,9 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
     }
 
     public void dataSelectInit(){
-        dataSelects = DateTool.getYearAllofDay(2015,2016);
+
+        int year = Integer.parseInt(DateTool.getNowTime("yyyy"));
+        dataSelects = DateTool.getYearAllofDay(2015,year);
         Collections.reverse(dataSelects);
         dataSelects.remove(dataSelects.size() - 1);
         windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();

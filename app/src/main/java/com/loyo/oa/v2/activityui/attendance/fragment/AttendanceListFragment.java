@@ -99,11 +99,19 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private int qtime, page = 1;
     private int type;                    //我的考勤【1】 团队考勤【2】
     private boolean isPullDowne = true;  //是否下拉刷新 默认是
+    private boolean isAttAdd    = false;
     private int outKind;                 //0上班  1下班  2加班
     private long checkdateTime;
     private Calendar cal;
     private View mView;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(isAttAdd){
+            getData(page);
+        }
+    }
 
     @Nullable
     @Override
@@ -186,8 +194,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * */
     public void DataSelectInit(){
 
+        int year = Integer.parseInt(DateTool.getNowTime("yyyy"));
+
         if(type == 2){
-            dataSelects = DateTool.getYearAllofDay(2015,2016);
+            dataSelects = DateTool.getYearAllofDay(2015,year);
             Collections.reverse(dataSelects);
             dataSelects.remove(dataSelects.size()-1);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
@@ -201,10 +211,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             recyclerView.setAdapter(dataSelectAdapter);
             qtime = Integer.parseInt(dataSelects.get(0).mapOftime);
         }else{
-            dataSelects = DateTool.getYearAllofMonth(2015,2016);
-            data_time_tv.setText(dataSelects.get(0).yearMonDay);
+            dataSelects = DateTool.getYearAllofMonth(2015,year);
             Collections.reverse(dataSelects);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
+            data_time_tv.setText(dataSelects.get(0).yearMonDay);
             layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerView.setLayoutManager(layoutManager);
@@ -445,6 +455,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 获取能否打卡的信息
      */
     private void getValidateInfo() {
+        isAttAdd = true;
         showLoading("加载中...");
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
@@ -540,6 +551,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 获取列表
      */
     private void getData(final int page) {
+        isAttAdd = false;
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
