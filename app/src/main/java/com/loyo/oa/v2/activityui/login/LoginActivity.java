@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -26,9 +27,11 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.activityui.setting.VerifyAccountActivity_;
 import com.loyo.oa.v2.customview.WaveView;
+
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -111,7 +114,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 serverFormalTv.setTextColor(getResources().getColor(R.color.gray));
                 serverTestImg.setVisibility(View.VISIBLE);
                 serverFormalImg.setVisibility(View.INVISIBLE);
-                LogUtil.d("isRelease:"+Config_project.isRelease);
+                LogUtil.d("isRelease:" + Config_project.isRelease);
             }
         });
 
@@ -214,10 +217,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * 登陆
      *
      * @param body 表单
-     *
-     * 1，微信登录；2，普通登录
-     * 成功 getStatus 状态码
-     * 失败 getKind 状态码
+     *             <p/>
+     *             1，微信登录；2，普通登录
+     *             成功 getStatus 状态码
+     *             失败 getKind 状态码
      */
     private void login(final HashMap<String, Object> body) {
         RestAdapter adapter = new RestAdapter.Builder()
@@ -276,6 +279,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "openOne");
                         //登录成功
                         MainApp.setToken(token.access_token);
                         SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);

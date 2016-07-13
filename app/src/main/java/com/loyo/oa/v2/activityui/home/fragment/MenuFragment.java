@@ -67,6 +67,7 @@ public class MenuFragment extends BaseFragment {
     private Intent rushTokenIntent;
     public static ExitAppCallback callback;
     private Intent mIntentCheckUpdate;
+    private boolean isUpdataData = false;
 
     //个人信息 和版本信息
     private BroadcastReceiver userInfoAndVersionInfo = new BroadcastReceiver() {
@@ -85,6 +86,10 @@ public class MenuFragment extends BaseFragment {
                     }
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
+                }
+                if (isUpdataData) {
+                    Toast("数据更新成功！");
+                    isUpdataData = false;
                 }
             }
         }
@@ -224,6 +229,7 @@ public class MenuFragment extends BaseFragment {
             case R.id.ll__update:
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, "all");
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
+                isUpdataData = true;
                 if (Utils.isNetworkAvailable(getActivity())) {
                     Global.Toast("开始更新");
                     rushHomeData();
@@ -231,7 +237,6 @@ public class MenuFragment extends BaseFragment {
                 } else {
                     Toast("请检查您的网络连接");
                 }
-                LogUtil.d("是否有新颁布" + app.hasNewVersion);
                 break;
             case R.id.ll_version:
                 if (PackageManager.PERMISSION_GRANTED ==

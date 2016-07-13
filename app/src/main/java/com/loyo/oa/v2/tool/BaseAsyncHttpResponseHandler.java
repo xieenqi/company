@@ -72,7 +72,7 @@ public abstract class BaseAsyncHttpResponseHandler extends AsyncHttpResponseHand
 
     @Override
     public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-
+        DialogHelp.cancelLoading();
         switch (i) {
             case 401:
                 Global.Toast(R.string.app_Session_invalidation);

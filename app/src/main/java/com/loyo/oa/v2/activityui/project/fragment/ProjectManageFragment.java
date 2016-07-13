@@ -140,6 +140,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         Intent intent = new Intent();
         intent.setClass(mActivity, ProjectAddActivity_.class);
         startActivityForResult(intent, REQUEST_CREATE);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**

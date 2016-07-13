@@ -448,7 +448,7 @@ public class AddMySaleActivity extends BaseActivity {
                 public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
                     HttpErrorCheck.checkResponse("创建销售机会", response);
                     Toast("创建成功");
-                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, new Intent());
+                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE_STAGE, new Intent());
                 }
 
                 @Override
@@ -466,7 +466,7 @@ public class AddMySaleActivity extends BaseActivity {
                     Toast("修改成功");
                     mIntent = new Intent();
                     mIntent.putExtra(ExtraAndResult.RESULT_ID, ActionCode.SALE_DETAILS_EDIT);
-                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, mIntent);
+                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                 }
 
                 @Override

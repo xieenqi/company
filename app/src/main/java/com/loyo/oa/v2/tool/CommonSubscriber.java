@@ -43,6 +43,9 @@ public abstract class CommonSubscriber extends Subscriber<Serializable> {
 
     @Override
     public void onStart() {
+        if(!DialogHelp.isShow())
         DialogHelp.showLoading(mContext, "正在上传", true);
     }
+
+
 }
