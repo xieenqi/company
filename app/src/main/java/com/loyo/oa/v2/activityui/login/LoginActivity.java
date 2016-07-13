@@ -188,7 +188,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 app.startActivity(this, VerifyAccountActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             default:
-
                 break;
         }
     }
@@ -285,8 +284,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         MainApp.setToken(token.access_token);
                         SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
                         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
-                        //app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
-                        //app.startActivity(LoginActivity.this, NewMainActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
                         app.startActivity(LoginActivity.this, MainHomeActivity.class, MainApp.ENTER_TYPE_RIGHT, true, new Bundle());
                     }
                 });

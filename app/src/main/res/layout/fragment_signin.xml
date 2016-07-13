@@ -5,60 +5,38 @@
               android:background="@color/white"
               android:orientation="vertical">
 
+
     <LinearLayout
-        android:id="@+id/layout_date"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dimen_44"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/img_time_left"
-            android:layout_width="@dimen/dimen_55"
-            android:layout_height="@dimen/table_height"
-            android:layout_weight="1"
-            android:gravity="center_vertical|right"
-            android:orientation="vertical"
-            android:paddingRight="@dimen/dimen_5">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_select_time_left"
-                />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_time"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="2015年8月"
-            android:textColor="#383838"
-            android:textSize="16sp"
-            />
+            android:layout_marginLeft="@dimen/margin_other_view"
+            android:background="@drawable/icon_data_caladener" />
 
-        <LinearLayout
-            android:id="@+id/img_time_right"
-            android:layout_width="@dimen/dimen_55"
-            android:layout_height="@dimen/table_height"
-            android:layout_weight="1"
-            android:gravity="center_vertical|left"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/dimen_5">
+        <TextView
+            android:id="@+id/data_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_other_view"
+            android:text="2016年7月8日"
+            android:textColor="@color/text33"
+            android:textSize="@dimen/text_sp18" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_select_time_right"
-                />
-
-        </LinearLayout>
 
     </LinearLayout>
+
+    <include layout="@layout/include_solid_line" />
+
+    <com.loyo.oa.v2.customview.CustomRecyclerView
+        android:id="@+id/recy_data_select"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60"
+        />
 
     <View
         android:layout_width="match_parent"
