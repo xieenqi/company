@@ -55,7 +55,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 报告详情
+ * 【报告详情】
  */
 
 @EActivity(R.layout.activity_workreports_info)

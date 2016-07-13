@@ -47,7 +47,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :项目详情页
+ * 描述 :【项目详情页】
  * 作者 : ykb
  * 时间 : 15/9/8.
  */
