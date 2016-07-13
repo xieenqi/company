@@ -151,11 +151,10 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
                 case 0:
                     if (mHomeApplicationFragment == null) {
                         mHomeApplicationFragment = new HomeApplicationFragment();
-                        mBundle = new Bundle();
-                        mBundle.putParcelable("view", heading);
-                        mHomeApplicationFragment.setArguments(mBundle);
-
                     }
+                    mBundle = new Bundle();
+                    mBundle.putParcelable("view", heading);
+                    mHomeApplicationFragment.setArguments(mBundle);
                     return mHomeApplicationFragment;
                 case 1:
                     if (mHomeStatisticsFragment == null) {
