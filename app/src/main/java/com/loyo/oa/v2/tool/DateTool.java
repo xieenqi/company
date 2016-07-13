@@ -69,7 +69,7 @@ public class DateTool {
 
 
     /**
-     * 【我的考勤 我的拜访 团队拜访】获取年份 月份
+     * 【我的考勤】获取年份 月份
      * */
     public static ArrayList<DataSelect> getYearAllofMonth(int startYear,int endYear){
         ArrayList<DataSelect> arrayList = new ArrayList<>();
@@ -88,7 +88,11 @@ public class DateTool {
         while(calendar.getTime().getTime() <= calendarEnd.getTime().getTime()){
             dataSelect = new DataSelect();
             dataSelect.top  = monthSf.format(calendar.getTime());
-            dataSelect.bottom  = yearSf.format(calendar.getTime());
+            if(yearSf.format(calendar.getTime()).contains(DateTool.getNowTime("yyyy"))){
+                dataSelect.bottom  = "今年";
+            }else{
+                dataSelect.bottom  = yearSf.format(calendar.getTime());
+            }
             dataSelect.yearMonDay = yearSf.format(calendar.getTime())+"年"+monthSf.format(calendar.getTime())+"月";
             dataSelect.mapOftime = String.valueOf(calendar.getTime().getTime()).substring(0,10);
             arrayList.add(dataSelect);
@@ -100,7 +104,7 @@ public class DateTool {
 
 
     /**
-     * 【团队考勤】获取年月日
+     * 【团队考勤 我的拜访 团队拜访】获取年月日
      * 月份0~11，计算时要减1位
      * */
     public static ArrayList<DataSelect> getYearAllofDay(int startYear,int endYear){
