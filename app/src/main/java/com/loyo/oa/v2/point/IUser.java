@@ -27,10 +27,15 @@ public interface IUser {
     @PUT("/api/v2/user/{userId}/profile")
     void updateProfile(@Path("userId") String id,@Body HashMap<String ,Object> map,Callback<User> callback);
 
-    @GET("/user/{id}")
+    /**
+     * 以id获取人多信息
+     * @param id
+     * @param callback
+     */
+    @GET("/user/{id}/profile")
     void getUserById(@Path("id") String id,Callback<User> callback);
 
-    @GET("/")
+    @GET("/user/profile")
     void getProfile(retrofit.Callback<User> cb);
 
     @PUT("/")

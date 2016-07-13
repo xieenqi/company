@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.discuss.bean.HttpCrecter;
 import com.loyo.oa.v2.activityui.other.bean.User;
@@ -32,11 +33,13 @@ import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.point.IDiscuss;
+import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -53,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -649,6 +653,37 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                 return true;
             }
         };
+        View.OnClickListener userClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoading("");
+                HaitHelper.SelectUser user = (HaitHelper.SelectUser) view.getTag();
+                if (user == null) {
+                    Toast("没有信息");
+                    return;
+                }
+                RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getUserById(user.id, new Callback<User>() {
+                    @Override
+                    public void success(User user, Response response) {
+                        HttpErrorCheck.checkResponse("讨论其它人的信息：", response);
+                        //点击进入人的详情页面
+                        if (null != user) {
+                            Bundle b = new Bundle();
+                            b.putSerializable("user", user);
+                            app.startActivity(DiscussDetialActivity.this, ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                        } else {
+                            Toast("没有人员信息");
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+
+            }
+        };
 
         public void updataList(List<HttpDiscussDet> data) {
             if (data == null)
@@ -707,15 +742,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                 otherHolder.mIvOtherAvatar.setTag(selectUser);
 
                 otherHolder.mIvOtherAvatar.setOnLongClickListener(onAvaterLongClicklistener);
-//                otherHolder.mIvOtherAvatar.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        User user = discussion.getCreator();
-//                        Bundle b = new Bundle();
-//                        b.putSerializable("user", user);
-//                        app.startActivity((Activity) app.getApplicationContext(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
-//                    }
-//                });
+                otherHolder.mIvOtherAvatar.setOnClickListener(userClick);
             }
         }
 
