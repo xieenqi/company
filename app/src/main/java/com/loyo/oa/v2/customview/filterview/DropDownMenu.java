@@ -303,7 +303,7 @@ public class DropDownMenu extends LinearLayout{
             }
             int width = getWidth();
 
-            for (int i = 0; i < mMenuCount; i++) {
+            for (int i = 0; i < mMenuCount; i++) {//menuItem  布局
                 final RelativeLayout v = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.menu_item, null, false);
                 RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(width / mMenuCount, LayoutParams.WRAP_CONTENT);
                 v.setLayoutParams(parms);
