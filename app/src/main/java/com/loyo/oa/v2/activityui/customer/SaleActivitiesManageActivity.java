@@ -229,7 +229,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 tv_time.setTextColor(getResources().getColor(R.color.red1));
                 iv_imgTime.setImageResource(R.drawable.icon_tx2);
             } else {
-                tv_time.setTextColor(getResources().getColor(R.color.text66));
+                tv_time.setTextColor(getResources().getColor(R.color.text99));
                 iv_imgTime.setImageResource(R.drawable.icon_tx1);
             }
             if (i == lstData_saleActivity_current.size() - 1) {

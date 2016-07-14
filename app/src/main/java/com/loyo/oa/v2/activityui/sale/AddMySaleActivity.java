@@ -67,10 +67,10 @@ public class AddMySaleActivity extends BaseActivity {
     private ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();
     private ArrayList<CommonTag> loseResons = new ArrayList<>();
 
-    private int estimatedTime = -1;
+    private int estimatedTime = 0;
     private boolean isEdit;
     private StringBuffer loseReasonBuff;
-    private boolean isProduct = false, isType = false, isSource = false;
+    private boolean isProduct = false, isType = false, isSource = false, isEstimatedAmount = false, isEstimatedTime = false;
 
 
     @Override
@@ -226,7 +226,7 @@ public class AddMySaleActivity extends BaseActivity {
             oldStageNmae = mSaleDetails.stageName;
             stageId = mSaleDetails.stageId;
             et_money.setText(Utils.setValueDouble(mSaleDetails.estimatedAmount) + "");
-            tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
+            tv_estimate.setText(mSaleDetails.estimatedTime != 0 ? app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)) : "");
             estimatedTime = mSaleDetails.estimatedTime;
             intentionProductData = mSaleDetails.proInfos;
             tv_product.setText(getIntentionProductName());
@@ -285,6 +285,18 @@ public class AddMySaleActivity extends BaseActivity {
                     if ("chance_source".equals(ele.fieldName) && ele.required) {
                         isSource = true;
                         tv_source.setHint("必填,请选择");
+                    }
+                    if ("estimated_amount".equals(ele.fieldName) && ele.required) {
+                        isEstimatedAmount = true;
+                        et_money.setHint("必填,请输入");
+                    } else {
+                        et_money.setHint("请输入");
+                    }
+                    if ("estimated_time".equals(ele.fieldName) && ele.required) {
+                        isEstimatedTime = true;
+                        tv_estimate.setHint("必填,请选择");
+                    } else {
+                        tv_estimate.setHint("请选择");
                     }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
@@ -361,13 +373,13 @@ public class AddMySaleActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(stageId)) {
             Toast("请选择销售阶段");
             return;
-        } else if (TextUtils.isEmpty(et_money.getText().toString())) {
+        } else if (TextUtils.isEmpty(et_money.getText().toString()) && isEstimatedAmount) {
             Toast("请输预估入销售金额");
             return;
         } else if (ll_transport.getVisibility() == View.VISIBLE && loseResons.size() == 0) {
             Toast("请选择输单原因");
             return;
-        } else if (-1 == estimatedTime) {
+        } else if (0 == estimatedTime && isEstimatedTime) {
             Toast("请选择预估成交时间");
             return;
         } else if (isProduct && null != intentionProductData && !(intentionProductData.size() > 0)) {

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
@@ -29,9 +30,11 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -230,7 +233,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             ll_product.setEnabled(false);
         }
         //已通过的审批 任何人都不能删除
-        if(mSaleDetails.wfState == 0 && mSaleDetails.prob == 100){
+        if (mSaleDetails.wfState == 0 && mSaleDetails.prob == 100) {
             iv_wfstatus.setEnabled(false);
             img_title_right.setVisibility(View.INVISIBLE);
             ll_product.setEnabled(false);
@@ -242,7 +245,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
         salesAmount.setText("" + Utils.setValueDouble(mSaleDetails.estimatedAmount));
-        estimatedAmount.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
+        estimatedAmount.setText(mSaleDetails.estimatedTime != 0 ? app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)) : "无");
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());
