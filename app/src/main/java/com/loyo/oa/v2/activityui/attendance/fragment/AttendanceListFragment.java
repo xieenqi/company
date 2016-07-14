@@ -159,7 +159,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     if (view.getLastVisiblePosition() == view.getCount() - 1) {
                         //加载更多功能的代码
                         // Toast("到底部啦");
-                        if (type == 2) {
+                        if (type == 2 && null == DialogHelp.loadingDialog) {
                             loadMore();
                         }
                     }
@@ -551,6 +551,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 获取列表
      */
     private void getData(final int page) {
+        LogUtil.dee("调用中");
         isAttAdd = false;
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
@@ -558,7 +559,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         map.put("qtime", qtime);
         map.put("pageIndex", page);
         map.put("pageSize", 20);
-        LogUtil.dee("map:" + MainApp.gson.toJson(map));
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
@@ -584,7 +584,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkErrorForAttendance(error);
             }
         });
     }
