@@ -17,8 +17,11 @@
             android:id="@+id/tv_menu_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="111"
             android:ellipsize="middle"
+            android:paddingLeft="@dimen/dimen_5"
+            android:paddingRight="@dimen/dimen_5"
             android:singleLine="true"
             android:textColor="@color/text33"
             android:textSize="@dimen/text_sp14"/>
