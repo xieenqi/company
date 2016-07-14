@@ -105,7 +105,8 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
         }
 
         if (!itemLock && position == 0) {
-            holder.num.setBackground(mContext.getResources().getDrawable(R.drawable.shape_count_top));
+            holder.num.setTextColor(mContext.getResources().getColor(R.color.white));
+            holder.num.setBackground(mContext.getResources().getDrawable(R.drawable.shape_count_gd));
         }
     }
 

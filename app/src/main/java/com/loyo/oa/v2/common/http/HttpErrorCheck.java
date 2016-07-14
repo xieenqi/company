@@ -37,6 +37,41 @@ public class HttpErrorCheck {
         mCurrentToast.show();
     }
 
+    public static void checkErrorForAttendance(RetrofitError error) {
+        DialogHelp.cancelLoading();
+        LogUtil.d("网络异常" + error.getMessage());
+        LogUtil.d("error接口URL：" + error.getUrl());
+
+        try {
+            String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
+            LogUtil.d("error获得的：", msg);
+            JSONObject job = new JSONObject(msg);
+            if (500 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (401 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (404 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                Toast("请检查您的网络连接");
+            } else {
+                Toast(job.getString("error"));
+            }
+            LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            LogUtil.d("Body空err:" + error.getUrl());
+            e.printStackTrace();
+            Toast("没有更多数据了！");
+        } catch (JSONException e) {
+            LogUtil.d("JSON异常err:" + error.getUrl());
+            Toast("服务端数据异常");
+            e.printStackTrace();
+        }
+    }
+
+
     public static void checkError(RetrofitError error) {
         DialogHelp.cancelLoading();
         LogUtil.d("网络异常" + error.getMessage());
@@ -60,7 +95,6 @@ public class HttpErrorCheck {
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
             e.printStackTrace();
-            // Toast(error.getMessage());
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
             e.printStackTrace();
@@ -70,13 +104,6 @@ public class HttpErrorCheck {
             Toast("服务端数据异常");
             e.printStackTrace();
         }
-
-
-        // LogUtil.d("cu123ow :" + error.getResponse().getBody().toString());
-        //Object obj = error.getBody();
-//        String msg = null == obj
-//                ? error.getMessage() :
-//                obj.toString();//error.getMessage();
     }
 
     public static void checkResponse(String tag, Response response) {
