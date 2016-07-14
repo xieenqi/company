@@ -26,15 +26,17 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
     private ArrayList<DataSelect> data;
     private int windowW;
     private int selectPosition;
+    private int defaultPosition;
     private int type;
     private boolean itemLock;
     private ScaleAnimation animation;
 
-   public DataSelectAdapter(Context mContext,ArrayList<DataSelect> data,int windowW,int type){
+   public DataSelectAdapter(Context mContext,ArrayList<DataSelect> data,int windowW,int type,int defaultPosition){
         this.mContext = mContext;
         this.data = data;
         this.windowW = windowW;
         this.type = type;
+        this.defaultPosition = defaultPosition;
    }
 
     @Override
@@ -104,7 +106,7 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
             holder.num.setTextColor(mContext.getResources().getColor(R.color.text33));
         }
 
-        if (!itemLock && position == 0) {
+        if (!itemLock && position == defaultPosition) {
             holder.num.setTextColor(mContext.getResources().getColor(R.color.white));
             holder.num.setBackground(mContext.getResources().getDrawable(R.drawable.shape_count_gd));
         }
