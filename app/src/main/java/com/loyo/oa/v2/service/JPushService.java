@@ -156,11 +156,17 @@ public class JPushService extends BroadcastReceiver {
         if (null == pushMsgData.buzzIds || !(pushMsgData.buzzIds.size() > 0)) {
             return false;
         }
-        for (String ele : pushMsgData.buzzIds) {
-            if (MainApp.user.id.equals(ele)) {
-                return true;
+        try {
+            for (String ele : pushMsgData.buzzIds) {
+                if (MainApp.user.id.equals(ele)) {
+                    return true;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
+
         return false;
     }
     //send msg to SelectCityMain

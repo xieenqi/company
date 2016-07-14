@@ -253,13 +253,12 @@ public class AddMySaleActivity extends BaseActivity {
             if (!TextUtils.isEmpty(customerName)) {
                 tv_customer.setText(customerName);
                 ll_customer.setEnabled(false);
+                et_name.setText(customerName);
             }
 
         }
     }
 
-//    private final static String[] tracyColors = {"#f8668a", "#4ec469", "#4ddac2", "#31cbe8", "#88b9f7", "#7fcaff", "#f18f73", "#fdb485", "#fde068", "#12db8a"};
-//    private final static float[] tracywhit = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
 
     /**
      * 获取动态字段
@@ -289,13 +288,29 @@ public class AddMySaleActivity extends BaseActivity {
                     }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
-//                for (int i = 0; i < tracyColors.length; i++) {
-//                    TrapezoidView view = new TrapezoidView(AddMySaleActivity.this);
-//                    view.setDefaultCorol(Color.parseColor(tracyColors[i]));
-//                    view.setBottomWidth(tracywhit[i]);
-//                    tv_custom.addView(view);
-//                    LogUtil.d(tracywhit[i] + "kongjian个数：" + tv_custom.getChildCount());
-//                }
+                getSaleStageData();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    /**
+     * 获取销售阶段 数据  默认第一个阶段
+     */
+    public void getSaleStageData() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(ISale.class).getSaleStage(new Callback<ArrayList<SaleStage>>() {
+            @Override
+            public void success(ArrayList<SaleStage> saleStage, Response response) {
+                HttpErrorCheck.checkResponse("销售阶段", response);
+                if (saleStage != null && saleStage.size() > 0) {
+                    tv_stage.setText(saleStage.get(0).name);
+                    stageId = saleStage.get(0).id;
+                }
             }
 
             @Override
@@ -488,6 +503,8 @@ public class AddMySaleActivity extends BaseActivity {
                         customerName = customer.name;
                     }
                     tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                    if (TextUtils.isEmpty(et_name.getText().toString()))
+                        et_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                     break;
                 case ExtraAndResult.REQUEST_CODE_STAGE://选择销售阶段
                     SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
