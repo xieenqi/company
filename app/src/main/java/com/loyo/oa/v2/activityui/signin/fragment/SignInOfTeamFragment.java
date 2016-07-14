@@ -73,6 +73,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     private PaginationLegWork legworkPaginationX = new PaginationLegWork(20);
     private boolean isTopAdd;
     private String duration;
+    private int defaultPosition = 0;
 
     private LinearLayoutManager layoutManager;
     private DataSelectAdapter dataSelectAdapter;
@@ -131,7 +132,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
         layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2);
+        dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2,0);
         recyclerView.setAdapter(dataSelectAdapter);
         endAt = Long.valueOf(dataSelects.get(0).mapOftime);
 
@@ -142,8 +143,9 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                 dataSelectAdapter.notifyDataSetChanged();
                 data_time_tv.setText(dataSelects.get(position).yearMonDay);
                 endAt = Long.valueOf(dataSelects.get(position).mapOftime);
-                duration = DateTool.timet(dataSelects.get(position).mapOftime,"yyyy-MM-dd");
+                duration = DateTool.timet(dataSelects.get(position).mapOftime, "yyyy-MM-dd");
                 onPullDownToRefresh(lv);
+                defaultPosition = position;
             }
 
             @Override
@@ -245,6 +247,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     private void previewLegWorks(User user) {
         Intent intent = new Intent(mActivity, LegworksListActivity_.class);
         intent.putExtra("data", user);
+        intent.putExtra("position", defaultPosition);
         intent.putExtra(ExtraAndResult.EXTRA_DATA, endAt);
         startActivity(intent);
     }

@@ -26,9 +26,13 @@ public class LegworksListActivity extends FragmentActivity {
 
     @ViewById ViewGroup img_title_left;
     @ViewById TextView tv_title_1;
-    @Extra("data") User mUser;
+    @Extra("data")
+    User mUser;
     @Extra(ExtraAndResult.EXTRA_DATA)
     long endAt;
+    @Extra("position")
+    int defaultPosition;
+
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
     @AfterViews
@@ -38,6 +42,7 @@ public class LegworksListActivity extends FragmentActivity {
         Bundle b = new Bundle();
         b.putSerializable("user", mUser);
         b.putBoolean("disabled", true);
+        b.putInt("position", defaultPosition);
         b.putLong(ExtraAndResult.EXTRA_DATA, endAt);
         BaseFragment fragment = (BaseFragment) Fragment.instantiate(this, SignInOfUserFragment.class.getName(), b);
         fragmentManager.beginTransaction().replace(R.id.layout_list_container, fragment).commit();

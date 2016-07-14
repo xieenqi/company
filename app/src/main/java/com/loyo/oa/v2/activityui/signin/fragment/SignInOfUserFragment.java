@@ -62,6 +62,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
     private PullToRefreshListView lv;
     private Button btn_add;
     private TextView data_time_tv;
+    private int defaultPosition;
 
     private ArrayList<LegWork> legWorks = new ArrayList<>();
     private SignInListAdapter adapter;
@@ -106,6 +107,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
             if (null != getArguments()) {
                 if (getArguments().containsKey("user")) {
                     mUser = (User) getArguments().getSerializable("user");
+                    defaultPosition = getArguments().getInt("position");
                 }
             }
 
@@ -113,7 +115,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 btn_add.setVisibility(View.GONE);
             }
             dataSelectInit();
-            initTimeStr(0);
+            initTimeStr(defaultPosition);
             getData();
         }
         return mView;
@@ -131,11 +133,11 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         Collections.reverse(dataSelects);
         dataSelects.remove(dataSelects.size() - 1);
         windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
-        data_time_tv.setText(dataSelects.get(0).yearMonDay);
+        data_time_tv.setText(dataSelects.get(defaultPosition).yearMonDay);
         layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2);
+        dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2,defaultPosition);
         recyclerView.setAdapter(dataSelectAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {

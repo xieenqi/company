@@ -159,7 +159,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     if (view.getLastVisiblePosition() == view.getCount() - 1) {
                         //加载更多功能的代码
                         // Toast("到底部啦");
-                        if (type == 2 && null == DialogHelp.loadingDialog) {
+                        if (type == 2 && null == DialogHelp.loadingDialog ) {
                             loadMore();
                         }
                     }
@@ -207,7 +207,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             //customerDataManager = new CustomerDataManager(1, StaggeredGridLayoutManager.HORIZONTAL);
             //customerDataManager.setSpeedRatio(0.5);
             recyclerView.setLayoutManager(layoutManager);
-            dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2);
+            dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2,0);
             recyclerView.setAdapter(dataSelectAdapter);
             qtime = Integer.parseInt(dataSelects.get(0).mapOftime);
         }else{
@@ -218,7 +218,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerView.setLayoutManager(layoutManager);
-            dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,1);
+            dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,1,0);
             recyclerView.setAdapter(dataSelectAdapter);
             qtime = Integer.parseInt(dataSelects.get(0).mapOftime);
         }
