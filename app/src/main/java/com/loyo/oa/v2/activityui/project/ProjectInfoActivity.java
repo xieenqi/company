@@ -351,12 +351,12 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     restartProject();
                 }
                 break;
-            case 196708://讨论不能够@自己196708
-                if (fragmentX instanceof DiscussionFragment) {
-                    ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
-                }
-
-                break;
+//            case 196708://讨论不能够@自己196708
+//                if (fragmentX instanceof DiscussionFragment) {
+//                    ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
+//                }
+//
+//                break;
 
         }
     }
