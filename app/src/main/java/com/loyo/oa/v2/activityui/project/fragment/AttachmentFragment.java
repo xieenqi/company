@@ -77,7 +77,6 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         onLoadSuccess(mListAttachment.size());
         final ArrayList<Attachment> sortAttachment = Attachment.Sort(mListAttachment);
         ArrayList<User> users = Common.getUsersByProject(mProject);
-        LogUtil.dll("project status:" + mProject.status);
 
         if (mProject.status == 2) {
             isOver = true;
