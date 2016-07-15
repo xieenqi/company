@@ -155,7 +155,6 @@ public class PreviewImageListActivity extends BaseActivity {
                 generalPopView.dismiss();
             }
         });
-
     }
 
     class SamplePagerAdapter extends PagerAdapter {
