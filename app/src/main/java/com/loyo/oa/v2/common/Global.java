@@ -212,19 +212,25 @@ public final class Global {
         if ((dot > -1) && (dot < (filename.length() - 1))) {
             fileExt = filename.substring(dot + 1).toLowerCase();
         } else {
-            return R.drawable.other_file;
+            return R.drawable.img_file_null;
         }
 
         if (fileExt.endsWith("docx") || fileExt.endsWith("doc") || fileExt.endsWith("docm") || fileExt.endsWith("dotx") || fileExt.endsWith("dotm")) {
             return R.drawable.img_file_doc;
         } else if (fileExt.endsWith("xlsx") || fileExt.endsWith("xlsb") || fileExt.endsWith("xls") || fileExt.endsWith("xlsm")) {
-            return R.drawable.img_file_xls;
+            return R.drawable.img_file_excel;
         } else if (fileExt.endsWith("pptx") || fileExt.endsWith("ppsx") || fileExt.endsWith("ppt") || fileExt.endsWith("pps") ||
                 fileExt.endsWith("pptm") || fileExt.endsWith("potm") || fileExt.endsWith("ppam") || fileExt.endsWith("potx") || fileExt.endsWith("ppsm")) {
             return R.drawable.img_file_ppt;
+        } else if (fileExt.endsWith("zip") || fileExt.endsWith("rar")) {
+            return R.drawable.img_file_zip;
+        } else if (fileExt.endsWith("txt") || fileExt.endsWith("TXT")) {
+            return R.drawable.img_file_txt;
+        } else if (fileExt.endsWith("pdf")) {
+            return R.drawable.img_file_pdf;
         }
 
-        return R.drawable.other_file;
+        return R.drawable.img_file_null;
     }
 
     /**
