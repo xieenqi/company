@@ -67,10 +67,10 @@ public class AddMySaleActivity extends BaseActivity {
     private ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();
     private ArrayList<CommonTag> loseResons = new ArrayList<>();
 
-    private int estimatedTime = -1;
+    private int estimatedTime = 0;
     private boolean isEdit;
     private StringBuffer loseReasonBuff;
-    private boolean isProduct = false, isType = false, isSource = false;
+    private boolean isProduct = false, isType = false, isSource = false, isEstimatedAmount = false, isEstimatedTime = false;
 
 
     @Override
@@ -226,7 +226,7 @@ public class AddMySaleActivity extends BaseActivity {
             oldStageNmae = mSaleDetails.stageName;
             stageId = mSaleDetails.stageId;
             et_money.setText(Utils.setValueDouble(mSaleDetails.estimatedAmount) + "");
-            tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
+            tv_estimate.setText(mSaleDetails.estimatedTime != 0 ? app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)) : "");
             estimatedTime = mSaleDetails.estimatedTime;
             intentionProductData = mSaleDetails.proInfos;
             tv_product.setText(getIntentionProductName());
@@ -253,13 +253,12 @@ public class AddMySaleActivity extends BaseActivity {
             if (!TextUtils.isEmpty(customerName)) {
                 tv_customer.setText(customerName);
                 ll_customer.setEnabled(false);
+                et_name.setText(customerName);
             }
 
         }
     }
 
-//    private final static String[] tracyColors = {"#f8668a", "#4ec469", "#4ddac2", "#31cbe8", "#88b9f7", "#7fcaff", "#f18f73", "#fdb485", "#fde068", "#12db8a"};
-//    private final static float[] tracywhit = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
 
     /**
      * 获取动态字段
@@ -287,15 +286,43 @@ public class AddMySaleActivity extends BaseActivity {
                         isSource = true;
                         tv_source.setHint("必填,请选择");
                     }
+                    if ("estimated_amount".equals(ele.fieldName) && ele.required) {
+                        isEstimatedAmount = true;
+                        et_money.setHint("必填,请输入");
+                    } else {
+                        et_money.setHint("请输入");
+                    }
+                    if ("estimated_time".equals(ele.fieldName) && ele.required) {
+                        isEstimatedTime = true;
+                        tv_estimate.setHint("必填,请选择");
+                    } else {
+                        tv_estimate.setHint("请选择");
+                    }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
-//                for (int i = 0; i < tracyColors.length; i++) {
-//                    TrapezoidView view = new TrapezoidView(AddMySaleActivity.this);
-//                    view.setDefaultCorol(Color.parseColor(tracyColors[i]));
-//                    view.setBottomWidth(tracywhit[i]);
-//                    tv_custom.addView(view);
-//                    LogUtil.d(tracywhit[i] + "kongjian个数：" + tv_custom.getChildCount());
-//                }
+                getSaleStageData();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    /**
+     * 获取销售阶段 数据  默认第一个阶段
+     */
+    public void getSaleStageData() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(ISale.class).getSaleStage(new Callback<ArrayList<SaleStage>>() {
+            @Override
+            public void success(ArrayList<SaleStage> saleStage, Response response) {
+                HttpErrorCheck.checkResponse("销售阶段", response);
+                if (saleStage != null && saleStage.size() > 0) {
+                    tv_stage.setText(saleStage.get(0).name);
+                    stageId = saleStage.get(0).id;
+                }
             }
 
             @Override
@@ -346,13 +373,13 @@ public class AddMySaleActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(stageId)) {
             Toast("请选择销售阶段");
             return;
-        } else if (TextUtils.isEmpty(et_money.getText().toString())) {
+        } else if (TextUtils.isEmpty(et_money.getText().toString()) && isEstimatedAmount) {
             Toast("请输预估入销售金额");
             return;
         } else if (ll_transport.getVisibility() == View.VISIBLE && loseResons.size() == 0) {
             Toast("请选择输单原因");
             return;
-        } else if (-1 == estimatedTime) {
+        } else if (0 == estimatedTime && isEstimatedTime) {
             Toast("请选择预估成交时间");
             return;
         } else if (isProduct && null != intentionProductData && !(intentionProductData.size() > 0)) {
@@ -448,7 +475,7 @@ public class AddMySaleActivity extends BaseActivity {
                 public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
                     HttpErrorCheck.checkResponse("创建销售机会", response);
                     Toast("创建成功");
-                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, new Intent());
+                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE_STAGE, new Intent());
                 }
 
                 @Override
@@ -466,7 +493,7 @@ public class AddMySaleActivity extends BaseActivity {
                     Toast("修改成功");
                     mIntent = new Intent();
                     mIntent.putExtra(ExtraAndResult.RESULT_ID, ActionCode.SALE_DETAILS_EDIT);
-                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, mIntent);
+                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                 }
 
                 @Override
@@ -488,6 +515,8 @@ public class AddMySaleActivity extends BaseActivity {
                         customerName = customer.name;
                     }
                     tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                    if (TextUtils.isEmpty(et_name.getText().toString()))
+                        et_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                     break;
                 case ExtraAndResult.REQUEST_CODE_STAGE://选择销售阶段
                     SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);

@@ -20,8 +20,9 @@ import com.loyo.oa.v2.tool.LogUtil;
  */
 public class DialogHelp {
 
-    private static Dialog loadingDialog;//加载loading
-    private static TextView tipTextView;
+    public static Dialog loadingDialog;//加载loading
+    public static TextView tipTextView;
+
     public static void showLoading(Context context, String msg) {
         showLoading(context, msg, true);
     }
@@ -79,5 +80,12 @@ public class DialogHelp {
         if (tipTextView != null && !TextUtils.isEmpty(msg)) {
             tipTextView.setText(msg);
         }
+    }
+
+    public static boolean isShow() {
+        if (null == loadingDialog) {
+            return false;
+        }
+        return loadingDialog.isShowing();
     }
 }

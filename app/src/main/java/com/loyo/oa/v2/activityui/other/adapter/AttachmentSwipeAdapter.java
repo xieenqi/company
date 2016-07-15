@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.other.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,33 +10,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
  * 【附件适配器】
- * */
+ */
 public class AttachmentSwipeAdapter extends BaseAdapter {
 
     public static final int REQUEST_ATTACHMENT = 4000;
@@ -105,7 +112,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             //修复进入附件时崩溃的bug ykb 07-13
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_swipelistview_attachments, null);
@@ -116,7 +123,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             holder.tv_creator = (TextView) convertView.findViewById(R.id.tv_creator);
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_createtime);
-//          holder.layout_action_update = (ViewGroup) convertView.findViewById(R.id.layout_action_update);
+            holder.pb_progress = (ProgressBar) convertView.findViewById(R.id.pb_progress);
             holder.layout_action_delete = (ViewGroup) convertView.findViewById(R.id.layout_action_delete);
 
             convertView.setTag(holder);
@@ -134,7 +141,28 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
 
         if (file == null) {
             if (isPic) {
-                ImageLoader.getInstance().displayImage(attachment.getUrl(), holder.img_attachment, MainApp.options_3);
+                ImageLoader.getInstance().displayImage(attachment.getUrl(), holder.img_attachment, MainApp.options_3, new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String s, View view) {
+                        holder.pb_progress.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String s, View view, FailReason failReason) {
+                        holder.pb_progress.setVisibility(View.INVISIBLE);
+                        holder.img_attachment.setImageResource(R.drawable.img_file_null);
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                        holder.pb_progress.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String s, View view) {
+
+                    }
+                });
             } else {
                 holder.img_attachment.setImageResource(Global.getAttachmentIcon(attachment.getUrl()));
             }
@@ -267,7 +295,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         public TextView tv_title;
         public TextView tv_time;
         public ViewGroup front;
-        //public ViewGroup layout_action_update;
+        public ProgressBar pb_progress;
         public ViewGroup layout_action_delete;
     }
 }

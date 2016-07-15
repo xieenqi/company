@@ -151,11 +151,10 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
                 case 0:
                     if (mHomeApplicationFragment == null) {
                         mHomeApplicationFragment = new HomeApplicationFragment();
-                        mBundle = new Bundle();
-                        mBundle.putParcelable("view", heading);
-                        mHomeApplicationFragment.setArguments(mBundle);
-
                     }
+                    mBundle = new Bundle();
+                    mBundle.putParcelable("view", heading);
+                    mHomeApplicationFragment.setArguments(mBundle);
                     return mHomeApplicationFragment;
                 case 1:
                     if (mHomeStatisticsFragment == null) {
@@ -207,7 +206,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
             ((MainHomeActivity) getActivity()).gotoStart();
         }
         title.get(index).setChecked(true);// 设置被选中，否则布局里面的背景不会切换
-        if (1 == index) {
+        if (1 == index && null != mHomeStatisticsFragment) {
             mHomeStatisticsFragment.onInIt();
         }
         LogUtil.d("选择值：" + index);

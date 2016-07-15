@@ -316,6 +316,10 @@ public class MainHomeActivity extends SlidingFragmentActivity {
      */
     @Override
     public void onBackPressed() {
+        if(sm.isMenuShowing()){
+           sm.showMenu(false);
+            return;
+        }
         showGeneralDialog(true, true, getString(R.string.app_exit_message));
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {

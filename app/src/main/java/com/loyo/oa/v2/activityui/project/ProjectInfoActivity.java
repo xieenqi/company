@@ -47,7 +47,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :项目详情页
+ * 描述 :【项目详情页】
  * 作者 : ykb
  * 时间 : 15/9/8.
  */
@@ -351,12 +351,12 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     restartProject();
                 }
                 break;
-            case 196708://讨论不能够@自己196708
-                if (fragmentX instanceof DiscussionFragment) {
-                    ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
-                }
-
-                break;
+//            case 196708://讨论不能够@自己196708
+//                if (fragmentX instanceof DiscussionFragment) {
+//                    ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
+//                }
+//
+//                break;
 
         }
     }

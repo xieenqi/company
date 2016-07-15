@@ -237,7 +237,6 @@ public class MenuFragment extends BaseFragment {
                 } else {
                     Toast("请检查您的网络连接");
                 }
-                LogUtil.d("是否有新颁布" + app.hasNewVersion);
                 break;
             case R.id.ll_version:
                 if (PackageManager.PERMISSION_GRANTED ==

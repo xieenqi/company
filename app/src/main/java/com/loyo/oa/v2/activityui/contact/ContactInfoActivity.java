@@ -211,11 +211,6 @@ public class ContactInfoActivity extends BaseActivity {
             return;
         }
         Utils.sendSms(ContactInfoActivity.this, user.mobile);
-
-//        Uri uri = Uri.parse("smsto:" + user.mobile);
-//        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
-//        sendIntent.putExtra("sms_body", "");
-//        startActivity(sendIntent);
     }
 
     /**
@@ -227,7 +222,5 @@ public class ContactInfoActivity extends BaseActivity {
             return;
         }
         Utils.call(ContactInfoActivity.this, user.mobile);
-//        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.mobile));
-//        startActivity(intent);
     }
 }

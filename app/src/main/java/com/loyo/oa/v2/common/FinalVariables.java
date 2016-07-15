@@ -157,7 +157,7 @@ public final class FinalVariables {
     /**
      * 获取个人资料
      **/
-    public static final String GET_PROFILE = Config_project.SERVER_URL_LOGIN() + "/api/v2/user/profile/";
+    public static final String GET_PROFILE = Config_project.SERVER_URL_LOGIN() + "/api/v2";
     /**
      * 获取组织架构
      **/

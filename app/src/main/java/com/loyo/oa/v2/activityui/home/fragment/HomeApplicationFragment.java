@@ -177,7 +177,12 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.heading = getArguments().getParcelable("view");
+        try {
+            this.heading = getArguments().getParcelable("view");
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.d("<<<<<<<<<<<<<<<<<主页头像再次异常>>>>>>>>>>>>>>>>>>>>>>");
+        }
         initData();
     }
 
@@ -287,6 +292,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     LogUtil.d(" Jpush user kongkong 空空");
                     setJpushAlias();
                     JpushCount++;
+//                    LogUtil.d("Jpush 的链接状态:" + JPushInterface.getConnectionState(getActivity()));
+                    isJPus = false;
                 }
             }, 5000);
             return;

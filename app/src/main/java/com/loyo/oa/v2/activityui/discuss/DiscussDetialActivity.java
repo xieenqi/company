@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
@@ -30,8 +31,12 @@ import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -40,10 +45,8 @@ import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -647,6 +650,18 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                 return true;
             }
         };
+        View.OnClickListener userClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HaitHelper.SelectUser user = (HaitHelper.SelectUser) view.getTag();
+                if (user == null) {
+                    Toast("没有信息");
+                    return;
+                }
+                showLoading("");
+                Common.getUserInfo(DiscussDetialActivity.this, app, user.id);
+            }
+        };
 
         public void updataList(List<HttpDiscussDet> data) {
             if (data == null)
@@ -705,6 +720,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                 otherHolder.mIvOtherAvatar.setTag(selectUser);
 
                 otherHolder.mIvOtherAvatar.setOnLongClickListener(onAvaterLongClicklistener);
+                otherHolder.mIvOtherAvatar.setOnClickListener(userClick);
             }
         }
 

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.project.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -11,12 +12,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
+import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -27,9 +33,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.TimeFormatUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
-import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -294,8 +297,30 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                     return true;
                 }
             });
-
+            iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (TextUtils.isEmpty(discussion.getCreator().getId()) || discussion.getCreator().id.equals(MainApp.user.id)) {
+                        return;
+                    }
+                    showLoading("");
+                    Common.getUserInfo(getActivity(), app, discussion.getCreator().getId());
+                }
+            });
             return view;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == -1) {
+            switch (requestCode) {
+                case ExtraAndResult.REQUEST_CODE:
+                    getHaitHelper().onActivityResult(requestCode, resultCode, data);
+                    break;
+            }
+        }
+
     }
 }

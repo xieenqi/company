@@ -39,7 +39,7 @@ public class JPushService extends BroadcastReceiver {
         manger = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Bundle bundle = intent.getExtras();
         LogUtil.d("[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
-
+        TrackRule.InitTrackRule();//收到推送启动一次定位服务 避免服务kill掉
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
@@ -156,11 +156,17 @@ public class JPushService extends BroadcastReceiver {
         if (null == pushMsgData.buzzIds || !(pushMsgData.buzzIds.size() > 0)) {
             return false;
         }
-        for (String ele : pushMsgData.buzzIds) {
-            if (MainApp.user.id.equals(ele)) {
-                return true;
+        try {
+            for (String ele : pushMsgData.buzzIds) {
+                if (MainApp.user.id.equals(ele)) {
+                    return true;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
+
         return false;
     }
     //send msg to SelectCityMain

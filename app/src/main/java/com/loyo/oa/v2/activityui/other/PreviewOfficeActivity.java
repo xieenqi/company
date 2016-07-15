@@ -15,6 +15,9 @@ import com.loyo.oa.v2.customview.ProgressWebView;
 
 import java.net.URLEncoder;
 
+/**
+ * 预览 Word文档
+ */
 public class PreviewOfficeActivity extends Activity {
 
     ProgressWebView mWebView;

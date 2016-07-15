@@ -1,9 +1,12 @@
 package com.loyo.oa.v2.common;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
@@ -11,13 +14,20 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
 import com.loyo.oa.v2.beans.UserInfo;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.ListUtil;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public final class Common {
 
@@ -489,5 +499,34 @@ public final class Common {
         }
 
         return myUsers;
+    }
+
+    /**
+     * 根据人id 获取人的信息
+     *
+     * @param activity
+     * @param app
+     * @param id
+     */
+    public static void getUserInfo(final Activity activity, final MainApp app, String id) {
+        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getUserById(id, new Callback<User>() {
+            @Override
+            public void success(User user, Response response) {
+                HttpErrorCheck.checkResponse("讨论其它人的信息：", response);
+                //点击进入人的详情页面
+                if (null != user) {
+                    Bundle b = new Bundle();
+                    b.putSerializable("user", user);
+                    app.startActivity(activity, ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                } else {
+                    Global.Toast("没有人员信息");
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 }

@@ -1,7 +1,7 @@
 <RelativeLayout
     android:id="@+id/rl_menu_head"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/default_menu_back"
     >
@@ -11,14 +11,18 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
+        android:paddingRight="@dimen/dimen_5"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_menu_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dimen_20"
+            android:layout_weight="1"
             android:text="111"
+            android:ellipsize="middle"
+            android:paddingLeft="@dimen/dimen_5"
+            android:singleLine="true"
             android:textColor="@color/text33"
             android:textSize="@dimen/text_sp14"/>
 

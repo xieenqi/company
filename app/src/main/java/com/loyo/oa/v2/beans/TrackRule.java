@@ -1,9 +1,14 @@
 package com.loyo.oa.v2.beans;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
+import com.loyo.oa.v2.activityui.other.bean.Company;
+import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -15,8 +20,6 @@ import com.loyo.oa.v2.service.TrackLogRecevier;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
-import com.loyo.oa.v2.activityui.other.bean.Company;
-import com.loyo.oa.v2.activityui.other.bean.User;
 
 import org.joda.time.DateTime;
 
@@ -149,20 +152,20 @@ public class TrackRule implements Serializable {
      * @param delayMills
      */
     private static synchronized void StartTrackRuleAlarm(Context mContext, TrackRule trackRule, long delayMills) {
-//        if (trackRule.getDuration() <= 0) {
-//            return;
-//        }
-//
-//        Context context = mContext.getApplicationContext();
-//        Intent intent = new Intent(context, TrackLogRecevier.class);
-//        intent.setAction(TrackRule.RequestAction);
-//        intent.putExtra("track", trackRule);
-//
-//        PendingIntent sender = PendingIntent.getBroadcast(context, TrackRule.RequestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//        am.cancel(sender);
-//        am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delayMills, sender);
+        if (trackRule.duration <= 0) {
+            return;
+        }
+
+        Context context = mContext.getApplicationContext();
+        Intent intent = new Intent(context, TrackLogRecevier.class);
+        intent.setAction(TrackRule.RequestAction);
+        intent.putExtra("track", trackRule);
+
+        PendingIntent sender = PendingIntent.getBroadcast(context, TrackRule.RequestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(sender);
+        am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delayMills, sender);
     }
 
     public static void StartTrackRule(TrackRule trackRule, Context app) {
