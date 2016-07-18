@@ -412,9 +412,6 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                                 adapter.removeAtTime(time);
                             }
                         }, 800);
-//                et_discuss.setText(message);
-//                Toast("信息上传失败请重新发送");
-
                     }
                 });
     }

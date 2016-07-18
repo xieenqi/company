@@ -217,15 +217,19 @@ public class MenuFragment extends BaseFragment {
      */
     private void onClickView(View v) {
         switch (v.getId()) {
+            //个人资料
             case R.id.ll_user:
                 updateUserinfo();
                 break;
+            //修改密码
             case R.id.ll_pwd:
                 app.startActivity(getActivity(), SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
+            //意见反馈
             case R.id.ll_feed_back:
                 app.startActivity(getActivity(), FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
+            //更新数据
             case R.id.ll__update:
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, "all");
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
@@ -238,6 +242,7 @@ public class MenuFragment extends BaseFragment {
                     Toast("请检查您的网络连接");
                 }
                 break;
+            //检查更新
             case R.id.ll_version:
                 if (PackageManager.PERMISSION_GRANTED ==
                         getActivity().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
@@ -261,6 +266,7 @@ public class MenuFragment extends BaseFragment {
                     });
                 }
                 break;
+            //退出登录
             case R.id.ll_exit:
                 exit();
                 break;

@@ -120,7 +120,6 @@ public class FeedbackActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
             @Override
             public void success(final FeedBackCommit feedBackCommit, final Response response) {
-
                 showSuccessDialog();
             }
 
