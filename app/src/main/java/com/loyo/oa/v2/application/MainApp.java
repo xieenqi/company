@@ -281,7 +281,7 @@ public class MainApp extends Application {
         File cacheDir = StorageUtils.getOwnCacheDirectory(mainApp.getBaseContext(), "imageloader/Cache");
 
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.img_default_user)// 空uri时的默认图片
-                .showImageOnFail(R.drawable.img_default_user)// 加载失败时的默认图片
+                .showImageOnFail(R.drawable.default_image)// 加载失败时的默认图片
                 .cacheInMemory(true)// 是否缓存到内存
                 .cacheOnDisc(true)// 是否缓存到磁盘
                 .bitmapConfig(Bitmap.Config.RGB_565)// 图片格式比RGB888少消耗2倍内存

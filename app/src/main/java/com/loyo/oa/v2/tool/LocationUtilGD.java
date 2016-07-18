@@ -7,6 +7,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.DialogHelp;
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class LocationUtilGD {
         startLocate(context);
         this.afterLocation = afterLocation;
         this.context = context;
+        TrackRule.InitTrackRule();//手动定位 启动一次定位服务 避免服务kill掉
     }
 
     /**

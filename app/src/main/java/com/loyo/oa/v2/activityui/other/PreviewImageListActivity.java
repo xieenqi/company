@@ -27,6 +27,8 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 
+import uk.co.senab.photoview.PhotoView;
+
 /**
  * 【附件列表】预览图片
  */
@@ -165,7 +167,7 @@ public class PreviewImageListActivity extends BaseActivity {
         @Override
         public View instantiateItem(final ViewGroup container, final int position) {
             View view = LayoutInflater.from(PreviewImageListActivity.this).inflate(R.layout.item_picture_preview, null);
-            ImageView img = (ImageView) view.findViewById(R.id.iv_img);
+            final PhotoView img = (PhotoView) view.findViewById(R.id.iv_img);
             final ProgressBar pro = (ProgressBar) view.findViewById(R.id.pb_progress);
             Attachment attachment = mNewAttachments.get(position);
 
@@ -180,7 +182,15 @@ public class PreviewImageListActivity extends BaseActivity {
 
                 @Override
                 public void onLoadingFailed(String s, View view, FailReason failReason) {
+//                    IO_ERROR,
+//                            DECODING_ERROR,
+//                            NETWORK_DENIED,
+//                            OUT_OF_MEMORY,
+//                            UNKNOWN;
 
+                    pro.setVisibility(View.INVISIBLE);
+                    LogUtil.d("加载大图片失败原因 " + failReason.getType().toString());
+                    img.setImageResource(R.drawable.img_file_failed);
                 }
 
                 @Override

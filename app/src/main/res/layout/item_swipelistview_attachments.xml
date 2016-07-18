@@ -54,15 +54,30 @@
         android:layout_height="84dp"
         android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/img_attachment"
-            android:layout_width="70dp"
-            android:layout_height="78dp"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginTop="3dp"
-            android:scaleType="centerCrop"/>
+        <RelativeLayout
+            android:id="@+id/ll_attachment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge">
+
+            <ImageView
+                android:id="@+id/img_attachment"
+                android:layout_width="70dp"
+                android:layout_height="78dp"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:scaleType="centerCrop"/>
+
+            <ProgressBar
+                android:id="@+id/pb_progress"
+                style="?android:attr/progressBarStyleInverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_title"
@@ -70,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@+id/img_attachment"
+            android:layout_toRightOf="@+id/ll_attachment"
             android:ellipsize="start"
             android:maxEms="15"
             android:singleLine="true"
@@ -86,7 +101,7 @@
             android:layout_below="@+id/tv_title"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@+id/img_attachment"
+            android:layout_toRightOf="@+id/ll_attachment"
             android:text="xxx上传"
             android:textColor="#555555"
             android:textSize="13sp"
@@ -99,10 +114,12 @@
             android:layout_below="@+id/tv_creator"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@+id/img_attachment"
+            android:layout_toRightOf="@+id/ll_attachment"
             android:text="xxx上传"
             android:textColor="#555555"
             android:textSize="13sp"
             />
+
+
     </RelativeLayout>
 </FrameLayout>

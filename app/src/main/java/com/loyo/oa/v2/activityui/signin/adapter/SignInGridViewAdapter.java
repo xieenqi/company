@@ -11,23 +11,26 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.io.File;
 import java.util.ArrayList;
 
 
 /**
  * 【附件GridView】通用
- * */
+ */
 
 public class SignInGridViewAdapter extends BaseAdapter {
 
@@ -115,9 +118,9 @@ public class SignInGridViewAdapter extends BaseAdapter {
         public void setContent(final int position) {
 
             if (position == mListData.size()) {
-                if(mListData.size() == 9){
+                if (mListData.size() == 9) {
                     imageView.setVisibility(View.GONE);
-                }else{
+                } else {
                     imageView.setImageResource(R.drawable.icon_add_file);
                     imageView.setBackgroundResource(R.drawable.icon_add_file);
                 }
@@ -136,7 +139,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                                     mListData, R.drawable.default_image, mIsAdd));
                 } else {
                     //显示文件
-                    imageView.setImageResource(R.drawable.other_file);
+                    imageView.setImageResource(Global.getAttachmentIcon(attachment.getUrl()));
                     textView.setText(attachment.getOriginalName());
 
                     imageView.setOnClickListener(new View.OnClickListener() {
@@ -173,11 +176,11 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
             /*拜访签到*/
             else if (mListData.size() <= 9) {
-                LogUtil.dee("mListData:"+mListData.size());
+                LogUtil.dee("mListData:" + mListData.size());
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
-                intent.putExtra("imgsize",(9-mListData.size()));
-                intent.putExtra("addpg",true);
+                intent.putExtra("imgsize", (9 - mListData.size()));
+                intent.putExtra("addpg", true);
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
             }
         }

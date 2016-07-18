@@ -39,7 +39,7 @@ public class JPushService extends BroadcastReceiver {
         manger = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Bundle bundle = intent.getExtras();
         LogUtil.d("[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
-
+        TrackRule.InitTrackRule();//收到推送启动一次定位服务 避免服务kill掉
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
