@@ -243,7 +243,11 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     }
 
     void launch() {
-        setJpushAlias();
+        try {
+            setJpushAlias();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         requestNumber();
         startTrack();
     }
@@ -292,7 +296,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     LogUtil.d(" Jpush user kongkong 空空");
                     setJpushAlias();
                     JpushCount++;
-//                    LogUtil.d("Jpush 的链接状态:" + JPushInterface.getConnectionState(getActivity()));
                     isJPus = false;
                 }
             }, 5000);
