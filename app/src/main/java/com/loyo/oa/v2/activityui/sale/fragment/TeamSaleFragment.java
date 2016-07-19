@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
@@ -46,11 +45,9 @@ import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -95,7 +92,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private SaleCommPopupView saleCommPopupView;
     private WindowManager.LayoutParams params;
     private ScreenDeptPopupView saleScreenPopupView;
-
     private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
     private List<SaleTeamScreen> data = new ArrayList<>();
@@ -104,7 +100,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> stageData = new ArrayList<>();
     private String[] sort = {"按最近创建时间", "按照最近更新", "按照最高金额"};
-
     private boolean isOk = true;
     private boolean isPull = false;
     private boolean isKind;
@@ -215,7 +210,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                         wersi();
                     } else {
                         isOk = false;
-                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x01);
+                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x02);
                         getData();
                     }
                 }

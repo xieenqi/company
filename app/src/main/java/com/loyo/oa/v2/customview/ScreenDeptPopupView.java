@@ -133,7 +133,7 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         msg.setData(bundle);
         msg.what = 0x01;
         mHandler.sendMessage(msg);
-        LogUtil.dee("name:" + userData.get(position).getName() + ",id:" + userData.get(position).getId() + "xPath:" + userData.get(position).getxPath());
+        //LogUtil.dee("name:" + userData.get(position).getName() + ",id:" + userData.get(position).getId() + "xPath:" + userData.get(position).getxPath());
         dismiss();
     }
 
