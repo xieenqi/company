@@ -15,9 +15,11 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -26,20 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 【机会客户】公司人员筛选标签
+ * 【客户和机会】公司人员筛选标签
  * Created by yyy on 16/5/18.
  */
 public class ScreenDeptPopupView extends PopupWindow implements View.OnClickListener {
-
-    /**
-     * 来自客户
-     */
-    private final int CUSTOMER = 0X01;
-
-    /**
-     * 来自销售机会
-     */
-    private final int SALE = 0X02;
 
     private View contentView;
     private ListView listView1;
@@ -60,15 +52,13 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
     private ArrayList<User> deptAllUser = new ArrayList<>();
 
     private int deptPosition = 0;
-    private int fromPage;
 
-    public ScreenDeptPopupView(final Activity context, List<SaleTeamScreen> data, Handler handler, int fromPage) {
+    public ScreenDeptPopupView(final Activity context, List<SaleTeamScreen> data, Handler handler) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.saleteam_screentag1, null);
         this.depementData = data;
         this.mContext = context;
         this.mHandler = handler;
-        this.fromPage = fromPage;
         initView();
 
         this.setContentView(contentView);
@@ -123,8 +113,13 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         bundle = new Bundle();
         //设置全体人员 名字
         if (position == 0) {
-            isKind = true;
-            userData.get(position).setName(depementData.get(deptPosition).getName());
+            //如果数据权限为自己，则isKind: false请求数据传id true请求数据传xPath
+            if(MainApp.user.role.getDataRange() == Role.SELF){
+                isKind = false;
+            }else{
+                isKind = true;
+                userData.get(position).setName(depementData.get(deptPosition).getName());
+            }
         } else {
             isKind = false;
         }
@@ -133,7 +128,7 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         msg.setData(bundle);
         msg.what = 0x01;
         mHandler.sendMessage(msg);
-        LogUtil.dee("name:" + userData.get(position).getName() + ",id:" + userData.get(position).getId() + "xPath:" + userData.get(position).getxPath());
+        LogUtil.dee("name:" + userData.get(position).getName() + "  id:" + userData.get(position).getId() + "  xPath:" + userData.get(position).getxPath());
         dismiss();
     }
 
@@ -154,11 +149,8 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         saleTeamScreen = new SaleTeamScreen();
         saleTeamScreen.setName("全部人员");
         saleTeamScreen.setId(depementData.get(position).getId());
-        if (fromPage == CUSTOMER) {
-            saleTeamScreen.setxPath(depementData.get(position).getId());
-        } else {
-            saleTeamScreen.setxPath(depementData.get(position).getxPath());
-        }
+
+        saleTeamScreen.setxPath(depementData.get(position).getxPath());
         userData.add(0,saleTeamScreen);
     }
 
