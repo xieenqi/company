@@ -28,20 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 【机会客户】公司人员筛选标签
+ * 【客户和机会】公司人员筛选标签
  * Created by yyy on 16/5/18.
  */
 public class ScreenDeptPopupView extends PopupWindow implements View.OnClickListener {
-
-    /**
-     * 来自客户
-     */
-    private final int CUSTOMER = 0X01;
-
-    /**
-     * 来自销售机会
-     */
-    private final int SALE = 0X02;
 
     private View contentView;
     private ListView listView1;
@@ -62,15 +52,13 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
     private ArrayList<User> deptAllUser = new ArrayList<>();
 
     private int deptPosition = 0;
-    private int fromPage;
 
-    public ScreenDeptPopupView(final Activity context, List<SaleTeamScreen> data, Handler handler, int fromPage) {
+    public ScreenDeptPopupView(final Activity context, List<SaleTeamScreen> data, Handler handler) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.saleteam_screentag1, null);
         this.depementData = data;
         this.mContext = context;
         this.mHandler = handler;
-        this.fromPage = fromPage;
         initView();
 
         this.setContentView(contentView);
@@ -161,11 +149,8 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         saleTeamScreen = new SaleTeamScreen();
         saleTeamScreen.setName("全部人员");
         saleTeamScreen.setId(depementData.get(position).getId());
-        if (fromPage == CUSTOMER) {
-            saleTeamScreen.setxPath(depementData.get(position).getId());
-        } else {
-            saleTeamScreen.setxPath(depementData.get(position).getxPath());
-        }
+
+        saleTeamScreen.setxPath(depementData.get(position).getxPath());
         userData.add(0,saleTeamScreen);
     }
 

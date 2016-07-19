@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.FeedBackCommit;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -22,6 +23,7 @@ import com.loyo.oa.v2.point.IFeedback;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -116,6 +118,8 @@ public class FeedbackActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("attachmentUUid", uuid);
         map.put("content", comment);
+        map.put("operationSystem", "Android");
+        map.put("userAgent", android.os.Build.MODEL);
 
         RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
             @Override

@@ -210,7 +210,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                         wersi();
                     } else {
                         isOk = false;
-                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x02);
+                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler);
                         getData();
                     }
                 }

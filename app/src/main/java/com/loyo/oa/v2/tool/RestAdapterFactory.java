@@ -60,7 +60,6 @@ public class RestAdapterFactory {
         RestAdapter adapter = null == adapters.get(url) ? null : adapters.get(url).get();
         if (null == adapter) {
 
-            // final CellInfo cellInfo = Utils.getCellInfo();
             cellInfo = new CellInfo();
 
             cellInfo.setLoyoAgent(Build.BRAND + " " + Build.MODEL);
