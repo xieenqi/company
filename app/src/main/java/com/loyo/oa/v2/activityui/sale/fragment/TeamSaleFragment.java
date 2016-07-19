@@ -232,7 +232,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
-
     }
 
     public void wersi() {

@@ -15,9 +15,11 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -123,8 +125,13 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         bundle = new Bundle();
         //设置全体人员 名字
         if (position == 0) {
-            isKind = true;
-            userData.get(position).setName(depementData.get(deptPosition).getName());
+            //如果数据权限为自己，则isKind: false请求数据传id true请求数据传xPath
+            if(MainApp.user.role.getDataRange() == Role.SELF){
+                isKind = false;
+            }else{
+                isKind = true;
+                userData.get(position).setName(depementData.get(deptPosition).getName());
+            }
         } else {
             isKind = false;
         }
@@ -133,7 +140,7 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         msg.setData(bundle);
         msg.what = 0x01;
         mHandler.sendMessage(msg);
-        //LogUtil.dee("name:" + userData.get(position).getName() + ",id:" + userData.get(position).getId() + "xPath:" + userData.get(position).getxPath());
+        LogUtil.dee("name:" + userData.get(position).getName() + "  id:" + userData.get(position).getId() + "  xPath:" + userData.get(position).getxPath());
         dismiss();
     }
 
