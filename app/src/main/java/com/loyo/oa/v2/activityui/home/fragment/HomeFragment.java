@@ -49,6 +49,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         View view = inflater.inflate(R.layout.fragment_main_home, null, false);
         initView(view);
         registerBaseReceiver();
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~主界面-->onCreateView()");
         return view;
     }
 
@@ -209,7 +210,6 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         if (1 == index && null != mHomeStatisticsFragment) {
             mHomeStatisticsFragment.onInIt();
         }
-        LogUtil.d("选择值：" + index);
     }
 
 }

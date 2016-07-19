@@ -47,6 +47,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
 
     @Override
     public void initAdapter() {
+
         mAdapter = new CommonExpandableListAdapter(mActivity, pagingGroupDatas);
         mExpandableListView.getRefreshableView().setAdapter(mAdapter);
     }

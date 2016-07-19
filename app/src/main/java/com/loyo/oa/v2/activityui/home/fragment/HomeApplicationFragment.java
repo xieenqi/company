@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
@@ -176,6 +177,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        setRetainInstance(true);
         try {
             this.heading = getArguments().getParcelable("view");
         } catch (Exception e) {
@@ -207,6 +209,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         if (null != items && items.size() > 0) {
             adapter.setItemData(items);
         }
+        LogUtil.d("用户获取的token：---> " + app.getToken());
         updateUser();
         return mView;
     }
