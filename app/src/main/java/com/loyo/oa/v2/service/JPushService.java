@@ -8,12 +8,18 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
+import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
+import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import org.json.JSONException;
@@ -22,6 +28,8 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 import cn.jpush.android.api.JPushInterface;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 自定义接收器
@@ -55,9 +63,11 @@ public class JPushService extends BroadcastReceiver {
             HttpJpushNotification pushMsgData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);
             /**
              * 轨迹改变 收到推送重新获取轨迹规则
+             * 同时刷新token
              */
             if (7 == pushMsgData.silentType) {
                 TrackRule.InitTrackRule();
+                getToken();
             } else if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新8组织架构与9个人信息
                 if (!getUserInfo(pushMsgData))
                     pushMsgData.silentType = 8;//更改别人的信息制动转成 更新8组织架构
@@ -73,7 +83,6 @@ public class JPushService extends BroadcastReceiver {
             } else if (12 == pushMsgData.silentType) {//审批类别
 
             }
-
 
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
@@ -169,27 +178,24 @@ public class JPushService extends BroadcastReceiver {
 
         return false;
     }
-    //send msg to SelectCityMain
-    //    private void processCustomMessage(Context context, Bundle bundle) {
-    //        if (SelectCityMain.isForeground) {
-    //            String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-    //            String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-    //            Intent msgIntent = new Intent(SelectCityMain.MESSAGE_RECEIVED_ACTION);
-    //            msgIntent.putExtra(SelectCityMain.KEY_MESSAGE, message);
-    //            if (!ExampleUtil.isEmpty(extras)) {
-    //                try {
-    //                    JSONObject extraJson = new JSONObject(extras);
-    //                    if (null != extraJson && extraJson.length() > 0) {
-    //                        msgIntent.putExtra(SelectCityMain.KEY_EXTRAS, extras);
-    //                    }
-    //                } catch (JSONException e) {
-    //
-    //                }
-    //
-    //            }
-    //            context.sendBroadcast(msgIntent);
-    //        }
-    //    }
-    //}
 
+    /**
+     * 获取最新Token，防止Token失效
+     * */
+    public void getToken() {
+        RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<LoginActivity.Token>() {
+            @Override
+            public void success(LoginActivity.Token token, Response response) {
+                HttpErrorCheck.checkResponse("刷新token", response);
+                MainApp.setToken(token.access_token);
+                //LogUtil.dee("刷新的Token:" + token.access_token);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
 }

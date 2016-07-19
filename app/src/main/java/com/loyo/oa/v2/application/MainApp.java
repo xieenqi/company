@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
-
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
@@ -64,6 +63,8 @@ public class MainApp extends Application {
     public static final int ENTER_TYPE_ZOOM_OUT = 5;
     public static final int ENTER_TYPE_ZOOM_IN = 6;
 
+    public static long nowTime;
+    public static long lastTime;
     public static DisplayImageOptions options_3;
     private static MainApp mainApp;
     public static Gson gson;
