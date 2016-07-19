@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -89,7 +90,6 @@ public class Utils {
         windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         return windowManager;
     }
-
 
     /**
      * ScroView嵌套listView，手动计算ListView高度

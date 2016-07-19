@@ -35,7 +35,6 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -64,7 +63,6 @@ public class MenuFragment extends BaseFragment {
     private RoundImageView riv_head;
     private TextView tv_name, tv_member, tv_version_info;
     private ImageView iv_new_version;
-    private Intent rushTokenIntent;
     public static ExitAppCallback callback;
     private Intent mIntentCheckUpdate;
     private boolean isUpdataData = false;
@@ -183,7 +181,6 @@ public class MenuFragment extends BaseFragment {
                 exit();
             }
         };
-        rushTokenIntent = new Intent(getActivity(), RushTokenService.class);
     }
 
     float downX = 0, upX = 0;
@@ -372,8 +369,6 @@ public class MenuFragment extends BaseFragment {
         //清楚token与用户资料
         MainApp.setToken(null);
         MainApp.user = null;
-        getActivity().stopService(rushTokenIntent);
-        RushTokenService.cancelJc();
 
         //清楚本地登录状态
         SharedUtil.clearInfo(getActivity());
