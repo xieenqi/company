@@ -208,13 +208,13 @@ public final class Common {
                     if (department == null) {
                         continue;
                     }
-                    if (department.getId().equals(department.getSuperiorId())) {
+                    if (department.getId().equals(department.xpath)) {
                         companyId = department.getId();
                         continue;
                     }
+                    String xpath = department.xpath;
 
-
-                    if ((department.getSuperiorId()).equals(companyId)) {
+                    if (xpath.startsWith(companyId) && xpath.split("/").length == 2) {
                         String groupName_current = department.getGroupName();
                         if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
                             departments.add(department);
