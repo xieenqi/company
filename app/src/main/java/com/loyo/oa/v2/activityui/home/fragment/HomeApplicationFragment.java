@@ -307,7 +307,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             companyTag = new HashSet<String>();
             companyTag.add(MainApp.user.companyId);
         }
-        JPushInterface.setAlias(getActivity(), MainApp.user.id, new TagAliasCallback() {
+        JPushInterface.setAlias(app, MainApp.user.id, new TagAliasCallback() {
             @Override
             public void gotResult(final int i, final String s, final Set<String> set) {
                 if (i != 0) {
@@ -320,7 +320,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 isQQLogin();
             }
         });
-        JPushInterface.setTags(getActivity(), companyTag, new TagAliasCallback() {
+        JPushInterface.setTags(app, companyTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
 
