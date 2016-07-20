@@ -6,19 +6,22 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
-import com.loyo.oa.v2.activityui.project.HttpProject;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.activityui.project.HttpProject;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.ListUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
@@ -194,6 +197,12 @@ public final class Common {
      * @return
      */
     public static ArrayList<ContactsGroup> getContactsGroups(String deptId) {
+        //缓存组织架构部门的数据 （组织架构没有变动 都取之前的缓存）
+        String originDepartenmData = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
+        if (!TextUtils.isEmpty(originDepartenmData)) {
+            return MainApp.gson.fromJson(originDepartenmData, new TypeToken<ArrayList<ContactsGroup>>() {
+            }.getType());
+        }
         List<Department> departmentList = getLstDepartment(deptId);//全部 组织 架构
         if (departmentList == null || departmentList.isEmpty()) {
             return new ArrayList<>();
@@ -201,6 +210,7 @@ public final class Common {
 
         SparseArray<ArrayList<Department>> maps = new SparseArray<>();//相当于 map 全部字母表 下的部门列表
         ArrayList<ContactsGroup> contactsGroups = new ArrayList<>();
+//        companyId=MainApp.user.companyId;
         try {
             for (char index = '#'; index <= 'Z'; index += (char) 1) {
                 ArrayList<Department> departments = new ArrayList<>();//相同首字母 部门集合
@@ -212,9 +222,9 @@ public final class Common {
                         companyId = department.getId();
                         continue;
                     }
-                    String xpath = department.xpath;
+                    String xpath = department.getXpath();
 
-                    if (xpath.startsWith(companyId) && xpath.split("/").length == 2) {
+                    if (!TextUtils.isEmpty(companyId) && !TextUtils.isEmpty(xpath) && xpath.startsWith(companyId) && xpath.split("/").length == 2) {
                         String groupName_current = department.getGroupName();
                         if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
                             departments.add(department);
@@ -229,6 +239,7 @@ public final class Common {
                 }
             }
         } catch (Exception e) {
+            LogUtil.d(" 组织通讯录 ？？？？？？？？？？？？？？？？？？？？？？？？ 部门数据异常 " + e.toString());
             e.printStackTrace();
         }
         if (maps.size() > 0) {
@@ -239,7 +250,7 @@ public final class Common {
                 contactsGroups.add(group);
             }
         }
-
+        SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT, MainApp.gson.toJson(contactsGroups));
         return contactsGroups;
     }
 

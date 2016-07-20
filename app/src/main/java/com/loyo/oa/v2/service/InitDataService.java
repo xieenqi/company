@@ -77,7 +77,7 @@ public class InitDataService extends IntentService {
             String organizationUpdateInfo = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
             //open或者run
             String appStatus = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.APP_START);
-            if ("one".equals(organizationUpdateInfo)||"openOne".equals(appStatus)) {//个人信息变动
+            if ("one".equals(organizationUpdateInfo) || "openOne".equals(appStatus)) {//个人信息变动
                 getOrganization();
             } else if ("all".equals(organizationUpdateInfo) && "open".equals(appStatus)) {//启动app是 之前组织架构有变动
                 getOrganization();
@@ -115,6 +115,8 @@ public class InitDataService extends IntentService {
             LogUtil.d("更新 组织《《《《《《《《《《《《《《《《》》》》》》》》》》》 架构 json：完成");
             SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
             SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.APP_START);
+            //清除之前缓存通讯录部门的数据
+            SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
         } else {
             LogUtil.d("更新 组织 架构 sb 失败");
         }

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
+
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
@@ -46,6 +47,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.jpush.android.api.JPushInterface;
 import retrofit.RequestInterceptor;
@@ -240,13 +243,20 @@ public class MainApp extends Application {
         DBManager.init(this);
 
         try {
-            //user = DBManager.Instance().getUser();
-            // subUsers = DBManager.Instance().getSubordinates();
+//            user = DBManager.Instance().getUser();
+//             subUsers = DBManager.Instance().getSubordinates();
         } catch (Exception ex) {
             Global.ProcDebugException(ex);
             ex.printStackTrace();
         }
-        setOriginData();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setOriginData();
+            }
+        }, 100);
+
     }
 
     /**

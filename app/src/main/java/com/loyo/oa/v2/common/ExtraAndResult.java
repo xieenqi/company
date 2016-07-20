@@ -34,7 +34,7 @@ public class ExtraAndResult {
     public static final String HOME_ITEM = "home_item";
 
     public static final String IS_TEAM = "is_team";
-
+    public static final String ORGANIZATION_DEPARTENT = "organization_departent";
     public static final String IS_ORGANIZATION_UPDATE = "is_organization_update";//组织架构是否更新
     public static final String APP_START = "app_start";
     public static final String ACTION_USER_VERSION = "update_user_version_info";
