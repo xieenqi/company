@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -59,6 +60,7 @@ public class LoginBQQActivity extends BaseActivity {
                     //String token = url.substring(FinalVariables.GetLogin_success_prefix().length(), url.length());
                     String[] token = url.split("=");
                     LogUtil.d("QQ登录token:" + token[1]);
+                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "openOne");
                     MainApp.setToken(token[1]);
                     MainApp.isQQLogin = true;
                     SharedUtil.put(mContext, FinalVariables.TOKEN, token[1]);

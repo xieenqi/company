@@ -48,6 +48,7 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.activityui.customer.SaleActivitiesAddActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
@@ -177,7 +178,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        setRetainInstance(true);
         try {
             this.heading = getArguments().getParcelable("view");
         } catch (Exception e) {
@@ -198,7 +198,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         listView = (PullToRefreshListView) mView.findViewById(R.id.newhome_listview);
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
-        if (null != items) {
+        //只有登录进来才加载loading
+        if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
             DialogHelp.showLoading(getActivity(), "", true);
         }
         adapter = new AdapterHomeItem(getActivity());
