@@ -177,7 +177,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        setRetainInstance(true);
+//        setRetainInstance(true);
         try {
             this.heading = getArguments().getParcelable("view");
         } catch (Exception e) {
