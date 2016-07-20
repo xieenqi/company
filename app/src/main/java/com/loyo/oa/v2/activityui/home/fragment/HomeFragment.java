@@ -58,8 +58,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         heading = (RoundImageView) view.findViewById(R.id.newhome_heading_img);
         ll_network = (LinearLayout) view.findViewById(R.id.ll_network);
         pager = (ViewPager) view.findViewById(R.id.pager);
-        pager.setAdapter(new MyPagerAdapter(
-                getChildFragmentManager()));
+        pager.setAdapter(new MyPagerAdapter(getChildFragmentManager()));
         pager.setOnPageChangeListener(this);
         title.add((RadioButton) view.findViewById(R.id.title1));// 4个title标签
         title.add((RadioButton) view.findViewById(R.id.title2));
