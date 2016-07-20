@@ -47,7 +47,6 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
 
     @Override
     public void initAdapter() {
-
         mAdapter = new CommonExpandableListAdapter(mActivity, pagingGroupDatas);
         mExpandableListView.getRefreshableView().setAdapter(mAdapter);
     }
@@ -119,9 +118,9 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
      * 初始化下拉菜单
      */
     private void initDropMenu() {
-
+        String[] defaultTitle = new String[]{"全部状态", "全部类别"};
         mMenu.setVisibility(View.VISIBLE);
-        mMenu.setmMenuCount(3);//Menu的个数
+        mMenu.setmMenuCount(defaultTitle.length);//Menu的个数
         mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
         mMenu.setShowCheck(true);//是否显示展开list的选中项
         mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
@@ -133,10 +132,10 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         mMenu.setmCheckIcon(R.drawable.img_check1);//Menu展开list的勾选图片
         mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
         mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
-        mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态", "全部类别"});//默认未选择任何过滤的Menu title
+        mMenu.setDefaultMenuTitle(defaultTitle);//默认未选择任何过滤的Menu title
 
         final List<String[]> items = new ArrayList<>();
-        items.add(FILTER_CATEGORY);
+//        items.add(FILTER_CATEGORY);
         items.add(FILTER_STATUS);
 
         HashMap<String, Object> params = new HashMap<>();
