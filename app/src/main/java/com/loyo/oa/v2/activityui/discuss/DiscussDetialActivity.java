@@ -246,8 +246,18 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
         });
     }
 
+    //返回页面先调用读取接口
     @Override
     public void onBackPressed() {
+        if (!TextUtils.isEmpty(bizTypeId)) {
+            refreshRedDot();
+        } else {
+            finishActivity();
+        }
+
+    }
+
+    private void finishActivity() {
         Intent intent = new Intent();
         intent.putExtra("data", mPageDiscussion);
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -456,9 +466,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
     protected void onStop() {
         super.onStop();
         rl_root.removeOnLayoutChangeListener(this);
-        if (!TextUtils.isEmpty(bizTypeId)) {
-            refreshRedDot();
-        }
+
     }
 
     @Override
@@ -784,11 +792,13 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                         @Override
                         public void success(final Object d, final Response response) {
                             HttpErrorCheck.checkResponse(response);
+                            finishActivity();
                         }
 
                         @Override
                         public void failure(final RetrofitError error) {
                             HttpErrorCheck.checkError(error);
+                            finishActivity();
                         }
                     });
         }
