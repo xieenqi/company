@@ -745,16 +745,16 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             }
         }
 
-        public void updata(final long time, final Discussion discussion) {
-            for (int i = 0; i < getItemCount(); i++) {
-                HttpDiscussDet dis = datas.get(i);
-                if (discussion.getCreatedAt() == time) {
-                    dis.id = discussion.getId();
-                    dis.createdAt = discussion.getCreatedAt();
-                    break;
-                }
-            }
-        }
+//        public void updata(final long time, final Discussion discussion) {
+//            for (int i = 0; i < getItemCount(); i++) {
+//                HttpDiscussDet dis = datas.get(i);
+//                if (discussion.getCreatedAt() == time) {
+//                    dis.id = discussion.getId();
+//                    dis.createdAt = discussion.getCreatedAt();
+//                    break;
+//                }
+//            }
+//        }
 
         @Override
         public int getItemCount() {
