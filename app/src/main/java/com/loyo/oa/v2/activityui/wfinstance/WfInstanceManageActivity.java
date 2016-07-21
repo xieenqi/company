@@ -2,6 +2,8 @@ package com.loyo.oa.v2.activityui.wfinstance;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -15,12 +17,18 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.adapter.WinstanceCategoryAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.fragment.WfinstanceMyApproveFragment;
+import com.loyo.oa.v2.activityui.wfinstance.fragment.WfinstanceMySubmitFragment;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 【审批流程】 页面 xnq
@@ -34,6 +42,9 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
     private String[] SaleItemStatus = new String[]{"我提交的", "我审批的"};
     private Animation rotateAnimation;//标题动画
     private float mRotation = 0;
+    private int mIndex = -1;
+    private FragmentManager fragmentManager = getSupportFragmentManager();
+    private List<BaseFragment> fragments = new ArrayList<>();
     /**
      * 流程类型回调
      */
@@ -44,7 +55,7 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sale_opportunities);
+        setContentView(R.layout.activity_wfinstance_manager);
         initView();
         initUI();
     }
@@ -67,6 +78,7 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         rotateAnimation = initArrowAnimation();
         initTitleItem();
+        initChildren();
     }
 
     void initUI() {
@@ -85,10 +97,28 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 changeTitleImg();
                 tv_title_1.setText(SaleItemStatus[position]);
-//                changeChild(position);
+                changeChild(position);
             }
         });
 
+    }
+
+    /**
+     * 初始化子片段
+     */
+    private void initChildren() {
+        for (int i = 0; i < SaleItemStatus.length; i++) {
+            BaseFragment fragment = null;
+            if ("我提交的".equals(SaleItemStatus[i])) {
+                Bundle b = new Bundle();
+                fragment = (BaseFragment) Fragment.instantiate(this, WfinstanceMySubmitFragment.class.getName(), b);
+            } else if ("我审批的".equals(SaleItemStatus[i])) {
+                Bundle b = new Bundle();
+                fragment = (BaseFragment) Fragment.instantiate(this, WfinstanceMyApproveFragment.class.getName(), b);
+            }
+            fragments.add(fragment);
+        }
+        changeChild(0);
     }
 
     @Override
@@ -130,6 +160,22 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
     }
 
     /**
+     * 改变子片段动画
+     *
+     * @param index
+     */
+    private void changeChild(int index) {
+        if (index != mIndex) {
+            mIndex = index;
+            try {
+                fragmentManager.beginTransaction().replace(R.id.fl_wflnstance, fragments.get(index)).commit();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * title动画
      *
      * @return
@@ -142,6 +188,16 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
         rotateAnimation.setFillEnabled(true);
         rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
         return rotateAnimation;
+    }
+
+    /**
+     * 到 审批流程 add 添加页面
+     */
+    public void addNewItem() {
+        Intent intent = new Intent();
+        intent.setClass(this, WfInTypeSelectActivity.class);
+        startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     @Override

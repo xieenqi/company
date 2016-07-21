@@ -86,7 +86,7 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
         ImageView img_status = ViewHolder.get(convertView, R.id.img_time_point);
         PagingGroupData_ data = null;
         if (groupPosition >= 0)
-             data = pagingGroupDatas.get(groupPosition);
+            data = pagingGroupDatas.get(groupPosition);
 
         /*列表状态条 颜色设置*/
         if (data != null && data.getOrderStr() != null) {
