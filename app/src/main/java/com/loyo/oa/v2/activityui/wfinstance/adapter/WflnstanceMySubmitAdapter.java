@@ -41,6 +41,9 @@ public class WflnstanceMySubmitAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
+        if (null == datas) {
+            return 0;
+        }
         return null == datas.get(groupPosition).records ? 0 : datas.get(groupPosition).records.size();
     }
 

@@ -28,11 +28,13 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.filterview.DropDownMenu;
+import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -60,6 +62,7 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     private WflnstanceMySubmitAdapter mAdapter;
     private int page = 1, category = 0, status = 0;
     ArrayList<WflnstanceItemData> datas = new ArrayList<>();
+    private boolean isTopAdd = false;
 
     @Override
     public void onAttach(Activity activity) {
@@ -133,6 +136,32 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
                 }
             }
         });
+        /**
+         * 顶部删选Menu
+         * */
+        mMenu.setMenuSelectedListener(new OnMenuSelectedListener() {
+            @Override
+            //Menu展开的list点击事件  RowIndex：list的索引  ColumnIndex：menu的索引
+            public void onSelected(View listview, int RowIndex, int ColumnIndex) {
+                LogUtil.d(" 行 : " + RowIndex + " 列 : " + ColumnIndex);
+                switch (ColumnIndex) {
+                    case 0:
+                        category = RowIndex;
+                        break;
+                    case 1:
+                        status = RowIndex;
+                        break;
+//                    case 2:
+//                        if (RowIndex == 0) {
+//                            bizFormId = "";
+//                        } else {
+//                            bizFormId = mBizForms.get(RowIndex - 1).getId();
+//                        }
+//                        break;
+                }
+                onPullDownToRefresh(expandableListView);
+            }
+        });
     }
 
     @Override
@@ -167,7 +196,7 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
                         ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
                         if (null != lstDataTemp && lstDataTemp.size() == 0) {
                             Toast("没有更多数据了");
-                            return;
+                            datas.clear();
                         }
                         //下接获取最新时，清空
 //                        if (isTopAdd) {
@@ -246,11 +275,15 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-
+        isTopAdd = true;
+        page = 1;
+        getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-
+        isTopAdd = false;
+        page++;
+        getData();
     }
 }
