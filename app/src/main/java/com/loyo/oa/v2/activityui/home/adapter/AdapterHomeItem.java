@@ -13,10 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.contact.ContactsActivity;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class AdapterHomeItem extends BaseAdapter {
     private boolean crmTi = false;
     private boolean oaTi = false;
     private Intent mIntent = new Intent();
+    private int wfinstanceCount = 0;//不为0就到我审批的
 
     public AdapterHomeItem(Activity activity) {
         this.activity = activity;
@@ -128,7 +130,8 @@ public class AdapterHomeItem extends BaseAdapter {
                     extra = num.bizNum + "个未完成";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                    extra = num.bizNum + "个待审批";
+                    extra = num.bizNum + "个待我审批";
+                    wfinstanceCount = num.bizNum;
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
                     extra = num.bizNum + "个进行中";
@@ -181,6 +184,15 @@ public class AdapterHomeItem extends BaseAdapter {
                         activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     } else {
                         Toast.makeText(activity, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (items.get(position).title.equals("审批流程")) {
+                    try {
+                        mIntent.setClass(activity, Class.forName(items.get(position).cls));
+                        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, wfinstanceCount);
+                        activity.startActivity(mIntent);
+                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 } else {
                     try {

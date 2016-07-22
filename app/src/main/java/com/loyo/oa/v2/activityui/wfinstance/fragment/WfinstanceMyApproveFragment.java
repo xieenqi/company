@@ -59,7 +59,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     private ArrayList<BizForm> mBizForms = new ArrayList<>();
     private String bizFormId = "";
     private WflnstanceMySubmitAdapter mAdapter;
-    private int page = 1, category = 0, status = 0;
+    private int page = 1, status = 0;
     ArrayList<WflnstanceItemData> datas = new ArrayList<>();
     protected ArrayList<WflnstanceListItem> lstData = new ArrayList<>();
     private boolean isTopAdd = false;
@@ -84,6 +84,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
+        btn_add.setVisibility(View.GONE);
         expandableListView.setOnRefreshListener(this);
         expandableListView.setEmptyView(emptyView);
         page = 1;

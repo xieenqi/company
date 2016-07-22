@@ -45,6 +45,7 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
     private int mIndex = -1;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private List<BaseFragment> fragments = new ArrayList<>();
+    private int fragmentStatus = -1;
     /**
      * 流程类型回调
      */
@@ -56,12 +57,17 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wfinstance_manager);
+        getIntentData();
         initView();
         initUI();
     }
 
+    private void getIntentData() {
+        fragmentStatus = getIntent().getIntExtra(ExtraAndResult.EXTRA_OBJ, -1);
+    }
+
     private void initView() {
-        setTitle("我提交的");
+        setTitle(fragmentStatus == 0 ? "我提交的" : "我审批的");
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
@@ -118,7 +124,7 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
             }
             fragments.add(fragment);
         }
-        changeChild(0);
+        changeChild(fragmentStatus == 0 ? 0 : 1);
     }
 
     @Override
