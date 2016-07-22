@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
@@ -431,6 +432,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         Intent intent = new Intent(this, WorkReportReviewActivity_.class);
         intent.putExtra("mWorkReportId", mWorkReport.getId());
         startActivityForResult(intent, MSG_REVIEW);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
 

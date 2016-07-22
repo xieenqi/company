@@ -52,11 +52,10 @@ public class WfinstanceUitls {
                     order = "未通过";
                     break;
                 case WfInstance.STATUS_FINISHED:
+                case WfInstance.STATUS_APPROVED:
                     order = "已通过";
+                    break;
 
-//                case WfInstance.STATUS_APPROVED:
-//                    order = "已通过";
-//                    break;
             }
             boolean isExist = false;
             for (WflnstanceItemData group : groupData) {
