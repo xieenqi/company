@@ -22,7 +22,6 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.WfinstanceUitls;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -59,9 +58,11 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     private ViewStub emptyView;
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
     private ArrayList<BizForm> mBizForms = new ArrayList<>();
+    private String bizFormId = "";
     private WflnstanceMySubmitAdapter mAdapter;
-    private int page = 1, category = 0, status = 0;
+    private int page = 1, status = 0;
     ArrayList<WflnstanceItemData> datas = new ArrayList<>();
+    protected ArrayList<WflnstanceListItem> lstData = new ArrayList<>();
     private boolean isTopAdd = false;
 
     @Override
@@ -86,6 +87,8 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         btn_add.setOnClickListener(this);
         expandableListView.setOnRefreshListener(this);
         expandableListView.setEmptyView(emptyView);
+        page = 1;
+        isTopAdd = true;
         initDropMenu();
         initList();
         initAdapter();
@@ -146,18 +149,15 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
                 LogUtil.d(" 行 : " + RowIndex + " 列 : " + ColumnIndex);
                 switch (ColumnIndex) {
                     case 0:
-                        category = RowIndex;
-                        break;
-                    case 1:
                         status = RowIndex;
                         break;
-//                    case 2:
-//                        if (RowIndex == 0) {
-//                            bizFormId = "";
-//                        } else {
-//                            bizFormId = mBizForms.get(RowIndex - 1).getId();
-//                        }
-//                        break;
+                    case 1:
+                        if (RowIndex == 0) {
+                            bizFormId = "";
+                        } else {
+                            bizFormId = mBizForms.get(RowIndex - 1).getId();
+                        }
+                        break;
                 }
                 onPullDownToRefresh(expandableListView);
             }
@@ -178,33 +178,30 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 20);
-        map.put("type", category);
         map.put("status", status);
-//        map.put("bizformId", bizFormId); //自定义筛选字段
+        map.put("bizformId", bizFormId); //自定义筛选字段
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL() +
                 FinalVariables.wfinstance).create(IWfInstance.class).
                 getSubmitWfInstancesList(map, new Callback<MySubmitWflnstance>() {
                     @Override
                     public void success(MySubmitWflnstance mySubmitWflnstance, Response response) {
-                        HttpErrorCheck.checkResponse("我提的交列表数据：", response);
+                        HttpErrorCheck.checkResponse("【我提的交】列表数据：", response);
                         expandableListView.onRefreshComplete();
                         if (null == mySubmitWflnstance) {
                             return;
                         }
-//                        pagination = tPaginationX;
                         ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
                         if (null != lstDataTemp && lstDataTemp.size() == 0) {
                             Toast("没有更多数据了");
-                            datas.clear();
+                            return;
                         }
-                        //下接获取最新时，清空
-//                        if (isTopAdd) {
-//                            lstData.clear();
-//                        }
-//
-//                        lstData.addAll(lstDataTemp);
-                        datas = WfinstanceUitls.convertGroupData(mySubmitWflnstance.records);
+                        //下拉获取最新时，清空
+                        if (isTopAdd) {
+                            lstData.clear();
+                        }
+                        lstData.addAll(lstDataTemp);
+                        datas = WfinstanceUitls.convertGroupSubmitData(lstData);
                         changeAdapter();
                         expand();
                     }
@@ -266,7 +263,7 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
 
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WfInstanceRecord) mAdapter.getChild(groupPosition, childPosition)).getId());
+        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition)).id);
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -285,5 +282,19 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         isTopAdd = false;
         page++;
         getData();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == -1) {
+            switch (requestCode) {
+                case ExtraAndResult.REQUEST_CODE:
+                    isTopAdd = true;
+                    page = 1;
+                    getData();
+                    break;
+            }
+        }
     }
 }

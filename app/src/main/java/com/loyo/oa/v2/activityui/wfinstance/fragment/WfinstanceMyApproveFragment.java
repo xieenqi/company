@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.wfinstance.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,18 +10,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity;
+import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activityui.wfinstance.adapter.WflnstanceMySubmitAdapter;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
+import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
+import com.loyo.oa.v2.activityui.wfinstance.bean.WfinstanceUitls;
+import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
+import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.filterview.DropDownMenu;
+import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -28,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -40,8 +55,14 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     private Button btn_add;
     private DropDownMenu mMenu;
     private ViewStub emptyView;
-    private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
+    private static final String FILTER_STATUS[] = new String[]{"全部状态", "待我审批的", "我同意的", "我驳回的"};
     private ArrayList<BizForm> mBizForms = new ArrayList<>();
+    private String bizFormId = "";
+    private WflnstanceMySubmitAdapter mAdapter;
+    private int page = 1, category = 0, status = 0;
+    ArrayList<WflnstanceItemData> datas = new ArrayList<>();
+    protected ArrayList<WflnstanceListItem> lstData = new ArrayList<>();
+    private boolean isTopAdd = false;
 
     @Override
     public void onAttach(Activity activity) {
@@ -65,7 +86,12 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         btn_add.setOnClickListener(this);
         expandableListView.setOnRefreshListener(this);
         expandableListView.setEmptyView(emptyView);
+        page = 1;
+        isTopAdd = true;
         initDropMenu();
+        initList();
+        initAdapter();
+        getData();
     }
 
     /**
@@ -112,6 +138,29 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
                 }
             }
         });
+        /**
+         * 顶部删选Menu
+         * */
+        mMenu.setMenuSelectedListener(new OnMenuSelectedListener() {
+            @Override
+            //Menu展开的list点击事件  RowIndex：list的索引  ColumnIndex：menu的索引
+            public void onSelected(View listview, int RowIndex, int ColumnIndex) {
+                LogUtil.d(" 行 : " + RowIndex + " 列 : " + ColumnIndex);
+                switch (ColumnIndex) {
+                    case 0:
+                        status = RowIndex;
+                        break;
+                    case 2:
+                        if (RowIndex == 0) {
+                            bizFormId = "";
+                        } else {
+                            bizFormId = mBizForms.get(RowIndex - 1).getId();
+                        }
+                        break;
+                }
+                onPullDownToRefresh(expandableListView);
+            }
+        });
     }
 
     @Override
@@ -123,13 +172,128 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         }
     }
 
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    private void getData() {
+        showLoading("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 20);
+        map.put("status", status);
+        map.put("bizformId", bizFormId); //自定义筛选字段
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
+                FinalVariables.wfinstance).create(IWfInstance.class).
+                getApproveWfInstancesList(map, new Callback<MySubmitWflnstance>() {
+                    @Override
+                    public void success(MySubmitWflnstance mySubmitWflnstance, Response response) {
+                        HttpErrorCheck.checkResponse("【我审批的】列表数据：", response);
+                        expandableListView.onRefreshComplete();
+                        if (null == mySubmitWflnstance) {
+                            return;
+                        }
+                        ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
+                        if (null != lstDataTemp && lstDataTemp.size() == 0) {
+                            Toast("没有更多数据了");
+                            return;
+                        }
+                        //下接获取最新时，清空
+                        if (isTopAdd) {
+                            lstData.clear();
+                        }
+                        lstData.addAll(lstDataTemp);
+                        datas = WfinstanceUitls.convertGroupApproveData(lstData);
+                        changeAdapter();
+                        expand();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        expandableListView.onRefreshComplete();
+                    }
+                });
+    }
+
+    /**
+     * 初始化
+     */
+    private void initList() {
+
+        ExpandableListView ListView = expandableListView.getRefreshableView();
+        initAdapter();
+        expand();
+        ListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return false;
+            }
+        });
+
+        ListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                try {
+                    openItem(groupPosition, childPosition);
+                } catch (Exception e) {
+                    Global.ProcException(e);
+                }
+
+                return false;
+            }
+        });
+    }
+
+    public void initAdapter() {
+        mAdapter = new WflnstanceMySubmitAdapter(mActivity);
+        expandableListView.getRefreshableView().setAdapter(mAdapter);
+    }
+
+    public void changeAdapter() {
+        mAdapter.setData(datas);
+    }
+
+    /**
+     * 展开listview
+     */
+    protected void expand() {
+        for (int i = 0; i < datas.size(); i++) {
+            expandableListView.getRefreshableView().expandGroup(i, false);//true 自动滑到底部
+        }
+    }
+
+    public void openItem(int groupPosition, int childPosition) {
+        Intent intent = new Intent();
+        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition)).id);
+        intent.setClass(mActivity, WfinstanceInfoActivity_.class);
+        startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        isTopAdd = true;
+        page = 1;
+        getData();
+    }
 
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        isTopAdd = false;
+        page++;
+        getData();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == -1) {
+            switch (requestCode) {
+                case ExtraAndResult.REQUEST_CODE:
+                    isTopAdd = true;
+                    page = 1;
+                    getData();
+                    break;
+            }
+        }
     }
 }

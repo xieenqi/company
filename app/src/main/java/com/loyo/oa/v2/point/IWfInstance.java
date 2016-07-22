@@ -107,6 +107,15 @@ public interface IWfInstance {
     void getSubmitWfInstancesList(@QueryMap HashMap<String, Object> map, Callback<MySubmitWflnstance> callback);
 
     /**
+     * 获取 我审批的 审批 列表数据
+     *
+     * @param map
+     * @param callback
+     */
+    @GET("/approve/mobile")
+    void getApproveWfInstancesList(@QueryMap HashMap<String, Object> map, Callback<MySubmitWflnstance> callback);
+
+    /**
      * 获取审批详情
      *
      * @param id
