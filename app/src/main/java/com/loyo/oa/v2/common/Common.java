@@ -288,20 +288,13 @@ public final class Common {
                 if (TextUtils.isEmpty(user.departmentsName)) {
                     user.departmentsName = department.getName();
                 }
-
                 Department deptInUser = new Department();
                 deptInUser.setId(department.getId());
                 deptInUser.setSuperiorId(department.getSuperiorId());
                 deptInUser.setName(department.getName());
-
-/*              UserInfo userInfo = new UserInfo();
-                userInfo.setShortDept(department);
-                user.depts=new ArrayList<>(Arrays.asList(userInfo));*/
-
                 String groupName_current = user.getGroupName();
                 Boolean isContainsGroupName = false;
                 UserGroupData userGroupData_current;
-
                 for (int m = 0; m < lstUserGroupData_current.size(); m++) {
                     userGroupData_current = lstUserGroupData_current.get(m);
                     if (groupName_current != null && groupName_current.equals(userGroupData_current.getGroupName())) {

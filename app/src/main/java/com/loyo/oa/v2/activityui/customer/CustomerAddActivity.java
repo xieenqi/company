@@ -16,7 +16,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.amap.api.services.core.PoiItem;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.MapModifyView;
+import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.bean.HttpAddCustomer;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -92,11 +96,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     private ImageView img_refresh_address;
     private ImageGridViewAdapter imageGridViewAdapter;
-    private Animation animation;
-    private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
     private ArrayList<Contact> mContacts = new ArrayList<>();
-    private ArrayList<TagItem> items = new ArrayList<>();
     private ArrayList<NewTag> tags;
 
     private String uuid = StringUtil.getUUID();
@@ -113,6 +114,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private int uploadSize;
     private int uploadNum;
 
+    private double laPosition;//当前位置的经纬度
+    private double loPosition;
+
+    private Intent mIntent;
+    private Bundle mBundle;
+    private PositionResultItem positionResultItem;
+
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(final Message msg) {
@@ -128,13 +136,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         img_refresh_address = (ImageView) findViewById(R.id.img_refresh_address);
-        animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         super.setTitle("新建客户");
         init_gridView_photo();
         getTempCustomer();
         startLocation();
 
-
+        if(app.latitude != -1 && app.longitude != -1){
+            laPosition = app.latitude;
+            loPosition = app.longitude;
+        }
     }
 
     LocationUtilGD locationGd;
@@ -143,24 +153,21 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 获取定位
      */
     void startLocation() {
-        img_refresh_address.startAnimation(animation);
+        
         et_address.setText(app.address);
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
                 myAddress = address;
                 mHandler.sendEmptyMessage(0x01);
-                img_refresh_address.clearAnimation();
                 LocationUtilGD.sotpLocation();
             }
 
             @Override
             public void OnLocationGDFailed() {
                 Toast("定位失败,请在网络和GPS信号良好时重试");
-                img_refresh_address.clearAnimation();
                 LocationUtilGD.sotpLocation();
             }
-
         });
     }
 
@@ -235,7 +242,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*刷新地址*/
             case R.id.img_refresh_address:
-                startLocation();
+                mIntent = new Intent();
+                mBundle = new Bundle();
+
+
+                startActivityForResult(new Intent(this, MapModifyView.class), 0x01);
                 break;
 
             /*查重*/
@@ -319,35 +330,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         layout_newContract.addView(view);
     }
 
-    public class AsyncAddCustomer extends BaseActivityAsyncHttpResponseHandler {
-
-        @Override
-        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
-            try {
-                Customer retCustomer = MainApp.gson.fromJson(getStr(arg2), Customer.class);
-                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-                isSave = false;
-                Intent intent = new Intent();
-                intent.putExtra(Customer.class.getName(), retCustomer);
-                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);
-
-            } catch (Exception e) {
-                Global.ProcException(e);
-            }
-        }
-
-        @Override
-        public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-            super.onFailure(i, headers, bytes, throwable);
-            cancelLoading();
-        }
-    }
 
     public void requestCommitTask(){
         HttpAddCustomer addCustomerData = new HttpAddCustomer();
         addCustomerData.loc.addr = customerAddress;
-        addCustomerData.loc.loc.add(app.longitude);
-        addCustomerData.loc.loc.add(app.latitude);
+        addCustomerData.loc.loc.add(loPosition);
+        addCustomerData.loc.loc.add(laPosition);
         if (tags != null && tags.size() > 0) {
             for (NewTag tag : tags) {
                 NewTag newtag = new NewTag();
@@ -396,51 +384,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
-/*    public void requestCommitTask(){
-        if (!StringUtil.isEmpty(customerContract) || !StringUtil.isEmpty(customerContractTel)) {
-            Contact defaultContact;
-            defaultContact = new Contact();
-            defaultContact.setName(customerContract);
-            defaultContact.setTel(customerContractTel);
-            defaultContact.setIsDefault(true);
-
-            if (mContacts.size() > 0 && mContacts.get(0).isDefault()) {
-                mContacts.set(0, defaultContact);
-            } else {
-                mContacts.add(0, defaultContact);
-            }
-        }
-        StringEntity stringEntity = null;
-        try {
-            HttpAddCustomer addCustomerData = new HttpAddCustomer();
-            addCustomerData.name = customer_name;
-            if (pickPhots.size() > 0) {
-                addCustomerData.uuid = uuid;
-                addCustomerData.attachmentCount = pickPhots.size();
-            }
-            addCustomerData.loc.addr = customerAddress;
-            addCustomerData.loc.loc.add(app.longitude);
-            addCustomerData.loc.loc.add(app.latitude);
-            addCustomerData.pname = customerContract;
-            addCustomerData.ptel = customerContractTel;
-            addCustomerData.wiretel = customerWrietele;
-            if (tags != null && tags.size() > 0) {
-                for (NewTag tag : tags) {
-                    NewTag newtag = new NewTag();
-                    newtag.tId = tag.tId;
-                    newtag.itemId = tag.itemId;
-                    newtag.itemName = tag.itemName;
-                    addCustomerData.tags.add(newtag);
-                }
-            }
-            stringEntity = new StringEntity(MainApp.gson.toJson(addCustomerData), "UTF-8");
-            LogUtil.dll("新建客户 发送参数:" + MainApp.gson.toJson(addCustomerData));
-        } catch (Exception e) {
-            Global.ProcException(e);
-        }
-        ServerAPI.request(CustomerAddActivity.this, ServerAPI.POST, FinalVariables.customers, stringEntity, ServerAPI.CONTENT_TYPE_JSON, AsyncAddCustomer.class);
-    }*/
-
     boolean isSave = true;
     Customer mCustomer;
 
@@ -481,8 +424,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK) {
+        if(null == data){
             return;
+        }
+
+        /*地图微调，数据回调*/
+        if (resultCode == MapModifyView.SERACH_MAP) {
+            positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+            laPosition = positionResultItem.laPosition;
+            loPosition = positionResultItem.loPosition;
+            et_address.setText(positionResultItem.address);
         }
 
         switch (requestCode) {

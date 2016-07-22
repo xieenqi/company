@@ -101,10 +101,44 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/icon_refresh"/>
+                        android:src="@drawable/icon_position_modify"/>
 
                 </LinearLayout>
 
+
+                <include layout="@layout/include_solid_line_left"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/margin_other_view"
+                    >
+
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="地址"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp15"/>
+
+                    <EditText
+                        style="@style/edtText_normal"
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:hint="请输入详细地址"
+                        android:inputType="textPersonName"
+                        android:maxLength="20"
+                        android:paddingRight="0dp"
+                        android:textColor="@color/title_bg1"/>
+
+                </LinearLayout>
 
                 <include layout="@layout/include_solid_line_left"/>
 

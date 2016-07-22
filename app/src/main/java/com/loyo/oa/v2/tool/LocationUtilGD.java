@@ -98,6 +98,10 @@ public class LocationUtilGD {
         app.address = address;
         app.longitude = location.getLongitude();
         app.latitude = location.getLatitude();
+        app.cityCode = location.getCityCode();
+
+        LogUtil.dee("message:"+MainApp.gson.toJson(location));
+
         if (!TextUtils.isEmpty(address)) {
             LogUtil.d("定位notify高德Location,address : " + address);
             LogUtil.d("定位l高德ocation:" + location.getLatitude() + "," + location.getLongitude());

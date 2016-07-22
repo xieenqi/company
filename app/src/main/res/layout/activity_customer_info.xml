@@ -105,6 +105,24 @@
                 <include layout="@layout/include_solid_line_left"/>
 
                 <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:layout_marginRight="@dimen/margin_other_view"
+                    android:background="@null"
+                    android:hint="客户详细地址"
+                    android:maxLength="500"
+                    android:minHeight="@dimen/dimen_48"
+                    android:paddingBottom="@dimen/dimen_8"
+                    android:paddingTop="@dimen/dimen_8"
+                    android:textColor="@color/text33"
+                    android:textColorHint="@color/text99"
+                    android:textSize="15sp"
+                    />
+
+                <include layout="@layout/include_solid_line_left"/>
+
+                <EditText
                     android:id="@+id/edt_customer_memo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

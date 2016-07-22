@@ -199,11 +199,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if(type == 2){
             dataSelects = DateTool.getYearAllofDay(2015,year);
             Collections.reverse(dataSelects);
-            dataSelects.remove(dataSelects.size()-1);
+            dataSelects.remove(dataSelects.size() - 1);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
             data_time_tv.setText(dataSelects.get(0).yearMonDay);
-            layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
-            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,true);//true 反向显示 false 正常显示
             //customerDataManager = new CustomerDataManager(1, StaggeredGridLayoutManager.HORIZONTAL);
             //customerDataManager.setSpeedRatio(0.5);
             recyclerView.setLayoutManager(layoutManager);
