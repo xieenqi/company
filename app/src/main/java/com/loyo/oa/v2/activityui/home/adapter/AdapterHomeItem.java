@@ -124,17 +124,25 @@ public class AdapterHomeItem extends BaseAdapter {
             for (HttpMainRedDot num : mItemNumbers) {
                 String extra = "";
                 if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                    extra = num.bizNum + "个待点评(含抄送)";
+                    if (num.bizNum > 0) {
+                        extra = num.bizNum + "个待点评(含抄送)";
+                    }
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                    extra = num.bizNum + "个未完成";
+                    if (num.bizNum > 0) {
+                        extra = num.bizNum + "个未完成";
+                    }
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                    extra = num.bizNum + "个待我审批";
+                    if (num.bizNum > 0) {
+                        extra = num.bizNum + "个待我审批";
+                    }
                     wfinstanceCount = num.bizNum;
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
-                    extra = num.bizNum + "个进行中";
+                    if (num.bizNum > 0) {
+                        extra = num.bizNum + "个进行中";
+                    }
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 }
 //            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点

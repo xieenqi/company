@@ -52,6 +52,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
     private DiscussAdapter adapter;
     private boolean isTopAdd = false;
     private int pageIndex = 1;
+    private boolean isfirst = true;
 
 
     @Override
@@ -79,7 +80,8 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void getData() {
-        showLoading("");
+        if (isfirst)
+            showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex + "");
         map.put("pageSize", "20");
@@ -110,6 +112,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
                         lv_discuss.onRefreshComplete();
                     }
                 });
+        isfirst = false;
     }
 
     private void assignViews() {
@@ -175,7 +178,10 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE:
-                    adapter.cleanData();
+//                    adapter.cleanData();
+                    pageIndex = 1;
+                    isTopAdd = true;
+                    getData();
                     LogUtil.d("数组刷新了红点数据");
                     break;
                 default:

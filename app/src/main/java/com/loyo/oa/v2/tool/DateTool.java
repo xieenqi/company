@@ -223,7 +223,7 @@ public class DateTool {
         String strTime = "";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
         long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date);
-        LogUtil.d("检查过了多少时间>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ：" + time);
+        LogUtil.d("检查过了多少时间>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ：" + getDiffTime(date));
         return time < dateNUmber * DAY_MILLIS ? false : true;
     }
 
