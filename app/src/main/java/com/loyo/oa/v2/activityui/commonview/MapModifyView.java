@@ -53,7 +53,7 @@ public class MapModifyView extends BaseActivity
 
     private String cityCode;               //当前城市编码 默认成都
     private String reGeoAddress;           //反GEO地址
-    private double laPosition = 30.659628;//默认经纬度
+    private double laPosition = 30.659628; //默认经纬度
     private double loPosition = 104.065606;
     private int currentPage = 0;    // 当前页面，从0开始计数
     private int selectPosition = -1;
@@ -178,7 +178,6 @@ public class MapModifyView extends BaseActivity
         tv_add.setOnClickListener(this);
 
         locationBtn.setOnTouchListener(Global.GetTouch());
-
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -237,12 +236,17 @@ public class MapModifyView extends BaseActivity
             return;
         }
 
+        LogUtil.dee("this.mZoom:"+this.mZoom);
+        LogUtil.dee("mZoom:"+mZoom);
+        LogUtil.dee("isTouch:"+isTouch);
+
         if (!isTouch) {
             mTarget = cameraPosition.target;
             mLatLonPoint = new LatLonPoint(mTarget.latitude, mTarget.longitude);
-            if(laPosition == mTarget.latitude){
+            /*if(laPosition == mTarget.latitude){
+                LogUtil.dee("return");
                 return;
-            }
+            }*/
             if (Utils.isNetworkAvailable(this)) {
                 showLoading("");
                 getAddress(mLatLonPoint);
