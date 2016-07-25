@@ -94,7 +94,9 @@
                         android:paddingBottom="@dimen/dimen_10"
                         android:paddingLeft="@dimen/dimen_5"
                         android:paddingTop="@dimen/dimen_3"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp"
+                        android:enabled="false"
+                        />
 
                     <ImageView
                         android:id="@+id/img_refresh_address"
@@ -119,7 +121,7 @@
 
 
                     <TextView
-                        android:layout_width="70dp"
+                        android:layout_width="50dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:text="地址"
@@ -127,6 +129,7 @@
                         android:textSize="@dimen/text_sp15"/>
 
                     <EditText
+                        android:id="@+id/edit_address_details"
                         style="@style/edtText_normal"
                         android:layout_width="0px"
                         android:layout_height="match_parent"

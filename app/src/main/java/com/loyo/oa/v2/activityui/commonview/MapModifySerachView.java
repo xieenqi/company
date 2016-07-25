@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
@@ -19,6 +21,8 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.RecycleViewDivider;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +41,8 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
     private PoiSearch.Query query;  // Poi查询条件类
     private PoiSearch poiSearch;    // POI搜索
 
-    private String cityName = "成都";
     private int currentPage;
+    private int fromPage;
 
     private List<PoiItem> poiItems = new ArrayList<>();
     private MapModifyViewSerachAdapter adapter;
@@ -46,6 +50,8 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
 
     private Intent mIntent;
     private Bundle mBundle;
+
+    private LatLonPoint mLatLonPoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,11 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
     }
 
     private void initUI(){
+        mIntent = getIntent();
+        if(null != mIntent){
+            fromPage = mIntent.getIntExtra("page", MapModifyView.CUSTOMER_PAGE);
+        }
+
         img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
         edt_search     = (EditText) findViewById(R.id.edt_search);
         iv_clean       = (ImageView) findViewById(R.id.iv_clean);
@@ -109,16 +120,21 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
      */
     protected void doSearchQuery(String address) {
         currentPage = 0;
-        query = new PoiSearch.Query(address, "",cityName);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        query = new PoiSearch.Query(address,"",app.cityCode);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query.setPageSize(15);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页
         query.setCityLimit(true);
+        mLatLonPoint = new LatLonPoint(app.latitude,app.longitude);
 
         poiSearch = new PoiSearch(this, query);
         poiSearch.setOnPoiSearchListener(this);
-        poiSearch.searchPOIAsyn();
-    }
 
+        //如果为拜访，则设置以mLatLonPoint为中心，300米范围内搜索
+        if(fromPage == MapModifyView.SIGNIN_PAGE){
+            poiSearch.setBound(new PoiSearch.SearchBound(mLatLonPoint, 300, true));
+        }
+        poiSearch.searchPOIAsyn();  //异步搜索
+    }
 
 
     @Override

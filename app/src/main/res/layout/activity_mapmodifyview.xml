@@ -62,6 +62,19 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/mapview_showmessage"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginBottom="@dimen/dimen_5"
+        android:layout_marginLeft="@dimen/margin_other_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="可选范围300迷以内的地点"
+        android:textColor="@color/text99"
+        />
+    <include layout="@layout/include_solid_line"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mapview_recyclerview"
         android:layout_width="match_parent"

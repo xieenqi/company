@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
@@ -35,10 +35,9 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch.OnPoiSearchListener;
 import com.loyo.oa.v2.tool.Utils;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+
 
 /**
  * 【地图微调】公用页面
@@ -52,21 +51,29 @@ public class MapModifyView extends BaseActivity
      */
     public static final int SERACH_MAP = 0x02;
 
-    private String cityCode;               //当前城市编码 默认成都
+    /**
+     * 来自拜访
+     * */
+    public static final int SIGNIN_PAGE = 76;
+
+    /**
+     * 来自客户
+     * */
+    public static final int CUSTOMER_PAGE = 77;
+
     private String reGeoAddress;           //反GEO地址
-    private double laPosition = 30.659628; //默认经纬度
-    private double loPosition = 104.065606;
     private int currentPage = 0;    // 当前页面，从0开始计数
     private int selectPosition = -1;
+    private int fromPage;           //客户和拜访区别
     private float mZoom = 17;       //缩放级别
     private boolean isTouch = false;
     private boolean isFrist;
     private boolean isResutl;
-    private boolean isSame;
 
     private ImageView img_back;
     private TextView tv_add;
     private TextView title;
+    private TextView mapview_showmessage;
     private LinearLayout serachBtn;
     private LinearLayout locationBtn;
 
@@ -139,11 +146,17 @@ public class MapModifyView extends BaseActivity
      * 初始化AMap对象
      */
     private void initUI() {
+        mIntent = getIntent();
+        if(null != mIntent){
+            fromPage = mIntent.getIntExtra("page",CUSTOMER_PAGE);
+        }
+
         isFrist = true;
         mRecyclerView = (RecyclerView) findViewById(R.id.mapview_recyclerview);
         img_back = (ImageView) findViewById(R.id.img_back);
         tv_add = (TextView) findViewById(R.id.tv_add);
         title = (TextView) findViewById(R.id.tv_title);
+        mapview_showmessage = (TextView) findViewById(R.id.mapview_showmessage);
         serachBtn = (LinearLayout) findViewById(R.id.mapview_serach);
         locationBtn = (LinearLayout) findViewById(R.id.mapview_position_this);
         tv_add.setText("确定");
@@ -155,20 +168,22 @@ public class MapModifyView extends BaseActivity
         }
         aMap.setOnCameraChangeListener(this);
 
-        if (app.latitude != -1 || app.longitude != -1) {
-            laPosition = app.latitude;
-            loPosition = app.longitude;
-
-            headerItem = new PositionResultItem();
-            headerItem.laPosition = laPosition;
-            headerItem.loPosition = loPosition;
-            headerItem.address = app.address;
-            headerItem.message = app.address;
-            cityCode = app.cityCode;
-
+        if(fromPage == SIGNIN_PAGE){
+            mapview_showmessage.setVisibility(View.VISIBLE);
+            mUiSettings.setZoomControlsEnabled(false);
+            mUiSettings.setZoomGesturesEnabled(false);
+            mUiSettings.setScrollGesturesEnabled(false);
         }
 
-        locationMapCenter(laPosition, loPosition);
+        if (app.latitude != -1 || app.longitude != -1) {
+            headerItem = new PositionResultItem();
+            headerItem.laPosition = app.latitude;
+            headerItem.loPosition = app.longitude;
+            headerItem.address = app.address;
+            headerItem.message = app.address;
+        }
+
+        locationMapCenter(app.latitude, app.longitude);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.HORIZONTAL));
@@ -206,21 +221,6 @@ public class MapModifyView extends BaseActivity
         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mTarget, mZoom));
     }
 
-    /**
-     * 开始进行poi搜索
-     */
-    protected void doSearchQuery(String address) {
-        currentPage = 0;
-        query = new PoiSearch.Query(address, "", cityCode);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
-        query.setPageSize(15);// 设置每页最多返回多少条poiitem
-        query.setPageNum(currentPage);// 设置查第一页
-        query.setCityLimit(true);
-
-        poiSearch = new PoiSearch(this, query);
-        poiSearch.setOnPoiSearchListener(this);
-        poiSearch.searchPOIAsyn();
-    }
-
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
 
@@ -241,10 +241,6 @@ public class MapModifyView extends BaseActivity
         if (!isTouch) {
             mTarget = cameraPosition.target;
             mLatLonPoint = new LatLonPoint(mTarget.latitude, mTarget.longitude);
-            /*if(laPosition == mTarget.latitude){
-                LogUtil.dee("return");
-                return;
-            }*/
             if (Utils.isNetworkAvailable(this)) {
                 showLoading("");
                 getAddress(mLatLonPoint);
@@ -255,6 +251,28 @@ public class MapModifyView extends BaseActivity
             isTouch = false;
         }
     }
+
+    /**
+     * 开始进行poi搜
+     */
+    protected void doSearchQuery(String address) {
+        currentPage = 0;
+        query = new PoiSearch.Query(address, "", app.cityCode);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        query.setPageSize(15);// 设置每页最多返回多少条poiitem
+        query.setPageNum(currentPage);// 设置查第一页
+        query.setCityLimit(true);
+
+        poiSearch = new PoiSearch(this, query);
+        poiSearch.setOnPoiSearchListener(this);
+        poiSearch.searchPOIAsyn();
+    }
+
+
+    @Override
+    public void onPoiItemSearched(PoiItem poiItem, int i) {
+        cancelLoading();
+    }
+
 
     /**
      * Poi搜索检索回调
@@ -332,12 +350,6 @@ public class MapModifyView extends BaseActivity
         geocoderSearch.getFromLocationAsyn(query);// 设置同步逆地理编码请求
     }
 
-    @Override
-    public void onPoiItemSearched(PoiItem poiItem, int i) {
-        cancelLoading();
-    }
-
-
     /**
      * 反Geo回调
      */
@@ -373,7 +385,9 @@ public class MapModifyView extends BaseActivity
 
             //进入搜索View
             case R.id.mapview_serach:
-                MainApp.getMainApp().startActivityForResult(this, MapModifySerachView.class, MainApp.ENTER_TYPE_RIGHT, 0x01, null);
+                mBundle = new Bundle();
+                mBundle.putInt("page", fromPage);
+                MainApp.getMainApp().startActivityForResult(this, MapModifySerachView.class, MainApp.ENTER_TYPE_RIGHT, 0x01, mBundle);
                 break;
 
             //确定
@@ -411,8 +425,8 @@ public class MapModifyView extends BaseActivity
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
-                locationMapCenter(app.latitude, app.longitude);
-                mLatLonPoint = new LatLonPoint(app.latitude, app.longitude);
+                locationMapCenter(latitude,longitude);
+                mLatLonPoint = new LatLonPoint(latitude, longitude);
                 getAddress(mLatLonPoint);
                 LocationUtilGD.sotpLocation();
             }
