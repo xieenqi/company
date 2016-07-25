@@ -429,6 +429,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
      * 点评报告
      */
     private void reviewWorkreport() {
+        if (null == mWorkReport) {
+            return;
+        }
         Intent intent = new Intent(this, WorkReportReviewActivity_.class);
         intent.putExtra("mWorkReportId", mWorkReport.getId());
         startActivityForResult(intent, MSG_REVIEW);

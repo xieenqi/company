@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
@@ -310,8 +311,8 @@ public class MainHomeActivity extends SlidingFragmentActivity {
      */
     @Override
     public void onBackPressed() {
-        if(sm.isMenuShowing()){
-           sm.showMenu(false);
+        if (sm.isMenuShowing()) {
+            sm.showMenu(false);
             return;
         }
         showGeneralDialog(true, true, getString(R.string.app_exit_message));
