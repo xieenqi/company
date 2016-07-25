@@ -54,9 +54,8 @@ public class LocationUtilGD {
             // 启动定位
             locationClient.startLocation();
             locationClient.startAssistantLocation();
-            LogUtil.d(" qx权限通过 ");
         } else {
-//            Global.Toast("你没有配置定位权限");
+//          Global.Toast("你没有配置定位权限");
             DialogHelp.cancelLoading();
         }
     }
@@ -94,18 +93,15 @@ public class LocationUtilGD {
             afterLocation.OnLocationGDFailed();
             return;
         }
-        String address = location.getAddress();
-        app.address = address;
+
+        app.address = location.getAddress();
         app.longitude = location.getLongitude();
         app.latitude = location.getLatitude();
         app.cityCode = location.getCityCode();
 
-        LogUtil.dee("message:"+MainApp.gson.toJson(location));
-
-        if (!TextUtils.isEmpty(address)) {
-            LogUtil.d("定位notify高德Location,address : " + address);
-            LogUtil.d("定位l高德ocation:" + location.getLatitude() + "," + location.getLongitude());
-            afterLocation.OnLocationGDSucessed(address, location.getLongitude(), location.getLatitude(),
+        if (!TextUtils.isEmpty(location.getAddress())) {
+            LogUtil.d("定位notify高德Location,address : " + location.getAddress());
+            afterLocation.OnLocationGDSucessed(location.getAddress(), location.getLongitude(), location.getLatitude(),
                     location.getRoad());
         } else {
             afterLocation.OnLocationGDFailed();

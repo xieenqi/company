@@ -163,8 +163,6 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
             } else {
                 Toast("没有查询到相关信息！");
             }
-        } else {
-            Toast("访问出错！");
         }
     }
 
