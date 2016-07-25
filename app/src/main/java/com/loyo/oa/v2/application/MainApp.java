@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
-
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
@@ -101,7 +100,9 @@ public class MainApp extends Application {
 
     public double longitude = -1;
     public double latitude = -1;
+    public String cityCode;
     public String address;
+    public String message;
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
     public static HashMap<String, Object> rootMap;

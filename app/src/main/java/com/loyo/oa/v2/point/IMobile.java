@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.point;
 
 import java.util.HashMap;
-
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
