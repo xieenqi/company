@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
+
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
@@ -16,6 +17,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
@@ -129,6 +131,7 @@ public class MainApp extends Application {
         JPushInterface.resumePush(mainApp);
         token = _token;
         SharedUtil.put(getMainApp().getBaseContext(), FinalVariables.TOKEN, token);
+        SharedUtil.put(getMainApp().getBaseContext(), ExtraAndResult.TOKEN_START, System.currentTimeMillis() + "");
     }
 
 
