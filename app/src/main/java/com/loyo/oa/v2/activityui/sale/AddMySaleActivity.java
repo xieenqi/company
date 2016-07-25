@@ -289,14 +289,10 @@ public class AddMySaleActivity extends BaseActivity {
                     if ("estimated_amount".equals(ele.fieldName) && ele.required) {
                         isEstimatedAmount = true;
                         et_money.setHint("必填,请输入");
-                    } else {
-                        et_money.setHint("请输入");
                     }
                     if ("estimated_time".equals(ele.fieldName) && ele.required) {
                         isEstimatedTime = true;
                         tv_estimate.setHint("必填,请选择");
-                    } else {
-                        tv_estimate.setHint("请选择");
                     }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));

@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
 import com.loyo.oa.v2.activityui.project.HttpProject;
@@ -17,9 +18,12 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -532,5 +536,33 @@ public final class Common {
                 HttpErrorCheck.checkError(error);
             }
         });
+    }
+
+
+    /**
+     * 获取最新Token，防止Token失效
+     */
+    public static void getToken() {
+        String startTimeText = SharedUtil.get(MainApp.getMainApp().getBaseContext(), ExtraAndResult.TOKEN_START);
+        if (!TextUtils.isEmpty(startTimeText)) {
+            long startTime = Long.parseLong(startTimeText);
+            if (DateTool.getDate(startTime, 1)) {
+                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<LoginActivity.Token>() {
+                    @Override
+                    public void success(LoginActivity.Token token, Response response) {
+                        HttpErrorCheck.checkResponse("刷新token", response);
+                        MainApp.setToken(token.access_token);
+                        //LogUtil.dee("刷新的Token:" + token.access_token);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+            }
+        }
+
     }
 }

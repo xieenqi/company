@@ -66,6 +66,7 @@ public class MenuFragment extends BaseFragment {
     public static ExitAppCallback callback;
     private Intent mIntentCheckUpdate;
     private boolean isUpdataData = false;
+    private boolean isExite = false;
 
     //个人信息 和版本信息
     private BroadcastReceiver userInfoAndVersionInfo = new BroadcastReceiver() {
@@ -89,6 +90,9 @@ public class MenuFragment extends BaseFragment {
                     Toast("数据更新成功！");
                     isUpdataData = false;
                 }
+            } else if ("exite".equals(info) && !isExite) {
+                exit();
+                isExite = true;
             }
         }
     };
@@ -266,6 +270,7 @@ public class MenuFragment extends BaseFragment {
             //退出登录
             case R.id.ll_exit:
                 exit();
+                isExite = false;
                 break;
         }
 

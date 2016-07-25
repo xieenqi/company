@@ -212,8 +212,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         HashMap<String, Object> map = new HashMap<>();
         map.put("gpsInfo", loPosition + "," + laPosition);
         map.put("address", mAddress.trim());
+        map.put("position",customerAddress);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
+
 
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());

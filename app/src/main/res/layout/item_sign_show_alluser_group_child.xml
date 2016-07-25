@@ -65,17 +65,15 @@
         android:id="@+id/layout_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_10"
         android:layout_marginLeft="@dimen/margin_side_edge"
         android:layout_marginTop="@dimen/dimen_3"
         android:orientation="horizontal"
         android:paddingRight="@dimen/margin_side_edge">
 
         <ImageView
-            android:id="@+id/img_sign_list_creator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/img_sign_list_position"/>
+            android:src="@drawable/icon_sinain_position"/>
 
         <TextView
             android:id="@+id/tv_address"
@@ -83,6 +81,31 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:text="客户地址"
+            android:textColor="@color/text99"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_position"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:layout_marginTop="@dimen/dimen_3"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/margin_side_edge">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_sign_list_position"/>
+
+        <TextView
+            android:id="@+id/tv_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="客户签到"
             android:textColor="@color/text99"
             android:textSize="12sp"/>
     </LinearLayout>

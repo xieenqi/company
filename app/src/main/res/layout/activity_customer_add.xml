@@ -107,7 +107,6 @@
 
                 </LinearLayout>
 
-
                 <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
@@ -118,7 +117,6 @@
                     android:paddingLeft="@dimen/margin_other_view"
                     android:paddingRight="@dimen/margin_other_view"
                     >
-
 
                     <TextView
                         android:layout_width="50dp"

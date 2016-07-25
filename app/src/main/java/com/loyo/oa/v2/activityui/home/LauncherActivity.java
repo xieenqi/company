@@ -15,6 +15,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.login.WelcomeActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -51,7 +52,8 @@ public class LauncherActivity extends Activity {
 
             }
         });
-        SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START,"open");
+        SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "open");
+        Common.getToken();//检查刷新token
     }
 
     /**
@@ -123,9 +125,6 @@ public class LauncherActivity extends Activity {
         if (!isWelcom) {
             intent.setClass(LauncherActivity.this, WelcomeActivity.class);
         } else {
-            //老版主页
-            /*intent.setClass(LauncherActivity.this,
-                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);*/
             //新版主页
             intent.setClass(LauncherActivity.this,
                     TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainHomeActivity.class);//MainHomeActivity  NewMainActivity

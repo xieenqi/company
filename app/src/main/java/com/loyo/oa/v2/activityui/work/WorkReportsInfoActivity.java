@@ -308,8 +308,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             if (!StringUtil.isEmpty(mWorkReport.reviewer.comment)) {
                 edt_content.setText(mWorkReport.reviewer.comment);
                 edt_content.setEnabled(false);
-            } else {
-                layout_content.setVisibility(View.GONE);
             }
             if (!mWorkReport.creator.id.equals(MainApp.user.id)) {
                 //显示编辑、删除按钮
@@ -429,6 +427,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
      * 点评报告
      */
     private void reviewWorkreport() {
+        if (null == mWorkReport) {
+            return;
+        }
         Intent intent = new Intent(this, WorkReportReviewActivity_.class);
         intent.putExtra("mWorkReportId", mWorkReport.getId());
         startActivityForResult(intent, MSG_REVIEW);

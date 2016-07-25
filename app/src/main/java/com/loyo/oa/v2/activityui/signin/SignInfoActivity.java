@@ -39,6 +39,7 @@ public class SignInfoActivity extends BaseActivity {
     private TextView tv_address;
     private TextView tv_customer_name;
     private TextView tv_memo;
+    private TextView customer_address;
     private ViewGroup ll_back;
     private GridView gridView_photo;
     private ViewGroup layout_customer_info;
@@ -74,6 +75,7 @@ public class SignInfoActivity extends BaseActivity {
     void initUI() {
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
+        customer_address = (TextView) findViewById(R.id.customer_address);
         tv_memo = (TextView) findViewById(R.id.tv_memo);
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
         layout_customer_icon = (ImageView) findViewById(R.id.layout_customer_icon);
@@ -145,8 +147,9 @@ public class SignInfoActivity extends BaseActivity {
 
     void updateUI() {
         if (legWork != null) {
-            tv_address.setText(legWork.address);
+            tv_address.setText(legWork.position);
             tv_memo.setText(legWork.memo);
+            customer_address.setText(legWork.address);
 
             if (null != legWork.customerName) {
                 tv_customer_name.setText(legWork.customerName);
