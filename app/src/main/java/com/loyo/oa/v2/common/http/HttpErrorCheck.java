@@ -81,7 +81,11 @@ public class HttpErrorCheck {
         LogUtil.d("error接口URL：" + error.getUrl());
 
         try {
-            String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
+            String msg = Utils.
+                    convertStreamToString(error.
+                    getResponse()
+                    .getBody()
+                    .in());
             LogUtil.d("error获得的：", msg);
             JSONObject job = new JSONObject(msg);
             if (500 == error.getResponse().getStatus()) {
@@ -90,7 +94,7 @@ public class HttpErrorCheck {
                 Toast(job.getString("error"));
             } else if (404 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
-            } else if (407 == error.getResponse().getStatus()) {
+            } else if (406 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
                 //到侧边栏 退出系统到登录界面
                 Intent in = new Intent();
