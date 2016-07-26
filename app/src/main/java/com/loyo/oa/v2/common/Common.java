@@ -546,7 +546,7 @@ public final class Common {
         String startTimeText = SharedUtil.get(MainApp.getMainApp().getBaseContext(), ExtraAndResult.TOKEN_START);
         if (!TextUtils.isEmpty(startTimeText)) {
             long startTime = Long.parseLong(startTimeText);
-            if (DateTool.getDate(startTime, 1)) {
+            if (DateTool.getDate(startTime, 10)) {
                 RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<LoginActivity.Token>() {
                     @Override
                     public void success(LoginActivity.Token token, Response response) {
