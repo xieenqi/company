@@ -18,31 +18,30 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.customer.bean.Locate;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
-import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.Members;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CustomerInfoExtraData;
+import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.CustomerInfoExtraData;
-import com.loyo.oa.v2.customview.SelectCityView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -63,7 +62,7 @@ import retrofit.client.Response;
  * 【客户信息】 页面
  */
 @EActivity(R.layout.activity_customer_info)
-public class CustomerInfoActivity extends BaseFragmentActivity{
+public class CustomerInfoActivity extends BaseFragmentActivity {
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
@@ -309,7 +308,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity{
         }
         tv_customer_name.setText(mCustomer.name);
 
-        if (!TextUtils.isEmpty(mCustomer.position.addr)){
+        if (!TextUtils.isEmpty(mCustomer.position.addr)) {
             tv_address.setText(mCustomer.position.addr);
         } else {
             Intent intent = new Intent();
@@ -321,13 +320,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity{
             }
         }
 
-        if(!TextUtils.isEmpty(mCustomer.loc.addr)){
+        if (!TextUtils.isEmpty(mCustomer.loc.addr)) {
             edt_address_details.setText(mCustomer.loc.addr);
         }
 
         try {
             tv_customer_creator.setText(mCustomer.creator.getName());
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             tv_customer_creator.setText("无");
             e.printStackTrace();
         }
@@ -453,7 +452,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity{
             /*刷新地理位置*/
             case R.id.img_refresh_address:
                 mIntent = new Intent(this, MapModifyView.class);
-                mIntent.putExtra("page",MapModifyView.CUSTOMER_PAGE);
+                mIntent.putExtra("page", MapModifyView.CUSTOMER_PAGE);
                 startActivityForResult(mIntent, 0x01);
                 break;
             /*路径规划*/
@@ -502,7 +501,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity{
             Toast.makeText(this, "客户地址不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(!TextUtils.isEmpty(addressDetails)){
+        if (!TextUtils.isEmpty(addressDetails)) {
             adrDetailsData.addr = addressDetails;
         }
 
@@ -515,7 +514,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity{
         map.put("members", members);
         map.put("tags", mTagItems);
         map.put("loc", adrDetailsData);
-        map.put("position",mLocate);
+        map.put("position", mLocate);
         map.put("extDatas", mCustomer.extDatas);
         map.put("regional", regional);
 
@@ -559,7 +558,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity{
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(null == data){
+        if (null == data) {
             return;
         }
 
