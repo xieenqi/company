@@ -91,10 +91,8 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
                     public void success(final PaginationX<HttpDiscussItem> discuss, final Response response) {
                         HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
                         if (!PaginationX.isEmpty(discuss)) {
-//                            mDiscuss = discuss;
                             if (isTopAdd) {
                                 listData = discuss.getRecords();
-//                                adapter.cleanData();
                             } else {
                                 listData.addAll(discuss.getRecords());
                             }
@@ -178,7 +176,6 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE:
-//                    adapter.cleanData();
                     pageIndex = 1;
                     isTopAdd = true;
                     getData();
