@@ -48,7 +48,7 @@
                     android:gravity="top"
                     android:paddingTop="@dimen/dimen_8"
                     android:singleLine="false"
-                    android:text="13"
+                    android:text=""
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15"/>
 
@@ -58,7 +58,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/margin_other_view"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/icon_refresh"/>
+                    android:src="@drawable/icon_position_modify"/>
 
             </LinearLayout>
 
@@ -69,44 +69,66 @@
                 />
 
             <LinearLayout
-                android:id="@+id/layout_customer_name"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/layout_bg1"
-                android:gravity="center_vertical"
-                android:minHeight="@dimen/view_h_title"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                >
 
-                <TextView
-                    style="@style/text_item1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:text="选择客户"
-                    android:textSize="@dimen/text_sp15"/>
-
-                <TextView
-                    android:id="@+id/tv_customer_name"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/layout_customer_name"
+                    android:layout_marginTop="@dimen/dimen_7"
+                    android:layout_marginBottom="@dimen/dimen_7"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_16"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:minHeight="@dimen/view_h_title"
-                    android:singleLine="false"
-                    android:text=""
-                    android:textColor="@color/title_bg1"
-                    android:textSize="@dimen/text_sp15"/>
+                    android:background="@drawable/layout_bg1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/img_title_right_customer_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="@dimen/dimen_4"
-                    android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:text="选择客户"
+                        android:textSize="@dimen/text_sp15"/>
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_customer_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="@color/title_bg1"
+                        android:textSize="@dimen/text_sp15"/>
+
+                    <ImageView
+                        android:id="@+id/img_title_right_customer_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginRight="@dimen/dimen_4"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:visibility="gone"
+                    android:layout_marginBottom="@dimen/dimen_7"
+                    android:layout_marginTop="@dimen/dimen_3"
+                    android:id="@+id/tv_customer_address"
+                    android:layout_marginRight="@dimen/margin_other_view"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="客户地址"
+                    android:textColor="@color/text99"
+                    android:gravity="center_vertical"
+                    />
+
+                </LinearLayout>
 
             <View
                 android:id="@+id/divider_customer_name"

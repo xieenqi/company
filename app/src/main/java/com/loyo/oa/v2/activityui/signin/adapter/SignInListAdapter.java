@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.signin.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class SignInListAdapter extends BaseAdapter {
         TextView tv_user_name = ViewHolder.get(view, R.id.tv_user_name);
         TextView tv_address = ViewHolder.get(view, R.id.tv_address);
         TextView tv_time = ViewHolder.get(view, R.id.tv_time);
+        TextView tv_position = ViewHolder.get(view, R.id.tv_position);
 
         if (mType == TYPE_LIST_OF_CUSTOMER) {
             tv_customer_name.setText("拜访人：" + legWork.creator.getName());
@@ -73,13 +75,18 @@ public class SignInListAdapter extends BaseAdapter {
             view.findViewById(R.id.layout_name).setVisibility(View.VISIBLE);
 
             if (null == legWork.customerName) {
-                tv_customer_name.setText("无指定客户");
+                tv_customer_name.setText("拜访人: 无指定客户");
             } else {
-                tv_customer_name.setText(legWork.customerName);
+                tv_customer_name.setText("拜访人: "+legWork.customerName);
             }
             tv_user_name.setText(legWork.creator.getName());
         }
-        tv_address.setText("地址：" + legWork.address);
+        if(TextUtils.isEmpty(legWork.position)){
+            tv_address.setText("地址: 无");
+        }else{
+            tv_address.setText("地址: " + legWork.position);
+        }
+        tv_position.setText("签到: "+legWork.address);
         tv_time.setText(DateTool.getDiffTime(legWork.getCreatedAt() * 1000));
 
         return view;

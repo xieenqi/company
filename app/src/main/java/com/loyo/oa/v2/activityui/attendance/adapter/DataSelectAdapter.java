@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.attendance.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +102,11 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
             if (position == 0) {
                 holder.num.setBackgroundResource(R.drawable.shape_count_top);
             } else {
-                holder.num.setBackground(null);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    holder.num.setBackground(null);
+                } else {
+                    holder.num.setBackgroundDrawable(null);
+                }
             }
             holder.num.setTextColor(mContext.getResources().getColor(R.color.text33));
         }
