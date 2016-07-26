@@ -90,18 +90,18 @@ public class HttpErrorCheck {
                 Toast(job.getString("error"));
             } else if (404 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
+            } else if (407 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+                //到侧边栏 退出系统到登录界面
+                Intent in = new Intent();
+                in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+                in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
+                LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
             } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
                 Toast("请检查您的网络连接");
             } else {
                 String errorInfo = job.getString("error");
                 Toast(errorInfo);
-                if (errorInfo.contains("access_token")) {
-                    //到侧边栏 退出系统到登录界面
-                    Intent in = new Intent();
-                    in.setAction(ExtraAndResult.ACTION_USER_VERSION);
-                    in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
-                    LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
-                }
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
