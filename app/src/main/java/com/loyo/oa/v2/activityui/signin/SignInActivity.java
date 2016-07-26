@@ -306,15 +306,15 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
         if (null == data) {
             return;
-        }
+       }
 
         /*地图微调，数据回调*/
-        if (resultCode == MapModifyView.SERACH_MAP) {
-            positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-            laPosition = positionResultItem.laPosition;
-            loPosition = positionResultItem.loPosition;
-            tv_address.setText(positionResultItem.address);
-        }
+    if (resultCode == MapModifyView.SERACH_MAP) {
+        positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+        laPosition = positionResultItem.laPosition;
+        loPosition = positionResultItem.loPosition;
+        tv_address.setText(positionResultItem.address);
+    }
 
 
         /**
