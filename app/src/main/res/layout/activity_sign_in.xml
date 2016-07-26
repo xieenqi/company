@@ -51,15 +51,6 @@
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15"/>
 
-                <ImageView
-                    android:id="@+id/img_refresh_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/margin_other_view"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/icon_position_modify"
-                    android:visibility="gone"/>
-
                 <TextView
                     android:id="@+id/tv_reset_address"
                     style="@style/text_item1"

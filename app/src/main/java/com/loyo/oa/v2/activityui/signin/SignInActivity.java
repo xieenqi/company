@@ -161,7 +161,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
-//                img_refresh_address.clearAnimation();
                 animation.reset();
                 laPosition = latitude;
                 loPosition = longitude;
@@ -172,7 +171,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
             @Override
             public void OnLocationGDFailed() {
-//                img_refresh_address.clearAnimation();
                 animation.reset();
                 boolean gpsOpen = Utils.isGPSOPen(mContext);
                 if (!gpsOpen) {
