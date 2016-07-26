@@ -22,6 +22,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/customer_position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 >
@@ -38,8 +39,8 @@
                     android:layout_marginLeft="@dimen/dimen_10"
                     android:layout_toLeftOf="@+id/head_foot"
                     android:layout_toRightOf="@+id/head_img"
-                    android:layout_marginBottom="@dimen/dimen_5"
-                    android:layout_marginTop="@dimen/dimen_5"
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    android:layout_marginTop="@dimen/dimen_10"
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
