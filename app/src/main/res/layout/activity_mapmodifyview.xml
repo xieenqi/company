@@ -13,8 +13,8 @@
         android:background="@color/mapmod_gray"
         >
         <TextView
-            android:layout_marginBottom="@dimen/dimen_10"
-            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginBottom="@dimen/dimen_7"
+            android:layout_marginTop="@dimen/dimen_7"
             android:layout_marginRight="@dimen/margin_other_view"
             android:layout_marginLeft="@dimen/margin_other_view"
             android:layout_width="match_parent"
