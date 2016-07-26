@@ -75,11 +75,11 @@ public class SignInListAdapter extends BaseAdapter {
             view.findViewById(R.id.layout_name).setVisibility(View.VISIBLE);
 
             if (null == legWork.customerName) {
-                tv_customer_name.setText("拜访人: 无指定客户");
+                tv_customer_name.setText("无指定客户");
             } else {
-                tv_customer_name.setText("拜访人: "+legWork.customerName);
+                tv_customer_name.setText(legWork.customerName);
             }
-            tv_user_name.setText(legWork.creator.getName());
+            tv_user_name.setText("拜访人: "+legWork.creator.getName());
         }
         if(TextUtils.isEmpty(legWork.position)){
             tv_address.setText("地址: 无");

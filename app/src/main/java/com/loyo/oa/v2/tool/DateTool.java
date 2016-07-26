@@ -131,7 +131,7 @@ public class DateTool {
             dataSelect.bottom = monthSf.format(calendar.getTime()) + "月";
             dataSelect.yearMonDay = yearSf.format(calendar.getTime()) + "年" + monthSf.format(calendar.getTime())
                     + "月" + daySf.format(calendar.getTime())
-                    + " " + getWeekStr(calendar.getTime().getTime());
+                    + "日 " + getWeekStr(calendar.getTime().getTime());
             dataSelect.mapOftime = String.valueOf(calendar.getTime().getTime()).substring(0, 10);
 
             arrayList.add(dataSelect);

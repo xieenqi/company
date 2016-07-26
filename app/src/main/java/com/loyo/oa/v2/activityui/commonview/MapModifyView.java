@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
+import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.UiSettings;
 import com.amap.api.maps2d.model.CameraPosition;
@@ -26,7 +27,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.adapter.MapModifyViewAdapter;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RecycleViewDivider;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -44,7 +44,7 @@ import java.util.Collections;
  * Created by yyy on 16/7/20.
  */
 public class MapModifyView extends BaseActivity
-        implements AMap.OnCameraChangeListener, OnPoiSearchListener, GeocodeSearch.OnGeocodeSearchListener, View.OnClickListener {
+        implements AMap.OnCameraChangeListener, OnPoiSearchListener, GeocodeSearch.OnGeocodeSearchListener, View.OnClickListener,LocationSource {
 
     /**
      * 搜索结果，返回CODE
@@ -61,13 +61,13 @@ public class MapModifyView extends BaseActivity
      * */
     public static final int CUSTOMER_PAGE = 77;
 
-    private String reGeoAddress;           //反GEO地址
-    private int currentPage = 0;    // 当前页面，从0开始计数
+    private String reGeoAddress;       //反GEO地址
+    private int currentPage = 0;       //当前页面，从0开始计数
     private int selectPosition = -1;
-    private int fromPage;           //客户和拜访区别
-    private float mZoom = 17;       //缩放级别
-    private boolean isTouch = false;
-    private boolean isFrist;
+    private int fromPage;              //客户和拜访区别
+    private float mZoom = 17;          //缩放级别
+    private boolean isTouch = true;
+    private boolean isFrist = true;
     private boolean isResutl;
 
     private ImageView img_back;
@@ -75,7 +75,6 @@ public class MapModifyView extends BaseActivity
     private TextView title;
     private TextView mapview_showmessage;
     private LinearLayout serachBtn;
-    private LinearLayout locationBtn;
 
     private UiSettings mUiSettings;
     private MapView mapView;
@@ -101,7 +100,7 @@ public class MapModifyView extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapmodifyview);
         mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);// 此方法必须重写
+        mapView.onCreate(savedInstanceState); //此方法必须重写
         initUI();
     }
 
@@ -151,14 +150,12 @@ public class MapModifyView extends BaseActivity
             fromPage = mIntent.getIntExtra("page",CUSTOMER_PAGE);
         }
 
-        isFrist = true;
         mRecyclerView = (RecyclerView) findViewById(R.id.mapview_recyclerview);
         img_back = (ImageView) findViewById(R.id.img_back);
         tv_add = (TextView) findViewById(R.id.tv_add);
         title = (TextView) findViewById(R.id.tv_title);
         mapview_showmessage = (TextView) findViewById(R.id.mapview_showmessage);
         serachBtn = (LinearLayout) findViewById(R.id.mapview_serach);
-        locationBtn = (LinearLayout) findViewById(R.id.mapview_position_this);
         tv_add.setText("确定");
         title.setText("定位");
 
@@ -175,26 +172,28 @@ public class MapModifyView extends BaseActivity
             mUiSettings.setScrollGesturesEnabled(false);
         }
 
+        aMap.setLocationSource(this);     //设置定位监听
+        mUiSettings.setMyLocationButtonEnabled(true); //是否显示默认的定位按钮
+        aMap.setMyLocationEnabled(true);  //是否可触发定位并显示定位层
+
+        /*如果缓存没有定位到信息，该页面再定位一次*/
         if (app.latitude != -1 || app.longitude != -1) {
-            headerItem = new PositionResultItem();
-            headerItem.laPosition = app.latitude;
-            headerItem.loPosition = app.longitude;
-            headerItem.address = app.address;
-            headerItem.message = app.address;
+            setHeaderItem();
+            locationMapCenter(app.latitude, app.longitude);
+            doSearchQuery(app.address);
+        }else{
+            startLocation();
         }
 
-        locationMapCenter(app.latitude, app.longitude);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.HORIZONTAL));
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
         serachBtn.setOnClickListener(this);
-        locationBtn.setOnClickListener(this);
         img_back.setOnClickListener(this);
         tv_add.setOnClickListener(this);
 
-        locationBtn.setOnTouchListener(Global.GetTouch());
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -211,6 +210,17 @@ public class MapModifyView extends BaseActivity
 
             }
         }));
+    }
+
+    /**
+     * 组装头部数据
+     * */
+    public void setHeaderItem(){
+            headerItem = new PositionResultItem();
+            headerItem.laPosition = app.latitude;
+            headerItem.loPosition = app.longitude;
+            headerItem.address = app.address;
+            headerItem.message = app.message;
     }
 
     /**
@@ -270,7 +280,7 @@ public class MapModifyView extends BaseActivity
 
     @Override
     public void onPoiItemSearched(PoiItem poiItem, int i) {
-        cancelLoading();
+
     }
 
 
@@ -304,6 +314,7 @@ public class MapModifyView extends BaseActivity
 
                     /*搜索结果返回，数据组装*/
                     if (isResutl) {
+                        isResutl = false;
                         for (PositionResultItem positionResultItem : resultItems) {
                             if (resultPoiItem.getTitle().contains(positionResultItem.address)) {
                                 resultItems.remove(positionResultItem);
@@ -328,7 +339,7 @@ public class MapModifyView extends BaseActivity
                             adapter.notifyDataSetChanged();
                         }
                         adapter.selectPositioni(selectPosition);
-                        LogUtil.dee("resutl:" + MainApp.gson.toJson(resultItems));
+                        //LogUtil.dee("resutl:" + MainApp.gson.toJson(resultItems));
                     } else {
                         Toast("没有查询到相关信息！");
                     }
@@ -396,6 +407,11 @@ public class MapModifyView extends BaseActivity
                 if (selectPosition == -1) {
                     Toast("请选择地点");
                 } else {
+                    app.latitude = resultItems.get(selectPosition).laPosition;
+                    app.longitude = resultItems.get(selectPosition).loPosition;
+                    app.address  = resultItems.get(selectPosition).address;
+                    app.message  = resultItems.get(selectPosition).message;
+
                     mIntent = new Intent();
                     mBundle = new Bundle();
                     mBundle.putSerializable("data", resultItems.get(selectPosition));
@@ -410,11 +426,6 @@ public class MapModifyView extends BaseActivity
                 finish();
                 break;
 
-            //当前位置
-            case R.id.mapview_position_this:
-                isFrist = true;
-                startLocation();
-                break;
         }
     }
 
@@ -425,9 +436,11 @@ public class MapModifyView extends BaseActivity
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
+                isTouch = true;
+                isFrist = true;
+                setHeaderItem();
                 locationMapCenter(latitude,longitude);
-                mLatLonPoint = new LatLonPoint(latitude, longitude);
-                getAddress(mLatLonPoint);
+                doSearchQuery(app.address);
                 LocationUtilGD.sotpLocation();
             }
 
@@ -439,6 +452,23 @@ public class MapModifyView extends BaseActivity
         });
     }
 
+    /**
+     * 定位按钮监听
+     * */
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+        if(!isFrist){
+            startLocation();
+        }
+    }
+
+    /**
+     * 取消定位监听
+     * */
+    @Override
+    public void deactivate() {
+        LocationUtilGD.sotpLocation();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -453,7 +483,6 @@ public class MapModifyView extends BaseActivity
             selectPosition = 0;
             resultPoiItem = data.getParcelableExtra("data");
             locationMapCenter(resultPoiItem.getLatLonPoint().getLatitude(), resultPoiItem.getLatLonPoint().getLongitude());
-            LogUtil.dee("返回值:" + resultPoiItem.getTitle());
         }
     }
 }
