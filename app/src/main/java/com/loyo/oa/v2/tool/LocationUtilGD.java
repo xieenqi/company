@@ -82,7 +82,7 @@ public class LocationUtilGD {
         //友盟统计定位失败的信息
         UMengTools.sendCustomErroInfo(context, location);
         String time = MainApp.getMainApp().df10.format(new Date(location.getTime()));
-        LogUtil.d("手动试试定位：" + "时间 : " + time +
+        LogUtil.d("定位回调数据：" + "时间 : " + time +
                 " 模式 : " + location.getProvider()
                 + " 地址是否有效 : " + (!TextUtils.isEmpty(location.getAddress()))
                 + " 纬度 : " + location.getLatitude()
@@ -95,6 +95,7 @@ public class LocationUtilGD {
         }
 
         app.address = location.getAddress();
+        app.message = location.getStreet()+location.getStreetNum();
         app.longitude = location.getLongitude();
         app.latitude = location.getLatitude();
         app.cityCode = location.getCityCode();
