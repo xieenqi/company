@@ -126,7 +126,6 @@ public class SignInfoActivity extends BaseActivity {
             }
         });
 
-
         getLegwork();
     }
 
