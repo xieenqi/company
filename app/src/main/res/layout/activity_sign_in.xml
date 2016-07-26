@@ -26,18 +26,17 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:minHeight="@dimen/view_h_title"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/margin_other_view"
+                android:paddingRight="@dimen/margin_other_view">
 
-                <TextView
-                    style="@style/text_item1"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:gravity="top"
-                    android:paddingTop="@dimen/dimen_9"
-                    android:text="地址:"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp15"/>
+                    android:layout_marginRight="@dimen/dimen_10"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_position_modify"/>
+
 
                 <TextView
                     android:id="@+id/tv_address"
@@ -58,8 +57,23 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/margin_other_view"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/icon_position_modify"/>
+                    android:src="@drawable/icon_position_modify"
+                    android:visibility="gone"/>
 
+                <TextView
+                    android:id="@+id/tv_reset_address"
+                    style="@style/text_item1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_blue_retange"
+                    android:paddingBottom="@dimen/dimen_2"
+                    android:paddingLeft="@dimen/dimen_6"
+                    android:paddingRight="@dimen/dimen_6"
+                    android:paddingTop="@dimen/dimen_2"
+                    android:text="微调"
+                    android:textColor="@color/title_bg1"
+                    android:textSize="@dimen/text_sp12"
+                    />
             </LinearLayout>
 
             <View
@@ -76,10 +90,10 @@
 
                 <LinearLayout
                     android:id="@+id/layout_customer_name"
-                    android:layout_marginTop="@dimen/dimen_7"
-                    android:layout_marginBottom="@dimen/dimen_7"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_7"
+                    android:layout_marginTop="@dimen/dimen_7"
                     android:background="@drawable/layout_bg1"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
@@ -115,20 +129,20 @@
                 </LinearLayout>
 
                 <TextView
-                    android:visibility="gone"
-                    android:layout_marginBottom="@dimen/dimen_7"
-                    android:layout_marginTop="@dimen/dimen_3"
                     android:id="@+id/tv_customer_address"
-                    android:layout_marginRight="@dimen/margin_other_view"
-                    android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_7"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:layout_marginRight="@dimen/margin_other_view"
+                    android:layout_marginTop="@dimen/dimen_3"
+                    android:gravity="center_vertical"
                     android:text="客户地址"
                     android:textColor="@color/text99"
-                    android:gravity="center_vertical"
+                    android:visibility="gone"
                     />
 
-                </LinearLayout>
+            </LinearLayout>
 
             <View
                 android:id="@+id/divider_customer_name"

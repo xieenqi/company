@@ -11,7 +11,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -56,7 +55,7 @@ import retrofit.client.Response;
  */
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_customer_name;
+    private TextView tv_customer_name,tv_reset_address;
     private TextView tv_address;
     private TextView wordcount;
     private TextView tv_customer_address;
@@ -70,12 +69,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private String customerName;
     private String customerAddress;
     private SignInGridViewAdapter signInGridViewAdapter;
-    private ImageView img_refresh_address;
     private double laPosition, loPosition;
     boolean mLocationFlag = false;  //是否定位完成的标记
     private Customer mCustomer;
     private Animation animation;
-    private boolean isPicture = false, upPicture = false;
+    private boolean isPicture = false;
     private Intent mIntent;
     private PositionResultItem positionResultItem;
 
@@ -108,9 +106,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         img_title_right.setOnClickListener(this);
         img_title_right.setOnTouchListener(Global.GetTouch());
 
-        img_refresh_address = (ImageView) findViewById(R.id.img_refresh_address);
-        img_refresh_address.setOnTouchListener(Global.GetTouch());
-        img_refresh_address.setOnClickListener(this);
+        tv_reset_address = (TextView) findViewById(R.id.tv_reset_address);
+        tv_reset_address.setOnTouchListener(Global.GetTouch());
+        tv_reset_address.setOnClickListener(this);
 
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         wordcount = (TextView) findViewById(R.id.wordcount);
@@ -163,7 +161,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
-                img_refresh_address.clearAnimation();
+//                img_refresh_address.clearAnimation();
                 animation.reset();
                 laPosition = latitude;
                 loPosition = longitude;
@@ -174,7 +172,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
             @Override
             public void OnLocationGDFailed() {
-                img_refresh_address.clearAnimation();
+//                img_refresh_address.clearAnimation();
                 animation.reset();
                 boolean gpsOpen = Utils.isGPSOPen(mContext);
                 if (!gpsOpen) {
@@ -213,7 +211,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 break;
 
             /*地址更新*/
-            case R.id.img_refresh_address:
+            case R.id.tv_reset_address:
                 mIntent = new Intent(this, MapModifyView.class);
                 mIntent.putExtra("page", MapModifyView.SIGNIN_PAGE);
                 startActivityForResult(mIntent, 0x01);
@@ -238,7 +236,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             Global.ToastLong("无效地址!请刷新地址后重试");
             return;
         }
-        if (isPicture && !upPicture) {
+        if (isPicture && !(lstData_Attachment.size() > 0)) {
             Global.ToastLong("需要上传照片，请拍照");
             return;
         }
@@ -306,15 +304,15 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
         if (null == data) {
             return;
-       }
+        }
 
         /*地图微调，数据回调*/
-    if (resultCode == MapModifyView.SERACH_MAP) {
-        positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-        laPosition = positionResultItem.laPosition;
-        loPosition = positionResultItem.loPosition;
-        tv_address.setText(positionResultItem.address);
-    }
+        if (resultCode == MapModifyView.SERACH_MAP) {
+            positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+            laPosition = positionResultItem.laPosition;
+            loPosition = positionResultItem.loPosition;
+            tv_address.setText(positionResultItem.address);
+        }
 
 
         /**
@@ -337,7 +335,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                                     @Override
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
-                                        upPicture = true;
                                     }
 
                                     @Override

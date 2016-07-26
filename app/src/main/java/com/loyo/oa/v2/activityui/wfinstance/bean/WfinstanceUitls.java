@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.wfinstance.bean;
 
+import android.text.TextUtils;
+
 import com.loyo.oa.v2.beans.WfInstance;
 
 import java.util.ArrayList;
@@ -88,22 +90,22 @@ public class WfinstanceUitls {
         ArrayList<WflnstanceItemData> groupData = new ArrayList<>();
 
         //1.先排序
-        Comparator<WflnstanceListItem> comparator = new Comparator<WflnstanceListItem>() {
-            @Override
-            public int compare(WflnstanceListItem lhs, WflnstanceListItem rhs) {
-
-                int l = Integer.parseInt("0");
-                int r = Integer.parseInt("0");
-
-                if (r - l > 0) {
-                    return -1;
-                } else if (r - l < 0) {
-                    return 1;
-                }
-                return 0;
-            }
-        };
-        Collections.sort(data, comparator);
+//        Comparator<WflnstanceListItem> comparator = new Comparator<WflnstanceListItem>() {
+//            @Override
+//            public int compare(WflnstanceListItem lhs, WflnstanceListItem rhs) {
+//
+//                int l = lhs.approveStatus;
+//                int r = rhs.approveStatus;
+//
+//                if (r - l > 0) {
+//                    return -1;
+//                } else if (r - l < 0) {
+//                    return 1;
+//                }
+//                return 0;
+//            }
+//        };
+//        Collections.sort(data, comparator);
         for (WflnstanceListItem ele : data) {
             String order = "";
             switch (ele.approveStatus) {
@@ -119,7 +121,7 @@ public class WfinstanceUitls {
             }
             boolean isExist = false;
             for (WflnstanceItemData group : groupData) {
-                if (group.orderStr.equals(order)) {
+                if (!TextUtils.isEmpty(group.orderStr) && group.orderStr.equals(order)) {
                     isExist = true;
                     group.records.add(ele);
                 }
