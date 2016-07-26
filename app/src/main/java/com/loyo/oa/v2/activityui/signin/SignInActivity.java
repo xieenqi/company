@@ -13,17 +13,20 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -37,12 +40,14 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.CountTextWatcher;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -70,8 +75,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     boolean mLocationFlag = false;  //是否定位完成的标记
     private Customer mCustomer;
     private Animation animation;
+    private boolean isPicture = false, upPicture = false;
     private Intent mIntent;
-
     private PositionResultItem positionResultItem;
 
     @Override
@@ -87,6 +92,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             customerAddress = mCustomer.loc.addr;
         }
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
+        getIsPhoto();
         initUI();
     }
 
@@ -124,6 +130,30 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
         init_gridView_photo();
         startLocation();
+    }
+
+    /**
+     * 获取签到是否需要传递图片
+     */
+    private void getIsPhoto() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("key", "need_pictures_switcher");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSetInfo(map, new Callback<SigninPictures>() {
+            @Override
+            public void success(SigninPictures result, Response response) {
+                HttpErrorCheck.checkResponse("签到时必须操作？？？", response);
+                if (result.value.equals("1")) {
+                    isPicture = true;
+                } else {
+                    isPicture = false;
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 
     void startLocation() {
@@ -185,7 +215,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             /*地址更新*/
             case R.id.img_refresh_address:
                 mIntent = new Intent(this, MapModifyView.class);
-                mIntent.putExtra("page",MapModifyView.SIGNIN_PAGE);
+                mIntent.putExtra("page", MapModifyView.SIGNIN_PAGE);
                 startActivityForResult(mIntent, 0x01);
                 break;
 
@@ -208,11 +238,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             Global.ToastLong("无效地址!请刷新地址后重试");
             return;
         }
-
+        if (isPicture && !upPicture) {
+            Global.ToastLong("需要上传照片，请拍照");
+            return;
+        }
         HashMap<String, Object> map = new HashMap<>();
         map.put("gpsInfo", loPosition + "," + laPosition);
         map.put("address", mAddress.trim());
-        map.put("position",customerAddress);
+        map.put("position", customerAddress);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
 
@@ -271,7 +304,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 
-        if(null == data){
+        if (null == data) {
             return;
         }
 
@@ -304,6 +337,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                                     @Override
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
+                                        upPicture = true;
                                     }
 
                                     @Override
