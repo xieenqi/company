@@ -74,6 +74,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
     private String[] sort = {"按最近创建时间", "按照最近更新", "按照最高金额"};
     private String stageId = "";
     private String sortType = "";
+    private int stageIndex = 0, sortIndex = 0;
     private int requestPage = 1;
     private boolean isPull = false;
 
@@ -86,11 +87,13 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                     isPull = false;
                     stageId = msg.getData().get("data").toString();
+                    stageIndex = (int) msg.getData().get("index");
                     break;
 
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
                     isPull = false;
                     sortType = msg.getData().get("data").toString();
+                    sortIndex = (int) msg.getData().get("index");
                     break;
 
                 default:
@@ -298,7 +301,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
                 //销售阶段
                 case R.id.salemy_screen1:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, stageData, SaleOpportunitiesManagerActivity.SCREEN_STAGE, true);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, stageData, SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, stageIndex);
                     saleCommPopupView.showAsDropDown(screen1);
                     openPopWindow(tagImage1);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -311,7 +314,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
                 //排序
                 case R.id.salemy_screen2:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, SaleOpportunitiesManagerActivity.SCREEN_SORT, false);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                     saleCommPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
