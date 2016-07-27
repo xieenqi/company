@@ -290,11 +290,11 @@ public class HomeStatisticsFragment extends BaseFragment {
         for (int i = 0; i < data.size(); i++) {
             HttpProcess processData = data.get(i);
             if (j < 10) {
-                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, j));
+                ll_process.addView(new ProcessDataAdapter(app, processData.value, processData.totalNum, max, j));
                 j++;
             } else {
                 j = 0;
-                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, j));
+                ll_process.addView(new ProcessDataAdapter(app, processData.value, processData.totalNum, max, j));
                 j++;
             }
 
@@ -381,7 +381,7 @@ public class HomeStatisticsFragment extends BaseFragment {
         }
         int bjIndex = 10 - data.size();
         for (int i = 0; i < data.size(); i++) {
-            ll_funnel.addView(new FunnelDataAdapter(getActivity(), i, data.get(i), bjIndex));
+            ll_funnel.addView(new FunnelDataAdapter(app, i, data.get(i), bjIndex));
             bjIndex++;
         }
     }

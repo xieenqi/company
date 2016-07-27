@@ -20,22 +20,35 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
+import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
+import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
+import com.loyo.oa.v2.activityui.customer.SaleActivitiesAddActivity;
+import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
+import com.loyo.oa.v2.activityui.home.bean.HomeItem;
+import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
+import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
+import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
+import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
+import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
+import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
+import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
-import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.TrackRule;
-import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.activityui.commonview.MapModifyView;
+import com.loyo.oa.v2.customview.AttenDancePopView;
+import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
@@ -51,20 +64,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.activityui.customer.SaleActivitiesAddActivity;
-import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
-import com.loyo.oa.v2.activityui.home.bean.HomeItem;
-import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
-import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
-import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
-import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
-import com.loyo.oa.v2.activityui.signin.SignInActivity;
-import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
-import com.loyo.oa.v2.customview.AttenDancePopView;
-import com.loyo.oa.v2.customview.GeneralPopView;
-import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -183,7 +182,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             this.heading = getArguments().getParcelable("view");
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.d("<<<<<<<<<<<<<<<<<主页头像再次异常>>>>>>>>>>>>>>>>>>>>>>");
         }
         initData();
     }
@@ -201,7 +199,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
         //只有登录进来才加载loading
         if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
-            DialogHelp.showLoading(getActivity(), "", true);
+            showLoading("");
         }
         adapter = new AdapterHomeItem(getActivity());
         listView.setAdapter(adapter);
@@ -379,7 +377,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         }
 
         if (!Global.isConnected()) {
-            Toast.makeText(getActivity(), "没有网络连接，不能打卡", Toast.LENGTH_SHORT).show();
+            Global.Toast("没有网络连接，不能打卡");
             return;
         }
         /*工作日*/
