@@ -106,6 +106,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:text="客户签到"
+            android:maxEms="22"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:textColor="@color/text99"
             android:textSize="12sp"/>
     </LinearLayout>

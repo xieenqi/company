@@ -53,14 +53,16 @@ public class WeeksDialog {
         return returnHashMap;
     }
 
-    private void setDataSource() {
-        //填充最近五个星期的范围
+    /**
+     * 填充最近(num-1)个星期的范围
+     * */
+    private void setDataSource(int num) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(curDate);
 
         long monday, sunday;
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < num; i++) {
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             monday = cal.getTime().getTime();
             cal.add(Calendar.DATE, 6);
@@ -81,7 +83,7 @@ public class WeeksDialog {
         this.mContext = view.getContext();
         this.resultTview = view;
         this.mHandler = handler;
-        setDataSource();
+        setDataSource(4);
 
         if (sourseList != null) {
 
