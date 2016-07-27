@@ -9,29 +9,25 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amap.api.services.core.PoiItem;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.HttpAddCustomer;
+import com.loyo.oa.v2.activityui.customer.bean.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.activityui.customer.bean.TagItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
@@ -42,13 +38,11 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.customview.CusGridView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.apache.http.Header;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -126,6 +120,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         public void dispatchMessage(final Message msg) {
             if (msg.what == 0x01) {
                 et_address.setText(myAddress);
+                edit_address_details.setText(myAddress);
             }
         }
     };
@@ -135,13 +130,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     void initUI() {
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-        edit_address_details= (EditText)  findViewById(R.id.edit_address_details);
+        edit_address_details = (EditText) findViewById(R.id.edit_address_details);
         super.setTitle("新建客户");
         init_gridView_photo();
         getTempCustomer();
         startLocation();
 
-        if(app.latitude != -1 && app.longitude != -1){
+        if (app.latitude != -1 && app.longitude != -1) {
             laPosition = app.latitude;
             loPosition = app.longitude;
         }
@@ -153,7 +148,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 获取定位
      */
     void startLocation() {
-        
+
         et_address.setText(app.address);
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
@@ -192,12 +187,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(){
+     */
+    private void newUploadAttachement() {
         showLoading("正在提交");
         try {
             uploadSize = 0;
-            uploadNum  = pickPhots.size();
+            uploadNum = pickPhots.size();
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
@@ -210,7 +205,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
-                                        if(uploadSize == uploadNum){
+                                        if (uploadSize == uploadNum) {
                                             requestCommitTask();
                                         }
                                     }
@@ -231,7 +226,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
 
     void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
         ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
@@ -243,7 +238,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             /*刷新地址*/
             case R.id.img_refresh_address:
                 mIntent = new Intent(this, MapModifyView.class);
-                mIntent.putExtra("page",MapModifyView.CUSTOMER_PAGE);
+                mIntent.putExtra("page", MapModifyView.CUSTOMER_PAGE);
                 startActivityForResult(mIntent, 0x01);
                 break;
 
@@ -278,7 +273,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else if (customerAddress.isEmpty()) {
                     Toast("请输入的客户地址");
                     return;
-                } else if(cusotmerDetalisAddress.isEmpty()){
+                } else if (cusotmerDetalisAddress.isEmpty()) {
                     Toast("请输入的客户详细地址");
                     return;
                 }
@@ -298,9 +293,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 //                }
 
                 //没有附件
-                if(pickPhots.size() == 0){
+                if (pickPhots.size() == 0) {
                     requestCommitTask();
-                }else{
+                } else {
                     newUploadAttachement();
                 }
                 break;
@@ -333,7 +328,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     }
 
 
-    public void requestCommitTask(){
+    public void requestCommitTask() {
         HttpAddCustomer positionData = new HttpAddCustomer();
         positionData.loc.addr = customerAddress;
         positionData.loc.loc.add(loPosition);
@@ -351,13 +346,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         HttpAddCustomer locData = new HttpAddCustomer();
         locData.loc.addr = cusotmerDetalisAddress;
 
-        HashMap<String,Object> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         if (pickPhots.size() > 0) {
-            map.put("attachmentCount",pickPhots.size());
-            map.put("uuid",uuid);
+            map.put("attachmentCount", pickPhots.size());
+            map.put("uuid", uuid);
         }
 
-        map.put("position",positionData.loc); //定位数据
+        map.put("position", positionData.loc); //定位数据
         map.put("loc", locData.loc);          //地址详情数据
         map.put("name", customer_name);
         map.put("pname", customerContract);
@@ -430,7 +425,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(null == data){
+        if (null == data) {
             return;
         }
 
@@ -440,6 +435,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             laPosition = positionResultItem.laPosition;
             loPosition = positionResultItem.loPosition;
             et_address.setText(positionResultItem.address);
+            edit_address_details.setText(positionResultItem.address);
         }
 
         switch (requestCode) {

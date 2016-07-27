@@ -23,6 +23,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UpdateTipActivity;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
 import java.io.Serializable;
@@ -80,7 +81,7 @@ public class CheckUpdateService extends Service {
     void downloadApp() {
 
         if (enqueue == 0) {
-            Global.Toast("正在更新最新版..");
+            Global.Toast("WIFI环境,正在更新最新版...");
             LogUtil.d("版本更新地址:" + mUpdateInfo.apkUrl);
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mUpdateInfo.apkUrl))
                     .setTitle(getResources().getString(R.string.app_name))
@@ -134,7 +135,7 @@ public class CheckUpdateService extends Service {
                     if (updateInfo.versionCode > Global.getVersion()) {
                         //有新版本
                         MainApp.getMainApp().hasNewVersion = true;
-                        if (updateInfo.autoUpdate) {//后台自动更新
+                        if (updateInfo.autoUpdate && Utils.getNetworkType(MainApp.getMainApp()).contains("WIFI")) {//后台自动更新
                             deleteFile();
                             downloadApp();
                         } else if (updateInfo.forceUpdate || isToast) {//弹窗提示更新
