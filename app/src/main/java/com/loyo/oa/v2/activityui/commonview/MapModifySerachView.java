@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -36,6 +37,7 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
     private EditText edt_search;
     private ImageView iv_clean;
     private RecyclerView mRecyclerView;
+    private ViewStub     mViewStub;
 
     private PoiResult poiResult;    // poi返回的结果
     private PoiSearch.Query query;  // Poi查询条件类
@@ -70,6 +72,7 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
         edt_search     = (EditText) findViewById(R.id.edt_search);
         iv_clean       = (ImageView) findViewById(R.id.iv_clean);
         mRecyclerView  = (RecyclerView) findViewById(R.id.mapmod_serach_recycler);
+        mViewStub      = (ViewStub) findViewById(R.id.vs_nodata);
 
         mLinearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -166,6 +169,8 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
                     poiItems.addAll(poiResult.getPois());// 取得第一页的poiitem数据，页数从数字0开始
 
                     if (poiItems != null && poiItems.size() > 0) {
+                        mViewStub.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
                         if(null == adapter){
                             adapter = new MapModifyViewSerachAdapter(poiItems,this);
                             mRecyclerView.setAdapter(adapter);
@@ -173,10 +178,14 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                         }
                     } else {
+                        mViewStub.setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(View.GONE);
                         Toast("没有查询到相关信息！");
                     }
                 }
             } else {
+                mViewStub.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
                 Toast("没有查询到相关信息！");
             }
         }
