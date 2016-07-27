@@ -228,7 +228,7 @@ public class DateTool {
     }
 
     /**
-     * 获取当天凌晨（即前一天24:00:00）的毫秒数
+     * 获取当天 开始时间
      *
      * @return
      */
@@ -244,7 +244,7 @@ public class DateTool {
     }
 
     /**
-     * 获取当天24:00:00的毫秒数
+     * 获取当天 结束时间
      *
      * @return
      */
@@ -257,6 +257,30 @@ public class DateTool {
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         long millis = calendar.getTimeInMillis();
         return millis;
+    }
+
+    /**
+     * 获取过去某天 开始时间
+     */
+    public static long getSomeDayBeginAt(int index) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(calendar.DAY_OF_MONTH, -(index + 1));//防止下标为0
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime().getTime();
+    }
+
+    /**
+     * 获取过去某天 结束时间
+     */
+    public static long getSomeDayEndAt(int index) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(calendar.DAY_OF_MONTH, -(index + 1));//防止下标为0
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        return calendar.getTime().getTime();
     }
 
 
@@ -335,30 +359,6 @@ public class DateTool {
     public static long getSomeMonthEndAt(int index) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(calendar.MONTH, -(index + 1));//防止下标为0
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        return calendar.getTime().getTime();
-    }
-
-    /**
-     * 获取过去某天 开始时间
-     */
-    public static long getSomeDayBeginAt(int index) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(calendar.DAY_OF_MONTH, -(index + 1));//防止下标为0
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        return calendar.getTime().getTime();
-    }
-
-    /**
-     * 获取过去某天 结束时间
-     */
-    public static long getSomeDayEndAt(int index) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(calendar.DAY_OF_MONTH, -(index + 1));//防止下标为0
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
