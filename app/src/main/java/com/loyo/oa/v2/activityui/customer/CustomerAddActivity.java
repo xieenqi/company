@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
+import com.loyo.oa.v2.activityui.customer.bean.CustomerJur;
 import com.loyo.oa.v2.activityui.customer.bean.HttpAddCustomer;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -26,6 +28,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
@@ -95,6 +98,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<NewTag> tags;
     private Intent mIntent;
 
+    private  ArrayList<CustomerJur> mCusList;
+
     private String uuid = StringUtil.getUUID();
     private String tagItemIds;
     private String myAddress;
@@ -112,6 +117,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     private double laPosition;//当前位置的经纬度
     private double loPosition;
+
+    private boolean cusGuys = false;  //联系人权限
+    private boolean cusPhone = false; //手机权限
+    private boolean cusMobile = false;//座机权限
 
     private PositionResultItem positionResultItem;
 
@@ -135,7 +144,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         init_gridView_photo();
         getTempCustomer();
         startLocation();
-
+        requestJurisdiction();
         if (app.latitude != -1 && app.longitude != -1) {
             laPosition = app.latitude;
             loPosition = app.longitude;
@@ -268,29 +277,38 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 cusotmerDetalisAddress = edit_address_details.getText().toString().trim();
 
                 if (customer_name.isEmpty()) {
-                    Toast("请输入客户名称");
+                    Toast("请输入客户名称!");
                     return;
                 } else if (customerAddress.isEmpty()) {
-                    Toast("请输入的客户地址");
+                    Toast("请输入的客户地址!");
                     return;
                 } else if (cusotmerDetalisAddress.isEmpty()) {
-                    Toast("请输入的客户详细地址");
+                    Toast("请输入的客户详细地址!");
+                    return;
+                } else if(TextUtils.isEmpty(customerContractTel) && cusPhone){
+                    Toast("请输入客户手机号码!");
+                    return;
+                } else if(TextUtils.isEmpty(customerWrietele)    && cusMobile){
+                    Toast("请输入客户座机号码!");
+                    return;
+                } else if(TextUtils.isEmpty(customerContract)    && cusGuys){
+                    Toast("请输入联系人姓名!");
                     return;
                 }
 
-//                if(!customerContractTel.isEmpty()){
-//                    if(!RegularCheck.isMobilePhone(customerContractTel)){
-//                        Toast("手机号码格式不正确");
-//                        return;
-//                    }
-//                }
-//
-//                if(!customerWrietele.isEmpty()){
-//                    if(!RegularCheck.isPhone(customerWrietele)){
-//                        Toast("座机号码格式不正确");
-//                        return;
-//                    }
-//                }
+/*                if(!customerContractTel.isEmpty()){
+                    if(!RegularCheck.isMobilePhone(customerContractTel)){
+                        Toast("手机号码格式不正确");
+                        return;
+                    }
+                }
+
+                if(!customerWrietele.isEmpty()){
+                    if(!RegularCheck.isPhone(customerWrietele)){
+                        Toast("座机号码格式不正确");
+                        return;
+                    }
+                }*/
 
                 //没有附件
                 if (pickPhots.size() == 0) {
@@ -327,7 +345,44 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         layout_newContract.addView(view);
     }
 
+    /**
+     * 获取新建客户权限
+     * */
+    public void requestJurisdiction(){
+        showLoading("");
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("bizType",100);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback< ArrayList<CustomerJur>>() {
+            @Override
+            public void success(final ArrayList<CustomerJur> cuslist, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                mCusList = cuslist;
+                for(CustomerJur customerJur : cuslist){
+                    if(customerJur.label.contains("联系人") && customerJur.required){
+                        cusGuys = true;
+                        edt_contract.setHint("请输入联系人姓名(必填)");
+                    }else if(customerJur.label.contains("手机") && customerJur.required){
+                        cusPhone = true;
+                        edt_contract_tel.setHint("请输入联系人手机号(必填)");
+                    }else if(customerJur.label.contains("座机") && customerJur.required){
+                        cusMobile = true;
+                        edt_contract_telnum.setHint("请输入联系人座机(必填)");
+                    }
+                }
+            }
 
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+
+    /**
+     * 新建客户请求
+     * */
     public void requestCommitTask() {
         HttpAddCustomer positionData = new HttpAddCustomer();
         positionData.loc.addr = customerAddress;

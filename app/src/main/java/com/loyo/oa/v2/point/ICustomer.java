@@ -1,8 +1,11 @@
 package com.loyo.oa.v2.point;
 
+import android.telecom.Call;
+
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerExtraData;
+import com.loyo.oa.v2.activityui.customer.bean.CustomerJur;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRepeatList;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.customer.bean.MembersRoot;
@@ -315,4 +318,11 @@ public interface ICustomer {
      */
     @GET("/config")
     void getSetInfo(@QueryMap Map<String, Object> map, Callback<SigninPictures> callback);
+
+    /**
+     * 新建客户,后台权限
+     * */
+    @GET("/properties")
+    void getAddCustomerJur(@QueryMap Map<String,Object> map,Callback<ArrayList<CustomerJur>> callback);
+
 }
