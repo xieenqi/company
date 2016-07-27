@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.util.SparseArray;
 import android.widget.TextView;
 
+import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.lang.reflect.Array;
@@ -33,6 +35,7 @@ public class WeeksDialog {
     private String sourseToWeek[];
     private String dateR;
     private Date curDate = new Date();
+    private Handler mHandler;
 
     public TextView getResultTview() {
         return resultTview;
@@ -74,9 +77,10 @@ public class WeeksDialog {
         }
     }
 
-    public WeeksDialog(TextView view) {
+    public WeeksDialog(TextView view,Handler handler) {
         this.mContext = view.getContext();
         this.resultTview = view;
+        this.mHandler = handler;
         setDataSource();
 
         if (sourseList != null) {
@@ -134,6 +138,7 @@ public class WeeksDialog {
                 dateR+="(补签)";
             }
             resultTview.setText(dateR);
+            mHandler.sendEmptyMessage(WorkReportAddActivity.WEEK_RESULT);
             LogUtil.dee("AAAA:"+sourseToWeek[0]);
         }
     };
