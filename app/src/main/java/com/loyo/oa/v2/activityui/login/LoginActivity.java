@@ -86,7 +86,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         layout_login.setOnClickListener(this);
 
         /*Debug模式下*/
-        if (Config_project.is_developer_mode) {
+        if (!Config_project.isRelease) {
             edt_username.setText("17412345678");
             edt_password.setText("123456");
 //            layout_check_debug.setVisibility(View.VISIBLE);
