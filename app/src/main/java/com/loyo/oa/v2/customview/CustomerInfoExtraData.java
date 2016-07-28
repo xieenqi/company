@@ -34,7 +34,6 @@ import java.util.ArrayList;
  */
 public class CustomerInfoExtraData extends LinearLayout {
 
-    private AlertDialog dialog;
     private Context mContext;
     private ArrayList<ExtraData> extras = new ArrayList<>();
     private boolean isRoot;
@@ -122,10 +121,6 @@ public class CustomerInfoExtraData extends LinearLayout {
                 }
             } else {
                 tv_content.setText(customerExtra.getVal());
-            }
-
-            if (properties.isList()) {
-                tv_content.setEnabled(false);
             }
 
             addView(extra);
@@ -293,6 +288,7 @@ public class CustomerInfoExtraData extends LinearLayout {
     }
 
     AlertDialog initDialog_Wheel_one(final TextView textView, final ExtraData extra) {
+
         final ArrayList<String> str = extra.getProperties().getDefVal();
         BaseAdapter followAdapter = new BaseAdapter() {
             @Override
@@ -325,6 +321,8 @@ public class CustomerInfoExtraData extends LinearLayout {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         View layout = LayoutInflater.from(mContext).inflate(R.layout.dialog_products_select, null);
+        builder.setView(layout);
+        final AlertDialog dialog = builder.create();
         ListView listView_follow = (ListView) layout.findViewById(R.id.listView);
         listView_follow.setAdapter(followAdapter);
         listView_follow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -335,8 +333,7 @@ public class CustomerInfoExtraData extends LinearLayout {
                 dialog.dismiss();
             }
         });
-        builder.setView(layout);
-        dialog = builder.create();
+
         return dialog;
 
     }

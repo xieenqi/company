@@ -42,7 +42,6 @@ import java.util.Calendar;
  */
 public class ContactAddforExtraData extends LinearLayout {
 
-    private AlertDialog dialog;
     private Context mContext;
     private ArrayList<ContactLeftExtras> extras = new ArrayList<>();
     private Contact mContact;
@@ -439,6 +438,8 @@ public class ContactAddforExtraData extends LinearLayout {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         View layout = LayoutInflater.from(mContext).inflate(R.layout.dialog_products_select, null);
+        builder.setView(layout);
+        final AlertDialog dialog = builder.create();
         ListView listView_follow = (ListView) layout.findViewById(R.id.listView);
         listView_follow.setAdapter(followAdapter);
         listView_follow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -449,8 +450,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 dialog.dismiss();
             }
         });
-        builder.setView(layout);
-        dialog = builder.create();
+
         return dialog;
 
     }
