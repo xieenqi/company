@@ -371,21 +371,28 @@ public class MenuFragment extends BaseFragment {
     }
 
     void exit() {
+//        showLoading("退出系统中");
+        Set<String> complanTag = new HashSet<>();
+        JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), "", complanTag, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+//                cancelLoading();
+                LogUtil.d("激光推送已经成功停止（注销）状态" + i);
+//                if (i != 0) {
+//                    Toast("请重试");
+//                    return;
+//                }
+                //设置别名 为空
+
+                JPushInterface.stopPush(app);
+            }
+        });
         //清楚token与用户资料
         MainApp.setToken(null);
         MainApp.user = null;
 
         //清楚本地登录状态
         SharedUtil.clearInfo(getActivity());
-        JPushInterface.stopPush(app);
-        Set<String> complanTag = new HashSet<>();
-        JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), "", complanTag, new TagAliasCallback() {
-            @Override
-            public void gotResult(int i, String s, Set<String> set) {
-                LogUtil.d("激光推送已经成功停止（注销）状态" + i);
-                //设置别名 为空
-            }
-        });
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(getActivity(), LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }
