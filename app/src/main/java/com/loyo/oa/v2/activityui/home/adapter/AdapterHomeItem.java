@@ -136,6 +136,8 @@ public class AdapterHomeItem extends BaseAdapter {
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
                     if (num.bizNum > 0) {
                         extra = num.bizNum + "个待我审批";
+                    } else {
+                        extra = " ";
                     }
                     wfinstanceCount = num.bizNum;
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
