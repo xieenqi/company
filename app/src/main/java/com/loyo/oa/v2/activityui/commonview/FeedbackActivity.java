@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.commonview;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.view.View;
@@ -11,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.beans.FeedBackCommit;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -23,7 +25,6 @@ import com.loyo.oa.v2.point.IFeedback;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -114,26 +115,35 @@ public class FeedbackActivity extends BaseActivity {
             Toast("请输入内容");
             return;
         }
+        try {
+            PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
 
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("attachmentUUid", uuid);
-        map.put("content", comment);
-        map.put("operationSystem", "Android");
-        map.put("userAgent", android.os.Build.MODEL);
+            CellInfo cellInfo = Utils.getCellInfo();
+            String androidInfo = "Android" + "品牌：" + cellInfo.getLoyoAgent() + "<->" + "版本：" + cellInfo.getLoyoOSVersion() +
+                    "<->" + "设备硬件版本:" + cellInfo.getLoyoHVersion() + "<->" + "app版本:" + pi.versionName + "<->";
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("attachmentUUid", uuid);
+            map.put("content", comment);
+            map.put("operationSystem", androidInfo);
+            map.put("userAgent", android.os.Build.MODEL);
 
-        RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
-            @Override
-            public void success(final FeedBackCommit feedBackCommit, final Response response) {
-                showSuccessDialog();
-            }
+            RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
+                @Override
+                public void success(final FeedBackCommit feedBackCommit, final Response response) {
+                    HttpErrorCheck.checkResponse("意见反馈：", response);
+                    showSuccessDialog();
+                }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("提交失败");
-                super.failure(error);
-            }
-        });
+                @Override
+                public void failure(final RetrofitError error) {
+                    HttpErrorCheck.checkError(error);
+                    Toast("提交失败");
+                    super.failure(error);
+                }
+            });
+        } catch (PackageManager.NameNotFoundException e) {
+            Global.ProcException(e);
+        }
     }
 
     /**
