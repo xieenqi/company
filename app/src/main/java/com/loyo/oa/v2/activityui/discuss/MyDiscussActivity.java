@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -25,10 +26,12 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -44,10 +47,12 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
     private ImageView iv_submit;
     private LinearLayoutManager linearLayoutManager;
     protected PaginationX<HttpDiscussItem> mDiscuss = new PaginationX(20);
+    private ArrayList<HttpDiscussItem> listData = new ArrayList<>();
 
     private DiscussAdapter adapter;
-    private boolean isTopAdd = true;
+    private boolean isTopAdd = false;
     private int pageIndex = 1;
+    private boolean isfirst = true;
 
 
     @Override
@@ -75,7 +80,8 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void getData() {
-        showLoading("");
+        if (isfirst)
+            showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex + "");
         map.put("pageSize", "20");
@@ -83,14 +89,14 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
                 getDisscussList(map, new RCallback<PaginationX<HttpDiscussItem>>() {
                     @Override
                     public void success(final PaginationX<HttpDiscussItem> discuss, final Response response) {
-                        cancelLoading();
                         HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
                         if (!PaginationX.isEmpty(discuss)) {
-                            mDiscuss = discuss;
                             if (isTopAdd) {
-                                adapter.cleanData();
+                                listData = discuss.getRecords();
+                            } else {
+                                listData.addAll(discuss.getRecords());
                             }
-                            adapter.updataList(discuss.getRecords());
+                            adapter.updataList(listData);
                         } else {
                             Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
                         }
@@ -99,12 +105,12 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        cancelLoading();
                         HttpErrorCheck.checkError(error);
                         super.failure(error);
                         lv_discuss.onRefreshComplete();
                     }
                 });
+        isfirst = false;
     }
 
     private void assignViews() {
@@ -170,7 +176,9 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE:
-                    adapter.cleanData();
+                    pageIndex = 1;
+                    isTopAdd = true;
+                    getData();
                     LogUtil.d("数组刷新了红点数据");
                     break;
                 default:
@@ -188,7 +196,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
             if (data == null) {
                 data = new ArrayList<>();
             }
-            this.datas.addAll(data);
+            this.datas = data;
             this.notifyDataSetChanged();
         }
 

@@ -12,7 +12,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PagingGroupData_;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 
 import java.util.ArrayList;
@@ -85,10 +84,9 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
         }
         TextView tv_title = ViewHolder.get(convertView, R.id.tv_title);
         ImageView img_status = ViewHolder.get(convertView, R.id.img_time_point);
-
-        PagingGroupData_ data = pagingGroupDatas.get(groupPosition);
-
-        LogUtil.dll("status:" + data.getOrderStr());
+        PagingGroupData_ data = null;
+        if (groupPosition >= 0)
+            data = pagingGroupDatas.get(groupPosition);
 
         /*列表状态条 颜色设置*/
         if (data != null && data.getOrderStr() != null) {

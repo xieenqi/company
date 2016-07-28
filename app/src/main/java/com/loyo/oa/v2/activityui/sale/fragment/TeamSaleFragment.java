@@ -95,7 +95,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private SaleCommPopupView saleCommPopupView;
     private WindowManager.LayoutParams params;
     private ScreenDeptPopupView saleScreenPopupView;
-
     private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
     private List<SaleTeamScreen> data = new ArrayList<>();
@@ -104,7 +103,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> stageData = new ArrayList<>();
     private String[] sort = {"按最近创建时间", "按照最近更新", "按照最高金额"};
-
     private boolean isOk = true;
     private boolean isPull = false;
     private boolean isKind;
@@ -113,6 +111,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private String sortType = "";
     private String userId = "";
     private String stageId = "";
+    private int stageIndex = 0, sortIndex = 0;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -138,11 +137,13 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 case SALETEAM_SCREEN_TAG2:
                     isPull = false;
                     stageId = msg.getData().getString("data");
+                    stageIndex = (int) msg.getData().get("index");
                     break;
 
                 case SALETEAM_SCREEN_TAG3:
                     isPull = false;
                     sortType = msg.getData().getString("data");
+                    sortIndex = (int) msg.getData().get("index");
                     break;
 
                 default:
@@ -215,7 +216,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                         wersi();
                     } else {
                         isOk = false;
-                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x01);
+                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler);
                         getData();
                     }
                 }
@@ -237,7 +238,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
-
     }
 
     public void wersi() {
@@ -246,11 +246,11 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
             setUser(mDeptSource);
         }
         //权限为部门 展示我的部门
-        else if(MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD){
+        else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
             deptSort();
         }
         //权限为个人 展示自己
-        else if(MainApp.user.role.getDataRange() == Role.SELF){
+        else if (MainApp.user.role.getDataRange() == Role.SELF) {
             data.clear();
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setId(MainApp.user.getId());
@@ -448,7 +448,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 break;
             //销售阶段
             case R.id.saleteam_screen2:
-                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, stageData, SaleOpportunitiesManagerActivity.SCREEN_STAGE, true);
+                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, stageData, SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, stageIndex);
                 saleCommPopupView.showAsDropDown(screen2);
                 openPopWindow(tagImage2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -461,7 +461,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 break;
             //排序
             case R.id.saleteam_screen3:
-                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, SaleOpportunitiesManagerActivity.SCREEN_SORT, false);
+                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                 saleCommPopupView.showAsDropDown(screen3);
                 openPopWindow(tagImage3);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

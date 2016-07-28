@@ -6,19 +6,26 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
-import com.loyo.oa.v2.activityui.project.HttpProject;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.activityui.project.HttpProject;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
@@ -194,6 +201,12 @@ public final class Common {
      * @return
      */
     public static ArrayList<ContactsGroup> getContactsGroups(String deptId) {
+        //缓存组织架构部门的数据 （组织架构没有变动 都取之前的缓存）
+        String originDepartenmData = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
+        if (!TextUtils.isEmpty(originDepartenmData)) {
+            return MainApp.gson.fromJson(originDepartenmData, new TypeToken<ArrayList<ContactsGroup>>() {
+            }.getType());
+        }
         List<Department> departmentList = getLstDepartment(deptId);//全部 组织 架构
         if (departmentList == null || departmentList.isEmpty()) {
             return new ArrayList<>();
@@ -201,6 +214,7 @@ public final class Common {
 
         SparseArray<ArrayList<Department>> maps = new SparseArray<>();//相当于 map 全部字母表 下的部门列表
         ArrayList<ContactsGroup> contactsGroups = new ArrayList<>();
+//        companyId=MainApp.user.companyId;
         try {
             for (char index = '#'; index <= 'Z'; index += (char) 1) {
                 ArrayList<Department> departments = new ArrayList<>();//相同首字母 部门集合
@@ -208,13 +222,13 @@ public final class Common {
                     if (department == null) {
                         continue;
                     }
-                    if (department.getId().equals(department.getSuperiorId())) {
+                    if (department.getId().equals(department.xpath)) {
                         companyId = department.getId();
                         continue;
                     }
+                    String xpath = department.getXpath();
 
-
-                    if ((department.getSuperiorId()).equals(companyId)) {
+                    if (!TextUtils.isEmpty(companyId) && !TextUtils.isEmpty(xpath) && xpath.startsWith(companyId) && xpath.split("/").length == 2) {
                         String groupName_current = department.getGroupName();
                         if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
                             departments.add(department);
@@ -229,6 +243,7 @@ public final class Common {
                 }
             }
         } catch (Exception e) {
+            LogUtil.d(" 组织通讯录 ？？？？？？？？？？？？？？？？？？？？？？？？ 部门数据异常 " + e.toString());
             e.printStackTrace();
         }
         if (maps.size() > 0) {
@@ -239,7 +254,7 @@ public final class Common {
                 contactsGroups.add(group);
             }
         }
-
+        SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT, MainApp.gson.toJson(contactsGroups));
         return contactsGroups;
     }
 
@@ -288,20 +303,13 @@ public final class Common {
                 if (TextUtils.isEmpty(user.departmentsName)) {
                     user.departmentsName = department.getName();
                 }
-
                 Department deptInUser = new Department();
                 deptInUser.setId(department.getId());
                 deptInUser.setSuperiorId(department.getSuperiorId());
                 deptInUser.setName(department.getName());
-
-/*              UserInfo userInfo = new UserInfo();
-                userInfo.setShortDept(department);
-                user.depts=new ArrayList<>(Arrays.asList(userInfo));*/
-
                 String groupName_current = user.getGroupName();
                 Boolean isContainsGroupName = false;
                 UserGroupData userGroupData_current;
-
                 for (int m = 0; m < lstUserGroupData_current.size(); m++) {
                     userGroupData_current = lstUserGroupData_current.get(m);
                     if (groupName_current != null && groupName_current.equals(userGroupData_current.getGroupName())) {
@@ -528,5 +536,33 @@ public final class Common {
                 HttpErrorCheck.checkError(error);
             }
         });
+    }
+
+
+    /**
+     * 获取最新Token，防止Token失效
+     */
+    public static void getToken() {
+        String startTimeText = SharedUtil.get(MainApp.getMainApp().getBaseContext(), ExtraAndResult.TOKEN_START);
+        if (!TextUtils.isEmpty(startTimeText)) {
+            long startTime = Long.parseLong(startTimeText);
+            if (DateTool.getDate(startTime, 10)) {
+                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<LoginActivity.Token>() {
+                    @Override
+                    public void success(LoginActivity.Token token, Response response) {
+                        HttpErrorCheck.checkResponse("刷新token", response);
+                        MainApp.setToken(token.access_token);
+                        //LogUtil.dee("刷新的Token:" + token.access_token);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+            }
+        }
+
     }
 }

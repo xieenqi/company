@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
@@ -47,6 +48,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.jpush.android.api.JPushInterface;
 import retrofit.RequestInterceptor;
@@ -64,6 +67,8 @@ public class MainApp extends Application {
     public static final int ENTER_TYPE_ZOOM_OUT = 5;
     public static final int ENTER_TYPE_ZOOM_IN = 6;
 
+    public static long nowTime;
+    public static long lastTime;
     public static DisplayImageOptions options_3;
     private static MainApp mainApp;
     public static Gson gson;
@@ -97,7 +102,9 @@ public class MainApp extends Application {
 
     public double longitude = -1;
     public double latitude = -1;
+    public String cityCode;
     public String address;
+    public String message;
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
     public static HashMap<String, Object> rootMap;
@@ -124,6 +131,7 @@ public class MainApp extends Application {
         JPushInterface.resumePush(mainApp);
         token = _token;
         SharedUtil.put(getMainApp().getBaseContext(), FinalVariables.TOKEN, token);
+        SharedUtil.put(getMainApp().getBaseContext(), ExtraAndResult.TOKEN_START, System.currentTimeMillis() + "");
     }
 
 
@@ -239,13 +247,20 @@ public class MainApp extends Application {
         DBManager.init(this);
 
         try {
-            //user = DBManager.Instance().getUser();
-            // subUsers = DBManager.Instance().getSubordinates();
+//            user = DBManager.Instance().getUser();
+//             subUsers = DBManager.Instance().getSubordinates();
         } catch (Exception ex) {
             Global.ProcDebugException(ex);
             ex.printStackTrace();
         }
-        setOriginData();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setOriginData();
+            }
+        }, 100);
+
     }
 
     /**

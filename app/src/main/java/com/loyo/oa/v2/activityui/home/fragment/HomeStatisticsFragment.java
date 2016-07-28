@@ -54,13 +54,14 @@ public class HomeStatisticsFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO HomeStatisticsFragment -->onCreate()
         super.onCreate(savedInstanceState);
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onCreate()");
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onCreate()");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_statistics, container, false);
         initView(view);
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onCreateView()");
         return view;
     }
 
@@ -289,11 +290,11 @@ public class HomeStatisticsFragment extends BaseFragment {
         for (int i = 0; i < data.size(); i++) {
             HttpProcess processData = data.get(i);
             if (j < 10) {
-                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, j));
+                ll_process.addView(new ProcessDataAdapter(app, processData.value, processData.totalNum, max, j));
                 j++;
             } else {
                 j = 0;
-                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, j));
+                ll_process.addView(new ProcessDataAdapter(app, processData.value, processData.totalNum, max, j));
                 j++;
             }
 
@@ -380,7 +381,7 @@ public class HomeStatisticsFragment extends BaseFragment {
         }
         int bjIndex = 10 - data.size();
         for (int i = 0; i < data.size(); i++) {
-            ll_funnel.addView(new FunnelDataAdapter(getActivity(), i, data.get(i), bjIndex));
+            ll_funnel.addView(new FunnelDataAdapter(app, i, data.get(i), bjIndex));
             bjIndex++;
         }
     }
@@ -397,21 +398,21 @@ public class HomeStatisticsFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onActivityCreated()");
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onActivityCreated()");
     }
 
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onDestroy()");
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onDestroy()");
     }
 
     @Override
     public void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onPause()");
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onPause()");
     }
 
     @Override
@@ -425,13 +426,13 @@ public class HomeStatisticsFragment extends BaseFragment {
     public void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onStart()");
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onStart()");
     }
 
     @Override
     public void onStop() {
         // TODO Auto-generated method stub
         super.onStop();
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onStop()");
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onStop()");
     }
 }

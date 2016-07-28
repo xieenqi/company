@@ -182,7 +182,7 @@ public class Department implements Serializable, SelectUserHelper.SelectUserBase
     }
 
     public String getName() {
-        return null == name ? " " : name;
+        return TextUtils.isEmpty(name) ? " " : name;
     }
 
     public void setName(String name) {

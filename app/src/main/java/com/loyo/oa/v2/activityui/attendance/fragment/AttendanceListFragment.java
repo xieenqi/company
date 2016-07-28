@@ -3,12 +3,9 @@ package com.loyo.oa.v2.activityui.attendance.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -53,7 +50,6 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.GeneralPopView;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -199,11 +195,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if(type == 2){
             dataSelects = DateTool.getYearAllofDay(2015,year);
             Collections.reverse(dataSelects);
-            dataSelects.remove(dataSelects.size()-1);
+            dataSelects.remove(dataSelects.size() - 1);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
             data_time_tv.setText(dataSelects.get(0).yearMonDay);
-            layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
-            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,true);//true 反向显示 false 正常显示
             //customerDataManager = new CustomerDataManager(1, StaggeredGridLayoutManager.HORIZONTAL);
             //customerDataManager.setSpeedRatio(0.5);
             recyclerView.setLayoutManager(layoutManager);

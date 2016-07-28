@@ -35,7 +35,6 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -64,10 +63,10 @@ public class MenuFragment extends BaseFragment {
     private RoundImageView riv_head;
     private TextView tv_name, tv_member, tv_version_info;
     private ImageView iv_new_version;
-    private Intent rushTokenIntent;
     public static ExitAppCallback callback;
     private Intent mIntentCheckUpdate;
     private boolean isUpdataData = false;
+    private boolean isExite = false;
 
     //个人信息 和版本信息
     private BroadcastReceiver userInfoAndVersionInfo = new BroadcastReceiver() {
@@ -91,6 +90,9 @@ public class MenuFragment extends BaseFragment {
                     Toast("数据更新成功！");
                     isUpdataData = false;
                 }
+            } else if ("exite".equals(info) && !isExite) {
+                exit();
+                isExite = true;
             }
         }
     };
@@ -183,7 +185,6 @@ public class MenuFragment extends BaseFragment {
                 exit();
             }
         };
-        rushTokenIntent = new Intent(getActivity(), RushTokenService.class);
     }
 
     float downX = 0, upX = 0;
@@ -217,15 +218,19 @@ public class MenuFragment extends BaseFragment {
      */
     private void onClickView(View v) {
         switch (v.getId()) {
+            //个人资料
             case R.id.ll_user:
                 updateUserinfo();
                 break;
+            //修改密码
             case R.id.ll_pwd:
                 app.startActivity(getActivity(), SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
+            //意见反馈
             case R.id.ll_feed_back:
                 app.startActivity(getActivity(), FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
+            //更新数据
             case R.id.ll__update:
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, "all");
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
@@ -238,6 +243,7 @@ public class MenuFragment extends BaseFragment {
                     Toast("请检查您的网络连接");
                 }
                 break;
+            //检查更新
             case R.id.ll_version:
                 if (PackageManager.PERMISSION_GRANTED ==
                         getActivity().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
@@ -261,8 +267,10 @@ public class MenuFragment extends BaseFragment {
                     });
                 }
                 break;
+            //退出登录
             case R.id.ll_exit:
                 exit();
+                isExite = false;
                 break;
         }
 
@@ -363,23 +371,28 @@ public class MenuFragment extends BaseFragment {
     }
 
     void exit() {
-        //清楚token与用户资料
-        MainApp.setToken(null);
-        MainApp.user = null;
-        getActivity().stopService(rushTokenIntent);
-        RushTokenService.cancelJc();
-
-        //清楚本地登录状态
-        SharedUtil.clearInfo(getActivity());
-        JPushInterface.stopPush(app);
+//        showLoading("退出系统中");
         Set<String> complanTag = new HashSet<>();
         JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), "", complanTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
+//                cancelLoading();
                 LogUtil.d("激光推送已经成功停止（注销）状态" + i);
+//                if (i != 0) {
+//                    Toast("请重试");
+//                    return;
+//                }
                 //设置别名 为空
+
+                JPushInterface.stopPush(app);
             }
         });
+        //清楚token与用户资料
+        MainApp.setToken(null);
+        MainApp.user = null;
+
+        //清楚本地登录状态
+        SharedUtil.clearInfo(getActivity());
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(getActivity(), LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }

@@ -33,6 +33,7 @@
     <!--升级到系统权限 修改手机连接网路状态权限-->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.DEVICE_POWER"/>
 
 
     <!-- 激光推送 -->
@@ -568,6 +569,21 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.commonview.MapModifyView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.commonview.MapModifySerachView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.commonview.MapSingleView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <service
             android:name=".service.InitDataService_"
@@ -575,10 +591,6 @@
         <service
             android:name=".service.CheckUpdateService"
             android:enabled="true"/>
-        <service
-            android:name=".service.RushTokenService"
-            android:enabled="true"
-            />
 
         <receiver android:name=".service.TrackLogRecevier"/>
         <receiver android:name=".service.TrackRuleReceiver">
@@ -710,6 +722,7 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2d8b80512b2c5a6110c177828b56bc01"/>
+
         <!-- 友盟统计 -->
         <meta-data
             android:name="UMENG_APPKEY"

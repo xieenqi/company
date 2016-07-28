@@ -58,7 +58,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
 
     public SwitchView task_info_switch;
     public LinearLayout tasks_info_sorceview;
-    private boolean isPc = false;
+    private float score;
 
     @AfterViews
     void init() {
@@ -69,7 +69,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
         ratingBar_Task.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                isPc = true;
+                score = v;
             }
         });
     }
@@ -111,14 +111,14 @@ public class TasksInfoScoreActivity extends BaseActivity {
             case R.id.btn_task_agree:
                 comment = edt_content.getText().toString().trim();
                 sorce = ratingBar_Task.getProgress() * 20;
-                if(status == 0) {
-                    if(comment.isEmpty()){
-                        Toast("点评内容不能为空!");
-                        return;
-                    }
+                if (status == 0) {
+//                    if(comment.isEmpty()){
+//                        Toast("点评内容不能为空!");
+//                        return;
+//                    }
                     verfyTask(sorce, status, comment);
-                }else{
-                    if(!isPc){
+                } else {
+                    if (!(score > 0)) {
                         Toast("请评分!");
                         return;
                     }
@@ -136,17 +136,17 @@ public class TasksInfoScoreActivity extends BaseActivity {
      *
      * @param sorce status comment
      */
-    private void verfyTask(final int sorce,final int status,final String comment) {
+    private void verfyTask(final int sorce, final int status, final String comment) {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("score", sorce);
         map.put("comment", comment);
         map.put("status", status);
 
-        LogUtil.dll("发送数据:"+MainApp.gson.toJson(map));
+        LogUtil.dll("发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).verifyTask(mTask.getId(), map, new RCallback<Task>() {
             @Override
-            public void success(final Task task,final Response response) {
+            public void success(final Task task, final Response response) {
                 if (task != null) {
                     isSave = false;
                     Intent intent = new Intent();

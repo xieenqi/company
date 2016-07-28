@@ -1,10 +1,13 @@
 package com.loyo.oa.v2.common.http;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -78,7 +81,11 @@ public class HttpErrorCheck {
         LogUtil.d("error接口URL：" + error.getUrl());
 
         try {
-            String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
+            String msg = Utils.
+                    convertStreamToString(error.
+                    getResponse()
+                    .getBody()
+                    .in());
             LogUtil.d("error获得的：", msg);
             JSONObject job = new JSONObject(msg);
             if (500 == error.getResponse().getStatus()) {
@@ -87,10 +94,18 @@ public class HttpErrorCheck {
                 Toast(job.getString("error"));
             } else if (404 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
+            } else if (406 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+                //到侧边栏 退出系统到登录界面
+                Intent in = new Intent();
+                in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+                in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
+                LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
             } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
                 Toast("请检查您的网络连接");
             } else {
-                Toast(job.getString("error"));
+                String errorInfo = job.getString("error");
+                Toast(errorInfo);
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
@@ -125,7 +140,7 @@ public class HttpErrorCheck {
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(" 接口成功result：" + result);
-            LogUtil.d( " 接口成功URL：" + response.getUrl());
+            LogUtil.d(" 接口成功URL：" + response.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {

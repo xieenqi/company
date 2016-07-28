@@ -3,6 +3,8 @@ package com.loyo.oa.v2.activityui.project.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -59,8 +62,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     private LayoutInflater mInflater;
     private EditText et_comment;
     private TextView tv_send;
-
-    ViewGroup layout_discuss_action;
+    public ViewGroup layout_discuss_action;
     private HaitHelper mHaitHelper;
 
     @Override
@@ -106,6 +108,15 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     }
 
     /**
+     * 定位到最后一项
+     */
+    public void scrollToBottom() {
+        if (adapter != null && adapter.getCount() > 0) {
+            lv_discuss.getRefreshableView().setSelection(adapter.getCount() - 1);
+        }
+    }
+
+    /**
      * 获取数据
      */
     private void getData() {
@@ -122,11 +133,13 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                     if (isTopAdd) {
                         discussions.clear();
                     }
+                    Collections.reverse(lstData_bulletin_current);
                     discussions.addAll(lstData_bulletin_current);
                     onLoadSuccess(pagination.getTotalRecords());
                     bindData();
                 }
                 lv_discuss.onRefreshComplete();
+                scrollToBottom();
             }
 
             @Override
@@ -172,7 +185,6 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             layout_discuss_action = (ViewGroup) mView.findViewById(R.id.layout_discuss_action);
 
             mHaitHelper = new HaitHelper(this, et_comment);
-
             getData();
         }
         return mView;

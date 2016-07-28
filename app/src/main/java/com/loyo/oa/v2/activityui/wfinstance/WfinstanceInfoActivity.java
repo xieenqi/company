@@ -418,6 +418,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 审批流程展示初始化相关
+     */
     void initUI_listView_workflowNodes() {
         workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(mWfInstance.status, lstData_WfNodes, LayoutInflater.from(this), mWfInstance.serverTime);
         listView_workflowNodes.setAdapter(workflowNodesListViewAdapter);
@@ -645,9 +648,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (comment.isEmpty() && type == 2) {
                     Toast("请输入驳回原因");
                     return;
-                } else if (comment.isEmpty() && type == 1) {
-                    comment = "同意";
                 }
+//                else if (comment.isEmpty() && type == 1) {
+//                    comment = "同意";
+//                }
                 popupWindow.dismiss();
                 setData_wfinstance_approve(type, comment);
             }

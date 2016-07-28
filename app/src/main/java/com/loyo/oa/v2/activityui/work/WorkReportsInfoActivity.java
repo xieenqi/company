@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
@@ -307,8 +308,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             if (!StringUtil.isEmpty(mWorkReport.reviewer.comment)) {
                 edt_content.setText(mWorkReport.reviewer.comment);
                 edt_content.setEnabled(false);
-            } else {
-                layout_content.setVisibility(View.GONE);
             }
             if (!mWorkReport.creator.id.equals(MainApp.user.id)) {
                 //显示编辑、删除按钮
@@ -428,9 +427,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
      * 点评报告
      */
     private void reviewWorkreport() {
+        if (null == mWorkReport) {
+            return;
+        }
         Intent intent = new Intent(this, WorkReportReviewActivity_.class);
         intent.putExtra("mWorkReportId", mWorkReport.getId());
         startActivityForResult(intent, MSG_REVIEW);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
 

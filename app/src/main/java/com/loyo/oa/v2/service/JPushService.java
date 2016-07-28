@@ -10,6 +10,7 @@ import android.util.Log;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.tool.ExitActivity;
@@ -40,6 +41,7 @@ public class JPushService extends BroadcastReceiver {
         Bundle bundle = intent.getExtras();
         LogUtil.d("[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
         TrackRule.InitTrackRule();//收到推送启动一次定位服务 避免服务kill掉
+        Common.getToken();//检查刷新token
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
@@ -55,6 +57,7 @@ public class JPushService extends BroadcastReceiver {
             HttpJpushNotification pushMsgData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);
             /**
              * 轨迹改变 收到推送重新获取轨迹规则
+             * 同时刷新token
              */
             if (7 == pushMsgData.silentType) {
                 TrackRule.InitTrackRule();
@@ -73,7 +76,6 @@ public class JPushService extends BroadcastReceiver {
             } else if (12 == pushMsgData.silentType) {//审批类别
 
             }
-
 
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
@@ -169,27 +171,6 @@ public class JPushService extends BroadcastReceiver {
 
         return false;
     }
-    //send msg to SelectCityMain
-    //    private void processCustomMessage(Context context, Bundle bundle) {
-    //        if (SelectCityMain.isForeground) {
-    //            String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-    //            String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-    //            Intent msgIntent = new Intent(SelectCityMain.MESSAGE_RECEIVED_ACTION);
-    //            msgIntent.putExtra(SelectCityMain.KEY_MESSAGE, message);
-    //            if (!ExampleUtil.isEmpty(extras)) {
-    //                try {
-    //                    JSONObject extraJson = new JSONObject(extras);
-    //                    if (null != extraJson && extraJson.length() > 0) {
-    //                        msgIntent.putExtra(SelectCityMain.KEY_EXTRAS, extras);
-    //                    }
-    //                } catch (JSONException e) {
-    //
-    //                }
-    //
-    //            }
-    //            context.sendBroadcast(msgIntent);
-    //        }
-    //    }
-    //}
+
 
 }

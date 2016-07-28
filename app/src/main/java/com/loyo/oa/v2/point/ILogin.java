@@ -2,7 +2,6 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.bean.User;
-import com.loyo.oa.v2.service.RushTokenService;
 
 import java.util.HashMap;
 
@@ -39,6 +38,6 @@ public interface ILogin {
 
 
     @GET("/newtoken")
-    void getNewToken(retrofit.Callback<RushTokenService.Token> back);
+    void getNewToken(retrofit.Callback<LoginActivity.Token> back);
 
 }

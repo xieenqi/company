@@ -49,6 +49,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         View view = inflater.inflate(R.layout.fragment_main_home, null, false);
         initView(view);
         registerBaseReceiver();
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~主界面-->onCreateView()"+savedInstanceState);
         return view;
     }
 
@@ -57,8 +58,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         heading = (RoundImageView) view.findViewById(R.id.newhome_heading_img);
         ll_network = (LinearLayout) view.findViewById(R.id.ll_network);
         pager = (ViewPager) view.findViewById(R.id.pager);
-        pager.setAdapter(new MyPagerAdapter(getActivity()
-                .getSupportFragmentManager()));
+        pager.setAdapter(new MyPagerAdapter(getChildFragmentManager()));
         pager.setOnPageChangeListener(this);
         title.add((RadioButton) view.findViewById(R.id.title1));// 4个title标签
         title.add((RadioButton) view.findViewById(R.id.title2));
@@ -209,7 +209,6 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         if (1 == index && null != mHomeStatisticsFragment) {
             mHomeStatisticsFragment.onInIt();
         }
-        LogUtil.d("选择值：" + index);
     }
 
 }

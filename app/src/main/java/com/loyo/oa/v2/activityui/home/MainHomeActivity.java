@@ -31,7 +31,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -51,7 +50,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
     //主要保存当前显示的是第几个fragment的索引值
     public static int index = 0;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +59,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
             String FRAGMENTS_TAG = "Android:support:fragments";
             savedInstanceState.remove(FRAGMENTS_TAG);
         }
-        startService(new Intent(this, RushTokenService.class));
         onInitSlideMenu();
         tintManager.setTintColor(Color.parseColor("#33000000"));
     }
@@ -70,7 +67,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        LogUtil.d(" 获得newMain现有的token：" + MainApp.getToken());
         //判断登陆是否失效
         if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.id)) {
             if (StringUtil.isEmpty(MainApp.getToken())) {
@@ -82,7 +78,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         startService(new Intent(this, InitDataService_.class));
         permissionLocation();
     }
-
 
     @Override
     protected void onResume() {
@@ -316,8 +311,8 @@ public class MainHomeActivity extends SlidingFragmentActivity {
      */
     @Override
     public void onBackPressed() {
-        if(sm.isMenuShowing()){
-           sm.showMenu(false);
+        if (sm.isMenuShowing()) {
+            sm.showMenu(false);
             return;
         }
         showGeneralDialog(true, true, getString(R.string.app_exit_message));
@@ -328,7 +323,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 generalPopView.dismiss();
                 //android 5.0以后不能隐式启动或关闭服务
                 stopService(new Intent(mContext, CheckUpdateService.class));
-                stopService(new Intent(mContext, RushTokenService.class));
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         });

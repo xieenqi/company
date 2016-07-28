@@ -70,7 +70,8 @@ public class AddMySaleActivity extends BaseActivity {
     private int estimatedTime = 0;
     private boolean isEdit;
     private StringBuffer loseReasonBuff;
-    private boolean isProduct = false, isType = false, isSource = false, isEstimatedAmount = false, isEstimatedTime = false;
+    private boolean isProduct = false, isType = false, isSource = false, isEstimatedAmount = false,
+            isEstimatedTime = false, isMemo = false;
 
 
     @Override
@@ -289,14 +290,15 @@ public class AddMySaleActivity extends BaseActivity {
                     if ("estimated_amount".equals(ele.fieldName) && ele.required) {
                         isEstimatedAmount = true;
                         et_money.setHint("必填,请输入");
-                    } else {
-                        et_money.setHint("请输入");
                     }
                     if ("estimated_time".equals(ele.fieldName) && ele.required) {
                         isEstimatedTime = true;
                         tv_estimate.setHint("必填,请选择");
-                    } else {
-                        tv_estimate.setHint("请选择");
+                    }
+
+                    if ("memo".equals(ele.fieldName) && ele.required) {
+                        isMemo = true;
+                        et_remake.setHint("必填,请输入");
                     }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
@@ -390,6 +392,9 @@ public class AddMySaleActivity extends BaseActivity {
             return;
         } else if (TextUtils.isEmpty(tv_source.getText().toString()) && isSource) {
             Toast("请选择机会来源");
+            return;
+        } else if (TextUtils.isEmpty(et_remake.getText().toString()) && isMemo) {
+            Toast("请输入备注内容");
             return;
         } else if (null != filedData) {
             for (ContactLeftExtras ele : filedData) {

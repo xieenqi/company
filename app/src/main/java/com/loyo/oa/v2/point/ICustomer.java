@@ -1,22 +1,26 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import android.telecom.Call;
+
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerExtraData;
+import com.loyo.oa.v2.activityui.customer.bean.CustomerJur;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRepeatList;
-import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
-import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.activityui.customer.bean.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.bean.NearCount;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.activityui.customer.bean.Product;
+import com.loyo.oa.v2.activityui.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.other.bean.SaleStage;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.Demand;
+import com.loyo.oa.v2.beans.LegWork;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.beans.SaleActivity;
-import com.loyo.oa.v2.activityui.other.bean.SaleStage;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -303,5 +307,22 @@ public interface ICustomer {
     void getCustomerContacts(@Path("customerId") String id, Callback<Customer> callback);
 
     @POST("/customer/")
-    void addNewCustomer(@Body Map<String,Object> map,Callback<Customer> callback);
+    void addNewCustomer(@Body Map<String, Object> map, Callback<Customer> callback);
+
+    /**
+     * 根据 key 获取后台设置信息
+     * ?key=need_pictures_switcher
+     *
+     * @param map
+     * @param callback
+     */
+    @GET("/config")
+    void getSetInfo(@QueryMap Map<String, Object> map, Callback<SigninPictures> callback);
+
+    /**
+     * 新建客户,后台权限
+     * */
+    @GET("/properties")
+    void getAddCustomerJur(@QueryMap Map<String,Object> map,Callback<ArrayList<CustomerJur>> callback);
+
 }

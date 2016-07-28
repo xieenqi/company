@@ -206,7 +206,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private void bindData() {
 
         if (null == adapter) {
-            adapter = new MyCustomerAdapter(getActivity(), mCustomers);
+            adapter = new MyCustomerAdapter(app, mCustomers);
             listView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
@@ -367,7 +367,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
 
                 //时间
                 case R.id.cus_screen1:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true,tagPostion);
                     saleCommPopupView.showAsDropDown(screen1);
                     openPopWindow(tagImage1);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

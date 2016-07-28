@@ -1,10 +1,11 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
+import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
+import com.loyo.oa.v2.activityui.wfinstance.bean.WfTemplate;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.activityui.wfinstance.bean.WfTemplate;
+import com.loyo.oa.v2.beans.WfInstanceRecord;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,10 +91,29 @@ public interface IWfInstance {
      * 获取审批列表(v2.2 精简版)
      *
      * @param map
-     * @param  callback
-     * */
+     * @param callback
+     */
     @GET("/mobile/simplify")
-    void getWfInstancesData(@QueryMap HashMap<String,Object> map,Callback<PaginationX<WfInstanceRecord>> callback);
+    void getWfInstancesData(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WfInstanceRecord>> callback);
+
+
+    /**
+     * 获取我提交的 审批 列表数据
+     *
+     * @param map
+     * @param callback
+     */
+    @GET("/new/simplify")
+    void getSubmitWfInstancesList(@QueryMap HashMap<String, Object> map, Callback<MySubmitWflnstance> callback);
+
+    /**
+     * 获取 我审批的 审批 列表数据
+     *
+     * @param map
+     * @param callback
+     */
+    @GET("/approve/mobile")
+    void getApproveWfInstancesList(@QueryMap HashMap<String, Object> map, Callback<MySubmitWflnstance> callback);
 
     /**
      * 获取审批详情

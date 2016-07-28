@@ -32,7 +32,6 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.GeneralPopView;
 
@@ -78,7 +77,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
-        rushTokenIntent = new Intent(this, RushTokenService.class);
 
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
@@ -183,6 +181,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     @Override
     protected void onPause() {
         super.onPause();
+
     }
 
     protected void setTitle(String title) {

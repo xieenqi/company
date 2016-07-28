@@ -419,8 +419,8 @@ public class ContactsDepartmentFragment extends BaseFragment {
             myDeptId = MainApp.user.role.id;
         }
 
-//        int userSize = Common.getAllUsersByDeptId(myDeptId, new ArrayList<User>()).size();
-        String members = "(" + commy.userNum + "人)";//本部门的人数
+        int userSize = Common.getAllUsersByDeptId(myDeptId, new ArrayList<User>()).size();
+        String members = "(" + userSize + "人)";//本部门的人数
         if (null != myDeptName) {
             myDeptName = myDeptName.concat(members);
             nameTv.setText(myDeptName);

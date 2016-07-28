@@ -3,6 +3,7 @@ package com.loyo.oa.v2.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -23,6 +24,7 @@ import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 
@@ -158,6 +160,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             }
 
         } catch (Exception ex) {
+            LogUtil.d("getStr  Token 异常！！！" + t + ">>>" + ex.toString());
             Global.ProcException(ex);
         }
 

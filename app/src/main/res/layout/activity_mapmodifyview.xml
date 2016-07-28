@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+    <include layout="@layout/include_title"/>
+    <LinearLayout
+        android:id="@+id/mapview_serach"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/mapmod_gray"
+        >
+        <TextView
+            android:layout_marginBottom="@dimen/dimen_7"
+            android:layout_marginTop="@dimen/dimen_7"
+            android:layout_marginRight="@dimen/margin_other_view"
+            android:layout_marginLeft="@dimen/margin_other_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_30"
+            android:background="@drawable/shape_edittext"
+            android:textSize="@dimen/text_sp12"
+            android:hint="搜索地点"
+            android:gravity="center"
+            />
+        </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        >
+    <com.amap.api.maps2d.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+        <ImageView
+            android:layout_marginTop="@dimen/dimen_100"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_30"
+            android:background="@drawable/icon_amapindex"
+            />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/mapview_showmessage"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginBottom="@dimen/dimen_5"
+        android:layout_marginLeft="@dimen/margin_other_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="可选范围300迷以内的地点"
+        android:textColor="@color/text99"
+        />
+    <include layout="@layout/include_solid_line"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mapview_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</LinearLayout>

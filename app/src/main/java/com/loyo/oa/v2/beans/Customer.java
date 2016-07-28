@@ -67,6 +67,7 @@ public class Customer extends BaseBeans {
     public String id;
     public String name;
     public Locate loc;
+    public Locate position;
     public long createdAt;
     public ArrayList<ExtraData> extDatas = new ArrayList<>();
     public boolean lock;

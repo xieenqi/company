@@ -60,7 +60,6 @@ public class RestAdapterFactory {
         RestAdapter adapter = null == adapters.get(url) ? null : adapters.get(url).get();
         if (null == adapter) {
 
-            // final CellInfo cellInfo = Utils.getCellInfo();
             cellInfo = new CellInfo();
 
             cellInfo.setLoyoAgent(Build.BRAND + " " + Build.MODEL);
@@ -80,7 +79,7 @@ public class RestAdapterFactory {
                     request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
                     request.addHeader("LoyoVersionName", Global.getVersionName());
                     request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-
+                    //LogUtil.dee("最新Token:"+MainApp.getToken());
 
                 }
             };

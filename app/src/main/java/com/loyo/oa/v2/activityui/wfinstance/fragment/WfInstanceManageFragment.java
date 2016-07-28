@@ -6,23 +6,23 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceSearchActivity;
-import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
-import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ import retrofit.client.Response;
  */
 public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInstanceRecord> {
 
-    private static final String FILTER_CATEGORY[] = new String[]{"全部类型", "我提交的", "我审批的", "我经办的"};
+    //    private static final String FILTER_CATEGORY[] = new String[]{"全部类型", "我提交的", "我审批的", "我经办的"};
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
 
     private int category = 0;
@@ -44,14 +44,34 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
 
     private ArrayList<BizForm> mBizForms = new ArrayList<>();
     private CommonExpandableListAdapter mAdapter;
+    private int page = 1;
 
-    @Override
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//    }
+//
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//    }
+//
+//    @Nullable
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        View view = inflater.inflate(R.layout.fragment_wfinstance_manager, null);
+//        initView(view);
+//        return view;
+//    }
+//
+//    private void initView(View view) {
+//    }
+
     public void initAdapter() {
         mAdapter = new CommonExpandableListAdapter(mActivity, pagingGroupDatas);
         mExpandableListView.getRefreshableView().setAdapter(mAdapter);
     }
 
-    @Override
     public void changeAdapter() {
         mAdapter.setData(pagingGroupDatas);
         mAdapter.notifyDataSetChanged();
@@ -60,7 +80,6 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
     /**
      * 到 审批流程 add 添加页面
      */
-    @Override
     public void addNewItem() {
         Intent intent = new Intent();
         intent.setClass(mActivity, WfInTypeSelectActivity.class);
@@ -71,7 +90,6 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
     /**
      * 到审批流程  的搜索页面
      */
-    @Override
     public void openSearch() {
 
         Bundle mBundle = new Bundle();
@@ -83,8 +101,8 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
     public void GetData() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", pagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
+        map.put("pageIndex", page);
+        map.put("pageSize", 20);
         map.put("type", category);
         map.put("status", status);
         map.put("bizformId", bizFormId); //自定义筛选字段
@@ -118,9 +136,9 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
      * 初始化下拉菜单
      */
     private void initDropMenu() {
-
+        String[] defaultTitle = new String[]{"全部状态", "全部类别"};
         mMenu.setVisibility(View.VISIBLE);
-        mMenu.setmMenuCount(3);//Menu的个数
+        mMenu.setmMenuCount(defaultTitle.length);//Menu的个数
         mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
         mMenu.setShowCheck(true);//是否显示展开list的选中项
         mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
@@ -132,15 +150,15 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         mMenu.setmCheckIcon(R.drawable.img_check1);//Menu展开list的勾选图片
         mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
         mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
-        mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态", "全部类别"});//默认未选择任何过滤的Menu title
+        mMenu.setDefaultMenuTitle(defaultTitle);//默认未选择任何过滤的Menu title
 
         final List<String[]> items = new ArrayList<>();
-        items.add(FILTER_CATEGORY);
+//        items.add(FILTER_CATEGORY);
         items.add(FILTER_STATUS);
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", 1);
-        params.put("pageSize", 100);
+        params.put("pageSize", 500);
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
             @Override
             public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {

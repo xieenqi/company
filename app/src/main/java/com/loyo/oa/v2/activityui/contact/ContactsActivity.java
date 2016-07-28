@@ -38,7 +38,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     private ViewPager pager;
     private MyPagerAdapter adapter;
     private MainApp app = MainApp.getMainApp();
-    private int departmentsSize;
+    private int  departmentsSize;
     private int myDepartmentContactsSize;
 
     @Override
@@ -89,6 +89,10 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
                 if (element.getUsers() != null) {
                     departmentsSize += element.getUsers().size();
                 }
+//                if (element.id.equals(element.xpath)) {//确定全公司人员数量
+//                    departmentsSize = element.userNum;
+//                }
+
             }
         }
     }

@@ -116,8 +116,10 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                     screen.setText(saleTeamScreen.getName());
                     isKind = msg.getData().getBoolean("kind");
                     if (isKind) {
+                        userId = "";
                         departmentId = saleTeamScreen.getxPath();
                     } else {
+                        departmentId = "";
                         userId = saleTeamScreen.getId();
                     }
                     getData();
@@ -231,7 +233,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                         wersi();
                     } else {
                         isOk = false;
-                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x01);
+                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler);
                         getData();
                     }
                 }
@@ -462,7 +464,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
                 //时间
                 case R.id.custeam_screen2:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true,tagPostion);
                     saleCommPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
