@@ -360,6 +360,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
     /**
      * 检查提交的数据
      *
