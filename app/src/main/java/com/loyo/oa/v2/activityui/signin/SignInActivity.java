@@ -75,6 +75,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private Animation animation;
     private boolean isPicture = false;
     private Intent mIntent;
+    private Bundle mBundle;
     private PositionResultItem positionResultItem;
 
     @Override
@@ -210,9 +211,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
             /*地址更新*/
             case R.id.tv_reset_address:
-                mIntent = new Intent(this, MapModifyView.class);
-                mIntent.putExtra("page", MapModifyView.SIGNIN_PAGE);
-                startActivityForResult(mIntent, 0x01);
+                mBundle = new Bundle();
+                mBundle.putInt("page",MapModifyView.SIGNIN_PAGE);
+                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
                 break;
 
             default:
@@ -229,6 +230,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 //            Toast("请选择客户");
 //            return;
 //        }
+
         mAddress = tv_address.getText().toString();
         if (TextUtils.isEmpty(mAddress)) {
             Global.ToastLong("无效地址!请刷新地址后重试");
@@ -305,19 +307,24 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
 
         /*地图微调，数据回调*/
-        if (resultCode == MapModifyView.SERACH_MAP) {
+/*        if (resultCode == MapModifyView.SERACH_MAP) {
             positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
             laPosition = positionResultItem.laPosition;
             loPosition = positionResultItem.loPosition;
             tv_address.setText(positionResultItem.address);
-        }
+        }*/
 
-
-        /**
-         * 添加附件流程：拍照回调－流生成file－上传服务器－从服务器下载－展示在View中
-         * 费解
-         * */
         switch (requestCode) {
+            //地图微调，数据回到
+            case MapModifyView.SERACH_MAP:
+                positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+                if(null != positionResultItem){
+                    laPosition = positionResultItem.laPosition;
+                    loPosition = positionResultItem.loPosition;
+                    tv_address.setText(positionResultItem.address);
+                }
+                break;
+
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");

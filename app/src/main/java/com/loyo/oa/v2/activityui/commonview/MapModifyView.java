@@ -416,7 +416,7 @@ public class MapModifyView extends BaseActivity
                     mBundle = new Bundle();
                     mBundle.putSerializable("data", resultItems.get(selectPosition));
                     mIntent.putExtras(mBundle);
-                    app.finishActivity(this, MainApp.ENTER_TYPE_RIGHT, SERACH_MAP, mIntent);
+                    app.finishActivity(this, MainApp.ENTER_TYPE_RIGHT, -1, mIntent);
                 }
 
                 break;

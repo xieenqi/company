@@ -97,6 +97,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<NewTag> tags;
     private Intent mIntent;
+    private Bundle mBundle;
 
     private  ArrayList<CustomerJur> mCusList;
 
@@ -246,9 +247,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*刷新地址*/
             case R.id.img_refresh_address:
-                mIntent = new Intent(this, MapModifyView.class);
-                mIntent.putExtra("page", MapModifyView.CUSTOMER_PAGE);
-                startActivityForResult(mIntent, 0x01);
+
+                mBundle = new Bundle();
+                mBundle.putInt("page",MapModifyView.CUSTOMER_PAGE);
+                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
+
                 break;
 
             /*查重*/
@@ -485,15 +488,25 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
 
         /*地图微调，数据回调*/
-        if (resultCode == MapModifyView.SERACH_MAP) {
+/*        if (resultCode == MapModifyView.SERACH_MAP) {
             positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
             laPosition = positionResultItem.laPosition;
             loPosition = positionResultItem.loPosition;
             et_address.setText(positionResultItem.address);
             edit_address_details.setText(positionResultItem.address);
-        }
+        }*/
 
         switch (requestCode) {
+            case  MapModifyView.SERACH_MAP:
+                positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+                if(null != positionResultItem){
+                    laPosition = positionResultItem.laPosition;
+                    loPosition = positionResultItem.loPosition;
+                    et_address.setText(positionResultItem.address);
+                    edit_address_details.setText(positionResultItem.address);
+                }
+                break;
+
             case REQUEST_CUSTOMER_SERACH:
 
                 Bundle bundle1 = data.getExtras();
