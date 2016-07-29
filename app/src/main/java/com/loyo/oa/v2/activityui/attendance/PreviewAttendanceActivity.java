@@ -172,6 +172,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
         LogUtil.dll("考勤详情 员工信息:" + MainApp.gson.toJson(user));
         String deptName = TextUtils.isEmpty(user.departmentsName) ?
                 Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
+
         tv_role.setText(deptName + " " + (TextUtils.isEmpty(user.depts.get(0).getShortDept().getName())
                 ? "-" : user.depts.get(0).getShortDept().title));
 
