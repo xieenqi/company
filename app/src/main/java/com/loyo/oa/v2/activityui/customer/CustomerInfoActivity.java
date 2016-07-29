@@ -454,7 +454,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             case R.id.img_refresh_address:
                 mBundle = new Bundle();
                 mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
+                if (null != mCustomer.loc && mCustomer.loc.loc.length > 0) {
+                    mBundle.putDoubleArray(ExtraAndResult.EXTRA_DATA, mCustomer.loc.loc);
+                }
+                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
             /*路径规划*/
             case R.id.img_go_where:
@@ -568,10 +571,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             /**
              * 地图微调，数据回调
              * */
-            case  MapModifyView.SERACH_MAP:
+            case MapModifyView.SERACH_MAP:
 
                 positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-                if(null != positionResultItem){
+                if (null != positionResultItem) {
                     laPosition = positionResultItem.laPosition;
                     loPosition = positionResultItem.loPosition;
                     tv_address.setText(positionResultItem.address);
