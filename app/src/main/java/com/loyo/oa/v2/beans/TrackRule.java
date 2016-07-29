@@ -49,6 +49,7 @@ public class TrackRule implements Serializable {
     public String startTime;//上班时间
     public String weekdays;
 
+
     public TrackRule() {
     }
 
@@ -88,17 +89,20 @@ public class TrackRule implements Serializable {
         }
     }
 
+    private static int count = 0;
+
     /**
      * 初始化轨迹规则
      */
     public static void InitTrackRule() {
-        if (TextUtils.isEmpty(MainApp.getToken())) {
+        if (TextUtils.isEmpty(MainApp.getToken()) && count < 20) {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     LogUtil.d("定位 轨迹 空空");
                     InitTrackRule();
+                    count++;
                 }
             }, 5000);
             return;

@@ -308,7 +308,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         }
         tv_customer_name.setText(mCustomer.name);
 
-        if (!TextUtils.isEmpty(mCustomer.position.addr)) {
+        if (null != mCustomer && null != mCustomer.position && !TextUtils.isEmpty(mCustomer.position.addr)) {
             tv_address.setText(mCustomer.position.addr);
         } else {
             Intent intent = new Intent();
