@@ -113,7 +113,7 @@ public interface ICustomer {
     @GET("/customer/mobile/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
 
-    @GET("/properties/dynamic/")
+    @GET("/properties/")
     void getDynamic(@QueryMap HashMap<String, Object> map, Callback<ArrayList<CustomerExtraData>> callback);
 
     /**
