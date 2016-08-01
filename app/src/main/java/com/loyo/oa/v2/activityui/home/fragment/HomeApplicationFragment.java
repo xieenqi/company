@@ -205,6 +205,13 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
+        btn_add.setOnTouchListener(Global.GetTouch());
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMoreWindow(v);
+            }
+        });
         items = DBManager.Instance().getHomeItem();
         if (null != items && items.size() > 0) {
             adapter.setItemData(items);
@@ -220,13 +227,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         DBManager.Instance().putHomeItem(MainApp.gson.toJson(items));
         adapter.setItemData(items);
         adapter.setRedNumbreData(mItemNumbers);
-        btn_add.setOnTouchListener(Global.GetTouch());
-        btn_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMoreWindow(v);
-            }
-        });
         if (null != MainApp.user && null != MainApp.user.avatar && null != heading) {
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }

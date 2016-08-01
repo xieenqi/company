@@ -170,9 +170,11 @@ public class PreviewAttendanceActivity extends BaseActivity {
         final User user = attendance.user;
         tv_name.setText(user.getRealname());
         LogUtil.dll("考勤详情 员工信息:" + MainApp.gson.toJson(user));
-        String deptName = TextUtils.isEmpty(user.departmentsName) ?
-                Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
-
+        String deptName = "";
+        if (null != Common.getDepartment(user.depts.get(0).getShortDept().getId())) {
+            deptName = TextUtils.isEmpty(user.departmentsName) ?
+                    Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
+        }
         tv_role.setText(deptName + " " + (TextUtils.isEmpty(user.depts.get(0).getShortDept().getName())
                 ? "-" : user.depts.get(0).getShortDept().title));
 
@@ -183,7 +185,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
             type = 1;
             strMessage = "是否确定该员工的加班?\n" + "确认后将无法取消！";
             /*确认外勤*/
-        } else if(attendance.state != 5){
+        } else if (attendance.state != 5) {
             if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
                 iv_type.setImageResource(R.drawable.icon_field_work_confirm);
                 iv_type.setVisibility(View.VISIBLE);
@@ -297,7 +299,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
      */
     private void confirmOutAttendance() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
-                confirmOutAttendance(attendanceId,type,new RCallback<AttendanceRecord>() {
+                confirmOutAttendance(attendanceId, type, new RCallback<AttendanceRecord>() {
                     @Override
                     public void success(final AttendanceRecord record, final Response response) {
                         HttpErrorCheck.checkResponse(" 考勤返回 ", response);
