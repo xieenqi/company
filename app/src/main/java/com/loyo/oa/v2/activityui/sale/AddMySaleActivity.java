@@ -489,7 +489,6 @@ public class AddMySaleActivity extends BaseActivity {
                 }
             });
         } else {
-            LogUtil.dee("编辑发送数据:" + MainApp.gson.toJson(map));
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                     create(ISale.class).updateSaleOpportunity(map, chanceId, new Callback<SaleOpportunityAdd>() {
                 @Override

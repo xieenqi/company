@@ -176,7 +176,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
             /*拜访签到*/
             else if (mListData.size() <= 9) {
-                LogUtil.dee("mListData:" + mListData.size());
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
                 intent.putExtra("imgsize", (9 - mListData.size()));

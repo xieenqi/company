@@ -106,7 +106,6 @@ public class MultiImageSelectorActivity extends BaseFragmentActivity implements 
             });
             return;
         }
-        LogUtil.dee("进入相册选择");
         Intent intent = getIntent();
         mDefaultCount = intent.getIntExtra(EXTRA_SELECT_COUNT, 9);
         int mode = intent.getIntExtra(EXTRA_SELECT_MODE, MODE_MULTI);

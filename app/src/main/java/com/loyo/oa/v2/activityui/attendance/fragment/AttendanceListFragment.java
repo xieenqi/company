@@ -546,7 +546,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 获取列表
      */
     private void getData(final int page) {
-        LogUtil.dee("调用中");
         isAttAdd = false;
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();

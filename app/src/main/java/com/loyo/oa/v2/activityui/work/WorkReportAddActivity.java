@@ -494,8 +494,6 @@ public class WorkReportAddActivity extends BaseActivity {
         for (Attachment attachment : lstData_Attachment) {
             pickPhots.add(new SelectPicPopupWindow.ImageInfo(attachment.url));
         }
-        LogUtil.dee("pickPhots结构:" + MainApp.gson.toJson(pickPhots));
-
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
@@ -590,13 +588,11 @@ public class WorkReportAddActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("startTime", startTime);
         map.put("endTime", endTime);
-        LogUtil.dee("动态统计发送数据:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
                 .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
                     @Override
                     public void success(final ArrayList<WorkReportDyn> dyn, final Response response) {
                         HttpErrorCheck.checkResponse(response);
-                        LogUtil.dee("动态工作返回：" + MainApp.gson.toJson(dyn));
                         dynList = dyn;
                         mHandler.sendEmptyMessage(UPDATE_SUCCESS);
                     }
@@ -875,7 +871,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
             }
         } catch (Exception ex) {
-            LogUtil.dee("异常抛出");
             Global.ProcException(ex);
         }
     }
