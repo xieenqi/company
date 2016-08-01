@@ -266,7 +266,6 @@ public class AMapService extends Service {
             LocateData data = buildLocateData(aMapLocation);
             ldbManager.addLocateData(data);
         }
-        uploadLocation(aMapLocation);
     }
 
     /**
