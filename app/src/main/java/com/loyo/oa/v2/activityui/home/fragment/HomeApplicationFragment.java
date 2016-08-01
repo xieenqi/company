@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -98,7 +99,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private Boolean outEnable;
     private boolean isJPus = false;//别名是否设置成功
     private int JpushCount = 0;//激光没有注册成功的次数
-    private int outKind; //0上班  1下班  2加班
+    private int outKind, staratItem; //0上班  1下班  2加班
     private PullToRefreshListView listView;
     private Button btn_add;
     private RoundImageView heading;
@@ -205,6 +206,18 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                LogUtil.d("一亿个：" + firstVisibleItem);
+                btn_add.setVisibility(firstVisibleItem > staratItem ? View.INVISIBLE : View.VISIBLE);
+                staratItem = firstVisibleItem;
+            }
+        });
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
