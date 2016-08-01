@@ -201,6 +201,7 @@ public final class Common {
      * @return
      */
     public static ArrayList<ContactsGroup> getContactsGroups(String deptId) {
+
         //缓存组织架构部门的数据 （组织架构没有变动 都取之前的缓存）
         String originDepartenmData = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
         if (!TextUtils.isEmpty(originDepartenmData)) {
@@ -214,21 +215,39 @@ public final class Common {
 
         SparseArray<ArrayList<Department>> maps = new SparseArray<>();//相当于 map 全部字母表 下的部门列表
         ArrayList<ContactsGroup> contactsGroups = new ArrayList<>();
-//        companyId=MainApp.user.companyId;
+
         try {
             for (char index = '#'; index <= 'Z'; index += (char) 1) {
-                ArrayList<Department> departments = new ArrayList<>();//相同首字母 部门集合
-                for (Department department : departmentList) {//遍历组织架构
+                //相同首字母 部门集合
+                ArrayList<Department> departments = new ArrayList<>();
+                //遍历组织架构
+                for (Department department : departmentList) {
                     if (department == null) {
                         continue;
                     }
-                    if (department.getId().equals(department.xpath)) {
-                        companyId = department.getId();
-                        continue;
+                    if(companyId == null){
+                        if (department.getId().equals(department.xpath)) {
+                            companyId = department.getId();
+                            continue;
+                        }
                     }
+
+           /*         if(department.getName().contains("组织发展部")){
+                        LogUtil.dee("组织发展部xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
+                    }else if(department.getName().contains("渠道部")){
+                        LogUtil.dee("渠道部xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
+                    }else if(department.getName().contains("新媒体事业部")){
+                        LogUtil.dee("新媒体事业部xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
+                    }else if(department.getName().contains("移动事业部")){
+                        LogUtil.dee("移动事业部xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
+                    }else if(department.getName().contains("研发中心")){
+                        LogUtil.dee("研发中心xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
+                    }*/
+
                     String xpath = department.getXpath();
 
-                    if (!TextUtils.isEmpty(companyId) && !TextUtils.isEmpty(xpath) && xpath.startsWith(companyId) && xpath.split("/").length == 2) {
+                    //去掉xpath.startsWith(companyId)判断后，能正常显示渠道部
+                    if (!TextUtils.isEmpty(companyId) && !TextUtils.isEmpty(xpath) && xpath.split("/").length == 2) {
                         String groupName_current = department.getGroupName();
                         if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
                             departments.add(department);
@@ -236,14 +255,13 @@ public final class Common {
                             departments.add(0, department);
                         }
                     }
-
                 }
                 if (!departments.isEmpty()) {
                     maps.put(index, departments);
                 }
             }
         } catch (Exception e) {
-            LogUtil.d(" 组织通讯录 ？？？？？？？？？？？？？？？？？？？？？？？？ 部门数据异常 " + e.toString());
+            LogUtil.dee("异常");
             e.printStackTrace();
         }
         if (maps.size() > 0) {

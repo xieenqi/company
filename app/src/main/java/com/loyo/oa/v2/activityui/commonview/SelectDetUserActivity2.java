@@ -288,13 +288,10 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
                 SelectUserData data = SelectUserHelper.mCurrentSelectDatas.get(position);
                 if (data.getClass() == SelectDepData.class) {
                     ((SelectDepData) data).setAllSelect(false);
-                    LogUtil.dee("1");
                 } else if (data.getClass() == SelectUserData.class) {
                     ((SelectUserData) data).setCallbackSelect(false);
                     mSelectUsersAdapter.notifyDataSetChanged();
-                    LogUtil.dee("2");
                 } else {
-                    LogUtil.dee("3");
                     data.setCallbackSelect(false);
                 }
             }

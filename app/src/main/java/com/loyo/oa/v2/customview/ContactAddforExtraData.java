@@ -60,9 +60,6 @@ public class ContactAddforExtraData extends LinearLayout {
         this.extras = extras;
         this.mContact = mContact;//为null 不是联系模块
         bindView(edit, valueColor, valueSize);
-
-        LogUtil.dee("新增联系人 动态字段Contact:" + MainApp.gson.toJson(mContact));
-        LogUtil.dee("新增联系人 动态字段ContactExtras:" + MainApp.gson.toJson(extras));
     }
 
     public ArrayList<ContactLeftExtras> getExtras() {

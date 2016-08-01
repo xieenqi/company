@@ -433,7 +433,6 @@ public class WfInEditActivity extends BaseActivity {
         map.put("workflowValues", workflowValues);             //流程 内容
         map.put("projectId", projectId);                       //项目Id
         map.put("memo", edt_memo.getText().toString().trim()); //备注
-        LogUtil.dee("新建审批 发送数据:" + MainApp.gson.toJson(map));
 
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(mWfInstance.id, map, new RCallback<WfInstance>() {

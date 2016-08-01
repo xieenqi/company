@@ -30,6 +30,7 @@ import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.customview.MyLetterListView;
 
@@ -66,7 +67,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lstUserGroupData = Common.getContactsGroups(null);
-
         StringBuffer sb = null;
 
         for (int i = 0; i < lstUserGroupData.size(); i++) {
@@ -447,7 +447,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
         expandableListView_user.addHeaderView(headView);
         expandableListView_user.addFooterView(footView);
         expandableListView_user.setAdapter(userGroupExpandableListAdapter);
-        //Global.setListViewHeightBasedOnChildren(expandableListView_user);
         expandableListView_user.setGroupIndicator(null);
         expandableListView_user.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override

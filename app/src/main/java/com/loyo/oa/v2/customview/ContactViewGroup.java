@@ -181,8 +181,6 @@ public class ContactViewGroup extends LinearLayout {
             });
         }
 
-        LogUtil.dee("客户详情，动态字段getExtDatas():" + MainApp.gson.toJson(mContact.getExtDatas()));
-
         //添加动态字段
         addView(new ContactListExtra(context, mContact.getExtDatas(),leftExtrases, false, R.color.text99, 14));
 
