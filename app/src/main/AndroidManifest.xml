@@ -572,6 +572,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
+            android:name=".activityui.order.AddOrderActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
             android:name=".activityui.other.PreviewImageAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
