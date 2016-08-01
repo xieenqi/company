@@ -44,6 +44,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
     private UserListViewAdapter userAdapter;
     private StringBuffer deptName;
     private int defaultAvatar;
+    private int defaultSize = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,8 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             layout_dept.setVisibility(View.GONE);
         }
 
+        LogUtil.dee("dept: "+defaultSize);
+
         listView_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -93,6 +96,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
         });
 
         final ArrayList<User> listUser = Common.getListUser(deptId);
+        LogUtil.dee("listUser: "+listUser.size());
         if (listUser != null && listUser.size() > 0) {
             userAdapter = new UserListViewAdapter(getActivity(), listUser);
             listView_user.setAdapter(userAdapter);
@@ -101,14 +105,12 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             layout_user.setVisibility(View.GONE);
         }
         listView_user.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 User user = listUser.get(position);
                 if (user == null) {
                     return;
                 }
-                LogUtil.d("User数据:" + MainApp.gson.toJson(user));
                 Bundle b = new Bundle();
                 b.putSerializable("user", user);
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
@@ -157,11 +159,15 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             if (null == convertView) {
                 convertView = mInflater.inflate(R.layout.item_contacts_department_child, null, false);
             }
-            Department d = listDepartment.get(position);
+            String members = "";
+            Department department = listDepartment.get(position);
             TextView tv_content = com.loyo.oa.v2.tool.ViewHolder.get(convertView, R.id.tv_mydept_content);
-            String departmentName = null == d.getName() ? "部门没有名字" : d.getName();
-//            int userSize = Common.getUsersByDeptId(d.getId(), new ArrayList<User>()).size();
-            String members = "(" + d.userNum + "人" + ")";
+            String departmentName = null == department.getName() ? "部门没有名字" : department.getName();
+            if(!department.userNum.equals("0")){
+                 members = "(" + department.userNum + "人" + ")";
+                 defaultSize += Integer.parseInt(department.userNum);
+            }
+
             departmentName = departmentName.concat(members);
             tv_content.setText(departmentName);
 
@@ -211,18 +217,12 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
                 holder.tv_content = (TextView) convertView.findViewById(R.id.tv_name);
                 holder.tv_position = (TextView) convertView.findViewById(R.id.tv_position);
                 holder.catalog = (TextView) convertView.findViewById(R.id.catalog);
-//                holder.lin = (ViewGroup) convertView.findViewById(R.id.line);
                 convertView.setTag(holder);
 
             } else {
                 holder = (HolderUser) convertView.getTag();
             }
             User user = listUser.get(position);
-//            ImageView img = ViewHolder.get(convertView, R.id.img);
-//            TextView tv_content = ViewHolder.get(convertView, R.id.tv_name);
-//            TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
-//            TextView catalog = ViewHolder.get(convertView, R.id.catalog);
-
             deptName = new StringBuffer();
             Utils.getDeptName(deptName, user.getDepts());
             holder.tv_position.setText(deptName.toString());
@@ -238,12 +238,6 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             } else {
                 ImageLoader.getInstance().displayImage(user.avatar, holder.img);
             }
-
-//            if (position == listUser.size() - 1) {
-//                holder.lin.setVisibility(View.GONE);
-//            } else {
-//                holder.lin.setVisibility(View.VISIBLE);
-//            }
             return convertView;
         }
     }
