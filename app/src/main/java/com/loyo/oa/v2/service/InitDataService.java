@@ -118,7 +118,7 @@ public class InitDataService extends IntentService {
             //清除之前缓存通讯录部门的数据
             SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
         } else {
-            LogUtil.d("更新 组织 架构 sb 失败");
+            LogUtil.d("更新 组织 架构  失败");
         }
     }
 

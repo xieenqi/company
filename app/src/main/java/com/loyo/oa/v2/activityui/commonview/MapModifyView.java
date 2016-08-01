@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +35,7 @@ import com.loyo.oa.v2.common.RecycleViewDivider;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -58,9 +60,15 @@ public class MapModifyView extends BaseActivity
     public static final int SIGNIN_PAGE = 76;
 
     /**
-     * 来自客户
+     * 来自客户新建
      */
     public static final int CUSTOMER_PAGE = 77;
+
+    /**
+     * 来自客户详情
+     */
+    public static final int CUSTOMER_DETAILS_PAGE = 78;
+
 
     private String reGeoAddress;       //反GEO地址
     private int currentPage = 0;       //当前页面，从0开始计数
@@ -96,6 +104,7 @@ public class MapModifyView extends BaseActivity
     private ArrayList<PositionResultItem> resultItems = new ArrayList<>();
     private PositionResultItem headerItem;
     private double[] locCustomer;
+    private String   defaultAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +159,8 @@ public class MapModifyView extends BaseActivity
         mIntent = getIntent();
         if (null != mIntent) {
             fromPage = mIntent.getIntExtra("page", CUSTOMER_PAGE);
-            locCustomer = mIntent.getDoubleArrayExtra(ExtraAndResult.EXTRA_DATA);
+            locCustomer = mIntent.getDoubleArrayExtra("loc");
+            defaultAddress = mIntent.getStringExtra("address");
         }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.mapview_recyclerview);
@@ -168,25 +178,37 @@ public class MapModifyView extends BaseActivity
         }
         aMap.setOnCameraChangeListener(this);
 
-        if (fromPage == SIGNIN_PAGE) {
-            mapview_showmessage.setVisibility(View.VISIBLE);
-            mUiSettings.setZoomControlsEnabled(false);
-            mUiSettings.setZoomGesturesEnabled(false);
-            mUiSettings.setScrollGesturesEnabled(false);
+        switch (fromPage){
+
+            //来自客户拜访
+            case SIGNIN_PAGE:
+                mapview_showmessage.setVisibility(View.VISIBLE);
+                mUiSettings.setZoomControlsEnabled(false);
+                mUiSettings.setZoomGesturesEnabled(false);
+                mUiSettings.setScrollGesturesEnabled(false);
+                locationInit();
+                break;
+
+            //来自客户新建
+            case CUSTOMER_PAGE:
+                locationInit();
+                break;
+
+            //来自客户详情
+            case CUSTOMER_DETAILS_PAGE:
+                if(null != locCustomer && locCustomer.length != 0){
+                    setHeaderItem(locCustomer[1],locCustomer[0],defaultAddress,defaultAddress);
+                    locationMapCenter(locCustomer[1], locCustomer[0]);
+                    doSearchQuery(defaultAddress);
+                }else{
+                    startLocation();
+                }
+                break;
         }
 
         aMap.setLocationSource(this);     //设置定位监听
         mUiSettings.setMyLocationButtonEnabled(true); //是否显示默认的定位按钮
         aMap.setMyLocationEnabled(true);  //是否可触发定位并显示定位层
-
-        /*如果缓存没有定位到信息，该页面再定位一次*/
-        if (app.latitude != -1 || app.longitude != -1) {
-            setHeaderItem();
-            locationMapCenter(app.latitude, app.longitude);
-            doSearchQuery(app.address);
-        } else {
-            startLocation();
-        }
 
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -215,15 +237,26 @@ public class MapModifyView extends BaseActivity
         }));
     }
 
+    /*如果缓存没有定位到信息，该页面再定位一次*/
+    public void locationInit(){
+        if (app.latitude != -1 || app.longitude != -1) {
+            setHeaderItem(app.latitude,app.longitude,app.address,app.message);
+            locationMapCenter(app.latitude, app.longitude);
+            doSearchQuery(app.address);
+        } else {
+            startLocation();
+        }
+    }
+
     /**
      * 组装头部数据
      */
-    public void setHeaderItem() {
+    public void setHeaderItem(double la,double lo,String adr,String msg) {
         headerItem = new PositionResultItem();
-        headerItem.laPosition = app.latitude;
-        headerItem.loPosition = app.longitude;
-        headerItem.address = app.address;
-        headerItem.message = app.message;
+        headerItem.laPosition = la;
+        headerItem.loPosition = lo;
+        headerItem.address = adr;
+        headerItem.message = msg;
     }
 
     /**
@@ -441,7 +474,7 @@ public class MapModifyView extends BaseActivity
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
                 isTouch = true;
                 isFrist = true;
-                setHeaderItem();
+                setHeaderItem(latitude,longitude,address,radius);
                 locationMapCenter(latitude, longitude);
                 doSearchQuery(app.address);
                 LocationUtilGD.sotpLocation();

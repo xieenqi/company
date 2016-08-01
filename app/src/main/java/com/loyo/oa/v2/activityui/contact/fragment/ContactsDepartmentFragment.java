@@ -56,6 +56,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
     private String mIndex;
     private String myDeptId;
     private String myDeptName;
+    private String totalNum = "0";
     public View headView;
     public View footView;
     public LayoutInflater mInflater;
@@ -107,23 +108,22 @@ public class ContactsDepartmentFragment extends BaseFragment {
             letterView = (MyLetterListView) view.findViewById(R.id.letter_View);
             //letterView.setKeyword(mIndex);
             letterView.setOnTouchingLetterChangedListener(new MyLetterListView.OnTouchingLetterChangedListener() {
-
                 @Override
                 public void onTouchingLetterChanged(int selectionIndex, String sectionLetter, int state) {
                     int position = index.getPositionForSection(selectionIndex);
 
                     switch (state) {
-                        case MyLetterListView.FINGER_ACTION_DOWN: // 手指按下
-//                            tv_dialog.setVisibility(View.VISIBLE);
+                        case MyLetterListView.FINGER_ACTION_DOWN: //手指按下
+//                          tv_dialog.setVisibility(View.VISIBLE);
                             tv_dialog.setText(sectionLetter);
                             scroll(position - 1);
                             break;
-                        case MyLetterListView.FINGER_ACTION_MOVE: // 手指滑动
+                        case MyLetterListView.FINGER_ACTION_MOVE: //手指滑动
                             tv_dialog.setText(sectionLetter);
                             scroll(position - 1);
                             break;
                         case MyLetterListView.FINGER_ACTION_UP:
-                            tv_dialog.setVisibility(View.GONE);// 手指离开
+                            tv_dialog.setVisibility(View.GONE);   //手指离开
                             break;
                         default:
                             break;
@@ -409,7 +409,8 @@ public class ContactsDepartmentFragment extends BaseFragment {
         }
 
         /**
-         * 设置我的部门排在首位，整个部门中移除自己部门
+         * 查询我的部门ID与名字
+         * 多部门情况下，只取了第一个部门，还需要修改
          * */
         if (MainApp.user.depts.size() > 0) {
             myDeptId = MainApp.user.depts.get(0).getShortDept().getId();
@@ -419,10 +420,15 @@ public class ContactsDepartmentFragment extends BaseFragment {
             myDeptId = MainApp.user.role.id;
         }
 
-        int userSize = Common.getAllUsersByDeptId(myDeptId, new ArrayList<User>()).size();
-        String members = "(" + userSize + "人)";//本部门的人数
+        for(Department department : MainApp.lstDepartment){
+            if(myDeptId.equals(department.getId())){
+                totalNum = department.userNum;
+                break;
+            }
+        }
+
         if (null != myDeptName) {
-            myDeptName = myDeptName.concat(members);
+            myDeptName = myDeptName.concat("(" + totalNum + "人)");//本部门的人数
             nameTv.setText(myDeptName);
         }
 
@@ -557,7 +563,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
                     String departmentName = department.getName();
                     //部门下的人员数量
-//                    int userSize = Common.getAllUsersByDeptId(department.getId(), new ArrayList<User>()).size();
                     String members = "(" + department.userNum + "人)";
                     departmentName = departmentName.concat(members);
                     tv_content.setText(departmentName);

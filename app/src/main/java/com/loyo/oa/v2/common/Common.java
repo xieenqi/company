@@ -94,18 +94,6 @@ public final class Common {
         return MainApp.lstUserGroupData == null ? new ArrayList<UserGroupData>() : MainApp.lstUserGroupData;
     }
 
-    /**
-     * 获取我的部门
-     */
-    public static Department getMyDeptment(String deptId) {
-        Department department = new Department();
-        for (Department department2 : getLstDepartment()) {
-            if (department2.getId().equals(deptId)) {
-                department = department2;
-            }
-        }
-        return department;
-    }
 
     /**
      * 获取部门所有人员（包含部门下属所有部门里的人员）
@@ -232,18 +220,6 @@ public final class Common {
                         }
                     }
 
-           /*         if(department.getName().contains("组织发展部")){
-                        LogUtil.dee("组织发展部xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
-                    }else if(department.getName().contains("渠道部")){
-                        LogUtil.dee("渠道部xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
-                    }else if(department.getName().contains("新媒体事业部")){
-                        LogUtil.dee("新媒体事业部xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
-                    }else if(department.getName().contains("移动事业部")){
-                        LogUtil.dee("移动事业部xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
-                    }else if(department.getName().contains("研发中心")){
-                        LogUtil.dee("研发中心xpath:"+department.getXpath()+"  首字母:"+department.getGroupName()+"  index:"+index+"  size:"+department.getXpath().split("/").length);
-                    }*/
-
                     String xpath = department.getXpath();
 
                     //去掉xpath.startsWith(companyId)判断后，能正常显示渠道部
@@ -261,7 +237,6 @@ public final class Common {
                 }
             }
         } catch (Exception e) {
-            LogUtil.dee("异常");
             e.printStackTrace();
         }
         if (maps.size() > 0) {
