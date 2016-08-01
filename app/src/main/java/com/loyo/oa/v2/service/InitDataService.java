@@ -107,10 +107,6 @@ public class InitDataService extends IntentService {
         ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
                 .create(IUser.class).getOrganization();
 
-        for(Department department : lstDepartment_current){
-            LogUtil.dee(department.getName()+": "+department.userNum);
-        }
-
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));

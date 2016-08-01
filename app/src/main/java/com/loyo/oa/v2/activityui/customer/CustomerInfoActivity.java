@@ -453,9 +453,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             /*刷新地理位置*/
             case R.id.img_refresh_address:
                 mBundle = new Bundle();
-                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                if (null != mCustomer.loc && mCustomer.loc.loc.length > 0) {
-                    mBundle.putDoubleArray(ExtraAndResult.EXTRA_DATA, mCustomer.loc.loc);
+                mBundle.putInt("page", MapModifyView.CUSTOMER_DETAILS_PAGE);
+                if (null != mCustomer.position && mCustomer.position.loc.length > 0) {
+                    mBundle.putDoubleArray("loc", mCustomer.position.loc);
+                    mBundle.putString("address",mCustomer.position.addr);
                 }
                 app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
