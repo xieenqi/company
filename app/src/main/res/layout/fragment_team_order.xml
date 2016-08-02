@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/saleteam_topview"
@@ -12,7 +12,7 @@
         >
 
         <LinearLayout
-            android:id="@+id/saleteam_screen1"
+            android:id="@+id/screen1"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -23,31 +23,31 @@
                 android:id="@+id/saleteam_screen1_commy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="全公司"
+                android:ellipsize="end"
                 android:maxEms="6"
                 android:singleLine="true"
-                android:ellipsize="end"
+                android:text="全公司"
                 />
 
             <ImageView
-                android:id="@+id/saleteam_screen1_iv1"
-                android:layout_marginLeft="@dimen/dimen_5"
+                android:id="@+id/screen1_iv1"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:background="@drawable/arrow_down" />
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:background="@drawable/arrow_down"/>
 
         </LinearLayout>
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/lineCC"
             android:layout_marginBottom="1dp"
             android:layout_marginTop="1dp"
+            android:background="@color/lineCC"
             />
 
         <LinearLayout
-            android:id="@+id/saleteam_screen2"
+            android:id="@+id/screen2"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -57,27 +57,27 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="销售阶段" />
+                android:text="全部状态"/>
 
             <ImageView
-                android:id="@+id/saleteam_screen1_iv2"
-                android:layout_marginLeft="@dimen/dimen_5"
+                android:id="@+id/screen2_iv2"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:background="@drawable/arrow_down" />
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:background="@drawable/arrow_down"/>
 
         </LinearLayout>
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/lineCC"
             android:layout_marginBottom="1dp"
             android:layout_marginTop="1dp"
+            android:background="@color/lineCC"
             />
 
         <LinearLayout
-            android:id="@+id/saleteam_screen3"
+            android:id="@+id/screen3"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -87,14 +87,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="排序" />
+                android:text="排序"/>
 
             <ImageView
-                android:id="@+id/saleteam_screen1_iv3"
-                android:layout_marginLeft="@dimen/dimen_5"
+                android:id="@+id/screen3_iv3"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:background="@drawable/arrow_down" />
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:background="@drawable/arrow_down"/>
 
         </LinearLayout>
 
@@ -131,19 +131,18 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginBottom="22dp"
-                    android:src="@drawable/img_nodata" />
+                    android:src="@drawable/img_nodata"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="没有相关数据"
                     android:textColor="#878787"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"/>
 
             </LinearLayout>
 
         </RelativeLayout>
-
 
 
         <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
@@ -158,8 +157,8 @@
             android:fastScrollEnabled="false"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
-            android:smoothScrollbar="true"
             android:scrollbars="none"
+            android:smoothScrollbar="true"
             />
 
         <Button
