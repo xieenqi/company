@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.order.AddOrderActivity;
+import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
 
@@ -28,7 +28,6 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             mView = inflater.inflate(R.layout.fragment_my_order, null);
             initView(mView);
         }
-//        getData();
         return mView;
     }
 
@@ -43,7 +42,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.btn_add:
                 Intent mIntent = new Intent();
-                mIntent.setClass(getActivity(), AddOrderActivity.class);
+                mIntent.setClass(getActivity(), OrderAddActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
