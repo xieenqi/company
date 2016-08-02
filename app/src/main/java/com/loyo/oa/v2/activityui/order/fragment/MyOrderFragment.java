@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,11 +18,14 @@ import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.AddOrderActivity;
+import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 import java.util.ArrayList;
@@ -29,7 +34,7 @@ import java.util.ArrayList;
  * 【我的订单】
  * Created by xeq on 16/8/1.
  */
-public class MyOrderFragment extends BaseFragment implements View.OnClickListener {
+public class MyOrderFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
     private Button btn_add;
     private String[] status = {"全部状态", "待审核", "未通过", "进行中", "已完成", "意外终止"};
     private String[] sort = {"按照创建时间", "按照最高金额"};
@@ -39,6 +44,9 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     private int statusIndex, sortIndex;
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
+    private ViewStub emptyView;
+    private PullToRefreshListView lv_list;
+    private MyOrderAdapter adapter;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -89,6 +97,24 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         salemy_screen2.setOnClickListener(this);
         salemy_screen1_iv1 = (ImageView) view.findViewById(R.id.salemy_screen1_iv1);
         salemy_screen1_iv2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
+        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
+        lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
+        lv_list.setMode(PullToRefreshBase.Mode.BOTH);
+        lv_list.setOnRefreshListener(this);
+        lv_list.setEmptyView(emptyView);
+        lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                mIntent = new Intent();
+//                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+//                mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
+//                mIntent.setClass(getActivity(), SaleDetailsActivity.class);
+//                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+//                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            }
+        });
+        adapter = new MyOrderAdapter(app);
+        lv_list.setAdapter(adapter);
     }
 
     private void setFilterData() {
@@ -160,4 +186,13 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+
+    }
 }

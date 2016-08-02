@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.order.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -15,7 +18,9 @@ import android.widget.PopupWindow;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
+import com.loyo.oa.v2.activityui.order.adapter.TeamOrderAdapter;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
@@ -23,6 +28,8 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 import java.util.ArrayList;
@@ -32,7 +39,7 @@ import java.util.List;
  * 【团队订单】
  * Created by xeq on 16/8/1.
  */
-public class TeamOrderFragment extends BaseFragment implements View.OnClickListener {
+public class TeamOrderFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private String[] status = {"全部状态", "待审核", "未通过", "进行中", "已完成", "意外终止"};
     private String[] sort = {"按照创建时间", "按照最高金额"};
@@ -47,6 +54,9 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
     private List<SaleTeamScreen> data = new ArrayList<>();
     private boolean isOk = true;
+    private ViewStub emptyView;
+    private PullToRefreshListView lv_list;
+    private TeamOrderAdapter adapter;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -98,6 +108,23 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         screen1_iv1 = (ImageView) view.findViewById(R.id.screen1_iv1);
         screen2_iv2 = (ImageView) view.findViewById(R.id.screen2_iv2);
         screen3_iv3 = (ImageView) view.findViewById(R.id.screen3_iv3);
+        lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
+        lv_list.setMode(PullToRefreshBase.Mode.BOTH);
+        lv_list.setOnRefreshListener(this);
+        lv_list.setEmptyView(emptyView);
+        lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent  mIntent = new Intent();
+//                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+//                mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
+                mIntent.setClass(getActivity(), SaleDetailsActivity.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            }
+        });
+        adapter = new TeamOrderAdapter(app);
+        lv_list.setAdapter(adapter);
 
     }
 
@@ -128,6 +155,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
             }
         }).start();
     }
+
     public void wersi() {
         //为超管或权限为全公司 展示全公司成员
         if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
@@ -140,13 +168,14 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         //权限为个人 展示自己
         else if (MainApp.user.role.getDataRange() == Role.SELF) {
             data.clear();
-            SaleTeamScreen  saleTeamScreen = new SaleTeamScreen();
+            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setId(MainApp.user.getId());
             saleTeamScreen.setName(MainApp.user.name);
             saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
             data.add(saleTeamScreen);
         }
     }
+
     /**
      * 过滤出我的部门
      */
@@ -162,6 +191,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         }
         setUser(newDeptSource);
     }
+
     /**
      * 组装部门格式
      */
@@ -175,6 +205,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
             data.add(saleTeamScreen);
         }
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -235,4 +266,13 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+
+    }
 }

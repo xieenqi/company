@@ -146,7 +146,7 @@
 
 
         <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
-            android:id="@+id/saleteam_list"
+            android:id="@+id/lv_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/whitesmoke"
