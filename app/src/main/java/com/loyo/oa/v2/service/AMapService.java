@@ -197,6 +197,7 @@ public class AMapService extends Service {
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
                 " 定位信息：" + aMapLocation.getErrorInfo() + "--" + aMapLocation.getLocationDetail());
+        isCache = SharedUtil.getBoolean(app, "isCache");
         if (isCache) {//上传缓存的地址数据
             uploadCacheLocation();
         }
@@ -222,13 +223,13 @@ public class AMapService extends Service {
             SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
             return;
         }
-        if (Global.isConnected()) {//检查是否有网络
-            if (isEmptyStr(address)) {
-                aMapLocation.setAddress("未知地址");
-            }
-        } else {
-            aMapLocation.setAddress("未知地址(离线)");
-        }
+//        if (Global.isConnected()) {//检查是否有网络
+//            if (isEmptyStr(address)) {
+//                aMapLocation.setAddress("未知地址");
+//            }
+//        } else {
+//            aMapLocation.setAddress("未知地址(离线)");
+//        }
 
         processLocation(aMapLocation);
     }
@@ -262,9 +263,10 @@ public class AMapService extends Service {
         if (Global.isConnected()) {
             uploadLocation(aMapLocation);
         } else {
-            isCache = true;
             LocateData data = buildLocateData(aMapLocation);
             ldbManager.addLocateData(data);
+            SharedUtil.putBoolean(app, "isCache", true);
+//            isCache = true;
         }
     }
 
@@ -327,7 +329,8 @@ public class AMapService extends Service {
                     Global.ProcException(new Exception(" 轨迹上【搜集】报失败:" + error.getMessage() +
                             " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(jsonObject)
                             + "用户：" + app.gson.toJson(MainApp.user)));
-                isCache = true;
+                SharedUtil.putBoolean(app, "isCache", true);
+//                isCache = true;
                 super.failure(error);
             }
         });
@@ -440,14 +443,14 @@ public class AMapService extends Service {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【缓存轨迹】上传成功： ", response);
-                        isCache = false;
                         ldbManager.clearAllLocateDatas();
+//                        isCache = false;
+                        SharedUtil.putBoolean(app, "isCache", false);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         super.failure(error);
-                        isCache = true;
                         if (null != MainApp.user)
                             Global.ProcException(new Exception(" 《缓存》轨迹上【搜集】报失败:" + error.getMessage() +
                                     " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(tracklogsMap)

@@ -591,7 +591,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             /*附件上传*/
             case R.id.layout_AttachFile:
 
-                if (mWfInstance.status == 2 || mWfInstance.status == 4 || mWfInstance.status == 5) {
+                if (null != mWfInstance && (mWfInstance.status == 2 || mWfInstance.status == 4 || mWfInstance.status == 5)) {
                     isOver = true;
                 }
                 Bundle bundle = new Bundle();
