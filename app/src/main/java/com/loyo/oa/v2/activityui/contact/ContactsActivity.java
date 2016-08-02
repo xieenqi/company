@@ -92,30 +92,17 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     }
 
     /**
-     * 获取部门数量和本部门人员数量
-     */
-/*    void getUserAndDepartmentSize() {
-        myDepartmentContactsSize = Common.getMyUserDept().size();
-        for (ContactsGroup group : lstUserGroupData) {
-            if (null == group.getDepartments() && group.getDepartments().isEmpty()) {
-                continue;
-            }
-            for (Department department : group.getDepartments()) {
-                if (null != department) {
-                    departmentsSize += Integer.parseInt(department.userNum);
-                }
-            }
-        }
-        departmentsSize += Common.getListUser(myDeptId).size();
-    }*/
-
-
-    /**
      * 获取全公司人数、本部门人数
      */
     void getUserAndDepartmentSize() {
-        myDepartmentContactsSize = Common.getMyUserDept().size();
-        departmentsSize          = MainApp.lstDepartment.get(0).userNum;
+        try{
+            myDepartmentContactsSize = Common.getMyUserDept().size();
+            departmentsSize          = MainApp.lstDepartment.get(0).userNum;
+        }catch (Exception e){
+            Toast("数据拉取中，请等待");
+            finish();
+            e.printStackTrace();
+        }
     }
 
     @Override

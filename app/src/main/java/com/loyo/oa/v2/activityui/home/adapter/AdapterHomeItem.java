@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -44,17 +45,6 @@ public class AdapterHomeItem extends BaseAdapter {
             e.printStackTrace();
         }
     }
-
-//    public AdapterHomeItem(Context context, ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
-//        this.mContext = context;
-//        this.items = items;
-//        this.mItemNumbers = mItemNumbers;
-//        try {
-//            inflter = LayoutInflater.from(context);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     /**
      * 设置item数据
@@ -188,12 +178,12 @@ public class AdapterHomeItem extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (items.get(position).title.equals("通讯录")) {
-                    if (null != MainApp.lstDepartment) {
+                    if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
                         mIntent.setClass(activity, ContactsActivity.class);
                         activity.startActivity(mIntent);
                         activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     } else {
-                        Toast.makeText(activity, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "数据获取中请等待，或手动更新数据", Toast.LENGTH_SHORT).show();
                     }
                 } else if (items.get(position).title.equals("审批流程")) {
                     try {
@@ -212,7 +202,6 @@ public class AdapterHomeItem extends BaseAdapter {
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
-
                 }
             }
         });
