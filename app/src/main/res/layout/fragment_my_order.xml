@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="销售阶段"/>
+                android:text="全部状态"/>
 
             <ImageView
                 android:id="@+id/salemy_screen1_iv1"
