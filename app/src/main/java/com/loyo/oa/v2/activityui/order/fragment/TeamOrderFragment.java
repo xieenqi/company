@@ -18,9 +18,9 @@ import android.widget.PopupWindow;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.TeamOrderAdapter;
 import com.loyo.oa.v2.activityui.other.bean.User;
-import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
@@ -118,7 +118,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                 Intent  mIntent = new Intent();
 //                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
 //                mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
-                mIntent.setClass(getActivity(), SaleDetailsActivity.class);
+                mIntent.setClass(getActivity(), OrderDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }

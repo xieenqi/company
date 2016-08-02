@@ -55,6 +55,9 @@ public class MyOrderAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
+        if (position == 2) {
+            holder.tv_status.setBackgroundResource(R.drawable.retange_gray);
+        }
         return convertView;
     }
 

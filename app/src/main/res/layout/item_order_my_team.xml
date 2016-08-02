@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_8"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -28,13 +29,14 @@
                 android:text="六女帝都"
                 android:textColor="@color/text33"
                 android:textSize="@dimen/text_sp18"
+                android:layout_marginRight="@dimen/dimen_10"
                 />
 
             <TextView
                 android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@color/title_bg1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/retange_blue"
                 android:gravity="center"
                 android:text="未通过"
                 android:textColor="@color/white"
@@ -44,9 +46,9 @@
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right|center_vertical"
+                android:gravity="right"
                 android:text="今天 14：15"
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp12"
@@ -58,8 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_5"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -80,7 +82,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="张三"
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14"
                 />
@@ -111,7 +112,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="张三"
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14"
                 />
@@ -142,7 +142,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="张三"
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14"
                 />
@@ -172,7 +171,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="张三"
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14"
                 />
