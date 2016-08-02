@@ -166,8 +166,8 @@ public class NearCustomerAdapter extends BaseAdapter {
         img_go_where.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null != customer.loc && customer.loc.loc.length > 0) {
-                    Utils.goWhere(mContext, customer.loc.loc[1], customer.loc.loc[0], customer.loc.addr);
+                if (null != customer.position && customer.position.loc.length > 0) {
+                    Utils.goWhere(mContext, customer.position.loc[1], customer.position.loc[0], customer.position.addr);
                 } else {
                     Global.Toast("没有获取到有效地址");
                 }
