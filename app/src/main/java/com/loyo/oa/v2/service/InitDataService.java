@@ -94,10 +94,12 @@ public class InitDataService extends IntentService {
      */
     void setRootMap(User user) {
         HashMap<String, Object> map = new HashMap<>();
-        for (Permission permission : user.newpermission) {
-            map.put(permission.getCode(), permission);
+        if (null != user.newpermission) {
+            for (Permission permission : user.newpermission) {
+                map.put(permission.getCode(), permission);
+            }
+            MainApp.rootMap = map;
         }
-        MainApp.rootMap = map;
     }
 
     /**
