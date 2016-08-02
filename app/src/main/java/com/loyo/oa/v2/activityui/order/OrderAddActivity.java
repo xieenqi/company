@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -9,6 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
+import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ContactAddforExtraData;
@@ -38,7 +45,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private LinearLayout ll_source;   //附件
     private LinearLayout tv_custom;   //附件
 
+    private String customerName, customerId;
     private  ArrayList<ContactLeftExtras> mCusList;
+    private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
 
     private EditText et_name;     //订单标题
     private TextView tv_customer; //对应客户
@@ -160,7 +169,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //提交
             case R.id.iv_submit:
-                Toast("客户");
+                Toast("提交");
                 break;
 
             //后退
@@ -170,12 +179,17 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //对应客户
             case R.id.ll_customer:
-                Toast("客户");
+                Bundle b = new Bundle();
+                app.startActivityForResult(OrderAddActivity.this, SigninSelectCustomer.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 
             //意向产品
             case R.id.ll_stage:
-                Toast("意向产品");
+                Bundle product = new Bundle();
+                product.putSerializable(ExtraAndResult.EXTRA_DATA, intentionProductData);
+                app.startActivityForResult(OrderAddActivity.this, IntentionProductActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
 
             //回款
@@ -189,6 +203,55 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 startActivity(intent);
                 break;
 
+        }
+    }
+
+    /**
+     * 获取 意向产品的名字
+     *
+     * @return
+     */
+    private String getIntentionProductName() {
+        String productName = "";
+        if (null != intentionProductData) {
+            for (SaleIntentionalProduct ele : intentionProductData) {
+                productName += ele.name + "、";
+            }
+        } else {
+            return "";
+        }
+        return productName.length() > 0 ? productName.substring(0, productName.length() - 1) : "";
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != -1){
+            return;
+        }
+
+        switch (requestCode){
+
+            //选择客户
+            case ExtraAndResult.REQUEST_CODE_CUSTOMER:
+                Customer customer = (Customer) data.getSerializableExtra("data");
+                if (null != customer) {
+                    customerId = customer.getId();
+                    customerName = customer.name;
+                }
+                tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                break;
+
+            //选择购买产品
+            case ExtraAndResult.REQUEST_CODE_PRODUCT:
+                ArrayList<SaleIntentionalProduct> resultData = (ArrayList<SaleIntentionalProduct>)
+                        data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+                if (null != resultData) {
+                    intentionProductData = resultData;
+                    tv_stage.setText(getIntentionProductName());
+                }
+                break;
         }
     }
 }

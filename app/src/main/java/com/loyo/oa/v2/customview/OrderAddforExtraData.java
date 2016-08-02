@@ -33,7 +33,7 @@ import java.util.Calendar;
 
 /**
  * com.loyo.oa.v2.customview
- * 描述 :【销售机会】动态字段
+ * 描述 :【创建订单】动态字段
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
