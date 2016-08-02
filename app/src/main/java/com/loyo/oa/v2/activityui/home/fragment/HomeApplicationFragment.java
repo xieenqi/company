@@ -95,7 +95,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private Boolean inEnable;
     private Boolean outEnable;
     private boolean isJPus = false;//别名是否设置成功
-    private int JpushCount = 0;//激光没有注册成功的次数
+    private int JpushCount = 0;    //激光没有注册成功的次数
     private int outKind, staratItem; //0上班  1下班  2加班
     private PullToRefreshListView listView;
     private Button btn_add;

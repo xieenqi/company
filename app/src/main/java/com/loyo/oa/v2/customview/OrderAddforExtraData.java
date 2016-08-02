@@ -19,9 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
@@ -30,35 +28,32 @@ import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
  * com.loyo.oa.v2.customview
- * 描述 : 新增【客户联系人】【销售机会】动态字段
+ * 描述 :【创建订单】动态字段
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
-public class ContactAddforExtraData extends LinearLayout {
+public class OrderAddforExtraData extends LinearLayout {
 
     private Context mContext;
     private ArrayList<ContactLeftExtras> extras = new ArrayList<>();
-    private Contact mContact;
     private String birthStr;
     private int age;
 
-    public ContactAddforExtraData(Context context, AttributeSet attrs, int defStyleAttr) {
+    public OrderAddforExtraData(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
         setOrientation(VERTICAL);
     }
 
-    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactLeftExtras> extras, boolean edit, int valueColor, int valueSize) {
+    public OrderAddforExtraData(Context context, ArrayList<ContactLeftExtras> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
-        this.mContact = mContact;//为null 不是联系模块
         bindView(edit, valueColor, valueSize);
     }
 
@@ -87,6 +82,10 @@ public class ContactAddforExtraData extends LinearLayout {
                 continue;
             }
 
+            if(customerExtra.isSystem){
+                continue;
+            }
+
             final View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_extra, null, false);
             extra.setEnabled(edit);
 
@@ -100,47 +99,6 @@ public class ContactAddforExtraData extends LinearLayout {
             }
             tv_content.setTextColor(valueColor);
             tv_tag.setText(customerExtra.label);
-
-            /**
-             * 编辑联系人，数据赋值
-             * */
-            if (null != mContact) {
-                if (customerExtra.fieldName.equals("name")) {
-                    tv_content.setText(mContact.getName());
-                    customerExtra.val = mContact.getName();
-                } else if (customerExtra.fieldName.equals("wiretel")) {
-                    tv_content.setText(mContact.getWiretel());
-                    customerExtra.val = mContact.getWiretel();
-                } else if (customerExtra.fieldName.equals("tel")) {
-                    tv_content.setText(mContact.getTel());
-                    customerExtra.val = mContact.getTel();
-                } else if (customerExtra.fieldName.equals("birth")) {
-                    tv_content.setText(mContact.getBirthStr());
-                    customerExtra.val = mContact.getBirthStr();
-                } else if (customerExtra.fieldName.equals("wx")) {
-                    tv_content.setText(mContact.getWx());
-                    customerExtra.val = mContact.getWx();
-                } else if (customerExtra.fieldName.equals("qq")) {
-                    tv_content.setText(mContact.getQq());
-                    customerExtra.val = mContact.getQq();
-                } else if (customerExtra.fieldName.equals("email")) {
-                    tv_content.setText(mContact.getEmail());
-                    customerExtra.val = mContact.getEmail();
-                } else if (customerExtra.fieldName.equals("memo")) {
-                    tv_content.setText(mContact.getMemo());
-                    customerExtra.val = mContact.getMemo();
-                } else if (customerExtra.fieldName.equals("dept_name")) {
-                    tv_content.setText(mContact.getDeptName());
-                    customerExtra.val = mContact.getDeptName();
-                } else if (!customerExtra.isSystem) {
-                    for (ExtraData extraData : mContact.getExtDatas()) {
-                        if (customerExtra.label.equals(extraData.getProperties().getLabel())) {
-                            tv_content.setText(extraData.getVal());
-                            customerExtra.val = extraData.getVal();
-                        }
-                    }
-                }
-            }
 
             if (customerExtra.isList) {//改过
                 tv_content.setEnabled(true);
@@ -166,9 +124,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                if (null == mContact) {
-                    tv_content.setText(customerExtra.val);
-                }
+
             } else if ("birth".equals(customerExtra.fieldName)) {
                 LogUtil.dll("生日");
                 LogUtil.dll("long enable:" + customerExtra.enabled);
@@ -187,9 +143,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                if (null == mContact) {
-                    tv_content.setText(customerExtra.val);
-                }
+
             } else if ("long".equals(customerExtra.type)) {
                 LogUtil.dll("时间");
                 LogUtil.dll("long enable:" + customerExtra.enabled);
@@ -208,9 +162,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                if (null == mContact) {
-                    tv_content.setText(customerExtra.val);
-                }
+
             } else if ("string".equals(customerExtra.type)) {
                 LogUtil.dll("string");
                 LogUtil.dll("string enable:" + customerExtra.enabled);
@@ -224,9 +176,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                if (null == mContact) {
-                    tv_content.setText(customerExtra.val);
-                }
+
             } else if ("int".equals(customerExtra.type)) {
                 LogUtil.dll("int");
                 LogUtil.dll("int enable:" + customerExtra.enabled);
@@ -240,9 +190,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                if (null == mContact) {
-                    tv_content.setText(customerExtra.val);
-                }
+
             } else if ("double".equals(customerExtra.type)) {
                 LogUtil.dll("double");
                 LogUtil.dll("double enable:" + customerExtra.enabled);
@@ -255,9 +203,6 @@ public class ContactAddforExtraData extends LinearLayout {
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
-                }
-                if (null == mContact) {
-                    tv_content.setText(customerExtra.val);
                 }
             }
         }

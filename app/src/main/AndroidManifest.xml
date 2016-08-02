@@ -572,7 +572,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.order.AddOrderActivity"
+            android:name=".activityui.order.OrderAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
@@ -598,6 +598,11 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.commonview.MapSingleView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.order.OrderAttachmentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
