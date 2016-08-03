@@ -22,7 +22,6 @@ import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -460,23 +459,23 @@ public final class Common {
     public static ArrayList<User> getMyUserDept() {
 
         ArrayList<User> myUsers = new ArrayList<>();
-        ArrayList<User> userAllList = new ArrayList<>();
+//        ArrayList<User> userAllList = new ArrayList<>();
         int positions = 0;
-        try {
-        /*全部人员获取*/
-            for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-                    userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//        /*全部人员获取*/
+//            for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
+//                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
+//                    userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         /*获取我的部门下标*/
         for (int i = 0; i < getLstDepartment().size(); i++) {
             if (null == MainApp.user.depts)
-                continue;
+                break;
             for (int j = 0; j < MainApp.user.depts.size(); j++) {
                 if (getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())) {
                     positions = i;

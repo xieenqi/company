@@ -124,8 +124,8 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint=""
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text66"
+                    android:textColor="@color/text66"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -163,8 +163,8 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint=""
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text66"
+                    android:textColor="@color/text66"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -202,8 +202,8 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint=""
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text66"
+                    android:textColor="@color/text66"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -241,7 +241,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint=""
-                    android:textColor="@color/title_bg1"
+                    android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
@@ -260,8 +260,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:paddingBottom="@dimen/dimen_10"
                 android:paddingLeft="@dimen/margin_other_view"
                 android:paddingRight="@dimen/margin_other_view"
+                android:paddingTop="@dimen/dimen_10"
                 >
 
                 <LinearLayout
@@ -278,6 +280,7 @@
                         android:textSize="@dimen/text_sp14"/>
 
                     <TextView
+                        android:id="@+id/tv_wfname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/title_bg1"
@@ -299,6 +302,7 @@
                         android:textSize="@dimen/text_sp14"/>
 
                     <TextView
+                        android:id="@+id/tv_order_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text99"
@@ -307,12 +311,14 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_extra"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     />
 
                 <TextView
+                    android:id="@+id/tv_memo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text99"

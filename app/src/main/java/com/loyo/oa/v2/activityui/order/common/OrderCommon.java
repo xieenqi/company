@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.order;
+package com.loyo.oa.v2.activityui.order.common;
 
 import android.widget.TextView;
 

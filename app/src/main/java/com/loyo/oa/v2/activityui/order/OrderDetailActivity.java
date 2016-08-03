@@ -1,13 +1,18 @@
 package com.loyo.oa.v2.activityui.order;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.bean.ExtensionDatas;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
+import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IOrder;
@@ -27,17 +32,28 @@ import retrofit.client.Response;
  */
 public class OrderDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout img_title_left;
+    private LinearLayout img_title_left, ll_extra;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
-            tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name, tv_creator_time;
+            tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name,
+            tv_creator_time, tv_wfname, tv_order_number, tv_memo;
     private OrderDetail mData;
+    private String orderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
+        getIntentData();
         initView();
+    }
+
+    private void getIntentData() {
+        orderId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
+        if (TextUtils.isEmpty(orderId)) {
+            onBackPressed();
+            Toast("参数不全");
+        }
     }
 
     private void initView() {
@@ -63,6 +79,10 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_responsible_name = (TextView) findViewById(R.id.tv_responsible_name);
         tv_creator_name = (TextView) findViewById(R.id.tv_creator_name);
         tv_creator_time = (TextView) findViewById(R.id.tv_creator_time);
+        tv_wfname = (TextView) findViewById(R.id.tv_wfname);
+        tv_order_number = (TextView) findViewById(R.id.tv_order_number);
+        tv_memo = (TextView) findViewById(R.id.tv_memo);
+        ll_extra = (LinearLayout) findViewById(R.id.ll_extra);
         getData();
     }
 
@@ -80,7 +100,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
 
     private void getData() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .getSaleDetails("57a0692d35d860eca276d964", new Callback<OrderDetail>() {
+                .getSaleDetails(orderId, new Callback<OrderDetail>() {
                     @Override
                     public void success(OrderDetail orderdetail, Response response) {
                         HttpErrorCheck.checkResponse("订单详情", response);
@@ -109,9 +129,21 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_creator_name.setText(mData.creatorName);
         tv_plan.setText("回款计划（" + mData.planNum + "）");
         tv_record.setText("回款记录（" + mData.recordNum + "）");
+        tv_record_value.setText("￥" + mData.backMoney + "(" + mData.ratePayment + "%)");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         OrderCommon.getOrderStatus(tv_status, mData.status);
+        tv_wfname.setText(mData.wfId);
+        tv_order_number.setText(mData.orderNum);
+        tv_memo.setText("备注：" + mData.remark);
+        if (ll_extra.getChildCount() != 0) {
+            ll_extra.removeAllViews();
+        }
+        if (null != mData.extensionDatas) {
+            for (ExtensionDatas ele : mData.extensionDatas) {
+                ll_extra.addView(new ViewOrderDetailsExtra(mContext, ele));
+            }
+        }
     }
 
 }

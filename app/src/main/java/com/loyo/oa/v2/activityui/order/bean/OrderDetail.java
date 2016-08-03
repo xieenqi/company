@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.order.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by xeq on 16/8/3.
@@ -23,4 +24,8 @@ public class OrderDetail implements Serializable {
     public int planNum;
     public long createdAt;
     public String proName;
+    public String wfId;
+    public String orderNum;
+    public String remark;
+    public List<ExtensionDatas> extensionDatas;
 }
