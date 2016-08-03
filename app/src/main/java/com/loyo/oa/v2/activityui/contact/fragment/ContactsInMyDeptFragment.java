@@ -27,6 +27,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+
+import com.loyo.oa.v2.db.bean.*;
 
 /**
  * 【本部门】人员列表页
@@ -39,11 +42,11 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public ListView sortListView;
     public ContactsInMyDeptAdapter adapter;
     public CharacterParser characterParser;
-    public PinyinComparator pinyinComparator;
+    public DBUserPinyinComparator pinyinComparator;
     public LayoutInflater mInflater;
     public int defaultAvatar;
 
-    public ArrayList<User> myUserList;
+    public ArrayList<DBUser> myUserList;
     public ArrayList<UserInfo> myDepts;
     public View view;
     public View headView;
@@ -95,22 +98,16 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         catalogTv = (TextView) headView.findViewById(R.id.catalog);
 
         item_medleft_top = (LinearLayout) headView.findViewById(R.id.item_medleft_top);
-        pinyinComparator = new PinyinComparator();
+        pinyinComparator = new DBUserPinyinComparator();
         characterParser = CharacterParser.getInstance();
 
         Utils.getDeptName(myDeptBuffer, myDepts);
         nameTv.setText(MainApp.user.getRealname());
         deptInfoTv.setText(myDeptBuffer.toString());
         catalogTv.setText("我");
-        myUserList = Common.getMyUserDept();
 
-        /*我的部门数据中，移除自己*/
-        for (int i = 0; i < myUserList.size(); i++) {
-            if (myUserList.get(i).getId().equals(MainApp.user.getId())) {
-                myUserList.remove(i);
-                break;
-            }
-        }
+        myUserList = (ArrayList<DBUser>) Common.getUsersAtSameDepts(true);
+
 //        sideBar.setTextView(tv_dialog);//暂时不上此dialog
         //设置右侧触摸监听
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
@@ -125,7 +122,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         });
 
         // 根据a-z进行排序源数据
-        sortDataList();
         Collections.sort(myUserList, pinyinComparator);
         adapter = new ContactsInMyDeptAdapter(getActivity(), myUserList);
         sortListView.addHeaderView(headView);
@@ -136,9 +132,9 @@ public class ContactsInMyDeptFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 //adapterView.getAdapter().getItem(position);
-                LogUtil.d("User数据:" + MainApp.gson.toJson(myUserList.get(position - 1)));
+                DBUser user = myUserList.get(position - 1);
                 Bundle b = new Bundle();
-                b.putSerializable("user", myUserList.get(position - 1));
+                b.putSerializable("user", user);
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
 
             }
@@ -156,19 +152,17 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         });
     }
 
-    /**
-     * 遍历数据排序
-     */
-    void sortDataList() {
-        for (User user : myUserList) {
-            String pinyin = characterParser.getSelling(user.getRealname());
-            String sortString = pinyin.substring(0, 1).toUpperCase();
+    private class DBUserPinyinComparator implements Comparator<DBUser> {
 
-            // 正则表达式，判断首字母是否是英文字母
-            if (sortString.matches("[A-Z]")) {
-                user.setSortLetters(sortString.toUpperCase());
+        public int compare(DBUser o1, DBUser o2) {
+            if ("@".equals(o1.getSortLetter())
+                    || "#".equals(o2.getSortLetter())) {
+                return -1;
+            } else if ("#".equals(o1.getSortLetter())
+                    || "@".equals(o2.getSortLetter())) {
+                return 1;
             } else {
-                user.setSortLetters("#");
+                return o1.pinyin().compareTo(o2.pinyin());
             }
         }
     }

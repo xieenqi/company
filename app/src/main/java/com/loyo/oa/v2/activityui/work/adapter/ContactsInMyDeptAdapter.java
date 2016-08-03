@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.db.bean.*;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -24,12 +25,12 @@ import java.util.List;
 
 public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndexer {
 
-    private List<User> list = null;
+    private List<DBUser> list = null;
     private Context mContext;
     private StringBuffer deptName;
     private int defaultAvatar;
 
-    public ContactsInMyDeptAdapter(final Context mContext, final List<User> list) {
+    public ContactsInMyDeptAdapter(final Context mContext, final List<DBUser> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -49,7 +50,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
     public View getView(final int position, View view, final ViewGroup arg2) {
 
         ViewHolder viewHolder = null;
-        final User mContent = list.get(position);
+        final DBUser mContent = list.get(position);
         if (view == null) {
             viewHolder = new ViewHolder();
             view = LayoutInflater.from(mContext).inflate(R.layout.item_contact_personnel, null);
@@ -67,18 +68,17 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         int section = getSectionForPosition(position);
         if (position == getPositionForSection(section)) {
             viewHolder.tvLetter.setVisibility(View.VISIBLE);
-            viewHolder.tvLetter.setText(mContent.getSortLetters());
+            viewHolder.tvLetter.setText(mContent.getSortLetter());
         } else {
             viewHolder.tvLetter.setVisibility(View.GONE);
         }
 
-        User user = list.get(position);
-        deptName = new StringBuffer();
-        Utils.getDeptName(deptName, user.getDepts());
-        viewHolder.name.setText(user.getRealname());
-        viewHolder.deptInf.setText(deptName.toString());
+        DBUser user = list.get(position);
 
-        if(null == user.getAvatar() || user.getAvatar().isEmpty() || !user.getAvatar().contains("http")){
+        viewHolder.name.setText(user.name);
+        viewHolder.deptInf.setText(user.shortDeptNames);
+
+        if(null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")){
             if (user.gender == 2) {
                 defaultAvatar = R.drawable.icon_contact_avatar;
             } else {
@@ -86,7 +86,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
             }
             viewHolder.img.setImageResource(defaultAvatar);
         }else{
-            ImageLoader.getInstance().displayImage(user.getAvatar(), viewHolder.img);
+            ImageLoader.getInstance().displayImage(user.avatar, viewHolder.img);
         }
         return view;
     }
@@ -101,12 +101,12 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
     }
 
     public int getSectionForPosition(final int position) {
-        return list.get(position).getSortLetters().charAt(0);
+        return list.get(position).getSortLetter().charAt(0);
     }
 
     public int getPositionForSection(final int section) {
         for (int i = 0; i < getCount(); i++) {
-            String sortStr = list.get(i).getSortLetters();
+            String sortStr = list.get(i).getSortLetter();
             char firstChar = sortStr.toUpperCase().charAt(0);
             if (firstChar == section) {
                 return i;

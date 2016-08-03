@@ -60,19 +60,6 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         userFragment = new ContactsInMyDeptFragment();
         lstUserGroupData = Common.getContactsGroups(null);
         initUI();
-
-        /*
-             * 读结构化数据
-             */
-
-        List<DBDepartment> list = OrganizationManager.shareManager(getBaseContext()).allDepartment();
-
-        if (list ==null){
-            Log.v("debg", "error");
-        }
-        else {
-            Log.v("debg", list.toString());
-        }
     }
 
     void initUI() {

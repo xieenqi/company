@@ -21,6 +21,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
@@ -242,6 +243,7 @@ public class MainApp extends Application {
         gson = new Gson();
         Utils.openGPS(this);
         DBManager.init(this);
+        OrganizationManager.init(this);
 
         try {
 //            user = DBManager.Instance().getUser();

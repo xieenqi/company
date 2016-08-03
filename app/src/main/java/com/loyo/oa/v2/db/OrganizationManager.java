@@ -5,7 +5,11 @@ package com.loyo.oa.v2.db;
  */
 import android.content.Context;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Iterator;
 
 import com.j256.ormlite.misc.TransactionManager;
 
@@ -14,6 +18,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.Callable;
 
+import com.j256.ormlite.stmt.query.In;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBPosition;
 import com.loyo.oa.v2.db.bean.DBRole;
@@ -40,15 +45,15 @@ public class OrganizationManager {
     }
 
     private static OrganizationManager instance;
+    public static void init(Context context) {
+        OrganizationManager.context = context;
+    }
     /**
      * 单例获取该Helper
-     *
-     * @param context
      * @return
      */
-    public static synchronized OrganizationManager shareManager(Context context)
+    public static synchronized OrganizationManager shareManager()
     {
-        context = context.getApplicationContext();
         if (instance == null)
         {
             synchronized (OrganizationManager.class)
@@ -98,6 +103,25 @@ public class OrganizationManager {
         user.isSuperUser = JSON.optBoolean("isSuperUser");
         user.isBQQ = JSON.optBoolean("isBQQ");
         user.deletedAt = JSON.optLong("deletedAt");
+
+        JSONArray deptsArray = JSON.optJSONArray("depts");
+        if (deptsArray == null){
+            return user;
+        }
+
+        StringBuilder namesBuilder = new StringBuilder();
+
+        for (int k = 0; k < deptsArray.length();k++) {
+            JSONObject dep = deptsArray.optJSONObject(k);
+            if (dep.optJSONObject("shortDept") != null){
+
+                String name = dep.optJSONObject("shortDept").optString("name");
+                if (name != null && name.length() > 0) {
+                    namesBuilder.append(name);
+                }
+            }
+        }
+        user.shortDeptNames = namesBuilder.toString();
 
         return user;
     }
@@ -249,6 +273,54 @@ public class OrganizationManager {
         catch (Exception e) {
 
         }
+        return list;
+    }
+
+    public List<DBUser> getUsersAtSameDeptsOfUser(String userId){
+
+        return this.getUsersAtSameDeptsOfUser(userId, false);
+    }
+
+    public List<DBUser> getUsersAtSameDeptsOfUser(String userId, Boolean excludeSelf){
+        UserDao dao = new UserDao(getContext());
+        List<DBUser> list = null;
+
+        try {
+            DBUser user = new UserDao(getContext()).get(userId);
+            if (user == null) {
+                return list;
+            }
+            else {
+                list = new ArrayList<DBUser>();
+            }
+
+            List<DBUserNode> nodes = user.allNodes();
+            Iterator<DBUserNode> iterator = nodes.iterator();
+            while (iterator.hasNext()) {
+                DBUserNode node = iterator.next();
+                DBDepartment dept = node.department;
+                if (dept == null) {
+                    continue;
+                }
+                list.addAll(dept.allUsers());
+            }
+        }
+        catch (Exception e) {}
+
+
+        if (excludeSelf && list != null) {
+            List<DBUser> dupSelfs = new ArrayList<DBUser>();
+            for (int i = 0; i < list.size(); i++) {
+                DBUser user = list.get(i);
+                if (userId.equals(user.id)) {
+                    dupSelfs.add(user);
+                }
+            }
+            if (dupSelfs.size() > 0) {
+                list.removeAll(dupSelfs);
+            }
+        }
+
         return list;
     }
 

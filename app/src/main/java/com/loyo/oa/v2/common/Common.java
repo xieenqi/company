@@ -18,6 +18,8 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.DateTool;
@@ -500,6 +502,20 @@ public final class Common {
         }
 
         return myUsers;
+    }
+
+    /**
+     * Add by Ethan
+     * 重构： 获取当前账号，本部门通讯录人员
+     */
+    public static List<DBUser> getUsersAtSameDepts(Boolean excludeSelf) {
+
+        List<DBUser> users = null;
+
+        User currentUser =  MainApp.user;
+        users = OrganizationManager.shareManager().getUsersAtSameDeptsOfUser(currentUser.id, excludeSelf);
+
+        return users;
     }
 
     /**

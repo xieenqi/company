@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.db.bean.*;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -71,7 +72,7 @@ public class ContactInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_action;
     @Extra
-    User user;
+    DBUser user;
 
     private StringBuffer myDeptName;
     private int defaultAvatar;
@@ -82,7 +83,7 @@ public class ContactInfoActivity extends BaseActivity {
         layout_msg.setOnTouchListener(Global.GetTouch());
         layout_back.setOnTouchListener(Global.GetTouch());
         tv_edit.setOnTouchListener(Global.GetTouch());
-        if (user.equals(MainApp.user)) {
+        if (user.id!=null && user.id.equals(MainApp.user.id)) {
             tv_edit.setVisibility(View.VISIBLE);
             layout_action.setVisibility(View.GONE);
         }
@@ -96,6 +97,8 @@ public class ContactInfoActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.tv_edit:
+
+                // TODO:
                 Bundle b = new Bundle();
                 b.putSerializable("user", user);
                 app.startActivityForResult(this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, b);
@@ -119,7 +122,8 @@ public class ContactInfoActivity extends BaseActivity {
             @Override
             public void success(final User users, final Response response) {
 
-                user = users;
+                // TODO:
+                // user = users;
                 HttpErrorCheck.checkResponse(response);
                 initData();
 
@@ -144,20 +148,6 @@ public class ContactInfoActivity extends BaseActivity {
             return;
         }
 
-        myDeptName = new StringBuffer();
-
-        /*获取部门名字和职位名字，包括多部门情况下*/
-        for (int i = 0; i < user.getDepts().size(); i++) {
-            myDeptName.append(user.getDepts().get(i).getShortDept().getName());
-            if (!user.getDepts().get(i).getTitle().isEmpty()
-                    && user.getDepts().get(i).getTitle().length() > 0) {
-                myDeptName.append(" | " + user.getDepts().get(i).getTitle());
-            }
-            if (i != user.getDepts().size() - 1) {
-                myDeptName.append(" ; ");
-            }
-        }
-
         //默认头像，头像获取
         if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
             if (user.gender == 2) {
@@ -167,11 +157,11 @@ public class ContactInfoActivity extends BaseActivity {
             }
             img_title_user.setImageResource(defaultAvatar);
         } else {
-            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
+            ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
         }
 
-        Utils.setContent(tv_realname, user.getRealname());
-        Utils.setContent(tv_deptname, myDeptName.toString());
+        Utils.setContent(tv_realname, user.name);
+        Utils.setContent(tv_deptname, user.shortDeptNames);
 
         Utils.setContent(tv_phone, user.mobile);
         String gender = "";
