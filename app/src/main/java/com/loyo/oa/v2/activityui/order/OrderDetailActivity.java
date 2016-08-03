@@ -111,35 +111,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_record.setText("回款记录（" + mData.recordNum + "）");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
-        if (mData.status > 0) {
-            String statusText = "";
-            int statusBj = R.drawable.retange_blue;
-            switch (mData.status) {
-                case 1:
-                    statusText = "待审核";
-                    statusBj = R.drawable.retange_blue;
-                    break;
-                case 2:
-                    statusText = "未通过";
-                    statusBj = R.drawable.retange_blue;
-                    break;
-                case 3:
-                    statusText = "进行中";
-                    statusBj = R.drawable.retange_blue;
-                    break;
-                case 4:
-                    statusText = "已完成";
-                    statusBj = R.drawable.retange_gray;
-                    break;
-                case 5:
-                    statusText = "意外终止";
-                    statusBj = R.drawable.retange_gray;
-                    break;
-                default:
-            }
-            tv_status.setText(statusText);
-            tv_status.setBackgroundResource(statusBj);
-        }
+        OrderCommon.getOrderStatus(tv_status, mData.status);
     }
 
 }

@@ -9,6 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.OrderCommon;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.tool.DateTool;
+
+import java.util.List;
 
 /**
  * 团队订单列表的adapter
@@ -18,15 +23,21 @@ public class TeamOrderAdapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflater;
+    List<OrderListItem> data;
 
     public TeamOrderAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
+    public void setData(List<OrderListItem> records) {
+        this.data = records;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        return 10;
+        return null == data ? 0 : data.size();
     }
 
     @Override
@@ -58,6 +69,14 @@ public class TeamOrderAdapter extends BaseAdapter {
             holder = (Holder) convertView.getTag();
         }
         holder.ll_responsible.setVisibility(View.VISIBLE);
+        OrderListItem mData = data.get(position);
+        holder.tv_title.setText(mData.title);
+        OrderCommon.getOrderStatus(holder.tv_status, mData.status);
+        holder.tv_name.setText(mData.directorName);
+        holder.tv_money.setText(mData.dealMoney + "");
+        holder.tv_customer.setText(mData.customerName);
+        holder.tv_product.setText(mData.proName);
+        holder.tv_time.setText(DateTool.getDiffTime(Long.valueOf(mData.createdAt + "") * 1000));
         return convertView;
     }
 

@@ -26,7 +26,6 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="六女帝都"
                 android:textColor="@color/text33"
                 android:textSize="@dimen/text_sp18"
                 android:layout_marginRight="@dimen/dimen_10"
@@ -36,9 +35,7 @@
                 android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/retange_blue"
                 android:gravity="center"
-                android:text="未通过"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_sp12"
                 />
@@ -49,7 +46,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="今天 14：15"
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp12"
                 />

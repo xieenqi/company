@@ -15,19 +15,31 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
+import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【我的订单】
@@ -46,6 +58,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private MyOrderAdapter adapter;
+    private int page = 1;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -69,7 +82,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                     break;
 
             }
-//            getData();
+            getData();
         }
     };
 
@@ -113,6 +126,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         });
         adapter = new MyOrderAdapter(app);
         lv_list.setAdapter(adapter);
+        getData();
     }
 
     private void setFilterData() {
@@ -182,6 +196,25 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         windowParams.alpha = 0.9f;
         getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
+    }
+
+    private void getData() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 15);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IOrder.class).getOrderMyList(map, new Callback<OrderList>() {
+            @Override
+            public void success(OrderList orderlist, Response response) {
+                HttpErrorCheck.checkResponse("我的订单列表：", response);
+                adapter.setData(orderlist.records);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 
     @Override

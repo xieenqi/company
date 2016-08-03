@@ -20,20 +20,30 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.TeamOrderAdapter;
+import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【团队订单】
@@ -57,6 +67,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private TeamOrderAdapter adapter;
+    private int page = 1;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -115,7 +126,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent  mIntent = new Intent();
+                Intent mIntent = new Intent();
 //                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
 //                mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
                 mIntent.setClass(getActivity(), OrderDetailActivity.class);
@@ -149,7 +160,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                     } else {
                         isOk = false;
                         deptPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler);
-//                        getData();
+                        getData();
                     }
                 }
             }
@@ -264,6 +275,25 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         windowParams.alpha = 0.9f;
         getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
+    }
+
+    private void getData() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 15);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IOrder.class).getOrderTeamList(map, new Callback<OrderList>() {
+            @Override
+            public void success(OrderList orderlist, Response response) {
+                HttpErrorCheck.checkResponse("团队订单列表：", response);
+                adapter.setData(orderlist.records);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 
     @Override
