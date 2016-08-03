@@ -8,22 +8,24 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.common.Global;
+
 import java.util.ArrayList;
 
 /**
  * 【首页菜单】 gridView适配器
  * Created by yyy on 16/6/17.
  */
-public class AdapterMoreWindow extends BaseAdapter{
+public class AdapterMoreWindow extends BaseAdapter {
 
     public ArrayList<MoreWindowItem> data;
     public Context mContext;
     public Handler mHandler;
 
-    public AdapterMoreWindow(ArrayList<MoreWindowItem> data,Context mContext,Handler mHandler){
+    public AdapterMoreWindow(ArrayList<MoreWindowItem> data, Context mContext, Handler mHandler) {
         this.data = data;
         this.mHandler = mHandler;
         this.mContext = mContext;
@@ -47,13 +49,13 @@ public class AdapterMoreWindow extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        if(null == convertView){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_morewindow,null);
+        if (null == convertView) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_morewindow, null);
             holder = new ViewHolder();
             holder.img = (ImageView) convertView.findViewById(R.id.case_morewindow_img);
             holder.name = (TextView) convertView.findViewById(R.id.case_morewindow_tv);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
@@ -68,6 +70,6 @@ public class AdapterMoreWindow extends BaseAdapter{
 
     class ViewHolder {
         public ImageView img;
-        public TextView  name;
+        public TextView name;
     }
 }

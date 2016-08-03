@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
@@ -45,9 +46,11 @@ import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -108,6 +111,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private String sortType = "";
     private String userId = "";
     private String stageId = "";
+    private int stageIndex = 0, sortIndex = 0;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -133,11 +137,13 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 case SALETEAM_SCREEN_TAG2:
                     isPull = false;
                     stageId = msg.getData().getString("data");
+                    stageIndex = (int) msg.getData().get("index");
                     break;
 
                 case SALETEAM_SCREEN_TAG3:
                     isPull = false;
                     sortType = msg.getData().getString("data");
+                    sortIndex = (int) msg.getData().get("index");
                     break;
 
                 default:
@@ -240,11 +246,11 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
             setUser(mDeptSource);
         }
         //权限为部门 展示我的部门
-        else if(MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD){
+        else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
             deptSort();
         }
         //权限为个人 展示自己
-        else if(MainApp.user.role.getDataRange() == Role.SELF){
+        else if (MainApp.user.role.getDataRange() == Role.SELF) {
             data.clear();
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setId(MainApp.user.getId());
@@ -442,7 +448,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 break;
             //销售阶段
             case R.id.saleteam_screen2:
-                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, stageData, SaleOpportunitiesManagerActivity.SCREEN_STAGE, true);
+                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, stageData, SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, stageIndex);
                 saleCommPopupView.showAsDropDown(screen2);
                 openPopWindow(tagImage2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -455,7 +461,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 break;
             //排序
             case R.id.saleteam_screen3:
-                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, SaleOpportunitiesManagerActivity.SCREEN_SORT, false);
+                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                 saleCommPopupView.showAsDropDown(screen3);
                 openPopWindow(tagImage3);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

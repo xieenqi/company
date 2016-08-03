@@ -10,8 +10,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.other.DepartmentUserSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
@@ -23,6 +23,7 @@ import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
+import java.util.ArrayList;
 
 import java.util.List;
 
@@ -43,8 +44,12 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     private ViewPager pager;
     private MyPagerAdapter adapter;
     private MainApp app = MainApp.getMainApp();
-    private int  departmentsSize;
+    private ArrayList<ContactsGroup> lstUserGroupData;
+
+    private String departmentsSize;
     private int myDepartmentContactsSize;
+
+    private String myDeptId;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -53,6 +58,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
         departmentFragment = new ContactsDepartmentFragment();
         userFragment = new ContactsInMyDeptFragment();
+        lstUserGroupData = Common.getContactsGroups(null);
         initUI();
 
         /*
@@ -70,6 +76,12 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     }
 
     void initUI() {
+        if (MainApp.user.depts.size() > 0) {
+            myDeptId = MainApp.user.depts.get(0).getShortDept().getId();
+        } else {
+            myDeptId = MainApp.user.role.id;
+        }
+
         setTouchView(-1);
         getUserAndDepartmentSize();
 
@@ -98,20 +110,16 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     }
 
     /**
-     * 获取部门数量和本部门人员数量
+     * 获取全公司人数、本部门人数
      */
     void getUserAndDepartmentSize() {
-        myDepartmentContactsSize = Common.getMyUserDept().size();
-        if (MainApp.lstDepartment != null) {//公司所有的人员数量
-            for (Department element : MainApp.lstDepartment) {
-                if (element.getUsers() != null) {
-                    departmentsSize += element.getUsers().size();
-                }
-//                if (element.id.equals(element.xpath)) {//确定全公司人员数量
-//                    departmentsSize = element.userNum;
-//                }
-
-            }
+        try{
+            myDepartmentContactsSize = Common.getMyUserDept().size();
+            departmentsSize          = MainApp.lstDepartment.get(0).userNum;
+        }catch (Exception e){
+            Toast("数据拉取中，请等待");
+            finish();
+            e.printStackTrace();
         }
     }
 

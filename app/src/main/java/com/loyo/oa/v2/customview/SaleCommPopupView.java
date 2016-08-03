@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreenComm;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
+
 import java.util.ArrayList;
 
 /**
@@ -37,17 +39,18 @@ public class SaleCommPopupView extends PopupWindow {
 
     private ArrayList<SaleTeamScreen> data;
     private int page;
-    private int resultTag;
+    private int resultTag, index;
     private boolean dynamIc = false;
 
-    public SaleCommPopupView(final Activity context, Handler handler,ArrayList<SaleTeamScreen> data,int page,boolean dynamIc) {
+    public SaleCommPopupView(final Activity context, Handler handler, ArrayList<SaleTeamScreen> dataNew, int page, boolean dynamIc, int index) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.saleteam_screen_common, null);
         this.mContext = context;
         this.mHandler = handler;
         this.page = page;
-        this.data = data;
+        this.data = dataNew;
         this.dynamIc = dynamIc;
+        this.index = index;
         initView();
 
         this.setContentView(contentView);
@@ -63,12 +66,12 @@ public class SaleCommPopupView extends PopupWindow {
     public void initView() {
         listView = (ListView) contentView.findViewById(R.id.saleteam_screencommon_lv);
         //如果为销售阶段pop,则动态设置高度
-        if(dynamIc){
+        if (dynamIc) {
             params = listView.getLayoutParams();
             params.height = mContext.getResources().getDimensionPixelSize(R.dimen.sale_pop_height);
             listView.setLayoutParams(params);
         }
-        adapter = new AdapterSaleTeamScreenComm(mContext,data);
+        adapter = new AdapterSaleTeamScreenComm(mContext, data,index);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -81,12 +84,12 @@ public class SaleCommPopupView extends PopupWindow {
 
     /**
      * 重置勾选标签数据
-     * */
-    public void dataReque(int position){
-        for(int i = 0;i<data.size();i++){
-            if(position == i){
+     */
+    public void dataReque(int position) {
+        for (int i = 0; i < data.size(); i++) {
+            if (position == i) {
                 data.get(i).setIndex(true);
-            }else{
+            } else {
                 data.get(i).setIndex(false);
             }
         }
@@ -95,25 +98,28 @@ public class SaleCommPopupView extends PopupWindow {
 
     /**
      * 业务区分
-     * */
-    public void reuseFirm(int position){
+     */
+    public void reuseFirm(int position) {
         msg = new Message();
         bundle = new Bundle();
 
-        switch (page){
+        switch (page) {
             //【机会】销售阶段筛选
             case SaleOpportunitiesManagerActivity.SCREEN_STAGE:
-                bundle.putString("data",data.get(position).getId());
+                bundle.putString("data", data.get(position).getId());
+                bundle.putInt("index", position);
                 resultTag = TeamSaleFragment.SALETEAM_SCREEN_TAG2;
                 break;
             //【机会】排序筛选
             case SaleOpportunitiesManagerActivity.SCREEN_SORT:
-                bundle.putString("data",position+1+"");
+                bundle.putString("data", position + 1 + "");
+                bundle.putInt("index", position);
                 resultTag = TeamSaleFragment.SALETEAM_SCREEN_TAG3;
                 break;
             //【客户】时间筛选
             case CustomerManagerActivity.CUSTOMER_TIME:
-                bundle.putInt("data",position);
+                bundle.putInt("data", position);
+//                bundle.putInt("index", position);
                 resultTag = CustomerManagerActivity.CUSTOMER_TIME;
                 break;
 

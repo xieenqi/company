@@ -87,7 +87,16 @@ public class WorkReportAddActivity extends BaseActivity {
     public static final int TYPE_EDIT = 2; //报告编辑
     public static final int TYPE_CREATE_FROM_COPY = 3; //报告复制
     public static final int TYPE_PROJECT = 4; //项目创建报告
+
+    /**
+     * 动态数据UI更新
+     * */
     public static final int UPDATE_SUCCESS = 0x01;
+
+    /**
+     * 周报数据回调
+     * */
+    public static final int WEEK_RESULT    = 0x02;
 
     @ViewById
     SwitchView crm_switch;
@@ -165,16 +174,28 @@ public class WorkReportAddActivity extends BaseActivity {
 
     private Handler mHandler = new Handler() {
         public void handleMessage(final Message msg) {
-            if (msg.what == UPDATE_SUCCESS) {
-                if (null == dynList || dynList.size() == 0) {
-                    no_dysndata_workreports.setVisibility(View.VISIBLE);
-                    gv_workreports.setVisibility(View.GONE);
-                } else {
-                    no_dysndata_workreports.setVisibility(View.GONE);
-                    gv_workreports.setVisibility(View.VISIBLE);
-                    workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
-                    gv_workreports.setAdapter(workGridViewAdapter);
-                }
+
+            switch (msg.what){
+
+                //刷新动态数据UI
+                case UPDATE_SUCCESS:
+                    if (null == dynList || dynList.size() == 0) {
+                        no_dysndata_workreports.setVisibility(View.VISIBLE);
+                        gv_workreports.setVisibility(View.GONE);
+                    } else {
+                        no_dysndata_workreports.setVisibility(View.GONE);
+                        gv_workreports.setVisibility(View.VISIBLE);
+                        workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
+                        gv_workreports.setAdapter(workGridViewAdapter);
+                    }
+                    break;
+
+                //周报数据回调
+                case WEEK_RESULT:
+                    beginAt = weeksDialog.GetBeginandEndAt()[0];
+                    endAt = weeksDialog.GetBeginandEndAt()[1];
+                    openDynamic(beginAt/1000+"",endAt/1000+"");
+                    break;
             }
         }
     };
@@ -198,7 +219,7 @@ public class WorkReportAddActivity extends BaseActivity {
         rb3 = (RadioButton) findViewById(R.id.rb3);
 
         if (weeksDialog == null) {
-            weeksDialog = new WeeksDialog(tv_time);
+            weeksDialog = new WeeksDialog(tv_time,mHandler);
         }
 
         /**动态统计开关*/
@@ -248,10 +269,10 @@ public class WorkReportAddActivity extends BaseActivity {
                 default:
                     break;
             }
+
             NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer
                     .user ? mWorkReport.reviewer.user : null;
             tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
-
             tv_toUser.setText(getMenberText());
             edt_content.setText(mWorkReport.content);
 
@@ -361,18 +382,41 @@ public class WorkReportAddActivity extends BaseActivity {
      * @param b
      */
     private void crmSwitch(final boolean b) {
+        long beginTime,endTime;
         if (b) {
             switch (mSelectType) {
+                //本日
                 case WorkReport.DAY:
-                    openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
+                    if(tv_time.getText().toString().contains("补签")){
+                        beginTime = beginAt/1000;
+                        endTime   = endAt/1000;
+                    }else{
+                        beginTime = DateTool.getCurrentMoringMillis()/1000;
+                        endTime = DateTool.getNextMoringMillis()/1000;
+                    }
+                    openDynamic(beginTime + "", endTime + "");
                     break;
-
+                //本周
                 case WorkReport.WEEK:
-                    openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
+                    if(tv_time.getText().toString().contains("补签")){
+                        beginTime = weeksDialog.GetBeginandEndAt()[0]/1000;
+                        endTime = weeksDialog.GetBeginandEndAt()[1]/1000;
+                    }else{
+                        beginTime = DateTool.getBeginAt_ofWeek()/1000;
+                        endTime = DateTool.getEndAt_ofWeek()/1000;
+                    }
+                    openDynamic(beginTime + "", endTime + "");
                     break;
-
+                //本月
                 case WorkReport.MONTH:
-                    openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
+                    if(tv_time.getText().toString().contains("补签")){
+                        beginTime = beginAt/1000;
+                        endTime   = endAt/1000;
+                    }else{
+                        beginTime = DateTool.getBeginAt_ofWeek()/1000;
+                        endTime = DateTool.getEndAt_ofWeek()/1000;
+                    }
+                    openDynamic(beginTime + "", endTime + "");
                     break;
 
                 default:
@@ -412,8 +456,6 @@ public class WorkReportAddActivity extends BaseActivity {
         isDelayed = false;
         openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
         tv_crm.setText("本周工作动态统计");
-/*      beginAt = DateTool.getBeginAt_ofWeek();
-        endAt = DateTool.getEndAt_ofWeek();*/
         beginAt = weeksDialog.getNowBeginandEndAt()[0];
         endAt = weeksDialog.getNowBeginandEndAt()[1];
         tv_time.setText(weeksDialog.GetDefautlText());
@@ -452,8 +494,6 @@ public class WorkReportAddActivity extends BaseActivity {
         for (Attachment attachment : lstData_Attachment) {
             pickPhots.add(new SelectPicPopupWindow.ImageInfo(attachment.url));
         }
-        LogUtil.dee("pickPhots结构:" + MainApp.gson.toJson(pickPhots));
-
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
@@ -518,6 +558,7 @@ public class WorkReportAddActivity extends BaseActivity {
             case R.id.layout_toUser:
                 SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
                 break;
+
             case R.id.layout_del:
                 users.clear();
                 depts.clear();
@@ -552,7 +593,6 @@ public class WorkReportAddActivity extends BaseActivity {
                     @Override
                     public void success(final ArrayList<WorkReportDyn> dyn, final Response response) {
                         HttpErrorCheck.checkResponse(response);
-                        LogUtil.dll("动态工作返回：" + MainApp.gson.toJson(dyn));
                         dynList = dyn;
                         mHandler.sendEmptyMessage(UPDATE_SUCCESS);
                     }
@@ -684,7 +724,7 @@ public class WorkReportAddActivity extends BaseActivity {
     }
 
     /**
-     * wheelDialog弹出选择框
+     * wheelDialog弹出选择框(日报 月报)
      */
     public void showSingleRowAlert(String[] arrlist, String title) {
         new AlertDialog.Builder(this)
@@ -706,8 +746,10 @@ public class WorkReportAddActivity extends BaseActivity {
                                 endAt = DateTool.getSomeMonthEndAt(retroIndex);
                                 break;
                         }
+
                         tv_time.setText(currentValue + "(补签)");
                         retroIndex = 0;
+                        openDynamic(beginAt/1000+"",endAt/1000+"");
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -724,7 +766,6 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     void selectDate() {
         switch (mSelectType) {
-
             /*日报补签*/
             case WorkReport.DAY:
                 showSingleRowAlert(pastSevenDay, "日报补签");
@@ -764,6 +805,7 @@ public class WorkReportAddActivity extends BaseActivity {
             beginAt = weeksDialog.GetBeginandEndAt()[0];
             endAt = weeksDialog.GetBeginandEndAt()[1];
         }
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("content", content);
         map.put("type", mSelectType);
@@ -829,7 +871,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
             }
         } catch (Exception ex) {
-            LogUtil.dee("异常抛出");
             Global.ProcException(ex);
         }
     }

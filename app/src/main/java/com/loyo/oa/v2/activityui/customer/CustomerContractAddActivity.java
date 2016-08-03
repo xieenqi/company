@@ -209,7 +209,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             public void success(ArrayList<ContactLeftExtras> ContactLeftExtras, Response response) {
                 HttpErrorCheck.checkResponse("联系人动态字段", response);
                 mContactLeftExtras = ContactLeftExtras;
-                LogUtil.dee("获取的联系人动态字段:" + MainApp.gson.toJson(mContactLeftExtras));
                 bindData();
             }
 

@@ -86,8 +86,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         layout_login.setOnClickListener(this);
 
         /*Debug模式下*/
-        if (Config_project.is_developer_mode) {
-            edt_username.setText("18235169100");
+        if (!Config_project.isRelease) {
+            edt_username.setText("17412345678");
             edt_password.setText("123456");
 //            layout_check_debug.setVisibility(View.VISIBLE);
             if (Config_project.isRelease) {
@@ -285,6 +285,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
                         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
                         app.startActivity(LoginActivity.this, MainHomeActivity.class, MainApp.ENTER_TYPE_RIGHT, true, new Bundle());
+                        SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
                     }
                 });
             }

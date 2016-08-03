@@ -15,32 +15,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.customer.bean.Locate;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
-import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.Members;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CustomerInfoExtraData;
+import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.CustomerInfoExtraData;
-import com.loyo.oa.v2.customview.SelectCityView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -61,7 +62,7 @@ import retrofit.client.Response;
  * 【客户信息】 页面
  */
 @EActivity(R.layout.activity_customer_info)
-public class CustomerInfoActivity extends BaseFragmentActivity implements LocationUtilGD.AfterLocation {
+public class CustomerInfoActivity extends BaseFragmentActivity {
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
@@ -109,6 +110,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     ImageView img_refresh_address;
     @ViewById
     ImageView img_del_join_users;
+    @ViewById
+    EditText edt_address_details;
 
     @Extra("Customer")
     Customer mCustomer;
@@ -124,8 +127,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     boolean isRoot;
 
     private boolean isMem = false;
-    private double lat, lng;
     private String addres;
+    private Intent mIntent;
+    private Bundle mBundle;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
     private Locate mLocate = new Locate();
     private User owner = new User();
@@ -136,8 +140,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private Animation animation;
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
-
     private ArrayList<CustomerExtraData> mCustomerExtraDatas;
+    private PositionResultItem positionResultItem;
+
+    private double laPosition;//当前位置的经纬度
+    private double loPosition;
 
     @AfterViews
     void initUI() {
@@ -275,8 +282,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             members = mCustomer.members;
         }
 
-        if (null != mCustomer.loc) {
-            mLocate = mCustomer.loc;
+        if (null != mCustomer.position) {
+            mLocate = mCustomer.position;
         }
 
         if (null != mCustomer.owner) {
@@ -292,18 +299,18 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
 
         try {
-            if (null != mCustomer.loc && mCustomer.loc.loc.length > 1) {
-                lat = mCustomer.loc.loc[1];
-                lng = mCustomer.loc.loc[0];
-                addres = mCustomer.loc.addr;
+            if (null != mCustomer.position && mCustomer.position.loc.length > 1) {
+                laPosition = mCustomer.position.loc[1];
+                loPosition = mCustomer.position.loc[0];
+                addres = mCustomer.position.addr;
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
         tv_customer_name.setText(mCustomer.name);
 
-        if (mCustomer.loc.addr != "") {
-            tv_address.setText(mCustomer.loc.addr);
+        if (null != mCustomer && null != mCustomer.position && !TextUtils.isEmpty(mCustomer.position.addr)) {
+            tv_address.setText(mCustomer.position.addr);
         } else {
             Intent intent = new Intent();
             Bundle bundle = intent.getExtras();
@@ -314,9 +321,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             }
         }
 
+        if (!TextUtils.isEmpty(mCustomer.loc.addr)) {
+            edt_address_details.setText(mCustomer.loc.addr);
+        }
+
         try {
             tv_customer_creator.setText(mCustomer.creator.getName());
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             tv_customer_creator.setText("无");
             e.printStackTrace();
         }
@@ -363,11 +374,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_responser.setEnabled(false);
         layout_customer_join_users.setEnabled(false);
         img_refresh_address.setEnabled(false);
-        //layout_customer_label.setEnabled(false);
 
         container.setClickable(false);
         container.setEnabled(false);
-        //tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
@@ -443,12 +452,17 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             /*刷新地理位置*/
             case R.id.img_refresh_address:
-                new LocationUtilGD(this, this);
-                img_refresh_address.startAnimation(animation);
+                mBundle = new Bundle();
+                mBundle.putInt("page", MapModifyView.CUSTOMER_DETAILS_PAGE);
+                if (null != mCustomer.position && mCustomer.position.loc.length > 0) {
+                    mBundle.putDoubleArray("loc", mCustomer.position.loc);
+                    mBundle.putString("address",mCustomer.position.addr);
+                }
+                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
             /*路径规划*/
             case R.id.img_go_where:
-                Utils.goWhere(this, lat, lng, addres);
+                Utils.goWhere(this, laPosition, loPosition, addres);
                 break;
             /*清除参与人*/
             case R.id.img_del_join_users:
@@ -478,9 +492,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 更新客戶
      */
     private void updateCustomer() {
+        Locate adrDetailsData = new Locate();
         String customerName = tv_customer_name.getText().toString().trim();
         String customerAddress = tv_address.getText().toString().trim();
         String summary = edt_customer_memo.getText().toString().trim();
+        String addressDetails = edt_address_details.getText().toString().trim();
 
         if (TextUtils.isEmpty(customerName)) {
             Toast.makeText(this, "客户姓名不能为空", Toast.LENGTH_SHORT).show();
@@ -489,6 +505,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         if (TextUtils.isEmpty(customerAddress)) {
             Toast.makeText(this, "客户地址不能为空", Toast.LENGTH_SHORT).show();
             return;
+        }
+        if (!TextUtils.isEmpty(addressDetails)) {
+            adrDetailsData.addr = addressDetails;
         }
 
         showLoading("");
@@ -499,7 +518,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("owner", owner);
         map.put("members", members);
         map.put("tags", mTagItems);
-        map.put("loc", mLocate);
+        map.put("loc", adrDetailsData);
+        map.put("position", mLocate);
         map.put("extDatas", mCustomer.extDatas);
         map.put("regional", regional);
 
@@ -543,11 +563,27 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK) {
+        if (null == data) {
             return;
         }
 
         switch (requestCode) {
+
+            /**
+             * 地图微调，数据回调
+             * */
+            case MapModifyView.SERACH_MAP:
+
+                positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+                if (null != positionResultItem) {
+                    laPosition = positionResultItem.laPosition;
+                    loPosition = positionResultItem.loPosition;
+                    tv_address.setText(positionResultItem.address);
+                    mLocate.addr = positionResultItem.address;
+                    mLocate.setLoc(new double[]{loPosition, laPosition});
+                }
+
+                break;
 
             /**
              * 负责人回调
@@ -643,23 +679,4 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         return null == sb ? "" : sb.toString();
     }
 
-    @Override
-    public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
-
-        img_refresh_address.clearAnimation();
-        animation.reset();
-        lat = latitude;
-        lng = longitude;
-        mLocate.addr = address;
-        mLocate.setLoc(new double[]{longitude, latitude});
-        tv_address.setText(address);
-        LocationUtilGD.sotpLocation();
-    }
-
-    @Override
-    public void OnLocationGDFailed() {
-        img_refresh_address.clearAnimation();
-        animation.reset();
-        LocationUtilGD.sotpLocation();
-    }
 }

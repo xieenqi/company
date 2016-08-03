@@ -8,8 +8,6 @@ import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 
-import org.joda.time.DateTime;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -70,31 +68,31 @@ public class DateTool {
 
     /**
      * 【我的考勤】获取年份 月份
-     * */
-    public static ArrayList<DataSelect> getYearAllofMonth(int startYear,int endYear){
+     */
+    public static ArrayList<DataSelect> getYearAllofMonth(int startYear, int endYear) {
         ArrayList<DataSelect> arrayList = new ArrayList<>();
-        SimpleDateFormat yearSf    = new SimpleDateFormat("yyyy");
+        SimpleDateFormat yearSf = new SimpleDateFormat("yyyy");
         SimpleDateFormat monthSf = new SimpleDateFormat("MM");
         DataSelect dataSelect = null;
-        long nowTimelongs = Long.parseLong(getDataTwo(getNowTime(DATE_FORMATE_SPLITE_BY_POINT),DATE_FORMATE_SPLITE_BY_POINT));
+        long nowTimelongs = Long.parseLong(getDataTwo(getNowTime(DATE_FORMATE_SPLITE_BY_POINT), DATE_FORMATE_SPLITE_BY_POINT));
 
-        Calendar calendar    = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         Calendar calendarEnd = Calendar.getInstance();
         calendar.set(Calendar.YEAR, startYear);
         calendar.set(Calendar.MONTH, 0);
         calendarEnd.set(Calendar.YEAR, endYear);
         calendarEnd.set(Calendar.MONTH, (Integer.parseInt(monthSf.format(nowTimelongs)) - 1));
 
-        while(calendar.getTime().getTime() <= calendarEnd.getTime().getTime()){
+        while (calendar.getTime().getTime() <= calendarEnd.getTime().getTime()) {
             dataSelect = new DataSelect();
-            dataSelect.top  = monthSf.format(calendar.getTime());
-            if(yearSf.format(calendar.getTime()).contains(DateTool.getNowTime("yyyy"))){
-                dataSelect.bottom  = "今年";
-            }else{
-                dataSelect.bottom  = yearSf.format(calendar.getTime());
+            dataSelect.top = monthSf.format(calendar.getTime());
+            if (yearSf.format(calendar.getTime()).contains(DateTool.getNowTime("yyyy"))) {
+                dataSelect.bottom = "今年";
+            } else {
+                dataSelect.bottom = yearSf.format(calendar.getTime());
             }
-            dataSelect.yearMonDay = yearSf.format(calendar.getTime())+"年"+monthSf.format(calendar.getTime())+"月";
-            dataSelect.mapOftime = String.valueOf(calendar.getTime().getTime()).substring(0,10);
+            dataSelect.yearMonDay = yearSf.format(calendar.getTime()) + "年" + monthSf.format(calendar.getTime()) + "月";
+            dataSelect.mapOftime = String.valueOf(calendar.getTime().getTime()).substring(0, 10);
             arrayList.add(dataSelect);
             calendar.add(Calendar.MONTH, 1);
         }
@@ -106,16 +104,16 @@ public class DateTool {
     /**
      * 【团队考勤 我的拜访 团队拜访】获取年月日
      * 月份0~11，计算时要减1位
-     * */
-    public static ArrayList<DataSelect> getYearAllofDay(int startYear,int endYear){
+     */
+    public static ArrayList<DataSelect> getYearAllofDay(int startYear, int endYear) {
 
         SimpleDateFormat yearSf = new SimpleDateFormat("yyyy");
         SimpleDateFormat monthSf = new SimpleDateFormat("MM");
-        SimpleDateFormat daySf    = new SimpleDateFormat("dd");
+        SimpleDateFormat daySf = new SimpleDateFormat("dd");
 
         ArrayList<DataSelect> arrayList = new ArrayList();
         DataSelect dataSelect = null;
-        long nowTimelongs = Long.parseLong(getDataTwo(getNowTime(DATE_FORMATE_SPLITE_BY_POINT),DATE_FORMATE_SPLITE_BY_POINT));
+        long nowTimelongs = Long.parseLong(getDataTwo(getNowTime(DATE_FORMATE_SPLITE_BY_POINT), DATE_FORMATE_SPLITE_BY_POINT));
 
         Calendar calendar = Calendar.getInstance();
         Calendar calendarEnd = Calendar.getInstance();
@@ -127,14 +125,14 @@ public class DateTool {
         calendarEnd.set(Calendar.MONTH, (Integer.parseInt(monthSf.format(nowTimelongs)) - 1));
         calendarEnd.set(Calendar.DAY_OF_MONTH, Integer.parseInt(daySf.format(nowTimelongs)));
 
-        while(calendar.getTime().getTime() <= calendarEnd.getTime().getTime()){
+        while (calendar.getTime().getTime() <= calendarEnd.getTime().getTime()) {
             dataSelect = new DataSelect();
-            dataSelect.top  = daySf.format(calendar.getTime());
-            dataSelect.bottom  = monthSf.format(calendar.getTime())+"月";
-            dataSelect.yearMonDay = yearSf.format(calendar.getTime())+"年"+monthSf.format(calendar.getTime())
-                     +"月"+daySf.format(calendar.getTime())
-                     +" "+getWeekStr(calendar.getTime().getTime());
-            dataSelect.mapOftime = String.valueOf(calendar.getTime().getTime()).substring(0,10);
+            dataSelect.top = daySf.format(calendar.getTime());
+            dataSelect.bottom = monthSf.format(calendar.getTime()) + "月";
+            dataSelect.yearMonDay = yearSf.format(calendar.getTime()) + "年" + monthSf.format(calendar.getTime())
+                    + "月" + daySf.format(calendar.getTime())
+                    + "日 " + getWeekStr(calendar.getTime().getTime());
+            dataSelect.mapOftime = String.valueOf(calendar.getTime().getTime()).substring(0, 10);
 
             arrayList.add(dataSelect);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -172,7 +170,6 @@ public class DateTool {
 
         return strDate;
     }
-
 
 
     public static String getMMDD(long time) {
@@ -214,9 +211,24 @@ public class DateTool {
         return strTime;
     }
 
+    /**
+     * 是否过来我们设置的天数
+     *
+     * @param date
+     * @param dateNUmber
+     * @return
+     */
+    public static boolean getDate(long date, int dateNUmber) {
+        SimpleDateFormat format = null;
+        String strTime = "";
+        // 今天午夜00:00:00的毫秒数-日期毫秒数
+        long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date);
+        LogUtil.d("检查过了多少时间>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ：" + getDiffTime(date));
+        return time < dateNUmber * DAY_MILLIS ? false : true;
+    }
 
     /**
-     * 获取当天凌晨（即前一天24:00:00）的毫秒数
+     * 获取当天 开始时间
      *
      * @return
      */
@@ -232,7 +244,7 @@ public class DateTool {
     }
 
     /**
-     * 获取当天24:00:00的毫秒数
+     * 获取当天 结束时间
      *
      * @return
      */
@@ -247,6 +259,29 @@ public class DateTool {
         return millis;
     }
 
+    /**
+     * 获取过去某天 开始时间
+     */
+    public static long getSomeDayBeginAt(int index) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(calendar.DAY_OF_MONTH, -(index + 1));//防止下标为0
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime().getTime();
+    }
+
+    /**
+     * 获取过去某天 结束时间
+     */
+    public static long getSomeDayEndAt(int index) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(calendar.DAY_OF_MONTH, -(index + 1));//防止下标为0
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        return calendar.getTime().getTime();
+    }
 
 
     /**
@@ -307,8 +342,8 @@ public class DateTool {
 
     /**
      * 获取过去某月 开始时间
-     * */
-    public static long getSomeMonthBeginAt(int index){
+     */
+    public static long getSomeMonthBeginAt(int index) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(calendar.MONTH, -(index + 1));//防止下标为0
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -320,8 +355,8 @@ public class DateTool {
 
     /**
      * 获取过去某月 结束时间
-     * */
-    public static long getSomeMonthEndAt(int index){
+     */
+    public static long getSomeMonthEndAt(int index) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(calendar.MONTH, -(index + 1));//防止下标为0
         calendar.set(Calendar.HOUR_OF_DAY, 23);
@@ -331,33 +366,9 @@ public class DateTool {
     }
 
     /**
-     * 获取过去某天 开始时间
-     * */
-    public static long getSomeDayBeginAt(int index){
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(calendar.DAY_OF_MONTH, -(index + 1));//防止下标为0
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        return calendar.getTime().getTime();
-    }
-
-    /**
-     * 获取过去某天 结束时间
-     * */
-    public static long getSomeDayEndAt(int index){
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(calendar.DAY_OF_MONTH,-(index + 1));//防止下标为0
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        return calendar.getTime().getTime();
-    }
-
-    /**
      * 获取过去某星期 开始时间
      */
-    public static long getSomeWeekBeginAt(int year,int month,int day) {
+    public static long getSomeWeekBeginAt(int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -369,9 +380,9 @@ public class DateTool {
     /**
      * 获取过去某星期 结束时间
      */
-    public static long getSomeWeekEndAt(int year,int month,int day) {
+    public static long getSomeWeekEndAt(int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year,month,day);
+        calendar.set(year, month, day);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);

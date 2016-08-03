@@ -11,18 +11,21 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.commonview.MapModifyView;
+import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -36,7 +39,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.CountTextWatcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +46,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -52,9 +55,10 @@ import retrofit.client.Response;
  */
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_customer_name;
+    private TextView tv_customer_name,tv_reset_address;
     private TextView tv_address;
     private TextView wordcount;
+    private TextView tv_customer_address;
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right;
     private GridView gridView_photo;
@@ -63,12 +67,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private String mAddress;
     private String customerId = "";
     private String customerName;
+    private String customerAddress;
     private SignInGridViewAdapter signInGridViewAdapter;
-    private ImageView img_refresh_address;
-    private double mLat, mLng;
+    private double laPosition, loPosition;
     boolean mLocationFlag = false;  //是否定位完成的标记
     private Customer mCustomer;
     private Animation animation;
+    private boolean isPicture = false;
+    private Intent mIntent;
+    private Bundle mBundle;
+    private PositionResultItem positionResultItem;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -80,13 +88,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             mCustomer = (Customer) intent.getSerializableExtra("data");
             customerId = mCustomer.getId();
             customerName = mCustomer.name;
+            customerAddress = mCustomer.loc.addr;
         }
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
+        getIsPhoto();
         initUI();
     }
 
     void initUI() {
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
+        tv_customer_address = (TextView) findViewById(R.id.tv_customer_address);
 
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
@@ -96,9 +107,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         img_title_right.setOnClickListener(this);
         img_title_right.setOnTouchListener(Global.GetTouch());
 
-        img_refresh_address = (ImageView) findViewById(R.id.img_refresh_address);
-        img_refresh_address.setOnTouchListener(Global.GetTouch());
-        img_refresh_address.setOnClickListener(this);
+        tv_reset_address = (TextView) findViewById(R.id.tv_reset_address);
+        tv_reset_address.setOnTouchListener(Global.GetTouch());
+        tv_reset_address.setOnClickListener(this);
 
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         wordcount = (TextView) findViewById(R.id.wordcount);
@@ -109,40 +120,58 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             layout_customer_name.setOnTouchListener(Global.GetTouch());
             layout_customer_name.setOnClickListener(this);
         } else {
-
             findViewById(R.id.divider_customer_name).setVisibility(View.GONE);
             layout_customer_name.setVisibility(View.GONE);
             tv_customer_name.setText(customerName);
         }
 
         tv_address = (TextView) findViewById(R.id.tv_address);
-
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
         init_gridView_photo();
-
         startLocation();
     }
 
+    /**
+     * 获取签到是否需要传递图片
+     */
+    private void getIsPhoto() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("key", "need_pictures_switcher");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSetInfo(map, new Callback<SigninPictures>() {
+            @Override
+            public void success(SigninPictures result, Response response) {
+                HttpErrorCheck.checkResponse("签到时必须操作？？？", response);
+                if (result.value.equals("1")) {
+                    isPicture = true;
+                } else {
+                    isPicture = false;
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
     void startLocation() {
-        img_refresh_address.startAnimation(animation);
         mLocationFlag = false;
         tv_address.setText("获取当前位置中...");
 
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
-                img_refresh_address.clearAnimation();
                 animation.reset();
-                mLat = latitude;
-                mLng = longitude;
-                mAddress = address;
+                laPosition = latitude;
+                loPosition = longitude;
+                app.address = address;
                 tv_address.setText(address);
                 LocationUtilGD.sotpLocation();
             }
 
             @Override
             public void OnLocationGDFailed() {
-                img_refresh_address.clearAnimation();
                 animation.reset();
                 boolean gpsOpen = Utils.isGPSOPen(mContext);
                 if (!gpsOpen) {
@@ -176,20 +205,18 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
             /*选择客户*/
             case R.id.layout_customer_name:
-
                 Bundle b = new Bundle();
-      /*          b.putInt("queryType", 1);
-                b.putInt("from",SIGNIN_ADD);*/
                 app.startActivityForResult(this, SigninSelectCustomer.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
-
                 break;
 
             /*地址更新*/
-            case R.id.img_refresh_address:
-                startLocation();
+            case R.id.tv_reset_address:
+                mBundle = new Bundle();
+                mBundle.putInt("page",MapModifyView.SIGNIN_PAGE);
+                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
                 break;
-            default:
 
+            default:
                 break;
         }
     }
@@ -198,21 +225,28 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 新增签到
      */
     private void addSignIn() {
+
 //        if (TextUtils.isEmpty(customerId)) {
 //            Toast("请选择客户");
 //            return;
 //        }
 
+        mAddress = tv_address.getText().toString();
         if (TextUtils.isEmpty(mAddress)) {
             Global.ToastLong("无效地址!请刷新地址后重试");
             return;
         }
-
+        if (isPicture && !(lstData_Attachment.size() > 0)) {
+            Global.ToastLong("需要上传照片，请拍照");
+            return;
+        }
         HashMap<String, Object> map = new HashMap<>();
-        map.put("gpsInfo", mLng + "," + mLat);
+        map.put("gpsInfo", loPosition + "," + laPosition);
         map.put("address", mAddress.trim());
+        map.put("position", customerAddress);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
+
 
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
@@ -234,7 +268,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     }
                 } else {
                     Toast("提交失败" + response.getStatus());
-//                    legWork.creator = MainApp.user.toShortUser();
                 }
             }
 
@@ -268,15 +301,30 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (data == null || resultCode != RESULT_OK) {
+
+        if (null == data) {
             return;
         }
 
-        /**
-         * 添加附件流程：拍照回调－流生成file－上传服务器－从服务器下载－展示在View中
-         * 费解
-         * */
+        /*地图微调，数据回调*/
+/*        if (resultCode == MapModifyView.SERACH_MAP) {
+            positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+            laPosition = positionResultItem.laPosition;
+            loPosition = positionResultItem.loPosition;
+            tv_address.setText(positionResultItem.address);
+        }*/
+
         switch (requestCode) {
+            //地图微调，数据回到
+            case MapModifyView.SERACH_MAP:
+                positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+                if(null != positionResultItem){
+                    laPosition = positionResultItem.laPosition;
+                    loPosition = positionResultItem.loPosition;
+                    tv_address.setText(positionResultItem.address);
+                }
+                break;
+
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
@@ -338,11 +386,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 if (null != customer) {
                     customerId = customer.getId();
                     customerName = customer.name;
+                    customerAddress = customer.loc.addr;
+                    tv_customer_address.setVisibility(View.VISIBLE);
                 }
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                tv_customer_address.setText(customerAddress);
                 break;
             default:
-
                 break;
         }
     }

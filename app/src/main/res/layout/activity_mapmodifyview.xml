@@ -13,8 +13,8 @@
         android:background="@color/mapmod_gray"
         >
         <TextView
-            android:layout_marginBottom="@dimen/dimen_10"
-            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginBottom="@dimen/dimen_7"
+            android:layout_marginTop="@dimen/dimen_7"
             android:layout_marginRight="@dimen/margin_other_view"
             android:layout_marginLeft="@dimen/margin_other_view"
             android:layout_width="match_parent"
@@ -43,24 +43,20 @@
             android:background="@drawable/icon_amapindex"
             />
 
-        <LinearLayout
-            android:id="@+id/mapview_position_this"
-            android:layout_marginBottom="@dimen/dimen_20"
-            android:layout_marginLeft="@dimen/dimen_20"
-            android:layout_alignParentBottom="true"
-            android:layout_width="@dimen/dimen_35"
-            android:layout_height="@dimen/dimen_35"
-            android:background="@color/ivory"
-            android:gravity="center"
-            >
-            <ImageView
-                android:layout_width="@dimen/dimen_20"
-                android:layout_height="@dimen/dimen_20"
-                android:background="@drawable/icon_position_this"
-                />
-            </LinearLayout>
-
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/mapview_showmessage"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginBottom="@dimen/dimen_5"
+        android:layout_marginLeft="@dimen/margin_other_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="可选范围300迷以内的地点"
+        android:textColor="@color/text99"
+        />
+    <include layout="@layout/include_solid_line"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mapview_recyclerview"

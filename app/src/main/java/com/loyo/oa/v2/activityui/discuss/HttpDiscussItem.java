@@ -13,7 +13,7 @@ public class HttpDiscussItem {
     public int bizType;//1.工作报告 2.任务 5.项目
     public String attachmentUUId;
     public Creator creator;
-    //    public String atUsers;
+    //public String atUsers;
     public boolean viewed;
     public String createdAt;
     public String updatedAt;

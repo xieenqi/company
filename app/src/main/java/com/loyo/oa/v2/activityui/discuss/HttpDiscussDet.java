@@ -18,5 +18,4 @@ public class HttpDiscussDet implements Serializable{
     public long updatedAt;
     public ArrayList<String> mentionedUserIds;
     public HttpCrecter creator;
-
 }

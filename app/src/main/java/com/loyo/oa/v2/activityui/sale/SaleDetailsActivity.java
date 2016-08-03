@@ -384,7 +384,6 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             case ExtraAndResult.MSG_WHAT_DIALOG:
                 resultAction = data.getIntExtra(ExtraAndResult.RESULT_ID, 0);
                 if (resultAction == ActionCode.SALE_DETAILS_EDIT) {
-                    LogUtil.dee("编辑成功回调");
                     getData();
                 }
                 break;

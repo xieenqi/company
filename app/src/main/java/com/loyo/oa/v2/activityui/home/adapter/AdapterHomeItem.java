@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -44,17 +45,6 @@ public class AdapterHomeItem extends BaseAdapter {
             e.printStackTrace();
         }
     }
-
-//    public AdapterHomeItem(Context context, ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
-//        this.mContext = context;
-//        this.items = items;
-//        this.mItemNumbers = mItemNumbers;
-//        try {
-//            inflter = LayoutInflater.from(context);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     /**
      * 设置item数据
@@ -124,17 +114,27 @@ public class AdapterHomeItem extends BaseAdapter {
             for (HttpMainRedDot num : mItemNumbers) {
                 String extra = "";
                 if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                    extra = num.bizNum + "个待点评(含抄送)";
+                    if (num.bizNum > 0) {
+                        extra = num.bizNum + "个待点评(含抄送)";
+                    }
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                    extra = num.bizNum + "个未完成";
+                    if (num.bizNum > 0) {
+                        extra = num.bizNum + "个未完成";
+                    }
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                    extra = num.bizNum + "个待我审批";
+                    if (num.bizNum > 0) {
+                        extra = num.bizNum + "个待我审批";
+                    } else {
+                        extra = " ";
+                    }
                     wfinstanceCount = num.bizNum;
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
-                    extra = num.bizNum + "个进行中";
+                    if (num.bizNum > 0) {
+                        extra = num.bizNum + "个进行中";
+                    }
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 }
 //            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
@@ -178,12 +178,12 @@ public class AdapterHomeItem extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (items.get(position).title.equals("通讯录")) {
-                    if (null != MainApp.lstDepartment) {
+                    if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
                         mIntent.setClass(activity, ContactsActivity.class);
                         activity.startActivity(mIntent);
                         activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     } else {
-                        Toast.makeText(activity, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "数据获取中请等待，或手动更新数据", Toast.LENGTH_SHORT).show();
                     }
                 } else if (items.get(position).title.equals("审批流程")) {
                     try {
@@ -202,7 +202,6 @@ public class AdapterHomeItem extends BaseAdapter {
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
-
                 }
             }
         });

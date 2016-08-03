@@ -70,7 +70,8 @@ public class AddMySaleActivity extends BaseActivity {
     private int estimatedTime = 0;
     private boolean isEdit;
     private StringBuffer loseReasonBuff;
-    private boolean isProduct = false, isType = false, isSource = false, isEstimatedAmount = false, isEstimatedTime = false;
+    private boolean isProduct = false, isType = false, isSource = false, isEstimatedAmount = false,
+            isEstimatedTime = false, isMemo = false;
 
 
     @Override
@@ -294,6 +295,11 @@ public class AddMySaleActivity extends BaseActivity {
                         isEstimatedTime = true;
                         tv_estimate.setHint("必填,请选择");
                     }
+
+                    if ("memo".equals(ele.fieldName) && ele.required) {
+                        isMemo = true;
+                        et_remake.setHint("必填,请输入");
+                    }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
                 getSaleStageData();
@@ -386,6 +392,9 @@ public class AddMySaleActivity extends BaseActivity {
             return;
         } else if (TextUtils.isEmpty(tv_source.getText().toString()) && isSource) {
             Toast("请选择机会来源");
+            return;
+        } else if (TextUtils.isEmpty(et_remake.getText().toString()) && isMemo) {
+            Toast("请输入备注内容");
             return;
         } else if (null != filedData) {
             for (ContactLeftExtras ele : filedData) {
@@ -480,7 +489,6 @@ public class AddMySaleActivity extends BaseActivity {
                 }
             });
         } else {
-            LogUtil.dee("编辑发送数据:" + MainApp.gson.toJson(map));
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                     create(ISale.class).updateSaleOpportunity(map, chanceId, new Callback<SaleOpportunityAdd>() {
                 @Override
