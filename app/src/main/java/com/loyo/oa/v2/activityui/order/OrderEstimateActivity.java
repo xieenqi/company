@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.order;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -62,7 +63,8 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
 
             //新建
             case R.id.ll_add:
-                onBackPressed();
+                Intent intent = new Intent(OrderEstimateActivity.this,OrderEstimateAddActivity.class);
+                startActivity(intent);
                 break;
 
 
