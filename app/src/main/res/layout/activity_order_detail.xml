@@ -23,6 +23,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10"
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:layout_marginTop="@dimen/dimen_10"
@@ -38,7 +39,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/dimen_10"
-                        android:text="bfdddgfb"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp16"/>
 
@@ -46,9 +46,7 @@
                         android:id="@+id/tv_status"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:background="@drawable/retange_blue"
                         android:gravity="center"
-                        android:text="未通过"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_sp12"
                         />
@@ -71,7 +69,7 @@
                         android:id="@+id/tv_customer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text99"
+                        android:textColor="@color/title_bg1"
                         android:textSize="@dimen/text_sp12"/>
 
                 </LinearLayout>
@@ -127,7 +125,7 @@
                     android:gravity="right|center_vertical"
                     android:hint=""
                     android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text99"
+                    android:textColorHint="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -166,7 +164,7 @@
                     android:gravity="right|center_vertical"
                     android:hint=""
                     android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text99"
+                    android:textColorHint="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -205,7 +203,7 @@
                     android:gravity="right|center_vertical"
                     android:hint=""
                     android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text99"
+                    android:textColorHint="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -232,7 +230,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
-                    android:text="附        件"
+                    android:text="附件"
                     android:textSize="15sp"/>
 
                 <TextView
@@ -256,7 +254,73 @@
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line15"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_other_view"
+                android:paddingRight="@dimen/margin_other_view"
+                >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_3"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="关联审批: "
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/title_bg1"
+                        android:textSize="@dimen/text_sp14"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_4"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="订单编号："
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp14"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line15"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -286,6 +350,7 @@
                         android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="fill_parent"
