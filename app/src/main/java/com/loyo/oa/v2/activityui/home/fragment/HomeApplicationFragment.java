@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
@@ -29,6 +30,7 @@ import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
+import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
@@ -65,6 +67,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -72,6 +75,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -166,6 +170,11 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 //写跟进
                 case BaseActivity.FOLLOW_ADD:
                     startActivityForResult(new Intent(getActivity(), SaleActivitiesAddActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    break;
+                //新建订单
+                case BaseActivity.ORDER_ADD:
+                    startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
             }
@@ -274,7 +283,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity", "0213", 0),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
-                new HomeItem(R.drawable.newmain_sale, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0215", 1),//新加订单
+                new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0215", 1),//新加订单
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signin.SignInManagerActivity_", "0206", 1),
                 new HomeItem(R.drawable.newmain_project, "项目管理", "com.loyo.oa.v2.activityui.project.ProjectManageActivity_", "0201", 2),
                 new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_", "0202", 2),
@@ -287,10 +296,12 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("申请审批", "0204", R.drawable.newmain_post_wif),
                 new MoreWindowItem("提交报告", "0203", R.drawable.newmain_post_report),
                 new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
-                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow),
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
+                new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
                 new MoreWindowItem("考勤打卡", "0000", R.drawable.newmain_post_att),
-                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign)));
+                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign),
+                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
+
 
     }
 
