@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
@@ -102,12 +103,12 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                mIntent = new Intent();
+                Intent mIntent = new Intent();
 //                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
 //                mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
-//                mIntent.setClass(getActivity(), SaleDetailsActivity.class);
-//                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
-//                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                mIntent.setClass(getActivity(), OrderDetailActivity.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
         adapter = new MyOrderAdapter(app);

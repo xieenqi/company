@@ -260,8 +260,8 @@ public class AMapService extends Service {
                 return;
             }
         }
+        uploadLocation(aMapLocation);
         if (Global.isConnected()) {
-            uploadLocation(aMapLocation);
         } else {
             LocateData data = buildLocateData(aMapLocation);
             ldbManager.addLocateData(data);
