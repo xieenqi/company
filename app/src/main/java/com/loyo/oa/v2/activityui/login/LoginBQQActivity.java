@@ -65,6 +65,7 @@ public class LoginBQQActivity extends BaseActivity {
                     MainApp.isQQLogin = true;
                     SharedUtil.put(mContext, FinalVariables.TOKEN, token[1]);
                     app.startActivity(LoginBQQActivity.this, MainHomeActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                    SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
                 } else {
                     view.loadUrl(url);
                 }
