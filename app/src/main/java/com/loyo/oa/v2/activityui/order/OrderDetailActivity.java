@@ -15,6 +15,8 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
+import java.util.Date;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -29,6 +31,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
             tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name, tv_creator_time;
+    private OrderDetail mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,13 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void success(OrderDetail orderdetail, Response response) {
                         HttpErrorCheck.checkResponse("订单详情", response);
+                        if (null == orderdetail) {
+                            Toast("没有获取到数据");
+                            onBackPressed();
+                            return;
+                        }
+                        mData = orderdetail;
+                        bindData();
                     }
 
                     @Override
@@ -89,4 +99,47 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                     }
                 });
     }
+
+    private void bindData() {
+        tv_title.setText(mData.title);
+        tv_customer.setText(mData.customerName);
+        tv_money.setText(mData.dealMoney + "");
+        tv_product.setText(mData.proName);
+        tv_responsible_name.setText(mData.directorName);
+        tv_creator_name.setText(mData.creatorName);
+        tv_plan.setText("回款计划（" + mData.planNum + "）");
+        tv_record.setText("回款记录（" + mData.recordNum + "）");
+        tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
+        tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
+        if (mData.status > 0) {
+            String statusText = "";
+            int statusBj = R.drawable.retange_blue;
+            switch (mData.status) {
+                case 1:
+                    statusText = "待审核";
+                    statusBj = R.drawable.retange_blue;
+                    break;
+                case 2:
+                    statusText = "未通过";
+                    statusBj = R.drawable.retange_blue;
+                    break;
+                case 3:
+                    statusText = "进行中";
+                    statusBj = R.drawable.retange_blue;
+                    break;
+                case 4:
+                    statusText = "已完成";
+                    statusBj = R.drawable.retange_gray;
+                    break;
+                case 5:
+                    statusText = "意外终止";
+                    statusBj = R.drawable.retange_gray;
+                    break;
+                default:
+            }
+            tv_status.setText(statusText);
+            tv_status.setBackgroundResource(statusBj);
+        }
+    }
+
 }
