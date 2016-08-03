@@ -194,7 +194,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //回款
             case R.id.ll_estimate:
-                Toast("回款");
+                Intent intent1 = new Intent(OrderAddActivity.this,OrderEstimateActivity.class);
+                startActivity(intent1);
                 break;
 
             //附件

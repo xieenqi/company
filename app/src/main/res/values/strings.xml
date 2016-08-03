@@ -48,4 +48,11 @@
     <string name="newmain_post_att">考勤打卡</string>
     <string name="newmain_post_sign">拜访签到</string>
 
+
+    <string name="estimate_page_string1">成交金额</string>
+    <string name="estimate_page_string2">开票总金额</string>
+    <string name="estimate_page_string3">未回款</string>
+    <string name="estimate_page_string4"></string>
+    <string name="estimate_page_string5"></string>
+
 </resources>
