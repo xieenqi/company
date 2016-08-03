@@ -52,7 +52,12 @@
     <string name="estimate_page_string1">成交金额</string>
     <string name="estimate_page_string2">开票总金额</string>
     <string name="estimate_page_string3">未回款</string>
-    <string name="estimate_page_string4"></string>
-    <string name="estimate_page_string5"></string>
+
+    <string name="estimate_page_string4">回款日期</string>
+    <string name="estimate_page_string5">回款金额</string>
+    <string name="estimate_page_string6">开票金额</string>
+    <string name="estimate_page_string7">收款人</string>
+    <string name="estimate_page_string8">付款方式</string>
+    <string name="estimate_page_string9">附件</string>
 
 </resources>
