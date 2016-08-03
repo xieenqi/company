@@ -15,6 +15,7 @@ import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -93,6 +94,20 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 onBackPressed();
                 break;
             case R.id.img_title_right:
+                ActionSheetDialog dialog = new ActionSheetDialog(OrderDetailActivity.this).builder();
+                dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int which) {
+
+                    }
+                });
+                dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int which) {
+
+                    }
+                });
+                dialog.show();
                 break;
         }
 
