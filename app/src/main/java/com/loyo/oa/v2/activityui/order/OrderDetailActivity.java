@@ -7,8 +7,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【订单详情】页面
@@ -51,6 +60,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_responsible_name = (TextView) findViewById(R.id.tv_responsible_name);
         tv_creator_name = (TextView) findViewById(R.id.tv_creator_name);
         tv_creator_time = (TextView) findViewById(R.id.tv_creator_time);
+        getData();
     }
 
     @Override
@@ -63,5 +73,20 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 break;
         }
 
+    }
+
+    private void getData() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                .getSaleDetails("57a0692d35d860eca276d964", new Callback<OrderDetail>() {
+                    @Override
+                    public void success(OrderDetail orderdetail, Response response) {
+                        HttpErrorCheck.checkResponse("订单详情", response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 }

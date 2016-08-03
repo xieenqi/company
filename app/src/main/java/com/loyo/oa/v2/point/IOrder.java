@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -14,5 +14,5 @@ public interface IOrder {
      * 获取 订单详情 order/57a0692d35d860eca276d964
      */
     @GET("/order/{id}")
-    void getSaleDetails(@Path("id") String id, Callback<SaleDetails> callback);
+    void getSaleDetails(@Path("id") String id, Callback<OrderDetail> callback);
 }
