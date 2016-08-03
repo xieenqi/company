@@ -38,6 +38,4 @@ public class AttenDancePopView extends Dialog{
     public void cancels(View.OnClickListener cusOnclick){
         findViewById(R.id.attendance_cancel).setOnClickListener(cusOnclick);
     }
-
-
 }

@@ -59,5 +59,6 @@
     <string name="estimate_page_string7">收款人</string>
     <string name="estimate_page_string8">付款方式</string>
     <string name="estimate_page_string9">附件</string>
+    <string name="estimate_page_string10">是否开票</string>
 
 </resources>
