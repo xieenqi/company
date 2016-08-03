@@ -3,6 +3,7 @@ package com.loyo.oa.v2.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
@@ -14,6 +15,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -21,10 +23,14 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 
+// Add by ethan on 2016-08-03
+import com.loyo.oa.v2.db.*;
+
 import org.androidannotations.annotations.EIntentService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -109,7 +115,17 @@ public class InitDataService extends IntentService {
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
             //写DB
-            DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
+            String jsonString = MainApp.gson.toJson(lstDepartment_current);
+            DBManager.Instance().putOrganization(jsonString);
+
+            Log.v("debug", jsonString);
+
+            /*
+             * 写入结构化数据到数据库
+             * Add by ethan
+             */
+            OrganizationManager.shareManager(getBaseContext()).saveOrgnizitionToDB(jsonString);
+
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
             LogUtil.d("更新 组织《《《《《《《《《《《《《《《《》》》》》》》》》》》 架构 json：完成");
