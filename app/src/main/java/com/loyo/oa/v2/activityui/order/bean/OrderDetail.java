@@ -9,6 +9,7 @@ import java.util.List;
 public class OrderDetail implements Serializable {
     public String id;
     public String companyId;
+    public String customerId;
     public String title;
     public String customerName;
     public String directorName;

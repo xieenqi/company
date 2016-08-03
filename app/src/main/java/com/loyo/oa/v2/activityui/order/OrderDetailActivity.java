@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.order;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,10 +9,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.order.bean.ExtensionDatas;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;
+import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -84,6 +88,8 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_order_number = (TextView) findViewById(R.id.tv_order_number);
         tv_memo = (TextView) findViewById(R.id.tv_memo);
         ll_extra = (LinearLayout) findViewById(R.id.ll_extra);
+        tv_customer.setOnClickListener(this);
+        tv_wfname.setOnClickListener(this);
         getData();
     }
 
@@ -108,6 +114,21 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                     }
                 });
                 dialog.show();
+                break;
+            case R.id.tv_customer:
+                Intent intent = new Intent();
+                intent.putExtra("Id", mData.customerId);
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
+                intent.setClass(OrderDetailActivity.this, CustomerDetailInfoActivity_.class);
+                startActivityForResult(intent, 2);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                break;
+            case R.id.tv_wfname:
+                Intent intentWf = new Intent();
+                intentWf.putExtra(ExtraAndResult.EXTRA_ID, mData.wfId);
+                intentWf.setClass(OrderDetailActivity.this, WfinstanceInfoActivity_.class);
+                startActivityForResult(intentWf, ExtraAndResult.REQUEST_CODE);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
         }
 
