@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
+import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.AttenDancePopView;
@@ -26,7 +29,7 @@ import java.util.Calendar;
  * 【新增回款】
  * Created by yyy on 16/8/3.
  */
-public class OrderEstimateAddActivity extends BaseActivity implements View.OnClickListener{
+public class OrderEstimateAddActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout ll_time;        //回款日期
     private LinearLayout ll_priecer;     //收款人
@@ -34,19 +37,23 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
     private LinearLayout ll_attachment;  //附件
     private LinearLayout ll_back;
 
-    private TextView     tv_time;        //回款日期
-    private TextView     tv_priceer;     //收款人
-    private TextView     tv_kind;        //付款方式
-    private TextView     tv_attachment;  //附件
+    private TextView tv_time;        //回款日期
+    private TextView tv_priceer;     //收款人
+    private TextView tv_kind;        //付款方式
+    private TextView tv_attachment;  //附件
 
-    private EditText     et_estprice; //回款金额
-    private EditText     et_kaiprice; //开票金额
+    private EditText et_estprice; //回款金额
+    private EditText et_kaiprice; //开票金额
+    private EditText et_remake;   //备注
 
-    private TextView  tv_title;
+    private TextView tv_title;
     private ImageView iv_submit;
 
     private int estimatedTime = 0;
+    private int paymentState;
+    private Intent mIntent;
     private NewUser newUser;
+    private EstimateAdd mEstimateAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +62,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
         initUI();
     }
 
-    public void initUI(){
+    public void initUI() {
 
         ll_time = (LinearLayout) findViewById(R.id.ll_time);
         ll_priecer = (LinearLayout) findViewById(R.id.ll_priecer);
@@ -73,6 +80,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
 
         et_estprice = (EditText) findViewById(R.id.et_estprice);
         et_kaiprice = (EditText) findViewById(R.id.et_kaiprice);
+        et_remake = (EditText) findViewById(R.id.et_remake);
 
 
         tv_title.setText("新增回款");
@@ -90,7 +98,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
             //回退
             case R.id.ll_back:
@@ -99,7 +107,37 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
 
             //提交
             case R.id.iv_submit:
-                onBackPressed();
+
+                if (estimatedTime == 0) {
+                    Toast("请选择回款时间!");
+                    return;
+                } else if (TextUtils.isEmpty(et_estprice.getText().toString())) {
+                    Toast("请选择回款金额!");
+                    return;
+                } else if (TextUtils.isEmpty(tv_priceer.getText().toString())) {
+                    Toast("请选择收款人!");
+                    return;
+                }
+
+                mIntent = new Intent();
+                mEstimateAdd = new EstimateAdd();
+                mEstimateAdd.receivedAt = estimatedTime;
+                mEstimateAdd.receivedMoney = Integer.parseInt(et_estprice.getText().toString().trim());
+                //如果开票金额没写，则默认为0
+                if(TextUtils.isEmpty(et_kaiprice.getText().toString())){
+                    mEstimateAdd.billingMoney = 0;
+                }else{
+                    mEstimateAdd.billingMoney = Integer.parseInt(et_kaiprice.getText().toString().trim());
+                }
+
+                mEstimateAdd.payeeUser.id = newUser.getId();
+                mEstimateAdd.payeeUser.name = newUser.getName();
+                mEstimateAdd.payeeUser.avatar = newUser.getAvatar();
+                mEstimateAdd.payeeMethod = paymentState;
+                mEstimateAdd.remark = et_remake.getText().toString();
+                mIntent.putExtra("data", mEstimateAdd);
+                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+
                 break;
 
             //回款日期
@@ -115,7 +153,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
 
             //附件
             case R.id.ll_attachment:
-                Intent intent = new Intent(OrderEstimateAddActivity.this,OrderAttachmentActivity.class);
+                Intent intent = new Intent(OrderEstimateAddActivity.this, OrderAttachmentActivity.class);
                 startActivity(intent);
                 break;
 
@@ -128,7 +166,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
     }
 
 
-    public void paymentSet(){
+    public void paymentSet() {
         final PaymentPopView popView = new PaymentPopView(this);
         popView.show();
         popView.setCanceledOnTouchOutside(true);
@@ -137,6 +175,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
         popView.onClickCase1(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                paymentState = 1;
                 tv_kind.setText("现金");
                 popView.dismiss();
             }
@@ -145,6 +184,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
         popView.onClickCase2(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                paymentState = 2;
                 tv_kind.setText("支票");
                 popView.dismiss();
             }
@@ -153,6 +193,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
         popView.onClickCase3(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                paymentState = 3;
                 tv_kind.setText("银行转账");
                 popView.dismiss();
             }
@@ -161,6 +202,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
         popView.onClickCase4(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                paymentState = 4;
                 tv_kind.setText("其他");
                 popView.dismiss();
             }
@@ -170,7 +212,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
 
     /**
      * 时间选择
-     * */
+     */
     public void estimateTime() {
         Calendar cal = Calendar.getInstance();
         final DatePickerDialog mDialog = new DatePickerDialog(this, null,
@@ -207,7 +249,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
             return;
         }
 
-        switch (requestCode){
+        switch (requestCode) {
 
             //用户单选, 负责人
             case SelectDetUserActivity2.REQUEST_ONLY:
