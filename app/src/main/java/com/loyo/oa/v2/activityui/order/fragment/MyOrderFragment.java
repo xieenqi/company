@@ -15,19 +15,34 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
+import com.loyo.oa.v2.activityui.order.bean.OrderList;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【我的订单】
@@ -46,30 +61,25 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private MyOrderAdapter adapter;
+    private int page = 1;
+    private boolean isPullDown = true;
+    private List<OrderListItem> listData = new ArrayList<>();
 
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-
             switch (msg.what) {
-
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
-//                    isPull = false;
-//                    stageId = msg.getData().get("data").toString();
+                    isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
                     break;
 
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
-//                    isPull = false;
-//                    sortType = msg.getData().get("data").toString();
+                    isPullDown = true;
                     sortIndex = (int) msg.getData().get("index");
                     break;
-
-                default:
-                    break;
-
             }
-//            getData();
+            getData();
         }
     };
 
@@ -105,7 +115,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent mIntent = new Intent();
 //                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-//                mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
+                mIntent.putExtra(ExtraAndResult.EXTRA_ID, adapter.getItemData(position - 1).id);
                 mIntent.setClass(getActivity(), OrderDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -113,6 +123,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         });
         adapter = new MyOrderAdapter(app);
         lv_list.setAdapter(adapter);
+        getData();
     }
 
     private void setFilterData() {
@@ -184,13 +195,45 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
+    private void getData() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 15);
+        map.put("status", statusIndex + 1);
+        map.put("filed", sortIndex == 1 ? "dealMoney" : "createdAt");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IOrder.class).getOrderMyList(map, new Callback<OrderList>() {
+            @Override
+            public void success(OrderList orderlist, Response response) {
+                lv_list.onRefreshComplete();
+                HttpErrorCheck.checkResponse("我的订单列表：", response);
+                if (!isPullDown) {
+                    listData.addAll(orderlist.records);
+                } else {
+                    listData = orderlist.records;
+                }
+                adapter.setData(listData);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                lv_list.onRefreshComplete();
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-
+        isPullDown = true;
+        page = 1;
+        getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-
+        isPullDown = false;
+        page++;
+        getData();
     }
 }

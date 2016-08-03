@@ -8,6 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.tool.DateTool;
+
+import java.util.List;
 
 /**
  * 我的订单列表的adapter
@@ -17,15 +22,25 @@ public class MyOrderAdapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflater;
+    List<OrderListItem> data;
 
     public MyOrderAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
+    public void setData(List<OrderListItem> records) {
+        this.data = records;
+        notifyDataSetChanged();
+    }
+
+    public OrderListItem getItemData(int index) {
+        return data.get(index);
+    }
+
     @Override
     public int getCount() {
-        return 10;
+        return null == data ? 0 : data.size();
     }
 
     @Override
@@ -55,9 +70,13 @@ public class MyOrderAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-        if (position == 2) {
-            holder.tv_status.setBackgroundResource(R.drawable.retange_gray);
-        }
+        OrderListItem mData = data.get(position);
+        holder.tv_title.setText(mData.title);
+        OrderCommon.getOrderStatus(holder.tv_status, mData.status);
+        holder.tv_money.setText(mData.dealMoney + "");
+        holder.tv_customer.setText(mData.customerName);
+        holder.tv_product.setText(mData.proName);
+        holder.tv_time.setText(DateTool.getDiffTime(Long.valueOf(mData.createdAt + "") * 1000));
         return convertView;
     }
 
