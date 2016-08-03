@@ -93,7 +93,11 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
 
         if (itemLock && selectPosition == position) {
             if (position == 0) {
-                holder.num.setBackground(null);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    holder.num.setBackground(null);
+                } else {
+                    holder.num.setBackgroundDrawable(null);
+                }
             }
             holder.num.setTextColor(Color.parseColor("#ffffff"));
             holder.num.setBackgroundResource(R.drawable.shape_count_gd);
