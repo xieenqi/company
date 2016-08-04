@@ -28,4 +28,7 @@ public class DBUserNode {
     @DatabaseField(canBeNull = true, foreign = true, columnName = "position_id",  foreignAutoRefresh = true)
     public DBPosition position;
 
+    @DatabaseField
+    public long saveTransactionId;
+
 }

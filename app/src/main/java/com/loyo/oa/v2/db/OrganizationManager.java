@@ -6,12 +6,16 @@ package com.loyo.oa.v2.db;
 import android.content.Context;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.j256.ormlite.misc.TransactionManager;
+import com.j256.ormlite.stmt.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -195,6 +199,8 @@ public class OrganizationManager {
 
     public void saveOrgnizitionToDB(final String json) {
 
+
+        final long saveTransactionId = (long)((Math.random() * 9 + 1) * 100000000);
         try {
             TransactionManager.callInTransaction(mDatabaseHelper.getConnectionSource(),
                     new Callable<Void>()
@@ -243,6 +249,7 @@ public class OrganizationManager {
                                     node.role = role;
                                     node.user = user;
                                     node.department = d;
+                                    node.saveTransactionId = saveTransactionId;
                                     departmentDao.createOrUpdate(d);
                                     userDao.createOrUpdate(user);
                                     roleDao.createOrUpdate(role);
@@ -250,6 +257,15 @@ public class OrganizationManager {
                                     nodeDao.createorUpdate(node);
                                 }
                             }
+
+                            // 删除过时数据
+                            DeleteBuilder<DBUserNode, String> deleteBuilder = nodeDao.getDao().deleteBuilder();
+                            //
+                            deleteBuilder.where().ne("saveTransactionId", saveTransactionId);
+                            // prepare our sql statement
+                            PreparedDelete<DBUserNode> preparedDelete = deleteBuilder.prepare();
+                            // query for all
+                            nodeDao.getDao().delete(preparedDelete);
 
                             long end = System.currentTimeMillis();
                             Log.i("time------------", "" + (end- start) + "ms");
@@ -283,15 +299,12 @@ public class OrganizationManager {
 
     public List<DBUser> getUsersAtSameDeptsOfUser(String userId, Boolean excludeSelf){
         UserDao dao = new UserDao(getContext());
-        List<DBUser> list = null;
+        List<DBUser> list = new ArrayList<DBUser>();
 
         try {
             DBUser user = new UserDao(getContext()).get(userId);
             if (user == null) {
                 return list;
-            }
-            else {
-                list = new ArrayList<DBUser>();
             }
 
             List<DBUserNode> nodes = user.allNodes();
@@ -307,19 +320,21 @@ public class OrganizationManager {
         }
         catch (Exception e) {}
 
-
-        if (excludeSelf && list != null) {
-            List<DBUser> dupSelfs = new ArrayList<DBUser>();
-            for (int i = 0; i < list.size(); i++) {
-                DBUser user = list.get(i);
-                if (userId.equals(user.id)) {
-                    dupSelfs.add(user);
-                }
+        // 去重，去掉自己
+        HashMap<String, DBUser> map = new HashMap<String, DBUser>();
+        Iterator<DBUser> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            DBUser user = iterator.next();
+            if (excludeSelf && (userId.equals(user.id))) {
+                continue;
             }
-            if (dupSelfs.size() > 0) {
-                list.removeAll(dupSelfs);
+            else if (user.id != null){
+                map.put(user.id, user);
             }
         }
+
+        Collection<DBUser> collection = map.values();
+        list = new ArrayList<DBUser>(collection);
 
         return list;
     }

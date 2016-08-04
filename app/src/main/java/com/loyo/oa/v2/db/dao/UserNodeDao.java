@@ -32,6 +32,10 @@ public class UserNodeDao {
         }
     }
 
+    public Dao<DBUserNode, String> getDao(){
+        return userNodeDaoOpe;
+    }
+
     public void add(DBUserNode node)
     {
         try
