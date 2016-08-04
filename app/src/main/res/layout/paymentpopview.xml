@@ -1,116 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
     >
 
     <LinearLayout
-        android:layout_width="310dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:background="@drawable/attendance_popview"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         >
 
-
-    <TextView
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp"
-        android:gravity="center"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="付款方式"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray0990"
-        />
-    <LinearLayout
-        android:id="@+id/payment_case1"
-        android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:gravity="center"
-        android:background="@drawable/attendance_popview_selector"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="现金"
-            android:textColor="@color/title_bg1"
-            android:textSize="16sp"
-            />
-    </LinearLayout>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray0990"
-        />
-
-    <LinearLayout
-        android:id="@+id/payment_case2"
-        android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:gravity="center"
-        android:background="@drawable/attendance_popview_selector"
-        >
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="支票"
-            android:textColor="@color/title_bg1"
-            android:textSize="16sp"
-            />
-    </LinearLayout>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray0990"
-        />
-    <LinearLayout
-        android:id="@+id/payment_case3"
-        android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:gravity="center"
-        android:background="@drawable/attendance_popview_selector"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="银行转账"
-            android:textColor="@color/title_bg1"
-            android:textSize="16sp"
-            />
-    </LinearLayout>
-
-        <View
+            android:id="@+id/tv_title"
             android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray0990"
-            />
-
-        <LinearLayout
-            android:id="@+id/payment_case4"
-            android:layout_width="fill_parent"
-            android:layout_height="58dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:background="@drawable/attendance_popview_selector"
-            >
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:text="付款方式"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="其他"
-                android:textColor="@color/title_bg1"
-                android:textSize="16sp"
-                />
-        </LinearLayout>
+        <include layout="@layout/include_solid_line"/>
+
+        <ListView
+            android:id="@+id/lv_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/lineCC"
+            android:dividerHeight="@dimen/dimen_0.5"
+            />
     </LinearLayout>
 </LinearLayout>
