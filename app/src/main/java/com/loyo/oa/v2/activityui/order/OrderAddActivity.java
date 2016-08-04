@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
@@ -46,8 +47,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private LinearLayout tv_custom;   //附件
 
     private String customerName, customerId;
-    private  ArrayList<ContactLeftExtras> mCusList;
-    private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
+    private ArrayList<ContactLeftExtras> mCusList;
+    private ArrayList<SaleIntentionalProduct> productData;//意向产品的数据
+    private ArrayList<EstimateAdd> estimateData;          //回款记录数据
 
     private EditText et_name;     //订单标题
     private TextView tv_customer; //对应客户
@@ -57,6 +59,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_source;   //附件
     private EditText et_ordernum; //订单编号
     private EditText et_remake;   //备注
+
+    private Bundle mBundle;
 
 
     @Override
@@ -179,29 +183,31 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //对应客户
             case R.id.ll_customer:
-                Bundle b = new Bundle();
                 app.startActivityForResult(OrderAddActivity.this, SigninSelectCustomer.class,
-                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                 break;
 
             //意向产品
             case R.id.ll_stage:
-                Bundle product = new Bundle();
-                product.putSerializable(ExtraAndResult.EXTRA_DATA, intentionProductData);
                 app.startActivityForResult(OrderAddActivity.this, IntentionProductActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, null);
                 break;
 
             //回款
             case R.id.ll_estimate:
-                Intent intent1 = new Intent(OrderAddActivity.this,OrderEstimateActivity.class);
-                startActivity(intent1);
+                mBundle = new Bundle();
+                if(!TextUtils.isEmpty(et_money.getText().toString())){
+                    mBundle.putString("price",et_money.getText().toString());
+                }
+                if(null != estimateData){
+                    mBundle.putSerializable("data",estimateData);
+                }
+                app.startActivityForResult(this,OrderEstimateActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_SOURCE,mBundle);
                 break;
 
             //附件
             case R.id.ll_source:
-                Intent intent = new Intent(OrderAddActivity.this,OrderAttachmentActivity.class);
-                startActivity(intent);
+                app.startActivityForResult(this,OrderAttachmentActivity.class,MainApp.ENTER_TYPE_RIGHT,101,null);
                 break;
 
         }
@@ -214,8 +220,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      */
     private String getIntentionProductName() {
         String productName = "";
-        if (null != intentionProductData) {
-            for (SaleIntentionalProduct ele : intentionProductData) {
+        if (null != productData) {
+            for (SaleIntentionalProduct ele : productData) {
                 productName += ele.name + "、";
             }
         } else {
@@ -224,11 +230,24 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         return productName.length() > 0 ? productName.substring(0, productName.length() - 1) : "";
     }
 
+    /**
+     * 获取 回款记录的成交金额
+     * */
+    private String getEstimateName(){
+        String estimateName = "";
+        if(null != estimateData){
+            for(EstimateAdd est : estimateData){
+                estimateName += est.receivedMoney;
+            }
+        }
+        return estimateName.length() > 0 ? estimateName.substring(0, estimateName.length() - 1) : "";
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode != -1){
+        if(resultCode != -1 && null == data){
             return;
         }
 
@@ -246,13 +265,16 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //选择购买产品
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
-                ArrayList<SaleIntentionalProduct> resultData = (ArrayList<SaleIntentionalProduct>)
-                        data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
-                if (null != resultData) {
-                    intentionProductData = resultData;
-                    tv_stage.setText(getIntentionProductName());
-                }
+                productData = (ArrayList<SaleIntentionalProduct>)data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+                tv_stage.setText(getIntentionProductName());
                 break;
+
+            //选择回款
+            case ExtraAndResult.REQUEST_CODE_SOURCE:
+                estimateData = (ArrayList<EstimateAdd>)data.getSerializableExtra("data");
+                tv_estimate.setText(getEstimateName());
+                break;
+
         }
     }
 }

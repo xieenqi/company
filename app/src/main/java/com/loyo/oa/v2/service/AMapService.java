@@ -13,6 +13,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.APSService;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.loyo.oa.v2.application.MainApp;
@@ -49,7 +50,7 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/8/19.
  */
-public class AMapService extends Service {
+public class AMapService extends APSService {
     private final String TAG = getClass().getSimpleName();
     /**
      * 请求定位的最小时间间隔

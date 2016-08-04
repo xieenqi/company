@@ -640,7 +640,11 @@
         <!-- 高德定位后台服务 -->
         <service
             android:name=".service.AMapService"
-            android:enabled="true"/>
+            android:enabled="true">
+            <intent-filter android:priority="1000" >
+                <action android:name="com.loyo.oa.v2.service.AMapService" />
+            </intent-filter>
+        </service>
 
         <!-- Required SDK核心功能    【激光 推送相关】 -->
         <activity
