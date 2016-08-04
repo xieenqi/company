@@ -52,6 +52,7 @@ public class IntentionProductActivity extends BaseActivity {
     ArrayList<SaleIntentionalProduct> listData = new ArrayList<>();
     SaleProductAdapter saleProductAdapter;
     private int editItemIndex;//改变item的位置记录
+    private boolean isKine = false;
 
     Handler hadler = new Handler() {
         @Override
@@ -97,7 +98,7 @@ public class IntentionProductActivity extends BaseActivity {
         tv_saleToal = (CustomTextView) findViewById(R.id.tv_saleToal);
         tv_discount = (CustomTextView) findViewById(R.id.tv_discount);
         ll_statistics = (LinearLayout) findViewById(R.id.ll_statistics);
-        if (fromPage == ActionCode.ORDER_DETAIL) {
+        if (fromPage == ActionCode.ORDER_DETAIL && !isKine) {
             ll_add.setVisibility(View.GONE);
         }
     }
@@ -126,6 +127,7 @@ public class IntentionProductActivity extends BaseActivity {
     private void getIntentData() {
         saleId = getIntent().getStringExtra("saleId");
         fromPage = getIntent().getIntExtra("data", 0);
+        isKine  = getIntent().getBooleanExtra("boolean",false);
         ArrayList<SaleIntentionalProduct> intentData = (ArrayList<SaleIntentionalProduct>) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentData && intentData.size() > 0) {
             listData = intentData;

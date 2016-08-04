@@ -223,6 +223,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:gravity="center"
+            android:background="@drawable/selector_order_res"
             android:orientation="horizontal">
 
             <ImageView
@@ -253,6 +254,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:gravity="center"
+            android:background="@drawable/selector_order_res"
             android:orientation="horizontal">
 
             <ImageView
