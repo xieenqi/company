@@ -40,7 +40,7 @@ import retrofit.client.Response;
  */
 public class OrderDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout img_title_left, ll_extra, ll_product;
+    private LinearLayout img_title_left, ll_extra, ll_product, ll_record, ll_enclosure, ll_plan;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
             tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name,
@@ -95,6 +95,12 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_wfname.setOnClickListener(this);
         ll_product = (LinearLayout) findViewById(R.id.ll_product);
         ll_product.setOnClickListener(this);
+        ll_record = (LinearLayout) findViewById(R.id.ll_record);
+        ll_record.setOnClickListener(this);
+        ll_enclosure = (LinearLayout) findViewById(R.id.ll_enclosure);
+        ll_enclosure.setOnClickListener(this);
+        ll_plan = (LinearLayout) findViewById(R.id.ll_plan);
+        ll_plan.setOnClickListener(this);
         getData();
     }
 
@@ -135,13 +141,24 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intentWf, ExtraAndResult.REQUEST_CODE);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
-            case R.id.ll_product:
+            case R.id.ll_product://购买产品
                 Bundle product = new Bundle();
                 product.putInt("data", ActionCode.ORDER_DETAIL);
 //                product.putString("saleId", selectId);
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mData.proInfo);
                 app.startActivityForResult(OrderDetailActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
+                break;
+            case R.id.ll_record://回款记录
+                Bundle mBundle = new Bundle();
+                mBundle.putString("price", tv_money.getText().toString());
+                app.startActivityForResult(this, OrderEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+                break;
+            case R.id.ll_enclosure://附件
+                app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, 101, null);
+                break;
+            case R.id.ll_plan://回款计划
+                app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, null);
                 break;
         }
 
