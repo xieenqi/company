@@ -25,88 +25,131 @@ import java.util.List;
 
 public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndexer {
 
-    private List<DBUser> list = null;
+    private List<Object> list = null;
     private Context mContext;
-    private StringBuffer deptName;
     private int defaultAvatar;
 
-    public ContactsInMyDeptAdapter(final Context mContext, final List<DBUser> list) {
+    public ContactsInMyDeptAdapter(final Context mContext, final List<Object> list) {
         this.mContext = mContext;
         this.list = list;
     }
 
+    @Override //SectionIndexer
+    public Object[] getSections() {
+        return null;
+    }
+
+    @Override //BaseAdapter
     public int getCount() {
         return this.list.size();
     }
 
+    @Override //BaseAdapter
     public Object getItem(final int position) {
         return list.get(position);
     }
 
+    @Override //BaseAdapter
     public long getItemId(final int position) {
         return position;
     }
 
+    @Override
+    public boolean isEnabled(int position) {
+        Object item = list.get(position);
+        if (item.getClass() == String.class) {
+            return false;
+        }
+        return super.isEnabled(position);
+    }
+
+    @Override //BaseAdapter
     public View getView(final int position, View view, final ViewGroup arg2) {
+        Object item = list.get(position);
+        if (item.getClass() == String.class) {
 
-        ViewHolder viewHolder = null;
-        final DBUser mContent = list.get(position);
-        if (view == null) {
-            viewHolder = new ViewHolder();
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_contact_personnel, null);
-
-            viewHolder.tvLetter = (TextView) view.findViewById(R.id.catalog);
-            viewHolder.name = (TextView) view.findViewById(R.id.tv_name);
-            viewHolder.deptInf = (TextView) view.findViewById(R.id.tv_position);
-            viewHolder.img = (ImageView) view.findViewById(R.id.img);
-
-            view.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) view.getTag();
-        }
-
-        int section = getSectionForPosition(position);
-        if (position == getPositionForSection(section)) {
-            viewHolder.tvLetter.setVisibility(View.VISIBLE);
-            viewHolder.tvLetter.setText(mContent.getSortLetter());
-        } else {
-            viewHolder.tvLetter.setVisibility(View.GONE);
-        }
-
-        DBUser user = list.get(position);
-
-        viewHolder.name.setText(user.name);
-        viewHolder.deptInf.setText(user.shortDeptNames);
-
-        if(null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")){
-            if (user.gender == 2) {
-                defaultAvatar = R.drawable.icon_contact_avatar;
-            } else {
-                defaultAvatar = R.drawable.img_default_user;
+            // 分区
+            SectionViewHolder holder = null;
+            if (view == null) {
+                holder = new SectionViewHolder();
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_contact_section, null);
+                holder.sectionTitle = (TextView) view.findViewById(R.id.section_title);
+                view.setTag(holder);
             }
-            viewHolder.img.setImageResource(defaultAvatar);
-        }else{
-            ImageLoader.getInstance().displayImage(user.avatar, viewHolder.img);
+            else {
+                holder = (SectionViewHolder)view.getTag();
+            }
+
+            holder.sectionTitle.setText((String)item);
         }
+        else if (item.getClass() == DBUser.class) {
+
+            // 用户
+            UserViewHolder holder = null;
+            if (view == null) {
+                holder = new UserViewHolder();
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_contact_user, null);
+                holder.userName = (TextView) view.findViewById(R.id.user_name);
+                holder.dept = (TextView) view.findViewById(R.id.user_dept);
+                holder.avatarImage = (ImageView) view.findViewById(R.id.avatar_view);
+                view.setTag(holder);
+            }
+            else {
+                holder = (UserViewHolder)view.getTag();
+            }
+
+            DBUser user = (DBUser)item;
+
+            holder.userName.setText(user.name);
+            holder.dept.setText(user.shortDeptNames);
+            if(null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")){
+                if (user.gender == 2) {
+                    defaultAvatar = R.drawable.icon_contact_avatar;
+                } else {
+                    defaultAvatar = R.drawable.img_default_user;
+                }
+                holder.avatarImage.setImageResource(defaultAvatar);
+            }else{
+                ImageLoader.getInstance().displayImage(user.avatar, holder.avatarImage);
+            }
+
+        }
+
+        //
         return view;
     }
 
-    static final class ViewHolder {
 
-        TextView deptInf;
-        TextView tvLetter;
-        TextView name;
-        ImageView img;
-
-    }
-
+    // TODO:
+    @Override
     public int getSectionForPosition(final int position) {
-        return list.get(position).getSortLetter().charAt(0);
+
+        Object item = list.get(position);
+        String sortStr = "#";
+        if(item.getClass()==String.class)
+        {
+            sortStr = (String)item;
+        }
+        else {
+            sortStr = ((DBUser)item).getSortLetter();
+        }
+        char firstChar = sortStr.toUpperCase().charAt(0);
+        return firstChar;
     }
 
+    // TODO:
+    @Override
     public int getPositionForSection(final int section) {
         for (int i = 0; i < getCount(); i++) {
-            String sortStr = list.get(i).getSortLetter();
+            Object item = list.get(i);
+            String sortStr = "#";
+            if(item.getClass()==String.class)
+            {
+                sortStr = (String)item;
+            }
+            else {
+                sortStr = ((DBUser)item).getSortLetter();
+            }
             char firstChar = sortStr.toUpperCase().charAt(0);
             if (firstChar == section) {
                 return i;
@@ -116,17 +159,32 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         return -1;
     }
 
-    private String getAlpha(final String str) {
-        String sortStr = str.trim().substring(0, 1).toUpperCase();
-        if (sortStr.matches("[A-Z]")) {
-            return sortStr;
-        } else {
-            return "#";
+    public int getPositionForSectionTitle(final String section) {
+        for (int i = 0; i < getCount(); i++) {
+            Object item = list.get(i);
+            if (item.getClass() != String.class) {
+                continue;
+            }
+            if (section.equals(item)) {
+                return i;
+            }
         }
+
+        return -1;
     }
 
-    @Override
-    public Object[] getSections() {
-        return null;
+
+    /*
+    *  Inner Class
+    * */
+
+    static final class UserViewHolder {
+        TextView dept;
+        TextView userName;
+        ImageView avatarImage;
+    }
+
+    static final class SectionViewHolder {
+        TextView sectionTitle;
     }
 }
