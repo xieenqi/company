@@ -202,7 +202,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                     @Override
                     public void success(OrderAdd orderAdd, Response response) {
                         HttpErrorCheck.checkResponse("订单详情", response);
-                        Toast("新建成功，跳转回调到列表页，刷新列表");
+                        app.finishActivity(OrderAddActivity.this,MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
                     }
 
                     @Override
@@ -210,7 +210,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                         HttpErrorCheck.checkError(error);
                     }
                 });
-
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.order.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,9 +23,11 @@ import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -34,6 +37,7 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
@@ -63,6 +67,8 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     private MyOrderAdapter adapter;
     private int page = 1;
     private boolean isPullDown = true;
+    private Intent mIntent;
+
     private List<OrderListItem> listData = new ArrayList<>();
 
     private Handler mHandler = new Handler() {
@@ -114,7 +120,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent mIntent = new Intent();
-//                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+//              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                 mIntent.putExtra(ExtraAndResult.EXTRA_ID, adapter.getItemData(position - 1).id);
                 mIntent.setClass(getActivity(), OrderDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
@@ -142,13 +148,15 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            //新建
             case R.id.btn_add:
-                Intent mIntent = new Intent();
-                mIntent.setClass(getActivity(), OrderAddActivity.class);
-                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
-            case R.id.salemy_screen1://状态选择
+
+            //状态选择
+            case R.id.salemy_screen1:
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen1);
@@ -160,7 +168,9 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                     }
                 });
                 break;
-            case R.id.salemy_screen2://排序
+
+            //排序
+            case R.id.salemy_screen2:
                 saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
                         SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen2);
@@ -235,5 +245,20 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         isPullDown = false;
         page++;
         getData();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (resultCode){
+
+            //新建订单回调
+            case ExtraAndResult.REQUEST_CODE:
+                isPullDown = true;
+                getData();
+                break;
+
+        }
     }
 }
