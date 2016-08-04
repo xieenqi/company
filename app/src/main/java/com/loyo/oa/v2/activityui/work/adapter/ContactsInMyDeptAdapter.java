@@ -4,6 +4,9 @@ package com.loyo.oa.v2.activityui.work.adapter;
 /**
  * 【通讯录本部门】适配器
  * Created by yyy on 15/12/30.
+ *
+ * Update by ethangong 16/08/04
+ * 重构
  */
 
 import android.content.Context;

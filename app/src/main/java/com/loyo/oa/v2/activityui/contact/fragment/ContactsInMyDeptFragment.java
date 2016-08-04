@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
@@ -18,7 +17,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.customview.SideBar;
 import com.loyo.oa.v2.tool.BaseFragment;
 
-import java.io.ObjectStreamException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -86,7 +85,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     }
 
     public void loadData(){
-        myUserList = (ArrayList<DBUser>) Common.getUsersAtSameDepts(true);
+        myUserList = (ArrayList<DBUser>) Common.getUsersAtSameDepts(/* 包含自己 */false);
         Collections.sort(myUserList, pinyinComparator);
         this.buildData();
     }
@@ -100,11 +99,18 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         Iterator<DBUser> iterator = myUserList.iterator();
         while (iterator.hasNext()) {
             DBUser user = iterator.next();
-            if (!(user.getSortLetter().equals(previouSectionTitle))) {
-                previouSectionTitle = user.getSortLetter();
-                datasource.add(previouSectionTitle);
+            if(user.id!= null && user.id.equals(MainApp.user.id)) {
+                // 自己放在最上边
+                datasource.add(0, "我");
+                datasource.add(1, user);
             }
-            datasource.add(user);
+            else{ // 其他人按字母顺序依次排列
+                if (!(user.getSortLetter().equals(previouSectionTitle))) {
+                    previouSectionTitle = user.getSortLetter();
+                    datasource.add(previouSectionTitle);
+                }
+                datasource.add(user);
+            }
         }
     }
 
