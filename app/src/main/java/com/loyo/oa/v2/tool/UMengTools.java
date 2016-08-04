@@ -4,10 +4,14 @@ import android.content.Context;
 import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.application.MainApp;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.Date;
+import java.util.HashMap;
+
+import retrofit.RetrofitError;
 
 /**
  * 友盟统计相关方法
@@ -41,13 +45,17 @@ public class UMengTools {
                 erroInfo.append("用户信息:" + MainApp.user.name + "-" + MainApp.user.mobile + "-" + MainApp.gson.toJson(MainApp.user.depts));
             }
             LogUtil.d("高德定位设备友盟统计信息：" + erroInfo.toString());
+            MobclickAgent.reportError(context, erroInfo.toString());
         }
     }
 
     /**
      * 上传轨迹失败原因友盟收集
      */
-    public static void sendCustomTrajectory() {
-
+    public static void sendCustomTrajectory(Context context, RetrofitError error, HashMap<String, Object> jsonObject) {
+        String errInfo = error.getMessage() +
+                " url：" + error.getUrl() + " 定位信息：" + MainApp.gson.toJson(jsonObject)
+                + "用户：" + MainApp.gson.toJson(MainApp.user);
+        MobclickAgent.reportError(context, errInfo.toString());
     }
 }
