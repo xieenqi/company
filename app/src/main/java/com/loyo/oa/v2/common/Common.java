@@ -253,6 +253,12 @@ public final class Common {
         return contactsGroups;
     }
 
+    /**
+     * Add by Ethan 2016/08/04
+     * 重构： 获取所有一级部门
+     *
+     */
+
     public static ArrayList<Department> getLstDepartment() {
         if (MainApp.lstDepartment == null) {
             InitOrganizationFromDB();
@@ -513,7 +519,7 @@ public final class Common {
         List<DBUser> users = null;
 
         User currentUser =  MainApp.user;
-        users = OrganizationManager.shareManager().getUsersAtSameDeptsOfUser(currentUser.id, excludeSelf);
+        users = OrganizationManager.shareManager().getUsersAtSameDeptsOfUser(excludeSelf);
 
         return users;
     }

@@ -6,6 +6,7 @@ package com.loyo.oa.v2.db.bean;
 
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.stmt.*;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -32,12 +33,15 @@ public class DBDepartment {
     public String simplePinyin;
 
     @DatabaseField
+    public String fullPinyin;
+
+    @DatabaseField
     public int userNum;
 
     @DatabaseField
     public boolean isRoot;
 
-    @DatabaseField(canBeNull = true, foreign = true, columnName = "parent_id",  foreignAutoRefresh = true)
+    @DatabaseField(canBeNull = true, foreign = true, columnName = "parent_id")
     public DBDepartment parentDepartment;
 
     @ForeignCollectionField
@@ -45,6 +49,28 @@ public class DBDepartment {
 
     @ForeignCollectionField
     public ForeignCollection<DBUserNode> userNodes;
+
+    public String getSortLetter() {
+
+        String pinyin = this.simplePinyin != null && this.simplePinyin.length()>0 ? this.simplePinyin:this.fullPinyin;
+        if (pinyin != null && pinyin.length() > 0) {
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+            return sortString;
+        }
+        else {
+            return "#";
+        }
+    }
+
+    public String pinyin(){
+        String pinyin = this.fullPinyin != null && this.fullPinyin.length()>0 ? this.fullPinyin:this.simplePinyin;
+        if (pinyin != null && pinyin.length() > 0) {
+            return pinyin;
+        }
+        else {
+            return "#";
+        }
+    }
 
     public List<DBUserNode> allNodes() {
 
@@ -103,6 +129,23 @@ public class DBDepartment {
             catch (Exception e){}
         }
 
+
+        return result;
+    }
+
+    public List<DBUser> allUsersWithoutSubDepartmentUsers() {
+
+        List<DBUser> result = new ArrayList<DBUser>();
+
+        // 本部门的用户
+        List<DBUserNode> nodes = this.allNodes();
+        Iterator<DBUserNode> iterator = nodes.iterator();
+        while (iterator.hasNext()){
+            DBUserNode node = iterator.next();
+            if (node.user != null){
+                result.add(node.user);
+            }
+        }
 
         return result;
     }

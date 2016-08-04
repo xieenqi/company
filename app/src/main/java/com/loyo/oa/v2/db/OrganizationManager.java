@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.j256.ormlite.dao.CloseableIterator;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.*;
 
@@ -22,7 +24,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.Callable;
 
-import com.j256.ormlite.stmt.query.In;
+import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBPosition;
 import com.loyo.oa.v2.db.bean.DBRole;
@@ -34,10 +36,16 @@ import com.loyo.oa.v2.db.dao.RoleDao;
 import com.loyo.oa.v2.db.dao.UserDao;
 import com.loyo.oa.v2.db.dao.UserNodeDao;
 
+import com.loyo.oa.v2.application.MainApp;
+
 public class OrganizationManager {
 
     private static DatabaseHelper mDatabaseHelper;
     private static Context context;
+
+    /* 缓存数据 */
+    private static DBUser sLoginUser;
+    private static DBDepartment sComany;
 
     private OrganizationManager(Context context) {
         this.context = context;
@@ -81,12 +89,6 @@ public class OrganizationManager {
         d.simplePinyin = JSON.optString("simplePinyin");
         d.userNum = JSON.optInt("userNum");
         d.isRoot = d.id.equals(d.superiorId);
-        if (d.superiorId != null) {
-            DBDepartment parent = dao.find(d.superiorId);
-            if (parent != null) {
-                d.parentDepartment = parent;
-            }
-        }
 
         return d;
     }
@@ -223,11 +225,15 @@ public class OrganizationManager {
                             }
 
                             JSONArray jsonarray = new JSONArray(s);
+
+                            List<DBDepartment> tmpDepts = new ArrayList<DBDepartment>();
+
                             for(int i = 0; i < jsonarray.length(); i++) {
                                 JSONObject departmentObj = jsonarray.getJSONObject(i);
 
                                 // 部门
                                 DBDepartment d = OrganizationManager.departmentFromJSON(departmentObj, departmentDao);
+                                tmpDepts.add(d);
 
                                 // Node
                                 JSONArray userArray = departmentObj.optJSONArray("users");
@@ -257,6 +263,31 @@ public class OrganizationManager {
                                     nodeDao.createorUpdate(node);
                                 }
                             }
+
+                            for (int i = 0; i < tmpDepts.size(); i++) {
+                                DBDepartment dept = tmpDepts.get(i);
+                                if (dept.superiorId != null && !(dept.superiorId.equals(dept.id))) {
+                                    DBDepartment parent = departmentDao.get(dept.superiorId);
+                                    dept.parentDepartment = parent;
+                                    departmentDao.createOrUpdate(dept);
+                                }
+                                else {
+                                    departmentDao.createOrUpdate(dept);
+                                }
+                            }
+
+                            {
+                                DBUser user = userDao.get("573576daebe07f03eee89096");
+                                DBDepartment dept = departmentDao.get("56a622250c342e5408000002");
+                                DBUserNode node = new DBUserNode();
+                                node.user = user;
+                                node.department = dept;
+                                node.id = user.id + "@" + dept.id;
+                                node.saveTransactionId = saveTransactionId;
+                                nodeDao.createorUpdate(node);
+                            }
+
+
 
                             // 删除过时数据
                             DeleteBuilder<DBUserNode, String> deleteBuilder = nodeDao.getDao().deleteBuilder();
@@ -292,19 +323,31 @@ public class OrganizationManager {
         return list;
     }
 
-    public List<DBUser> getUsersAtSameDeptsOfUser(String userId){
+    public List<DBUser> getUsersAtSameDeptsOfUser(){
 
-        return this.getUsersAtSameDeptsOfUser(userId, false);
+        return this.getUsersAtSameDeptsOfUser(false);
     }
 
-    public List<DBUser> getUsersAtSameDeptsOfUser(String userId, Boolean excludeSelf){
+    public List<DBUser> getUsersAtSameDeptsOfUser(Boolean excludeSelf){
+        String userId = MainApp.user.id;
         UserDao dao = new UserDao(getContext());
         List<DBUser> list = new ArrayList<DBUser>();
 
+        if (userId == null) {
+            return list;
+        }
+
         try {
-            DBUser user = new UserDao(getContext()).get(userId);
-            if (user == null) {
-                return list;
+            DBUser user = null;
+            if ( OrganizationManager.sLoginUser != null) {
+                user = OrganizationManager.sLoginUser;
+            }
+            else {
+                user = new UserDao(getContext()).get(userId);
+                if (user == null) {
+                    return list;
+                }
+                OrganizationManager.sLoginUser = user;
             }
 
             List<DBUserNode> nodes = user.allNodes();
@@ -339,4 +382,93 @@ public class OrganizationManager {
         return list;
     }
 
+    public DBUser currentUser(boolean refresh) {
+        DBUser user = OrganizationManager.sLoginUser;
+        String userId = MainApp.user.id;
+        if (user == null || refresh) {
+            user = new UserDao(getContext()).get(userId);
+        }
+        return user;
+    }
+
+    public DBDepartment company() {
+
+        //  取缓存数据
+        if (OrganizationManager.sComany != null) {
+            return OrganizationManager.sComany;
+        }
+
+        // 按当前登录用户的部门向上查找公司
+//        DBUser currentLoginUser = OrganizationManager.sLoginUser;
+//        if (currentLoginUser != null) {
+//            DBDepartment result = null;
+//            List<DBDepartment> depts = currentLoginUser.allDepartment();
+//            Iterator<DBDepartment> iterator = depts.iterator();
+//            while (iterator.hasNext()) {
+//                DBDepartment dept = iterator.next();
+//                DBDepartment parent = dept.parentDepartment;
+//                while (parent!=null && parent.parentDepartment != null) {
+//                    parent = parent.parentDepartment;
+//                }
+//                if (parent.isRoot) {
+//                    result = parent;
+//                    break;
+//                }
+//            }
+//
+//            if (result != null) {
+//                OrganizationManager.sComany = result;
+//                return result;
+//            }
+//        }
+
+        // 直接从数据库中读取
+        DepartmentDao dao = new DepartmentDao(getContext());
+        List<DBDepartment> list = null;
+        DBDepartment company = null;
+        try {
+            QueryBuilder<DBDepartment, String> queryBuilder = dao.getDao().queryBuilder();
+            queryBuilder.where().eq("isRoot", true);
+            PreparedQuery<DBDepartment> preparedQuery = queryBuilder.prepare();
+            list = dao.getDao().query(preparedQuery);
+        }
+        catch (Exception e) {
+
+        }
+        if (list.size() > 0) {
+            company = list.get(0);
+        }
+
+        OrganizationManager.sComany = company;
+        return company;
+    }
+
+    public List<DBDepartment> level1Departments() {
+        List<DBDepartment> result = new ArrayList<DBDepartment>();
+
+        DBDepartment company = this.company();
+        if (company == null) {
+            return result;
+        }
+
+        ForeignCollection<DBDepartment> depts = company.childDepartments;
+        CloseableIterator<DBDepartment> iterator = depts.closeableIterator();
+
+        DBDepartment dept = null;
+        try {
+            while (iterator.hasNext()){
+                dept = iterator.next();
+                result.add(dept);
+            }
+        }
+        finally {
+            // must always close our iterators otherwise connections to the database are held open
+            try {
+                iterator.close();
+            }
+            catch (Exception e){}
+        }
+
+        return result;
+    }
 }

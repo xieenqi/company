@@ -73,7 +73,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
 
             // 分区
             SectionViewHolder holder = null;
-            if (view == null) {
+            if (view == null || view.getTag().getClass() != SectionViewHolder.class) {
                 holder = new SectionViewHolder();
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_contact_section, null);
                 holder.sectionTitle = (TextView) view.findViewById(R.id.section_title);
@@ -89,7 +89,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
 
             // 用户
             UserViewHolder holder = null;
-            if (view == null) {
+            if (view == null || view.getTag().getClass() != UserViewHolder.class) {
                 holder = new UserViewHolder();
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_contact_user, null);
                 holder.userName = (TextView) view.findViewById(R.id.user_name);
