@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_bg"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical"
+    >
+
+    <include layout="@layout/include_title"/>
+
+    <ListView
+        android:id="@+id/lv_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:divider="@null"
+        android:scrollbars="none"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/activity_bg"
+        android:gravity="center"
+        android:minHeight="@dimen/dimen_48"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/icon_common_add"
+            android:drawablePadding="@dimen/dimen_5"
+            android:gravity="center"
+            android:text="新增回款计划"
+            android:textColor="@color/title_bg1"
+            android:textSize="15sp"/>
+    </LinearLayout>
+</LinearLayout>

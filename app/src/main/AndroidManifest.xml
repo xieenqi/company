@@ -582,6 +582,17 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
+            android:name=".activityui.order.OrderPlanListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
+            android:name=".activityui.order.OrderAddPlanActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
             android:name=".activityui.other.PreviewImageAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -641,8 +652,8 @@
         <service
             android:name=".service.AMapService"
             android:enabled="true">
-            <intent-filter android:priority="1000" >
-                <action android:name="com.loyo.oa.v2.service.AMapService" />
+            <intent-filter android:priority="1000">
+                <action android:name="com.loyo.oa.v2.service.AMapService"/>
             </intent-filter>
         </service>
 

@@ -99,6 +99,8 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         ll_record.setOnClickListener(this);
         ll_enclosure = (LinearLayout) findViewById(R.id.ll_enclosure);
         ll_enclosure.setOnClickListener(this);
+        ll_plan = (LinearLayout) findViewById(R.id.ll_plan);
+        ll_plan.setOnClickListener(this);
         getData();
     }
 
@@ -156,6 +158,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, 101, null);
                 break;
             case R.id.ll_plan://回款计划
+                app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, null);
                 break;
         }
 
