@@ -124,6 +124,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:hint="请选择"
+                    android:textColor="@color/text66"
                     />
 
                 <ImageView
@@ -161,7 +164,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="必填,请选择"
-                    android:textColor="@color/title_bg1"
+                    android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 

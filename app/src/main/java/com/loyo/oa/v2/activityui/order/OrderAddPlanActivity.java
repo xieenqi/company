@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.tool.BaseActivity;
 
 /**
@@ -65,8 +66,30 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
             case R.id.ll_time:
                 break;
             case R.id.ll_tx:
+                String[] dataTx = {"计划前1天提醒", "计划前2天提醒", "计划前3天提醒", "计划前1周提醒", "不提醒"};
+                final PaymentPopView popViewTx = new PaymentPopView(this, dataTx, "设置提醒");
+                popViewTx.show();
+                popViewTx.setCanceledOnTouchOutside(true);
+                popViewTx.setCallback(new PaymentPopView.VaiueCallback() {
+                    @Override
+                    public void setValue(String value, int index) {
+//                        paymentState = index;
+                        tv_tx.setText(value);
+                    }
+                });
                 break;
             case R.id.ll_kind:
+                String[] dataKind = {"现金", "支票", "银行转账", "其它"};
+                final PaymentPopView popViewKind = new PaymentPopView(this, dataKind, "付款方式");
+                popViewKind.show();
+                popViewKind.setCanceledOnTouchOutside(true);
+                popViewKind.setCallback(new PaymentPopView.VaiueCallback() {
+                    @Override
+                    public void setValue(String value, int index) {
+//                        paymentState = index;
+                        tv_kind.setText(value);
+                    }
+                });
                 break;
         }
     }
