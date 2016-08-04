@@ -18,11 +18,11 @@ import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.DateTool;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -124,9 +124,9 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
                 mEstimateAdd.receivedAt = estimatedTime;
                 mEstimateAdd.receivedMoney = Integer.parseInt(et_estprice.getText().toString().trim());
                 //如果开票金额没写，则默认为0
-                if(TextUtils.isEmpty(et_kaiprice.getText().toString())){
+                if (TextUtils.isEmpty(et_kaiprice.getText().toString())) {
                     mEstimateAdd.billingMoney = 0;
-                }else{
+                } else {
                     mEstimateAdd.billingMoney = Integer.parseInt(et_kaiprice.getText().toString().trim());
                 }
 
@@ -167,47 +167,17 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
 
 
     public void paymentSet() {
-        final PaymentPopView popView = new PaymentPopView(this);
+        String[] data = {"现金", "支票", "银行转账", "其它"};
+        final PaymentPopView popView = new PaymentPopView(this, Arrays.asList(data), "付款方式");
         popView.show();
         popView.setCanceledOnTouchOutside(true);
-
-        //现金
-        popView.onClickCase1(new View.OnClickListener() {
+        popView.setCallback(new PaymentPopView.VaiueCallback() {
             @Override
-            public void onClick(View v) {
-                paymentState = 1;
-                tv_kind.setText("现金");
-                popView.dismiss();
+            public void setValue(String value, int index) {
+                paymentState = index;
+                tv_kind.setText(value);
             }
         });
-        //支票
-        popView.onClickCase2(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paymentState = 2;
-                tv_kind.setText("支票");
-                popView.dismiss();
-            }
-        });
-        //银行转账
-        popView.onClickCase3(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paymentState = 3;
-                tv_kind.setText("银行转账");
-                popView.dismiss();
-            }
-        });
-        //其他
-        popView.onClickCase4(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paymentState = 4;
-                tv_kind.setText("其他");
-                popView.dismiss();
-            }
-        });
-
     }
 
     /**
