@@ -105,7 +105,7 @@ public class AMapService extends Service {
                 .setLogLevel(RestAdapter.LogLevel.NONE)
                 .build();
 
-        startLocate();
+
         super.onCreate();
     }
 
@@ -115,13 +115,14 @@ public class AMapService extends Service {
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
         }
+        startLocate();
         return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
         releaseWakeLock();
-        stopLocate();
+//        stopLocate();
         TrackRule.StartTrackRule(10 * 1000);
         super.onDestroy();
     }
@@ -213,14 +214,14 @@ public class AMapService extends Service {
             address = addressBuilder.toString();
         }
         oldAddress = SharedUtil.get(app, "address");
+        SharedUtil.put(app, "latOld", String.valueOf(aMapLocation.getLatitude()));
+        SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
         if (TextUtils.isEmpty(address) ||
                 (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
                 || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || oldAddress.equals(address)) {
             LogUtil.d("当前位置偏移量很大，直接return");
             //缓存有效定位
-            SharedUtil.put(app, "latOld", String.valueOf(aMapLocation.getLatitude()));
-            SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
             return;
         }
 //        if (Global.isConnected()) {//检查是否有网络
@@ -255,7 +256,7 @@ public class AMapService extends Service {
             LogUtil.d("获取到的distance : " + distance);
             LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE));
 
-            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE) || maxLocation(aMapLocation)) {
+            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
                 LogUtil.d("小于请求定位的最小间隔！");
                 return;
             }
@@ -306,7 +307,7 @@ public class AMapService extends Service {
         app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
             @Override
             public void success(Object trackLog, Response response) {
-                LogUtil.d("【轨迹上报成功！！！】,address : " + address);
+                LogUtil.d("【轨迹上报成功！!!!!!!!！！】,address : " + address);
                 HttpErrorCheck.checkResponse("上报轨迹", response);
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
 
@@ -331,6 +332,7 @@ public class AMapService extends Service {
                             + "用户：" + app.gson.toJson(MainApp.user)));
                 SharedUtil.putBoolean(app, "isCache", true);
 //                isCache = true;
+                UMengTools.sendCustomTrajectory(app, error, jsonObject);
                 super.failure(error);
             }
         });
