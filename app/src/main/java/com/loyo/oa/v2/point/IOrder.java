@@ -1,12 +1,15 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;
 
 import java.util.HashMap;
 
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
@@ -34,4 +37,9 @@ public interface IOrder {
      */
     @GET("/order/{id}")
     void getSaleDetails(@Path("id") String id, Callback<OrderDetail> callback);
+
+    @POST("/order")
+    void addOrder(@Body HashMap<String,Object> map,Callback<OrderAdd> callback);
+
+
 }

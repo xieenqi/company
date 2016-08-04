@@ -1,14 +1,23 @@
 package com.loyo.oa.v2.activityui.order.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.ArrayList;
 
 /**
@@ -19,10 +28,14 @@ public class OrderEstimateListAdapter extends BaseAdapter{
 
     private Context mContext;
     private ArrayList<EstimateAdd> mData;
+    private Handler mHandler;
+    private Bundle  mBundle;
+    private Message msg;
 
-    public OrderEstimateListAdapter(Context context,ArrayList<EstimateAdd> data){
+    public OrderEstimateListAdapter(Context context,ArrayList<EstimateAdd> data,Handler handler){
         this.mContext = context;
         this.mData    = data;
+        this.mHandler = handler;
     }
 
     @Override
@@ -41,7 +54,7 @@ public class OrderEstimateListAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(mContext).inflate(R.layout.item_orderestimate,null);
         ViewHolder holder = null;
         EstimateAdd mEstimateAdd = mData.get(position);
@@ -54,11 +67,16 @@ public class OrderEstimateListAdapter extends BaseAdapter{
             holder.tv_payment = (TextView) convertView.findViewById(R.id.tv_payment);
             holder.tv_Remarks = (TextView) convertView.findViewById(R.id.tv_Remarks);
             holder.tv_titlenum = (TextView) convertView.findViewById(R.id.tv_titlenum);
+
+            holder.btn_edit   = (LinearLayout) convertView.findViewById(R.id.btn_edit);
+            holder.btn_delete = (LinearLayout) convertView.findViewById(R.id.btn_delete);
+
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tv_titlenum.setText("回款记录"+position+1);
+        int index = position+1;
+        holder.tv_titlenum.setText("回款记录"+index);
         holder.tv_esttime.setText(DateTool.timet(mEstimateAdd.receivedAt+"","yyyy-MM-dd"));
         holder.tv_esttime_price.setText("￥"+mEstimateAdd.receivedMoney);
         holder.tv_price.setText("￥"+mEstimateAdd.billingMoney);
@@ -66,6 +84,7 @@ public class OrderEstimateListAdapter extends BaseAdapter{
         holder.tv_Remarks.setText(mEstimateAdd.remark);
 
         switch (mEstimateAdd.payeeMethod){
+
             case 1:
                 holder.tv_payment.setText("现金");
                 break;
@@ -84,6 +103,27 @@ public class OrderEstimateListAdapter extends BaseAdapter{
 
         }
 
+        //删除
+        holder.btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                msg     = new Message();
+                mBundle = new Bundle();
+                mBundle.putInt("posi",position);
+                msg.what = ExtraAndResult.MSG_WHAT_GONG;
+                msg.setData(mBundle);
+                mHandler.sendMessage(msg);
+            }
+        });
+
+        //编辑
+        holder.btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return convertView;
     }
 
@@ -97,6 +137,9 @@ public class OrderEstimateListAdapter extends BaseAdapter{
         TextView tv_payment;       //收款方式
         TextView tv_Remarks;       //备注
         TextView tv_titlenum;
+
+        LinearLayout btn_edit;     //编辑
+        LinearLayout btn_delete;   //删除
 
     }
 }

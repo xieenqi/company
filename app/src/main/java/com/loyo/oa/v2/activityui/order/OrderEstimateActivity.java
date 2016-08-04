@@ -2,11 +2,12 @@ package com.loyo.oa.v2.activityui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.adapter.OrderEstimateListAdapter;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -14,8 +15,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
-
 import java.util.ArrayList;
 
 /**
@@ -37,7 +36,25 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
     private ArrayList<EstimateAdd> mData;
     private OrderEstimateListAdapter mAdapter;
     private Intent mIntent;
+    private Bundle mBundle;
     private String dealPrice;
+
+
+    private Handler mHandler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg){
+
+            if(msg.what == ExtraAndResult.MSG_WHAT_DIALOG){
+                ll_add.setVisibility(View.GONE);
+            }else if(msg.what == ExtraAndResult.MSG_WHAT_GONG){
+                mBundle = msg.getData();
+                mData.remove(mBundle.getInt("posi"));
+                adapterInit();
+                ll_add.setVisibility(View.VISIBLE);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +67,11 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
         mIntent = getIntent();
         if(null != mIntent){
             dealPrice = mIntent.getStringExtra("price");
-            mData     = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
+            mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
+        }
+
+        if(null != mData){
+            ll_add.setVisibility(View.GONE);
         }
 
         ll_back  = (LinearLayout) findViewById(R.id.ll_back);
@@ -73,8 +94,9 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
 
     public void adapterInit(){
         if(null == mAdapter){
-            mData = new ArrayList<EstimateAdd>();
-            mAdapter = new OrderEstimateListAdapter(this,mData);
+            if(null == mData)
+                mData = new ArrayList<EstimateAdd>();
+            mAdapter = new OrderEstimateListAdapter(this,mData,mHandler);
             lv_listview.setAdapter(mAdapter);
         }else{
             mAdapter.notifyDataSetChanged();
@@ -87,13 +109,7 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
 
             //后退
             case R.id.ll_back:
-                if(mData.size() != 0){
-                    mIntent = new Intent();
-                    mIntent.putExtra("data",mData);
-                    app.finishActivity(this,MainApp.ENTER_TYPE_LEFT,RESULT_OK,mIntent);
-                }else{
-                    onBackPressed();
-                }
+                onBackPressed();
                 break;
 
             //新建
@@ -101,6 +117,18 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
                 app.startActivityForResult(this,OrderEstimateAddActivity.class,MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE,null);
                 break;
 
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if(mData.size() != 0){
+            mIntent = new Intent();
+            mIntent.putExtra("data",mData);
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+        }else{
+            super.onBackPressed();
         }
     }
 
@@ -115,6 +143,7 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
             mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
             mData.add(mEstimateAdd);
             adapterInit();
+            mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_DIALOG);
         }
     }
 }
