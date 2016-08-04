@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * 【订单回款】
  * Created by yyy on 16/8/2.
  */
-public class OrderEstimateActivity extends BaseActivity implements View.OnClickListener {
+public class OrderEstimateListActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout ll_back;
     private LinearLayout ll_add;

@@ -152,7 +152,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             case R.id.ll_record://回款记录
                 Bundle mBundle = new Bundle();
                 mBundle.putString("price", tv_money.getText().toString());
-                app.startActivityForResult(this, OrderEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
             case R.id.ll_enclosure://附件
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, 101, null);

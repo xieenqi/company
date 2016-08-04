@@ -21,7 +21,6 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.ContactAddforExtraData;
 import com.loyo.oa.v2.customview.OrderAddforExtraData;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.point.IOrder;
@@ -252,8 +251,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 if(null != estimateData){
                     mBundle.putSerializable("data",estimateData);
                 }
-                mBundle.putInt("fromPage",OrderEstimateActivity.PAGE_ADD);
-                app.startActivityForResult(this,OrderEstimateActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_SOURCE,mBundle);
+                mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_ADD);
+                app.startActivityForResult(this,OrderEstimateListActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_SOURCE,mBundle);
                 break;
 
             //附件

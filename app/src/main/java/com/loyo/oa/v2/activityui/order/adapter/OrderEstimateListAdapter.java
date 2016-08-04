@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.order.OrderEstimateAddActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 
@@ -107,6 +108,9 @@ public class OrderEstimateListAdapter extends BaseAdapter{
                 break;
 
         }
+
+        holder.btn_delete.setOnTouchListener(Global.GetTouch());
+        holder.btn_edit.setOnTouchListener(Global.GetTouch());
 
         //删除
         holder.btn_delete.setOnClickListener(new View.OnClickListener() {
