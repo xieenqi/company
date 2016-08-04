@@ -1,6 +1,9 @@
 package com.loyo.oa.v2.activityui.order.bean;
 
+import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +21,8 @@ public class OrderDetail implements Serializable {
     public long dealMoney;
     public int backMoney;
     public int ratePayment;
-    public int salesAmount;
-    public int discount;
+    public double salesAmount;
+    public double discount;
     public int attachmentCount;
     public int recordNum;
     public int planNum;
@@ -29,4 +32,5 @@ public class OrderDetail implements Serializable {
     public String orderNum;
     public String remark;
     public List<ExtensionDatas> extensionDatas;
+    public ArrayList<SaleIntentionalProduct> proInfo;
 }
