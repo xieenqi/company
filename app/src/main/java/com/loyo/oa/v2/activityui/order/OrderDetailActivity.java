@@ -15,7 +15,10 @@ import com.loyo.oa.v2.activityui.order.bean.ExtensionDatas;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;
+import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
+import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -37,7 +40,7 @@ import retrofit.client.Response;
  */
 public class OrderDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout img_title_left, ll_extra;
+    private LinearLayout img_title_left, ll_extra, ll_product;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
             tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name,
@@ -90,6 +93,8 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         ll_extra = (LinearLayout) findViewById(R.id.ll_extra);
         tv_customer.setOnClickListener(this);
         tv_wfname.setOnClickListener(this);
+        ll_product = (LinearLayout) findViewById(R.id.ll_product);
+        ll_product.setOnClickListener(this);
         getData();
     }
 
@@ -115,7 +120,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 });
                 dialog.show();
                 break;
-            case R.id.tv_customer:
+            case R.id.tv_customer://跳转到相关客户
                 Intent intent = new Intent();
                 intent.putExtra("Id", mData.customerId);
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
@@ -123,12 +128,20 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intent, 2);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
-            case R.id.tv_wfname:
+            case R.id.tv_wfname://跳转到相关审批
                 Intent intentWf = new Intent();
                 intentWf.putExtra(ExtraAndResult.EXTRA_ID, mData.wfId);
                 intentWf.setClass(OrderDetailActivity.this, WfinstanceInfoActivity_.class);
                 startActivityForResult(intentWf, ExtraAndResult.REQUEST_CODE);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                break;
+            case R.id.ll_product:
+                Bundle product = new Bundle();
+                product.putInt("data", ActionCode.ORDER_DETAIL);
+//                product.putString("saleId", selectId);
+                product.putSerializable(ExtraAndResult.EXTRA_DATA, mData.proInfo);
+                app.startActivityForResult(OrderDetailActivity.this, IntentionProductActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
         }
 

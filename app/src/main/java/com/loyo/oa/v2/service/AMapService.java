@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.service;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
@@ -194,7 +193,6 @@ public class AMapService extends APSService {
         float accuracy = aMapLocation.getAccuracy();//定位精度
         String provider = aMapLocation.getProvider();//获取定位提供者
         String time = MainApp.getMainApp().df1.format(new Date(aMapLocation.getTime()));
-        boolean isTimeMin = currentTime - aMapLocation.getTime() >= 2 * 60 * 1000;
         LogUtil.d("【轨迹定位】：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " +
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
