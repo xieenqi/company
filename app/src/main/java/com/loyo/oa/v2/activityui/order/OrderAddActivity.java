@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
@@ -22,12 +23,16 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ContactAddforExtraData;
 import com.loyo.oa.v2.customview.OrderAddforExtraData;
 import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -165,6 +170,48 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    public void commitOrder(){
+        if(TextUtils.isEmpty(et_name.getText().toString())){
+            Toast("请填写订单标题!");
+            return;
+        }else if(TextUtils.isEmpty(tv_customer.getText().toString())){
+            Toast("请选择对应客户!");
+            return;
+        }else if(TextUtils.isEmpty(tv_stage.getText().toString())){
+            Toast("请选择购买产品!");
+            return;
+        }else if(TextUtils.isEmpty(et_money.getText().toString())){
+            Toast("请选择成交金额!");
+            return;
+        }
+        showLoading("");
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("customerId",customerId);
+        map.put("customerName",customerName);
+        map.put("title",et_name.getText().toString());
+        map.put("attachmentUUId","");
+        map.put("dealMoney",Integer.parseInt(et_money.getText().toString()));
+        map.put("orderNum",et_ordernum.getText().toString());
+        map.put("remark",et_remake.getText().toString());
+        map.put("proInfo",productData);
+        map.put("paymentRecords",estimateData);
+        LogUtil.dee("提交参数:"+MainApp.gson.toJson(map));
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                .addOrder(map,new Callback<OrderAdd>() {
+                    @Override
+                    public void success(OrderAdd orderAdd, Response response) {
+                        HttpErrorCheck.checkResponse("订单详情", response);
+                        Toast("新建成功，跳转回调到列表页，刷新列表");
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+
+    }
 
     @Override
     public void onClick(View v) {
@@ -173,7 +220,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //提交
             case R.id.iv_submit:
-                Toast("提交");
+                commitOrder();
                 break;
 
             //后退
