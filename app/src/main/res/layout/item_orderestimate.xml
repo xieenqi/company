@@ -212,7 +212,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dimen_50"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -241,8 +241,8 @@
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/lineCC"
-            android:layout_marginTop="@dimen/dimen_5"
-            android:layout_marginBottom="@dimen/dimen_5"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:layout_marginBottom="@dimen/dimen_8"
             />
 
         <LinearLayout

@@ -13,6 +13,7 @@ import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
+import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
@@ -20,7 +21,6 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.ContactAddforExtraData;
 import com.loyo.oa.v2.customview.OrderAddforExtraData;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.point.IOrder;
@@ -233,10 +233,13 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, null);
                 break;
 
-            //意向产品
+            //购买产品
             case R.id.ll_stage:
+                mBundle = new Bundle();
+                mBundle.putBoolean("boolean",true);
+                mBundle.putInt("data", ActionCode.ORDER_DETAIL);
                 app.startActivityForResult(OrderAddActivity.this, IntentionProductActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, null);
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
                 break;
 
             //回款
@@ -248,7 +251,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 if(null != estimateData){
                     mBundle.putSerializable("data",estimateData);
                 }
-                app.startActivityForResult(this,OrderEstimateActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_SOURCE,mBundle);
+                mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_ADD);
+                app.startActivityForResult(this,OrderEstimateListActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_SOURCE,mBundle);
                 break;
 
             //附件
@@ -280,13 +284,13 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 获取 回款记录的成交金额
      * */
     private String getEstimateName(){
-        String estimateName = "";
+        String estimateName = "￥";
         if(null != estimateData){
             for(EstimateAdd est : estimateData){
-                estimateName += est.receivedMoney;
+                estimateName += est.receivedMoney+"、";
             }
         }
-        return estimateName.length() > 0 ? estimateName.substring(0, estimateName.length() - 1) : "";
+        return estimateName;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.order.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,8 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.OrderEstimateAddActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 
@@ -26,14 +31,15 @@ import java.util.ArrayList;
  */
 public class OrderEstimateListAdapter extends BaseAdapter{
 
-    private Context mContext;
+    private Activity mActivity;
     private ArrayList<EstimateAdd> mData;
     private Handler mHandler;
     private Bundle  mBundle;
+    private Intent  mIntent;
     private Message msg;
 
-    public OrderEstimateListAdapter(Context context,ArrayList<EstimateAdd> data,Handler handler){
-        this.mContext = context;
+    public OrderEstimateListAdapter(Activity activity,ArrayList<EstimateAdd> data,Handler handler){
+        this.mActivity = activity;
         this.mData    = data;
         this.mHandler = handler;
     }
@@ -55,7 +61,7 @@ public class OrderEstimateListAdapter extends BaseAdapter{
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(mContext).inflate(R.layout.item_orderestimate,null);
+        convertView = LayoutInflater.from(mActivity).inflate(R.layout.item_orderestimate,null);
         ViewHolder holder = null;
         EstimateAdd mEstimateAdd = mData.get(position);
         if(null == holder){
@@ -103,6 +109,9 @@ public class OrderEstimateListAdapter extends BaseAdapter{
 
         }
 
+        holder.btn_delete.setOnTouchListener(Global.GetTouch());
+        holder.btn_edit.setOnTouchListener(Global.GetTouch());
+
         //删除
         holder.btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +129,9 @@ public class OrderEstimateListAdapter extends BaseAdapter{
         holder.btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mIntent = new Intent(mActivity, OrderEstimateAddActivity.class);
+                mIntent.putExtra(ExtraAndResult.RESULT_DATA,mData.get(position));
+                mActivity.startActivityForResult(mIntent,ExtraAndResult.REQUEST_CODE_STAGE);
             }
         });
 

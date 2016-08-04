@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -64,6 +65,11 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
 
     public void initUI() {
 
+        mIntent = getIntent();
+        if (mIntent != null) {
+            mEstimateAdd = (EstimateAdd) mIntent.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+        }
+
         ll_time = (LinearLayout) findViewById(R.id.ll_time);
         ll_priecer = (LinearLayout) findViewById(R.id.ll_priecer);
         ll_kind = (LinearLayout) findViewById(R.id.ll_kind);
@@ -82,7 +88,6 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
         et_kaiprice = (EditText) findViewById(R.id.et_kaiprice);
         et_remake = (EditText) findViewById(R.id.et_remake);
 
-
         tv_title.setText("新增回款");
         ll_back.setOnClickListener(this);
         iv_submit.setOnClickListener(this);
@@ -93,6 +98,41 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
         ll_back.setOnTouchListener(Global.GetTouch());
         iv_submit.setOnTouchListener(Global.GetTouch());
 
+        tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
+        estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+
+        if (null != mEstimateAdd) {
+            newUser = new NewUser();
+            newUser.setId(mEstimateAdd.payeeUser.id);
+            newUser.setName(mEstimateAdd.payeeUser.name);
+            newUser.setAvatar(mEstimateAdd.payeeUser.avatar);
+
+            estimatedTime = mEstimateAdd.receivedAt;
+            paymentState = mEstimateAdd.payeeMethod;
+            tv_time.setText(DateTool.timet(mEstimateAdd.receivedAt + "", "yyyy.MM.dd"));
+            et_estprice.setText(mEstimateAdd.receivedMoney + "");
+            et_kaiprice.setText(mEstimateAdd.billingMoney + "");
+            tv_priceer.setText(mEstimateAdd.payeeUser.name);
+            et_remake.setText(mEstimateAdd.remark);
+            switch (mEstimateAdd.payeeMethod) {
+
+                case 1:
+                    tv_kind.setText("现金");
+                    break;
+
+                case 2:
+                    tv_kind.setText("支票");
+                    break;
+
+                case 3:
+                    tv_kind.setText("银行转账");
+                    break;
+
+                case 4:
+                    tv_kind.setText("其他");
+                    break;
+            }
+        }
     }
 
     @Override
@@ -135,6 +175,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
                 mEstimateAdd.payeeUser.avatar = newUser.getAvatar();
                 mEstimateAdd.payeeMethod = paymentState;
                 mEstimateAdd.remark = et_remake.getText().toString();
+
                 mIntent.putExtra("data", mEstimateAdd);
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 

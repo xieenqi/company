@@ -16,6 +16,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  * 【订单回款】
  * Created by yyy on 16/8/2.
  */
-public class OrderEstimateActivity extends BaseActivity implements View.OnClickListener {
+public class OrderEstimateListActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout ll_back;
     private LinearLayout ll_add;
@@ -40,7 +41,17 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
     private Intent mIntent;
     private Bundle mBundle;
     private String dealPrice;
+    private int    fromPage;
 
+    /**
+     * 来自新建订单
+     * */
+    public static int PAGE_ADD = 0x01;
+
+    /**
+     * 来自编辑订单
+     * */
+    public static int PAGE_EDIT = 0x02;
 
     private Handler mHandler = new Handler() {
 
@@ -68,8 +79,10 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
     public void initUI() {
         mIntent = getIntent();
         if (null != mIntent) {
+            fromPage  = mIntent.getIntExtra("fromPage",PAGE_ADD);
             dealPrice = mIntent.getStringExtra("price");
             mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
+
         }
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
@@ -93,8 +106,9 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
 
     public void adapterInit() {
         if (null == mAdapter) {
-            if (null == mData)
+            if (null == mData){
                 mData = new ArrayList<EstimateAdd>();
+            }
             mAdapter = new OrderEstimateListAdapter(this, mData, mHandler);
             lv_listview.setAdapter(mAdapter);
         } else {
@@ -140,6 +154,10 @@ public class OrderEstimateActivity extends BaseActivity implements View.OnClickL
 
         if (requestCode == ExtraAndResult.REQUEST_CODE_STAGE) {
             mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
+            LogUtil.dee("mEstimateAdd:"+MainApp.gson.toJson(mEstimateAdd));
+            if(fromPage == PAGE_ADD){
+                mData.clear();
+            }
             mData.add(mEstimateAdd);
             adapterInit();
             mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_DIALOG);
