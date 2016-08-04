@@ -23,7 +23,6 @@ import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.DateTool;
 
-import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -209,7 +208,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
 
     public void paymentSet() {
         String[] data = {"现金", "支票", "银行转账", "其它"};
-        final PaymentPopView popView = new PaymentPopView(this, Arrays.asList(data), "付款方式");
+        final PaymentPopView popView = new PaymentPopView(this, data, "付款方式");
         popView.show();
         popView.setCanceledOnTouchOutside(true);
         popView.setCallback(new PaymentPopView.VaiueCallback() {
