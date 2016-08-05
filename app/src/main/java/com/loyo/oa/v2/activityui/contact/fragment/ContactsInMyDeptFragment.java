@@ -1,6 +1,13 @@
 package com.loyo.oa.v2.activityui.contact.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.content.*;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +21,8 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.CharacterParser;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.customview.SideBar;
 import com.loyo.oa.v2.tool.BaseFragment;
 
@@ -53,11 +62,25 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public DBUserPinyinComparator pinyinComparator;
 
     /* Method */
+
+
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            Bundle b = intent.getExtras();
+            String userId = b.getString("userId");
+            loadData();
+            adapter.setDatasource(datasource);
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pinyinComparator = new DBUserPinyinComparator();
         characterParser = CharacterParser.getInstance();
+        registerBroadcastReceiver();
         loadData();
     }
 
@@ -78,6 +101,12 @@ public class ContactsInMyDeptFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        unregisterBroadcastReceiver();
+    }
+
     public void setupView(View view) {
         mInflater = LayoutInflater.from(getActivity());
         sortListView = (ListView) view.findViewById(R.id.expandableListView_user);
@@ -88,6 +117,15 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         myUserList = (ArrayList<DBUser>) Common.getUsersAtSameDepts(/* 包含自己 */false);
         Collections.sort(myUserList, pinyinComparator);
         this.buildData();
+    }
+
+    public void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        getContext().registerReceiver(mReceiver, filter);
+    }
+
+    public void unregisterBroadcastReceiver() {
+        getContext().unregisterReceiver(mReceiver);
     }
 
     public void buildData(){

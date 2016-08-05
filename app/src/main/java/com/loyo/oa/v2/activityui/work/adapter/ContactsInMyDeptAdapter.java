@@ -37,6 +37,10 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         this.list = list;
     }
 
+    public void setDatasource(List<Object> datasource){
+        list = datasource;
+    }
+
     @Override //SectionIndexer
     public Object[] getSections() {
         return null;

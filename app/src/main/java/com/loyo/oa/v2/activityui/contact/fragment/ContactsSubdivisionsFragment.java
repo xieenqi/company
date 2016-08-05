@@ -1,6 +1,9 @@
 package com.loyo.oa.v2.activityui.contact.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -63,12 +66,39 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
     private MainApp app = MainApp.getMainApp();
     public PinyinComparator pinyinComparator;
 
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            Bundle b = intent.getExtras();
+            String userId = b.getString("userId");
+            loadData();
+            listAdapter.datasource = datasource;
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        registerBroadcastReceiver();
         pinyinComparator = new PinyinComparator();
         loadData();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        /*及时刷新头像*/
+        // TODO:
+        listAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        unregisterBroadcastReceiver();
     }
 
     @Nullable
@@ -163,6 +193,15 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
             listView.expandGroup(i);
         }
 
+    }
+
+    public void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        getContext().registerReceiver(mReceiver, filter);
+    }
+
+    public void unregisterBroadcastReceiver() {
+        getContext().unregisterReceiver(mReceiver);
     }
 
     /**

@@ -127,12 +127,15 @@ public class ContactInfoActivity extends BaseActivity {
     void getUserInfo() {
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
-            public void success(final User users, final Response response) {
-
-                // TODO:
-                // user = users;
+            public void success(final User responseUser, final Response response) {
+                OrganizationManager.updateDBUserWithUser(user, responseUser);
+                OrganizationManager.shareManager().updateUser(user);
                 HttpErrorCheck.checkResponse(response);
-                initData();
+                updateUIWithUser(user);
+
+                Intent it = new Intent("com.loyo.oa.v2.USER_EDITED");
+                it.putExtra("userId", user.id);
+                sendBroadcast(it);
 
             }
 
@@ -190,6 +193,45 @@ public class ContactInfoActivity extends BaseActivity {
             Utils.setContent(tv_age, age + "");
         }
 
+    }
+
+    public void updateUIWithUser(DBUser user){
+        if (null == user) {
+            return;
+        }
+
+
+        //默认头像，头像获取
+        if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
+            if (user.gender == 2) {
+                defaultAvatar = R.drawable.icon_contact_avatar;
+            } else {
+                defaultAvatar = R.drawable.img_default_user;
+            }
+            img_title_user.setImageResource(defaultAvatar);
+        } else {
+            ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
+        }
+
+        Utils.setContent(tv_realname, user.name);
+        Utils.setContent(tv_deptname, user.shortDeptNames);
+
+        Utils.setContent(tv_phone, user.mobile);
+        String gender = "";
+        if (user.gender == 2)
+            gender = "女";
+        else if (user.gender == 1)
+            gender = "男";
+        Utils.setContent(tv_sex, gender);
+        Utils.setContent(tv_weixin, user.weixinId);
+        if (!TextUtils.isEmpty(user.birthDay)) {
+            int age = Utils.getAge(user.birthDay.substring(0, 4));
+            if (age >= 150) {
+                return;
+            }
+            Utils.setContent(tv_birthday, user.birthDay.substring(0,10));
+            Utils.setContent(tv_age, age + "");
+        }
     }
 
     @Override

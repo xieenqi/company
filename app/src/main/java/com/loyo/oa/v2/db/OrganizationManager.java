@@ -530,8 +530,69 @@ public class OrganizationManager {
         return result;
     }
 
+    public void updateUser(DBUser user){
+        if (user.id == null) {
+            return ;
+        }
+        (new UserDao(getContext())).createOrUpdate(user);
+
+        // 更新缓存
+        if (OrganizationManager.sLoginUser != null
+                && OrganizationManager.sLoginUser.id.equals(user.id)) {
+            OrganizationManager.updateDBUserWithDBUser(OrganizationManager.sLoginUser, user);
+        }
+
+
+        List<DBDepartment> depts = user.allDepartment();
+        if (depts == null) return;
+
+        DBUser result = null;
+        Iterator<DBDepartment> iterator = depts.iterator();
+        while (iterator.hasNext()) {
+            DBDepartment deptBelongTo = iterator.next();
+            String xpath = deptBelongTo.xpath;
+
+            if (xpath != null) { // 在缓存中查找
+                DBDepartment company = OrganizationManager.sComany;
+                if (company != null) {
+                    DBDepartment dept = company.subDepartmentWithXpath(xpath);
+                    List<DBUser> users = dept!= null ? dept.allUsers():null;
+                    if (users != null) {
+                        Iterator<DBUser> userIterator = users.iterator();
+                        while (userIterator.hasNext()) {
+                            DBUser target = userIterator.next();
+                            if (target.id != null && target.id.equals(user.id)) {
+                                //
+                                OrganizationManager.updateDBUserWithDBUser(target, user);
+                                break;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        DBDepartment company = OrganizationManager.sComany;
+        if (company != null ) {
+            List<DBUser> users = company.allUsersWithoutSubDepartmentUsers();
+            if (users == null) return;
+            Iterator<DBUser> userIterator = users.iterator();
+            while (userIterator.hasNext()) {
+                DBUser target = userIterator.next();
+                if (target.id != null && target.id.equals(user.id)) {
+                    //
+                    OrganizationManager.updateDBUserWithDBUser(target, user);
+                    break;
+                }
+            }
+        }
+
+    }
+
     public List<List<Object>> getChildrenOf(String deptId, String xpath){
 
+        DBDepartment company = OrganizationManager.sComany;
+        List<DBUser> all  = company.allUsers();
         List<Object> users = new ArrayList<Object>();
         List<Object> depts = new ArrayList<Object>();
         List<List<Object>> result = new ArrayList<List<Object>>();
@@ -555,6 +616,62 @@ public class OrganizationManager {
      *  DBPosition   <---  Position
      *  DBUserNode   <---  UserInfo
      */
+
+    public static void updateDBUserWithUser(DBUser result, User user)
+    {
+        result.name = user.name;
+        result.gender = user.gender;
+        result.mobile = user.mobile;
+        result.avatar = user.avatar;
+        //result.activated = user
+        result.simplePinyin = user.simplePinyin;
+        result.fullPinyin = user.fullPinyin;
+        result.weixinId = user.weixinId;
+        result.birthDay = user.birthDay;
+        //result.bqqDeletable = user.bqq
+        result.isSuperUser = user.isSuperUser;
+        result.isBQQ = user.isBQQ;
+
+        ArrayList<UserInfo> deptsArray = user.depts;
+        if (deptsArray == null){
+            return ;
+        }
+
+        StringBuilder namesBuilder = new StringBuilder();
+
+        for (int k = 0; k < deptsArray.size();k++) {
+            UserInfo dep = deptsArray.get(k);
+            if (dep.getShortDept() != null){
+
+                String name = dep.getShortDept().getName();
+                if (name != null && name.length() > 0) {
+                    namesBuilder.append(name);
+                }
+            }
+        }
+        result.shortDeptNames = namesBuilder.toString();
+
+        return ;
+    }
+
+    public static void updateDBUserWithDBUser(DBUser result, DBUser user)
+    {
+        result.name = user.name;
+        result.gender = user.gender;
+        result.mobile = user.mobile;
+        result.avatar = user.avatar;
+        //result.activated = user
+        result.simplePinyin = user.simplePinyin;
+        result.fullPinyin = user.fullPinyin;
+        result.weixinId = user.weixinId;
+        result.birthDay = user.birthDay;
+        //result.bqqDeletable = user.bqq
+        result.isSuperUser = user.isSuperUser;
+        result.isBQQ = user.isBQQ;
+        result.shortDeptNames = user.shortDeptNames;
+
+        return ;
+    }
 
     public static DBUser convertDBUserFormUser(User user) {
         if (user.id == null)
