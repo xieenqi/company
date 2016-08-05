@@ -471,4 +471,42 @@ public class OrganizationManager {
 
         return result;
     }
+
+    public DBDepartment getDepartment(String deptId, String xpath) {
+        DBDepartment result = null;
+
+        if (deptId == null) {
+            return result;
+        }
+        if (xpath != null) { // 在缓存中查找
+            DBDepartment company = OrganizationManager.sComany;
+            if (company != null) {
+                result = company.subDepartmentWithXpath(xpath);
+                if (result != null) return result;
+            }
+        }
+
+        // 从数据库读取
+        result = (new DepartmentDao(getContext())).get(deptId);
+
+        return result;
+    }
+
+    public List<List<Object>> getChildrenOf(String deptId, String xpath){
+
+        List<Object> users = new ArrayList<Object>();
+        List<Object> depts = new ArrayList<Object>();
+        List<List<Object>> result = new ArrayList<List<Object>>();
+        result.add(users);
+        result.add(depts);
+
+        DBDepartment department = this.getDepartment(deptId, xpath);
+        if (department != null) {
+            users.addAll(department.allUsersWithoutSubDepartmentUsers());
+            depts.addAll(department.subDepartments());
+        }
+
+        return result;
+
+    }
 }

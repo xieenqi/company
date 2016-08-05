@@ -49,7 +49,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
     private View view;
     private ExpandableListView expandableListView_user;
     private MyLetterListView letterView;
-    public LayoutInflater mInflater;
 
     /* Adaptor */
     private ContactsDepartmentExpandableListAdapter userGroupExpandableListAdapter;
@@ -71,7 +70,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_user, container, false);
-            mInflater = LayoutInflater.from(getActivity());
             setupView();
             setupAdapterAndListener();
         }
@@ -181,6 +179,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
                     Bundle b = new Bundle();
                     b.putString("depId", dept.id!=null?dept.id:"");
                     b.putString("depName", dept.name!=null?dept.name:"");
+                    b.putString("xpath", dept.xpath!=null?dept.xpath:"");
                     app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 }
                 else if (item.getClass()==DBUser.class) {

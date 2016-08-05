@@ -5,9 +5,10 @@ package com.loyo.oa.v2.db.bean;
  */
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import java.io.Serializable;
 
 @DatabaseTable(tableName = "roles")
-public class DBRole {
+public class DBRole implements Serializable {
 
     @DatabaseField(id = true)
     public String id;

@@ -6,9 +6,10 @@ package com.loyo.oa.v2.db.bean;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import java.io.Serializable;
 
 @DatabaseTable(tableName = "user_nodes")
-public class DBUserNode {
+public class DBUserNode implements Serializable{
 
     @DatabaseField(id = true)
     public String id;
