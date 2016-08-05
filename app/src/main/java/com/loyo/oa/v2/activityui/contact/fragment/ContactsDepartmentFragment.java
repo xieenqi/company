@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.contact.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,14 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.customview.MyLetterListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ListIterator;
 
 /**
  * com.loyo.oa.v2.ui.fragment
@@ -86,10 +89,18 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
     public void loadData() {
         List<DBDepartment> level1Departments = OrganizationManager.shareManager().level1Departments();
-        List<DBUser> level1Users = OrganizationManager.shareManager()
-                                    .company().allUsersWithoutSubDepartmentUsers();
-        List<DBDepartment> currentUserDepts = OrganizationManager.shareManager()
-                                                .currentUser(false).allDepartment();
+        DBDepartment company = OrganizationManager.shareManager().company();
+        DBUser currentUser = OrganizationManager.shareManager().currentUser(false);
+        List<DBUser> level1Users = new ArrayList<DBUser>();
+        if (company != null) { // 当前公司用户可能为空
+            level1Users.addAll(company.allUsersWithoutSubDepartmentUsers());
+        }
+
+        List<DBDepartment> currentUserDepts = new ArrayList<DBDepartment>();
+        if (currentUser != null) { // 当前登录用户可能为空
+            currentUserDepts.addAll(currentUser.allDepartment());
+        }
+
         Collections.sort(level1Departments, pinyinComparator);
         ArrayList<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
         Iterator<DBDepartment> deptsIterator = level1Departments.iterator();
@@ -291,10 +302,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 }
 
                 holder.tv_content.setText(dept.name + " ( "+ dept.userNum + "人 ) ");
-//                if (childPosition == getChildrenCount(groupPosition) - 1)
-//                    ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
-//                else
-//                    ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
             }
             else if (item.getClass() == DBUser.class) {
                 DBUser user = (DBUser) item;

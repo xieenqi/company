@@ -92,6 +92,10 @@ public class DBUser implements Serializable {
 
         List<DBUserNode> result = new ArrayList<DBUserNode>();
         ForeignCollection<DBUserNode> nodes = this.userNodes;
+        if (nodes == null) {
+            return result;
+        }
+
         CloseableIterator<DBUserNode> iterator = nodes.closeableIterator();
 
         DBUserNode node = null;
@@ -116,6 +120,10 @@ public class DBUser implements Serializable {
         List<DBDepartment> result = new ArrayList<DBDepartment>();
 
         List<DBUserNode> nodes = this.allNodes();
+        if (nodes == null) {
+            return result;
+        }
+
         Iterator<DBUserNode> iterator = nodes.iterator();
         while (iterator.hasNext()){
             DBUserNode node = iterator.next();

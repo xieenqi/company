@@ -76,6 +76,9 @@ public class DBDepartment {
 
         List<DBUserNode> result = new ArrayList<DBUserNode>();
         ForeignCollection<DBUserNode> nodes = this.userNodes;
+        if (nodes == null) {
+            return result;
+        }
         CloseableIterator<DBUserNode> iterator = nodes.closeableIterator();
 
         DBUserNode node = null;
@@ -102,17 +105,23 @@ public class DBDepartment {
 
         // 本部门的用户
         List<DBUserNode> nodes = this.allNodes();
-        Iterator<DBUserNode> iterator = nodes.iterator();
-        while (iterator.hasNext()){
-            DBUserNode node = iterator.next();
-            if (node.user != null){
-                result.add(node.user);
+        if (nodes != null) {
+            Iterator<DBUserNode> iterator = nodes.iterator();
+            while (iterator.hasNext()){
+                DBUserNode node = iterator.next();
+                if (node.user != null){
+                    result.add(node.user);
+                }
             }
         }
 
         //  子部门的用户
         List<DBDepartment> childrenList = new ArrayList<DBDepartment>();
         ForeignCollection<DBDepartment> children = this.childDepartments;
+        if (children == null) {
+            return result;
+        }
+
         CloseableIterator<DBDepartment> deptIterator = children.closeableIterator();
 
         try {
@@ -139,6 +148,10 @@ public class DBDepartment {
 
         // 本部门的用户
         List<DBUserNode> nodes = this.allNodes();
+        if (nodes == null) {
+            return result;
+        }
+
         Iterator<DBUserNode> iterator = nodes.iterator();
         while (iterator.hasNext()){
             DBUserNode node = iterator.next();
