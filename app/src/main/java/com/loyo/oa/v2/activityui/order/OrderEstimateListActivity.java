@@ -127,7 +127,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
             //新建
             case R.id.ll_add:
-                app.startActivityForResult(this, OrderEstimateAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, null);
+                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, null);
                 break;
 
         }

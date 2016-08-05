@@ -47,6 +47,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             tv_creator_time, tv_wfname, tv_order_number, tv_memo;
     private OrderDetail mData;
     private String orderId;
+    private Bundle mBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +116,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                     @Override
                     public void onClick(int which) {
-
+                    /* mBundle = new Bundle();
+                       mBundle.putSerializable("data",mData);
+                       app.startActivityForResult(OrderDetailActivity.this,OrderAddActivity.class,MainApp.ENTER_TYPE_RIGHT,0x01,mBundle);*/
                     }
                 });
                 dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
@@ -144,7 +147,6 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             case R.id.ll_product://购买产品
                 Bundle product = new Bundle();
                 product.putInt("data", ActionCode.ORDER_DETAIL);
-//                product.putString("saleId", selectId);
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mData.proInfo);
                 app.startActivityForResult(OrderDetailActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
@@ -158,7 +160,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, 101, null);
                 break;
             case R.id.ll_plan://回款计划
-                app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, null);
+                mBundle = new Bundle();
+                mBundle.putString("orderId",mData.id);
+                app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
         }
 

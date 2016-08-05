@@ -23,14 +23,13 @@ import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.DateTool;
 
-import java.util.Arrays;
 import java.util.Calendar;
 
 /**
  * 【新增回款】
  * Created by yyy on 16/8/3.
  */
-public class OrderEstimateAddActivity extends BaseActivity implements View.OnClickListener {
+public class OrderAddEstimateActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout ll_time;        //回款日期
     private LinearLayout ll_priecer;     //收款人
@@ -188,13 +187,13 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
 
             //收款人
             case R.id.ll_priecer:
-                SelectDetUserActivity2.startThisForOnly(OrderEstimateAddActivity.this, null);
+                SelectDetUserActivity2.startThisForOnly(OrderAddEstimateActivity.this, null);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
             //附件
             case R.id.ll_attachment:
-                Intent intent = new Intent(OrderEstimateAddActivity.this, OrderAttachmentActivity.class);
+                Intent intent = new Intent(OrderAddEstimateActivity.this, OrderAttachmentActivity.class);
                 startActivity(intent);
                 break;
 
@@ -209,7 +208,7 @@ public class OrderEstimateAddActivity extends BaseActivity implements View.OnCli
 
     public void paymentSet() {
         String[] data = {"现金", "支票", "银行转账", "其它"};
-        final PaymentPopView popView = new PaymentPopView(this, Arrays.asList(data), "付款方式");
+        final PaymentPopView popView = new PaymentPopView(this, data, "付款方式");
         popView.show();
         popView.setCanceledOnTouchOutside(true);
         popView.setCallback(new PaymentPopView.VaiueCallback() {

@@ -1,9 +1,15 @@
 package com.loyo.oa.v2.point;
 
+import android.telecom.Call;
+
+import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;
+import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -38,8 +44,21 @@ public interface IOrder {
     @GET("/order/{id}")
     void getSaleDetails(@Path("id") String id, Callback<OrderDetail> callback);
 
+    /**
+     * 创建订单
+     * */
     @POST("/order")
     void addOrder(@Body HashMap<String,Object> map,Callback<OrderAdd> callback);
 
+    /**
+     * 创建回款计划
+     * */
+    @POST("/order/plan")
+    void addPlanEstimate(@Body HashMap<String,Object> map,Callback<EstimatePlanAdd> callback);
 
+    /**
+     * 获取 回款计划列表
+     * */
+    @GET("/order/plan/")
+    void getPlanEstimateList(@QueryMap HashMap<String,Object> map,Callback<ArrayList<PlanEstimateList>> callback);
 }

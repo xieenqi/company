@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,11 +29,11 @@ public class PaymentPopView extends Dialog {
     private LayoutInflater inflater;
     private VaiueCallback callback;
 
-    public PaymentPopView(Context context, List<String> data, String title) {
+    public PaymentPopView(Context context, String[] data, String title) {
         super(context);
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.data = data;
+        this.data = Arrays.asList(data);
     }
 
     @Override

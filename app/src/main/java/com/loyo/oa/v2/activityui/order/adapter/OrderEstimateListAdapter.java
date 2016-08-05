@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.order.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,16 +11,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.order.OrderEstimateAddActivity;
+import com.loyo.oa.v2.activityui.order.OrderAddEstimateActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -129,7 +125,7 @@ public class OrderEstimateListAdapter extends BaseAdapter{
         holder.btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mIntent = new Intent(mActivity, OrderEstimateAddActivity.class);
+                mIntent = new Intent(mActivity, OrderAddEstimateActivity.class);
                 mIntent.putExtra(ExtraAndResult.RESULT_DATA,mData.get(position));
                 mActivity.startActivityForResult(mIntent,ExtraAndResult.REQUEST_CODE_STAGE);
             }
