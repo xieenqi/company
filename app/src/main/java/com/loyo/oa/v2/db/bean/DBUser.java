@@ -45,7 +45,7 @@ public class DBUser implements Serializable {
     @DatabaseField
     public String weixinId;
 
-    //@DatabaseField
+    @DatabaseField
     public String birthDay;
 
     @DatabaseField

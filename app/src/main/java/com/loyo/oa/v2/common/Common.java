@@ -12,14 +12,17 @@ import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.beans.Position;
+import com.loyo.oa.v2.activityui.customer.bean.Role;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
-import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.db.bean.*;
 import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.DateTool;
@@ -37,6 +40,7 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.http.PUT;
 
 public final class Common {
 
@@ -580,4 +584,5 @@ public final class Common {
         }
 
     }
+
 }

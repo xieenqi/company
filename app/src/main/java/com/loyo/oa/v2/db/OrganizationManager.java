@@ -36,6 +36,13 @@ import com.loyo.oa.v2.db.dao.RoleDao;
 import com.loyo.oa.v2.db.dao.UserDao;
 import com.loyo.oa.v2.db.dao.UserNodeDao;
 
+import com.loyo.oa.v2.beans.Position;
+import com.loyo.oa.v2.activityui.customer.bean.Role;
+import com.loyo.oa.v2.beans.UserInfo;
+import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.other.bean.User;
+
+
 import com.loyo.oa.v2.application.MainApp;
 
 public class OrganizationManager {
@@ -508,5 +515,245 @@ public class OrganizationManager {
 
         return result;
 
+    }
+
+    /**
+     *  DBUser       <---> User
+     *  DBDepartment <---  Department
+     *  DBRole       <---  Role
+     *  DBPosition   <---  Position
+     *  DBUserNode   <---  UserInfo
+     */
+
+    public static DBUser convertDBUserFormUser(User user) {
+        if (user.id == null)
+            return null;
+
+        DBUser result = new DBUser();
+        result.id = user.id;
+        result.name = user.name;
+        result.gender = user.gender;
+        result.mobile = user.mobile;
+        result.avatar = user.avatar;
+        //result.activated = user
+        result.simplePinyin = user.simplePinyin;
+        result.fullPinyin = user.fullPinyin;
+        result.weixinId = user.weixinId;
+        result.birthDay = user.birthDay;
+        //result.bqqDeletable = user.bqq
+        result.isSuperUser = user.isSuperUser;
+        result.isBQQ = user.isBQQ;
+
+        ArrayList<UserInfo> deptsArray = user.depts;
+        if (deptsArray == null){
+            return result;
+        }
+
+        StringBuilder namesBuilder = new StringBuilder();
+
+        for (int k = 0; k < deptsArray.size();k++) {
+            UserInfo dep = deptsArray.get(k);
+            if (dep.getShortDept() != null){
+
+                String name = dep.getShortDept().getName();
+                if (name != null && name.length() > 0) {
+                    namesBuilder.append(name);
+                }
+            }
+        }
+        result.shortDeptNames = namesBuilder.toString();
+
+        return result;
+    }
+
+    public static DBDepartment convertDBDepartmentFromDepartment(Department dept) {
+        if (dept.id == null) {
+            return null;
+        }
+        DBDepartment d = new DBDepartment();
+        d.id = dept.id;
+        d.xpath = dept.xpath;
+        d.superiorId = dept.superiorId;
+        d.name = dept.name;
+        d.simplePinyin = dept.simplePinyin;
+        d.userNum = Integer.valueOf(dept.userNum);
+        d.isRoot = d.id.equals(d.superiorId);
+
+        return d;
+    }
+
+    public static DBRole convertDBRoleFromUser(User user) {
+        if (user.id == null) {
+            return null;
+        }
+
+        DBRole role = null;
+        Role roleObj = user.role;
+        String roleId = roleObj!=null?roleObj.id:null;
+        if (roleId!=null) {
+            role = new DBRole();
+            role.id = roleId;
+            role.name = roleObj.name;
+            role.dataRange = roleObj.dataRange;
+        }
+        return role;
+    }
+
+    public static DBPosition convertDBPositionFromUser(User user, String depId) {
+        if (user.getId() == null) {
+            return null;
+        }
+
+        ArrayList<UserInfo> deptsArray = user.depts;
+        if (deptsArray == null){
+            return null;
+        }
+
+        DBPosition pos = new DBPosition();
+
+        for (int k = 0; k < deptsArray.size();k++) {
+            UserInfo dep = deptsArray.get(k);
+            if (dep.getShortDept() != null
+                    && dep.getShortDept().id!=null
+                    && dep.getShortDept().id.equals(depId)){
+
+
+                String positionId = dep.getShortPosition()!=null ?
+                        dep.getShortPosition().getId() : null;
+                if (positionId != null){
+                    pos = new DBPosition();
+                    pos.id = positionId;
+                    pos.name = dep.getShortPosition().getName();;
+                    pos.sequence = dep.getShortPosition().getSequence();
+                }
+                break;
+
+            }
+        }
+        return pos;
+    }
+
+    public static String titleFromUser(User user, String depId) {
+        if (user.getId() == null) {
+            return null;
+        }
+
+        ArrayList<UserInfo> deptsArray = user.depts;
+        if (deptsArray == null){
+            return null;
+        }
+
+        String title = null;
+        for (int k = 0; k < deptsArray.size();k++) {
+            UserInfo dep = deptsArray.get(k);
+            if (dep.getShortDept() != null
+                    && dep.getShortDept().id!=null
+                    && dep.getShortDept().id.equals(depId)){
+                title = dep.getTitle();
+            }
+        }
+        return title;
+    }
+
+    public void saveOrgnizitionToDB(final ArrayList<Department> list) {
+
+
+        final long saveTransactionId = (long)((Math.random() * 9 + 1) * 100000000);
+        try {
+            TransactionManager.callInTransaction(mDatabaseHelper.getConnectionSource(),
+                    new Callable<Void>()
+                    {
+                        @Override
+                        public Void call() throws Exception
+                        {
+
+                            DepartmentDao departmentDao  = new DepartmentDao(context);
+                            PositionDao positionDao = new PositionDao(context);
+                            RoleDao roleDao  = new RoleDao(context);
+                            UserDao userDao  = new UserDao(context);
+                            UserNodeDao nodeDao  = new UserNodeDao(context);
+                            if (list == null || list.size() == 0) {
+                                return null;
+                            }
+
+                            List<DBDepartment> tmpDepts = new ArrayList<DBDepartment>();
+
+                            for(int i = 0; i < list.size(); i++) {
+                                Department departmentObj = list.get(i);
+
+                                // 部门
+                                DBDepartment d = OrganizationManager.convertDBDepartmentFromDepartment(departmentObj);
+                                tmpDepts.add(d);
+
+                                // Node
+                                ArrayList<User> userArray = departmentObj.users;
+                                if (userArray == null) {
+                                    departmentDao.createOrUpdate(d);
+                                    continue;
+                                }
+                                for(int j = 0; j < userArray.size(); j++) {
+                                    User userObj = userArray.get(j);
+                                    DBUser user = OrganizationManager.convertDBUserFormUser(userObj);
+                                    DBPosition position = OrganizationManager.convertDBPositionFromUser(userObj, d.id);
+                                    String title = OrganizationManager.titleFromUser(userObj, d.id);
+
+                                    DBRole role = OrganizationManager.convertDBRoleFromUser(userObj);
+                                    DBUserNode node = new DBUserNode();
+                                    node.id = user.id + "@" + d.id;
+                                    node.title = title;
+                                    node.position = position;
+                                    node.role = role;
+                                    node.user = user;
+                                    node.department = d;
+                                    node.saveTransactionId = saveTransactionId;
+                                    departmentDao.createOrUpdate(d);
+                                    userDao.createOrUpdate(user);
+                                    roleDao.createOrUpdate(role);
+                                    positionDao.createOrUpdate(position);
+                                    nodeDao.createorUpdate(node);
+                                }
+                            }
+
+                            for (int i = 0; i < tmpDepts.size(); i++) {
+                                DBDepartment dept = tmpDepts.get(i);
+                                if (dept.superiorId != null && !(dept.superiorId.equals(dept.id))) {
+                                    DBDepartment parent = departmentDao.get(dept.superiorId);
+                                    dept.parentDepartment = parent;
+                                    departmentDao.createOrUpdate(dept);
+                                }
+                                else {
+                                    departmentDao.createOrUpdate(dept);
+                                }
+                            }
+
+                            {
+                                DBUser user = userDao.get("573576daebe07f03eee89096");
+                                DBDepartment dept = departmentDao.get("56a622250c342e5408000002");
+                                DBUserNode node = new DBUserNode();
+                                node.user = user;
+                                node.department = dept;
+                                node.id = user.id + "@" + dept.id;
+                                node.saveTransactionId = saveTransactionId;
+                                nodeDao.createorUpdate(node);
+                            }
+
+
+
+                            // 删除过时数据
+                            DeleteBuilder<DBUserNode, String> deleteBuilder = nodeDao.getDao().deleteBuilder();
+                            //
+                            deleteBuilder.where().ne("saveTransactionId", saveTransactionId);
+                            // prepare our sql statement
+                            PreparedDelete<DBUserNode> preparedDelete = deleteBuilder.prepare();
+                            // query for all
+                            nodeDao.getDao().delete(preparedDelete);
+                            return null;
+                        }
+                    });
+
+        }
+        catch (Exception e) {
+            Log.v("debug", "error");
+        }
     }
 }

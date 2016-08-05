@@ -126,7 +126,7 @@ public class InitDataService extends IntentService {
              * 写入结构化数据到数据库
              * Add by ethan
              */
-            OrganizationManager.shareManager().saveOrgnizitionToDB(jsonString);
+            OrganizationManager.shareManager().saveOrgnizitionToDB(lstDepartment_current);
 
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
