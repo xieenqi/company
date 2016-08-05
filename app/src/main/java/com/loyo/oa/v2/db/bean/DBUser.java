@@ -134,5 +134,25 @@ public class DBUser implements Serializable {
 
         return result;
     }
+
+    public String anyDepartmentXpath() {
+        String result = null;
+
+        List<DBUserNode> nodes = this.allNodes();
+        if (nodes == null) {
+            return result;
+        }
+
+        Iterator<DBUserNode> iterator = nodes.iterator();
+        while (iterator.hasNext()){
+            DBUserNode node = iterator.next();
+            if (node.department != null && node.department.xpath != null){
+                result = node.department.xpath;
+                return result;
+            }
+        }
+
+        return result;
+    }
 }
 

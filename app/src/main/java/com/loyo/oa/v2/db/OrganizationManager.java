@@ -499,6 +499,37 @@ public class OrganizationManager {
         return result;
     }
 
+    public DBUser getUser(String userId, String deptXpath){
+        DBUser result = null;
+
+        if (userId == null) {
+            return result;
+        }
+        if (deptXpath != null) { // 在缓存中查找
+            DBDepartment company = OrganizationManager.sComany;
+            if (company != null) {
+                DBDepartment dept = company.subDepartmentWithXpath(deptXpath);
+                List<DBUser> users = dept!= null ? dept.allUsers():null;
+                if (users != null) {
+                    Iterator<DBUser> iterator = users.iterator();
+                    while (iterator.hasNext()) {
+                        DBUser user = iterator.next();
+                        if (user.id != null && user.id.equals(userId)) {
+                            result = user;
+                            return result;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        // 从数据库读取
+        result = (new UserDao(getContext())).get(userId);
+
+        return result;
+    }
+
     public List<List<Object>> getChildrenOf(String deptId, String xpath){
 
         List<Object> users = new ArrayList<Object>();

@@ -33,6 +33,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IMobile;
 import com.loyo.oa.v2.point.IUser;
@@ -113,7 +114,11 @@ public class ContactInfoEditActivity extends BaseActivity {
     @ViewById
     TextView name_title_user;
     @Extra
-    DBUser user;
+    String  userId;
+    @Extra
+    String  xpath;
+
+    private DBUser user;
 
 
     private int mobile_phone = 1;
@@ -310,6 +315,9 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+
+        user = OrganizationManager.shareManager().getUser(userId, xpath);
+
         if (null == user) {
             return;
         }

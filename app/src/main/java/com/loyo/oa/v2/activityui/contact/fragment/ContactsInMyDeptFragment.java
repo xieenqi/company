@@ -137,7 +137,9 @@ public class ContactsInMyDeptFragment extends BaseFragment {
                 }
                 DBUser user = (DBUser) item;
                 Bundle b = new Bundle();
-                b.putSerializable("user", user);
+                String xpath = user.anyDepartmentXpath();
+                b.putSerializable("userId", user.id!=null?user.id:"");
+                b.putSerializable("xpath", xpath!=null?xpath:"");
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
 
             }

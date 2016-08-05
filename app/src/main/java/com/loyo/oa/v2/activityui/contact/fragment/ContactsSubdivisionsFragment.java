@@ -31,6 +31,7 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -143,7 +144,9 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
                 else if (item.getClass()==DBUser.class) {
                     DBUser user = (DBUser) item;
                     Bundle b = new Bundle();
-                    b.putSerializable("user", user);
+                    String xpath = user.anyDepartmentXpath();
+                    b.putSerializable("userId", user.id!=null?user.id:"");
+                    b.putSerializable("xpath", xpath!=null?xpath:"");
                     app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 }
                 return true;
