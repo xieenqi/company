@@ -14,8 +14,10 @@ import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
@@ -61,4 +63,17 @@ public interface IOrder {
      * */
     @GET("/order/plan/")
     void getPlanEstimateList(@QueryMap HashMap<String,Object> map,Callback<ArrayList<PlanEstimateList>> callback);
+
+    /**
+     * 删除 回款计划
+     * */
+    @DELETE("/order/plan/{id}")
+    void deletePlanEsstimateList(@Path("id") String id,Callback<EstimatePlanAdd> callback);
+
+    /**
+     * 编辑 回款计划
+     * */
+    @PUT("/order/plan/{id}")
+    void editPlanEsstimate(@Path("id") String id,@Body HashMap<String,Object> map,Callback<EstimatePlanAdd> callback);
+
 }

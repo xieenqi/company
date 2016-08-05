@@ -18,7 +18,7 @@ public class OrderDetail implements Serializable {
     public String directorName;
     public String creatorName;
     public int status;
-    public long dealMoney;
+    public float dealMoney;
     public int backMoney;
     public int ratePayment;
     public double salesAmount;

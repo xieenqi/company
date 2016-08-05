@@ -11,8 +11,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
+import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.PaymentPopView;
@@ -20,15 +23,18 @@ import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.Calendar;
 import java.util.HashMap;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 添加 回款计划
+ * 【新增\编辑】计划回款
  * Created by xeq on 16/8/4.
  */
 public class OrderAddPlanActivity extends BaseActivity implements View.OnClickListener {
@@ -41,9 +47,22 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
     private int estimatedTime;
     private int payeeMethod;
     private int remindType;
+    private int formPage;
 
     private String orderId;
     private Intent mIntent;
+
+    private PlanEstimateList planEstimateList;
+
+    /**
+     * 计划回新增
+     */
+    public static final int PLAN_ADD = 0x01;
+
+    /**
+     * 计划编辑
+     */
+    public static final int PLAN_EDIT = 0x02;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +74,10 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
     public void initUI() {
 
         mIntent = getIntent();
-        if(null != mIntent){
+        if (null != mIntent) {
+            formPage = mIntent.getIntExtra("fromPage", PLAN_ADD);
             orderId = mIntent.getStringExtra("orderId");
+            planEstimateList = (PlanEstimateList) mIntent.getSerializableExtra("data");
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -83,45 +104,127 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
         tv_tx = (TextView) findViewById(R.id.tv_tx);
         tv_kind = (TextView) findViewById(R.id.tv_kind);
 
-        tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
-        estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+        //是否编辑
+        if (null != planEstimateList) {
+            editData();
+        } else {
+            tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
+            estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+        }
+    }
+
+    /**
+     * 编辑参数设置
+     */
+    public void editData() {
+
+        estimatedTime = planEstimateList.remindAt;
+        tv_time.setText(DateTool.timet(planEstimateList.remindAt + "", "yyyy.MM.dd"));
+        et_estprice.setText(planEstimateList.planMoney + "");
+        payeeMethod = planEstimateList.payeeMethod;
+        remindType = planEstimateList.remindType;
+        et_remake.setText(planEstimateList.remark);
+
+        switch (planEstimateList.payeeMethod) {
+
+            case 1:
+                tv_kind.setText("现金");
+                break;
+
+            case 2:
+                tv_kind.setText("支票");
+                break;
+
+            case 3:
+                tv_kind.setText("银行转账");
+                break;
+
+            case 4:
+                tv_kind.setText("其他");
+                break;
+        }
+
+        switch (planEstimateList.remindType) {
+
+            case 1:
+                tv_tx.setText("计划前1天提醒");
+                break;
+
+            case 2:
+                tv_tx.setText("计划前2天提醒");
+                break;
+
+            case 3:
+                tv_tx.setText("计划前3天提醒");
+                break;
+
+            case 4:
+                tv_tx.setText("计划前1周提醒");
+                break;
+
+            case 5:
+                tv_tx.setText("不提醒");
+                break;
+        }
 
     }
 
-    public void commitPlan(){
-        HashMap<String,Object> map = new HashMap<>();
 
-        if(TextUtils.isEmpty(et_estprice.getText().toString())){
+    /**
+     * 提交新建、编辑计划回款
+     */
+    public void commitPlan() {
+        HashMap<String, Object> map = new HashMap<>();
+
+        if (TextUtils.isEmpty(et_estprice.getText().toString())) {
             Toast("请选择计划回款金额！");
             return;
-        }else if(TextUtils.isEmpty(tv_tx.getText().toString())){
+        } else if (TextUtils.isEmpty(tv_tx.getText().toString())) {
             Toast("请选择提醒方式！");
             return;
-        }else if(TextUtils.isEmpty(tv_kind.getText().toString())){
+        } else if (TextUtils.isEmpty(tv_kind.getText().toString())) {
             Toast("请选择付款方式！");
             return;
         }
         showLoading("");
-        map.put("orderId",orderId);
-        map.put("planAt",estimatedTime);
-        map.put("planMoney",Integer.parseInt(et_estprice.getText().toString()));
-        map.put("payeeMethod",payeeMethod);
-        map.put("remindType",remindType);
-        map.put("remark",et_remake.getText().toString());
+        map.put("orderId", orderId);
+        map.put("planAt", estimatedTime);
+        map.put("planMoney", Float.parseFloat(et_estprice.getText().toString()));
+        map.put("payeeMethod", payeeMethod);
+        map.put("remindType", remindType);
+        map.put("remark", et_remake.getText().toString());
 
+        LogUtil.dee("创建计划:"+MainApp.gson.toJson(map));
+        if (null == planEstimateList) {   //新建
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                    .addPlanEstimate(map, new Callback<EstimatePlanAdd>() {
+                        @Override
+                        public void success(EstimatePlanAdd estimatePlanAdd, Response response) {
+                            HttpErrorCheck.checkResponse("创建计划回款", response);
+                            app.finishActivity(OrderAddPlanActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                        }
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .addPlanEstimate(map, new Callback<EstimatePlanAdd>() {
-                    @Override
-                    public void success(EstimatePlanAdd estimatePlanAdd, Response response) {
-                        HttpErrorCheck.checkResponse("创建计划回款", response);
-                    }
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
+        } else {    //编辑
+            map.put("id", planEstimateList.id);
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                    .editPlanEsstimate(planEstimateList.id, map, new Callback<EstimatePlanAdd>() {
+                        @Override
+                        public void success(EstimatePlanAdd estimatePlanAdd, Response response) {
+                            HttpErrorCheck.checkResponse("编辑计划回款", response);
+                            app.finishActivity(OrderAddPlanActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                        }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
+        }
     }
 
 

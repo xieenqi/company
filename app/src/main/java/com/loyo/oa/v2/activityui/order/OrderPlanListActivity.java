@@ -9,11 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
+import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
-import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -23,10 +22,8 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -41,11 +38,11 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     private LinearLayout ll_back, ll_add;
     private ListView lv_list;
     private OrderPlanAdapter adapter;
-
     private String orderId;
     private Intent mIntent;
+    private Bundle mBundle;
 
-    private ArrayList<PlanEstimateList> mPlanEstimateList;
+    private ArrayList<PlanEstimateList> mPlanEstimateList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +80,31 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+    /**
+     * 删除回款计划
+     * */
+    public void deletePlanList(String id){
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                .deletePlanEsstimateList(id, new Callback<EstimatePlanAdd>() {
+                    @Override
+                    public void success(EstimatePlanAdd estimatePlanAdd, Response response) {
+                        HttpErrorCheck.checkResponse("删除回款计划", response);
+                        getPlanList();
+                    }
 
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    /**
+     * 获取回款计划列表
+     * */
     public void getPlanList(){
+        showLoading("");
         HashMap<String,Object> map = new HashMap<>();
         map.put("orderId",orderId);
 
@@ -93,7 +113,8 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void success(ArrayList<PlanEstimateList> planEstimateList, Response response) {
                         HttpErrorCheck.checkResponse("计划回款列表", response);
-                        mPlanEstimateList = planEstimateList;
+                        mPlanEstimateList.clear();
+                        mPlanEstimateList.addAll(planEstimateList);
                         rushAdapter();
                     }
 
@@ -120,6 +141,23 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
                 app.startActivityForResult(OrderPlanListActivity.this, OrderAddPlanActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != RESULT_OK){
+            return;
+        }
+
+        switch (requestCode){
+
+            case ExtraAndResult.REQUEST_CODE_PRODUCT:
+                getPlanList();
+                break;
+
         }
     }
 
@@ -170,7 +208,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         public TextView tv_index, tv_time, tv_money, tv_mode, tv_tx, tv_memo;
         public LinearLayout ll_delete, ll_edit, ll_add;
 
-        public void setContentView(final int position,PlanEstimateList planEstimateList) {
+        public void setContentView(final int position, final PlanEstimateList planEstimateList) {
             tv_index.setText("计划" + (position + 1));
             ll_delete.setOnTouchListener(Global.GetTouch());
             ll_edit.setOnTouchListener(Global.GetTouch());
@@ -227,15 +265,17 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
             ll_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
+                    deletePlanList(planEstimateList.id);
                 }
             });
             /*意向产品 编辑*/
             ll_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    mBundle = new Bundle();
+                    mBundle.putSerializable("data",planEstimateList);
+                    mBundle.putString("orderId",orderId);
+                    app.startActivityForResult(OrderPlanListActivity.this,OrderAddPlanActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_PRODUCT,mBundle);
                 }
             });
 

@@ -190,7 +190,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         map.put("customerName",customerName);
         map.put("title",et_name.getText().toString());
         map.put("attachmentUUId","");
-        map.put("dealMoney",Integer.parseInt(et_money.getText().toString()));
+        map.put("dealMoney",Float.parseFloat(et_money.getText().toString()));
         map.put("orderNum",et_ordernum.getText().toString());
         map.put("remark",et_remake.getText().toString());
         map.put("proInfo",productData);
