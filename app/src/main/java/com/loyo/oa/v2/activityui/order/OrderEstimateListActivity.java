@@ -15,10 +15,19 @@ import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【订单回款】
@@ -40,18 +49,25 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private OrderEstimateListAdapter mAdapter;
     private Intent mIntent;
     private Bundle mBundle;
+
+    private String orderId;
     private String dealPrice;
     private int    fromPage;
 
     /**
-     * 来自新建订单
+     * 来自订单新建 新建回款
      * */
-    public static int PAGE_ADD = 0x01;
+    public final static int PAGE_ORDER_ADD = 0x01;
+
+    /**
+     * 来自订单详情 新建回款
+     * */
+    public final static int PAGE_DETAILS_ADD = 0x02;
 
     /**
      * 来自编辑订单
      * */
-    public static int PAGE_EDIT = 0x02;
+    public final static int PAGE_EDIT = 0x03;
 
     private Handler mHandler = new Handler() {
 
@@ -63,7 +79,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             } else if (msg.what == ExtraAndResult.MSG_WHAT_GONG) {
                 mBundle = msg.getData();
                 mData.remove(mBundle.getInt("posi"));
-                adapterInit();
+                rushAdapter();
                 ll_add.setVisibility(View.VISIBLE);
             }
         }
@@ -79,10 +95,12 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     public void initUI() {
         mIntent = getIntent();
         if (null != mIntent) {
-            fromPage  = mIntent.getIntExtra("fromPage",PAGE_ADD);
+            orderId   = mIntent.getStringExtra("orderId");
+            fromPage  = mIntent.getIntExtra("fromPage", PAGE_ORDER_ADD);
             dealPrice = mIntent.getStringExtra("price");
-            mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
-
+            if(null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")){
+                mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
+            }
         }
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
@@ -101,12 +119,16 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_back.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         ll_back.setOnTouchListener(Global.GetTouch());
-        adapterInit();
+        rushAdapter();
+
+        if(fromPage == PAGE_DETAILS_ADD){
+            getData();
+        }
     }
 
-    public void adapterInit() {
+    public void rushAdapter() {
         if (null == mAdapter) {
-            if (null == mData){
+            if(null == mData){
                 mData = new ArrayList<EstimateAdd>();
             }
             mAdapter = new OrderEstimateListAdapter(this, mData, mHandler);
@@ -114,6 +136,30 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         } else {
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * 获取收款记录列表
+     * */
+    public void getData(){
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                .getPayEstimate(orderId, new Callback<ArrayList<EstimateAdd>>() {
+                    @Override
+                    public void success(ArrayList<EstimateAdd> estimateAdds, Response response) {
+                        HttpErrorCheck.checkResponse("回款记录列表", response);
+                        if(null != estimateAdds){
+                            mData.clear();
+                            mData.addAll(estimateAdds);
+                            rushAdapter();
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
     @Override
@@ -127,7 +173,10 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
             //新建
             case R.id.ll_add:
-                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, null);
+                mBundle = new Bundle();
+                mBundle.putString("orderId", orderId);
+                mBundle.putInt("fromPage",fromPage);
+                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                 break;
 
         }
@@ -148,18 +197,29 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK && null == data) {
+        if (resultCode != RESULT_OK) {
             return;
         }
 
         if (requestCode == ExtraAndResult.REQUEST_CODE_STAGE) {
-            mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
-            LogUtil.dee("mEstimateAdd:"+MainApp.gson.toJson(mEstimateAdd));
-            if(fromPage == PAGE_ADD){
-                mData.clear();
+
+            switch (fromPage){
+
+                case PAGE_ORDER_ADD:
+                    if(null == data){
+                        return;
+                    }
+                    mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
+                    mData.clear();
+                    mData.add(mEstimateAdd);
+                    rushAdapter();
+                    break;
+
+
+                case PAGE_DETAILS_ADD:
+                    getData();
+                    break;
             }
-            mData.add(mEstimateAdd);
-            adapterInit();
             mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_DIALOG);
         }
     }

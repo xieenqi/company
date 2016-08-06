@@ -26,6 +26,7 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.Date;
@@ -153,7 +154,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.ll_record://回款记录
                 Bundle mBundle = new Bundle();
+                mBundle.putInt("fromPage",OrderEstimateListActivity.PAGE_DETAILS_ADD);
                 mBundle.putString("price", tv_money.getText().toString());
+                mBundle.putString("orderId",orderId);
                 app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
             case R.id.ll_enclosure://附件

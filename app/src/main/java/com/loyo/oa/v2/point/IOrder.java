@@ -76,4 +76,16 @@ public interface IOrder {
     @PUT("/order/plan/{id}")
     void editPlanEsstimate(@Path("id") String id,@Body HashMap<String,Object> map,Callback<EstimatePlanAdd> callback);
 
+    /**
+     * 创建 回款记录
+     * */
+    @POST("/order/pay")
+    void addPayEstimate(@Body HashMap<String,Object> map,Callback<EstimateAdd> callback);
+
+    /**
+     * 获取 回款记录列表
+     * */
+    @GET("/order/record/{id}")
+    void getPayEstimate(@Path("id") String id,Callback<ArrayList<EstimateAdd>> callback);
+
 }
