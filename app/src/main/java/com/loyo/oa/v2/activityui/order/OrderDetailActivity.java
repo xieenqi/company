@@ -51,6 +51,16 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     private String orderId;
     private Bundle mBundle;
 
+    /**
+     * 来自订单新建
+     * */
+    public final static int ORDER_ADD = 0x10;
+
+    /**
+     * 来自订单编辑
+     * */
+    public final static int ORDER_EDIT = 0x11;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,12 +219,16 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * 右上角菜单
+     * */
     private void functionBuuton() {
         ActionSheetDialog dialog = new ActionSheetDialog(OrderDetailActivity.this).builder();
         dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
                 mBundle = new Bundle();
+                mBundle.putInt("fromPage",ORDER_EDIT);
                 mBundle.putSerializable("data", mData);
                 app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, 0x01, mBundle);
             }
