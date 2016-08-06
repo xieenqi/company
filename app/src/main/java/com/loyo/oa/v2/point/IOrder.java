@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
@@ -84,5 +85,29 @@ public interface IOrder {
      */
     @DELETE("/order/{id}")
     void deleteOrder(@Path("id") String id, Callback<Object> callback);
+
+    /**
+     * 创建 回款记录
+     * */
+    @POST("/order/pay")
+    void addPayEstimate(@Body HashMap<String,Object> map,Callback<EstimateAdd> callback);
+
+    /**
+     * 获取 回款记录列表
+     * */
+    @GET("/order/record/{id}")
+    void getPayEstimate(@Path("id") String id,Callback<ArrayList<EstimateAdd>> callback);
+
+    /**
+     * 删除 回款记录
+     * */
+    @DELETE("/order/pay/{id}")
+    void deletePayEstimate(@Path("id") String id,Callback<EstimateAdd> callback);
+
+    /**
+     * 编辑 回款记录
+     * */
+    @PUT("/order/pay/{id}")
+    void editPayEstimate(@Path("id") String id,@Body HashMap<String,Object> map, Callback<EstimateAdd> callback);
 
 }

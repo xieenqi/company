@@ -8,12 +8,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
-import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
@@ -31,7 +29,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -67,7 +64,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_source;   //附件
     private EditText et_ordernum; //订单编号
     private EditText et_remake;   //备注
-    private OrderDetail mData;
+
     private Bundle mBundle;
 
 
@@ -75,12 +72,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_order);
-        getIntentData();
         init();
-    }
-
-    private void getIntentData() {
-        mData = (OrderDetail) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
     }
 
     private void init() {
@@ -119,15 +111,15 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     /**
      * 获取新建订单动态字段
-     */
-    public void getAddDynamic() {
-        showLoading("", false);
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("bizType", 104);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
+     * */
+    public void getAddDynamic(){
+        showLoading("",false);
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("bizType",104);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback< ArrayList<ContactLeftExtras>>() {
             @Override
             public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse("新建订单动态字段", response);
+                HttpErrorCheck.checkResponse("新建订单动态字段",response);
                 mCusList = cuslist;
                 setAddDynamic();
             }
@@ -143,33 +135,33 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     /**
      * 设置权限
      * 标题、客户、产品、金额都是必填，所以不判断
-     */
-    public void setAddDynamic() {
+     * */
+    public void setAddDynamic(){
         tv_custom.addView(new OrderAddforExtraData(mContext, mCusList, true, R.color.title_bg1, 0));
 
-        for (ContactLeftExtras customerJur : mCusList) {
-            switch (customerJur.name) {
+        for(ContactLeftExtras customerJur : mCusList){
+            switch (customerJur.name){
 
                 case "paymentRecords":
-                    if (customerJur.required) {
+                    if(customerJur.required){
                         tv_estimate.setHint("必填,请输入");
                     }
                     break;
 
                 case "orderNum":
-                    if (customerJur.required) {
+                    if(customerJur.required){
                         et_ordernum.setHint("必填,请输入");
                     }
                     break;
 
                 case "attachment":
-                    if (customerJur.required) {
+                    if(customerJur.required){
                         tv_source.setHint("必填,请输入");
                     }
                     break;
 
                 case "remark":
-                    if (customerJur.required) {
+                    if(customerJur.required){
                         et_remake.setHint("备注(必填)");
                     }
                     break;
@@ -178,39 +170,39 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    public void commitOrder() {
-        if (TextUtils.isEmpty(et_name.getText().toString())) {
+    public void commitOrder(){
+        if(TextUtils.isEmpty(et_name.getText().toString())){
             Toast("请填写订单标题!");
             return;
-        } else if (TextUtils.isEmpty(tv_customer.getText().toString())) {
+        }else if(TextUtils.isEmpty(tv_customer.getText().toString())){
             Toast("请选择对应客户!");
             return;
-        } else if (TextUtils.isEmpty(tv_stage.getText().toString())) {
+        }else if(TextUtils.isEmpty(tv_stage.getText().toString())){
             Toast("请选择购买产品!");
             return;
-        } else if (TextUtils.isEmpty(et_money.getText().toString())) {
+        }else if(TextUtils.isEmpty(et_money.getText().toString())){
             Toast("请选择成交金额!");
             return;
         }
         showLoading("");
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("customerId", customerId);
-        map.put("customerName", customerName);
-        map.put("title", et_name.getText().toString());
-        map.put("attachmentUUId", "");
-        map.put("dealMoney", Float.parseFloat(et_money.getText().toString()));
-        map.put("orderNum", et_ordernum.getText().toString());
-        map.put("remark", et_remake.getText().toString());
-        map.put("proInfo", productData);
-        map.put("paymentRecords", estimateData);
-        LogUtil.dee("提交参数:" + MainApp.gson.toJson(map));
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("customerId",customerId);
+        map.put("customerName",customerName);
+        map.put("title",et_name.getText().toString());
+        map.put("attachmentUUId","");
+        map.put("dealMoney",Float.parseFloat(et_money.getText().toString()));
+        map.put("orderNum",et_ordernum.getText().toString());
+        map.put("remark",et_remake.getText().toString());
+        map.put("proInfo",productData);
+        map.put("paymentRecords",estimateData);
+        LogUtil.dee("提交参数:"+MainApp.gson.toJson(map));
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .addOrder(map, new Callback<OrderAdd>() {
+                .addOrder(map,new Callback<OrderAdd>() {
                     @Override
                     public void success(OrderAdd orderAdd, Response response) {
                         HttpErrorCheck.checkResponse("订单详情", response);
-                        app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                        app.finishActivity(OrderAddActivity.this,MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
                     }
 
                     @Override
@@ -244,7 +236,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //购买产品
             case R.id.ll_stage:
                 mBundle = new Bundle();
-                mBundle.putBoolean("boolean", true);
+                mBundle.putBoolean("boolean",true);
                 mBundle.putInt("data", ActionCode.ORDER_DETAIL);
                 app.startActivityForResult(OrderAddActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
@@ -253,19 +245,19 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //回款
             case R.id.ll_estimate:
                 mBundle = new Bundle();
-                if (!TextUtils.isEmpty(et_money.getText().toString())) {
-                    mBundle.putString("price", et_money.getText().toString());
+                if(!TextUtils.isEmpty(et_money.getText().toString())){
+                    mBundle.putString("price",et_money.getText().toString());
                 }
-                if (null != estimateData) {
-                    mBundle.putSerializable("data", estimateData);
+                if(null != estimateData){
+                    mBundle.putSerializable("data",estimateData);
                 }
-                mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_ADD);
-                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+                mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_ORDER_ADD);
+                app.startActivityForResult(this,OrderEstimateListActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_SOURCE,mBundle);
                 break;
 
             //附件
             case R.id.ll_source:
-                app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, 101, null);
+                app.startActivityForResult(this,OrderAttachmentActivity.class,MainApp.ENTER_TYPE_RIGHT,101,null);
                 break;
 
         }
@@ -290,12 +282,13 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     /**
      * 获取 回款记录的成交金额
-     */
-    private String getEstimateName() {
-        String estimateName = "￥";
-        if (null != estimateData) {
-            for (EstimateAdd est : estimateData) {
-                estimateName += est.receivedMoney + "、";
+     * */
+    private String getEstimateName(){
+        String estimateName = "";
+        if(estimateData.size() > 0){
+            estimateName = "￥";
+            for(EstimateAdd est : estimateData){
+                estimateName += est.receivedMoney+"、";
             }
         }
         return estimateName;
@@ -305,11 +298,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != -1 && null == data) {
+        if(resultCode != -1 && null == data){
             return;
         }
 
-        switch (requestCode) {
+        switch (requestCode){
 
             //选择客户
             case ExtraAndResult.REQUEST_CODE_CUSTOMER:
@@ -323,13 +316,13 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //选择购买产品
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
-                productData = (ArrayList<SaleIntentionalProduct>) data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+                productData = (ArrayList<SaleIntentionalProduct>)data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
                 tv_stage.setText(getIntentionProductName());
                 break;
 
             //选择回款
             case ExtraAndResult.REQUEST_CODE_SOURCE:
-                estimateData = (ArrayList<EstimateAdd>) data.getSerializableExtra("data");
+                estimateData = (ArrayList<EstimateAdd>)data.getSerializableExtra("data");
                 tv_estimate.setText(getEstimateName());
                 break;
 

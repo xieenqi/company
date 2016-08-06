@@ -21,6 +21,7 @@ public class EstimateAdd implements Serializable{
     public int status;             //回款记录状态(待审批 未通过等)
     public String wfId;
     public String remark;          //备注
+    public String UUId;
 
 
     public class PayeeUser implements Serializable{
