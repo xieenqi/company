@@ -18,7 +18,7 @@ public class OrderDetail implements Serializable {
     public String directorName;
     public String creatorName;
     public int status;
-    public float dealMoney;
+    public float dealMoney;//成交金额
     public int backMoney;
     public int ratePayment;
     public double salesAmount;
@@ -29,7 +29,7 @@ public class OrderDetail implements Serializable {
     public long createdAt;
     public String proName;
     public String wfId;
-    public String orderNum;
+    public String orderNum;//订单编号
     public String remark;
     public List<ExtensionDatas> extensionDatas;
     public ArrayList<SaleIntentionalProduct> proInfo;

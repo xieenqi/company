@@ -19,11 +19,9 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
