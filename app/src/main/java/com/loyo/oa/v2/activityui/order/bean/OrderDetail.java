@@ -33,4 +33,5 @@ public class OrderDetail implements Serializable {
     public String remark;
     public List<ExtensionDatas> extensionDatas;
     public ArrayList<SaleIntentionalProduct> proInfo;
+    public String wfName;
 }

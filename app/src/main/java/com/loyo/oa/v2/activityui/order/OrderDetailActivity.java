@@ -30,6 +30,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -41,7 +42,7 @@ import retrofit.client.Response;
  */
 public class OrderDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout img_title_left, ll_extra, ll_product, ll_record, ll_enclosure, ll_plan;
+    private LinearLayout img_title_left, ll_extra, ll_product, ll_record, ll_enclosure, ll_plan, ll_wflayout;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
             tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name,
@@ -103,6 +104,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         ll_enclosure.setOnClickListener(this);
         ll_plan = (LinearLayout) findViewById(R.id.ll_plan);
         ll_plan.setOnClickListener(this);
+        ll_wflayout = (LinearLayout) findViewById(R.id.ll_wflayout);
         getData();
     }
 
@@ -113,22 +115,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                ActionSheetDialog dialog = new ActionSheetDialog(OrderDetailActivity.this).builder();
-                dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                    @Override
-                    public void onClick(int which) {
-                    /* mBundle = new Bundle();
-                       mBundle.putSerializable("data",mData);
-                       app.startActivityForResult(OrderDetailActivity.this,OrderAddActivity.class,MainApp.ENTER_TYPE_RIGHT,0x01,mBundle);*/
-                    }
-                });
-                dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
-                    @Override
-                    public void onClick(int which) {
-
-                    }
-                });
-                dialog.show();
+                functionBuuton();
                 break;
             case R.id.tv_customer://跳转到相关客户
                 Intent intent = new Intent();
@@ -164,7 +151,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.ll_plan://回款计划
                 mBundle = new Bundle();
-                mBundle.putString("orderId",mData.id);
+                mBundle.putString("orderId", mData.id);
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
         }
@@ -206,7 +193,10 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         OrderCommon.getOrderStatus(tv_status, mData.status);
-        tv_wfname.setText(mData.wfId);
+        if (!TextUtils.isEmpty(mData.wfName)) {//是否关联审批
+            ll_wflayout.setVisibility(View.VISIBLE);
+            tv_wfname.setText(mData.wfName);
+        }
         tv_order_number.setText(mData.orderNum);
         tv_memo.setText("备注：" + mData.remark);
         if (ll_extra.getChildCount() != 0) {
@@ -219,4 +209,61 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    private void functionBuuton() {
+        ActionSheetDialog dialog = new ActionSheetDialog(OrderDetailActivity.this).builder();
+        dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                mBundle = new Bundle();
+                mBundle.putSerializable("data", mData);
+                app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, 0x01, mBundle);
+            }
+        });
+        dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                terminationOrder();
+            }
+        });
+        dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                deleteOrder();
+            }
+        });
+        dialog.show();
+    }
+
+    private void deleteOrder() {
+        HashMap<String, Object> map = new HashMap<>();
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class).
+                deleteOrder(mData.id, new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("删除订单：", response);
+                        onBackPressed();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    private void terminationOrder() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class).
+                terminationOrder(mData.id, new Callback<Object>() {
+                    @Override
+                    public void success(Object estimatePlanAdd, Response response) {
+                        HttpErrorCheck.checkResponse("意外终止订单：", response);
+                        Toast("订单终止成功");
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
 }
