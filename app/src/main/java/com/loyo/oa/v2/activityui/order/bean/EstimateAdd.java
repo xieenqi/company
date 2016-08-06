@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 【新建回款】bean
  * Created by yyy on 16/8/3.
  */
-public class EstimateAdd implements Serializable{
+public class EstimateAdd implements Serializable {
 
     public String id;          //订单id
     public String companyId;   //公司id
@@ -24,7 +24,7 @@ public class EstimateAdd implements Serializable{
     public String UUId;
 
 
-    public class PayeeUser implements Serializable{
+    public class PayeeUser implements Serializable {
         public String id;
         public String name;
         public String avatar;

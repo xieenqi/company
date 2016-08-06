@@ -41,4 +41,26 @@ public class OrderCommon {
             view.setBackgroundResource(statusBj);
         }
     }
+
+    /**
+     * 获得回款方式
+     */
+    public static String getPaymentMode(int payeeMethod) {
+        String modeInfo = "";
+        switch (payeeMethod) {
+            case 1:
+                modeInfo = "现金";
+                break;
+            case 2:
+                modeInfo = "支票";
+                break;
+            case 3:
+                modeInfo = "银行转账";
+                break;
+            case 4:
+                modeInfo = "其他";
+                break;
+        }
+        return modeInfo;
+    }
 }
