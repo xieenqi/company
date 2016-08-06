@@ -51,6 +51,12 @@ public interface IOrder {
     void addOrder(@Body HashMap<String, Object> map, Callback<OrderAdd> callback);
 
     /**
+     * 编辑订单
+     * */
+    @PUT("/order/{id}")
+    void editOrder(@Path("id") String id,@Body HashMap<String,Object> map,Callback<OrderAdd> callback);
+
+    /**
      * 创建回款计划
      */
     @POST("/order/plan")

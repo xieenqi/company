@@ -68,6 +68,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     private int page = 1;
     private boolean isPullDown = true;
     private Intent mIntent;
+    private Bundle mBundle;
 
     private List<OrderListItem> listData = new ArrayList<>();
 
@@ -151,6 +152,8 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
 
             //新建
             case R.id.btn_add:
+                mBundle = new Bundle();
+                mBundle.putInt("fromPage",OrderDetailActivity.ORDER_ADD);
                 startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;

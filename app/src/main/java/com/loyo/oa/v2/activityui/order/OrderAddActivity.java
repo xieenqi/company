@@ -12,6 +12,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
@@ -65,8 +66,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private EditText et_ordernum; //订单编号
     private EditText et_remake;   //备注
 
+    private Intent mIntent;
     private Bundle mBundle;
+    private int fromPage;
 
+    private OrderDetail mOrderDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,12 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void init() {
+        mIntent = getIntent();
+        if(null != mIntent){
+            mOrderDetail = (OrderDetail) mIntent.getSerializableExtra("data");
+            fromPage = mIntent.getIntExtra("fromPage",OrderDetailActivity.ORDER_ADD);
+        }
+
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_title.setText("新建订单");
         iv_submit = (ImageView) findViewById(R.id.iv_submit);
@@ -170,7 +180,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    /**
+     * 提交订单
+     * */
     public void commitOrder(){
+
         if(TextUtils.isEmpty(et_name.getText().toString())){
             Toast("请填写订单标题!");
             return;
@@ -184,6 +198,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             Toast("请选择成交金额!");
             return;
         }
+
         showLoading("");
         HashMap<String,Object> map = new HashMap<>();
         map.put("customerId",customerId);
@@ -195,14 +210,14 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         map.put("remark",et_remake.getText().toString());
         map.put("proInfo",productData);
         map.put("paymentRecords",estimateData);
-        LogUtil.dee("提交参数:"+MainApp.gson.toJson(map));
+        LogUtil.dee("提交参数:" + MainApp.gson.toJson(map));
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .addOrder(map,new Callback<OrderAdd>() {
+                .addOrder(map, new Callback<OrderAdd>() {
                     @Override
                     public void success(OrderAdd orderAdd, Response response) {
-                        HttpErrorCheck.checkResponse("订单详情", response);
-                        app.finishActivity(OrderAddActivity.this,MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
+                        HttpErrorCheck.checkResponse("创建订单", response);
+                        app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
                     }
 
                     @Override
@@ -210,6 +225,21 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                         HttpErrorCheck.checkError(error);
                     }
                 });
+
+
+/*        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                .editOrder("",map,new Callback<OrderAdd>() {
+                    @Override
+                    public void success(OrderAdd orderAdd, Response response) {
+                        HttpErrorCheck.checkResponse("编辑订单", response);
+                        app.finishActivity(OrderAddActivity.this,MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });*/
     }
 
     @Override
