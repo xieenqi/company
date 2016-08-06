@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddEstimateActivity;
+import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -33,11 +34,13 @@ public class OrderEstimateListAdapter extends BaseAdapter{
     private Bundle  mBundle;
     private Intent  mIntent;
     private Message msg;
+    private String  orderId;
 
-    public OrderEstimateListAdapter(Activity activity,ArrayList<EstimateAdd> data,Handler handler){
+    public OrderEstimateListAdapter(Activity activity,ArrayList<EstimateAdd> data,Handler handler,String orderId){
         this.mActivity = activity;
         this.mData    = data;
         this.mHandler = handler;
+        this.orderId  = orderId;
     }
 
     @Override
@@ -126,6 +129,8 @@ public class OrderEstimateListAdapter extends BaseAdapter{
             @Override
             public void onClick(View v) {
                 mIntent = new Intent(mActivity, OrderAddEstimateActivity.class);
+                mIntent.putExtra("orderId",orderId);
+                mIntent.putExtra("fromPage", OrderEstimateListActivity.PAGE_EDIT);
                 mIntent.putExtra(ExtraAndResult.RESULT_DATA,mData.get(position));
                 mActivity.startActivityForResult(mIntent,ExtraAndResult.REQUEST_CODE_STAGE);
             }

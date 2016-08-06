@@ -104,4 +104,10 @@ public interface IOrder {
     @DELETE("/order/pay/{id}")
     void deletePayEstimate(@Path("id") String id,Callback<EstimateAdd> callback);
 
+    /**
+     * 编辑 回款记录
+     * */
+    @PUT("/order/pay/{id}")
+    void editPayEstimate(@Path("id") String id,@Body HashMap<String,Object> map, Callback<EstimateAdd> callback);
+
 }

@@ -52,6 +52,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
     private String orderId;
     private String dealPrice;
+
     private int    fromPage;
     private int    position;
 
@@ -145,7 +146,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             if(null == mData){
                 mData = new ArrayList<EstimateAdd>();
             }
-            mAdapter = new OrderEstimateListAdapter(this, mData, mHandler);
+            mAdapter = new OrderEstimateListAdapter(this, mData, mHandler,orderId);
             lv_listview.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -223,14 +224,6 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-       /* if (mData.size() != 0) {
-            mIntent = new Intent();
-            mIntent.putExtra("data", mData);
-            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-        } else {
-            super.onBackPressed();
-        }*/
-
             mIntent = new Intent();
             mIntent.putExtra("data", mData);
             app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
