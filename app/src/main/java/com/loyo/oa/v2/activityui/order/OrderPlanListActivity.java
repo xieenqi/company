@@ -9,9 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
-import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -22,8 +22,10 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -41,6 +43,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     private String orderId;
     private Intent mIntent;
     private Bundle mBundle;
+    public int pagForm;//1 审批过来
 
     private ArrayList<PlanEstimateList> mPlanEstimateList = new ArrayList<>();
 
@@ -54,8 +57,9 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     private void init() {
 
         mIntent = getIntent();
-        if(null != mIntent){
+        if (null != mIntent) {
             orderId = mIntent.getStringExtra("orderId");
+            pagForm = mIntent.getIntExtra(ExtraAndResult.TOKEN_START, 0);
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -71,19 +75,20 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     }
 
 
-    public void rushAdapter(){
-        if(null == adapter){
+    public void rushAdapter() {
+        ll_add.setVisibility(pagForm == 1 ? View.GONE : View.VISIBLE);
+        if (null == adapter) {
             adapter = new OrderPlanAdapter();
             lv_list.setAdapter(adapter);
-        }else{
+        } else {
             adapter.notifyDataSetChanged();
         }
     }
 
     /**
      * 删除回款计划
-     * */
-    public void deletePlanList(String id){
+     */
+    public void deletePlanList(String id) {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .deletePlanEsstimateList(id, new Callback<EstimatePlanAdd>() {
@@ -102,11 +107,11 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
 
     /**
      * 获取回款计划列表
-     * */
-    public void getPlanList(){
+     */
+    public void getPlanList() {
         showLoading("");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("orderId",orderId);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("orderId", orderId);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .getPlanEstimateList(map, new Callback<ArrayList<PlanEstimateList>>() {
@@ -137,7 +142,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
             //新增
             case R.id.ll_add:
                 Bundle mBundle = new Bundle();
-                mBundle.putString("orderId",orderId);
+                mBundle.putString("orderId", orderId);
                 app.startActivityForResult(OrderPlanListActivity.this, OrderAddPlanActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
                 break;
@@ -148,11 +153,11 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode != RESULT_OK){
+        if (resultCode != RESULT_OK) {
             return;
         }
 
-        switch (requestCode){
+        switch (requestCode) {
 
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
                 getPlanList();
@@ -195,29 +200,30 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
                 holderView.ll_delete = (LinearLayout) convertView.findViewById(R.id.ll_delete);
                 holderView.ll_edit = (LinearLayout) convertView.findViewById(R.id.ll_edit);
                 holderView.ll_add = (LinearLayout) convertView.findViewById(R.id.ll_add);
+                holderView.ll_function = (LinearLayout) convertView.findViewById(R.id.ll_function);
                 convertView.setTag(holderView);
             } else {
                 holderView = (HolderView) convertView.getTag();
             }
-            holderView.setContentView(position,planEstimateList);
+            holderView.setContentView(position, planEstimateList);
             return convertView;
         }
     }
 
     class HolderView {
         public TextView tv_index, tv_time, tv_money, tv_mode, tv_tx, tv_memo;
-        public LinearLayout ll_delete, ll_edit, ll_add;
+        public LinearLayout ll_delete, ll_edit, ll_add, ll_function;
 
         public void setContentView(final int position, final PlanEstimateList planEstimateList) {
             tv_index.setText("计划" + (position + 1));
             ll_delete.setOnTouchListener(Global.GetTouch());
             ll_edit.setOnTouchListener(Global.GetTouch());
             ll_add.setOnTouchListener(Global.GetTouch());
-
+            ll_function.setVisibility(pagForm == 1 ? View.GONE : View.VISIBLE);
             tv_time.setText(DateTool.timet(planEstimateList.planAt + "", "yyyy.MM.dd"));
-            tv_money.setText("￥"+planEstimateList.planMoney);
+            tv_money.setText("￥" + planEstimateList.planMoney);
 
-            switch (planEstimateList.payeeMethod){
+            switch (planEstimateList.payeeMethod) {
 
                 case 1:
                     tv_mode.setText("现金");
@@ -236,7 +242,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
                     break;
             }
 
-            switch (planEstimateList.remindType){
+            switch (planEstimateList.remindType) {
 
                 case 1:
                     tv_tx.setText("计划前1天提醒");
@@ -273,9 +279,9 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
                 @Override
                 public void onClick(View v) {
                     mBundle = new Bundle();
-                    mBundle.putSerializable("data",planEstimateList);
-                    mBundle.putString("orderId",orderId);
-                    app.startActivityForResult(OrderPlanListActivity.this,OrderAddPlanActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_PRODUCT,mBundle);
+                    mBundle.putSerializable("data", planEstimateList);
+                    mBundle.putString("orderId", orderId);
+                    app.startActivityForResult(OrderPlanListActivity.this, OrderAddPlanActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
                 }
             });
 

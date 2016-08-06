@@ -29,7 +29,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -173,6 +172,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
+                        onBackPressed();
                     }
                 });
     }
@@ -212,7 +212,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(int which) {
                 mBundle = new Bundle();
-                mBundle.putSerializable("data", mData);
+                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, mData);
                 app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, 0x01, mBundle);
             }
         });
@@ -232,7 +232,6 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void deleteOrder() {
-        HashMap<String, Object> map = new HashMap<>();
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class).
                 deleteOrder(mData.id, new Callback<Object>() {
                     @Override
