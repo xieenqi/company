@@ -53,6 +53,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private String orderId;
     private String dealPrice;
     private int    fromPage;
+    private int    position;
 
     /**
      * 来自订单新建 新建回款
@@ -74,13 +75,26 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         @Override
         public void handleMessage(Message msg) {
 
-            if (msg.what == ExtraAndResult.MSG_WHAT_DIALOG) {
-                ll_add.setVisibility(View.GONE);
-            } else if (msg.what == ExtraAndResult.MSG_WHAT_GONG) {
-                mBundle = msg.getData();
-                mData.remove(mBundle.getInt("posi"));
-                rushAdapter();
-                ll_add.setVisibility(View.VISIBLE);
+            switch (msg.what){
+
+                case ExtraAndResult.MSG_WHAT_DIALOG:
+                    ll_add.setVisibility(View.GONE);
+                    break;
+
+                //订单删除操作
+                case ExtraAndResult.MSG_WHAT_GONG:
+
+                    if(fromPage == PAGE_ORDER_ADD){
+                        mBundle = msg.getData();
+                        position = mBundle.getInt("posi");
+                        mData.remove(position);
+                        rushAdapter();
+                        ll_add.setVisibility(View.VISIBLE);
+                    }else if(fromPage == PAGE_DETAILS_ADD){
+                        deleteData();
+                    }
+
+                    break;
             }
         }
     };
@@ -114,7 +128,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         tv_title.setText("回款记录");
         if (null != dealPrice)
             tv_dealprice.setText("￥" + dealPrice);
-        if (null != mData)
+        if (null != mData && mData.size() > 0)
             ll_add.setVisibility(View.GONE);
         ll_back.setOnClickListener(this);
         ll_add.setOnClickListener(this);
@@ -137,6 +151,30 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             mAdapter.notifyDataSetChanged();
         }
     }
+
+    /**
+     * 删除订单
+     * */
+    public void deleteData(){
+
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                .deletePayEstimate(mData.get(position).id, new Callback<EstimateAdd>() {
+                    @Override
+                    public void success(EstimateAdd estimateAdds, Response response) {
+                        HttpErrorCheck.checkResponse("回款记录列表", response);
+                        getData();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+
+    }
+
+
 
     /**
      * 获取收款记录列表
@@ -185,13 +223,18 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        if (mData.size() != 0) {
+       /* if (mData.size() != 0) {
             mIntent = new Intent();
             mIntent.putExtra("data", mData);
             app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
         } else {
             super.onBackPressed();
-        }
+        }*/
+
+            mIntent = new Intent();
+            mIntent.putExtra("data", mData);
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+            super.onBackPressed();
     }
 
     @Override

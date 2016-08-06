@@ -284,8 +284,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 获取 回款记录的成交金额
      * */
     private String getEstimateName(){
-        String estimateName = "￥";
-        if(null != estimateData){
+        String estimateName = "";
+        if(estimateData.size() > 0){
+            estimateName = "￥";
             for(EstimateAdd est : estimateData){
                 estimateName += est.receivedMoney+"、";
             }

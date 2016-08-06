@@ -98,4 +98,10 @@ public interface IOrder {
     @GET("/order/record/{id}")
     void getPayEstimate(@Path("id") String id,Callback<ArrayList<EstimateAdd>> callback);
 
+    /**
+     * 删除 回款记录
+     * */
+    @DELETE("/order/pay/{id}")
+    void deletePayEstimate(@Path("id") String id,Callback<EstimateAdd> callback);
+
 }
