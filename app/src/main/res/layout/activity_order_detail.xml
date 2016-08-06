@@ -268,13 +268,16 @@
                 android:paddingLeft="@dimen/margin_other_view"
                 android:paddingRight="@dimen/margin_other_view"
                 android:paddingTop="@dimen/dimen_10"
+
                 >
 
                 <LinearLayout
+                    android:id="@+id/ll_wflayout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_3"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"

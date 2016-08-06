@@ -1,8 +1,5 @@
 package com.loyo.oa.v2.point;
 
-import android.telecom.Call;
-
-import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
@@ -48,32 +45,44 @@ public interface IOrder {
 
     /**
      * 创建订单
-     * */
+     */
     @POST("/order")
-    void addOrder(@Body HashMap<String,Object> map,Callback<OrderAdd> callback);
+    void addOrder(@Body HashMap<String, Object> map, Callback<OrderAdd> callback);
 
     /**
      * 创建回款计划
-     * */
+     */
     @POST("/order/plan")
-    void addPlanEstimate(@Body HashMap<String,Object> map,Callback<EstimatePlanAdd> callback);
+    void addPlanEstimate(@Body HashMap<String, Object> map, Callback<EstimatePlanAdd> callback);
 
     /**
      * 获取 回款计划列表
-     * */
+     */
     @GET("/order/plan/")
-    void getPlanEstimateList(@QueryMap HashMap<String,Object> map,Callback<ArrayList<PlanEstimateList>> callback);
+    void getPlanEstimateList(@QueryMap HashMap<String, Object> map, Callback<ArrayList<PlanEstimateList>> callback);
 
     /**
      * 删除 回款计划
-     * */
+     */
     @DELETE("/order/plan/{id}")
-    void deletePlanEsstimateList(@Path("id") String id,Callback<EstimatePlanAdd> callback);
+    void deletePlanEsstimateList(@Path("id") String id, Callback<EstimatePlanAdd> callback);
 
     /**
      * 编辑 回款计划
-     * */
+     */
     @PUT("/order/plan/{id}")
-    void editPlanEsstimate(@Path("id") String id,@Body HashMap<String,Object> map,Callback<EstimatePlanAdd> callback);
+    void editPlanEsstimate(@Path("id") String id, @Body HashMap<String, Object> map, Callback<EstimatePlanAdd> callback);
+
+    /**
+     * 意外终止订单
+     */
+    @PUT("/order/unexpecte/{id}")
+    void terminationOrder(@Path("id") String id, Callback<Object> callback);
+
+    /**
+     * 删除订单
+     */
+    @DELETE("/order/{id}")
+    void deleteOrder(@Path("id") String id, Callback<Object> callback);
 
 }
