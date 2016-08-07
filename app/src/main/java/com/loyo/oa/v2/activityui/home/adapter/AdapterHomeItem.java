@@ -178,13 +178,13 @@ public class AdapterHomeItem extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (items.get(position).title.equals("通讯录")) {
-                    if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
+                    //if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
                         mIntent.setClass(activity, ContactsActivity.class);
                         activity.startActivity(mIntent);
                         activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                    } else {
-                        Toast.makeText(activity, "数据获取中请等待，或手动更新数据", Toast.LENGTH_SHORT).show();
-                    }
+//                    } else {
+//                        Toast.makeText(activity, "数据获取中请等待，或手动更新数据", Toast.LENGTH_SHORT).show();
+//                    }
                 } else if (items.get(position).title.equals("审批流程")) {
                     try {
                         mIntent.setClass(activity, Class.forName(items.get(position).cls));

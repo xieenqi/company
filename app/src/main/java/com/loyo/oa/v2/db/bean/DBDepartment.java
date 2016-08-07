@@ -4,17 +4,8 @@ package com.loyo.oa.v2.db.bean;
  * Created by EthanGong on 16/8/2.
  */
 
-import com.j256.ormlite.dao.CloseableIterator;
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.field.types.NativeUuidType;
-import com.j256.ormlite.stmt.*;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
 import java.io.Serializable;
 
 @DatabaseTable(tableName = "departments")
@@ -43,14 +34,9 @@ public class DBDepartment implements Serializable {
     @DatabaseField
     public boolean isRoot;
 
-    @DatabaseField(canBeNull = true, foreign = true, columnName = "parent_id")
-    public DBDepartment parentDepartment;
+    @DatabaseField(defaultValue = "1")
+    public int depth;
 
-    @ForeignCollectionField
-    public ForeignCollection<DBDepartment> childDepartments;
-
-    @ForeignCollectionField
-    public ForeignCollection<DBUserNode> userNodes;
 
     public String getSortLetter() {
 
@@ -74,163 +60,13 @@ public class DBDepartment implements Serializable {
         }
     }
 
-    public List<DBUserNode> allNodes() {
-
-        List<DBUserNode> result = new ArrayList<DBUserNode>();
-        ForeignCollection<DBUserNode> nodes = this.userNodes;
-        if (nodes == null) {
-            return result;
-        }
-        CloseableIterator<DBUserNode> iterator = nodes.closeableIterator();
-
-        DBUserNode node = null;
-        try {
-            while (iterator.hasNext()){
-                node = iterator.next();
-                result.add(node);
-            }
-        }
-        finally {
-            // must always close our iterators otherwise connections to the database are held open
-            try {
-                iterator.close();
-            }
-            catch (Exception e){}
-        }
-
-        return result;
+    @Override
+    public boolean equals(Object obj) {
+        DBDepartment d =( DBDepartment)obj;
+        return id.equals(d.id);
     }
-
-    public List<DBUser> allUsers() {
-
-        List<DBUser> result = new ArrayList<DBUser>();
-
-        // 本部门的用户
-        List<DBUserNode> nodes = this.allNodes();
-        if (nodes != null) {
-            Iterator<DBUserNode> iterator = nodes.iterator();
-            while (iterator.hasNext()){
-                DBUserNode node = iterator.next();
-                if (node.user != null){
-                    result.add(node.user);
-                }
-            }
-        }
-
-        //  子部门的用户
-        List<DBDepartment> childrenList = new ArrayList<DBDepartment>();
-        ForeignCollection<DBDepartment> children = this.childDepartments;
-        if (children == null) {
-            return result;
-        }
-
-        CloseableIterator<DBDepartment> deptIterator = children.closeableIterator();
-
-        try {
-            while (deptIterator.hasNext()){
-                DBDepartment sub = deptIterator.next();
-                result.addAll(sub.allUsers());
-            }
-        }
-        finally {
-            // must always close our iterators otherwise connections to the database are held open
-            try {
-                deptIterator.close();
-            }
-            catch (Exception e){}
-        }
-
-
-        return result;
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
-
-    public List<DBDepartment> subDepartments(){
-        //  子部门的用户
-        List<DBDepartment> childrenList = new ArrayList<DBDepartment>();
-        ForeignCollection<DBDepartment> children = this.childDepartments;
-        if (children == null) {
-            return childrenList;
-        }
-
-        CloseableIterator<DBDepartment> deptIterator = children.closeableIterator();
-
-        try {
-            while (deptIterator.hasNext()){
-                DBDepartment sub = deptIterator.next();
-                childrenList.add(sub);
-            }
-        }
-        finally {
-            // must always close our iterators otherwise connections to the database are held open
-            try {
-                deptIterator.close();
-            }
-            catch (Exception e){}
-        }
-
-
-        return childrenList;
-    }
-
-    public List<DBUser> allUsersWithoutSubDepartmentUsers() {
-
-        List<DBUser> result = new ArrayList<DBUser>();
-
-        // 本部门的用户
-        List<DBUserNode> nodes = this.allNodes();
-        if (nodes == null) {
-            return result;
-        }
-
-        Iterator<DBUserNode> iterator = nodes.iterator();
-        while (iterator.hasNext()){
-            DBUserNode node = iterator.next();
-            if (node.user != null){
-                result.add(node.user);
-            }
-        }
-
-        return result;
-    }
-
-    public DBDepartment subDepartmentWithXpath(String xpath)
-    {
-        DBDepartment result = null;
-        if (this.xpath != null && this.xpath.equals(xpath)) {
-            result = this;
-            return result;
-        }
-        if (this.xpath != null && !(xpath.startsWith(this.xpath))) // 避免不必要的深度遍历
-        {
-            return result;
-        }
-
-        ForeignCollection<DBDepartment> children = this.childDepartments;
-        if (children == null) {
-            return result;
-        }
-
-        CloseableIterator<DBDepartment> deptIterator = children.closeableIterator();
-
-        try {
-            while (deptIterator.hasNext()){
-                DBDepartment sub = deptIterator.next();
-                DBDepartment theDept = sub.subDepartmentWithXpath(xpath);
-                if (theDept != null) {
-                    result = theDept;
-                    return result;
-                }
-            }
-        }
-        finally {
-            // must always close our iterators otherwise connections to the database are held open
-            try {
-                deptIterator.close();
-            }
-            catch (Exception e){}
-        }
-
-        return result;
-    }
-
 }

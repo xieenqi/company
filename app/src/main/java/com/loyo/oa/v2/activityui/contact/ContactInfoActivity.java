@@ -74,13 +74,9 @@ public class ContactInfoActivity extends BaseActivity {
     ViewGroup layout_action;
     @Extra
     String  userId;
-    @Extra
-    String  xpath;
 
     private DBUser user;
 
-
-    private StringBuffer myDeptName;
     private int defaultAvatar;
 
     @AfterViews
@@ -107,7 +103,6 @@ public class ContactInfoActivity extends BaseActivity {
                 // TODO:
                 Bundle b = new Bundle();
                 b.putSerializable("userId", userId);
-                b.putSerializable("xpath", xpath);
                 app.startActivityForResult(this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, b);
                 break;
             case R.id.layout_call:
@@ -154,7 +149,7 @@ public class ContactInfoActivity extends BaseActivity {
      */
     private void initData() {
         tv_title.setText("通讯录");
-        user = OrganizationManager.shareManager().getUser(userId, xpath);
+        user = OrganizationManager.shareManager().getUser(userId);
 
         if (null == user) {
             return;

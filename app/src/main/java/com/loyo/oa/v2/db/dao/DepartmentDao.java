@@ -5,6 +5,8 @@ package com.loyo.oa.v2.db.dao;
  */
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 
@@ -122,19 +124,18 @@ public class DepartmentDao {
         return d;
     }
 
-//    public Department rootDepartment() {
-//        Department dep = null;
-//        try
-//        {
-//            dep = departmentDaoOpe.queryForId(department.id);
-//            if (dep == null) {
-//                add(department);
-//                dep = departmentDaoOpe.queryForId(department.id);
-//            }
-//        } catch (SQLException e)
-//        {
-//            e.printStackTrace();
-//        }
-//        return dep;
-//    }
+    public List<DBDepartment> all(){
+        List<DBDepartment> result = new ArrayList<DBDepartment>();
+        try
+        {
+            List<DBDepartment> d = departmentDaoOpe.queryForAll();
+            if (d !=null) {
+                result = d;
+            }
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

@@ -5,6 +5,8 @@ package com.loyo.oa.v2.db.dao;
  */
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 
@@ -85,5 +87,20 @@ public class PositionDao {
             e.printStackTrace();
         }
         return pos;
+    }
+
+    public List<DBPosition> all(){
+        List<DBPosition> result = new ArrayList<DBPosition>();
+        try
+        {
+            List<DBPosition> d = positionDaoOpe.queryForAll();
+            if (d !=null) {
+                result = d;
+            }
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

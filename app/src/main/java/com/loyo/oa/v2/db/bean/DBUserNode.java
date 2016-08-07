@@ -17,19 +17,36 @@ public class DBUserNode implements Serializable{
     @DatabaseField
     public String title;
 
-    @DatabaseField(canBeNull = true, foreign = true, columnName = "department_id",  foreignAutoRefresh = true)
-    public DBDepartment department;
+    @DatabaseField(index = true)
+    public String departmentId;
 
-    @DatabaseField(canBeNull = true, foreign = true, columnName = "user_id",  foreignAutoRefresh = true)
-    public DBUser user;
+    @DatabaseField(index = true)
+    public String departmentXpath;
 
-    @DatabaseField(canBeNull = true, foreign = true, columnName = "role_id",  foreignAutoRefresh = true)
-    public DBRole role;
+    @DatabaseField(index = true)
+    public String userId;
 
-    @DatabaseField(canBeNull = true, foreign = true, columnName = "position_id",  foreignAutoRefresh = true)
-    public DBPosition position;
+    @DatabaseField(index = true)
+    public String roleId;
+
+    @DatabaseField(index = true)
+    public String positionId;
+
+    @DatabaseField(defaultValue = "1")
+    public int depth;
 
     @DatabaseField
     public long saveTransactionId;
+
+    @Override
+    public boolean equals(Object obj) {
+        DBUserNode d =( DBUserNode)obj;
+        return id.equals(d.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
 }

@@ -78,21 +78,23 @@ public class InitDataService extends IntentService {
                 HttpErrorCheck.checkError(error);
             }
         });
-        try {
-            //all或者one
-            String organizationUpdateInfo = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
-            //open或者run
-            String appStatus = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.APP_START);
-            if ("one".equals(organizationUpdateInfo) || "openOne".equals(appStatus)) {//个人信息变动
-                getOrganization();
-            } else if ("all".equals(organizationUpdateInfo) && "open".equals(appStatus)) {//启动app是 之前组织架构有变动
-                getOrganization();
-            } else if ("all".equals(organizationUpdateInfo) && "run".equals(appStatus)) {//手动跟新数据
-                getOrganization();
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
-        }
+
+        getOrganization();
+//        try {
+//            //all或者one
+//            String organizationUpdateInfo = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
+//            //open或者run
+//            String appStatus = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.APP_START);
+//            if ("one".equals(organizationUpdateInfo) || "openOne".equals(appStatus)) {//个人信息变动
+//                getOrganization();
+//            } else if ("all".equals(organizationUpdateInfo) && "open".equals(appStatus)) {//启动app是 之前组织架构有变动
+//                getOrganization();
+//            } else if ("all".equals(organizationUpdateInfo) && "run".equals(appStatus)) {//手动跟新数据
+//                getOrganization();
+//            }
+//        } catch (Exception ex) {
+//            Global.ProcException(ex);
+//        }
     }
 
     /**
@@ -117,16 +119,15 @@ public class InitDataService extends IntentService {
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
             //写DB
-            String jsonString = MainApp.gson.toJson(lstDepartment_current);
-            DBManager.Instance().putOrganization(jsonString);
-
-            Log.v("debug", jsonString);
+//            String jsonString = MainApp.gson.toJson(lstDepartment_current);
+//            DBManager.Instance().putOrganization(jsonString);
 
             /*
              * 写入结构化数据到数据库
              * Add by ethan
              */
-            OrganizationManager.shareManager().saveOrgnizitionToDB(lstDepartment_current);
+            OrganizationManager.shareManager().saveOrganizitionToDB(lstDepartment_current);
+            OrganizationManager.shareManager().loadOrganizitionDataToCache();
 
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);

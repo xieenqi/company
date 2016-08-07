@@ -515,20 +515,6 @@ public final class Common {
     }
 
     /**
-     * Add by Ethan
-     * 重构： 获取当前账号，本部门通讯录人员
-     */
-    public static List<DBUser> getUsersAtSameDepts(Boolean excludeSelf) {
-
-        List<DBUser> users = null;
-
-        User currentUser =  MainApp.user;
-        users = OrganizationManager.shareManager().getUsersAtSameDeptsOfUser(excludeSelf);
-
-        return users;
-    }
-
-    /**
      * 根据人id 获取人的信息
      *
      * @param activity

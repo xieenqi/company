@@ -4,15 +4,8 @@ package com.loyo.oa.v2.db.bean;
  * Created by EthanGong on 16/8/2.
  */
 
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.io.Serializable;
 
 @DatabaseTable(tableName = "users")
@@ -63,8 +56,10 @@ public class DBUser implements Serializable {
     @DatabaseField
     public boolean isBQQ;
 
-    @ForeignCollectionField
-    public ForeignCollection<DBUserNode> userNodes;
+    @DatabaseField(defaultValue = "1")
+    public int depth;
+
+    public boolean isCurrentUser;
 
     public String getSortLetter() {
 
@@ -88,71 +83,14 @@ public class DBUser implements Serializable {
         }
     }
 
-    public List<DBUserNode> allNodes() {
-
-        List<DBUserNode> result = new ArrayList<DBUserNode>();
-        ForeignCollection<DBUserNode> nodes = this.userNodes;
-        if (nodes == null) {
-            return result;
-        }
-
-        CloseableIterator<DBUserNode> iterator = nodes.closeableIterator();
-
-        DBUserNode node = null;
-        try {
-            while (iterator.hasNext()){
-                node = iterator.next();
-                result.add(node);
-            }
-        }
-        finally {
-            // must always close our iterators otherwise connections to the database are held open
-            try {
-                iterator.close();
-            }
-            catch (Exception e){}
-        }
-
-        return result;
+    @Override
+    public boolean equals(Object obj) {
+        DBUser d =( DBUser)obj;
+        return id.equals(d.id);
     }
-
-    public List<DBDepartment> allDepartment() {
-        List<DBDepartment> result = new ArrayList<DBDepartment>();
-
-        List<DBUserNode> nodes = this.allNodes();
-        if (nodes == null) {
-            return result;
-        }
-
-        Iterator<DBUserNode> iterator = nodes.iterator();
-        while (iterator.hasNext()){
-            DBUserNode node = iterator.next();
-            if (node.department != null){
-                result.add(node.department);
-            }
-        }
-
-        return result;
-    }
-
-    public String anyDepartmentXpath() {
-        String result = null;
-
-        List<DBUserNode> nodes = this.allNodes();
-        if (nodes == null) {
-            return result;
-        }
-
-        Iterator<DBUserNode> iterator = nodes.iterator();
-        while (iterator.hasNext()){
-            DBUserNode node = iterator.next();
-            if (node.department != null && node.department.xpath != null){
-                result = node.department.xpath;
-                return result;
-            }
-        }
-
-        return result;
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
 

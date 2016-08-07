@@ -120,4 +120,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
             dao = null;
         }
     }
+
+    public void dropAndCreateTable(){
+        try {
+            TableUtils.dropTable(getConnectionSource(), DBDepartment.class, true);
+            TableUtils.dropTable(getConnectionSource(), DBPosition.class, true);
+            TableUtils.dropTable(getConnectionSource(), DBRole.class, true);
+            TableUtils.dropTable(getConnectionSource(), DBUser.class, true);
+            TableUtils.dropTable(getConnectionSource(), DBUserNode.class, true);
+
+            TableUtils.createTable(getConnectionSource(), DBDepartment.class);
+            TableUtils.createTable(getConnectionSource(), DBPosition.class);
+            TableUtils.createTable(getConnectionSource(), DBRole.class);
+            TableUtils.createTable(getConnectionSource(), DBUser.class);
+            TableUtils.createTable(getConnectionSource(), DBUserNode.class);
+        }
+        catch (Exception e){}
+
+    }
 }

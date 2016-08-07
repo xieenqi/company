@@ -24,6 +24,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.customview.SideBar;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 import java.lang.reflect.Array;
@@ -70,8 +71,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         public void onReceive(final Context context, final Intent intent) {
             Bundle b = intent.getExtras();
             String userId = b.getString("userId");
-            loadData();
-            adapter.setDatasource(datasource);
+            adapter.notifyDataSetChanged();
         }
     };
 
@@ -97,7 +97,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         super.onResume();
         /*及时刷新头像*/
         // TODO:
-        adapter.notifyDataSetChanged();
+
 
     }
 
@@ -114,7 +114,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     }
 
     public void loadData(){
-        myUserList = (ArrayList<DBUser>) Common.getUsersAtSameDepts(/* 包含自己 */false);
+        myUserList = (ArrayList<DBUser>) OrganizationManager.shareManager().getCurrentUserSameDeptsUsers();
         Collections.sort(myUserList, pinyinComparator);
         this.buildData();
     }
@@ -175,9 +175,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
                 }
                 DBUser user = (DBUser) item;
                 Bundle b = new Bundle();
-                String xpath = user.anyDepartmentXpath();
                 b.putSerializable("userId", user.id!=null?user.id:"");
-                b.putSerializable("xpath", xpath!=null?xpath:"");
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
 
             }

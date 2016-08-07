@@ -73,7 +73,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
             Bundle b = intent.getExtras();
             String userId = b.getString("userId");
             loadData();
-            listAdapter.datasource = datasource;
+            listAdapter.notifyDataSetChanged();
         }
     };
 
@@ -123,9 +123,8 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
 
         ArrayList<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
         // TODO:
-        List<List<Object>> children = OrganizationManager.shareManager().getChildrenOf(deptId, xpath);
-        List<Object> users = children.get(0);
-        List<Object> depts = children.get(1);
+        List<DBUser> users = OrganizationManager.shareManager().directUsersOfDepartment(deptId);
+        List<DBDepartment> depts = OrganizationManager.shareManager().subDepartmentsOfDepartment(deptId);
         Collections.sort(users, pinyinComparator);
         Collections.sort(depts, pinyinComparator);
 
@@ -174,9 +173,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
                 else if (item.getClass()==DBUser.class) {
                     DBUser user = (DBUser) item;
                     Bundle b = new Bundle();
-                    String xpath = user.anyDepartmentXpath();
                     b.putSerializable("userId", user.id!=null?user.id:"");
-                    b.putSerializable("xpath", xpath!=null?xpath:"");
                     app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 }
                 return true;

@@ -47,12 +47,21 @@ import com.loyo.oa.v2.application.MainApp;
 
 public class OrganizationManager {
 
+    /* 常量 */
+    private static final String kCurrentUserSameDeptsUsers = "loyo.oa.v2.kCurrentUserSameDeptsUsers";
+
     private static DatabaseHelper mDatabaseHelper;
     private static Context context;
 
     /* 缓存数据 */
-    private static DBUser sLoginUser;
-    private static DBDepartment sComany;
+    private static DBUser             sLoginUser;
+    private static DBDepartment       sComany;
+    private static List<DBDepartment> departmentsCache = new ArrayList<DBDepartment>();
+    private static List<DBPosition>   positionsCache   = new ArrayList<DBPosition>();
+    private static List<DBRole>       rolesCache = new ArrayList<DBRole>();
+    private static List<DBUser>       usersCache = new ArrayList<DBUser>();
+    private static List<DBUserNode>   nodesCache = new ArrayList<DBUserNode>();
+    private static HashMap<String, Object> caches = new HashMap<String, Object>();
 
     private OrganizationManager(Context context) {
         this.context = context;
@@ -95,7 +104,7 @@ public class OrganizationManager {
         d.name = JSON.optString("name");
         d.simplePinyin = JSON.optString("simplePinyin");
         d.userNum = JSON.optInt("userNum");
-        d.isRoot = d.id.equals(d.superiorId);
+        d.isRoot = d.id.equals(d.superiorId) || d.superiorId == null;
 
         return d;
     }
@@ -204,409 +213,6 @@ public class OrganizationManager {
             role.dataRange = roleObj.optInt("dataRange");
         }
         return role;
-    }
-
-    public void saveOrgnizitionToDB(final String json) {
-
-
-        final long saveTransactionId = (long)((Math.random() * 9 + 1) * 100000000);
-        try {
-            TransactionManager.callInTransaction(mDatabaseHelper.getConnectionSource(),
-                    new Callable<Void>()
-                    {
-                        @Override
-                        public Void call() throws Exception
-                        {
-                            String s = json;
-                            long start = System.currentTimeMillis();
-
-                            DepartmentDao departmentDao  = new DepartmentDao(context);
-                            PositionDao positionDao = new PositionDao(context);
-                            RoleDao roleDao  = new RoleDao(context);
-                            UserDao userDao  = new UserDao(context);
-                            UserNodeDao nodeDao  = new UserNodeDao(context);
-                            if (s == null) {
-                                long end = System.currentTimeMillis();
-                                Log.i("time------------", "" + (end- start) + "ms");
-                                return null;
-                            }
-
-                            JSONArray jsonarray = new JSONArray(s);
-
-                            List<DBDepartment> tmpDepts = new ArrayList<DBDepartment>();
-
-                            for(int i = 0; i < jsonarray.length(); i++) {
-                                JSONObject departmentObj = jsonarray.getJSONObject(i);
-
-                                // 部门
-                                DBDepartment d = OrganizationManager.departmentFromJSON(departmentObj, departmentDao);
-                                tmpDepts.add(d);
-
-                                // Node
-                                JSONArray userArray = departmentObj.optJSONArray("users");
-                                if (userArray == null) {
-                                    departmentDao.createOrUpdate(d);
-                                    continue;
-                                }
-                                for(int j = 0; j < userArray.length(); j++) {
-                                    JSONObject userObj = userArray.optJSONObject(j);
-                                    DBUser user = OrganizationManager.userFormJSON(userObj, d.id);
-                                    DBPosition position = OrganizationManager.positionFromJSON(userObj, d.id);
-                                    String title = OrganizationManager.titleFromJSON(userObj, d.id);
-
-                                    DBRole role = OrganizationManager.roleFromJSON(userObj);
-                                    DBUserNode node = new DBUserNode();
-                                    node.id = user.id + "@" + d.id;
-                                    node.title = title;
-                                    node.position = position;
-                                    node.role = role;
-                                    node.user = user;
-                                    node.department = d;
-                                    node.saveTransactionId = saveTransactionId;
-                                    departmentDao.createOrUpdate(d);
-                                    userDao.createOrUpdate(user);
-                                    roleDao.createOrUpdate(role);
-                                    positionDao.createOrUpdate(position);
-                                    nodeDao.createorUpdate(node);
-                                }
-                            }
-
-                            for (int i = 0; i < tmpDepts.size(); i++) {
-                                DBDepartment dept = tmpDepts.get(i);
-                                if (dept.superiorId != null && !(dept.superiorId.equals(dept.id))) {
-                                    DBDepartment parent = departmentDao.get(dept.superiorId);
-                                    dept.parentDepartment = parent;
-                                    departmentDao.createOrUpdate(dept);
-                                }
-                                else {
-                                    departmentDao.createOrUpdate(dept);
-                                }
-                            }
-
-                            {
-                                DBUser user = userDao.get("573576daebe07f03eee89096");
-                                DBDepartment dept = departmentDao.get("56a622250c342e5408000002");
-                                DBUserNode node = new DBUserNode();
-                                node.user = user;
-                                node.department = dept;
-                                node.id = user.id + "@" + dept.id;
-                                node.saveTransactionId = saveTransactionId;
-                                nodeDao.createorUpdate(node);
-                            }
-
-
-
-                            // 删除过时数据
-                            DeleteBuilder<DBUserNode, String> deleteBuilder = nodeDao.getDao().deleteBuilder();
-                            //
-                            deleteBuilder.where().ne("saveTransactionId", saveTransactionId);
-                            // prepare our sql statement
-                            PreparedDelete<DBUserNode> preparedDelete = deleteBuilder.prepare();
-                            // query for all
-                            nodeDao.getDao().delete(preparedDelete);
-
-                            long end = System.currentTimeMillis();
-                            Log.i("time------------", "" + (end- start) + "ms");
-                            return null;
-                        }
-                    });
-
-        }
-        catch (Exception e) {
-            Log.v("debug", "error");
-        }
-    }
-
-    public List<DBDepartment> allDepartment() {
-        DepartmentDao dao = new DepartmentDao(getContext());
-        List<DBDepartment> list = null;
-
-        try {
-            list = dao.getDao().queryForAll();
-        }
-        catch (Exception e) {
-
-        }
-        return list;
-    }
-
-    public List<DBUser> getUsersAtSameDeptsOfUser(){
-
-        return this.getUsersAtSameDeptsOfUser(false);
-    }
-
-    public List<DBUser> getUsersAtSameDeptsOfUser(Boolean excludeSelf){
-        String userId = MainApp.user.id;
-        UserDao dao = new UserDao(getContext());
-        List<DBUser> list = new ArrayList<DBUser>();
-
-        if (userId == null) {
-            return list;
-        }
-
-        try {
-            DBUser user = null;
-            if ( OrganizationManager.sLoginUser != null) {
-                user = OrganizationManager.sLoginUser;
-            }
-            else {
-                user = new UserDao(getContext()).get(userId);
-                if (user == null) {
-                    return list;
-                }
-                OrganizationManager.sLoginUser = user;
-            }
-
-            List<DBUserNode> nodes = user.allNodes();
-            Iterator<DBUserNode> iterator = nodes.iterator();
-            while (iterator.hasNext()) {
-                DBUserNode node = iterator.next();
-                DBDepartment dept = node.department;
-                if (dept == null) {
-                    continue;
-                }
-                list.addAll(dept.allUsers());
-            }
-        }
-        catch (Exception e) {}
-
-        // 去重，去掉自己
-        HashMap<String, DBUser> map = new HashMap<String, DBUser>();
-        Iterator<DBUser> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            DBUser user = iterator.next();
-            if (excludeSelf && (userId.equals(user.id))) {
-                continue;
-            }
-            else if (user.id != null){
-                map.put(user.id, user);
-            }
-        }
-
-        Collection<DBUser> collection = map.values();
-        list = new ArrayList<DBUser>(collection);
-
-        return list;
-    }
-
-    public DBUser currentUser(boolean refresh) {
-        DBUser user = OrganizationManager.sLoginUser;
-        String userId = MainApp.user.id;
-        if (user == null || refresh) {
-            user = new UserDao(getContext()).get(userId);
-        }
-        return user;
-    }
-
-    public DBDepartment company() {
-
-        //  取缓存数据
-        if (OrganizationManager.sComany != null) {
-            return OrganizationManager.sComany;
-        }
-
-        // 按当前登录用户的部门向上查找公司
-//        DBUser currentLoginUser = OrganizationManager.sLoginUser;
-//        if (currentLoginUser != null) {
-//            DBDepartment result = null;
-//            List<DBDepartment> depts = currentLoginUser.allDepartment();
-//            Iterator<DBDepartment> iterator = depts.iterator();
-//            while (iterator.hasNext()) {
-//                DBDepartment dept = iterator.next();
-//                DBDepartment parent = dept.parentDepartment;
-//                while (parent!=null && parent.parentDepartment != null) {
-//                    parent = parent.parentDepartment;
-//                }
-//                if (parent.isRoot) {
-//                    result = parent;
-//                    break;
-//                }
-//            }
-//
-//            if (result != null) {
-//                OrganizationManager.sComany = result;
-//                return result;
-//            }
-//        }
-
-        // 直接从数据库中读取
-        DepartmentDao dao = new DepartmentDao(getContext());
-        List<DBDepartment> list = null;
-        DBDepartment company = null;
-        try {
-            QueryBuilder<DBDepartment, String> queryBuilder = dao.getDao().queryBuilder();
-            queryBuilder.where().eq("isRoot", true);
-            PreparedQuery<DBDepartment> preparedQuery = queryBuilder.prepare();
-            list = dao.getDao().query(preparedQuery);
-        }
-        catch (Exception e) {
-
-        }
-        if (list.size() > 0) {
-            company = list.get(0);
-        }
-
-        OrganizationManager.sComany = company;
-        return company;
-    }
-
-    public List<DBDepartment> level1Departments() {
-        List<DBDepartment> result = new ArrayList<DBDepartment>();
-
-        DBDepartment company = this.company();
-        if (company == null) {
-            return result;
-        }
-
-        ForeignCollection<DBDepartment> depts = company.childDepartments;
-        CloseableIterator<DBDepartment> iterator = depts.closeableIterator();
-
-        DBDepartment dept = null;
-        try {
-            while (iterator.hasNext()){
-                dept = iterator.next();
-                result.add(dept);
-            }
-        }
-        finally {
-            // must always close our iterators otherwise connections to the database are held open
-            try {
-                iterator.close();
-            }
-            catch (Exception e){}
-        }
-
-        return result;
-    }
-
-    public DBDepartment getDepartment(String deptId, String xpath) {
-        DBDepartment result = null;
-
-        if (deptId == null) {
-            return result;
-        }
-        if (xpath != null) { // 在缓存中查找
-            DBDepartment company = OrganizationManager.sComany;
-            if (company != null) {
-                result = company.subDepartmentWithXpath(xpath);
-                if (result != null) return result;
-            }
-        }
-
-        // 从数据库读取
-        result = (new DepartmentDao(getContext())).get(deptId);
-
-        return result;
-    }
-
-    public DBUser getUser(String userId, String deptXpath){
-        DBUser result = null;
-
-        if (userId == null) {
-            return result;
-        }
-        if (deptXpath != null) { // 在缓存中查找
-            DBDepartment company = OrganizationManager.sComany;
-            if (company != null) {
-                DBDepartment dept = company.subDepartmentWithXpath(deptXpath);
-                List<DBUser> users = dept!= null ? dept.allUsers():null;
-                if (users != null) {
-                    Iterator<DBUser> iterator = users.iterator();
-                    while (iterator.hasNext()) {
-                        DBUser user = iterator.next();
-                        if (user.id != null && user.id.equals(userId)) {
-                            result = user;
-                            return result;
-                        }
-                    }
-                }
-
-            }
-        }
-
-        // 从数据库读取
-        result = (new UserDao(getContext())).get(userId);
-
-        return result;
-    }
-
-    public void updateUser(DBUser user){
-        if (user.id == null) {
-            return ;
-        }
-        (new UserDao(getContext())).createOrUpdate(user);
-
-        // 更新缓存
-        if (OrganizationManager.sLoginUser != null
-                && OrganizationManager.sLoginUser.id.equals(user.id)) {
-            OrganizationManager.updateDBUserWithDBUser(OrganizationManager.sLoginUser, user);
-        }
-
-
-        List<DBDepartment> depts = user.allDepartment();
-        if (depts == null) return;
-
-        DBUser result = null;
-        Iterator<DBDepartment> iterator = depts.iterator();
-        while (iterator.hasNext()) {
-            DBDepartment deptBelongTo = iterator.next();
-            String xpath = deptBelongTo.xpath;
-
-            if (xpath != null) { // 在缓存中查找
-                DBDepartment company = OrganizationManager.sComany;
-                if (company != null) {
-                    DBDepartment dept = company.subDepartmentWithXpath(xpath);
-                    List<DBUser> users = dept!= null ? dept.allUsers():null;
-                    if (users != null) {
-                        Iterator<DBUser> userIterator = users.iterator();
-                        while (userIterator.hasNext()) {
-                            DBUser target = userIterator.next();
-                            if (target.id != null && target.id.equals(user.id)) {
-                                //
-                                OrganizationManager.updateDBUserWithDBUser(target, user);
-                                break;
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-        DBDepartment company = OrganizationManager.sComany;
-        if (company != null ) {
-            List<DBUser> users = company.allUsersWithoutSubDepartmentUsers();
-            if (users == null) return;
-            Iterator<DBUser> userIterator = users.iterator();
-            while (userIterator.hasNext()) {
-                DBUser target = userIterator.next();
-                if (target.id != null && target.id.equals(user.id)) {
-                    //
-                    OrganizationManager.updateDBUserWithDBUser(target, user);
-                    break;
-                }
-            }
-        }
-
-    }
-
-    public List<List<Object>> getChildrenOf(String deptId, String xpath){
-
-        DBDepartment company = OrganizationManager.sComany;
-        List<DBUser> all  = company.allUsers();
-        List<Object> users = new ArrayList<Object>();
-        List<Object> depts = new ArrayList<Object>();
-        List<List<Object>> result = new ArrayList<List<Object>>();
-        result.add(users);
-        result.add(depts);
-
-        DBDepartment department = this.getDepartment(deptId, xpath);
-        if (department != null) {
-            users.addAll(department.allUsersWithoutSubDepartmentUsers());
-            depts.addAll(department.subDepartments());
-        }
-
-        return result;
-
     }
 
     /**
@@ -757,7 +363,7 @@ public class OrganizationManager {
             return null;
         }
 
-        DBPosition pos = new DBPosition();
+        DBPosition pos = null;
 
         for (int k = 0; k < deptsArray.size();k++) {
             UserInfo dep = deptsArray.get(k);
@@ -771,7 +377,7 @@ public class OrganizationManager {
                 if (positionId != null){
                     pos = new DBPosition();
                     pos.id = positionId;
-                    pos.name = dep.getShortPosition().getName();;
+                    pos.name = dep.getShortPosition().getName();
                     pos.sequence = dep.getShortPosition().getSequence();
                 }
                 break;
@@ -803,10 +409,78 @@ public class OrganizationManager {
         return title;
     }
 
-    public void saveOrgnizitionToDB(final ArrayList<Department> list) {
+    public void saveOrganizitionToDB(final ArrayList<Department> list) {
 
+        if (list == null || list.size() == 0) {
+            return;
+        }
 
-        final long saveTransactionId = (long)((Math.random() * 9 + 1) * 100000000);
+        long saveTransactionId = (long)((Math.random() * 9 + 1) * 100000000);
+        List<DBDepartment> deptListTmp = new ArrayList<DBDepartment>();
+        List<DBUser> userListTmp = new ArrayList<DBUser>();
+        List<DBUserNode> nodeListTmp = new ArrayList<DBUserNode>();
+
+        List<DBPosition> positionListTmp = new ArrayList<DBPosition>();
+        List<DBRole> roleListTmp = new ArrayList<DBRole>();
+
+        for(int i = 0; i < list.size(); i++) {
+            Department departmentObj = list.get(i);
+
+            // 部门
+            DBDepartment d = OrganizationManager.convertDBDepartmentFromDepartment(departmentObj);
+            if (d!=null){
+                deptListTmp.add(d);
+            }
+            // Node
+            ArrayList<User> userArray = departmentObj.users;
+            if (userArray == null) {
+                continue;
+            }
+            for(int j = 0; j < userArray.size(); j++) {
+                User userObj = userArray.get(j);
+                DBUser user = OrganizationManager.convertDBUserFormUser(userObj);
+                DBPosition position = OrganizationManager.convertDBPositionFromUser(userObj, d.id);
+                String title = OrganizationManager.titleFromUser(userObj, d.id);
+                DBRole role = OrganizationManager.convertDBRoleFromUser(userObj);
+                if (user == null || d == null){
+                    continue;
+                }
+
+                DBUserNode node = new DBUserNode();
+                node.id = user.id + "@" + d.id;
+                node.title = title;
+                node.saveTransactionId = saveTransactionId;
+
+                if (position != null){
+                    node.positionId = position.id;
+                    positionListTmp.add(position);
+                }
+                if (role != null) {
+                    node.roleId = role.id;
+                    roleListTmp.add(role);
+                }
+                if (user != null) {
+                    node.userId = user.id;
+                    userListTmp.add(user);
+                }
+                if (d != null) {
+                    node.departmentId = d.id;
+                    node.departmentXpath = d.xpath;
+                    node.depth = d.depth;
+                }
+                nodeListTmp.add(node);
+            }
+        }
+
+        final List<DBDepartment>  deptList = new ArrayList<DBDepartment>(new HashSet<DBDepartment>(deptListTmp));
+        final List<DBUser> userList = new ArrayList<DBUser>(new HashSet<DBUser>(userListTmp));
+        final List<DBUserNode> nodeList = new ArrayList<DBUserNode>(new HashSet<DBUserNode>(nodeListTmp));
+
+        final List<DBRole> roleList = new ArrayList<DBRole>(new HashSet<DBRole>(roleListTmp));
+        final List<DBPosition> positionList = new ArrayList<DBPosition>(new HashSet<DBPosition>(positionListTmp));
+
+        mDatabaseHelper.dropAndCreateTable();
+
         try {
             TransactionManager.callInTransaction(mDatabaseHelper.getConnectionSource(),
                     new Callable<Void>()
@@ -814,87 +488,28 @@ public class OrganizationManager {
                         @Override
                         public Void call() throws Exception
                         {
-
                             DepartmentDao departmentDao  = new DepartmentDao(context);
                             PositionDao positionDao = new PositionDao(context);
                             RoleDao roleDao  = new RoleDao(context);
                             UserDao userDao  = new UserDao(context);
                             UserNodeDao nodeDao  = new UserNodeDao(context);
-                            if (list == null || list.size() == 0) {
-                                return null;
+
+                            for(DBDepartment d : deptList) {
+                                departmentDao.add(d);
+                            }
+                            for(DBUser d : userList) {
+                                userDao.add(d);
+                            }
+                            for(DBPosition d : positionList) {
+                                positionDao.add(d);
+                            }
+                            for(DBRole d : roleList) {
+                                roleDao.add(d);
+                            }
+                            for(DBUserNode node : nodeList) {
+                                nodeDao.add(node);
                             }
 
-                            List<DBDepartment> tmpDepts = new ArrayList<DBDepartment>();
-
-                            for(int i = 0; i < list.size(); i++) {
-                                Department departmentObj = list.get(i);
-
-                                // 部门
-                                DBDepartment d = OrganizationManager.convertDBDepartmentFromDepartment(departmentObj);
-                                tmpDepts.add(d);
-
-                                // Node
-                                ArrayList<User> userArray = departmentObj.users;
-                                if (userArray == null) {
-                                    departmentDao.createOrUpdate(d);
-                                    continue;
-                                }
-                                for(int j = 0; j < userArray.size(); j++) {
-                                    User userObj = userArray.get(j);
-                                    DBUser user = OrganizationManager.convertDBUserFormUser(userObj);
-                                    DBPosition position = OrganizationManager.convertDBPositionFromUser(userObj, d.id);
-                                    String title = OrganizationManager.titleFromUser(userObj, d.id);
-
-                                    DBRole role = OrganizationManager.convertDBRoleFromUser(userObj);
-                                    DBUserNode node = new DBUserNode();
-                                    node.id = user.id + "@" + d.id;
-                                    node.title = title;
-                                    node.position = position;
-                                    node.role = role;
-                                    node.user = user;
-                                    node.department = d;
-                                    node.saveTransactionId = saveTransactionId;
-                                    departmentDao.createOrUpdate(d);
-                                    userDao.createOrUpdate(user);
-                                    roleDao.createOrUpdate(role);
-                                    positionDao.createOrUpdate(position);
-                                    nodeDao.createorUpdate(node);
-                                }
-                            }
-
-                            for (int i = 0; i < tmpDepts.size(); i++) {
-                                DBDepartment dept = tmpDepts.get(i);
-                                if (dept.superiorId != null && !(dept.superiorId.equals(dept.id))) {
-                                    DBDepartment parent = departmentDao.get(dept.superiorId);
-                                    dept.parentDepartment = parent;
-                                    departmentDao.createOrUpdate(dept);
-                                }
-                                else {
-                                    departmentDao.createOrUpdate(dept);
-                                }
-                            }
-
-                            {
-                                DBUser user = userDao.get("573576daebe07f03eee89096");
-                                DBDepartment dept = departmentDao.get("56a622250c342e5408000002");
-                                DBUserNode node = new DBUserNode();
-                                node.user = user;
-                                node.department = dept;
-                                node.id = user.id + "@" + dept.id;
-                                node.saveTransactionId = saveTransactionId;
-                                nodeDao.createorUpdate(node);
-                            }
-
-
-
-                            // 删除过时数据
-                            DeleteBuilder<DBUserNode, String> deleteBuilder = nodeDao.getDao().deleteBuilder();
-                            //
-                            deleteBuilder.where().ne("saveTransactionId", saveTransactionId);
-                            // prepare our sql statement
-                            PreparedDelete<DBUserNode> preparedDelete = deleteBuilder.prepare();
-                            // query for all
-                            nodeDao.getDao().delete(preparedDelete);
                             return null;
                         }
                     });
@@ -902,6 +517,316 @@ public class OrganizationManager {
         }
         catch (Exception e) {
             Log.v("debug", "error");
+        }
+    }
+
+    public void loadOrganizitionDataToCache(){
+
+        departmentsCache = (new DepartmentDao(getContext())).all();
+        nodesCache = (new UserNodeDao(getContext())).all();
+        usersCache = (new UserDao(getContext())).all();
+        positionsCache = (new PositionDao(getContext())).all();
+        rolesCache = (new RoleDao(getContext())).all();
+    }
+
+    /* 当前登录用户 */
+    public DBUser getCurrentUser(){
+
+        // 取缓存
+        if (sLoginUser != null) {
+            return sLoginUser;
+        }
+
+        DBUser result = null;
+        String userId = MainApp.user.id;
+        if (userId == null) {
+            return result;
+        }
+
+        for(DBUser user : usersCache) {
+            if (user.id.equals(userId)) {
+                result = user;
+                break;
+            }
+        }
+        sLoginUser = result;
+
+        return result;
+    }
+
+    /* 当前登录用户同部门的所有用户（包括子部门） */
+    public List<DBUser> getCurrentUserSameDeptsUsers() {
+
+        if (caches.get(kCurrentUserSameDeptsUsers) != null) {
+            return (List<DBUser>)caches.get(kCurrentUserSameDeptsUsers);
+        }
+
+        List<DBUser> result = new ArrayList<DBUser>();
+
+        // 查找所在部门
+        List<String> currentDeptXpath = _currentUserDeptXpaths();
+
+        List<String> targetUserIds= new ArrayList<String>();
+        for (DBUserNode node : nodesCache) {
+            Iterator<String> xpathIterator = currentDeptXpath.iterator();
+            while (xpathIterator.hasNext()) {
+                String xpath = xpathIterator.next();
+                if (node.userId != null
+                        && node.departmentXpath != null
+                        && node.departmentXpath.startsWith(xpath))
+                {
+                    targetUserIds.add(node.userId);
+                }
+            }
+        }
+
+        // 排重
+        targetUserIds = new ArrayList<String>(new HashSet<String>(targetUserIds));
+
+        // 按Id查询用户
+        for(DBUser user : usersCache) {
+            if (targetUserIds.contains(user.id)) {
+                result.add(user);
+            }
+        }
+
+        caches.put(kCurrentUserSameDeptsUsers, result);
+
+        return result;
+    }
+
+    // 当前登录用户所在所有部门的xpath列表
+    public List<String> _currentUserDeptXpaths() {
+        DBUser currentUser = getCurrentUser();
+        List<String> currentDeptXpath = new ArrayList<String>();
+
+        if (currentUser == null) {
+            return currentDeptXpath;
+        }
+
+        for (DBUserNode node : nodesCache) {
+            if (node.userId != null
+                    && node.userId.equals(currentUser.id)
+                    && node.departmentXpath != null)
+            {
+                currentDeptXpath.add(node.departmentXpath);
+            }
+        }
+
+        return currentDeptXpath;
+    }
+
+    // 当前登录用户所在所有一级部门的xpath列表
+    public List<String> _currentUserTopDeptXpaths() {
+        List<String> currentTopDeptXpath = new ArrayList<String>();
+
+        List<String> currentDeptXpath = _currentUserDeptXpaths();
+        for(String xpath : currentDeptXpath) {
+            String[] components = xpath.split("/");
+            if (components.length < 2) {
+                continue;
+            }
+            String target = String.format("%s/%s", components[0], components[1]);
+            currentTopDeptXpath.add(target);
+        }
+
+
+        return currentTopDeptXpath;
+    }
+
+    // 当前登录用户所在所有一级部门的id列表
+    public List<String> _currentUserTopDeptIds() {
+        List<String> currentTopDeptId = new ArrayList<String>();
+
+        List<String> currentDeptXpath = _currentUserDeptXpaths();
+        for(String xpath : currentDeptXpath) {
+            String[] components = xpath.split("/");
+            if (components.length < 2) {
+                continue;
+            }
+            String target = String.format("%s", components[1]);
+            currentTopDeptId.add(target);
+        }
+
+        return currentTopDeptId;
+    }
+
+    // 当前登录用户所在所有一级部门列表
+    public List<DBDepartment> currentUserTopDepartments() {
+
+        List<DBDepartment> result = new ArrayList<DBDepartment>();
+
+        List<String> currentTopDeptXpath = _currentUserTopDeptXpaths();
+        List<String> currentTopDeptId = _currentUserTopDeptIds();
+        for (DBDepartment dept : departmentsCache) {
+            if (dept.xpath != null
+                    && currentTopDeptXpath.contains(dept.xpath)) { // 按xpath查找
+                result.add(dept);
+            }
+            else if (dept.xpath != null
+                    && currentTopDeptId.contains(dept.id)) { // 按id查找
+                result.add(dept);
+            }
+        }
+
+        return result;
+    }
+
+    // 部门的子部门列表
+    public List<DBDepartment> subDepartmentsOfDepartment(DBDepartment parent) {
+        List<DBDepartment> result = new ArrayList<DBDepartment>();
+        if (parent == null) {
+            return result;
+        }
+
+        for (DBDepartment dept : departmentsCache) {
+            if (parent.id.equals(dept.superiorId)) {
+                result.add(dept);
+            }
+        }
+
+        return result;
+    }
+
+    public List<DBDepartment> subDepartmentsOfDepartment(String parentId) {
+        List<DBDepartment> result = new ArrayList<DBDepartment>();
+        if (parentId == null) {
+            return result;
+        }
+
+        for (DBDepartment dept : departmentsCache) {
+            if (parentId.equals(dept.superiorId)) {
+                result.add(dept);
+            }
+        }
+
+        return result;
+    }
+
+    // 部门直属用户列表(非只部门用户)
+    public List<DBUser> directUsersOfDepartment(DBDepartment parent) {
+        List<DBUser> result = new ArrayList<DBUser>();
+        if (parent == null) {
+            return result;
+        }
+
+        List<String> userIds = new ArrayList<String>();
+        for (DBUserNode node : nodesCache) {
+            if (node.departmentId != null
+                    && node.departmentId.equals(parent.id)
+                    && node.userId != null) {
+                userIds.add(node.userId);
+            }
+        }
+
+        for (DBUser user : usersCache) {
+            if (userIds.contains(user.id)) {
+                result.add(user);
+            }
+        }
+
+        return result;
+    }
+
+    public List<DBUser> directUsersOfDepartment(String parentId) {
+        List<DBUser> result = new ArrayList<DBUser>();
+        if (parentId == null) {
+            return result;
+        }
+
+        List<String> userIds = new ArrayList<String>();
+        for (DBUserNode node : nodesCache) {
+            if (node.departmentId != null
+                    && node.departmentId.equals(parentId)
+                    && node.userId != null) {
+                userIds.add(node.userId);
+            }
+        }
+
+        for (DBUser user : usersCache) {
+            if (userIds.contains(user.id)) {
+                result.add(user);
+            }
+        }
+
+        return result;
+    }
+
+    // 公司
+    public DBDepartment getsComany() {
+
+        // 优先取缓存
+        if (OrganizationManager.sComany != null) {
+            return OrganizationManager.sComany;
+        }
+
+        List<DBDepartment> list = new ArrayList<DBDepartment>();
+        DBDepartment result = null;
+
+        for(DBDepartment dept : departmentsCache) {
+            if (dept.isRoot) {
+                list.add( dept );
+            }
+        }
+
+        if (list.size() > 1) {
+            //DBUser
+            List<String> deptXpaths = _currentUserDeptXpaths();
+            String anyXpath = deptXpaths.size()> 0? deptXpaths.get(0):null;
+            if (anyXpath != null) {
+                for (DBDepartment dept: list) {
+                    if (anyXpath.startsWith(dept.id)) {
+                        result = dept;
+                        break;
+                    }
+                }
+                if (result == null) {
+                    result = list.get(0);
+                }
+            }
+
+        }
+        else if (list.size() == 1){
+            result = list.get(0);
+        }
+
+        OrganizationManager.sComany = result;
+
+        return result;
+
+    }
+
+    // 公司的所有一级部门列表
+    public List<DBDepartment> topDepartments() {
+        List<DBDepartment> result = subDepartmentsOfDepartment(getsComany());
+        return result;
+    }
+
+    // 根据id获取用户
+    public DBUser getUser(String userId) {
+        if (userId == null) {
+            return null;
+        }
+        for (DBUser user : usersCache) {
+            if (user.id.equals(userId)) {
+                return user;
+            }
+        }
+
+        return null;
+    }
+
+    //
+    public List<DBUser> allUsers() {
+        return usersCache;
+    }
+
+    // 更新
+    public void updateUser(DBUser user){
+        DBUser target = getUser(user.id);
+        if (target != null) {
+            updateDBUserWithDBUser(target, user);
+            (new UserDao(getContext())).createOrUpdate(target);
         }
     }
 }

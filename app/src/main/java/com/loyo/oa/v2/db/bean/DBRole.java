@@ -18,4 +18,14 @@ public class DBRole implements Serializable {
 
     @DatabaseField
     public int dataRange;
+
+    @Override
+    public boolean equals(Object obj) {
+        DBRole d =( DBRole)obj;
+        return id.equals(d.id);
+    }
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

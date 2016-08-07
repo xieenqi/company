@@ -115,8 +115,6 @@ public class ContactInfoEditActivity extends BaseActivity {
     TextView name_title_user;
     @Extra
     String  userId;
-    @Extra
-    String  xpath;
 
     private DBUser user;
 
@@ -316,7 +314,7 @@ public class ContactInfoEditActivity extends BaseActivity {
      */
     private void initData() {
 
-        user = OrganizationManager.shareManager().getUser(userId, xpath);
+        user = OrganizationManager.shareManager().getUser(userId);
 
         if (null == user) {
             return;

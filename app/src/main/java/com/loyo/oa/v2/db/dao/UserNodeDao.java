@@ -5,6 +5,8 @@ package com.loyo.oa.v2.db.dao;
  */
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 
@@ -90,6 +92,21 @@ public class UserNodeDao {
             e.printStackTrace();
         }
         return node;
+    }
+
+    public List<DBUserNode> all(){
+        List<DBUserNode> result = new ArrayList<DBUserNode>();
+        try
+        {
+            List<DBUserNode> d = userNodeDaoOpe.queryForAll();
+            if (d !=null) {
+                result = d;
+            }
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
 

@@ -68,8 +68,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
         public void onReceive(final Context context, final Intent intent) {
             Bundle b = intent.getExtras();
             String userId = b.getString("userId");
-            loadData();
-            userGroupExpandableListAdapter.datasource = datasource;
+            userGroupExpandableListAdapter.notifyDataSetChanged();
         }
     };
 
@@ -116,32 +115,28 @@ public class ContactsDepartmentFragment extends BaseFragment {
     }
 
     public void loadData() {
-        List<DBDepartment> level1Departments = OrganizationManager.shareManager().level1Departments();
-        DBDepartment company = OrganizationManager.shareManager().company();
-        DBUser currentUser = OrganizationManager.shareManager().currentUser(false);
-        List<DBUser> level1Users = new ArrayList<DBUser>();
-        if (company != null) { // 当前公司用户可能为空
-            level1Users.addAll(company.allUsersWithoutSubDepartmentUsers());
-        }
+        OrganizationManager orgManager = OrganizationManager.shareManager();
+        DBDepartment company = orgManager.getsComany();
 
-        List<DBDepartment> currentUserDepts = new ArrayList<DBDepartment>();
-        if (currentUser != null) { // 当前登录用户可能为空
-            currentUserDepts.addAll(currentUser.allDepartment());
-        }
+        List<DBDepartment> topDepartments = orgManager.subDepartmentsOfDepartment(company);
+        List<DBUser> directUsers = orgManager.directUsersOfDepartment(company);
+        List<DBDepartment> currentUserTopDepartments = orgManager.currentUserTopDepartments();
 
-        Collections.sort(level1Departments, pinyinComparator);
+        Collections.sort(topDepartments, pinyinComparator);
+
         ArrayList<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
-        Iterator<DBDepartment> deptsIterator = level1Departments.iterator();
+        Iterator<DBDepartment> deptsIterator = topDepartments.iterator();
         String previousKey = null;
         HashMap<String, Object> previousMap = null;
         ArrayList<DBDepartment> currentUserLevel1Depts = new ArrayList<DBDepartment>();
+
         while (deptsIterator.hasNext()) {
             DBDepartment dept = deptsIterator.next();
             Boolean isCurrentUserDept = false;
-            for (int i = 0; i < currentUserDepts.size(); i++) {
-                DBDepartment theDept = currentUserDepts.get(i);
-                if (theDept.xpath.startsWith(dept.xpath)) {
-                    currentUserLevel1Depts.add(theDept);
+            for (int i = 0; i < currentUserTopDepartments.size(); i++) {
+                DBDepartment theDept = currentUserTopDepartments.get(i);
+                if (theDept.id.equals(dept.id)) {
+                    currentUserLevel1Depts.add(dept);
                     isCurrentUserDept = true;
                     break;
                 }
@@ -174,10 +169,10 @@ public class ContactsDepartmentFragment extends BaseFragment {
             result.add(0, currentUserMap);
         }
 
-        if (level1Users.size() > 0) {
+        if (directUsers.size() > 0) {
             HashMap<String, Object> level1Map = new HashMap<String, Object>();
             level1Map.put("name", "人员");
-            level1Map.put("items", level1Users);
+            level1Map.put("items", directUsers);
             result.add(level1Map);
         }
 
@@ -215,9 +210,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 else if (item.getClass()==DBUser.class) {
                     DBUser user = (DBUser) item;
                     Bundle b = new Bundle();
-                    String xpath = user.anyDepartmentXpath();
                     b.putSerializable("userId", user.id!=null?user.id:"");
-                    b.putSerializable("xpath", xpath!=null?xpath:"");
                     app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 }
                 return true;

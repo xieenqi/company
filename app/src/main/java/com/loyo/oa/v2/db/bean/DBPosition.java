@@ -19,4 +19,14 @@ public class DBPosition implements Serializable {
 
     @DatabaseField
     public int sequence;
+
+    @Override
+    public boolean equals(Object obj) {
+        DBPosition d =( DBPosition)obj;
+        return id.equals(d.id);
+    }
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
