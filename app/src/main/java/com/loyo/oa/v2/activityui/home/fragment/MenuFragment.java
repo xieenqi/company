@@ -293,7 +293,8 @@ public class MenuFragment extends BaseFragment {
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
                 Bundle b = new Bundle();
-                b.putSerializable("user", MainApp.user);
+                String userId = MainApp.user.id;
+                b.putSerializable("userId", userId!=null?userId:"");
                 app.startActivity(getActivity(), ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
 
