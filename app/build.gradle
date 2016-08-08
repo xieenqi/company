@@ -20,7 +20,7 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('D:\\android\\key\\loyo_share.keystore')
+            storeFile file('/Users/EthanGong/Desktop/loyo_share.keystore')
 //            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
@@ -28,8 +28,8 @@ android {
             storePassword 'android'
         }
         SignConfig {
-          storeFile file('D:\\android\\key\\loyo_share.keystore')
-          keyPassword 'Loyo2012'
+            storeFile file('/Users/EthanGong/Desktop/loyo_share.keystore')
+            keyPassword 'Loyo2012'
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
 //          storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'android'
@@ -76,13 +76,13 @@ android {
     }
 
     //jenkins 构建文件输出
-    android.applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def today = new Date().format('yyyyMMdd-HH');
-            def file = output.outputFile
-            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
-        }
-    }
+//    android.applicationVariants.all { variant ->
+//        variant.outputs.each { output ->
+//            def today = new Date().format('yyyyMMdd-HH');
+//            def file = output.outputFile
+//            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
+//        }
+//    }
 
 //  productFlavors {
 //        ukuaiqi {}

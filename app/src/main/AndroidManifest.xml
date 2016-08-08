@@ -636,6 +636,11 @@
         <service
             android:name=".service.InitDataService_"
             android:enabled="true"/>
+
+        <service
+            android:name=".service.OrganizationService"
+            android:enabled="true" />
+
         <service
             android:name=".service.CheckUpdateService"
             android:enabled="true"/>

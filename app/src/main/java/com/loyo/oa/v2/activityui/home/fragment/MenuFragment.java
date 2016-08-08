@@ -32,9 +32,11 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -307,7 +309,10 @@ public class MenuFragment extends BaseFragment {
      * 更新 组织架构
      */
     void initService() {
+        /* 更新登录用户信息 */
         InitDataService_.intent(getActivity()).start();
+        /* 拉取组织架构 */
+        OrganizationService.startActionFetchAll(MainApp.getMainApp());
     }
 
     /**
@@ -392,6 +397,10 @@ public class MenuFragment extends BaseFragment {
         //清楚token与用户资料
         MainApp.setToken(null);
         MainApp.user = null;
+
+        /* 清空组织架构 */
+        OrganizationManager.clearOrganizationData();
+
 
         //清楚本地登录状态
         SharedUtil.clearInfo(getActivity());
