@@ -302,6 +302,7 @@
 
 
                         <LinearLayout
+                            android:id="@+id/ll_payment_order"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
                             android:gravity="center_vertical"
@@ -317,6 +318,7 @@
                                 android:textSize="15sp"/>
 
                             <TextView
+                                android:id="@+id/tv_order_name"
                                 style="@style/text_item1"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"

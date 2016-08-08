@@ -23,6 +23,9 @@ public class EstimateAdd implements Serializable {
     public String remark;          //备注
     public String UUId;
 
+    public String orderTitle;
+    public String orderId;
+
 
     public class PayeeUser implements Serializable {
         public String id;

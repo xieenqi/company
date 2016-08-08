@@ -22,6 +22,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.OrderPlanListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.ExtensionDatas;
@@ -98,7 +99,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById LinearLayout ll_order_layout, ll_order_content, ll_product;
     @ViewById TextView tv_product, tv_plan_value;
     //回款审批
-    @ViewById LinearLayout ll_payment_layout, ll_payment_content;
+    @ViewById LinearLayout ll_payment_layout, ll_payment_content, ll_payment_order;
+    @ViewById TextView tv_order_name;
 
     public final int MSG_DELETE_WFINSTANCE = 100;
     public final int MSG_ATTACHMENT = 200;
@@ -303,6 +305,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
             tv_key.setText(text);
             ll_payment_content.addView(view_value);
         }
+        tv_order_name.setText(payment.orderTitle);
+        ll_payment_order.setTag(payment.orderId);
     }
 
     /**
@@ -620,7 +624,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_nopass, R.id.layout_pass, R.id.layout_lastwork,
-            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan})
+            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan, R.id.ll_payment_order})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -685,6 +689,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 mBundle.putString("orderId", mWfInstance.order.id);
                 mBundle.putInt(ExtraAndResult.TOKEN_START, 1);
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
+                break;
+            case R.id.ll_payment_order://回款审批到订单详情
+                Intent mIntent = new Intent();
+//              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                mIntent.putExtra(ExtraAndResult.EXTRA_ID, (String) v.getTag());
+                mIntent.setClass(this, OrderDetailActivity.class);
+                startActivityForResult(mIntent, 1);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
         }
     }
