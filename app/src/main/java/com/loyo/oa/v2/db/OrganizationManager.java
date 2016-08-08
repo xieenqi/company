@@ -271,7 +271,9 @@ public class OrganizationManager {
     }
 
     public static void clearOrganizationData() {
-        mDatabaseHelper.clearOrganizationData();
+        if (mDatabaseHelper != null) {
+            mDatabaseHelper.clearOrganizationData();
+        }
         sLoginUser = null;
         sComany =null;
         departmentsCache = new ArrayList<DBDepartment>();

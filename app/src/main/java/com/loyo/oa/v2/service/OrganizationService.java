@@ -77,9 +77,12 @@ public class OrganizationService extends IntentService {
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
 
-            OrganizationManager.shareManager().saveOrganizitionToDB(lstDepartment_current);
             OrganizationManager.clearOrganizationData();
+            OrganizationManager.shareManager().saveOrganizitionToDB(lstDepartment_current);
             OrganizationManager.shareManager().loadOrganizitionDataToCache();
+
+            Intent it = new Intent("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+            sendBroadcast(it);
 
 
             LogUtil.d("更新 组织《《《《《《《《《《《《《《《《》》》》》》》》》》》 架构 json：完成");

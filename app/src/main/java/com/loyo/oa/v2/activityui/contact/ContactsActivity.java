@@ -1,5 +1,9 @@
 package com.loyo.oa.v2.activityui.contact;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,9 +55,21 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
     private String myDeptId;
 
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            //Bundle b = intent.getExtras();
+            if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
+                // getUserAndDepartmentSize();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        registerBroadcastReceiver();
         setContentView(R.layout.activity_department_contacts);
 
         departmentFragment = new ContactsDepartmentFragment();
@@ -96,6 +112,12 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         tabs.setViewPager(pager);
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        unregisterBroadcastReceiver();
+    }
+
     /**
      * 获取全公司人数、本部门人数
      */
@@ -125,6 +147,16 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
             default:
                 break;
         }
+    }
+
+    public void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+        registerReceiver(mReceiver, filter);
+    }
+
+    public void unregisterBroadcastReceiver() {
+        unregisterReceiver(mReceiver);
     }
 
 

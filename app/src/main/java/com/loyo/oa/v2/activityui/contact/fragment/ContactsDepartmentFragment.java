@@ -66,9 +66,16 @@ public class ContactsDepartmentFragment extends BaseFragment {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
-            Bundle b = intent.getExtras();
-            String userId = b.getString("userId");
-            userGroupExpandableListAdapter.notifyDataSetChanged();
+            //Bundle b = intent.getExtras();
+            if ( "com.loyo.oa.v2.USER_EDITED".equals( intent.getAction() )) {
+                //String userId = b.getString("userId");
+                userGroupExpandableListAdapter.notifyDataSetChanged();
+            }
+            else  if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
+                loadData();
+                userGroupExpandableListAdapter.datasource = datasource;
+                userGroupExpandableListAdapter.notifyDataSetChanged();
+            }
         }
     };
 
@@ -83,9 +90,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        /*及时刷新头像*/
-        // TODO:
-        userGroupExpandableListAdapter.notifyDataSetChanged();
 
     }
 
@@ -231,6 +235,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
     public void registerBroadcastReceiver(){
         IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
         getContext().registerReceiver(mReceiver, filter);
     }
 
