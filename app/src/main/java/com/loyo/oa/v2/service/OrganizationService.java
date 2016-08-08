@@ -78,6 +78,7 @@ public class OrganizationService extends IntentService {
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
 
             OrganizationManager.shareManager().saveOrganizitionToDB(lstDepartment_current);
+            OrganizationManager.clearOrganizationData();
             OrganizationManager.shareManager().loadOrganizitionDataToCache();
 
 
