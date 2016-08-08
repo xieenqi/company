@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -20,9 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
-import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
@@ -86,7 +85,7 @@ public class OrderAddforExtraData extends LinearLayout {
                 continue;
             }
 
-            final View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_extra, null, false);
+            final View extra = LayoutInflater.from(mContext).inflate(R.layout.item_order_extra, null, false);
             extra.setEnabled(edit);
 
             TextView tv_tag = (TextView) extra.findViewById(R.id.tv_tag);
@@ -105,6 +104,12 @@ public class OrderAddforExtraData extends LinearLayout {
             }
 
             addView(extra);
+
+            if(customerExtra.name.length() > 20){
+                if(!TextUtils.isEmpty(customerExtra.name))
+                tv_content.setText(customerExtra.val);
+            }
+
             if (customerExtra.isList) {
                 LogUtil.dll("islist");
                 LogUtil.dll("islist enable:" + customerExtra.enabled);

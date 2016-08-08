@@ -266,7 +266,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         orderList.add("成交金额：" + mWfInstance.order.dealMoney);
         orderList.add("订单编号：" + mWfInstance.order.orderNum);
         if (null != mWfInstance.order.extensionDatas && mWfInstance.order.extensionDatas.size() > 0) {
-            for (ExtensionDatas ele : mWfInstance.order.extensionDatas) {
+            for (ContactLeftExtras ele : mWfInstance.order.extensionDatas) {
                 orderList.add(ele.label + "：" + ele.val);
             }
         }

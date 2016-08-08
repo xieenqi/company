@@ -71,6 +71,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private int fromPage;
 
     private OrderDetail mOrderDetail;
+    private OrderAddforExtraData orderAddforExtra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_title.setText("新建订单");
         iv_submit = (ImageView) findViewById(R.id.iv_submit);
         iv_submit.setImageResource(R.drawable.right_submit1);
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
@@ -115,41 +115,47 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         ll_estimate.setOnClickListener(this);
         ll_source.setOnClickListener(this);
 
-        getAddDynamic();
-    }
+        if(fromPage == OrderDetailActivity.ORDER_EDIT){
+            tv_title.setText("编辑订单");
+            editData();
+        }else if(fromPage == OrderDetailActivity.ORDER_ADD){
+            tv_title.setText("新建订单");
+            getAddDynamic();
+        }
 
+    }
 
     /**
-     * 获取新建订单动态字段
+     * 编辑数据绑定
      * */
-    public void getAddDynamic(){
-        showLoading("",false);
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("bizType",104);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback< ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse("新建订单动态字段",response);
-                mCusList = cuslist;
-                setAddDynamic();
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+    public void editData(){
+
+        customerId = mOrderDetail.customerId;
+        customerName = mOrderDetail.customerName;
+        productData = mOrderDetail.proInfo;
+        estimateData = mOrderDetail.paymentRecords;
+        mCusList    = mOrderDetail.extensionDatas;
+
+        et_name.setText(mOrderDetail.title);
+        tv_customer.setText(mOrderDetail.customerName);
+        tv_stage.setText(getIntentionProductName());
+        tv_estimate.setText(getEstimateName());
+        tv_estimate.setText(getEstimateName());
+        et_money.setText(mOrderDetail.dealMoney+"");
+        et_ordernum.setText(mOrderDetail.orderNum);
+        et_remake.setText(mOrderDetail.remark);
+        bindExtraView(mCusList);
+
     }
+
 
     /**
      * 设置权限
      * 标题、客户、产品、金额都是必填，所以不判断
      * */
-    public void setAddDynamic(){
-        tv_custom.addView(new OrderAddforExtraData(mContext, mCusList, true, R.color.title_bg1, 0));
-
-        for(ContactLeftExtras customerJur : mCusList){
+    public void setAddDynamic(ArrayList<ContactLeftExtras> extras){
+        for(ContactLeftExtras customerJur : extras){
             switch (customerJur.name){
 
                 case "paymentRecords":
@@ -180,6 +186,36 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    public void bindExtraView(ArrayList<ContactLeftExtras> extrases){
+        orderAddforExtra = new OrderAddforExtraData(mContext, extrases, true, R.color.title_bg1, 0);
+        tv_custom.addView(orderAddforExtra);
+        setAddDynamic(extrases);
+    }
+
+
+    /**
+     * 获取新建订单动态字段
+     * */
+    public void getAddDynamic(){
+        showLoading("", false);
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("bizType", 104);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
+            @Override
+            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
+                HttpErrorCheck.checkResponse("新建订单动态字段", response);
+                mCusList = cuslist;
+                bindExtraView(cuslist);
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
     /**
      * 提交订单
      * */
@@ -198,9 +234,20 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             Toast("请选择成交金额!");
             return;
         }
+        LogUtil.dee("extra:"+MainApp.gson.toJson(orderAddforExtra.getExtras()));
+        for(ContactLeftExtras extra : orderAddforExtra.getExtras()){
+            if(extra.name.length() > 20)
+            if(extra.required && TextUtils.isEmpty(extra.val)){
+                Toast("请填写必填项!");
+                return;
+            }
+        }
 
         showLoading("");
         HashMap<String,Object> map = new HashMap<>();
+        if(fromPage == OrderDetailActivity.ORDER_EDIT){
+            map.put("id",mOrderDetail.id);
+        }
         map.put("customerId",customerId);
         map.put("customerName",customerName);
         map.put("title",et_name.getText().toString());
@@ -209,8 +256,44 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         map.put("orderNum",et_ordernum.getText().toString());
         map.put("remark",et_remake.getText().toString());
         map.put("proInfo",productData);
-        map.put("paymentRecords",estimateData);
+        map.put("paymentRecords", estimateData);
+        map.put("extensionDatas", orderAddforExtra.getExtras());
+
         LogUtil.dee("提交参数:" + MainApp.gson.toJson(map));
+
+        if(fromPage == OrderDetailActivity.ORDER_EDIT){
+            editOrderData(map);
+        }else{
+            addOrderData(map);
+        }
+
+    }
+
+    /**
+     * 编辑订单
+     * */
+    public void editOrderData(HashMap<String,Object> map){
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                .editOrder(mOrderDetail.id,map,new Callback<OrderAdd>() {
+                    @Override
+                    public void success(OrderAdd orderAdd, Response response) {
+                        HttpErrorCheck.checkResponse("编辑订单", response);
+                        app.finishActivity(OrderAddActivity.this,MainApp.ENTER_TYPE_LEFT,RESULT_OK,new Intent());
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+
+    }
+
+    /**
+     * 新建订单
+     * */
+    public void addOrderData(HashMap<String,Object> map){
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .addOrder(map, new Callback<OrderAdd>() {
@@ -226,20 +309,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                     }
                 });
 
-
-/*        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .editOrder("",map,new Callback<OrderAdd>() {
-                    @Override
-                    public void success(OrderAdd orderAdd, Response response) {
-                        HttpErrorCheck.checkResponse("编辑订单", response);
-                        app.finishActivity(OrderAddActivity.this,MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });*/
     }
 
     @Override

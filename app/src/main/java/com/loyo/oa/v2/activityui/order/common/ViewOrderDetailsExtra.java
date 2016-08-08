@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.ExtensionDatas;
 import com.loyo.oa.v2.application.MainApp;
 
@@ -21,15 +22,15 @@ public class ViewOrderDetailsExtra extends LinearLayout {
     private View convertView;
     private TextView name;
     private TextView value;
-    private ExtensionDatas mData;
+    private ContactLeftExtras mData;
 
-    public ViewOrderDetailsExtra(Context context, ExtensionDatas data) {
+    public ViewOrderDetailsExtra(Context context, ContactLeftExtras data) {
         super(context);
         mData = data;
         bindView(mData);
     }
 
-    public void bindView(ExtensionDatas mData) {
+    public void bindView(ContactLeftExtras mData) {
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_saledetils_extra, null);
         name = (TextView) convertView.findViewById(R.id.saledetils_name);
         value = (TextView) convertView.findViewById(R.id.saledetils_value);
