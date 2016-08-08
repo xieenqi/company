@@ -12,6 +12,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -42,7 +43,7 @@ public class WorkReportReviewActivity extends BaseActivity {
     @Extra
     String mWorkReportId;
 
-    private boolean isPc = false;
+    private float score;
 
     @AfterViews
     void initViews() {
@@ -52,7 +53,8 @@ public class WorkReportReviewActivity extends BaseActivity {
         ratingBar_workReport.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                isPc = true;
+                LogUtil.d("分数 ：" + v);
+                score = v;
             }
         });
     }
@@ -66,7 +68,7 @@ public class WorkReportReviewActivity extends BaseActivity {
 //            return;
 //        }
 
-        if (!isPc) {
+        if (!(score > 0)) {
             Toast("请评分!");
             return;
         }

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 
@@ -16,14 +17,14 @@ import java.util.List;
  * 团队机会 公司双列表筛选Adapter
  * Created by yyy on 16/5/18.
  */
-public class AdapterSaleTeamScreen extends BaseAdapter {
+public class AdapterSaleTeamScreen2 extends BaseAdapter {
 
     private Context mContext;
     private List<SaleTeamScreen> data;
-    private int selectPosition;
+    private int selectPosition = -1, index1 = -1, index2 = -1;
     private int page;
 
-    public AdapterSaleTeamScreen(Context context,final List<SaleTeamScreen> data,final int page){
+    public AdapterSaleTeamScreen2(Context context, final List<SaleTeamScreen> data, final int page) {
         this.mContext = context;
         this.data = data;
         this.page = page;
@@ -32,6 +33,11 @@ public class AdapterSaleTeamScreen extends BaseAdapter {
     @Override
     public int getCount() {
         return data.size();
+    }
+
+    public void refshData(int index1) {
+        this.index1 = index1;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -44,37 +50,38 @@ public class AdapterSaleTeamScreen extends BaseAdapter {
         return 0;
     }
 
-    public void selectPosition(final int position){
+    public void selectPosition(final int position) {
         selectPosition = position;
+        index2 = index1;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        if(null == convertView){
+        if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_list_item,null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_list_item, null);
             holder.name = (TextView) convertView.findViewById(R.id.tv_menu_item);
             holder.index = (ImageView) convertView.findViewById(R.id.iv_menu_select);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         holder.name.setText(data.get(position).getName());
 
-        if(page == 1){
-            if(selectPosition == position){
-                convertView.setBackgroundColor(mContext.getResources().getColor(R.color.ececec));
-            }else{
-                convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        if (page == 2) {
+            if (selectPosition == position && index2 == index1) {
+                holder.index.setVisibility(View.VISIBLE);
+            } else {
+                holder.index.setVisibility(View.INVISIBLE);
             }
         }
 
         return convertView;
     }
 
-    class ViewHolder{
+    class ViewHolder {
         TextView name;
         ImageView index;
     }

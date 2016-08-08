@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.beans;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
@@ -40,6 +42,8 @@ public class WfInstance extends BaseBeans implements Serializable {
     public ProjectInfoName ProjectInfo;
     public SaleDetails chance;//销售机会
     public boolean viewed;
+    public OrderDetail order;
+    public ArrayList<EstimateAdd> paymentRecord;
 
 
     public boolean isViewed() {

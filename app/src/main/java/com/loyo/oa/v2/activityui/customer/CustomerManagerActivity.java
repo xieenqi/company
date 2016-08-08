@@ -110,7 +110,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private int mIndex = -1;
     private float mRotation = 0;
 
-    private Permission permission = (Permission) MainApp.rootMap.get("0404");
+    private Permission permission;
     private String[] SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
     private List<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<Tag> mTags;
@@ -148,7 +148,14 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                             e.printStackTrace();
                         }
                         initTitleItem();
-                        initChildren();
+                        try{
+                            permission = (Permission) MainApp.rootMap.get("0404");
+                            initChildren();
+                        }catch(NullPointerException e){
+                            e.printStackTrace();
+                            Toast("没有获取到权限数据，请重新拉去后再试");
+                            finish();
+                        }
                     }
 
                     @Override
@@ -188,6 +195,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
+
 
         //超级管理员权限判断
         if (!MainApp.user.isSuperUser()) {

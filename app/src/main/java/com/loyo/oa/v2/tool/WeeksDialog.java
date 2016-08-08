@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.util.SparseArray;
 import android.widget.TextView;
 
+import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.lang.reflect.Array;
@@ -33,6 +35,7 @@ public class WeeksDialog {
     private String sourseToWeek[];
     private String dateR;
     private Date curDate = new Date();
+    private Handler mHandler;
 
     public TextView getResultTview() {
         return resultTview;
@@ -50,14 +53,16 @@ public class WeeksDialog {
         return returnHashMap;
     }
 
-    private void setDataSource() {
-        //填充最近五个星期的范围
+    /**
+     * 填充最近(num-1)个星期的范围
+     * */
+    private void setDataSource(int num) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(curDate);
 
         long monday, sunday;
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < num; i++) {
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             monday = cal.getTime().getTime();
             cal.add(Calendar.DATE, 6);
@@ -74,10 +79,11 @@ public class WeeksDialog {
         }
     }
 
-    public WeeksDialog(TextView view) {
+    public WeeksDialog(TextView view,Handler handler) {
         this.mContext = view.getContext();
         this.resultTview = view;
-        setDataSource();
+        this.mHandler = handler;
+        setDataSource(4);
 
         if (sourseList != null) {
 
@@ -126,7 +132,6 @@ public class WeeksDialog {
     private DialogInterface.OnClickListener btnListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int which) {// 按下项所在的索引
-            LogUtil.dee("周报按下的索引:"+singleIndex);
             String date=sourseArray[singleIndex].replace(" (本周)", "").split("-")[1];
             dateR=sourseArray[singleIndex].replace(" (本周)", "");
             if (DateTool.getDateToTimestamp(date,MainApp.getMainApp().df7)<DateTool.getBeginAt_ofWeek())
@@ -134,7 +139,7 @@ public class WeeksDialog {
                 dateR+="(补签)";
             }
             resultTview.setText(dateR);
-            LogUtil.dee("AAAA:"+sourseToWeek[0]);
+            mHandler.sendEmptyMessage(WorkReportAddActivity.WEEK_RESULT);
         }
     };
 

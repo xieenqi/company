@@ -1,22 +1,22 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRepeatList;
-import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
-import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.activityui.customer.bean.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.bean.NearCount;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.activityui.customer.bean.Product;
-import com.loyo.oa.v2.beans.Province;
-import com.loyo.oa.v2.beans.SaleActivity;
-import com.loyo.oa.v2.activityui.other.bean.SaleStage;
 import com.loyo.oa.v2.activityui.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.activityui.other.bean.SaleStage;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.LegWork;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.SaleActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,25 +51,6 @@ public interface ICustomer {
 
     @GET("/customers")
     void Query(@QueryMap Map<String, Object> params, retrofit.Callback<PaginationX<Customer>> cb);
-
-    @GET("/customer/selfsearch")
-    void searchMyCustomers(@QueryMap Map<String, Object> params, retrofit.Callback<PaginationX<Customer>> cb);
-
-    @GET("/customer/teamsearch")
-    void searchTeamCustomers(@QueryMap Map<String, Object> params, retrofit.Callback<PaginationX<Customer>> cb);
-
-    @GET("/customer/sharedsearch")
-    void searchSharedCustomers(@QueryMap Map<String, Object> params, retrofit.Callback<PaginationX<Customer>> cb);
-
-    /**
-     * 获取个人附近客户
-     *
-     * @param lat
-     * @param lon
-     * @param cb
-     */
-    @GET("/customer/selfnear")
-    void getNearCustomers(@Query("lat") String lat, @Query("lon") String lon, retrofit.Callback<ArrayList<Customer>> cb);
 
     /**
      * name "客户名称"	string
@@ -109,7 +90,7 @@ public interface ICustomer {
     @GET("/customer/mobile/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
 
-    @GET("/properties/dynamic/")
+    @GET("/properties/")
     void getDynamic(@QueryMap HashMap<String, Object> map, Callback<ArrayList<CustomerExtraData>> callback);
 
     /**
@@ -197,52 +178,8 @@ public interface ICustomer {
     @POST("/saleactivity/")
     void addSaleactivity(@Body HashMap<String, Object> map, Callback<SaleActivity> cb);
 
-
-    @GET("/demand/{id}/list")
-    void getDemands(@Path("id") String id, @QueryMap HashMap<String, Object> map, Callback<PaginationX<Demand>> cb);
-
-    @GET("/demand/{id}")
-    void getDemand(@Path("id") String id, Callback<Demand> cb);
-
     @GET("/losereason/")
     void getLoseReasons(Callback<ArrayList<CommonTag>> cb);
-
-    /**
-     * 新增购买意向<BR/>
-     * customerId		"客户id"	string	form<BR/>
-     * productId		"产品id"	string	form<BR/>
-     * saleStage		"销售阶段"	models.setting.SaleStage	form<BR/>
-     * loseIds		false "丢单原因id数组"	[]	string<BR/>
-     * actualNum		"实际数量"	float32	form<BR/>
-     * actualPrice		"实际价格"	float32	form<BR/>
-     * estimatedNum		"预估数量"	float32	form<BR/>
-     * estimatedPrice		"预估价格"	float32	form<BR/>
-     * memo 备注
-     *
-     * @param map
-     * @param callback
-     */
-    @POST("/demand/")
-    void addDemand(@Body HashMap<String, Object> map, Callback<Demand> callback);
-
-    /**
-     * 更新购买意向<BR/>
-     * productId		"产品id"	string	form<BR/>
-     * saleStage		"销售阶段"	models.setting.SaleStage	form<BR/>
-     * loseIds		false "输单原因id"	[]	string<BR/>
-     * wfId		"赢单审批流程id"	string	form<BR/>
-     * wfState		"赢单审批流程状态"	int	form<BR/>
-     * actualNum		"实际数量"	float32	form<BR/>
-     * actualPrice		"实际价格"	float32	form<BR/>
-     * estimatedNum		"预估数量"	float32	form<BR/>
-     * estimatedPrice		"预估价格"	float32	form<BR/>
-     * memo		"备注"	string	form
-     *
-     * @param map
-     * @param callback
-     */
-    @PUT("/demand/{id}")
-    void updateDemand(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Demand> callback);
 
 
     @GET("/product")
@@ -277,9 +214,6 @@ public interface ICustomer {
     @GET("/customer/industry")
     void getIndustry(Callback<ArrayList<Industry>> callback);
 
-    @GET("/customer/regional")
-    void getDistricts(Callback<ArrayList<Province>> callback);
-
     /**
      * 新建客户，查重
      */
@@ -303,5 +237,30 @@ public interface ICustomer {
     void getCustomerContacts(@Path("customerId") String id, Callback<Customer> callback);
 
     @POST("/customer/")
-    void addNewCustomer(@Body Map<String,Object> map,Callback<Customer> callback);
+    void addNewCustomer(@Body Map<String, Object> map, Callback<Customer> callback);
+
+    /**
+     * 根据 key 获取后台设置信息
+     * ?key=need_pictures_switcher
+     *
+     * @param map
+     * @param callback
+     */
+    @GET("/config")
+    void getSetInfo(@QueryMap Map<String, Object> map, Callback<SigninPictures> callback);
+
+    /**
+     * 新建客户,后台权限
+     */
+    @GET("/properties")
+    void getAddCustomerJur(@QueryMap Map<String, Object> map, Callback<ArrayList<ContactLeftExtras>> callback);
+
+    /**
+     * 获取 客户 的订单
+     *
+     * @param callback
+     */
+    @GET("/order/cus")
+    void getCutomerOrder(@QueryMap HashMap<String, Object> map, Callback<PaginationX<OrderListItem>> callback);
+
 }

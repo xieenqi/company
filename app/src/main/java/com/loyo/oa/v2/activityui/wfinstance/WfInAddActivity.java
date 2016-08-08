@@ -380,7 +380,6 @@ public class WfInAddActivity extends BaseActivity {
             map.put("bizExtData", bizExtData);
         }
         map.put("memo", edt_memo.getText().toString().trim()); //备注
-        LogUtil.dee("新建审批 发送数据:" + MainApp.gson.toJson(map));
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override

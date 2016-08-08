@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.service;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
@@ -13,6 +12,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.APSService;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.loyo.oa.v2.application.MainApp;
@@ -49,16 +49,20 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/8/19.
  */
-public class AMapService extends Service {
+public class AMapService extends APSService {
     private final String TAG = getClass().getSimpleName();
     /**
      * 请求定位的最小时间间隔
      */
     private static final long MIN_SCAN_SPAN_MILLS = 15 * 1000;
     /**
-     * 请求定位的最小距离间隔【定位精度】
+     * 【定位精度】
      */
-    private static final float MIN_SCAN_SPAN_DISTANCE = 250f;
+    private static final float MIN_SCAN_SPAN_DISTANCE = 255f;
+    /**
+     * 请求定位的最小距离间隔
+     */
+    private static final float MAX_SPAN_DISTANCE = 2400f;
 
     private PowerManager.WakeLock wakeLock;
     private PowerManager manager;
@@ -101,7 +105,7 @@ public class AMapService extends Service {
                 .setLogLevel(RestAdapter.LogLevel.NONE)
                 .build();
 
-        startLocate();
+
         super.onCreate();
     }
 
@@ -111,13 +115,14 @@ public class AMapService extends Service {
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
         }
+        startLocate();
         return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
         releaseWakeLock();
-        stopLocate();
+//        stopLocate();
         TrackRule.StartTrackRule(10 * 1000);
         super.onDestroy();
     }
@@ -139,7 +144,7 @@ public class AMapService extends Service {
         locationOption.setOnceLocation(false);//false持续定位 true单次定位
         locationOption.setHttpTimeOut(15000);//设置联网超时时间
         locationOption.setNeedAddress(true);
-        // 设置定位模式为高精度模式
+        // 设置定位模式为低功耗模式
         locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
         // 设置定位监听
         locationClient.setLocationListener(maMapLocationListener);
@@ -188,11 +193,11 @@ public class AMapService extends Service {
         float accuracy = aMapLocation.getAccuracy();//定位精度
         String provider = aMapLocation.getProvider();//获取定位提供者
         String time = MainApp.getMainApp().df1.format(new Date(aMapLocation.getTime()));
-        boolean isTimeMin = currentTime - aMapLocation.getTime() >= 2 * 60 * 1000;
         LogUtil.d("【轨迹定位】：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " +
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
                 " 定位信息：" + aMapLocation.getErrorInfo() + "--" + aMapLocation.getLocationDetail());
+        isCache = SharedUtil.getBoolean(app, "isCache");
         if (isCache) {//上传缓存的地址数据
             uploadCacheLocation();
         }
@@ -208,20 +213,23 @@ public class AMapService extends Service {
             address = addressBuilder.toString();
         }
         oldAddress = SharedUtil.get(app, "address");
+        SharedUtil.put(app, "latOld", String.valueOf(aMapLocation.getLatitude()));
+        SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
         if (TextUtils.isEmpty(address) ||
                 (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
                 || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || oldAddress.equals(address)) {
             LogUtil.d("当前位置偏移量很大，直接return");
+            //缓存有效定位
             return;
         }
-        if (Global.isConnected()) {//检查是否有网络
-            if (isEmptyStr(address)) {
-                aMapLocation.setAddress("未知地址");
-            }
-        } else {
-            aMapLocation.setAddress("未知地址(离线)");
-        }
+//        if (Global.isConnected()) {//检查是否有网络
+//            if (isEmptyStr(address)) {
+//                aMapLocation.setAddress("未知地址");
+//            }
+//        } else {
+//            aMapLocation.setAddress("未知地址(离线)");
+//        }
 
         processLocation(aMapLocation);
     }
@@ -247,19 +255,38 @@ public class AMapService extends Service {
             LogUtil.d("获取到的distance : " + distance);
             LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE));
 
-            if (distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE) {
+            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
                 LogUtil.d("小于请求定位的最小间隔！");
                 return;
             }
         }
+        uploadLocation(aMapLocation);
         if (Global.isConnected()) {
-            uploadLocation(aMapLocation);
         } else {
-            isCache = true;
             LocateData data = buildLocateData(aMapLocation);
             ldbManager.addLocateData(data);
+            SharedUtil.putBoolean(app, "isCache", true);
+//            isCache = true;
         }
-        uploadLocation(aMapLocation);
+    }
+
+    /**
+     * 排除异常定位点
+     */
+    private boolean maxLocation(AMapLocation aMapLocation) {
+        String lat = SharedUtil.get(app, "latOld");
+        String lng = SharedUtil.get(app, "lngOld");
+        double tempLat = Double.parseDouble(lat);
+        double tempLng = Double.parseDouble(lng);
+        LatLng lastLatLng = new LatLng(tempLat, tempLng);
+        double latitude = aMapLocation.getLatitude();
+        double longitude = aMapLocation.getLongitude();
+        LatLng newLatLng = new LatLng(latitude, longitude);
+        double distance = AMapUtils.calculateLineDistance(lastLatLng, newLatLng);
+        if (distance > MAX_SPAN_DISTANCE) {//速度超过20米每秒
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -279,7 +306,7 @@ public class AMapService extends Service {
         app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
             @Override
             public void success(Object trackLog, Response response) {
-                LogUtil.d("【轨迹上报成功！！！】,address : " + address);
+                LogUtil.d("【轨迹上报成功！!!!!!!!！！】,address : " + address);
                 HttpErrorCheck.checkResponse("上报轨迹", response);
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
 
@@ -302,7 +329,9 @@ public class AMapService extends Service {
                     Global.ProcException(new Exception(" 轨迹上【搜集】报失败:" + error.getMessage() +
                             " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(jsonObject)
                             + "用户：" + app.gson.toJson(MainApp.user)));
-                isCache = true;
+                SharedUtil.putBoolean(app, "isCache", true);
+//                isCache = true;
+                UMengTools.sendCustomTrajectory(app, error, jsonObject);
                 super.failure(error);
             }
         });
@@ -415,14 +444,14 @@ public class AMapService extends Service {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【缓存轨迹】上传成功： ", response);
-                        isCache = false;
                         ldbManager.clearAllLocateDatas();
+//                        isCache = false;
+                        SharedUtil.putBoolean(app, "isCache", false);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         super.failure(error);
-                        isCache = true;
                         if (null != MainApp.user)
                             Global.ProcException(new Exception(" 《缓存》轨迹上【搜集】报失败:" + error.getMessage() +
                                     " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(tracklogsMap)

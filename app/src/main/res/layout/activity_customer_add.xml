@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:paddingTop="@dimen/dimen_10"
-                        android:text="地址:"
+                        android:text="定   位"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp15"/>
 
@@ -88,13 +88,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dimen_5"
                         android:layout_weight="1"
+                        android:enabled="false"
                         android:gravity="top"
                         android:hint="地址获取中..."
                         android:lineSpacingExtra="6dp"
                         android:paddingBottom="@dimen/dimen_10"
-                        android:paddingLeft="@dimen/dimen_5"
                         android:paddingTop="@dimen/dimen_3"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp"
+                        />
 
                     <ImageView
                         android:id="@+id/img_refresh_address"
@@ -105,13 +106,13 @@
 
                 </LinearLayout>
 
-
                 <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:minHeight="@dimen/view_h_title"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/margin_other_view"
                     android:paddingRight="@dimen/margin_other_view"
@@ -119,24 +120,30 @@
 
 
                     <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="地址"
+                        android:paddingTop="@dimen/dimen_10"
+                        android:text="地    址"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp15"/>
 
                     <EditText
+                        android:id="@+id/edit_address_details"
                         style="@style/edtText_normal"
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_5"
                         android:layout_weight="1"
-                        android:gravity="right|center_vertical"
+                        android:enabled="true"
+                        android:gravity="top"
                         android:hint="请输入详细地址"
-                        android:inputType="textPersonName"
-                        android:maxLength="20"
-                        android:paddingRight="0dp"
-                        android:textColor="@color/title_bg1"/>
+                        android:lineSpacingExtra="6dp"
+                        android:paddingBottom="@dimen/dimen_10"
+                        android:paddingTop="@dimen/dimen_3"
+                        android:textColor="@color/title_bg1"
+                        android:textSize="14sp"
+                        />
 
                 </LinearLayout>
 
@@ -153,7 +160,7 @@
 
 
                     <TextView
-                        android:layout_width="70dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:text="联系人"
@@ -166,7 +173,7 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="right|center_vertical"
+                        android:gravity="left|center_vertical"
                         android:hint="请输入联系人姓名"
                         android:inputType="textPersonName"
                         android:maxLength="20"
@@ -188,10 +195,10 @@
 
 
                     <TextView
-                        android:layout_width="70dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="手机"
+                        android:text="手机号"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp15"/>
 
@@ -201,7 +208,7 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="right|center_vertical"
+                        android:gravity="left|center_vertical"
                         android:hint="请输入联系人手机号"
                         android:inputType="phone"
                         android:maxLength="20"
@@ -223,10 +230,10 @@
 
 
                     <TextView
-                        android:layout_width="70dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="座机"
+                        android:text="座    机"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp15"/>
 
@@ -236,7 +243,7 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="right|center_vertical"
+                        android:gravity="left|center_vertical"
                         android:hint="请输入联系人座机"
                         android:inputType="phone"
                         android:maxLength="20"
@@ -306,7 +313,7 @@
                         style="@style/text_item1"
                         android:layout_width="80dp"
                         android:layout_height="fill_parent"
-                        android:text="标签"
+                        android:text="标    签"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp15"/>
 

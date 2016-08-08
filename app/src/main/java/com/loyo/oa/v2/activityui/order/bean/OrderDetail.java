@@ -1,0 +1,45 @@
+package com.loyo.oa.v2.activityui.order.bean;
+
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by xeq on 16/8/3.
+ */
+public class OrderDetail implements Serializable {
+    public String id;
+    public String companyId;
+    public String customerId;
+    public String title;
+    public String customerName;
+    public String directorName;
+    public String creatorName;
+    public int status;
+    public float dealMoney;//成交金额
+    public int backMoney;
+    public int ratePayment;
+    public double salesAmount;
+    public double discount;
+    public int attachmentCount;
+    public int recordNum;
+    public int planNum;
+    public long createdAt;
+    public String proName;
+    public String wfId;
+    public String orderNum;//订单编号
+    public String remark;
+    public ArrayList<EstimateAdd> paymentRecords;
+    //public List<ExtensionDatas> extensionDatas;
+    public ArrayList<ContactLeftExtras> extensionDatas;
+    public ArrayList<SaleIntentionalProduct> proInfo;
+    public String wfName;
+
+
+
+
+
+}

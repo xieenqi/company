@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -20,6 +22,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -39,8 +42,10 @@ public class SignInfoActivity extends BaseActivity {
     private TextView tv_address;
     private TextView tv_customer_name;
     private TextView tv_memo;
+    private TextView customer_address;
     private ViewGroup ll_back;
     private GridView gridView_photo;
+    private RelativeLayout customer_position;
     private ViewGroup layout_customer_info;
     private SignInGridViewAdapter signInGridViewAdapter;
     private ArrayList<Attachment> lstData_Attachment;
@@ -48,6 +53,8 @@ public class SignInfoActivity extends BaseActivity {
     private boolean isFormCustom;
     private LegWork legWork;
     private ImageView layout_customer_icon;
+
+    private Intent mIntent;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -74,7 +81,9 @@ public class SignInfoActivity extends BaseActivity {
     void initUI() {
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
+        customer_address = (TextView) findViewById(R.id.customer_address);
         tv_memo = (TextView) findViewById(R.id.tv_memo);
+        customer_position = (RelativeLayout) findViewById(R.id.customer_position);
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
         layout_customer_icon = (ImageView) findViewById(R.id.layout_customer_icon);
         ll_back = (ViewGroup) findViewById(R.id.ll_back);
@@ -103,6 +112,20 @@ public class SignInfoActivity extends BaseActivity {
             layout_customer_icon.setVisibility(View.GONE);
             tv_customer_name.setEnabled(false);
         }
+        customer_position.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mIntent = new Intent(SignInfoActivity.this, MapSingleView.class);
+                String[] gps = legWork.gpsInfo.split(",");
+                mIntent.putExtra("la",Double.valueOf(gps[1]));
+                mIntent.putExtra("lo",Double.valueOf(gps[0]));
+                mIntent.putExtra("address",legWork.address);
+                startActivity(mIntent);
+
+            }
+        });
+
         getLegwork();
     }
 
@@ -145,8 +168,9 @@ public class SignInfoActivity extends BaseActivity {
 
     void updateUI() {
         if (legWork != null) {
-            tv_address.setText(legWork.address);
+            tv_address.setText(legWork.position);
             tv_memo.setText(legWork.memo);
+            customer_address.setText(legWork.address);
 
             if (null != legWork.customerName) {
                 tv_customer_name.setText(legWork.customerName);

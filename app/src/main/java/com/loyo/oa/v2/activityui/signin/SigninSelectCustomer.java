@@ -188,8 +188,10 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 params.put("pageIndex", paginationX.getPageIndex());
                 params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
                 params.put("keyWords", strSearch);
+                params.put("order", "desc");
                 params.put("position", position);
                 dataRequestvoid(url, params);
+                LocationUtilGD.sotpLocation();
             }
 
             @Override

@@ -6,32 +6,30 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amap.api.services.core.PoiItem;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.bean.Contact;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.bean.HttpAddCustomer;
+import com.loyo.oa.v2.activityui.customer.bean.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.activityui.customer.bean.TagItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
@@ -42,13 +40,11 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.customview.CusGridView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.apache.http.Header;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -94,11 +90,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @ViewById
     CusGridView gridView_photo;
 
-    private ImageView img_refresh_address;
+    private EditText edit_address_details;
     private ImageGridViewAdapter imageGridViewAdapter;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<NewTag> tags;
+    private Intent mIntent;
+    private Bundle mBundle;
+
+    private  ArrayList<ContactLeftExtras> mCusList;
 
     private String uuid = StringUtil.getUUID();
     private String tagItemIds;
@@ -109,6 +109,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private String customerContract;
     private String customerContractTel;
     private String customerWrietele;
+    private String cusotmerDetalisAddress;
 
     private int bizType = 0x01;
     private int uploadSize;
@@ -117,8 +118,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private double laPosition;//当前位置的经纬度
     private double loPosition;
 
-    private Intent mIntent;
-    private Bundle mBundle;
+    private boolean cusGuys = false;  //联系人权限
+    private boolean cusPhone = false; //手机权限
+    private boolean cusMobile = false;//座机权限
+
     private PositionResultItem positionResultItem;
 
     private Handler mHandler = new Handler() {
@@ -126,6 +129,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         public void dispatchMessage(final Message msg) {
             if (msg.what == 0x01) {
                 et_address.setText(myAddress);
+                edit_address_details.setText(myAddress);
             }
         }
     };
@@ -135,13 +139,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     void initUI() {
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-        img_refresh_address = (ImageView) findViewById(R.id.img_refresh_address);
+        edit_address_details = (EditText) findViewById(R.id.edit_address_details);
         super.setTitle("新建客户");
         init_gridView_photo();
         getTempCustomer();
         startLocation();
-
-        if(app.latitude != -1 && app.longitude != -1){
+        requestJurisdiction();
+        if (app.latitude != -1 && app.longitude != -1) {
             laPosition = app.latitude;
             loPosition = app.longitude;
         }
@@ -153,7 +157,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 获取定位
      */
     void startLocation() {
-        
+
         et_address.setText(app.address);
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
@@ -192,12 +196,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(){
+     */
+    private void newUploadAttachement() {
         showLoading("正在提交");
         try {
             uploadSize = 0;
-            uploadNum  = pickPhots.size();
+            uploadNum = pickPhots.size();
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
@@ -210,7 +214,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
-                                        if(uploadSize == uploadNum){
+                                        if (uploadSize == uploadNum) {
                                             requestCommitTask();
                                         }
                                     }
@@ -231,7 +235,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
 
     void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
         ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
@@ -242,11 +246,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*刷新地址*/
             case R.id.img_refresh_address:
-                mIntent = new Intent();
+
                 mBundle = new Bundle();
+                mBundle.putInt("page",MapModifyView.CUSTOMER_PAGE);
+                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
 
-
-                startActivityForResult(new Intent(this, MapModifyView.class), 0x01);
                 break;
 
             /*查重*/
@@ -272,33 +276,46 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 customerContract = edt_contract.getText().toString().trim();
                 customerContractTel = edt_contract_tel.getText().toString().trim();
                 customerWrietele = edt_contract_telnum.getText().toString().trim();
+                cusotmerDetalisAddress = edit_address_details.getText().toString().trim();
 
                 if (customer_name.isEmpty()) {
-                    Toast("请输入客户名称");
+                    Toast("请输入客户名称!");
                     return;
                 } else if (customerAddress.isEmpty()) {
-                    Toast("请输入的客户地址");
+                    Toast("请输入的客户地址!");
+                    return;
+                } else if (cusotmerDetalisAddress.isEmpty()) {
+                    Toast("请输入的客户详细地址!");
+                    return;
+                } else if(TextUtils.isEmpty(customerContractTel) && cusPhone){
+                    Toast("请输入客户手机号码!");
+                    return;
+                } else if(TextUtils.isEmpty(customerWrietele)    && cusMobile){
+                    Toast("请输入客户座机号码!");
+                    return;
+                } else if(TextUtils.isEmpty(customerContract)    && cusGuys){
+                    Toast("请输入联系人姓名!");
                     return;
                 }
 
-//                if(!customerContractTel.isEmpty()){
-//                    if(!RegularCheck.isMobilePhone(customerContractTel)){
-//                        Toast("手机号码格式不正确");
-//                        return;
-//                    }
-//                }
-//
-//                if(!customerWrietele.isEmpty()){
-//                    if(!RegularCheck.isPhone(customerWrietele)){
-//                        Toast("座机号码格式不正确");
-//                        return;
-//                    }
-//                }
+/*                if(!customerContractTel.isEmpty()){
+                    if(!RegularCheck.isMobilePhone(customerContractTel)){
+                        Toast("手机号码格式不正确");
+                        return;
+                    }
+                }
+
+                if(!customerWrietele.isEmpty()){
+                    if(!RegularCheck.isPhone(customerWrietele)){
+                        Toast("座机号码格式不正确");
+                        return;
+                    }
+                }*/
 
                 //没有附件
-                if(pickPhots.size() == 0){
+                if (pickPhots.size() == 0) {
                     requestCommitTask();
-                }else{
+                } else {
                     newUploadAttachement();
                 }
                 break;
@@ -330,34 +347,75 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         layout_newContract.addView(view);
     }
 
+    /**
+     * 获取新建客户权限
+     * */
+    public void requestJurisdiction(){
+        showLoading("");
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("bizType",100);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback< ArrayList<ContactLeftExtras>>() {
+            @Override
+            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                mCusList = cuslist;
+                for(ContactLeftExtras customerJur : cuslist){
+                    if(customerJur.label.contains("联系人") && customerJur.required){
+                        cusGuys = true;
+                        edt_contract.setHint("请输入联系人姓名(必填)");
+                    }else if(customerJur.label.contains("手机") && customerJur.required){
+                        cusPhone = true;
+                        edt_contract_tel.setHint("请输入联系人手机号(必填)");
+                    }else if(customerJur.label.contains("座机") && customerJur.required){
+                        cusMobile = true;
+                        edt_contract_telnum.setHint("请输入联系人座机(必填)");
+                    }
+                }
+            }
 
-    public void requestCommitTask(){
-        HttpAddCustomer addCustomerData = new HttpAddCustomer();
-        addCustomerData.loc.addr = customerAddress;
-        addCustomerData.loc.loc.add(loPosition);
-        addCustomerData.loc.loc.add(laPosition);
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+
+    /**
+     * 新建客户请求
+     * */
+    public void requestCommitTask() {
+        HttpAddCustomer positionData = new HttpAddCustomer();
+        positionData.loc.addr = customerAddress;
+        positionData.loc.loc.add(loPosition);
+        positionData.loc.loc.add(laPosition);
         if (tags != null && tags.size() > 0) {
             for (NewTag tag : tags) {
                 NewTag newtag = new NewTag();
                 newtag.tId = tag.tId;
                 newtag.itemId = tag.itemId;
                 newtag.itemName = tag.itemName;
-                addCustomerData.tags.add(newtag);
+                positionData.tags.add(newtag);
             }
         }
 
-        HashMap<String,Object> map = new HashMap<>();
+        HttpAddCustomer locData = new HttpAddCustomer();
+        locData.loc.addr = cusotmerDetalisAddress;
+
+        HashMap<String, Object> map = new HashMap<>();
         if (pickPhots.size() > 0) {
-            map.put("attachmentCount",pickPhots.size());
-            map.put("uuid",uuid);
+            map.put("attachmentCount", pickPhots.size());
+            map.put("uuid", uuid);
         }
-        map.put("loc", addCustomerData.loc);
+
+        map.put("position", positionData.loc); //定位数据
+        map.put("loc", locData.loc);          //地址详情数据
         map.put("name", customer_name);
         map.put("pname", customerContract);
         map.put("ptel", customerContractTel);
         map.put("wiretel", customerWrietele);
-        map.put("tags", addCustomerData.tags);
-
+        map.put("tags", positionData.tags);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
             @Override
@@ -424,19 +482,30 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(null == data){
+        if (null == data) {
             return;
         }
 
         /*地图微调，数据回调*/
-        if (resultCode == MapModifyView.SERACH_MAP) {
+/*        if (resultCode == MapModifyView.SERACH_MAP) {
             positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
             laPosition = positionResultItem.laPosition;
             loPosition = positionResultItem.loPosition;
             et_address.setText(positionResultItem.address);
-        }
+            edit_address_details.setText(positionResultItem.address);
+        }*/
 
         switch (requestCode) {
+            case  MapModifyView.SERACH_MAP:
+                positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+                if(null != positionResultItem){
+                    laPosition = positionResultItem.laPosition;
+                    loPosition = positionResultItem.loPosition;
+                    et_address.setText(positionResultItem.address);
+                    edit_address_details.setText(positionResultItem.address);
+                }
+                break;
+
             case REQUEST_CUSTOMER_SERACH:
 
                 Bundle bundle1 = data.getExtras();

@@ -62,12 +62,14 @@
                         android:layout_marginTop="@dimen/dimen_8"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:enabled="false"
                         android:hint="地址"
                         android:maxLength="100"
                         android:singleLine="false"
                         android:textColor="@color/text33"
                         android:textColorHint="@color/text99"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp"
+                        />
 
                     <LinearLayout
                         android:id="@+id/layout_rushpackger"
@@ -82,7 +84,7 @@
                             android:layout_height="@dimen/dimen_25"
                             android:layout_marginLeft="@dimen/dimen_8"
                             android:layout_marginRight="@dimen/dimen_8"
-                            android:src="@drawable/icon_refresh"/>
+                            android:src="@drawable/icon_position_modify"/>
 
                         <View
                             android:layout_width="0.5dp"
@@ -105,13 +107,13 @@
                 <include layout="@layout/include_solid_line_left"/>
 
                 <EditText
+                    android:id="@+id/edt_address_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginRight="@dimen/margin_other_view"
                     android:background="@null"
                     android:hint="客户详细地址"
-                    android:maxLength="500"
                     android:minHeight="@dimen/dimen_48"
                     android:paddingBottom="@dimen/dimen_8"
                     android:paddingTop="@dimen/dimen_8"

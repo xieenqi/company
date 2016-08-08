@@ -14,28 +14,44 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
+import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
+import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
+import com.loyo.oa.v2.activityui.customer.SaleActivitiesAddActivity;
+import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
+import com.loyo.oa.v2.activityui.home.bean.HomeItem;
+import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
+import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
+import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
+import com.loyo.oa.v2.activityui.order.OrderAddActivity;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
+import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
+import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
+import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
+import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
-import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.TrackRule;
-import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.activityui.commonview.MapModifyView;
+import com.loyo.oa.v2.customview.AttenDancePopView;
+import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
@@ -51,20 +67,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.activityui.customer.SaleActivitiesAddActivity;
-import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
-import com.loyo.oa.v2.activityui.home.bean.HomeItem;
-import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
-import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
-import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
-import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
-import com.loyo.oa.v2.activityui.signin.SignInActivity;
-import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
-import com.loyo.oa.v2.customview.AttenDancePopView;
-import com.loyo.oa.v2.customview.GeneralPopView;
-import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -98,13 +100,15 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private Boolean inEnable;
     private Boolean outEnable;
     private boolean isJPus = false;//别名是否设置成功
-    private int JpushCount = 0;//激光没有注册成功的次数
-    private int outKind; //0上班  1下班  2加班
+    private int JpushCount = 0;    //激光没有注册成功的次数
+    private int outKind, staratItem; //0上班  1下班  2加班
     private PullToRefreshListView listView;
     private Button btn_add;
     private RoundImageView heading;
     private MoreWindowCase mMoreWindowcase;
     private ValidateInfo validateInfo = new ValidateInfo();
+
+    private Bundle mBundle;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -171,6 +175,13 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     startActivityForResult(new Intent(getActivity(), SaleActivitiesAddActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
+                //新建订单
+                case BaseActivity.ORDER_ADD:
+                    mBundle = new Bundle();
+                    mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
+                    startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    break;
             }
         }
     };
@@ -183,7 +194,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             this.heading = getArguments().getParcelable("view");
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.d("<<<<<<<<<<<<<<<<<主页头像再次异常>>>>>>>>>>>>>>>>>>>>>>");
         }
         initData();
     }
@@ -201,12 +211,31 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
         //只有登录进来才加载loading
         if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
-            DialogHelp.showLoading(getActivity(), "", true);
+            showLoading("");
         }
         adapter = new AdapterHomeItem(getActivity());
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                LogUtil.d("一亿个：" + firstVisibleItem);
+                btn_add.setVisibility(firstVisibleItem > staratItem ? View.INVISIBLE : View.VISIBLE);
+                staratItem = firstVisibleItem;
+            }
+        });
+        btn_add.setOnTouchListener(Global.GetTouch());
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMoreWindow(v);
+            }
+        });
         items = DBManager.Instance().getHomeItem();
         if (null != items && items.size() > 0) {
             adapter.setItemData(items);
@@ -222,13 +251,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         DBManager.Instance().putHomeItem(MainApp.gson.toJson(items));
         adapter.setItemData(items);
         adapter.setRedNumbreData(mItemNumbers);
-        btn_add.setOnTouchListener(Global.GetTouch());
-        btn_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMoreWindow(v);
-            }
-        });
         if (null != MainApp.user && null != MainApp.user.avatar && null != heading) {
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }
@@ -266,6 +288,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity", "0213", 0),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
+                new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0215", 1),//新加订单
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signin.SignInManagerActivity_", "0206", 1),
                 new HomeItem(R.drawable.newmain_project, "项目管理", "com.loyo.oa.v2.activityui.project.ProjectManageActivity_", "0201", 2),
                 new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_", "0202", 2),
@@ -278,10 +301,12 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("申请审批", "0204", R.drawable.newmain_post_wif),
                 new MoreWindowItem("提交报告", "0203", R.drawable.newmain_post_report),
                 new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
-                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow),
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
+                new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
                 new MoreWindowItem("考勤打卡", "0000", R.drawable.newmain_post_att),
-                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign)));
+                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign),
+                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
+
 
     }
 
@@ -379,7 +404,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         }
 
         if (!Global.isConnected()) {
-            Toast.makeText(getActivity(), "没有网络连接，不能打卡", Toast.LENGTH_SHORT).show();
+            Global.Toast("没有网络连接，不能打卡");
             return;
         }
         /*工作日*/

@@ -9,6 +9,9 @@ import java.util.ArrayList;
  *xnq
  */
 public class LegWork extends BaseBeans implements Serializable {
+
+    public String gpsInfo;
+    public String position;
     public String address;//(string, optional): ,
     public ArrayList<Attachment> attachments;// (array[&{common Attachment}], optional): ,
     public long createdAt;// (&{time Time}, optional): ,

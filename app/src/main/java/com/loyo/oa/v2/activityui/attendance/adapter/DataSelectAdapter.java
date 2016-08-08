@@ -92,7 +92,7 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
 
         if (itemLock && selectPosition == position) {
             if (position == 0) {
-                holder.num.setBackground(null);
+                holder.num.setBackgroundColor(Color.parseColor("#ffffff"));
             }
             holder.num.setTextColor(Color.parseColor("#ffffff"));
             holder.num.setBackgroundResource(R.drawable.shape_count_gd);
@@ -101,7 +101,7 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
             if (position == 0) {
                 holder.num.setBackgroundResource(R.drawable.shape_count_top);
             } else {
-                holder.num.setBackground(null);
+                holder.num.setBackgroundColor(Color.parseColor("#ffffff"));
             }
             holder.num.setTextColor(mContext.getResources().getColor(R.color.text33));
         }
