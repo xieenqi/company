@@ -24,7 +24,6 @@
 
         <LinearLayout
             android:layout_marginTop="@dimen/dimen_10"
-            android:layout_marginBottom="@dimen/dimen_10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -41,16 +40,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ivory"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_sp13"
                     android:text="@string/estimate_page_string1"
                     />
                 <TextView
                     android:id="@+id/tv_dealprice"
-                    android:layout_marginTop="@dimen/dimen_5"
+                    android:layout_marginTop="@dimen/dimen_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ivory"
-                    android:text="￥1000000"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_sp13"
+                    android:text="￥0"
                     />
 
                 </LinearLayout>
@@ -72,16 +73,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ivory"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_sp13"
                     android:text="已回款"
                     />
                 <TextView
                     android:id="@+id/tv_aleryprice"
-                    android:layout_marginTop="@dimen/dimen_5"
+                    android:layout_marginTop="@dimen/dimen_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ivory"
-                    android:text="￥1000000"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_sp13"
+                    android:text="￥0"
                     />
 
             </LinearLayout>
@@ -91,6 +94,7 @@
 
         <LinearLayout
             android:layout_marginBottom="@dimen/dimen_10"
+            android:layout_marginTop="@dimen/dimen_20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -108,16 +112,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ivory"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_sp13"
                     android:text="@string/estimate_page_string2"
                     />
                 <TextView
                     android:id="@+id/tv_totalprice"
-                    android:layout_marginTop="@dimen/dimen_5"
+                    android:layout_marginTop="@dimen/dimen_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ivory"
-                    android:text="￥1000000"
+                    android:textSize="@dimen/text_sp13"
+                    android:textColor="@color/white"
+                    android:text="￥0"
                     />
 
             </LinearLayout>
@@ -139,22 +145,22 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ivory"
+                    android:textColor="@color/white"
                     android:text="@string/estimate_page_string3"
+                    android:textSize="@dimen/text_sp13"
                     />
                 <TextView
                     android:id="@+id/tv_faileprice"
-                    android:layout_marginTop="@dimen/dimen_5"
+                    android:layout_marginTop="@dimen/dimen_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ivory"
-                    android:text="￥1000000"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_sp13"
+                    android:text="￥0"
                     />
 
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
 
     <ListView
@@ -163,6 +169,8 @@
         android:layout_above="@+id/ll_add"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="none"
         >
     </ListView>
 

@@ -22,6 +22,7 @@ import com.loyo.oa.v2.activityui.home.fragment.HomeFragment;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.activityui.home.slidingmenu.SlidingFragmentActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
@@ -272,6 +273,13 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     intent.setClass(MainHomeActivity.this, CustomerDetailInfoActivity_.class);
                     intent.putExtra("Id", MainApp.jpushData.buzzId);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 16://订单详情
+                    intent.setClass(MainHomeActivity.this, OrderDetailActivity.class);
+//              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;

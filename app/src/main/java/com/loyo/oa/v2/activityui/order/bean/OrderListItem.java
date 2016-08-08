@@ -7,13 +7,14 @@ import java.io.Serializable;
  * Created by xeq on 16/8/3.
  */
 public class OrderListItem implements Serializable {
+
     public String id;
     public String title;
     public String customerName;
     public String directorName;
     public String proName;
     public int status;
-    public long dealMoney;
+    public float dealMoney;
     public long createdAt;
 
 }

@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.service;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
@@ -13,6 +12,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.APSService;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.loyo.oa.v2.application.MainApp;
@@ -49,7 +49,7 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/8/19.
  */
-public class AMapService extends Service {
+public class AMapService extends APSService {
     private final String TAG = getClass().getSimpleName();
     /**
      * 请求定位的最小时间间隔
@@ -105,7 +105,7 @@ public class AMapService extends Service {
                 .setLogLevel(RestAdapter.LogLevel.NONE)
                 .build();
 
-        startLocate();
+
         super.onCreate();
     }
 
@@ -115,13 +115,14 @@ public class AMapService extends Service {
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
         }
+        startLocate();
         return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
         releaseWakeLock();
-        stopLocate();
+//        stopLocate();
         TrackRule.StartTrackRule(10 * 1000);
         super.onDestroy();
     }
@@ -192,7 +193,6 @@ public class AMapService extends Service {
         float accuracy = aMapLocation.getAccuracy();//定位精度
         String provider = aMapLocation.getProvider();//获取定位提供者
         String time = MainApp.getMainApp().df1.format(new Date(aMapLocation.getTime()));
-        boolean isTimeMin = currentTime - aMapLocation.getTime() >= 2 * 60 * 1000;
         LogUtil.d("【轨迹定位】：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " +
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
@@ -213,14 +213,14 @@ public class AMapService extends Service {
             address = addressBuilder.toString();
         }
         oldAddress = SharedUtil.get(app, "address");
+        SharedUtil.put(app, "latOld", String.valueOf(aMapLocation.getLatitude()));
+        SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
         if (TextUtils.isEmpty(address) ||
                 (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
                 || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || oldAddress.equals(address)) {
             LogUtil.d("当前位置偏移量很大，直接return");
             //缓存有效定位
-            SharedUtil.put(app, "latOld", String.valueOf(aMapLocation.getLatitude()));
-            SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
             return;
         }
 //        if (Global.isConnected()) {//检查是否有网络
@@ -255,7 +255,7 @@ public class AMapService extends Service {
             LogUtil.d("获取到的distance : " + distance);
             LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE));
 
-            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE) || maxLocation(aMapLocation)) {
+            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
                 LogUtil.d("小于请求定位的最小间隔！");
                 return;
             }
@@ -306,7 +306,7 @@ public class AMapService extends Service {
         app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
             @Override
             public void success(Object trackLog, Response response) {
-                LogUtil.d("【轨迹上报成功！！！】,address : " + address);
+                LogUtil.d("【轨迹上报成功！!!!!!!!！！】,address : " + address);
                 HttpErrorCheck.checkResponse("上报轨迹", response);
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
 
@@ -331,6 +331,7 @@ public class AMapService extends Service {
                             + "用户：" + app.gson.toJson(MainApp.user)));
                 SharedUtil.putBoolean(app, "isCache", true);
 //                isCache = true;
+                UMengTools.sendCustomTrajectory(app, error, jsonObject);
                 super.failure(error);
             }
         });

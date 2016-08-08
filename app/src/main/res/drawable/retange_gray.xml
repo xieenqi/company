@@ -3,6 +3,6 @@
     <corners android:radius="@dimen/dimen_2"/>
     <size
         android:width="@dimen/dimen_40"
-        android:height="@dimen/dimen_20"/>
+        android:height="@dimen/dimen_17"/>
     <solid android:color="@color/text99"/>
 </shape>

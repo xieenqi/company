@@ -227,7 +227,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
                 Bundle b = new Bundle();
-                b.putSerializable("user", MainApp.user);
+                String userId = MainApp.user.id;
+                b.putSerializable("userId", userId!=null?userId:"");
                 app.startActivity(SettingActivity.this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
 

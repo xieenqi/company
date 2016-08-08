@@ -32,6 +32,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
@@ -45,7 +46,7 @@
                     <TextView
                         android:id="@+id/tv_status"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_sp12"
@@ -100,7 +101,7 @@
             <include layout="@layout/include_solid_line15"/>
 
             <LinearLayout
-                android:id="@+id/ll_stage"
+                android:id="@+id/ll_product"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
@@ -124,8 +125,8 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint=""
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text66"
+                    android:textColor="@color/text66"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -140,6 +141,7 @@
             <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
+                android:id="@+id/ll_plan"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
@@ -163,8 +165,8 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint=""
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text66"
+                    android:textColor="@color/text66"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -179,6 +181,7 @@
             <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
+                android:id="@+id/ll_record"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
@@ -202,8 +205,8 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint=""
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text66"
+                    android:textColor="@color/text66"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -218,6 +221,7 @@
             <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
+                android:id="@+id/ll_enclosure"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
@@ -241,7 +245,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint=""
-                    android:textColor="@color/title_bg1"
+                    android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
@@ -260,15 +264,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:paddingBottom="@dimen/dimen_10"
                 android:paddingLeft="@dimen/margin_other_view"
                 android:paddingRight="@dimen/margin_other_view"
+                android:paddingTop="@dimen/dimen_10"
+
                 >
 
                 <LinearLayout
+                    android:id="@+id/ll_wflayout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_3"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -278,6 +287,7 @@
                         android:textSize="@dimen/text_sp14"/>
 
                     <TextView
+                        android:id="@+id/tv_wfname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/title_bg1"
@@ -299,6 +309,7 @@
                         android:textSize="@dimen/text_sp14"/>
 
                     <TextView
+                        android:id="@+id/tv_order_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text99"
@@ -307,12 +318,14 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_extra"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     />
 
                 <TextView
+                    android:id="@+id/tv_memo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text99"

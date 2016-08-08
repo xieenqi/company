@@ -247,13 +247,26 @@ public class OrganizationManager {
 
         StringBuilder namesBuilder = new StringBuilder();
 
+
         for (int k = 0; k < deptsArray.size();k++) {
+
+            if (k != 0) {
+                namesBuilder.append(",");
+            }
+
             UserInfo dep = deptsArray.get(k);
             if (dep.getShortDept() != null){
 
                 String name = dep.getShortDept().getName();
                 if (name != null && name.length() > 0) {
                     namesBuilder.append(name);
+                }
+            }
+            if (dep.getShortPosition() != null){
+
+                String name = dep.getShortPosition().getName();
+                if (name != null && name.length() > 0) {
+                    namesBuilder.append("|" + name);
                 }
             }
         }
@@ -330,13 +343,26 @@ public class OrganizationManager {
 
         StringBuilder namesBuilder = new StringBuilder();
 
+
         for (int k = 0; k < deptsArray.size();k++) {
+
+            if (k != 0) {
+                namesBuilder.append(",");
+            }
+
             UserInfo dep = deptsArray.get(k);
             if (dep.getShortDept() != null){
 
                 String name = dep.getShortDept().getName();
                 if (name != null && name.length() > 0) {
                     namesBuilder.append(name);
+                }
+            }
+            if (dep.getShortPosition() != null){
+
+                String name = dep.getShortPosition().getName();
+                if (name != null && name.length() > 0) {
+                    namesBuilder.append("|" + name);
                 }
             }
         }

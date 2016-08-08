@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.order.fragment;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,15 +16,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
@@ -33,10 +35,9 @@ import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -46,6 +47,7 @@ import retrofit.client.Response;
  * Created by xeq on 16/8/1.
  */
 public class MyOrderFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+
     private Button btn_add;
     private String[] status = {"全部状态", "待审核", "未通过", "进行中", "已完成", "意外终止"};
     private String[] sort = {"按照创建时间", "按照最高金额"};
@@ -59,28 +61,25 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     private PullToRefreshListView lv_list;
     private MyOrderAdapter adapter;
     private int page = 1;
+    private boolean isPullDown = true;
+    private Intent mIntent;
+    private Bundle mBundle;
+
+    private List<OrderListItem> listData = new ArrayList<>();
 
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-
             switch (msg.what) {
-
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
-//                    isPull = false;
-//                    stageId = msg.getData().get("data").toString();
+                    isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
                     break;
 
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
-//                    isPull = false;
-//                    sortType = msg.getData().get("data").toString();
+                    isPullDown = true;
                     sortIndex = (int) msg.getData().get("index");
                     break;
-
-                default:
-                    break;
-
             }
             getData();
         }
@@ -117,8 +116,8 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent mIntent = new Intent();
-//                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-//                mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
+//              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                mIntent.putExtra(ExtraAndResult.EXTRA_ID, adapter.getItemData(position - 1).id);
                 mIntent.setClass(getActivity(), OrderDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -145,13 +144,17 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            //新建
             case R.id.btn_add:
-                Intent mIntent = new Intent();
-                mIntent.setClass(getActivity(), OrderAddActivity.class);
-                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                mBundle = new Bundle();
+                mBundle.putInt("fromPage",OrderDetailActivity.ORDER_ADD);
+                startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
-            case R.id.salemy_screen1://状态选择
+
+            //状态选择
+            case R.id.salemy_screen1:
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen1);
@@ -163,7 +166,9 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                     }
                 });
                 break;
-            case R.id.salemy_screen2://排序
+
+            //排序
+            case R.id.salemy_screen2:
                 saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
                         SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen2);
@@ -202,16 +207,25 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
+        map.put("status", statusIndex + 1);
+        map.put("filed", sortIndex == 1 ? "dealMoney" : "createdAt");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IOrder.class).getOrderMyList(map, new Callback<OrderList>() {
             @Override
             public void success(OrderList orderlist, Response response) {
+                lv_list.onRefreshComplete();
                 HttpErrorCheck.checkResponse("我的订单列表：", response);
-                adapter.setData(orderlist.records);
+                if (!isPullDown) {
+                    listData.addAll(orderlist.records);
+                } else {
+                    listData = orderlist.records;
+                }
+                adapter.setData(listData);
             }
 
             @Override
             public void failure(RetrofitError error) {
+                lv_list.onRefreshComplete();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -219,11 +233,30 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-
+        isPullDown = true;
+        page = 1;
+        getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        isPullDown = false;
+        page++;
+        getData();
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (resultCode){
+
+            //新建订单回调
+            case ExtraAndResult.REQUEST_CODE:
+                isPullDown = true;
+                getData();
+                break;
+
+        }
     }
 }
