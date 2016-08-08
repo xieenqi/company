@@ -53,6 +53,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private LinearLayout tv_custom;   //附件
 
     private String customerName, customerId;
+    private ArrayList<ContactLeftExtras> fieldData;
     private ArrayList<ContactLeftExtras> mCusList;
     private ArrayList<SaleIntentionalProduct> productData;//意向产品的数据
     private ArrayList<EstimateAdd> estimateData;          //回款记录数据
@@ -186,6 +187,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    /**
+     * 动态字段绑定
+     * */
     public void bindExtraView(ArrayList<ContactLeftExtras> extrases){
         orderAddforExtra = new OrderAddforExtraData(mContext, extrases, true, R.color.title_bg1, 0);
         tv_custom.addView(orderAddforExtra);
@@ -234,12 +238,13 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             Toast("请选择成交金额!");
             return;
         }
-        LogUtil.dee("extra:"+MainApp.gson.toJson(orderAddforExtra.getExtras()));
+        fieldData = new ArrayList<>();
         for(ContactLeftExtras extra : orderAddforExtra.getExtras()){
-            if(extra.name.length() > 20)
-            if(extra.required && TextUtils.isEmpty(extra.val)){
+            if(!extra.isSystem && extra.required && TextUtils.isEmpty(extra.val)){
                 Toast("请填写必填项!");
                 return;
+            }else if (!extra.isSystem && extra.required && !TextUtils.isEmpty(extra.val)){
+                fieldData.add(extra);
             }
         }
 
@@ -257,8 +262,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         map.put("remark",et_remake.getText().toString());
         map.put("proInfo",productData);
         map.put("paymentRecords", estimateData);
-        map.put("extensionDatas", orderAddforExtra.getExtras());
-
+        map.put("extensionDatas",fieldData);
         LogUtil.dee("提交参数:" + MainApp.gson.toJson(map));
 
         if(fromPage == OrderDetailActivity.ORDER_EDIT){
@@ -335,6 +339,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //购买产品
             case R.id.ll_stage:
                 mBundle = new Bundle();
+                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA,productData);
                 mBundle.putBoolean("boolean",true);
                 mBundle.putInt("data", ActionCode.ORDER_DETAIL);
                 app.startActivityForResult(OrderAddActivity.this, IntentionProductActivity.class,

@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.order.fragment;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,18 +16,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
-import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -37,13 +34,10 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -53,6 +47,7 @@ import retrofit.client.Response;
  * Created by xeq on 16/8/1.
  */
 public class MyOrderFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+
     private Button btn_add;
     private String[] status = {"全部状态", "待审核", "未通过", "进行中", "已完成", "意外终止"};
     private String[] sort = {"按照创建时间", "按照最高金额"};

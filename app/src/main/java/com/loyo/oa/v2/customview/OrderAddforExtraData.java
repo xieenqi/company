@@ -106,7 +106,7 @@ public class OrderAddforExtraData extends LinearLayout {
             addView(extra);
 
             if(customerExtra.name.length() > 20){
-                if(!TextUtils.isEmpty(customerExtra.name))
+                if(!TextUtils.isEmpty(customerExtra.val))
                 tv_content.setText(customerExtra.val);
             }
 
