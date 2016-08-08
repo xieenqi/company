@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -72,44 +74,26 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_wfinstance_info)
 public class WfinstanceInfoActivity extends BaseActivity {
 
-    @ViewById
-    ListView_inScrollView listView_workflowNodes;
-    @ViewById
-    TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title;
-    @ViewById
-    TextView tv_memo;
-    @ViewById
-    TextView tv_projectName;
-    @ViewById
-    TextView tv_time_creator;
-    @ViewById
-    TextView tv_title_role;
-    @ViewById
-    TextView tv_title_creator;
-    @ViewById
-    ViewGroup img_title_left;
-    @ViewById
-    ViewGroup img_title_right;
-    @ViewById
-    ViewGroup layout_nopass;
-    @ViewById
-    ViewGroup layout_pass;
-    @ViewById
-    ViewGroup layout_AttachFile;
-    @ViewById
-    LinearLayout ll_project;
-    @ViewById
-    ViewGroup layout_lastwork;
-    @ViewById
-    ViewGroup layout_memo;
-    @ViewById
-    ViewGroup layout_bottom, layout_wfinstance_content;
-    @ViewById
-    ImageView img_wfinstance_status;
-    @ViewById
-    LinearLayout ll_sale;
-    @ViewById
-    TextView tv_sale;
+    @ViewById ScrollView scrollView;
+    @ViewById ListView_inScrollView listView_workflowNodes;
+    @ViewById TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title;
+    @ViewById TextView tv_memo;
+    @ViewById TextView tv_projectName;
+    @ViewById TextView tv_time_creator;
+    @ViewById TextView tv_title_role;
+    @ViewById TextView tv_title_creator;
+    @ViewById ViewGroup img_title_left;
+    @ViewById ViewGroup img_title_right;
+    @ViewById ViewGroup layout_nopass;
+    @ViewById ViewGroup layout_pass;
+    @ViewById ViewGroup layout_AttachFile;
+    @ViewById LinearLayout ll_project;
+    @ViewById ViewGroup layout_lastwork;
+    @ViewById ViewGroup layout_memo;
+    @ViewById ViewGroup layout_bottom, layout_wfinstance_content;
+    @ViewById ImageView img_wfinstance_status;
+    @ViewById LinearLayout ll_sale;
+    @ViewById TextView tv_sale;
     //订单审批
     @ViewById LinearLayout ll_order_layout, ll_order_content, ll_product;
     @ViewById TextView tv_product, tv_plan_value;
@@ -132,6 +116,15 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
     @Extra(ExtraAndResult.EXTRA_ID)
     String wfInstanceId;
+
+    Handler mHander = new Handler() {
+        @Override
+        public void dispatchMessage(Message msg) {
+            super.dispatchMessage(msg);
+            //让scrollView自动滚到顶部
+            scrollView.fullScroll(ScrollView.FOCUS_UP);
+        }
+    };
 
     @AfterViews
     void init() {
@@ -295,7 +288,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
         List<String> paymentList = new ArrayList<>();
         paymentList.add("回款时间：" + DateTool.timet(payment.receivedAt + "", "yyyy.MM.dd"));
         paymentList.add("回款金额：" + "￥" + payment.receivedMoney);
-        paymentList.add("是否开票：");
         paymentList.add("开票金额：" + "￥" + payment.billingMoney);
         paymentList.add("收款人：");
         paymentList.add("收款方式：" + OrderCommon.getPaymentMode(payment.payeeMethod));
@@ -449,7 +441,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
      * 审批内容数据设置
      */
     void initUI_listView_wfinstance() {
-        layout_wfinstance_content.removeAllViews();
+//        layout_wfinstance_content.removeAllViews();
         ArrayList<BizFormFields> fields = new ArrayList<>();
         if (mWfInstance != null && mWfInstance.bizForm != null && mWfInstance.bizForm.getFields() != null) {
             fields = mWfInstance.bizForm.getFields();
@@ -543,6 +535,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 }
             }
         }
+        mHander.sendEmptyMessage(0);
     }
 
     private String wfinstanceInfoValue(Object obj) {

@@ -154,11 +154,10 @@
                         android:id="@+id/layout_wfinstance_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dimen_15"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_marginRight="@dimen/margin_side_edge"
-                        android:orientation="vertical">
-                    </LinearLayout>
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/dimen_10"/>
                     <!-- 订单审批-->
                     <LinearLayout
                         android:id="@+id/ll_order_layout"
@@ -183,8 +182,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
+                            android:paddingBottom="@dimen/margin_other_view"
                             android:paddingLeft="@dimen/margin_other_view"
-                            android:paddingRight="@dimen/margin_other_view"/>
+                            android:paddingRight="@dimen/margin_other_view"
+                            android:paddingTop="@dimen/dimen_8"
+                            />
 
                         <include layout="@layout/include_solid_line15"/>
 
@@ -290,8 +292,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
+                            android:paddingBottom="@dimen/margin_other_view"
                             android:paddingLeft="@dimen/margin_other_view"
-                            android:paddingRight="@dimen/margin_other_view"/>
+                            android:paddingRight="@dimen/margin_other_view"
+                            android:paddingTop="@dimen/dimen_8"
+                            />
 
                         <include layout="@layout/include_solid_line15"/>
 
