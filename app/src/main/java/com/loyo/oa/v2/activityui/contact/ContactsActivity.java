@@ -22,8 +22,10 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsDepartmentFragment;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsInMyDeptFragment;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
@@ -61,7 +63,15 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         public void onReceive(final Context context, final Intent intent) {
             //Bundle b = intent.getExtras();
             if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
-                // getUserAndDepartmentSize();
+                getUserAndDepartmentSize();
+                adapter = new MyPagerAdapter(getSupportFragmentManager());
+                adapter.setTitles(new String[]{"本部门(" + myDepartmentContactsSize + ")", "全公司(" + departmentsSize + ")"});
+
+                pager.setAdapter(adapter);
+                int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+                pager.setPageMargin(pageMargin);
+                tabs.setViewPager(pager);
+                DialogHelp.cancelLoading();
             }
         }
     };
@@ -86,7 +96,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         }
 
         setTouchView(-1);
-        getUserAndDepartmentSize();
+        //getUserAndDepartmentSize();
 
         ((TextView) findViewById(R.id.tv_title_1)).setText("通讯录");
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
@@ -103,13 +113,23 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         tabs.setTextSize(app.spTopx(14));
 
         pager = (ViewPager) findViewById(R.id.pager);
-        adapter = new MyPagerAdapter(getSupportFragmentManager());
-        adapter.setTitles(new String[]{"本部门(" + myDepartmentContactsSize + ")", "全公司(" + departmentsSize + ")"});
 
-        pager.setAdapter(adapter);
-        int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-        pager.setPageMargin(pageMargin);
-        tabs.setViewPager(pager);
+        if (OrganizationManager.isOrganizationCached() == false
+                && OrganizationService.isFetchingOrganziationData()) {
+            DialogHelp.showLoading(this, "加载通讯录中...", true);
+        }
+        else {
+
+            getUserAndDepartmentSize();
+            adapter = new MyPagerAdapter(getSupportFragmentManager());
+            adapter.setTitles(new String[]{"本部门(" + myDepartmentContactsSize + ")", "全公司(" + departmentsSize + ")"});
+
+            pager.setAdapter(adapter);
+            int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+            pager.setPageMargin(pageMargin);
+            tabs.setViewPager(pager);
+            DialogHelp.cancelLoading();
+        }
     }
 
     @Override

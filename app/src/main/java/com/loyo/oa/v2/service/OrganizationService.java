@@ -27,6 +27,8 @@ import java.util.ArrayList;
  */
 public class OrganizationService extends IntentService {
 
+    private static boolean _isFetchingOrganziationData = false;
+
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     private static final String ACTION_FETCH_ALL = "com.loyo.oa.v2.service.action.FETCH_ALL";
 
@@ -72,6 +74,9 @@ public class OrganizationService extends IntentService {
      * 后台 更新 组织架构
      */
     void getOrganization() {
+
+        _isFetchingOrganziationData = true;
+
         ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
                 .create(IUser.class).getOrganization();
 
@@ -89,5 +94,11 @@ public class OrganizationService extends IntentService {
         } else {
             LogUtil.d("更新 组织 架构  失败");
         }
+
+        _isFetchingOrganziationData = false;
+    }
+
+    public static boolean isFetchingOrganziationData(){
+        return _isFetchingOrganziationData;
     }
 }
