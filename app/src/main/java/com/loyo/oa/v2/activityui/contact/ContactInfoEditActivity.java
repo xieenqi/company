@@ -405,7 +405,17 @@ public class ContactInfoEditActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.id, map, new RCallback<User>() {
             @Override
-            public void success(final User user, final Response response) {
+            public void success(final User responseUser, final Response response) {
+
+                if (user.id != null){
+                    OrganizationManager.updateDBUserWithUser(user, responseUser);
+                    OrganizationManager.shareManager().updateUser(user);
+
+                    Intent it = new Intent("com.loyo.oa.v2.USER_EDITED");
+                    it.putExtra("userId", user.id);
+                    sendBroadcast(it);
+                }
+                
                 HttpErrorCheck.checkResponse("修改个人信息", response);
                 Toast("修改个人信息成功");
                 Intent mIntent = new Intent();

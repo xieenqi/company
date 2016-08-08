@@ -236,7 +236,7 @@ public class ContactInfoActivity extends BaseActivity {
         if (requestCode != ExtraAndResult.REQUEST_CODE || resultCode != RESULT_OK) {
             return;
         }
-        getUserInfo();
+        // getUserInfo();
     }
 
     /**
