@@ -260,7 +260,7 @@ public interface ICustomer {
      *
      * @param callback
      */
-    @GET("/order/cus")
-    void getCutomerOrder(@QueryMap HashMap<String, Object> map, Callback<PaginationX<OrderListItem>> callback);
+    @GET("/order/cus/{id}")
+    void getCutomerOrder(@Path("id") String id, @QueryMap HashMap<String, Object> map, Callback<PaginationX<OrderListItem>> callback);
 
 }

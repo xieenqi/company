@@ -25,6 +25,7 @@ public class EstimateAdd implements Serializable {
 
     public String orderTitle;
     public String orderId;
+    public String customerName;
 
 
     public class PayeeUser implements Serializable {

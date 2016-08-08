@@ -12,7 +12,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
-import com.loyo.oa.v2.activityui.order.bean.ExtensionDatas;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;
@@ -27,7 +26,6 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.Date;
@@ -60,6 +58,10 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
      * 来自订单编辑
      * */
     public final static int ORDER_EDIT = 0x11;
+    /**
+     *  机会 生成订单
+     * */
+    public final static int ORDER_CREATE = 0x12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

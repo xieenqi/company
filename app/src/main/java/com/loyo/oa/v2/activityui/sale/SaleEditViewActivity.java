@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.sale;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +27,8 @@ public class SaleEditViewActivity extends Activity implements OnClickListener {
     private Intent mIntent;
     private boolean isDelete = true;
     private boolean isEdit = true;
+    private String isExra;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -34,6 +37,7 @@ public class SaleEditViewActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_saleedit_view);
         isDelete = getIntent().getBooleanExtra("isDelete", false);
         isEdit = getIntent().getBooleanExtra("isEdit", false);
+        isExra = getIntent().getStringExtra("isExra");
         getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
         btn_delete = (Button) this.findViewById(R.id.btn_delete);
@@ -54,6 +58,7 @@ public class SaleEditViewActivity extends Activity implements OnClickListener {
         btn_cancel.setOnClickListener(this);
         btn_edit.setOnClickListener(this);
         btn_delete.setOnClickListener(this);
+        btn_extra.setOnClickListener(this);
         if (isDelete) {
             btn_delete.setVisibility(View.VISIBLE);
         } else {
@@ -63,6 +68,12 @@ public class SaleEditViewActivity extends Activity implements OnClickListener {
             btn_edit.setVisibility(View.VISIBLE);
         } else {
             btn_edit.setVisibility(View.GONE);
+        }
+        if (!TextUtils.isEmpty(isExra)) {
+            btn_extra.setVisibility(View.VISIBLE);
+            btn_extra.setText(isExra);
+        } else {
+            btn_extra.setVisibility(View.GONE);
         }
 
 
@@ -124,6 +135,10 @@ public class SaleEditViewActivity extends Activity implements OnClickListener {
 
             //自定义
             case R.id.btn_extra:
+                mIntent = new Intent();
+                mIntent.putExtra("extra", true);
+                setResult(RESULT_OK, mIntent);
+                finish();
                 break;
 
             default:
