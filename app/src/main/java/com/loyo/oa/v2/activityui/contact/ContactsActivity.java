@@ -13,6 +13,9 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
@@ -23,6 +26,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsDepartmentFragment;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsInMyDeptFragment;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.service.OrganizationService;
@@ -44,6 +48,9 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
+    private ViewGroup loading_view;// dialog_view
+    private ImageView loading_indicator;
+    private TextView loading_tip;
     private ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
     private ContactsInMyDeptFragment userFragment;         //本部门  人员frag
     private PagerSlidingTabStrip tabs;
@@ -71,7 +78,9 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
                 int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
                 pager.setPageMargin(pageMargin);
                 tabs.setViewPager(pager);
-                DialogHelp.cancelLoading();
+                tabs.setVisibility(View.VISIBLE);
+                loading_view.setVisibility(View.GONE);
+                loading_indicator.clearAnimation();
             }
         }
     };
@@ -109,6 +118,12 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         img_title_right.setOnClickListener(this);
         img_title_right.setOnTouchListener(touch);
 
+        loading_view = (ViewGroup) findViewById(R.id.dialog_view);
+
+        loading_indicator = (ImageView) loading_view.findViewById(R.id.img);
+        loading_tip = (TextView) loading_view.findViewById(R.id.tipTextView);// 提示文字
+
+
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setTextSize(app.spTopx(14));
 
@@ -116,9 +131,20 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
         if (OrganizationManager.isOrganizationCached() == false
                 && OrganizationService.isFetchingOrganziationData()) {
-            DialogHelp.showLoading(this, "加载通讯录中...", true);
+            // DialogHelp.showLoading(this, "加载通讯录中...", true);
+            // start animation
+            tabs.setVisibility(View.GONE);
+            // 加载动画
+            Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(
+                    this, R.anim.load_animayion);
+            // 使用ImageView显示动画
+            loading_indicator.startAnimation(hyperspaceJumpAnimation);
+            loading_tip.setText("获取通讯录中...");
+
         }
         else {
+
+            loading_view.setVisibility(View.GONE);
 
             getUserAndDepartmentSize();
             adapter = new MyPagerAdapter(getSupportFragmentManager());
