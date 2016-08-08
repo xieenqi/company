@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.ExtensionDatas;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
@@ -26,6 +27,7 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.Date;
@@ -212,7 +214,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             ll_extra.removeAllViews();
         }
         if (null != mData.extensionDatas) {
-            for (ExtensionDatas ele : mData.extensionDatas) {
+            for (ContactLeftExtras ele : mData.extensionDatas) {
                 ll_extra.addView(new ViewOrderDetailsExtra(mContext, ele));
             }
         }
@@ -229,7 +231,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 mBundle = new Bundle();
                 mBundle.putInt("fromPage",ORDER_EDIT);
                 mBundle.putSerializable("data", mData);
-                app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, 0x01, mBundle);
+                app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
             }
         });
         dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
@@ -277,5 +279,25 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                         HttpErrorCheck.checkError(error);
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != RESULT_OK){
+            return;
+        }
+
+        switch (requestCode){
+
+            //编辑回调
+            case  ExtraAndResult.REQUEST_CODE_STAGE:
+                getData();
+                break;
+
+        }
+
+
     }
 }

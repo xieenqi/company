@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.adapter.OrderEstimateListAdapter;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.activityui.order.bean.EstimateList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -181,13 +182,13 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     public void getData(){
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .getPayEstimate(orderId, new Callback<ArrayList<EstimateAdd>>() {
+                .getPayEstimate(orderId, new Callback<EstimateList>() {
                     @Override
-                    public void success(ArrayList<EstimateAdd> estimateAdds, Response response) {
+                    public void success(EstimateList estimateList, Response response) {
                         HttpErrorCheck.checkResponse("回款记录列表", response);
-                        if(null != estimateAdds){
+                        if(null != estimateList.records){
                             mData.clear();
-                            mData.addAll(estimateAdds);
+                            mData.addAll(estimateList.records);
                             rushAdapter();
                         }
                     }

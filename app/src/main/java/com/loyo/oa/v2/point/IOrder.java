@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.activityui.order.bean.EstimateList;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
@@ -102,7 +103,7 @@ public interface IOrder {
      * 获取 回款记录列表
      * */
     @GET("/order/record/{id}")
-    void getPayEstimate(@Path("id") String id,Callback<ArrayList<EstimateAdd>> callback);
+    void getPayEstimate(@Path("id") String id,Callback<EstimateList> callback);
 
     /**
      * 删除 回款记录
