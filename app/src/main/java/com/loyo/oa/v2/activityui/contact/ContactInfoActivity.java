@@ -123,14 +123,17 @@ public class ContactInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
             public void success(final User responseUser, final Response response) {
-                OrganizationManager.updateDBUserWithUser(user, responseUser);
-                OrganizationManager.shareManager().updateUser(user);
+//                OrganizationManager.updateDBUserWithUser(user, responseUser);
+//                OrganizationManager.shareManager().updateUser(user);
+//                HttpErrorCheck.checkResponse(response);
+//                updateUIWithUser(user);
+//
+//                Intent it = new Intent("com.loyo.oa.v2.USER_EDITED");
+//                it.putExtra("userId", user.id);
+//                sendBroadcast(it);
+
                 HttpErrorCheck.checkResponse(response);
                 updateUIWithUser(user);
-
-                Intent it = new Intent("com.loyo.oa.v2.USER_EDITED");
-                it.putExtra("userId", user.id);
-                sendBroadcast(it);
 
             }
 
@@ -236,7 +239,7 @@ public class ContactInfoActivity extends BaseActivity {
         if (requestCode != ExtraAndResult.REQUEST_CODE || resultCode != RESULT_OK) {
             return;
         }
-        // getUserInfo();
+        getUserInfo();
     }
 
     /**
