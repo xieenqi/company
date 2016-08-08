@@ -15,7 +15,7 @@ import com.loyo.oa.v2.application.MainApp;
 import java.util.Date;
 
 /**
- * d订单详情 自定义字段
+ * 订单详情 自定义字段
  */
 public class ViewOrderDetailsExtra extends LinearLayout {
 
