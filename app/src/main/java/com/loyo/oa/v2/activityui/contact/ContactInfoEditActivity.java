@@ -415,7 +415,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                     it.putExtra("userId", user.id);
                     sendBroadcast(it);
                 }
-                
+
                 HttpErrorCheck.checkResponse("修改个人信息", response);
                 Toast("修改个人信息成功");
                 Intent mIntent = new Intent();
