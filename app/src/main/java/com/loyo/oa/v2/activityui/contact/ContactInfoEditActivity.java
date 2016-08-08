@@ -409,7 +409,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 HttpErrorCheck.checkResponse("修改个人信息", response);
                 Toast("修改个人信息成功");
                 Intent mIntent = new Intent();
-                InitDataService_.intent(ContactInfoEditActivity.this).start(); //更新组织架构
+                // InitDataService_.intent(ContactInfoEditActivity.this).start(); //更新组织架构
                 mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
                 app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
             }
