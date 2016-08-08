@@ -78,8 +78,6 @@ public class InitDataService extends IntentService {
                 HttpErrorCheck.checkError(error);
             }
         });
-
-        getOrganization();
 //        try {
 //            //all或者one
 //            String organizationUpdateInfo = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
@@ -107,37 +105,6 @@ public class InitDataService extends IntentService {
                 map.put(permission.getCode(), permission);
             }
             MainApp.rootMap = map;
-        }
-    }
-
-    /**
-     * 后台 更新 组织架构
-     */
-    void getOrganization() {
-        ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
-                .create(IUser.class).getOrganization();
-
-        if (!ListUtil.IsEmpty(lstDepartment_current)) {
-            //写DB
-//            String jsonString = MainApp.gson.toJson(lstDepartment_current);
-//            DBManager.Instance().putOrganization(jsonString);
-
-            /*
-             * 写入结构化数据到数据库
-             * Add by ethan
-             */
-            OrganizationManager.shareManager().saveOrganizitionToDB(lstDepartment_current);
-            OrganizationManager.shareManager().loadOrganizitionDataToCache();
-
-            //设置缓存
-            Common.setLstDepartment(lstDepartment_current);
-            LogUtil.d("更新 组织《《《《《《《《《《《《《《《《》》》》》》》》》》》 架构 json：完成");
-            SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
-            SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.APP_START);
-            //清除之前缓存通讯录部门的数据
-            SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
-        } else {
-            LogUtil.d("更新 组织 架构  失败");
         }
     }
 

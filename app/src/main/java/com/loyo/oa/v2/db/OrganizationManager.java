@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.util.concurrent.Callable;
 
 import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBPosition;
 import com.loyo.oa.v2.db.bean.DBRole;
@@ -44,6 +45,7 @@ import com.loyo.oa.v2.activityui.other.bean.User;
 
 
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.tool.SharedUtil;
 
 public class OrganizationManager {
 
@@ -258,6 +260,27 @@ public class OrganizationManager {
         result.shortDeptNames = namesBuilder.toString();
 
         return ;
+    }
+
+    public static Boolean isOrganizationCached() {
+        return SharedUtil.getBoolean(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_CACHED);
+    }
+
+    public static void setOrganizationCached(Boolean cached) {
+        SharedUtil.putBoolean(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_CACHED, cached);
+    }
+
+    public static void clearOrganizationData() {
+        mDatabaseHelper.clearOrganizationData();
+        sLoginUser = null;
+        sComany =null;
+        departmentsCache = new ArrayList<DBDepartment>();
+        positionsCache   = new ArrayList<DBPosition>();
+        rolesCache = new ArrayList<DBRole>();
+        usersCache = new ArrayList<DBUser>();
+        nodesCache = new ArrayList<DBUserNode>();
+        caches = new HashMap<String, Object>();
+        setOrganizationCached(false);
     }
 
     public static void updateDBUserWithDBUser(DBUser result, DBUser user)
@@ -510,6 +533,9 @@ public class OrganizationManager {
                                 nodeDao.add(node);
                             }
 
+                            //  设置已本地缓存组织架构
+                            OrganizationManager.setOrganizationCached(true);
+
                             return null;
                         }
                     });
@@ -557,9 +583,9 @@ public class OrganizationManager {
     /* 当前登录用户同部门的所有用户（包括子部门） */
     public List<DBUser> getCurrentUserSameDeptsUsers() {
 
-        if (caches.get(kCurrentUserSameDeptsUsers) != null) {
-            return (List<DBUser>)caches.get(kCurrentUserSameDeptsUsers);
-        }
+//        if (caches.get(kCurrentUserSameDeptsUsers) != null) {
+//            return (List<DBUser>)caches.get(kCurrentUserSameDeptsUsers);
+//        }
 
         List<DBUser> result = new ArrayList<DBUser>();
 
@@ -590,7 +616,7 @@ public class OrganizationManager {
             }
         }
 
-        caches.put(kCurrentUserSameDeptsUsers, result);
+//        caches.put(kCurrentUserSameDeptsUsers, result);
 
         return result;
     }

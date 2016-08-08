@@ -117,6 +117,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
         for (String key : daos.keySet())
         {
             Dao dao = daos.get(key);
+            dao.clearObjectCache();
             dao = null;
         }
     }
@@ -134,6 +135,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
             TableUtils.createTable(getConnectionSource(), DBRole.class);
             TableUtils.createTable(getConnectionSource(), DBUser.class);
             TableUtils.createTable(getConnectionSource(), DBUserNode.class);
+
+            daos = new HashMap<String, Dao>();
+        }
+        catch (Exception e){}
+
+    }
+
+    public void clearOrganizationData(){
+        try {
+
+            daos = new HashMap<String, Dao>();
+
+            TableUtils.dropTable(getConnectionSource(), DBDepartment.class, true);
+            TableUtils.dropTable(getConnectionSource(), DBPosition.class, true);
+            TableUtils.dropTable(getConnectionSource(), DBRole.class, true);
+            TableUtils.dropTable(getConnectionSource(), DBUser.class, true);
+            TableUtils.dropTable(getConnectionSource(), DBUserNode.class, true);
         }
         catch (Exception e){}
 

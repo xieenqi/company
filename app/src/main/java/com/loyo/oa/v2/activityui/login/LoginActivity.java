@@ -18,6 +18,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ILogin;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -286,6 +287,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
                         app.startActivity(LoginActivity.this, MainHomeActivity.class, MainApp.ENTER_TYPE_RIGHT, true, new Bundle());
                         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
+
+                        /* 拉取组织架构 */
+                        OrganizationService.startActionFetchAll(MainApp.getMainApp());
+
                     }
                 });
             }
