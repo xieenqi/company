@@ -4,5 +4,5 @@
     <size
         android:width="@dimen/dimen_10"
         android:height="@dimen/dimen_17"/>
-    <solid android:color="@color/title_bg1"/>
+    <solid android:color="#f5625a"/>
 </shape>

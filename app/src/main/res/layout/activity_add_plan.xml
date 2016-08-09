@@ -44,7 +44,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="必填,请选择"
-                    android:textColor="@color/title_bg1"
+                    android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
@@ -89,6 +89,7 @@
                     android:paddingBottom="@dimen/dimen_5"
                     android:paddingTop="@dimen/dimen_5"
                     android:singleLine="true"
+                    android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -126,6 +127,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="请选择"
+                    android:text="不提醒"
                     android:textColor="@color/text66"
                     />
 
@@ -163,7 +165,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
-                    android:hint="必填,请选择"
+                    android:hint="请选择"
                     android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"/>

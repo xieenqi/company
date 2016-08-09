@@ -303,7 +303,8 @@ public class BitmapUtil {
         Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片
         return bitmap;
     }
-//
+
+    //
 //    public int judgeImagePosition(String imagepath, String imageName) {
 //        int position = 0;
 //        File file = new File(imagepath);

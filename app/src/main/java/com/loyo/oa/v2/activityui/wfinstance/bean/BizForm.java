@@ -14,7 +14,7 @@ public class BizForm implements Serializable {
     private String id;
     private String name;
     private long updatedAt;
-    public int bizCode;
+    public int bizCode;//赢单审批 300  订单审批 400 回款审批 500
 
     public int getBizCode() {
         return bizCode;

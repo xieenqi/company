@@ -50,6 +50,6 @@
         android:text="取消"
         android:textColor="@color/title_bg1"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        />
 
 </LinearLayout>

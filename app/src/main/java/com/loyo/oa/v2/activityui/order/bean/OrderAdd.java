@@ -16,7 +16,7 @@ public class OrderAdd implements Serializable{
     public String customerName;  //对应客户
     public String attachmentUUId;
 
-    public int dealMoney;     //成交金额
+    public float  dealMoney;     //成交金额
     public String orderNum;   //订单编号
     public String remark;     //备注
 
