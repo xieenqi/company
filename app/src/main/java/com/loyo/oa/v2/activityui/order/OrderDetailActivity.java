@@ -166,7 +166,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             case R.id.ll_plan://回款计划
                 mBundle = new Bundle();
                 mBundle.putString("orderId", mData.id);
-                mBundle.putInt(ExtraAndResult.TOKEN_START, isAdd ? 1 : 2);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, isAdd);
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
         }
@@ -243,6 +243,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
+        tv_plan_value.setText(mData.planMoney + "");
         OrderCommon.getOrderStatus(tv_status, mData.status);
         if (!TextUtils.isEmpty(mData.wfName)) {//是否关联审批
             ll_wflayout.setVisibility(View.VISIBLE);

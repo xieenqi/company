@@ -19,6 +19,7 @@ public class OrderDetail implements Serializable {
     public String creatorName;
     public int status;//1待审核 2未通过 3进行中 4已完成 5意外终止 6
     public float dealMoney;//成交金额
+    public float planMoney;//计划回款金额
     public int backMoney;
     public double ratePayment;//回款率
     public double salesAmount;

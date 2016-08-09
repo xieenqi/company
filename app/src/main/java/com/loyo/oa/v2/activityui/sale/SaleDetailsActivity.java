@@ -217,7 +217,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             ll_product.setEnabled(false);
         }
         //已通过的审批 任何人都不能删除
-        if (mSaleDetails.wfState == 0) {
+        if (mSaleDetails.wfState == 0 && mSaleDetails.prob == 100) {
             iv_wfstatus.setEnabled(false);
             img_title_right.setVisibility(View.INVISIBLE);
             ll_product.setEnabled(false);
@@ -270,8 +270,8 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         } else {
             layout_losereson.setVisibility(View.GONE);
         }
-        if (0 != mSaleDetails.wfState && mSaleDetails.prob != 100) {//销售阶段是赢单的时候
-            img_title_right.setVisibility(View.INVISIBLE);
+        if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
+            img_title_right.setVisibility(mSaleDetails.prob == 100 ? View.VISIBLE : View.GONE);
             ll_product.setEnabled(false);
             ll_stage.setEnabled(false);
             iv_wfstatus.setVisibility(View.VISIBLE);
