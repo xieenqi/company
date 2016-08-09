@@ -74,7 +74,6 @@ public class AMapService extends APSService {
     private LocalBinder mBinder = new LocalBinder();
     private LDBManager ldbManager;
     private boolean isCache;//是否有缓存
-    private RestAdapter mRestAdapter;
     private String oldAddress = "";
 
     private static AMapLocationClient locationClient = null;
@@ -100,12 +99,7 @@ public class AMapService extends APSService {
     public void onCreate() {
         app = (MainApp) getApplicationContext();
         ldbManager = new LDBManager();
-        mRestAdapter = new RestAdapter.Builder()
-                .setEndpoint(Config_project.SERVER_URL())
-                .setLogLevel(RestAdapter.LogLevel.NONE)
-                .build();
-
-
+        startLocate();
         super.onCreate();
     }
 
@@ -115,7 +109,6 @@ public class AMapService extends APSService {
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
         }
-        startLocate();
         return START_REDELIVER_INTENT;
     }
 
@@ -299,7 +292,8 @@ public class AMapService extends APSService {
         final double longitude = location.getLongitude();
         final String address = location.getAddress();
 
-        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude + "," + latitude, System.currentTimeMillis() / 1000)));
+        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude
+                + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("tracklogs", trackLogs);
 
