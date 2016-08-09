@@ -166,6 +166,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             case R.id.ll_plan://回款计划
                 mBundle = new Bundle();
                 mBundle.putString("orderId", mData.id);
+                mBundle.putInt(ExtraAndResult.TOKEN_START, isAdd ? 1 : 2);
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
         }
@@ -275,7 +276,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         if (isStop)
-            dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
                     terminationOrder();

@@ -35,7 +35,10 @@ public class OrderCommon {
                     statusText = "意外终止";
                     statusBj = R.drawable.retange_gray;
                     break;
-                default:
+                case 6://回款记录的状态
+                    statusText = "--";
+                    statusBj = R.drawable.retange_gray;
+                    break;
             }
             view.setText(statusText);
             view.setBackgroundResource(statusBj);

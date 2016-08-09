@@ -29,7 +29,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【订单回款】
+ * 订单【回款记录】
  * Created by yyy on 16/8/2.
  */
 public class OrderEstimateListActivity extends BaseActivity implements View.OnClickListener {
@@ -139,6 +139,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
         if (fromPage == PAGE_DETAILS_ADD) {
             getData();
+            ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         }
     }
 

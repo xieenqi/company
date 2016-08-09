@@ -31,7 +31,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 回款计划 列表页面
+ * 【回款计划】 列表页面
  * Created by xeq on 16/8/4.
  */
 public class OrderPlanListActivity extends BaseActivity implements View.OnClickListener {
@@ -71,12 +71,14 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         ll_add.setOnTouchListener(Global.GetTouch());
         ll_add.setOnClickListener(this);
         lv_list = (ListView) findViewById(R.id.lv_list);
+
         getPlanList();
+        ll_add.setVisibility(pagForm == 1 ? View.GONE : View.VISIBLE);
     }
 
 
     public void rushAdapter() {
-        ll_add.setVisibility(pagForm == 1 ? View.GONE : View.VISIBLE);
+
         if (null == adapter) {
             adapter = new OrderPlanAdapter();
             lv_list.setAdapter(adapter);
