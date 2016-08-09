@@ -207,7 +207,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("status", statusIndex + 1);
+        map.put("status", statusIndex);
         map.put("filed", sortIndex == 1 ? "dealMoney" : "createdAt");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IOrder.class).getOrderMyList(map, new Callback<OrderList>() {

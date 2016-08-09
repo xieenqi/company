@@ -48,19 +48,20 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     private OrderDetail mData;
     private String orderId;
     private Bundle mBundle;
+    private boolean isDelete, isEdit, isStop, isAdd;
 
     /**
      * 来自订单新建
-     * */
+     */
     public final static int ORDER_ADD = 0x10;
 
     /**
      * 来自订单编辑
-     * */
+     */
     public final static int ORDER_EDIT = 0x11;
     /**
-     *  机会 生成订单
-     * */
+     * 机会 生成订单
+     */
     public final static int ORDER_CREATE = 0x12;
 
     @Override
@@ -153,9 +154,10 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.ll_record://回款记录
                 Bundle mBundle = new Bundle();
-                mBundle.putInt("fromPage",OrderEstimateListActivity.PAGE_DETAILS_ADD);
+                mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_DETAILS_ADD);
                 mBundle.putString("price", tv_money.getText().toString());
-                mBundle.putString("orderId",orderId);
+                mBundle.putString("orderId", orderId);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, isAdd);
                 app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
             case R.id.ll_enclosure://附件
@@ -194,6 +196,41 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void bindData() {
+        switch (mData.status) {
+            case 1:
+                img_title_right.setVisibility(View.GONE);
+                isDelete = false;
+                isEdit = false;
+                isAdd = false;
+                isStop = false;
+                break;
+            case 2:
+                isDelete = true;
+                isEdit = true;
+                isAdd = false;
+                isStop = false;
+                break;
+            case 3:
+                isDelete = false;
+                isEdit = false;
+                isAdd = true;
+                isStop = true;
+                break;
+            case 4:
+                isDelete = false;
+                isEdit = false;
+                isAdd = false;
+                isStop = true;
+                break;
+            case 5:
+                isDelete = false;
+                isEdit = false;
+                isAdd = false;
+                isStop = false;
+                img_title_right.setVisibility(View.GONE);
+                break;
+
+        }
         tv_title.setText(mData.title);
         tv_customer.setText(mData.customerName);
         tv_money.setText(mData.dealMoney + "");
@@ -202,7 +239,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_creator_name.setText(mData.creatorName);
         tv_plan.setText("回款计划（" + mData.planNum + "）");
         tv_record.setText("回款记录（" + mData.recordNum + "）");
-        tv_record_value.setText("￥" + mData.backMoney + "(" + mData.ratePayment + "%)");
+        tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         OrderCommon.getOrderStatus(tv_status, mData.status);
@@ -224,30 +261,33 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 右上角菜单
-     * */
+     */
     private void functionBuuton() {
         ActionSheetDialog dialog = new ActionSheetDialog(OrderDetailActivity.this).builder();
-        dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-            @Override
-            public void onClick(int which) {
-                mBundle = new Bundle();
-                mBundle.putInt("fromPage",ORDER_EDIT);
-                mBundle.putSerializable("data", mData);
-                app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
-            }
-        });
-        dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-            @Override
-            public void onClick(int which) {
-                terminationOrder();
-            }
-        });
-        dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
-            @Override
-            public void onClick(int which) {
-                deleteOrder();
-            }
-        });
+        if (isEdit)
+            dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    mBundle = new Bundle();
+                    mBundle.putInt("fromPage", ORDER_EDIT);
+                    mBundle.putSerializable("data", mData);
+                    app.startActivityForResult(OrderDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                }
+            });
+        if (isStop)
+            dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    terminationOrder();
+                }
+            });
+        if (isDelete)
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    deleteOrder();
+                }
+            });
         dialog.show();
     }
 
@@ -274,6 +314,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                     public void success(Object estimatePlanAdd, Response response) {
                         HttpErrorCheck.checkResponse("意外终止订单：", response);
                         Toast("订单终止成功");
+                        getData();
                     }
 
                     @Override
@@ -287,14 +328,14 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode != RESULT_OK){
+        if (resultCode != RESULT_OK) {
             return;
         }
 
-        switch (requestCode){
+        switch (requestCode) {
 
             //编辑回调
-            case  ExtraAndResult.REQUEST_CODE_STAGE:
+            case ExtraAndResult.REQUEST_CODE_STAGE:
                 getData();
                 break;
 
