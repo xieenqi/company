@@ -70,8 +70,8 @@ public class Config_project {
 
     /**
      * Oss bucketName
-     * */
-    public static String OSS_UPLOAD_BUCKETNAME(){
+     */
+    public static String OSS_UPLOAD_BUCKETNAME() {
         return isRelease ? "loyocloud-01" : "dev-loyocloud-01";
     }
 
