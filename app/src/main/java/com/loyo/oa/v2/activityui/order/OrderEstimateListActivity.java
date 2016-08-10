@@ -17,6 +17,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -37,10 +38,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private LinearLayout ll_back;
     private LinearLayout ll_add;
     private TextView tv_title;
-    private TextView tv_dealprice;  //成交金额
-    private TextView tv_totalprice; //交易总金额
-    private TextView tv_aleryprice; //回款金额
-    private TextView tv_faileprice; //未回款
+    private CustomTextView tv_dealprice, tv_totalprice, tv_aleryprice, tv_faileprice;  //成交金额、已回款、开票总金额、未回款
 
     private ListView lv_listview;
     private EstimateAdd mEstimateAdd;
@@ -126,10 +124,10 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_add = (LinearLayout) findViewById(R.id.ll_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_totalprice = (TextView) findViewById(R.id.tv_totalprice);
-        tv_aleryprice = (TextView) findViewById(R.id.tv_aleryprice);
-        tv_faileprice = (TextView) findViewById(R.id.tv_faileprice);
-        tv_dealprice = (TextView) findViewById(R.id.tv_dealprice);
+        tv_totalprice = (CustomTextView) findViewById(R.id.tv_totalprice);
+        tv_aleryprice = (CustomTextView) findViewById(R.id.tv_aleryprice);
+        tv_faileprice = (CustomTextView) findViewById(R.id.tv_faileprice);
+        tv_dealprice = (CustomTextView) findViewById(R.id.tv_dealprice);
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         tv_title.setText("回款记录");
         if (null != dealPrice)
@@ -152,7 +150,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             if (null == mData) {
                 mData = new ArrayList<EstimateAdd>();
             }
-            mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId,fromPage);
+            mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage);
             lv_listview.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();

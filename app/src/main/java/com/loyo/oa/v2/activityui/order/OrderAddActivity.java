@@ -81,19 +81,19 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private OrderDetail mOrderDetail;
     private OrderAddforExtraData orderAddforExtra;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
 
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
 
-         switch (msg.what){
+            switch (msg.what) {
 
-             case ExtraAndResult.MSG_WHAT_VISIBLE:
-                 if(attamentSize != 0){
-                     tv_source.setText("附件("+attamentSize+")");
-                 }
-                 break;
-         }
+                case ExtraAndResult.MSG_WHAT_VISIBLE:
+                    if (attamentSize != 0) {
+                        tv_source.setText("附件(" + attamentSize + ")");
+                    }
+                    break;
+            }
         }
     };
 
@@ -292,7 +292,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             map.put("id", mOrderDetail.id);
         }
-        map.put("attachmentCount",attamentSize);
+        map.put("attachmentCount", attamentSize);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
         map.put("title", et_name.getText().toString());
@@ -402,8 +402,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //附件
             case R.id.ll_source:
                 mBundle = new Bundle();
-                mBundle.putString("uuid",uuid);
-                app.startActivityForResult(this,OrderAttachmentActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.MSG_WHAT_HIDEDIALOG,mBundle);
+                mBundle.putString("uuid", uuid);
+                app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
 
         }
@@ -475,7 +475,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //附件回调
             case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
                 uuid = data.getStringExtra("uuid");
-                attamentSize = data.getIntExtra("size",0);
+                attamentSize = data.getIntExtra("size", 0);
                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
                 break;
 
