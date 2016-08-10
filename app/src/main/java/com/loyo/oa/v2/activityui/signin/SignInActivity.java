@@ -38,6 +38,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
@@ -55,7 +56,7 @@ import retrofit.client.Response;
  */
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_customer_name,tv_reset_address;
+    private TextView tv_customer_name, tv_reset_address;
     private TextView tv_address;
     private TextView wordcount;
     private TextView tv_customer_address;
@@ -168,6 +169,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 app.address = address;
                 tv_address.setText(address);
                 LocationUtilGD.sotpLocation();
+                UMengTools.sendLocationInfo(address, longitude, latitude);
             }
 
             @Override
@@ -212,8 +214,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             /*地址更新*/
             case R.id.tv_reset_address:
                 mBundle = new Bundle();
-                mBundle.putInt("page",MapModifyView.SIGNIN_PAGE);
-                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
+                mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
+                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
 
             default:
@@ -318,7 +320,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             //地图微调，数据回到
             case MapModifyView.SERACH_MAP:
                 positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-                if(null != positionResultItem){
+                if (null != positionResultItem) {
                     laPosition = positionResultItem.laPosition;
                     loPosition = positionResultItem.loPosition;
                     tv_address.setText(positionResultItem.address);
