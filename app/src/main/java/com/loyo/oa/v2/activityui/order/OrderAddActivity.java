@@ -436,7 +436,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 estimateName += est.receivedMoney + "、";
             }
         }
-        return estimateName;
+        return estimateName.length() > 0 ? estimateName.substring(0, estimateName.length() - 1) : "";
     }
 
     @Override

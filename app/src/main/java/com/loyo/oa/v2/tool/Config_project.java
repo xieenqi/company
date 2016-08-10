@@ -8,13 +8,13 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static boolean isRelease = false;                               //是否是正式产品
+    public static boolean isRelease = false;                                //是否是正式产品
 
 //  public static final Boolean is_developer_mode = true;                  //生产模式
 
-    public static final Boolean is_developer_mode = BuildConfig.DEBUG;     //dbug模式
+    public static final Boolean is_developer_mode = BuildConfig.DEBUG;   //dbug模式
 
-    public static String IP = "http://192.168.31.131";                     //内部测试环境
+    public static String IP = "http://192.168.31.131";                    //内部测试环境
 
 //  public static String IP = "http://staging.ukuaiqi.com";              //产品预上线环境
 
@@ -26,7 +26,6 @@ public class Config_project {
 
     //public static String IP = "http://192.168.31.139";
 
-    public static String endpoint = "http://oss-cn-qingdao.aliyuncs.com";        //阿里云Oss
 
     protected Config_project() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -66,13 +65,6 @@ public class Config_project {
          * statistics 统计
          */
         public static String statistics = "http://stat.ukuaiqi.com";
-    }
-
-    /**
-     * Oss bucketName
-     * */
-    public static String OSS_UPLOAD_BUCKETNAME(){
-        return isRelease ? "loyocloud-01" : "dev-loyocloud-01";
     }
 
     /**
