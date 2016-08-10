@@ -118,6 +118,12 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         ll_plan = (LinearLayout) findViewById(R.id.ll_plan);
         ll_plan.setOnClickListener(this);
         ll_wflayout = (LinearLayout) findViewById(R.id.ll_wflayout);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getData();
     }
 
@@ -299,7 +305,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("删除订单：", response);
-                        onBackPressed();
+                        app.finishActivity(OrderDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
                     }
 
                     @Override

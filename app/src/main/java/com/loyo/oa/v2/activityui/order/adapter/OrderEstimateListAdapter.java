@@ -76,6 +76,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             holder.btn_edit = (LinearLayout) convertView.findViewById(R.id.btn_edit);
             holder.btn_delete = (LinearLayout) convertView.findViewById(R.id.btn_delete);
             holder.tv_status = (TextView) convertView.findViewById(R.id.tv_status);
+            holder.ll_action = (LinearLayout) convertView.findViewById(R.id.ll_action);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -116,7 +117,11 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 mActivity.startActivityForResult(mIntent, ExtraAndResult.REQUEST_CODE_STAGE);
             }
         });
-
+        if (mEstimateAdd.status == 1 || mEstimateAdd.status == 3) {
+            holder.ll_action.setVisibility(View.GONE);
+        } else {
+            holder.ll_action.setVisibility(View.VISIBLE);
+        }
         return convertView;
     }
 
@@ -132,7 +137,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         TextView tv_titlenum, tv_status;
 
         LinearLayout btn_edit;     //编辑
-        LinearLayout btn_delete;   //删除
+        LinearLayout btn_delete, ll_action;   //删除
 
     }
 }

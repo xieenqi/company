@@ -782,7 +782,6 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
      */
     private void refreshRedDot() {
         setResult(Activity.RESULT_OK);
-        if (!TextUtils.isEmpty(summaryId)) {
             HashMap<String, Object> body = new HashMap<>();
             body.put("summaryId", summaryId);
             LogUtil.d("@刷新红点:" + app.gson.toJson(body));
@@ -800,6 +799,5 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                             finishActivity();
                         }
                     });
-        }
     }
 }

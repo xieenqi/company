@@ -340,6 +340,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 } else if (TextUtils.isEmpty(tv_priceer.getText().toString())) {
                     Toast("请选择收款人!");
                     return;
+                }else if (TextUtils.isEmpty(tv_kind.getText().toString())) {
+                    Toast("请选择付款方式!");
+                    return;
                 }
 
                 mIntent = new Intent();
