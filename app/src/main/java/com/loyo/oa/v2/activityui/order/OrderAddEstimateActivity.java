@@ -64,7 +64,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     private int paymentState;
 
     private String id;
-    private String orderId;
+    private String orderId, planId;
     private Intent mIntent;
     private NewUser newUser;
     private EstimateAdd mEstimateAdd;
@@ -82,6 +82,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         mIntent = getIntent();
         if (mIntent != null) {
             orderId = mIntent.getStringExtra("orderId");
+            planId = mIntent.getStringExtra("planId");
             fromPage = mIntent.getIntExtra("fromPage", OrderEstimateListActivity.PAGE_ORDER_ADD);
             mEstimateAdd = (EstimateAdd) mIntent.getSerializableExtra(ExtraAndResult.RESULT_DATA);
         }
@@ -103,13 +104,6 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         et_estprice = (EditText) findViewById(R.id.et_estprice);
         et_kaiprice = (EditText) findViewById(R.id.et_kaiprice);
         et_remake = (EditText) findViewById(R.id.et_remake);
-
-        if (fromPage == OrderEstimateListActivity.PAGE_EDIT) {
-            tv_title.setText("编辑回款");
-        } else {
-            tv_title.setText("新增回款");
-        }
-
         ll_back.setOnClickListener(this);
         iv_submit.setOnClickListener(this);
         ll_time.setOnClickListener(this);
@@ -122,6 +116,20 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
         estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
 
+        if (fromPage == OrderEstimateListActivity.PAGE_EDIT) {
+            tv_title.setText("编辑回款记录");
+        } else if (fromPage == OrderEstimateListActivity.PAGE_GENERATE) {
+            creatEstimate();
+        } else {
+            tv_title.setText("新增回款记录");
+        }
+        editEstimate();
+    }
+
+    /**
+     * 编辑 记录
+     */
+    private void editEstimate() {
         if (null != mEstimateAdd) {
             newUser = new NewUser();
             newUser.setId(mEstimateAdd.payeeUser.id);
@@ -136,24 +144,42 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             et_kaiprice.setText(mEstimateAdd.billingMoney + "");
             tv_priceer.setText(mEstimateAdd.payeeUser.name);
             et_remake.setText(mEstimateAdd.remark);
-            switch (mEstimateAdd.payeeMethod) {
+            setPayeeMethod(mEstimateAdd.payeeMethod);
+        }
+    }
 
-                case 1:
-                    tv_kind.setText("现金");
-                    break;
+    /**
+     * 计划生成 记录
+     */
+    private void creatEstimate() {
+        if (null != mEstimateAdd) {
+            estimatedTime = mEstimateAdd.receivedAt;
+            paymentState = mEstimateAdd.payeeMethod;
+            tv_time.setText(DateTool.timet(mEstimateAdd.receivedAt + "", "yyyy.MM.dd"));
+            et_estprice.setText(mEstimateAdd.receivedMoney + "");
+            et_remake.setText(mEstimateAdd.remark);
+            setPayeeMethod(mEstimateAdd.payeeMethod);
+        }
+    }
 
-                case 2:
-                    tv_kind.setText("支票");
-                    break;
+    private void setPayeeMethod(int payeeMethod) {
+        switch (payeeMethod) {
 
-                case 3:
-                    tv_kind.setText("银行转账");
-                    break;
+            case 1:
+                tv_kind.setText("现金");
+                break;
 
-                case 4:
-                    tv_kind.setText("其它");
-                    break;
-            }
+            case 2:
+                tv_kind.setText("支票");
+                break;
+
+            case 3:
+                tv_kind.setText("银行转账");
+                break;
+
+            case 4:
+                tv_kind.setText("其它");
+                break;
         }
     }
 
@@ -230,6 +256,38 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                                 HttpErrorCheck.checkError(error);
                             }
                         });
+                break;
+            //来自计划生成 新建
+            case OrderEstimateListActivity.PAGE_GENERATE:
+
+                showLoading("");
+                map = new HashMap<>();
+                map.put("UUID", "");
+                map.put("payeeMethod", mEstimateAdd.payeeMethod);
+                map.put("orderId", orderId);
+                map.put("attachmentsName", "");
+                map.put("receivedAt", mEstimateAdd.receivedAt);
+                map.put("receivedMoney", mEstimateAdd.receivedMoney);
+                map.put("billingMoney", mEstimateAdd.billingMoney);
+                map.put("remark", mEstimateAdd.remark);
+                map.put("payMethodString", tv_kind.getText().toString());
+                map.put("payeeUser", mEstimateAdd.payeeUser);
+                map.put("planId", planId);
+
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
+                        .addPayEstimate(map, new Callback<EstimateAdd>() {
+                            @Override
+                            public void success(EstimateAdd orderAdd, Response response) {
+                                HttpErrorCheck.checkResponse("新建回款记录", response);
+                                app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                HttpErrorCheck.checkError(error);
+                            }
+                        });
+
                 break;
 
         }

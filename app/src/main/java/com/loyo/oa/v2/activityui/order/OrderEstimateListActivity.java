@@ -57,19 +57,23 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private boolean isAdd;
 
     /**
-     * 来自订单新建 新建回款
+     * 来自【订单新建】 新建回款记录
      */
     public final static int PAGE_ORDER_ADD = 0x01;
 
     /**
-     * 来自订单详情 新建回款
+     * 来自【订单详情】 新建回款记录
      */
     public final static int PAGE_DETAILS_ADD = 0x02;
 
     /**
-     * 来自编辑订单
+     * 来自【编辑】订单记录
      */
     public final static int PAGE_EDIT = 0x03;
+    /**
+     * 来自【生成】订单记录
+     */
+    public final static int PAGE_GENERATE = 0x04;
 
     private Handler mHandler = new Handler() {
 
