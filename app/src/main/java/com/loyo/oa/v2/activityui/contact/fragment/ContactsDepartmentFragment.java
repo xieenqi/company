@@ -30,10 +30,8 @@ import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.customview.MyLetterListView;
-
 import java.util.ArrayList;
 
 /**
