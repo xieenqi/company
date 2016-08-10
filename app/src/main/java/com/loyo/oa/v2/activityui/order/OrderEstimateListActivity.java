@@ -20,6 +20,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
      * 来自【编辑】订单记录
      */
     public final static int PAGE_EDIT = 0x03;
+
     /**
      * 来自【生成】订单记录
      */
@@ -116,6 +118,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         if (null != mIntent) {
             orderId = mIntent.getStringExtra("orderId");
             fromPage = mIntent.getIntExtra("fromPage", PAGE_ORDER_ADD);
+            LogUtil.dee("fromPage:"+fromPage);
             dealPrice = mIntent.getStringExtra("price");
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
                 mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
