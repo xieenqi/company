@@ -181,7 +181,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
                         AliOSSManager.getInstance().init(mContext,ak,sk,token,expiration);
                         oss = AliOSSManager.getInstance().getOss();
-                        //uploadOssFile(oss, Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
+                        uploadOssFile(oss, Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
                     }
 
                     @Override
