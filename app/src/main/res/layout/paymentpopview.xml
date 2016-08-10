@@ -22,7 +22,7 @@
             android:gravity="center"
             android:paddingBottom="18dp"
             android:paddingTop="18dp"
-            android:text="付款方式"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="20sp"
             />

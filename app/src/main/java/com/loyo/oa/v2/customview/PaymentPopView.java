@@ -28,12 +28,14 @@ public class PaymentPopView extends Dialog {
     private Context context;
     private LayoutInflater inflater;
     private VaiueCallback callback;
+    private String title;
 
     public PaymentPopView(Context context, String[] data, String title) {
         super(context);
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = Arrays.asList(data);
+        this.title = title;
     }
 
     @Override
@@ -52,6 +54,7 @@ public class PaymentPopView extends Dialog {
                 PaymentPopView.this.dismiss();
             }
         });
+        tv_title.setText(title);
     }
 
     public void setCallback(VaiueCallback callback) {
