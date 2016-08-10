@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.DatePicker;
@@ -63,12 +65,34 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     private int estimatedTime = 0;
     private int paymentState;
 
+    private String uuid = "";
     private String id;
     private String orderId, planId;
+    private String attamentSize;
     private Intent mIntent;
+    private Bundle mBundle;
     private NewUser newUser;
     private EstimateAdd mEstimateAdd;
     private HashMap<String, Object> map;
+
+    private Handler mHandler = new Handler(){
+
+        public void handleMessage(Message msg){
+
+            switch (msg.what){
+
+                //附件数量刷新
+                case ExtraAndResult.MSG_WHAT_VISIBLE:
+                    if(!attamentSize.equals("0")){
+                        tv_attachment.setText("附件("+attamentSize+")");
+                    }
+                    break;
+
+            }
+
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,7 +256,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 showLoading("");
                 map = new HashMap<>();
-                map.put("UUID", "");
+                map.put("UUID", mEstimateAdd.attachmentUUId);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
                 map.put("orderId", orderId);
                 map.put("attachmentsName", "");
@@ -328,6 +352,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 } else {
                     mEstimateAdd.billingMoney = Integer.parseInt(et_kaiprice.getText().toString().trim());
                 }
+                mEstimateAdd.attachmentUUId = uuid;
                 mEstimateAdd.id = id;
                 mEstimateAdd.payeeUser.id = newUser.getId();
                 mEstimateAdd.payeeUser.name = newUser.getName();
@@ -351,8 +376,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
             //附件
             case R.id.ll_attachment:
-                Intent intent = new Intent(OrderAddEstimateActivity.this, OrderAttachmentActivity.class);
-                startActivity(intent);
+                mBundle = new Bundle();
+                mBundle.putString("uuid",uuid);
+                app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, mBundle);
                 break;
 
             //付款方式
@@ -424,6 +450,13 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 newUser = u;
                 tv_priceer.setText(newUser.getName());
+                break;
+
+            //附件回调
+            case ExtraAndResult.REQUEST_CODE:
+                uuid = data.getStringExtra("uuid");
+                attamentSize = data.getStringExtra("size");
+                mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
                 break;
 
         }

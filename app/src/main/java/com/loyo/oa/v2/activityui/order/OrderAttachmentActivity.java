@@ -64,27 +64,26 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
     private ArrayList<User> mUserList;
     private String uuid;
-    private int bizType;
-    private boolean isOver; //当前业务已经结束
-    private LinearLayout img_title_left;
-    private TextView tv_title;
-    private TextView tv_upload;
-    private SwipeListView mListViewAttachment;
-    private int uploadSize;
-    private int uploadNum;
     private String ak;
     private String sk;
     private String token;
     private String expiration;
-    private OSS oss;
+    private int bizType;
+    private int uploadSize;
+    private int uploadNum = 0; //上传附件数量
+    private boolean isOver;    //当前业务已经结束
 
+    private LinearLayout img_title_left;
+    private TextView tv_title;
+    private TextView tv_upload;
+    private SwipeListView mListViewAttachment;
+
+    private OSS oss;
+    private Intent mIntent;
     private ArrayList<AttachmentBatch> attachment;
     private AttachmentBatch attachmentBatch;
     private ArrayList<Attachment> mListAttachment;
     private AttachmentSwipeAdapter adapter;
-
-    private Intent mIntent;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -296,6 +295,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     public void onBackPressed(){
         mIntent = new Intent();
         mIntent.putExtra("uuid",uuid);
+        mIntent.putExtra("size",uploadNum+"");
         app.finishActivity(this,MainApp.ENTER_TYPE_LEFT,RESULT_OK,mIntent);
     }
 
