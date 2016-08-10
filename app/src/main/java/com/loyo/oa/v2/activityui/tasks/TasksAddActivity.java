@@ -584,6 +584,7 @@ public class TasksAddActivity extends BaseActivity {
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
+                        LogUtil.dee("typeFile:"+typedFile);
                         TypedString typedUuid = new TypedString(uuid);
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
                                 new RCallback<Attachment>() {

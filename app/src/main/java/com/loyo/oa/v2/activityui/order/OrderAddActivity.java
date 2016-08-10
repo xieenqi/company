@@ -2,6 +2,8 @@ package com.loyo.oa.v2.activityui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -58,6 +60,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private ArrayList<SaleIntentionalProduct> productData;//意向产品的数据
     private ArrayList<EstimateAdd> estimateData;          //回款记录数据
 
+
     private EditText et_name;     //订单标题
     private TextView tv_customer; //对应客户
     private TextView tv_stage;    //购买产品
@@ -70,9 +73,29 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private Intent mIntent;
     private Bundle mBundle;
     private int fromPage;
+    private int attamentSize;
+    private String uuid;
 
     private OrderDetail mOrderDetail;
     private OrderAddforExtraData orderAddforExtra;
+
+    private Handler mHandler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg){
+
+         switch (msg.what){
+
+             case ExtraAndResult.MSG_WHAT_VISIBLE:
+                 tv_source.setText("附件("+attamentSize+")");
+                 break;
+
+         }
+
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -361,7 +384,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //附件
             case R.id.ll_source:
-                app.startActivityForResult(this,OrderAttachmentActivity.class,MainApp.ENTER_TYPE_RIGHT,101,null);
+                mBundle = new Bundle();
+                mBundle.putString("uuid",uuid);
+                app.startActivityForResult(this,OrderAttachmentActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE,mBundle);
                 break;
 
         }
@@ -429,6 +454,14 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 estimateData = (ArrayList<EstimateAdd>)data.getSerializableExtra("data");
                 tv_estimate.setText(getEstimateName());
                 break;
+
+            //附件回调
+            case ExtraAndResult.REQUEST_CODE:
+                uuid = data.getStringExtra("uuid");
+                attamentSize = data.getIntExtra("size", 0);
+                mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
+                break;
+
 
         }
     }

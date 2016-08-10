@@ -26,6 +26,7 @@ public class Config_project {
 
     //public static String IP = "http://192.168.31.139";
 
+    public static String endpoint = "http://oss-cn-qingdao.aliyuncs.com";        //阿里云Oss
 
     protected Config_project() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -65,6 +66,13 @@ public class Config_project {
          * statistics 统计
          */
         public static String statistics = "http://stat.ukuaiqi.com";
+    }
+
+    /**
+     * Oss bucketName
+     * */
+    public static String OSS_UPLOAD_BUCKETNAME(){
+        return isRelease ? "loyocloud-01" : "dev-loyocloud-01";
     }
 
     /**
