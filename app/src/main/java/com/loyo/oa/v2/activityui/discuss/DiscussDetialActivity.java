@@ -22,7 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.discuss.bean.HttpCrecter;
 import com.loyo.oa.v2.activityui.other.bean.User;
@@ -592,7 +592,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
         private void toSelectUserByHait() {
             Bundle bundle = new Bundle();
             bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-            app.startActivityForResult(DiscussDetialActivity.this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+            app.startActivityForResult(DiscussDetialActivity.this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
                     ExtraAndResult.REQUEST_CODE, bundle);
         }
 

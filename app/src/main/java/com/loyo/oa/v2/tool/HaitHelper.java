@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 
@@ -84,13 +84,13 @@ public class HaitHelper {
             bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
             if (null == mFragment) {
                 MainApp.getMainApp().startActivityForResult((Activity) et_scanner.getContext(),
-                        SelectDetUserActivity.class,
+                        SelectDetUserActivity2.class,
                         MainApp.ENTER_TYPE_RIGHT,
                         ExtraAndResult.REQUEST_CODE,
                         bundle);
             } else {
                 mFragment.startActivityForResult(new Intent(mFragment.getActivity(),
-                                SelectDetUserActivity.class).putExtras(bundle),
+                                SelectDetUserActivity2.class).putExtras(bundle),
                         ExtraAndResult.REQUEST_CODE);
             }
         }
