@@ -63,15 +63,17 @@ import retrofit.client.Response;
 public class OrderAttachmentActivity extends BaseActivity implements View.OnClickListener {
 
     private ArrayList<User> mUserList;
-    private String uuid;
+    private String uuid = StringUtil.getUUID();
     private String ak;
     private String sk;
     private String token;
     private String expiration;
     private int bizType;
+    private int attachmentCount = 0; //当前附件总数
     private int uploadSize;
     private int uploadNum = 0; //上传附件数量
     private boolean isOver;    //当前业务已经结束
+    private boolean isPic = false;
 
     private LinearLayout img_title_left;
     private TextView tv_title;
@@ -93,13 +95,15 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     }
 
     public void initUI() {
-
+        mIntent = getIntent();
         if(null != mIntent){
-            mIntent = getIntent();
             mUserList = (ArrayList<User>) mIntent.getSerializableExtra("users");
-            uuid = mIntent.getStringExtra("uuid");
-            bizType = mIntent.getIntExtra("bizType",0);
-            isOver  = mIntent.getBooleanExtra("isOver",false);
+            bizType = mIntent.getIntExtra("bizType", 0);
+            isOver  = mIntent.getBooleanExtra("isOver", false);
+            if(!TextUtils.isEmpty(mIntent.getStringExtra("uuid")) || null != mIntent.getStringExtra("uuid")){
+                uuid = mIntent.getStringExtra("uuid");
+                isPic = true;
+            }
         }
 
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
@@ -111,8 +115,10 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
         img_title_left.setOnTouchListener(Global.GetTouch());
         tv_upload.setOnClickListener(this);
         img_title_left.setOnClickListener(this);
-        getAttachments();
 
+        if(isPic){
+            getAttachments();
+        }
     }
 
     /**
@@ -179,9 +185,10 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
                         token = ossToken.Credentials.SecurityToken;
                         expiration = ossToken.Credentials.Expiration;
 
-                        AliOSSManager.getInstance().init(mContext,ak,sk,token,expiration);
+                        AliOSSManager.getInstance().init(mContext, ak, sk, token, expiration);
                         oss = AliOSSManager.getInstance().getOss();
                         uploadOssFile(oss, Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
+
                     }
 
                     @Override
@@ -195,7 +202,6 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
      * 上传附件信息
      * */
     public void postAttaData(){
-
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
                 .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
@@ -217,14 +223,14 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
      * 获取附件列表信息
      */
     void getAttachments() {
-        if(null == uuid || TextUtils.isEmpty(uuid)){
-            return;
-        }
+
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse("获取附件",response);
                 mListAttachment = attachments;
+                attachmentCount = attachments.size();
                 bindAttachment();
             }
 
@@ -295,7 +301,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     public void onBackPressed(){
         mIntent = new Intent();
         mIntent.putExtra("uuid",uuid);
-        mIntent.putExtra("size",uploadNum+"");
+        mIntent.putExtra("size",attachmentCount);
         app.finishActivity(this,MainApp.ENTER_TYPE_LEFT,RESULT_OK,mIntent);
     }
 
@@ -319,7 +325,6 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
                     uploadSize = 0;
                     uploadNum = pickPhots.size();
                     attachment = new ArrayList<>();
-                    uuid = StringUtil.getUUID();
                     showLoading("");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);

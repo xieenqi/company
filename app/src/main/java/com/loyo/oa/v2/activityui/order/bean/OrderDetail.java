@@ -10,6 +10,8 @@ import java.util.ArrayList;
  * Created by xeq on 16/8/3.
  */
 public class OrderDetail implements Serializable {
+
+    public String attachmentUUId;
     public String id;
     public String companyId;
     public String customerId;

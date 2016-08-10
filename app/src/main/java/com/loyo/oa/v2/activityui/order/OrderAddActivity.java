@@ -75,8 +75,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private Intent mIntent;
     private Bundle mBundle;
     private int fromPage;
-    private String attamentSize;
-    private String uuid = "";
+    private int attamentSize = 0;
+    private String uuid;
 
     private OrderDetail mOrderDetail;
     private OrderAddforExtraData orderAddforExtra;
@@ -89,7 +89,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
          switch (msg.what){
 
              case ExtraAndResult.MSG_WHAT_VISIBLE:
-                 if(!attamentSize.equals("0")){
+                 if(attamentSize != 0){
                      tv_source.setText("附件("+attamentSize+")");
                  }
                  break;
@@ -292,6 +292,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             map.put("id", mOrderDetail.id);
         }
+        map.put("attachmentCount",attamentSize);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
         map.put("title", et_name.getText().toString());
@@ -402,7 +403,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             case R.id.ll_source:
                 mBundle = new Bundle();
                 mBundle.putString("uuid",uuid);
-                app.startActivityForResult(this,OrderAttachmentActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE,mBundle);
+                app.startActivityForResult(this,OrderAttachmentActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.MSG_WHAT_HIDEDIALOG,mBundle);
                 break;
 
         }
@@ -472,9 +473,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 break;
 
             //附件回调
-            case ExtraAndResult.REQUEST_CODE:
+            case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
                 uuid = data.getStringExtra("uuid");
-                attamentSize = data.getStringExtra("size");
+                attamentSize = data.getIntExtra("size",0);
                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
                 break;
 

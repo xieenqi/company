@@ -36,12 +36,14 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     private Intent mIntent;
     private Message msg;
     private String orderId;
+    private int fromPage;
 
-    public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId) {
+    public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId, int fromPage) {
         this.mActivity = activity;
         this.mData = data;
         this.mHandler = handler;
         this.orderId = orderId;
+        this.fromPage = fromPage;
     }
 
     @Override
@@ -63,7 +65,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(mActivity).inflate(R.layout.item_orderestimate, null);
         ViewHolder holder = null;
-        EstimateAdd mEstimateAdd = mData.get(position);
+        final EstimateAdd mEstimateAdd = mData.get(position);
         if (null == holder) {
             holder = new ViewHolder();
             holder.tv_esttime = (TextView) convertView.findViewById(R.id.tv_esttime);
@@ -77,6 +79,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             holder.btn_delete = (LinearLayout) convertView.findViewById(R.id.btn_delete);
             holder.tv_status = (TextView) convertView.findViewById(R.id.tv_status);
             holder.ll_action = (LinearLayout) convertView.findViewById(R.id.ll_action);
+            holder.tv_attachment = (TextView) convertView.findViewById(R.id.tv_attachment);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -89,7 +92,9 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         holder.tv_payee.setText(mEstimateAdd.payeeUser.name);
         holder.tv_Remarks.setText(mEstimateAdd.remark);
         holder.tv_payment.setText(OrderCommon.getPaymentMode(mEstimateAdd.payeeMethod));
-
+        if (mEstimateAdd.attachmentCount != 0) {
+            holder.tv_attachment.setText("附件(" + mEstimateAdd.attachmentCount + ")");
+        }
         holder.btn_delete.setOnTouchListener(Global.GetTouch());
         holder.btn_edit.setOnTouchListener(Global.GetTouch());
         OrderCommon.getOrderStatus(holder.tv_status, mEstimateAdd.status);
@@ -111,8 +116,10 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 mIntent = new Intent(mActivity, OrderAddEstimateActivity.class);
+                mIntent.putExtra("size", mEstimateAdd.attachmentCount);
                 mIntent.putExtra("orderId", orderId);
-                mIntent.putExtra("fromPage", OrderEstimateListActivity.PAGE_EDIT);
+                //mIntent.putExtra("fromPage", OrderEstimateListActivity.PAGE_EDIT);
+                mIntent.putExtra("fromPage", fromPage);
                 mIntent.putExtra(ExtraAndResult.RESULT_DATA, mData.get(position));
                 mActivity.startActivityForResult(mIntent, ExtraAndResult.REQUEST_CODE_STAGE);
             }
@@ -135,6 +142,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         TextView tv_payment;       //收款方式
         TextView tv_Remarks;       //备注
         TextView tv_titlenum, tv_status;
+        TextView tv_attachment;    //附件
 
         LinearLayout btn_edit;     //编辑
         LinearLayout btn_delete, ll_action;   //删除
