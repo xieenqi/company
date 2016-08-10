@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,7 +32,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 回款计划 列表页面
+ * 【回款计划】 列表页面
  * Created by xeq on 16/8/4.
  */
 public class OrderPlanListActivity extends BaseActivity implements View.OnClickListener {
@@ -44,6 +45,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     private Intent mIntent;
     private Bundle mBundle;
     public int pagForm;//1 审批过来
+    private boolean isAdd;//需要编辑就传true
 
     private ArrayList<PlanEstimateList> mPlanEstimateList = new ArrayList<>();
 
@@ -60,6 +62,8 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         if (null != mIntent) {
             orderId = mIntent.getStringExtra("orderId");
             pagForm = mIntent.getIntExtra(ExtraAndResult.TOKEN_START, 0);
+            isAdd = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
+
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -71,12 +75,14 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         ll_add.setOnTouchListener(Global.GetTouch());
         ll_add.setOnClickListener(this);
         lv_list = (ListView) findViewById(R.id.lv_list);
+
         getPlanList();
+        ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
     }
 
 
     public void rushAdapter() {
-        ll_add.setVisibility(pagForm == 1 ? View.GONE : View.VISIBLE);
+
         if (null == adapter) {
             adapter = new OrderPlanAdapter();
             lv_list.setAdapter(adapter);
@@ -201,6 +207,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
                 holderView.ll_edit = (LinearLayout) convertView.findViewById(R.id.ll_edit);
                 holderView.ll_add = (LinearLayout) convertView.findViewById(R.id.ll_add);
                 holderView.ll_function = (LinearLayout) convertView.findViewById(R.id.ll_function);
+                holderView.iv_tx = (ImageView) convertView.findViewById(R.id.iv_tx);
                 convertView.setTag(holderView);
             } else {
                 holderView = (HolderView) convertView.getTag();
@@ -213,13 +220,14 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     class HolderView {
         public TextView tv_index, tv_time, tv_money, tv_mode, tv_tx, tv_memo;
         public LinearLayout ll_delete, ll_edit, ll_add, ll_function;
+        public ImageView iv_tx;
 
         public void setContentView(final int position, final PlanEstimateList planEstimateList) {
             tv_index.setText("计划" + (position + 1));
             ll_delete.setOnTouchListener(Global.GetTouch());
             ll_edit.setOnTouchListener(Global.GetTouch());
             ll_add.setOnTouchListener(Global.GetTouch());
-            ll_function.setVisibility(pagForm == 1 ? View.GONE : View.VISIBLE);
+            ll_function.setVisibility(isAdd ? View.VISIBLE : View.GONE);
             tv_time.setText(DateTool.timet(planEstimateList.planAt + "", "yyyy.MM.dd"));
             tv_money.setText("￥" + planEstimateList.planMoney);
 
@@ -262,6 +270,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
 
                 case 5:
                     tv_tx.setText("不提醒");
+                    iv_tx.setVisibility(View.GONE);
                     break;
             }
 

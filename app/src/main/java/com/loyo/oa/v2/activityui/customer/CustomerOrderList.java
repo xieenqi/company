@@ -149,9 +149,8 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("customerId", customerId);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getCutomerOrder(map, new RCallback<PaginationX<OrderListItem>>() {
+                getCutomerOrder(customerId, map, new RCallback<PaginationX<OrderListItem>>() {
                     @Override
                     public void success(PaginationX<OrderListItem> resultData, Response response) {
                         HttpErrorCheck.checkResponse(" 客户 订单 列表：", response);

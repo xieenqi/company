@@ -104,9 +104,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         et_kaiprice = (EditText) findViewById(R.id.et_kaiprice);
         et_remake = (EditText) findViewById(R.id.et_remake);
 
-        if(fromPage == OrderEstimateListActivity.PAGE_EDIT){
+        if (fromPage == OrderEstimateListActivity.PAGE_EDIT) {
             tv_title.setText("编辑回款");
-        }else{
+        } else {
             tv_title.setText("新增回款");
         }
 
@@ -151,7 +151,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                     break;
 
                 case 4:
-                    tv_kind.setText("其他");
+                    tv_kind.setText("其它");
                     break;
             }
         }
@@ -186,18 +186,18 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("payeeUser", mEstimateAdd.payeeUser);
 
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                            .addPayEstimate(map, new Callback<EstimateAdd>() {
-                                @Override
-                                public void success(EstimateAdd orderAdd, Response response) {
-                                    HttpErrorCheck.checkResponse("新建回款记录", response);
-                                    app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
-                                }
+                        .addPayEstimate(map, new Callback<EstimateAdd>() {
+                            @Override
+                            public void success(EstimateAdd orderAdd, Response response) {
+                                HttpErrorCheck.checkResponse("新建回款记录", response);
+                                app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                            }
 
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    HttpErrorCheck.checkError(error);
-                                }
-                            });
+                            @Override
+                            public void failure(RetrofitError error) {
+                                HttpErrorCheck.checkError(error);
+                            }
+                        });
 
                 break;
 
@@ -216,7 +216,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("remark", mEstimateAdd.remark);
                 map.put("payMethodString", tv_kind.getText().toString());
                 map.put("payeeUser", mEstimateAdd.payeeUser);
-                LogUtil.dee("编辑订单:"+MainApp.gson.toJson(map));
+                LogUtil.dee("编辑订单:" + MainApp.gson.toJson(map));
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                         .editPayEstimate(id, map, new Callback<EstimateAdd>() {
                             @Override

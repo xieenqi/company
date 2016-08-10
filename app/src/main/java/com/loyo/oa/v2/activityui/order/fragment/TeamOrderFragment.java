@@ -83,10 +83,12 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                     isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
+                    page = 1;
                     break;
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
                     isPullDown = true;
                     sortIndex = (int) msg.getData().get("index");
+                    page = 1;
                     break;
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG1:
                     isPullDown = true;
@@ -100,6 +102,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                         xPath = "";
                         userId = saleTeamScreen.getId();
                     }
+                    page = 1;
                     break;
             }
             getData();

@@ -73,10 +73,9 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             holder.tv_payment = (TextView) convertView.findViewById(R.id.tv_payment);
             holder.tv_Remarks = (TextView) convertView.findViewById(R.id.tv_Remarks);
             holder.tv_titlenum = (TextView) convertView.findViewById(R.id.tv_titlenum);
-
             holder.btn_edit = (LinearLayout) convertView.findViewById(R.id.btn_edit);
             holder.btn_delete = (LinearLayout) convertView.findViewById(R.id.btn_delete);
-
+            holder.tv_status = (TextView) convertView.findViewById(R.id.tv_status);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -92,7 +91,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
 
         holder.btn_delete.setOnTouchListener(Global.GetTouch());
         holder.btn_edit.setOnTouchListener(Global.GetTouch());
-
+        OrderCommon.getOrderStatus(holder.tv_status, mEstimateAdd.status);
         //删除
         holder.btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +129,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         TextView tv_payee;         //收款人
         TextView tv_payment;       //收款方式
         TextView tv_Remarks;       //备注
-        TextView tv_titlenum;
+        TextView tv_titlenum, tv_status;
 
         LinearLayout btn_edit;     //编辑
         LinearLayout btn_delete;   //删除

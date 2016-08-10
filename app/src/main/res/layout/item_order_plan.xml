@@ -120,10 +120,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_side_edge"
-            android:drawableRight="@drawable/icon_tx3"
-            android:minWidth="@dimen/dimen_60"
             android:text="提醒"
             android:textSize="15sp"/>
+
+        <ImageView
+            android:id="@+id/iv_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10"
+            android:src="@drawable/icon_tx3"/>
 
         <TextView
             android:id="@+id/tv_tx"

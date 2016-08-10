@@ -5,7 +5,6 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by xeq on 16/8/3.
@@ -18,10 +17,11 @@ public class OrderDetail implements Serializable {
     public String customerName;
     public String directorName;
     public String creatorName;
-    public int status;
+    public int status;//1待审核 2未通过 3进行中 4已完成 5意外终止 6
     public float dealMoney;//成交金额
+    public float planMoney;//计划回款金额
     public int backMoney;
-    public int ratePayment;
+    public double ratePayment;//回款率
     public double salesAmount;
     public double discount;
     public int attachmentCount;
@@ -37,9 +37,6 @@ public class OrderDetail implements Serializable {
     public ArrayList<ContactLeftExtras> extensionDatas;
     public ArrayList<SaleIntentionalProduct> proInfo;
     public String wfName;
-
-
-
 
 
 }
