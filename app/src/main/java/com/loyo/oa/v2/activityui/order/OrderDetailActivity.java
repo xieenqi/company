@@ -2,6 +2,8 @@ package com.loyo.oa.v2.activityui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -49,6 +51,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     private String orderId;
     private Bundle mBundle;
     private boolean isDelete, isEdit, isStop, isAdd;
+    private int attachmentSize = 0;
 
     /**
      * 来自订单新建
@@ -63,6 +66,21 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
      * 机会 生成订单
      */
     public final static int ORDER_CREATE = 0x12;
+
+
+    public Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+
+            switch (msg.what) {
+                case ExtraAndResult.MSG_WHAT_VISIBLE:
+                    if (attachmentSize != 0) {
+                        tv_enclosure.setText("附件(" + attachmentSize + ")");
+                    }
+                    break;
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +179,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
             case R.id.ll_enclosure://附件
-                app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, 101, null);
+                mBundle = new Bundle();
+                mBundle.putString("uuid", mData.attachmentUUId);
+                app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
             case R.id.ll_plan://回款计划
                 mBundle = new Bundle();
@@ -335,14 +355,20 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         }
 
         switch (requestCode) {
-
             //编辑回调
             case ExtraAndResult.REQUEST_CODE_STAGE:
                 getData();
                 break;
 
+            //附件回调
+            case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
+                if(null == data){
+                    return;
+                }
+                attachmentSize = data.getIntExtra("size",0);
+                mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
+                break;
+
         }
-
-
     }
 }

@@ -65,10 +65,10 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     private int estimatedTime = 0;
     private int paymentState;
 
-    private String uuid = "";
+    private String uuid;
     private String id;
     private String orderId, planId;
-    private String attamentSize;
+    private int attamentSize = 0;
     private Intent mIntent;
     private Bundle mBundle;
     private NewUser newUser;
@@ -83,15 +83,12 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 //附件数量刷新
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
-                    if(!attamentSize.equals("0")){
+                    if(attamentSize != 0){
                         tv_attachment.setText("附件("+attamentSize+")");
                     }
                     break;
-
             }
-
         }
-
     };
 
     @Override
@@ -109,6 +106,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             planId = mIntent.getStringExtra("planId");
             fromPage = mIntent.getIntExtra("fromPage", OrderEstimateListActivity.PAGE_ORDER_ADD);
             mEstimateAdd = (EstimateAdd) mIntent.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+            if(mIntent.getIntExtra("size",0) != 0){
+                attamentSize = mIntent.getIntExtra("size",0);
+            }
         }
 
         ll_time = (LinearLayout) findViewById(R.id.ll_time);
@@ -137,6 +137,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         ll_back.setOnTouchListener(Global.GetTouch());
         iv_submit.setOnTouchListener(Global.GetTouch());
 
+        if(attamentSize != 0){
+            tv_attachment.setText("附件("+attamentSize+")");
+        }
         tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
         estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
 
@@ -161,6 +164,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             newUser.setAvatar(mEstimateAdd.payeeUser.avatar);
 
             id = mEstimateAdd.id;
+            uuid = mEstimateAdd.attachmentUUId;
             estimatedTime = mEstimateAdd.receivedAt;
             paymentState = mEstimateAdd.payeeMethod;
             tv_time.setText(DateTool.timet(mEstimateAdd.receivedAt + "", "yyyy.MM.dd"));
@@ -168,6 +172,10 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             et_kaiprice.setText(mEstimateAdd.billingMoney + "");
             tv_priceer.setText(mEstimateAdd.payeeUser.name);
             et_remake.setText(mEstimateAdd.remark);
+            if(mEstimateAdd.attachmentCount != 0){
+                attamentSize = mEstimateAdd.attachmentCount;
+                tv_attachment.setText("附件("+attamentSize+")");
+            }
             setPayeeMethod(mEstimateAdd.payeeMethod);
         }
     }
@@ -352,8 +360,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 } else {
                     mEstimateAdd.billingMoney = Integer.parseInt(et_kaiprice.getText().toString().trim());
                 }
-                mEstimateAdd.attachmentUUId = uuid;
                 mEstimateAdd.id = id;
+                mEstimateAdd.attachmentCount = attamentSize;
+                mEstimateAdd.attachmentUUId = uuid;
                 mEstimateAdd.payeeUser.id = newUser.getId();
                 mEstimateAdd.payeeUser.name = newUser.getName();
                 mEstimateAdd.payeeUser.avatar = newUser.getAvatar();
@@ -378,7 +387,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             case R.id.ll_attachment:
                 mBundle = new Bundle();
                 mBundle.putString("uuid",uuid);
-                app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, mBundle);
+                app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
 
             //付款方式
@@ -453,9 +462,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 break;
 
             //附件回调
-            case ExtraAndResult.REQUEST_CODE:
+            case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
                 uuid = data.getStringExtra("uuid");
-                attamentSize = data.getStringExtra("size");
+                attamentSize = data.getIntExtra("size",0);
                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
                 break;
 

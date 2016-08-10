@@ -152,7 +152,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             if (null == mData) {
                 mData = new ArrayList<EstimateAdd>();
             }
-            mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId);
+            mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId,fromPage);
             lv_listview.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
