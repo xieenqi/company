@@ -258,6 +258,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
      * 订单审批相关内容
      */
     private void orderData() {
+        if (null == mWfInstance || null == mWfInstance.order) {
+            return;
+        }
         ll_order_layout.setVisibility(View.VISIBLE);
         List<String> orderList = new ArrayList<>();
         OrderDetail order = mWfInstance.order;
@@ -285,7 +288,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
      * 回款审批数据
      */
     private void paymentData() {
-        if (null == mWfInstance || null == mWfInstance.paymentRecord || mWfInstance.paymentRecord.size() > 0) {
+        if (null == mWfInstance || null == mWfInstance.paymentRecord || !(mWfInstance.paymentRecord.size() > 0)) {
             return;
         }
         ll_payment_layout.setVisibility(View.VISIBLE);

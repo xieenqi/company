@@ -216,6 +216,7 @@
     <include layout="@layout/include_solid_line_left"/>
 
     <LinearLayout
+        android:id="@+id/ll_action"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_50"
         android:orientation="horizontal">

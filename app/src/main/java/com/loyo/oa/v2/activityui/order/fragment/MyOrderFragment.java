@@ -256,9 +256,10 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
 
         switch (resultCode) {
 
-            //新建订单回调
+            //新建订单回调 订单详细 删除成功刷新列表
             case ExtraAndResult.REQUEST_CODE:
                 isPullDown = true;
+                page = 1;
                 getData();
                 break;
 
