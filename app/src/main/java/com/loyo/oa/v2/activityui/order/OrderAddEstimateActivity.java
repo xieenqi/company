@@ -227,7 +227,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                 break;
 
-            //来自订单详情 新建
+            //来自订单详情 新建回款
             case OrderEstimateListActivity.PAGE_DETAILS_ADD:
 
                 showLoading("");
