@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
 import com.loyo.oa.v2.application.MainApp;
@@ -21,10 +22,10 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -228,7 +229,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
             ll_edit.setOnTouchListener(Global.GetTouch());
             ll_add.setOnTouchListener(Global.GetTouch());
             ll_function.setVisibility(isAdd ? View.VISIBLE : View.GONE);
-            tv_time.setText(DateTool.timet(planEstimateList.planAt + "", "yyyy.MM.dd"));
+            tv_time.setText(app.df4.format(new Date(Long.valueOf(planEstimateList.planAt + "") * 1000)));
             tv_money.setText("￥" + planEstimateList.planMoney);
 
             switch (planEstimateList.payeeMethod) {
@@ -276,14 +277,14 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
 
             tv_memo.setText(planEstimateList.remark);
 
-            /*意向产品 删除*/
+            /*删除*/
             ll_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     deletePlanList(planEstimateList.id);
                 }
             });
-            /*意向产品 编辑*/
+            /*编辑*/
             ll_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -297,7 +298,17 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
             ll_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    EstimateAdd data = new EstimateAdd();
+                    data.receivedAt = planEstimateList.planAt;
+                    data.receivedMoney = (int) planEstimateList.planMoney;
+                    data.payeeMethod = planEstimateList.payeeMethod;
+                    data.remark = planEstimateList.remark;
+                    mBundle = new Bundle();
+                    mBundle.putString("orderId", orderId);
+                    mBundle.putString("planId", planEstimateList.id);
+                    mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_GENERATE);
+                    mBundle.putSerializable(ExtraAndResult.RESULT_DATA, data);
+                    app.startActivityForResult(OrderPlanListActivity.this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                 }
             });
         }

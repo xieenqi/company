@@ -27,6 +27,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -118,8 +119,8 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
      */
     public void editData() {
 
-        estimatedTime = planEstimateList.remindAt;
-        tv_time.setText(DateTool.timet(planEstimateList.remindAt + "", "yyyy.MM.dd"));
+        estimatedTime = planEstimateList.planAt;
+        tv_time.setText(app.df4.format(new Date(Long.valueOf(planEstimateList.planAt + "") * 1000)));
         et_estprice.setText(planEstimateList.planMoney + "");
         payeeMethod = planEstimateList.payeeMethod;
         remindType = planEstimateList.remindType;
@@ -191,6 +192,7 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
         showLoading("");
         map.put("orderId", orderId);
         map.put("planAt", estimatedTime);
+
         map.put("planMoney", Float.parseFloat(et_estprice.getText().toString()));
         map.put("payeeMethod", payeeMethod);
         map.put("remindType", remindType);
