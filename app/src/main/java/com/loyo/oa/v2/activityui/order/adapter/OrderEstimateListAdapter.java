@@ -39,7 +39,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     private Message msg;
     private String orderId;
     private int fromPage;
-    private int shitPage;
+    private int requestPage;
 
     public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId, int fromPage) {
         this.mActivity = activity;
@@ -121,15 +121,14 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 mBundle = new Bundle();
                 mBundle.putInt("size", mEstimateAdd.attachmentCount);
                 mBundle.putString("orderId", orderId);
-                if(fromPage == OrderEstimateListActivity.PAGE_DETAILS){
-                    shitPage = OrderEstimateListActivity.PAGE_EDIT;
-                }else{
-                    shitPage = fromPage;
+                if(fromPage == OrderEstimateListActivity.ORDER_ADD){
+                    requestPage = OrderEstimateListActivity.OADD_EST_EDIT;
+                }else if(fromPage == OrderEstimateListActivity.ORDER_DETAILS){
+                    requestPage = OrderEstimateListActivity.ODET_EST_EDIT;
                 }
-                mBundle.putInt("fromPage", shitPage);
-                LogUtil.dee("fromPage:"+fromPage);
+                mBundle.putInt("fromPage", requestPage);
                 mBundle.putSerializable(ExtraAndResult.RESULT_DATA, mData.get(position));
-                MainApp.getMainApp().startActivityForResult(mActivity,OrderAddEstimateActivity.class,MainApp.ENTER_TYPE_RIGHT,shitPage,mBundle);
+                MainApp.getMainApp().startActivityForResult(mActivity,OrderAddEstimateActivity.class,MainApp.ENTER_TYPE_RIGHT,requestPage,mBundle);
             }
         });
         if (mEstimateAdd.status == 1 || mEstimateAdd.status == 3) {

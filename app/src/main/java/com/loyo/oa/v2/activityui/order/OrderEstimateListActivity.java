@@ -36,6 +36,65 @@ import retrofit.client.Response;
  */
 public class OrderEstimateListActivity extends BaseActivity implements View.OnClickListener {
 
+    /**
+     ******************来自【订单详情】********************
+     * */
+    public final static int ORDER_DETAILS  = 0x11;
+
+
+    /**
+     * 新增回款
+     * */
+    public final static int ODET_EST_ADD   = 0x12;
+
+    /**
+     * 编辑回款
+     * */
+    public final static int ODET_EST_EDIT  = 0x13;
+
+    /**
+     * 编辑附件
+     * */
+    public final static int ODET_EST_EDITATTAMENT   = 0x14;
+
+    /**
+     * 删除回款
+     * */
+    public final static int ODET_EST_DELETE  = 0x15;
+
+
+    /**
+     *****************来自【订单新建】**********************
+     * */
+    public final static int ORDER_ADD      = 0x21;
+
+    /**
+     * 新增回款
+     * */
+    public final static int OADD_EST_ADD   = 0x22;
+
+    /**
+     * 编辑回款
+     * */
+    public final static int OADD_EST_EDIT  = 0x23;
+
+    /**
+     * 编辑附件
+     * */
+    public final static int OADD_EST_EDITATTAMENT   = 0x24;
+
+    /**
+     * 删除回款
+     * */
+    public final static int OADD_EST_DELETE  = 0x25;
+
+
+    /**
+     ********************来自【回款计划】***********************
+     * */
+
+    public final static int ORDER_PLAN  = 0x31;
+
     private LinearLayout ll_back;
     private LinearLayout ll_add;
     private TextView tv_title;
@@ -51,32 +110,10 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private String orderId;
     private String dealPrice;
 
+    private int requestPage;
     private int fromPage;
     private int position;
     private boolean isAdd;
-
-    /**
-     * 来自【订单新建】 新建回款记录
-     */
-    public final static int PAGE_ORDER_ADD = 0x01;
-
-    /**
-     * 来自【订单详情】 新建回款记录
-     */
-    public final static int PAGE_DETAILS_ADD = 0x02;
-
-    public final static int PAGE_DETAILS = 0x05;
-
-    /**
-     * 来自【编辑】订单记录
-     */
-    public final static int PAGE_EDIT = 0x03;
-
-    /**
-     * 来自【生成】订单记录
-     */
-    public final static int PAGE_GENERATE = 0x04;
-
 
     private Handler mHandler = new Handler() {
 
@@ -92,13 +129,13 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                 //订单删除操作
                 case ExtraAndResult.MSG_WHAT_GONG:
 
-                    if (fromPage == PAGE_ORDER_ADD) {
+                    if (fromPage == ORDER_ADD) {
                         mBundle = msg.getData();
                         position = mBundle.getInt("posi");
                         mData.remove(position);
                         rushAdapter();
                         ll_add.setVisibility(View.VISIBLE);
-                    } else if (fromPage == PAGE_EDIT) {
+                    } else if (fromPage == ORDER_DETAILS) {
                         deleteData();
                     }
 
@@ -118,7 +155,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         mIntent = getIntent();
         if (null != mIntent) {
             orderId = mIntent.getStringExtra("orderId");
-            fromPage = mIntent.getIntExtra("fromPage", PAGE_ORDER_ADD);
+            fromPage = mIntent.getIntExtra("fromPage", OrderEstimateListActivity.ORDER_ADD);
             dealPrice = mIntent.getStringExtra("price");
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
                 mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
@@ -144,7 +181,8 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_back.setOnTouchListener(Global.GetTouch());
         rushAdapter();
 
-        if (fromPage == PAGE_DETAILS) {
+        //如果来自详情，则请求回款记录
+        if (fromPage == ORDER_DETAILS) {
             getData();
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         }
@@ -222,8 +260,13 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             case R.id.ll_add:
                 mBundle = new Bundle();
                 mBundle.putString("orderId", orderId);
-                mBundle.putInt("fromPage", fromPage);
-                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, OrderEstimateListActivity.PAGE_ORDER_ADD, mBundle);
+                if(fromPage == OrderEstimateListActivity.ORDER_ADD){
+                    requestPage =  OrderEstimateListActivity.OADD_EST_ADD;
+                }else if(fromPage == OrderEstimateListActivity.ORDER_DETAILS){
+                    requestPage =  OrderEstimateListActivity.ODET_EST_ADD;
+                }
+                mBundle.putInt("fromPage", requestPage);
+                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT,requestPage, mBundle);
                 break;
         }
     }
@@ -246,7 +289,9 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         }
             switch (requestCode) {
 
-                case PAGE_ORDER_ADD:
+                //新建订单 编辑与新建回调
+                case OADD_EST_ADD:
+                case OADD_EST_EDIT:
                     if (null == data) {
                         return;
                     }
@@ -256,11 +301,9 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     rushAdapter();
                     break;
 
-                case PAGE_DETAILS_ADD:
-                    getData();
-                    break;
-
-                case PAGE_EDIT:
+                //订单详情 编辑与新建回调
+                case ODET_EST_EDIT:
+                case ODET_EST_ADD:
                     getData();
                     break;
 
