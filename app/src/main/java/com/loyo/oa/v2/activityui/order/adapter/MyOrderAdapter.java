@@ -73,7 +73,7 @@ public class MyOrderAdapter extends BaseAdapter {
         }
         OrderListItem mData = data.get(position);
         holder.tv_title.setText(mData.title);
-        OrderCommon.getOrderStatus(holder.tv_status, mData.status);
+        OrderCommon.getOrderDetailsStatus(holder.tv_status, mData.status);
         holder.tv_money.setText(Utils.setValueDouble(mData.dealMoney));
         holder.tv_customer.setText(mData.customerName);
         holder.tv_product.setText(mData.proName);

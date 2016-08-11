@@ -76,7 +76,7 @@ public class TeamOrderAdapter extends BaseAdapter {
         holder.ll_responsible.setVisibility(View.VISIBLE);
         OrderListItem mData = data.get(position);
         holder.tv_title.setText(mData.title);
-        OrderCommon.getOrderStatus(holder.tv_status, mData.status);
+        OrderCommon.getOrderDetailsStatus(holder.tv_status, mData.status);
         holder.tv_name.setText(mData.directorName);
         holder.tv_money.setText(Utils.setValueDouble(mData.dealMoney));
         holder.tv_customer.setText(mData.customerName);
