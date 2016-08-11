@@ -93,6 +93,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                         tv_source.setText("附件(" + attamentSize + ")");
                     }
                     break;
+                case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
+                    ll_customer.setVisibility(TextUtils.isEmpty(customerId) ? View.VISIBLE : View.GONE);
+                    break;
             }
         }
     };
@@ -110,6 +113,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         if (null != mIntent) {
             mOrderDetail = (OrderDetail) mIntent.getSerializableExtra("data");
             fromPage = mIntent.getIntExtra("fromPage", OrderDetailActivity.ORDER_ADD);
+            //客户创建订单
+            customerId = mIntent.getStringExtra(ExtraAndResult.EXTRA_ID);
+            customerName = mIntent.getStringExtra(ExtraAndResult.EXTRA_NAME);
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -146,6 +152,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         } else if (fromPage == OrderDetailActivity.ORDER_ADD) {
             tv_title.setText("新建订单");
             getAddDynamic();
+            mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_HIDEDIALOG);
         } else if (fromPage == OrderDetailActivity.ORDER_CREATE) {
             tv_title.setText("生成订单");
             getAddDynamic();

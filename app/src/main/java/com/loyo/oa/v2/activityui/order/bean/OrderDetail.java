@@ -39,6 +39,7 @@ public class OrderDetail implements Serializable {
     public ArrayList<ContactLeftExtras> extensionDatas;
     public ArrayList<SaleIntentionalProduct> proInfo;
     public String wfName;
+    public String directorId;//负责人id
 
 
 }

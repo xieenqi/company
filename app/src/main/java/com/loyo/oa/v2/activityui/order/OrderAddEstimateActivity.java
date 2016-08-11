@@ -219,10 +219,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
      * 提交数据
      */
     public void commitData() {
-        LogUtil.dee("新建回款 fromPage:"+fromPage);
         switch (fromPage) {
 
-            //来自订单新建 新建回款
+            //来自订单新建 新建/编辑回款
             case OrderEstimateListActivity.OADD_EST_EDIT:
             case OrderEstimateListActivity.OADD_EST_ADD:
                 mIntent.putExtra("data", mEstimateAdd);

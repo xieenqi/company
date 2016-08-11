@@ -129,6 +129,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
                     bundle = new Bundle();
                     bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
                     bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
+                    bundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
                     app.startActivityForResult(this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, 200, bundle);
                 }
                 break;
