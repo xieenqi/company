@@ -19,7 +19,6 @@ import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
-import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
@@ -393,7 +392,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, productData);
                 mBundle.putBoolean("boolean", true);
-                mBundle.putInt("data", ActionCode.ORDER_DETAIL);
                 app.startActivityForResult(OrderAddActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
                 break;
