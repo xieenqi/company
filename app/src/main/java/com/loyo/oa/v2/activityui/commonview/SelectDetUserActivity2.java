@@ -27,6 +27,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.customview.HorizontalScrollListView;
@@ -72,7 +73,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SelectUserHelper.SelectThread.OK:
-                    MainApp.selectAllUsers = SelectUserHelper.useAlllist;
                     updata();
                     if (!TextUtils.isEmpty(mJoinUserId)) {
                         toJoinUserIds(mJoinUserId);
@@ -512,7 +512,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
                     case ExtraAndResult.TYPE_SELECT_SINGLE:
                         Intent intent = new Intent();
                         Bundle bundle = new Bundle();
-                        User user = (User) data.getSerializableExtra(User.class.getName());
+                        DBUser user = (DBUser) data.getSerializableExtra(DBUser.class.getName());
                         bundle.putSerializable("data", user.toShortUser());
                         intent.putExtras(bundle);
                         app.finishActivity(SelectDetUserActivity2.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);

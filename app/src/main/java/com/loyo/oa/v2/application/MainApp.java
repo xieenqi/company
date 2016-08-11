@@ -110,9 +110,9 @@ public class MainApp extends Application {
 
     //-------这些数据需要保存在本地-------------
     //下属
-    public static ArrayList<UserGroupData> lstUserGroupData;
-    public static ArrayList<Department> lstDepartment;//组织架构 的缓存
-    public static ArrayList<User> selectAllUsers; //选人功能 所有人员缓存
+//    public static ArrayList<UserGroupData> lstUserGroupData;
+//    public static ArrayList<Department> lstDepartment;//组织架构 的缓存
+//    public static ArrayList<User> selectAllUsers; //选人功能 所有人员缓存
 
     static String token;
     public static User user;//InitDataService 在这里负值
@@ -256,7 +256,7 @@ public class MainApp extends Application {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                setOriginData();
+                //setOriginData();
             }
         }, 100);
 
@@ -265,9 +265,9 @@ public class MainApp extends Application {
     /**
      * 设置缓存的组织架构数据
      */
-    void setOriginData() {
-        lstDepartment = DBManager.Instance().getOrganization();
-    }
+//    void setOriginData() {
+//        lstDepartment = DBManager.Instance().getOrganization();
+//    }
 
     void init_DisplayImageOptions() {
         options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).
