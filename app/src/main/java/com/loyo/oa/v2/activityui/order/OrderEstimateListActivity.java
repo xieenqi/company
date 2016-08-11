@@ -144,7 +144,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     EstimateAdd data = (EstimateAdd) msg.obj;
                     tv_totalprice.setText("￥" + Utils.setValueDouble(data.receivedMoney));
                     tv_aleryprice.setText("￥" + Utils.setValueDouble(data.billingMoney));
-                    tv_faileprice.setText("￥" + Utils.setValueDouble(Integer.parseInt(dealPrice) - data.receivedMoney));
+                    tv_faileprice.setText("￥" + Utils.setValueDouble(Double.valueOf(dealPrice) - data.receivedMoney));
                     break;
             }
         }
@@ -197,8 +197,6 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
     public void rushAdapter() {
         mAdapter.notifyDataSetChanged();
-
-
     }
 
     /**
@@ -247,7 +245,6 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                         HttpErrorCheck.checkError(error);
                     }
                 });
-
     }
 
 

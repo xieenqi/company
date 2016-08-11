@@ -22,7 +22,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
-import com.loyo.oa.v2.activityui.order.OrderPlanListActivity;
+import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
@@ -262,6 +262,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             return;
         }
         layout_wfinstance_content.setVisibility(View.GONE);
+        img_title_right.setVisibility(View.GONE);
         ll_order_layout.setVisibility(View.VISIBLE);
         List<String> orderList = new ArrayList<>();
         OrderDetail order = mWfInstance.order;
@@ -282,7 +283,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             ll_order_content.addView(view_value);
         }
         tv_product.setText(order.proName);
-        tv_plan_value.setText(order.proName);
+        tv_plan_value.setText("¥" + order.backMoney + "(" + order.ratePayment + "%)");
     }
 
     /**
@@ -293,6 +294,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             return;
         }
         layout_wfinstance_content.setVisibility(View.GONE);
+        img_title_right.setVisibility(View.GONE);
         ll_payment_layout.setVisibility(View.VISIBLE);
         EstimateAdd payment = mWfInstance.paymentRecord.get(0);
         List<String> paymentList = new ArrayList<>();
@@ -692,11 +694,18 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 app.startActivityForResult(this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
-            case R.id.ll_plan://订单 查看回款计划
-                mBundle = new Bundle();
+            case R.id.ll_plan://订单 查看回款记录
+
+                Bundle mBundle = new Bundle();
+                mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_DETAILS);
+                mBundle.putString("price", mWfInstance.order.dealMoney + "");
                 mBundle.putString("orderId", mWfInstance.order.id);
-                mBundle.putInt(ExtraAndResult.TOKEN_START, 1);
-                app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
+                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
+//                mBundle = new Bundle();
+//                mBundle.putString("orderId", mWfInstance.order.id);
+////                mBundle.putInt(ExtraAndResult.TOKEN_START, 1);
+//                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
 //            case R.id.ll_payment_order://回款审批到订单详情
 //                Intent mIntent = new Intent();

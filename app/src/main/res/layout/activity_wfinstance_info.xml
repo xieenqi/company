@@ -244,7 +244,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="@dimen/margin_side_edge"
                                 android:layout_marginRight="@dimen/dimen_8"
-                                android:text="回款计划"
+                                android:text="回款记录"
                                 android:textSize="15sp"/>
 
                             <TextView
