@@ -17,7 +17,6 @@ import com.loyo.oa.v2.activityui.order.OrderAddEstimateActivity;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
-import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -40,7 +39,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     private Message msg;
     private String orderId;
     private int fromPage;
-    private int shitPage;
+    private int requestPage;
 
     public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId, int fromPage) {
         this.mActivity = activity;
@@ -84,6 +83,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             holder.tv_status = (TextView) convertView.findViewById(R.id.tv_status);
             holder.ll_action = (LinearLayout) convertView.findViewById(R.id.ll_action);
             holder.tv_attachment = (TextView) convertView.findViewById(R.id.tv_attachment);
+            holder.ll_attachment = (LinearLayout) convertView.findViewById(R.id.ll_attachment);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -122,15 +122,14 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 mBundle = new Bundle();
                 mBundle.putInt("size", mEstimateAdd.attachmentCount);
                 mBundle.putString("orderId", orderId);
-                if (fromPage == OrderEstimateListActivity.PAGE_DETAILS) {
-                    shitPage = OrderEstimateListActivity.PAGE_EDIT;
-                } else {
-                    shitPage = fromPage;
+                if(fromPage == OrderEstimateListActivity.ORDER_ADD){
+                    requestPage = OrderEstimateListActivity.OADD_EST_EDIT;
+                }else if(fromPage == OrderEstimateListActivity.ORDER_DETAILS){
+                    requestPage = OrderEstimateListActivity.ODET_EST_EDIT;
                 }
-                mBundle.putInt("fromPage", shitPage);
-                LogUtil.dee("fromPage:" + fromPage);
+                mBundle.putInt("fromPage", requestPage);
                 mBundle.putSerializable(ExtraAndResult.RESULT_DATA, mData.get(position));
-                MainApp.getMainApp().startActivityForResult(mActivity, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, shitPage, mBundle);
+                MainApp.getMainApp().startActivityForResult(mActivity,OrderAddEstimateActivity.class,MainApp.ENTER_TYPE_RIGHT,requestPage,mBundle);
             }
         });
         if (mEstimateAdd.status == 1 || mEstimateAdd.status == 3) {
@@ -138,18 +137,15 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         } else {
             holder.ll_action.setVisibility(View.VISIBLE);
         }
-        holder.tv_status.setOnClickListener(new View.OnClickListener() {
+
+        //附件监听
+        holder.ll_attachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEstimateAdd.status != 6) {
-                    Intent intentWf = new Intent();
-                    intentWf.putExtra(ExtraAndResult.EXTRA_ID, mEstimateAdd.wfId);
-                    intentWf.setClass(mActivity, WfinstanceInfoActivity_.class);
-                    mActivity.startActivityForResult(intentWf, ExtraAndResult.REQUEST_CODE);
-                    mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                }
+
             }
         });
+
         return convertView;
     }
 
@@ -165,6 +161,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         TextView tv_titlenum, tv_status;
         TextView tv_attachment;    //附件
 
+        LinearLayout ll_attachment;
         LinearLayout btn_edit;     //编辑
         LinearLayout btn_delete, ll_action;   //删除
 
