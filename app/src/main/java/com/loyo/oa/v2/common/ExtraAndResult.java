@@ -57,6 +57,7 @@ public class ExtraAndResult {
     public static final int MSG_WHAT_VISIBLE = 130;
     public static final int MSG_WHAT_DIALOG = 140;
     public static final int MSG_WHAT_HIDEDIALOG = 150;
+    public static final int MSG_SEND = 160;
 
     public static final int REQUEST_CODE_CUSTOMER = 101;
     public static final int REQUEST_CODE_STAGE = 102;
