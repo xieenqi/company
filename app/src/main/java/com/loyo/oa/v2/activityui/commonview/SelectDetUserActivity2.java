@@ -25,6 +25,8 @@ import com.loyo.oa.v2.activityui.other.bean.SelectUserData;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.customview.HorizontalScrollListView;
@@ -52,10 +54,10 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 
     private LinearLayoutManager mDepartmentLayoutManager;
     private LinearLayoutManager mUserLayoutManager;
-    private List<Department> mDeptSource = new ArrayList<>(); // 部门和用户集合
-    private List<Department> newDeptSource = new ArrayList<>();//部门新的顺序
-    private List<Department> deptHead = new ArrayList<>();//一级部门
-    private List<Department> deptOther = new ArrayList<>();//其他部门
+    private List<DBDepartment> mDeptSource = new ArrayList<>(); // 部门和用户集合
+    private List<DBDepartment> newDeptSource = new ArrayList<>();//部门新的顺序
+    private List<DBDepartment> deptHead = new ArrayList<>();//一级部门
+    private List<DBDepartment> deptOther = new ArrayList<>();//其他部门
 
     private List<SelectUserHelper.SelectUserBase> mSelectUserOrDepartment = new ArrayList<>(); // 多选时的选中列表
 
@@ -255,7 +257,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 
 //        if (!isDataBinded()) {
         showLoading("数据正在加载...");
-        mDeptSource = Common.getLstDepartment();
+        mDeptSource = OrganizationManager.shareManager().allDepartments();
         deptSort(); //重新排序
         SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
         SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
@@ -312,10 +314,13 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
      */
     private void deptSort() {
         /*分别获取一级/其他级部门*/
-        for (Department department : mDeptSource) {
-            if (department.getXpath().split("/").length == 2) {
+        for (DBDepartment department : mDeptSource) {
+            if (department.xpath == null) {
+                continue;
+            }
+            if (department.xpath.split("/").length == 2) {
                 deptHead.add(department);
-            } else if (!department.getXpath().contains("/")) {
+            } else if (!department.xpath.contains("/")) {
                 deptHead.add(department);
             } else {
                 deptOther.add(department);
@@ -323,20 +328,20 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         }
 
         /*根据Xpath,把部门按照一级/二级顺序排序,排除掉公司数据*/
-        for (Department dept1 : deptHead) {
+        for (DBDepartment dept1 : deptHead) {
             newDeptSource.add(dept1);
-            for (Department dept2 : deptOther) {
-                if (dept2.getXpath().contains(dept1.getXpath()) && dept1.getXpath().indexOf("/") != -1) {
+            for (DBDepartment dept2 : deptOther) {
+                if (dept2.xpath.contains(dept1.xpath) && dept1.xpath.indexOf("/") != -1) {
                     newDeptSource.add(dept2);
                 }
             }
         }
 
-        Department companySource = null;
+        DBDepartment companySource = null;
 
         /*把公司数据，移动到首位*/
         for (int i = 0; i < newDeptSource.size(); i++) {
-            if (newDeptSource.get(i).getXpath().indexOf("/") == -1) {
+            if (newDeptSource.get(i).xpath.indexOf("/") == -1) {
                 companySource = newDeptSource.get(i);
                 newDeptSource.remove(i);
                 break;

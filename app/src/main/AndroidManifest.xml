@@ -194,12 +194,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activityui.other.DepartmentUserActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/FragmentActivityTheme"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
             android:name=".activityui.signin.SignInfoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -359,10 +353,6 @@
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom"/>
         <activity
-            android:name=".activityui.other.DepartmentActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
             android:name=".activityui.signin.SignInManagerFromCustomer"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -462,11 +452,6 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.signin.SigninSelectCustomer"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.commonview.SelectDetUserActivity"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity

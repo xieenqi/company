@@ -43,6 +43,8 @@ import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.ScreenTagPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -86,7 +88,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private TeamCustomerAdapter adapter;
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mDoubleTags = new ArrayList<>();
-    private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
     private List<SaleTeamScreen> data = new ArrayList<>();
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
@@ -224,7 +225,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         screen3.setOnClickListener(click);
 
         showLoading("");
-        mDeptSource = Common.getLstDepartment();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -244,11 +244,11 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     public void wersi() {
         //为超管或权限为全公司 展示全公司成员
         if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-            setUser(mDeptSource);
+            setUser(OrganizationManager.shareManager().allDepartments());
         }
         //权限为部门 展示我的部门
         else if(MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD){
-            deptSort();
+            setUser(OrganizationManager.shareManager().currentUserDepartments());
         }
         //权限为个人 展示自己
         else if(MainApp.user.role.getDataRange() == Role.SELF){
@@ -417,13 +417,13 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     /**
      * 组装部门格式
      */
-    private void setUser(List<Department> values) {
+    private void setUser(List<DBDepartment> values) {
         data.clear();
-        for (Department department : values) {
+        for (DBDepartment department : values) {
             saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(department.getId());
-            saleTeamScreen.setName(department.getName());
-            saleTeamScreen.setxPath(department.getXpath());
+            saleTeamScreen.setId(department.id);
+            saleTeamScreen.setName(department.name);
+            saleTeamScreen.setxPath(department.xpath);
             data.add(saleTeamScreen);
         }
     }
@@ -431,18 +431,18 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     /**
      * 过滤出我的部门
      */
-    private void deptSort() {
-        newDeptSource.clear();
-        User user = MainApp.user;
-        for (Department department : mDeptSource) {
-            for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
-                    newDeptSource.add(department);
-                }
-            }
-        }
-        setUser(newDeptSource);
-    }
+//    private void deptSort() {
+//        newDeptSource.clear();
+//        User user = MainApp.user;
+//        for (Department department : mDeptSource) {
+//            for (int i = 0; i < user.getDepts().size(); i++) {
+//                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
+//                    newDeptSource.add(department);
+//                }
+//            }
+//        }
+//        setUser(newDeptSource);
+//    }
 
     private View.OnClickListener click = new View.OnClickListener() {
         @Override

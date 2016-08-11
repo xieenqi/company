@@ -159,7 +159,7 @@ public class SelectUserHelper {
     public static final List<SelectDepData> mSelectDatas = new ArrayList<>(); // 组织架构数据
     public static final List<SelectUserData> mCurrentSelectDatas = new ArrayList<>(); // 多选时选中项列表
     public static final List<SelectDepData> mAllSelectDatas = new ArrayList<>();
-    public static final ArrayList<User> useAlllist = new ArrayList<>();
+//    public static final ArrayList<User> useAlllist = new ArrayList<>();
 
     /**
      * 为选中列表添加数据
@@ -358,7 +358,7 @@ public class SelectUserHelper {
             mSelectDatas.clear();
             mDepSource.clear();
             mUserSource.clear();
-            useAlllist.clear();
+            //useAlllist.clear();
             try {
                 if (mDepartmentDatas != null) {
                     bindAllUser(mDepartmentDatas.get(0));
@@ -371,7 +371,7 @@ public class SelectUserHelper {
                     }
                     mSelectDatas.addAll(mDepSource);
 
-                    getAllUsers();
+                    //getAllUsers();
                 }
                 mHandler.sendEmptyMessage(OK);
             } catch (Exception e) {
@@ -380,20 +380,20 @@ public class SelectUserHelper {
             }
         }
 
-        private void getAllUsers() {
-            /*全部人员获取*/
-            List<User> localCacheUserList = new ArrayList<>();
-            for (int i = 0; i < mDepartmentDatas.size(); i++) {
-                try {
-                    for (int k = 0; k < mDepartmentDatas.get(i).getUsers().size(); k++) {
-                        localCacheUserList.add(mDepartmentDatas.get(i).getUsers().get(k));
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-            useAlllist.addAll(RemoveSame(localCacheUserList));
-        }
+//        private void getAllUsers() {
+//            /*全部人员获取*/
+//            List<User> localCacheUserList = new ArrayList<>();
+//            for (int i = 0; i < mDepartmentDatas.size(); i++) {
+//                try {
+//                    for (int k = 0; k < mDepartmentDatas.get(i).getUsers().size(); k++) {
+//                        localCacheUserList.add(mDepartmentDatas.get(i).getUsers().get(k));
+//                    }
+//                } catch (NullPointerException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            useAlllist.addAll(RemoveSame(localCacheUserList));
+//        }
 
         /**
          * 去掉人员重复数据

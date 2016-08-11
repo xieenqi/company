@@ -20,6 +20,8 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -171,10 +173,17 @@ public class PreviewAttendanceActivity extends BaseActivity {
         tv_name.setText(user.getRealname());
         LogUtil.dll("考勤详情 员工信息:" + MainApp.gson.toJson(user));
         String deptName = "";
-        if (null != Common.getDepartment(user.depts.get(0).getShortDept().getId())) {
-            deptName = TextUtils.isEmpty(user.departmentsName) ?
-                    Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
+        if (TextUtils.isEmpty(user.departmentsName)) {
+            String deptId = user.depts.get(0).getShortDept().getId();
+            DBDepartment dept = OrganizationManager.shareManager().getDepartment(deptId);
+            if (null != dept) {
+                deptName = dept.name;
+            }
         }
+        else {
+            deptName = user.departmentsName;
+        }
+
         tv_role.setText(deptName + " " + (TextUtils.isEmpty(user.depts.get(0).getShortDept().getName())
                 ? "-" : user.depts.get(0).getShortDept().title));
 

@@ -670,6 +670,27 @@ public class OrganizationManager {
         return currentDeptXpath;
     }
 
+    // 当前登录用户所在所有部门的id列表
+    public List<String> _currentUserDeptIds() {
+        DBUser currentUser = getCurrentUser();
+        List<String> currentDeptId = new ArrayList<String>();
+
+        if (currentUser == null) {
+            return currentDeptId;
+        }
+
+        for (DBUserNode node : nodesCache) {
+            if (node.userId != null
+                    && node.userId.equals(currentUser.id)
+                    && node.departmentId != null)
+            {
+                currentDeptId.add(node.departmentId);
+            }
+        }
+
+        return currentDeptId;
+    }
+
     // 当前登录用户所在所有一级部门的xpath列表
     public List<String> _currentUserTopDeptXpaths() {
         List<String> currentTopDeptXpath = new ArrayList<String>();
@@ -687,6 +708,7 @@ public class OrganizationManager {
 
         return currentTopDeptXpath;
     }
+
 
     // 当前登录用户所在所有一级部门的id列表
     public List<String> _currentUserTopDeptIds() {
@@ -719,6 +741,22 @@ public class OrganizationManager {
             }
             else if (dept.xpath != null
                     && currentTopDeptId.contains(dept.id)) { // 按id查找
+                result.add(dept);
+            }
+        }
+
+        return result;
+    }
+
+    // 当前登录用户所在部门列表
+    public List<DBDepartment> currentUserDepartments() {
+
+        List<DBDepartment> result = new ArrayList<DBDepartment>();
+
+        List<String> currentDeptId = _currentUserDeptIds();
+        for (DBDepartment dept : departmentsCache) {
+            if (dept.id != null
+                    && currentDeptId.contains(dept.id)) { // 按id查找
                 result.add(dept);
             }
         }
@@ -806,6 +844,36 @@ public class OrganizationManager {
         return result;
     }
 
+    // 部门下全体人员（包括子部门人员）
+    public List<DBUser> entireUsersOfDepartment(String parentId) {
+        List<DBUser> result = new ArrayList<DBUser>();
+        if (parentId == null) {
+            return result;
+        }
+
+        List<String> targetUserIds= new ArrayList<String>();
+        for (DBUserNode node : nodesCache) {
+            if (node.userId != null
+                    && node.departmentXpath != null
+                    && node.departmentXpath.contains(parentId))
+            {
+                targetUserIds.add(node.userId);
+            }
+        }
+
+        // 排重
+        targetUserIds = new ArrayList<String>(new HashSet<String>(targetUserIds));
+
+        // 按Id查询用户
+        for(DBUser user : usersCache) {
+            if (targetUserIds.contains(user.id)) {
+                result.add(user);
+            }
+        }
+
+        return result;
+    }
+
     // 公司
     public DBDepartment getsComany() {
 
@@ -870,9 +938,28 @@ public class OrganizationManager {
         return null;
     }
 
+    // 根据id获取部门
+    public DBDepartment getDepartment(String deptId) {
+        if (deptId == null) {
+            return null;
+        }
+        for (DBDepartment dept : departmentsCache) {
+            if (dept.id.equals(deptId)) {
+                return dept;
+            }
+        }
+
+        return null;
+    }
+
     //
     public List<DBUser> allUsers() {
         return usersCache;
+    }
+
+    //
+    public List<DBDepartment> allDepartments() {
+        return departmentsCache;
     }
 
     // 更新

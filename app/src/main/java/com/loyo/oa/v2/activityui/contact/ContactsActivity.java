@@ -57,7 +57,6 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     private ViewPager pager;
     private MyPagerAdapter adapter;
     private MainApp app = MainApp.getMainApp();
-    private ArrayList<ContactsGroup> lstUserGroupData;
 
     private String departmentsSize;
     private int myDepartmentContactsSize;
@@ -93,7 +92,6 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
         departmentFragment = new ContactsDepartmentFragment();
         userFragment = new ContactsInMyDeptFragment();
-        lstUserGroupData = Common.getContactsGroups(null);
         initUI();
     }
 

@@ -6,6 +6,8 @@ package com.loyo.oa.v2.db.bean;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.loyo.oa.v2.beans.NewUser;
+
 import java.io.Serializable;
 
 @DatabaseTable(tableName = "users")
@@ -91,6 +93,19 @@ public class DBUser implements Serializable {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    /**
+     * TODO:
+     *
+     * @return NewUser
+     */
+    public NewUser toShortUser() {
+        NewUser user = new NewUser();
+        user.setId(this.id);
+        user.setName(this.name);
+        user.setAvatar(this.avatar);
+        return user;
     }
 }
 
