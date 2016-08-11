@@ -21,8 +21,8 @@ import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 
@@ -37,63 +37,63 @@ import retrofit.client.Response;
 public class OrderEstimateListActivity extends BaseActivity implements View.OnClickListener {
 
     /**
-     ******************来自【订单详情】********************
-     * */
-    public final static int ORDER_DETAILS  = 0x11;
+     * *****************来自【订单详情】********************
+     */
+    public final static int ORDER_DETAILS = 0x11;
 
 
     /**
      * 新增回款
-     * */
-    public final static int ODET_EST_ADD   = 0x12;
+     */
+    public final static int ODET_EST_ADD = 0x12;
 
     /**
      * 编辑回款
-     * */
-    public final static int ODET_EST_EDIT  = 0x13;
+     */
+    public final static int ODET_EST_EDIT = 0x13;
 
     /**
      * 编辑附件
-     * */
-    public final static int ODET_EST_EDITATTAMENT   = 0x14;
+     */
+    public final static int ODET_EST_EDITATTAMENT = 0x14;
 
     /**
      * 删除回款
-     * */
-    public final static int ODET_EST_DELETE  = 0x15;
+     */
+    public final static int ODET_EST_DELETE = 0x15;
 
 
     /**
-     *****************来自【订单新建】**********************
-     * */
-    public final static int ORDER_ADD      = 0x21;
+     * ****************来自【订单新建】**********************
+     */
+    public final static int ORDER_ADD = 0x21;
 
     /**
      * 新增回款
-     * */
-    public final static int OADD_EST_ADD   = 0x22;
+     */
+    public final static int OADD_EST_ADD = 0x22;
 
     /**
      * 编辑回款
-     * */
-    public final static int OADD_EST_EDIT  = 0x23;
+     */
+    public final static int OADD_EST_EDIT = 0x23;
 
     /**
      * 编辑附件
-     * */
-    public final static int OADD_EST_EDITATTAMENT   = 0x24;
+     */
+    public final static int OADD_EST_EDITATTAMENT = 0x24;
 
     /**
      * 删除回款
-     * */
-    public final static int OADD_EST_DELETE  = 0x25;
+     */
+    public final static int OADD_EST_DELETE = 0x25;
 
 
     /**
-     ********************来自【回款计划】***********************
-     * */
+     * *******************来自【回款计划】***********************
+     */
 
-    public final static int ORDER_PLAN  = 0x31;
+    public final static int ORDER_PLAN = 0x31;
 
     private LinearLayout ll_back;
     private LinearLayout ll_add;
@@ -102,7 +102,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
     private ListView lv_listview;
     private EstimateAdd mEstimateAdd;
-    private ArrayList<EstimateAdd> mData;
+    private ArrayList<EstimateAdd> mData = new ArrayList<>();
     private OrderEstimateListAdapter mAdapter;
     private Intent mIntent;
     private Bundle mBundle;
@@ -140,6 +140,12 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     }
 
                     break;
+                case ExtraAndResult.MSG_SEND:
+                    EstimateAdd data = (EstimateAdd) msg.obj;
+                    tv_totalprice.setText("￥" + Utils.setValueDouble(data.receivedMoney));
+                    tv_aleryprice.setText("￥" + Utils.setValueDouble(data.billingMoney));
+                    tv_faileprice.setText("￥" + Utils.setValueDouble(Integer.parseInt(dealPrice) - data.receivedMoney));
+                    break;
             }
         }
     };
@@ -173,32 +179,54 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         tv_title.setText("回款记录");
         if (null != dealPrice)
-            tv_dealprice.setText("￥" + dealPrice);
+            tv_dealprice.setText("￥" + Utils.setValueDouble(dealPrice));
         if (null != mData && mData.size() > 0)
             ll_add.setVisibility(View.GONE);
         ll_back.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         ll_back.setOnTouchListener(Global.GetTouch());
-        rushAdapter();
-
         //如果来自详情，则请求回款记录
         if (fromPage == ORDER_DETAILS) {
             getData();
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         }
+        mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage);
+        lv_listview.setAdapter(mAdapter);
+        rushAdapter();
     }
 
     public void rushAdapter() {
-        if (null == mAdapter) {
-            if (null == mData) {
-                mData = new ArrayList<EstimateAdd>();
-            }
-            mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage);
-            lv_listview.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
+        mAdapter.notifyDataSetChanged();
+
+
     }
+
+    /**
+     * 计算 已回款、开票总金额、未回款
+     */
+    private void setTitleNumber() {
+        new Runnable() {
+            @Override
+            public void run() {
+                int backMoney = 0, ticketMoneyno = 0;
+                for (EstimateAdd ele : mData) {
+                    if (ele.status == 4) {
+                        backMoney += ele.receivedMoney;
+                        ticketMoneyno += ele.billingMoney;
+                    }
+                }
+                Message msg = new Message();
+                msg.what = ExtraAndResult.MSG_SEND;
+                EstimateAdd data = new EstimateAdd();//借用此模板
+                data.receivedMoney = backMoney;
+                data.billingMoney = ticketMoneyno;
+                msg.obj = data;
+                mHandler.sendMessage(msg);
+            }
+        }.run();
+    }
+
+    ;
 
     /**
      * 删除订单
@@ -237,6 +265,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                             mData.clear();
                             mData.addAll(estimateList.records);
                             rushAdapter();
+                            setTitleNumber();
                         }
                     }
 
@@ -260,13 +289,13 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             case R.id.ll_add:
                 mBundle = new Bundle();
                 mBundle.putString("orderId", orderId);
-                if(fromPage == OrderEstimateListActivity.ORDER_ADD){
-                    requestPage =  OrderEstimateListActivity.OADD_EST_ADD;
-                }else if(fromPage == OrderEstimateListActivity.ORDER_DETAILS){
-                    requestPage =  OrderEstimateListActivity.ODET_EST_ADD;
+                if (fromPage == OrderEstimateListActivity.ORDER_ADD) {
+                    requestPage = OrderEstimateListActivity.OADD_EST_ADD;
+                } else if (fromPage == OrderEstimateListActivity.ORDER_DETAILS) {
+                    requestPage = OrderEstimateListActivity.ODET_EST_ADD;
                 }
                 mBundle.putInt("fromPage", requestPage);
-                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT,requestPage, mBundle);
+                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, requestPage, mBundle);
                 break;
         }
     }
@@ -287,27 +316,27 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         if (resultCode != RESULT_OK) {
             return;
         }
-            switch (requestCode) {
+        switch (requestCode) {
 
-                //新建订单 编辑与新建回调
-                case OADD_EST_ADD:
-                case OADD_EST_EDIT:
-                    if (null == data) {
-                        return;
-                    }
-                    mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
-                    mData.clear();
-                    mData.add(mEstimateAdd);
-                    rushAdapter();
-                    break;
+            //新建订单 编辑与新建回调
+            case OADD_EST_ADD:
+            case OADD_EST_EDIT:
+                if (null == data) {
+                    return;
+                }
+                mEstimateAdd = (EstimateAdd) data.getSerializableExtra("data");
+                mData.clear();
+                mData.add(mEstimateAdd);
+                rushAdapter();
+                break;
 
-                //订单详情 编辑与新建回调
-                case ODET_EST_EDIT:
-                case ODET_EST_ADD:
-                    getData();
-                    break;
+            //订单详情 编辑与新建回调
+            case ODET_EST_EDIT:
+            case ODET_EST_ADD:
+                getData();
+                break;
 
-            }
-            mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_DIALOG);
+        }
+        mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_DIALOG);
     }
 }

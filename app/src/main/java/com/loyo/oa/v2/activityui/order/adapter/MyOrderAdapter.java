@@ -11,6 +11,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class MyOrderAdapter extends BaseAdapter {
         OrderListItem mData = data.get(position);
         holder.tv_title.setText(mData.title);
         OrderCommon.getOrderStatus(holder.tv_status, mData.status);
-        holder.tv_money.setText(mData.dealMoney + "");
+        holder.tv_money.setText(Utils.setValueDouble(mData.dealMoney));
         holder.tv_customer.setText(mData.customerName);
         holder.tv_product.setText(mData.proName);
         holder.tv_time.setText(DateTool.getDiffTime(Long.valueOf(mData.createdAt + "") * 1000));
