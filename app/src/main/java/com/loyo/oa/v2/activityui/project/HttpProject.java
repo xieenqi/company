@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.project;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.beans.UserInfo;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,10 +70,13 @@ public class HttpProject implements Serializable {
             }
 
             for (UserInfo userInfo : MainApp.user.getDepts()) {
-                if (null != member.dept && null != userInfo.getShortDept() && null != member.dept.xpath && null != userInfo.getShortDept().getXpath() &&
-                        userInfo.getShortDept().getXpath().contains(member.dept.xpath)) {
-                    //部门id改成部门XPath
-                    return true;
+                if (null != member.dept && null != userInfo.getShortDept() && null != userInfo.getShortDept().getXpath()) {
+                    if (null != member.dept.xpath && userInfo.getShortDept().getXpath().contains(member.dept.xpath)) {
+                        return true;
+                    } else if (null != member.dept.id && userInfo.getShortDept().getXpath().contains(member.dept.id)) {
+                        return true;
+                    }
+                    //部门id和部门XPath 两个条件
                 }
             }
         }
