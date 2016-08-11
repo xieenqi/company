@@ -258,6 +258,13 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 break;
 
         }
+        if (!MainApp.user.id.equals(mData.directorId)) {//如果不是负责人有编辑 添加的权限
+            img_title_right.setVisibility(View.GONE);
+            isDelete = false;
+            isEdit = false;
+            isAdd = false;
+            isStop = false;
+        }
         tv_title.setText(mData.title);
         tv_customer.setText(mData.customerName);
         tv_money.setText(mData.dealMoney + "");
@@ -368,10 +375,10 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
 
             //附件回调
             case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
-                if(null == data){
+                if (null == data) {
                     return;
                 }
-                attachmentSize = data.getIntExtra("size",0);
+                attachmentSize = data.getIntExtra("size", 0);
                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
                 break;
 
