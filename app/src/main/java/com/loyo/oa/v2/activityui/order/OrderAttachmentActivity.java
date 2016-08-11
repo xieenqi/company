@@ -5,19 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
-import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
-import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
@@ -32,6 +26,7 @@ import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.AliOSSManager;
@@ -44,14 +39,9 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-
-import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
 import java.util.ArrayList;
-
+import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -86,6 +76,8 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     private AttachmentBatch attachmentBatch;
     private ArrayList<Attachment> mListAttachment;
     private AttachmentSwipeAdapter adapter;
+    private List<String> mSelectPath;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,7 +220,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse("获取附件",response);
+                HttpErrorCheck.checkResponse("获取附件", response);
                 mListAttachment = attachments;
                 attachmentCount = attachments.size();
                 bindAttachment();
@@ -258,10 +250,9 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
                 public void afterDelete(final Attachment attachment) {
-                    //附件删除后重新绑定
+                    //附件删除 重新绑定
                     mListAttachment.remove(attachment);
-                    //                bindAttachment();
-                    //不能重新绑定，会报错，只需要通知adapter即可 ykb 07-23
+                    attachmentCount = mListAttachment.size();
                     adapter.notifyDataSetChanged();
                 }
             });
@@ -273,6 +264,38 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
         }
         if (uploadNum == uploadSize) {
             DialogHelp.cancelLoading();
+        }
+    }
+
+    /**
+     * 组装附件数据
+     * */
+    public void setAttachmentData(){
+        try {
+            uploadSize = 0;
+            uploadNum = pickPhots.size();
+            attachment = new ArrayList<>();
+            showLoading("");
+            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                Uri uri = Uri.parse(item.path);
+                File newFile = Global.scal(this, uri);
+                if (newFile != null && newFile.length() > 0) {
+                    if (newFile.exists()) {
+                        attachmentBatch = new AttachmentBatch();
+                        attachmentBatch.UUId = uuid;
+                        attachmentBatch.bizType = 17;
+                        attachmentBatch.mime = Utils.getMimeType(newFile.getPath());
+                        attachmentBatch.name = uuid + "/" + newFile.getName();
+                        attachmentBatch.size = Integer.parseInt(newFile.length()+"");
+                        attachment.add(attachmentBatch);
+
+                        getServerToken(uuid + "/" + newFile.getName(),newFile.getPath());
+
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Global.ProcException(ex);
         }
     }
 
@@ -288,10 +311,17 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
             //上传
             case R.id.tv_upload:
-                Intent intent = new Intent(this, SelectPicPopupWindow.class);
-                intent.putExtra("localpic", true);
-                intent.putExtra("addpg", false);
-                startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+
+                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
+                // 是否显示拍摄图片
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+                // 最大可选择图片数量
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9);
+                // 选择模式
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
+                startActivityForResult(intent, 2);
+
                 break;
 
         }
@@ -309,46 +339,21 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK) {
+        if (resultCode != RESULT_OK && null != data) {
             return;
         }
 
         switch (requestCode) {
 
-            //附件上传回调
-            case SelectPicPopupWindow.GET_IMG:
-                try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
-                    if (pickPhots == null) {
-                        return;
+            //相册选择回调
+            case SelectPicPopupWindow.PICTURE:
+                    pickPhots = new ArrayList<>();
+                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    for (String path : mSelectPath) {
+                        pickPhots.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
                     }
-                    uploadSize = 0;
-                    uploadNum = pickPhots.size();
-                    attachment = new ArrayList<>();
-                    showLoading("");
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(this, uri);
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-
-                                attachmentBatch = new AttachmentBatch();
-                                attachmentBatch.UUId = uuid;
-                                attachmentBatch.bizType = 17;
-                                attachmentBatch.mime = Utils.getMimeType(newFile.getPath());
-                                attachmentBatch.name = uuid + "/" + newFile.getName();
-                                attachmentBatch.size = Integer.parseInt(newFile.length()+"");
-                                attachment.add(attachmentBatch);
-
-                                getServerToken(uuid + "/" + newFile.getName(),newFile.getPath());
-
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
-                }
-                break;
+                    setAttachmentData();
+                    break;
         }
     }
 }

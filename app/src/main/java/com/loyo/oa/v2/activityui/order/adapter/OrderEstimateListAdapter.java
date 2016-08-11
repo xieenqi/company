@@ -82,6 +82,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             holder.tv_status = (TextView) convertView.findViewById(R.id.tv_status);
             holder.ll_action = (LinearLayout) convertView.findViewById(R.id.ll_action);
             holder.tv_attachment = (TextView) convertView.findViewById(R.id.tv_attachment);
+            holder.ll_attachment = (LinearLayout) convertView.findViewById(R.id.ll_attachment);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -135,6 +136,15 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         } else {
             holder.ll_action.setVisibility(View.VISIBLE);
         }
+
+        //附件监听
+        holder.ll_attachment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return convertView;
     }
 
@@ -150,6 +160,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         TextView tv_titlenum, tv_status;
         TextView tv_attachment;    //附件
 
+        LinearLayout ll_attachment;
         LinearLayout btn_edit;     //编辑
         LinearLayout btn_delete, ll_action;   //删除
 
