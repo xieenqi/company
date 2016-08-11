@@ -261,6 +261,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         if (null == mWfInstance || null == mWfInstance.order) {
             return;
         }
+        layout_wfinstance_content.setVisibility(View.GONE);
         ll_order_layout.setVisibility(View.VISIBLE);
         List<String> orderList = new ArrayList<>();
         OrderDetail order = mWfInstance.order;
@@ -291,6 +292,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         if (null == mWfInstance || null == mWfInstance.paymentRecord || !(mWfInstance.paymentRecord.size() > 0)) {
             return;
         }
+        layout_wfinstance_content.setVisibility(View.GONE);
         ll_payment_layout.setVisibility(View.VISIBLE);
         EstimateAdd payment = mWfInstance.paymentRecord.get(0);
         List<String> paymentList = new ArrayList<>();

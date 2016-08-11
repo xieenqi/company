@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.order.OrderAddEstimateActivity;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
+import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -39,7 +40,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     private Message msg;
     private String orderId;
     private int fromPage;
-    private int requestPage;
+    private int shitPage;
 
     public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId, int fromPage) {
         this.mActivity = activity;
@@ -121,14 +122,15 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 mBundle = new Bundle();
                 mBundle.putInt("size", mEstimateAdd.attachmentCount);
                 mBundle.putString("orderId", orderId);
-                if(fromPage == OrderEstimateListActivity.ORDER_ADD){
-                    requestPage = OrderEstimateListActivity.OADD_EST_EDIT;
-                }else if(fromPage == OrderEstimateListActivity.ORDER_DETAILS){
-                    requestPage = OrderEstimateListActivity.ODET_EST_EDIT;
+                if (fromPage == OrderEstimateListActivity.PAGE_DETAILS) {
+                    shitPage = OrderEstimateListActivity.PAGE_EDIT;
+                } else {
+                    shitPage = fromPage;
                 }
-                mBundle.putInt("fromPage", requestPage);
+                mBundle.putInt("fromPage", shitPage);
+                LogUtil.dee("fromPage:" + fromPage);
                 mBundle.putSerializable(ExtraAndResult.RESULT_DATA, mData.get(position));
-                MainApp.getMainApp().startActivityForResult(mActivity,OrderAddEstimateActivity.class,MainApp.ENTER_TYPE_RIGHT,requestPage,mBundle);
+                MainApp.getMainApp().startActivityForResult(mActivity, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, shitPage, mBundle);
             }
         });
         if (mEstimateAdd.status == 1 || mEstimateAdd.status == 3) {
@@ -136,6 +138,18 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         } else {
             holder.ll_action.setVisibility(View.VISIBLE);
         }
+        holder.tv_status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mEstimateAdd.status != 6) {
+                    Intent intentWf = new Intent();
+                    intentWf.putExtra(ExtraAndResult.EXTRA_ID, mEstimateAdd.wfId);
+                    intentWf.setClass(mActivity, WfinstanceInfoActivity_.class);
+                    mActivity.startActivityForResult(intentWf, ExtraAndResult.REQUEST_CODE);
+                    mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                }
+            }
+        });
         return convertView;
     }
 

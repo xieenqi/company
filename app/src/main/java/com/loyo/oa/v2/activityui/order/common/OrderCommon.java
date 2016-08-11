@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.order.common;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -65,5 +67,25 @@ public class OrderCommon {
                 break;
         }
         return modeInfo;
+    }
+
+    public static TextWatcher getTextWatcher() {
+        TextWatcher watcherMoney = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().contains(".") && s.toString().length() > 7) {
+                    s.delete(7, s.toString().length());
+                }
+            }
+        };
+        return watcherMoney;
     }
 }

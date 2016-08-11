@@ -50,15 +50,16 @@
                     android:minHeight="@dimen/dimen_48"
                     android:paddingBottom="@dimen/dimen_5"
                     android:paddingTop="@dimen/dimen_5"
+                    android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
-                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 
@@ -88,8 +89,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="必填,请选择"
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text99"
+                    android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -126,8 +126,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="必填,请选择"
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text99"
+                    android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -167,19 +166,20 @@
                     android:hint="必填,请输入"
                     android:inputType="numberDecimal"
                     android:maxLength="7"
-                    android:singleLine="true"
                     android:minHeight="@dimen/dimen_48"
                     android:paddingBottom="@dimen/dimen_5"
                     android:paddingTop="@dimen/dimen_5"
+                    android:singleLine="true"
+                    android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
-                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 
@@ -208,8 +208,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="请选择"
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text99"
+                    android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -248,19 +247,19 @@
                     android:gravity="center_vertical|right"
                     android:hint="请输入"
                     android:maxLength="30"
-                    android:numeric="integer"
                     android:minHeight="@dimen/dimen_48"
                     android:paddingBottom="@dimen/dimen_5"
                     android:paddingTop="@dimen/dimen_5"
+                    android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
-                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow"
+                    android:visibility="invisible"/>
             </LinearLayout>
 
             <include layout="@layout/include_solid_line_left"/>
@@ -288,8 +287,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint=""
-                    android:textColor="@color/title_bg1"
-                    android:textColorHint="@color/text99"
+                    android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -321,6 +319,7 @@
                 android:minHeight="@dimen/dimen_100"
                 android:paddingBottom="@dimen/dimen_5"
                 android:paddingTop="@dimen/dimen_5"
+                android:textColor="@color/text66"
                 android:textSize="15sp"/>
         </LinearLayout>
     </ScrollView>
