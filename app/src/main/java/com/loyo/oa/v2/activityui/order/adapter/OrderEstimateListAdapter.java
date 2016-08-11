@@ -50,7 +50,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mData.size();
+        return null == mData ? 0 : mData.size();
     }
 
     @Override
@@ -120,14 +120,14 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 mBundle = new Bundle();
                 mBundle.putInt("size", mEstimateAdd.attachmentCount);
                 mBundle.putString("orderId", orderId);
-                if(fromPage == OrderEstimateListActivity.ORDER_ADD){
+                if (fromPage == OrderEstimateListActivity.ORDER_ADD) {
                     requestPage = OrderEstimateListActivity.OADD_EST_EDIT;
-                }else if(fromPage == OrderEstimateListActivity.ORDER_DETAILS){
+                } else if (fromPage == OrderEstimateListActivity.ORDER_DETAILS) {
                     requestPage = OrderEstimateListActivity.ODET_EST_EDIT;
                 }
                 mBundle.putInt("fromPage", requestPage);
                 mBundle.putSerializable(ExtraAndResult.RESULT_DATA, mData.get(position));
-                MainApp.getMainApp().startActivityForResult(mActivity,OrderAddEstimateActivity.class,MainApp.ENTER_TYPE_RIGHT,requestPage,mBundle);
+                MainApp.getMainApp().startActivityForResult(mActivity, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, requestPage, mBundle);
             }
         });
         if (mEstimateAdd.status == 1 || mEstimateAdd.status == 3) {

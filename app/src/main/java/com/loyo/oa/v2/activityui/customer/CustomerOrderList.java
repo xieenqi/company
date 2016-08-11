@@ -29,6 +29,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import java.util.ArrayList;
@@ -255,7 +256,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
             OrderListItem mData = data.get(position);
             holder.tv_title.setText(mData.title);
             OrderCommon.getOrderStatus(holder.tv_status, mData.status);
-            holder.tv_money.setText(mData.dealMoney + "");
+            holder.tv_money.setText(Utils.setValueDouble(mData.dealMoney));
             holder.ll_customer.setVisibility(View.GONE);
             holder.ll_responsible.setVisibility(View.VISIBLE);
             holder.tv_name.setText(mData.directorName);

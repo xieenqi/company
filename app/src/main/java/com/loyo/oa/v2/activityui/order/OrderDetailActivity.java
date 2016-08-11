@@ -29,6 +29,7 @@ import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.Date;
 
@@ -267,7 +268,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         }
         tv_title.setText(mData.title);
         tv_customer.setText(mData.customerName);
-        tv_money.setText(mData.dealMoney + "");
+        tv_money.setText(Utils.setValueDouble(mData.dealMoney));
         tv_product.setText(mData.proName);
         tv_responsible_name.setText(mData.directorName);
         tv_creator_name.setText(mData.creatorName);
