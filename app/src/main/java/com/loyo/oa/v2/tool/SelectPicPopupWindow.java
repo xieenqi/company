@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.GeneralPopView;
@@ -25,13 +26,13 @@ import java.util.List;
 
 /**
  * 【附件上传】自定义popwindow
- *
+ * <p/>
  * create by yyy on 2016/03/11
  */
 public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
-    public  static final int GET_IMG  = 10;
-    private static final int PHOTO   = 1;
+    public static final int GET_IMG = 10;
+    private static final int PHOTO = 1;
     private static final int PICTURE = 2;
     private static final String RESTORE_FILEURI = "fileUri";
     private List<String> mSelectPath;
@@ -71,11 +72,11 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
         /**判断是直接调用相机，还是弹出选相框*/
         if (null != getIntent() && null != getIntent().getExtras()) {
-            addpg    = getIntent().getBooleanExtra("addpg", false);
+            addpg = getIntent().getBooleanExtra("addpg", false);
             localpic = getIntent().getBooleanExtra("localpic", false);
-            imgSize  = getIntent().getIntExtra("imgsize",0);
+            imgSize = getIntent().getIntExtra("imgsize", 0);
 
-            if(!addpg){
+            if (!addpg) {
                 imgSize = 9;
             }
 
@@ -171,7 +172,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
     /**
      * 处理拍照权限
-     * */
+     */
     private void takePhotoIntent() {
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
@@ -211,8 +212,8 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
     /**
      * 处理相册权限
-     * */
-    public void dealPermisson(){
+     */
+    public void dealPermisson() {
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
             try {
@@ -256,7 +257,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         ArrayList<ImageInfo> pickArray = new ArrayList<>();
         mIntent = new Intent();
 
-        switch (requestCode){
+        switch (requestCode) {
 
             //拍照回调
             case PHOTO:
@@ -271,10 +272,10 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
             //相册选择回调
             case PICTURE:
-                if(null != data){
+                if (null != data) {
                     mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                    for(String path : mSelectPath){
-                        pickArray.add(new ImageInfo("file://"+path));
+                    for (String path : mSelectPath) {
+                        pickArray.add(new ImageInfo("file://" + path));
                     }
                     mIntent.putExtra("data", pickArray);
                     setResult(RESULT_OK, mIntent);

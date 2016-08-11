@@ -2,12 +2,15 @@ package com.loyo.oa.v2.activityui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -30,6 +33,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -58,6 +62,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private ArrayList<SaleIntentionalProduct> productData;//意向产品的数据
     private ArrayList<EstimateAdd> estimateData;          //回款记录数据
 
+
     private EditText et_name;     //订单标题
     private TextView tv_customer; //对应客户
     private TextView tv_stage;    //购买产品
@@ -70,9 +75,31 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private Intent mIntent;
     private Bundle mBundle;
     private int fromPage;
+    private int attamentSize = 0;
+    private String uuid;
 
     private OrderDetail mOrderDetail;
     private OrderAddforExtraData orderAddforExtra;
+
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what) {
+
+                case ExtraAndResult.MSG_WHAT_VISIBLE:
+                    if (attamentSize != 0) {
+                        tv_source.setText("附件(" + attamentSize + ")");
+                    }
+                    break;
+                case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
+                    ll_customer.setVisibility(TextUtils.isEmpty(customerId) ? View.VISIBLE : View.GONE);
+                    break;
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +110,12 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     private void init() {
         mIntent = getIntent();
-        if(null != mIntent){
+        if (null != mIntent) {
             mOrderDetail = (OrderDetail) mIntent.getSerializableExtra("data");
-            fromPage = mIntent.getIntExtra("fromPage",OrderDetailActivity.ORDER_ADD);
+            fromPage = mIntent.getIntExtra("fromPage", OrderDetailActivity.ORDER_ADD);
+            //客户创建订单
+            customerId = mIntent.getStringExtra(ExtraAndResult.EXTRA_ID);
+            customerName = mIntent.getStringExtra(ExtraAndResult.EXTRA_NAME);
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -116,69 +146,85 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         ll_estimate.setOnClickListener(this);
         ll_source.setOnClickListener(this);
 
-        if(fromPage == OrderDetailActivity.ORDER_EDIT){
+        if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             tv_title.setText("编辑订单");
             editData();
-        }else if(fromPage == OrderDetailActivity.ORDER_ADD){
+        } else if (fromPage == OrderDetailActivity.ORDER_ADD) {
             tv_title.setText("新建订单");
             getAddDynamic();
+            mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_HIDEDIALOG);
+        } else if (fromPage == OrderDetailActivity.ORDER_CREATE) {
+            tv_title.setText("生成订单");
+            getAddDynamic();
+            createData();
         }
 
     }
 
     /**
      * 编辑数据绑定
-     * */
+     */
 
-    public void editData(){
+    public void editData() {
 
         customerId = mOrderDetail.customerId;
         customerName = mOrderDetail.customerName;
         productData = mOrderDetail.proInfo;
         estimateData = mOrderDetail.paymentRecords;
-        mCusList    = mOrderDetail.extensionDatas;
+        mCusList = mOrderDetail.extensionDatas;
 
         et_name.setText(mOrderDetail.title);
         tv_customer.setText(mOrderDetail.customerName);
         tv_stage.setText(getIntentionProductName());
         tv_estimate.setText(getEstimateName());
         tv_estimate.setText(getEstimateName());
-        et_money.setText(mOrderDetail.dealMoney+"");
+        et_money.setText(mOrderDetail.dealMoney + "");
         et_ordernum.setText(mOrderDetail.orderNum);
         et_remake.setText(mOrderDetail.remark);
         bindExtraView(mCusList);
 
     }
 
+    /**
+     * 生成订单
+     */
+    void createData() {
+        customerId = mOrderDetail.customerId;
+        customerName = mOrderDetail.customerName;
+        productData = mOrderDetail.proInfo;
+        et_money.setText(mOrderDetail.dealMoney + "");
+        tv_customer.setText(mOrderDetail.customerName);
+        tv_stage.setText(getIntentionProductName());
+    }
 
     /**
      * 设置权限
      * 标题、客户、产品、金额都是必填，所以不判断
-     * */
-    public void setAddDynamic(ArrayList<ContactLeftExtras> extras){
-        for(ContactLeftExtras customerJur : extras){
-            switch (customerJur.name){
+     */
+    public void setAddDynamic(ArrayList<ContactLeftExtras> extras) {
+        for (ContactLeftExtras customerJur : extras) {
+            switch (customerJur.name) {
 
                 case "paymentRecords":
-                    if(customerJur.required){
+                    if (customerJur.required) {
                         tv_estimate.setHint("必填,请输入");
                     }
                     break;
 
                 case "orderNum":
-                    if(customerJur.required){
+                    if (customerJur.required) {
                         et_ordernum.setHint("必填,请输入");
                     }
                     break;
 
                 case "attachment":
-                    if(customerJur.required){
+                    if (customerJur.required) {
                         tv_source.setHint("必填,请输入");
                     }
                     break;
 
                 case "remark":
-                    if(customerJur.required){
+                    if (customerJur.required) {
                         et_remake.setHint("备注(必填)");
                     }
                     break;
@@ -189,8 +235,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     /**
      * 动态字段绑定
-     * */
-    public void bindExtraView(ArrayList<ContactLeftExtras> extrases){
+     */
+    public void bindExtraView(ArrayList<ContactLeftExtras> extrases) {
         orderAddforExtra = new OrderAddforExtraData(mContext, extrases, true, R.color.title_bg1, 0);
         tv_custom.addView(orderAddforExtra);
         setAddDynamic(extrases);
@@ -199,10 +245,10 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     /**
      * 获取新建订单动态字段
-     * */
-    public void getAddDynamic(){
+     */
+    public void getAddDynamic() {
         showLoading("", false);
-        HashMap<String,Object> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 104);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
             @Override
@@ -222,52 +268,53 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     /**
      * 提交订单
-     * */
-    public void commitOrder(){
+     */
+    public void commitOrder() {
 
-        if(TextUtils.isEmpty(et_name.getText().toString())){
+        if (TextUtils.isEmpty(et_name.getText().toString())) {
             Toast("请填写订单标题!");
             return;
-        }else if(TextUtils.isEmpty(tv_customer.getText().toString())){
+        } else if (TextUtils.isEmpty(tv_customer.getText().toString())) {
             Toast("请选择对应客户!");
             return;
-        }else if(TextUtils.isEmpty(tv_stage.getText().toString())){
+        } else if (TextUtils.isEmpty(tv_stage.getText().toString())) {
             Toast("请选择购买产品!");
             return;
-        }else if(TextUtils.isEmpty(et_money.getText().toString())){
+        } else if (TextUtils.isEmpty(et_money.getText().toString())) {
             Toast("请选择成交金额!");
             return;
         }
         fieldData = new ArrayList<>();
-        for(ContactLeftExtras extra : orderAddforExtra.getExtras()){
-            if(!extra.isSystem && extra.required && TextUtils.isEmpty(extra.val)){
+        for (ContactLeftExtras extra : orderAddforExtra.getExtras()) {
+            if (!extra.isSystem && extra.required && TextUtils.isEmpty(extra.val)) {
                 Toast("请填写必填项!");
                 return;
-            }else if (!extra.isSystem && extra.required && !TextUtils.isEmpty(extra.val)){
+            } else if (!extra.isSystem && extra.required && !TextUtils.isEmpty(extra.val)) {
                 fieldData.add(extra);
             }
         }
 
         showLoading("");
-        HashMap<String,Object> map = new HashMap<>();
-        if(fromPage == OrderDetailActivity.ORDER_EDIT){
-            map.put("id",mOrderDetail.id);
+        HashMap<String, Object> map = new HashMap<>();
+        if (fromPage == OrderDetailActivity.ORDER_EDIT) {
+            map.put("id", mOrderDetail.id);
         }
-        map.put("customerId",customerId);
-        map.put("customerName",customerName);
-        map.put("title",et_name.getText().toString());
-        map.put("attachmentUUId","");
-        map.put("dealMoney",Float.parseFloat(et_money.getText().toString()));
-        map.put("orderNum",et_ordernum.getText().toString());
-        map.put("remark",et_remake.getText().toString());
-        map.put("proInfo",productData);
+        map.put("attachmentCount", attamentSize);
+        map.put("customerId", customerId);
+        map.put("customerName", customerName);
+        map.put("title", et_name.getText().toString());
+        map.put("attachmentUUId", uuid);
+        map.put("dealMoney", Float.parseFloat(et_money.getText().toString()));
+        map.put("orderNum", et_ordernum.getText().toString());
+        map.put("remark", et_remake.getText().toString());
+        map.put("proInfo", productData);
         map.put("paymentRecords", estimateData);
-        map.put("extensionDatas",fieldData);
+        map.put("extensionDatas", fieldData);
         LogUtil.dee("提交参数:" + MainApp.gson.toJson(map));
 
-        if(fromPage == OrderDetailActivity.ORDER_EDIT){
+        if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             editOrderData(map);
-        }else{
+        } else {
             addOrderData(map);
         }
 
@@ -275,15 +322,15 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     /**
      * 编辑订单
-     * */
-    public void editOrderData(HashMap<String,Object> map){
+     */
+    public void editOrderData(HashMap<String, Object> map) {
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
-                .editOrder(mOrderDetail.id,map,new Callback<OrderAdd>() {
+                .editOrder(mOrderDetail.id, map, new Callback<OrderAdd>() {
                     @Override
                     public void success(OrderAdd orderAdd, Response response) {
                         HttpErrorCheck.checkResponse("编辑订单", response);
-                        app.finishActivity(OrderAddActivity.this,MainApp.ENTER_TYPE_LEFT,RESULT_OK,new Intent());
+                        app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                     }
 
                     @Override
@@ -296,8 +343,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     /**
      * 新建订单
-     * */
-    public void addOrderData(HashMap<String,Object> map){
+     */
+    public void addOrderData(HashMap<String, Object> map) {
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .addOrder(map, new Callback<OrderAdd>() {
@@ -339,8 +386,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //购买产品
             case R.id.ll_stage:
                 mBundle = new Bundle();
-                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA,productData);
-                mBundle.putBoolean("boolean",true);
+                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, productData);
+                mBundle.putBoolean("boolean", true);
                 mBundle.putInt("data", ActionCode.ORDER_DETAIL);
                 app.startActivityForResult(OrderAddActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
@@ -349,19 +396,21 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //回款
             case R.id.ll_estimate:
                 mBundle = new Bundle();
-                if(!TextUtils.isEmpty(et_money.getText().toString())){
-                    mBundle.putString("price",et_money.getText().toString());
+                if (!TextUtils.isEmpty(et_money.getText().toString())) {
+                    mBundle.putString("price", et_money.getText().toString());
                 }
-                if(null != estimateData){
-                    mBundle.putSerializable("data",estimateData);
+                if (null != estimateData) {
+                    mBundle.putSerializable("data", estimateData);
                 }
                 mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_ORDER_ADD);
-                app.startActivityForResult(this,OrderEstimateListActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_SOURCE,mBundle);
+                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
 
             //附件
             case R.id.ll_source:
-                app.startActivityForResult(this,OrderAttachmentActivity.class,MainApp.ENTER_TYPE_RIGHT,101,null);
+                mBundle = new Bundle();
+                mBundle.putString("uuid", uuid);
+                app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
 
         }
@@ -386,27 +435,27 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     /**
      * 获取 回款记录的成交金额
-     * */
-    private String getEstimateName(){
+     */
+    private String getEstimateName() {
         String estimateName = "";
-        if(estimateData.size() > 0){
+        if (estimateData.size() > 0) {
             estimateName = "￥";
-            for(EstimateAdd est : estimateData){
-                estimateName += est.receivedMoney+"、";
+            for (EstimateAdd est : estimateData) {
+                estimateName += est.receivedMoney + "、";
             }
         }
-        return estimateName;
+        return estimateName.length() > 0 ? estimateName.substring(0, estimateName.length() - 1) : "";
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode != -1 && null == data){
+        if (resultCode != -1 && null == data) {
             return;
         }
 
-        switch (requestCode){
+        switch (requestCode) {
 
             //选择客户
             case ExtraAndResult.REQUEST_CODE_CUSTOMER:
@@ -420,15 +469,23 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //选择购买产品
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
-                productData = (ArrayList<SaleIntentionalProduct>)data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+                productData = (ArrayList<SaleIntentionalProduct>) data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
                 tv_stage.setText(getIntentionProductName());
                 break;
 
             //选择回款
             case ExtraAndResult.REQUEST_CODE_SOURCE:
-                estimateData = (ArrayList<EstimateAdd>)data.getSerializableExtra("data");
+                estimateData = (ArrayList<EstimateAdd>) data.getSerializableExtra("data");
                 tv_estimate.setText(getEstimateName());
                 break;
+
+            //附件回调
+            case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
+                uuid = data.getStringExtra("uuid");
+                attamentSize = data.getIntExtra("size", 0);
+                mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
+                break;
+
 
         }
     }
