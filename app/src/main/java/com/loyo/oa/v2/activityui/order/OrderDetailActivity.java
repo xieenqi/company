@@ -178,7 +178,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.ll_record://回款记录
                 Bundle mBundle = new Bundle();
-                mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_DETAILS);
+                mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_DETAILS);
                 mBundle.putString("price", tv_money.getText().toString());
                 mBundle.putString("orderId", orderId);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, isAdd);

@@ -306,7 +306,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
                     mBundle = new Bundle();
                     mBundle.putString("orderId", orderId);
                     mBundle.putString("planId", planEstimateList.id);
-                    mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_GENERATE);
+                    mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_PLAN);
                     mBundle.putSerializable(ExtraAndResult.RESULT_DATA, data);
                     app.startActivityForResult(OrderPlanListActivity.this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                 }
