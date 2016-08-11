@@ -262,7 +262,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
             return;
         }
         layout_wfinstance_content.setVisibility(View.GONE);
-        img_title_right.setVisibility(View.GONE);
         ll_order_layout.setVisibility(View.VISIBLE);
         List<String> orderList = new ArrayList<>();
         OrderDetail order = mWfInstance.order;
@@ -294,7 +293,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
             return;
         }
         layout_wfinstance_content.setVisibility(View.GONE);
-        img_title_right.setVisibility(View.GONE);
         ll_payment_layout.setVisibility(View.VISIBLE);
         EstimateAdd payment = mWfInstance.paymentRecord.get(0);
         List<String> paymentList = new ArrayList<>();
@@ -490,6 +488,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
             img_title_right.setVisibility(View.VISIBLE);
         } else if (mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")) {
             img_title_right.setVisibility(View.VISIBLE);
+        } else if ("400".equals(mWfInstance.bizForm.bizCode + "") || "500".equals(mWfInstance.bizForm.bizCode + "")) {
+            img_title_right.setVisibility(View.GONE);//自动生成的审批不可以编辑删除
         }
     }
 
