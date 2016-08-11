@@ -107,7 +107,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         if (mIntent != null) {
             orderId = mIntent.getStringExtra("orderId");
             planId = mIntent.getStringExtra("planId");
-            fromPage = mIntent.getIntExtra("fromPage", OrderEstimateListActivity.PAGE_ORDER_ADD);
+            fromPage = mIntent.getIntExtra("fromPage", OrderEstimateListActivity.ORDER_ADD);
             mEstimateAdd = (EstimateAdd) mIntent.getSerializableExtra(ExtraAndResult.RESULT_DATA);
             if (mIntent.getIntExtra("size", 0) != 0) {
                 attamentSize = mIntent.getIntExtra("size", 0);
@@ -150,9 +150,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
         estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
 
-        if (fromPage == OrderEstimateListActivity.PAGE_EDIT) {
+        if (fromPage == OrderEstimateListActivity.OADD_EST_EDIT || fromPage == OrderEstimateListActivity.ODET_EST_EDIT) {
             tv_title.setText("编辑回款记录");
-        } else if (fromPage == OrderEstimateListActivity.PAGE_GENERATE) {
+        } else if (fromPage == OrderEstimateListActivity.ORDER_PLAN) {
             creatEstimate();
         } else {
             tv_title.setText("新增回款记录");
@@ -228,14 +228,15 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     public void commitData() {
         switch (fromPage) {
 
-            //来自订单新建 新建回款
-            case OrderEstimateListActivity.PAGE_ORDER_ADD:
+            //来自订单新建 新建/编辑回款
+            case OrderEstimateListActivity.OADD_EST_EDIT:
+            case OrderEstimateListActivity.OADD_EST_ADD:
                 mIntent.putExtra("data", mEstimateAdd);
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                 break;
 
             //来自订单详情 新建回款
-            case OrderEstimateListActivity.PAGE_DETAILS_ADD:
+            case OrderEstimateListActivity.ODET_EST_ADD:
 
                 showLoading("");
                 map = new HashMap<>();
@@ -266,8 +267,8 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 break;
 
-            //来自编辑订单
-            case OrderEstimateListActivity.PAGE_EDIT:
+            //来自订单详情 编辑
+            case OrderEstimateListActivity.ODET_EST_EDIT:
 
                 showLoading("");
                 map = new HashMap<>();
@@ -296,8 +297,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                             }
                         });
                 break;
+
             //来自计划生成 新建
-            case OrderEstimateListActivity.PAGE_GENERATE:
+            case OrderEstimateListActivity.ORDER_PLAN:
 
                 showLoading("");
                 map = new HashMap<>();
