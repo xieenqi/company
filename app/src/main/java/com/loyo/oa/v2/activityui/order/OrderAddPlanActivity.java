@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.DatePicker;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -25,6 +27,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -102,6 +105,8 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
         et_remake = (EditText) findViewById(R.id.et_remake);
         tv_time = (TextView) findViewById(R.id.tv_time);
         et_estprice = (EditText) findViewById(R.id.et_estprice);
+        et_estprice.addTextChangedListener(OrderCommon.getTextWatcher());
+        et_estprice.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
         tv_tx = (TextView) findViewById(R.id.tv_tx);
         tv_kind = (TextView) findViewById(R.id.tv_kind);
 

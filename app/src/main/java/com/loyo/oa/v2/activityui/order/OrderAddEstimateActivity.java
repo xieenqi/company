@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.DatePicker;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -29,6 +31,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -75,16 +78,16 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     private EstimateAdd mEstimateAdd;
     private HashMap<String, Object> map;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
 
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
 
-            switch (msg.what){
+            switch (msg.what) {
 
                 //附件数量刷新
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
-                    if(attamentSize != 0){
-                        tv_attachment.setText("附件("+attamentSize+")");
+                    if (attamentSize != 0) {
+                        tv_attachment.setText("附件(" + attamentSize + ")");
                     }
                     break;
             }
@@ -106,8 +109,8 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             planId = mIntent.getStringExtra("planId");
             fromPage = mIntent.getIntExtra("fromPage", OrderEstimateListActivity.ORDER_ADD);
             mEstimateAdd = (EstimateAdd) mIntent.getSerializableExtra(ExtraAndResult.RESULT_DATA);
-            if(mIntent.getIntExtra("size",0) != 0){
-                attamentSize = mIntent.getIntExtra("size",0);
+            if (mIntent.getIntExtra("size", 0) != 0) {
+                attamentSize = mIntent.getIntExtra("size", 0);
             }
         }
 
@@ -126,7 +129,11 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         iv_submit.setImageResource(R.drawable.right_submit1);
 
         et_estprice = (EditText) findViewById(R.id.et_estprice);
+        et_estprice.addTextChangedListener(OrderCommon.getTextWatcher());
+        et_estprice.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
         et_kaiprice = (EditText) findViewById(R.id.et_kaiprice);
+        et_kaiprice.addTextChangedListener(OrderCommon.getTextWatcher());
+        et_kaiprice.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
         et_remake = (EditText) findViewById(R.id.et_remake);
         ll_back.setOnClickListener(this);
         iv_submit.setOnClickListener(this);
@@ -137,8 +144,8 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         ll_back.setOnTouchListener(Global.GetTouch());
         iv_submit.setOnTouchListener(Global.GetTouch());
 
-        if(attamentSize != 0){
-            tv_attachment.setText("附件("+attamentSize+")");
+        if (attamentSize != 0) {
+            tv_attachment.setText("附件(" + attamentSize + ")");
         }
         tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
         estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
@@ -172,9 +179,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             et_kaiprice.setText(mEstimateAdd.billingMoney + "");
             tv_priceer.setText(mEstimateAdd.payeeUser.name);
             et_remake.setText(mEstimateAdd.remark);
-            if(mEstimateAdd.attachmentCount != 0){
+            if (mEstimateAdd.attachmentCount != 0) {
                 attamentSize = mEstimateAdd.attachmentCount;
-                tv_attachment.setText("附件("+attamentSize+")");
+                tv_attachment.setText("附件(" + attamentSize + ")");
             }
             setPayeeMethod(mEstimateAdd.payeeMethod);
         }
@@ -388,7 +395,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //附件
             case R.id.ll_attachment:
                 mBundle = new Bundle();
-                mBundle.putString("uuid",uuid);
+                mBundle.putString("uuid", uuid);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
 
@@ -466,7 +473,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //附件回调
             case ExtraAndResult.MSG_WHAT_HIDEDIALOG:
                 uuid = data.getStringExtra("uuid");
-                attamentSize = data.getIntExtra("size",0);
+                attamentSize = data.getIntExtra("size", 0);
                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
                 break;
 

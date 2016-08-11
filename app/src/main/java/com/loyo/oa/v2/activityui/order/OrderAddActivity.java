@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
@@ -33,6 +35,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,6 +135,8 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         tv_customer = (TextView) findViewById(R.id.tv_customer);
         tv_stage = (TextView) findViewById(R.id.tv_stage);
         et_money = (EditText) findViewById(R.id.et_money);
+        et_money.addTextChangedListener(OrderCommon.getTextWatcher());
+        et_money.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
         tv_estimate = (TextView) findViewById(R.id.tv_estimate);
         tv_source = (TextView) findViewById(R.id.tv_source);
         et_ordernum = (EditText) findViewById(R.id.et_ordernum);
@@ -274,7 +279,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         if (TextUtils.isEmpty(et_name.getText().toString())) {
             Toast("请填写订单标题!");
             return;
-        } else if (TextUtils.isEmpty(tv_customer.getText().toString())) {
+        } else if (TextUtils.isEmpty(customerId)) {
             Toast("请选择对应客户!");
             return;
         } else if (TextUtils.isEmpty(tv_stage.getText().toString())) {
