@@ -278,7 +278,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_plan_value.setText(mData.planMoney + "");
-        OrderCommon.getOrderStatus(tv_status, mData.status);
+        OrderCommon.getOrderDetailsStatus(tv_status, mData.status);
         if (!TextUtils.isEmpty(mData.wfName)) {//是否关联审批
             ll_wflayout.setVisibility(View.VISIBLE);
             tv_wfname.setText(mData.wfName);

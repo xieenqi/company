@@ -101,7 +101,8 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         }
         holder.btn_delete.setOnTouchListener(Global.GetTouch());
         holder.btn_edit.setOnTouchListener(Global.GetTouch());
-        OrderCommon.getOrderStatus(holder.tv_status, mEstimateAdd.status);
+        OrderCommon.getEstimateStatus(holder.tv_status, mEstimateAdd.status);
+
         //删除
         holder.btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +133,9 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 MainApp.getMainApp().startActivityForResult(mActivity, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, requestPage, mBundle);
             }
         });
-        if (mEstimateAdd.status == 1 || mEstimateAdd.status == 3) {
+
+        //当订单状态为待审批 审批中 已通过 已完成时，不能编辑和删除
+        if (mEstimateAdd.status == 1 || mEstimateAdd.status == 2 || mEstimateAdd.status == 4 || mEstimateAdd.status == 5) {
             holder.ll_action.setVisibility(View.GONE);
         } else {
             holder.ll_action.setVisibility(View.VISIBLE);

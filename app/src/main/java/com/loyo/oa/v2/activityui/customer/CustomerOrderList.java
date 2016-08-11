@@ -255,7 +255,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
             }
             OrderListItem mData = data.get(position);
             holder.tv_title.setText(mData.title);
-            OrderCommon.getOrderStatus(holder.tv_status, mData.status);
+            OrderCommon.getOrderDetailsStatus(holder.tv_status, mData.status);
             holder.tv_money.setText(Utils.setValueDouble(mData.dealMoney));
             holder.ll_customer.setVisibility(View.GONE);
             holder.ll_responsible.setVisibility(View.VISIBLE);
