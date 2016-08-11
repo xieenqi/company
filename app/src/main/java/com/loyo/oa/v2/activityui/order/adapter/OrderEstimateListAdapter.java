@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.order.OrderAddEstimateActivity;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
+import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -146,6 +147,18 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+        holder.tv_status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mEstimateAdd.status != 6) {
+                    Intent intentWf = new Intent();
+                    intentWf.putExtra(ExtraAndResult.EXTRA_ID, mEstimateAdd.wfId);
+                    intentWf.setClass(mActivity, WfinstanceInfoActivity_.class);
+                    mActivity.startActivityForResult(intentWf, ExtraAndResult.REQUEST_CODE);
+                    mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                }
             }
         });
 
