@@ -214,7 +214,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         }
         tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
         tv_sale_count.setText("(" + mCustomer.counter.getDemand() + ")");
-        tv_order_count.setText("(" + mCustomer.counter.getDemand() + ")");//数字暂时没有返回
+        tv_order_count.setText("(" + mCustomer.counter.order + ")");
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
         //正式启用销售机会 弃用购买意向

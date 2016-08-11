@@ -39,6 +39,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -132,6 +133,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         tv_address.setText(address);
         refreshLocation(longitude, latitude);
         LocationUtilGD.sotpLocation();
+        UMengTools.sendLocationInfo(address, longitude, latitude);
     }
 
     @Override

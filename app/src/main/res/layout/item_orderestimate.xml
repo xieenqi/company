@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:layout_marginLeft="@dimen/margin_other_view"
             android:layout_marginTop="@dimen/dimen_10"
             android:text=""
-            android:textColor="@color/gray" />
+            android:textColor="@color/gray"/>
 
     </LinearLayout>
 
@@ -31,15 +31,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/estimate_page_string4" />
+            android:text="@string/estimate_page_string4"/>
 
-        <ImageView
-            android:layout_width="@dimen/dimen_45"
-            android:layout_height="@dimen/dimen_18"
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dimen_5"
+            android:layout_marginLeft="@dimen/dimen_2"
             android:layout_toRightOf="@+id/tv_esttime_title"
-            android:background="@drawable/img_wfinstance_status3" />
+            android:paddingLeft="@dimen/dimen_2"
+            android:paddingRight="@dimen/dimen_2"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sp11"
+            />
 
         <TextView
             android:id="@+id/tv_esttime"
@@ -48,11 +53,11 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_other_view"
-            android:text="" />
+            android:text=""/>
 
     </RelativeLayout>
 
-    <include layout="@layout/include_solid_line_left" />
+    <include layout="@layout/include_solid_line_left"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -63,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/estimate_page_string5" />
+            android:text="@string/estimate_page_string5"/>
 
         <TextView
             android:id="@+id/tv_esttime_price"
@@ -72,11 +77,11 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_other_view"
-            android:text="" />
+            android:text=""/>
 
     </RelativeLayout>
 
-    <include layout="@layout/include_solid_line_left" />
+    <include layout="@layout/include_solid_line_left"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -87,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/estimate_page_string6" />
+            android:text="@string/estimate_page_string6"/>
 
         <TextView
             android:id="@+id/tv_price"
@@ -96,11 +101,11 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_other_view"
-            android:text="" />
+            android:text=""/>
 
     </RelativeLayout>
 
-    <include layout="@layout/include_solid_line_left" />
+    <include layout="@layout/include_solid_line_left"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -111,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/estimate_page_string7" />
+            android:text="@string/estimate_page_string7"/>
 
         <TextView
             android:id="@+id/tv_payee"
@@ -120,11 +125,11 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_other_view"
-            android:text="" />
+            android:text=""/>
 
     </RelativeLayout>
 
-    <include layout="@layout/include_solid_line_left" />
+    <include layout="@layout/include_solid_line_left"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -135,7 +140,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="收款方式" />
+            android:text="收款方式"/>
 
         <TextView
             android:id="@+id/tv_payment"
@@ -144,11 +149,11 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_other_view"
-            android:text="未选择" />
+            android:text="未选择"/>
 
     </RelativeLayout>
 
-    <include layout="@layout/include_solid_line_left" />
+    <include layout="@layout/include_solid_line_left"/>
 
     <LinearLayout
         android:id="@+id/ll_attachment"
@@ -157,32 +162,32 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/tv_attachment"
             style="@style/text_item1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:minWidth="@dimen/dimen_60"
             android:text="@string/estimate_page_string9"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/tv_attachment"
             style="@style/text_item1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:hint="" />
+            android:hint=""/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="4dp"
             android:scaleType="center"
-            android:src="@drawable/right_arrow" />
+            android:src="@drawable/right_arrow"/>
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left" />
+    <include layout="@layout/include_solid_line_left"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -195,7 +200,7 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="@dimen/dimen_16"
             android:layout_marginTop="@dimen/dimen_16"
-            android:text="备注" />
+            android:text="备注"/>
 
         <TextView
             android:id="@+id/tv_Remarks"
@@ -204,70 +209,72 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_other_view"
-            android:text="" />
+            android:text=""/>
 
     </RelativeLayout>
 
-    <include layout="@layout/include_solid_line_left" />
+    <include layout="@layout/include_solid_line_left"/>
 
     <LinearLayout
+        android:id="@+id/ll_action"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_50"
         android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/btn_delete"
-            android:paddingBottom="@dimen/dimen_16"
-            android:paddingTop="@dimen/dimen_16"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dimen_16"
+            android:paddingTop="@dimen/dimen_16">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/icon_order_delete" />
+                android:background="@drawable/icon_order_delete"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="删除"
-                android:textColor="@color/text99" />
+                android:textColor="@color/text99"/>
         </LinearLayout>
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/lineCC"
-            android:layout_marginTop="@dimen/dimen_8"
             android:layout_marginBottom="@dimen/dimen_8"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:background="@color/lineCC"
             />
 
         <LinearLayout
             android:id="@+id/btn_edit"
-            android:paddingBottom="@dimen/dimen_16"
-            android:paddingTop="@dimen/dimen_16"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dimen_16"
+            android:paddingTop="@dimen/dimen_16">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/icon_order_edit" />
+                android:background="@drawable/icon_order_edit"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="编辑"
-                android:textColor="@color/text99" />
+                android:textColor="@color/text99"/>
         </LinearLayout>
 
     </LinearLayout>
-    <include layout="@layout/include_solid_line_left" />
+
+    <include layout="@layout/include_solid_line_left"/>
 
 </LinearLayout>

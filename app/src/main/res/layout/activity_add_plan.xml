@@ -44,7 +44,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="必填,请选择"
-                    android:textColor="@color/title_bg1"
+                    android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
@@ -81,7 +81,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/white"
-                    android:textColor="@color/title_bg1"
                     android:gravity="center_vertical|right"
                     android:hint="必填,请输入"
                     android:maxLength="7"
@@ -90,6 +89,7 @@
                     android:paddingBottom="@dimen/dimen_5"
                     android:paddingTop="@dimen/dimen_5"
                     android:singleLine="true"
+                    android:textColor="@color/text66"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -127,7 +127,8 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="请选择"
-                    android:textColor="@color/title_bg1"
+                    android:text="不提醒"
+                    android:textColor="@color/text66"
                     />
 
                 <ImageView
@@ -164,8 +165,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
-                    android:hint="必填,请选择"
-                    android:textColor="@color/title_bg1"
+                    android:hint="请选择"
+                    android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 

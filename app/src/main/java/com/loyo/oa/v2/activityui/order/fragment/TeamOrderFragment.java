@@ -84,10 +84,12 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                     isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
+                    page = 1;
                     break;
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
                     isPullDown = true;
                     sortIndex = (int) msg.getData().get("index");
+                    page = 1;
                     break;
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG1:
                     isPullDown = true;
@@ -101,6 +103,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                         xPath = "";
                         userId = saleTeamScreen.getId();
                     }
+                    page = 1;
                     break;
             }
             getData();
@@ -294,7 +297,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("status", statusIndex + 1);
+        map.put("status", statusIndex);
         map.put("filed", sortIndex == 1 ? "dealMoney" : "createdAt");
         map.put("xpath", xPath);
         map.put("userId", userId);
@@ -303,6 +306,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void success(OrderList orderlist, Response response) {
                 HttpErrorCheck.checkResponse("团队订单列表：", response);
+                lv_list.onRefreshComplete();
                 if (!isPullDown) {
                     listData.addAll(orderlist.records);
                 } else {
@@ -313,6 +317,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
 
             @Override
             public void failure(RetrofitError error) {
+                lv_list.onRefreshComplete();
                 HttpErrorCheck.checkError(error);
             }
         });

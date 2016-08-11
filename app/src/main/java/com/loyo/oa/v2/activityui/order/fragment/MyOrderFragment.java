@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
@@ -35,9 +36,11 @@ import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -74,11 +77,13 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                     isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
+                    page = 1;
                     break;
 
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
                     isPullDown = true;
                     sortIndex = (int) msg.getData().get("index");
+                    page = 1;
                     break;
             }
             getData();
@@ -148,7 +153,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             //新建
             case R.id.btn_add:
                 mBundle = new Bundle();
-                mBundle.putInt("fromPage",OrderDetailActivity.ORDER_ADD);
+                mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
                 startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
@@ -207,7 +212,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("status", statusIndex + 1);
+        map.put("status", statusIndex);
         map.put("filed", sortIndex == 1 ? "dealMoney" : "createdAt");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IOrder.class).getOrderMyList(map, new Callback<OrderList>() {
@@ -249,11 +254,12 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (resultCode){
+        switch (resultCode) {
 
-            //新建订单回调
+            //新建订单回调 订单详细 删除成功刷新列表
             case ExtraAndResult.REQUEST_CODE:
                 isPullDown = true;
+                page = 1;
                 getData();
                 break;
 

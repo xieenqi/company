@@ -22,10 +22,9 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
-import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.OrderPlanListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
-import com.loyo.oa.v2.activityui.order.bean.ExtensionDatas;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
@@ -99,8 +98,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById LinearLayout ll_order_layout, ll_order_content, ll_product;
     @ViewById TextView tv_product, tv_plan_value;
     //回款审批
-    @ViewById LinearLayout ll_payment_layout, ll_payment_content, ll_payment_order;
-    @ViewById TextView tv_order_name;
+    @ViewById LinearLayout ll_payment_layout, ll_payment_content;
 
     public final int MSG_DELETE_WFINSTANCE = 100;
     public final int MSG_ATTACHMENT = 200;
@@ -260,34 +258,44 @@ public class WfinstanceInfoActivity extends BaseActivity {
      * 订单审批相关内容
      */
     private void orderData() {
+        if (null == mWfInstance || null == mWfInstance.order) {
+            return;
+        }
         ll_order_layout.setVisibility(View.VISIBLE);
         List<String> orderList = new ArrayList<>();
-        orderList.add("对应客户：" + mWfInstance.order.customerName);
-        orderList.add("成交金额：" + mWfInstance.order.dealMoney);
-        orderList.add("订单编号：" + mWfInstance.order.orderNum);
-        if (null != mWfInstance.order.extensionDatas && mWfInstance.order.extensionDatas.size() > 0) {
-            for (ContactLeftExtras ele : mWfInstance.order.extensionDatas) {
+        OrderDetail order = mWfInstance.order;
+        orderList.add("对应订单：" + order.title);
+        orderList.add("对应客户：" + order.customerName);
+        orderList.add("成交金额：" + order.dealMoney);
+        orderList.add("订单编号：" + order.orderNum);
+        if (null != order.extensionDatas && order.extensionDatas.size() > 0) {
+            for (ContactLeftExtras ele : order.extensionDatas) {
                 orderList.add(ele.label + "：" + ele.val);
             }
         }
-        orderList.add("备注：" + mWfInstance.order.remark);
+        orderList.add("备注：" + order.remark);
         for (String text : orderList) {
             View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
             TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
             tv_key.setText(text);
             ll_order_content.addView(view_value);
         }
-        tv_product.setText(mWfInstance.order.proName);
-        tv_plan_value.setText(mWfInstance.order.proName);
+        tv_product.setText(order.proName);
+        tv_plan_value.setText(order.proName);
     }
 
     /**
      * 回款审批数据
      */
     private void paymentData() {
+        if (null == mWfInstance || null == mWfInstance.paymentRecord || !(mWfInstance.paymentRecord.size() > 0)) {
+            return;
+        }
         ll_payment_layout.setVisibility(View.VISIBLE);
         EstimateAdd payment = mWfInstance.paymentRecord.get(0);
         List<String> paymentList = new ArrayList<>();
+        paymentList.add("对应订单：" + payment.orderTitle);
+        paymentList.add("对应客户：" + payment.customerName);
         paymentList.add("回款时间：" + DateTool.timet(payment.receivedAt + "", "yyyy.MM.dd"));
         paymentList.add("回款金额：" + "￥" + payment.receivedMoney);
         paymentList.add("开票金额：" + "￥" + payment.billingMoney);
@@ -305,8 +313,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
             tv_key.setText(text);
             ll_payment_content.addView(view_value);
         }
-        tv_order_name.setText(payment.orderTitle);
-        ll_payment_order.setTag(payment.orderId);
     }
 
     /**
@@ -624,7 +630,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_nopass, R.id.layout_pass, R.id.layout_lastwork,
-            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan, R.id.ll_payment_order})
+            R.id.layout_AttachFile, R.id.ll_sale, R.id.ll_product, R.id.ll_plan})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -690,14 +696,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 mBundle.putInt(ExtraAndResult.TOKEN_START, 1);
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
-            case R.id.ll_payment_order://回款审批到订单详情
-                Intent mIntent = new Intent();
-//              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-                mIntent.putExtra(ExtraAndResult.EXTRA_ID, (String) v.getTag());
-                mIntent.setClass(this, OrderDetailActivity.class);
-                startActivityForResult(mIntent, 1);
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                break;
+//            case R.id.ll_payment_order://回款审批到订单详情
+//                Intent mIntent = new Intent();
+////              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+//                mIntent.putExtra(ExtraAndResult.EXTRA_ID, (String) v.getTag());
+//                mIntent.setClass(this, OrderDetailActivity.class);
+//                startActivityForResult(mIntent, 1);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                break;
         }
     }
 

@@ -27,6 +27,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -46,7 +47,7 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
 
     private int estimatedTime;
     private int payeeMethod;
-    private int remindType;
+    private int remindType = 5;
     private int formPage;
 
     private String orderId;
@@ -118,8 +119,8 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
      */
     public void editData() {
 
-        estimatedTime = planEstimateList.remindAt;
-        tv_time.setText(DateTool.timet(planEstimateList.remindAt + "", "yyyy.MM.dd"));
+        estimatedTime = planEstimateList.planAt;
+        tv_time.setText(app.df4.format(new Date(Long.valueOf(planEstimateList.planAt + "") * 1000)));
         et_estprice.setText(planEstimateList.planMoney + "");
         payeeMethod = planEstimateList.payeeMethod;
         remindType = planEstimateList.remindType;
@@ -179,22 +180,25 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
         if (TextUtils.isEmpty(et_estprice.getText().toString())) {
             Toast("请选择计划回款金额！");
             return;
-        } else if (TextUtils.isEmpty(tv_tx.getText().toString())) {
-            Toast("请选择提醒方式！");
-            return;
-        } else if (TextUtils.isEmpty(tv_kind.getText().toString())) {
-            Toast("请选择付款方式！");
-            return;
         }
+//        else if (TextUtils.isEmpty(tv_tx.getText().toString())) {
+//            Toast("请选择提醒方式！");
+//            return;
+//        }
+//        else if (TextUtils.isEmpty(tv_kind.getText().toString())) {
+//            Toast("请选择付款方式！");
+//            return;
+//        }
         showLoading("");
         map.put("orderId", orderId);
         map.put("planAt", estimatedTime);
+
         map.put("planMoney", Float.parseFloat(et_estprice.getText().toString()));
         map.put("payeeMethod", payeeMethod);
         map.put("remindType", remindType);
         map.put("remark", et_remake.getText().toString());
 
-        LogUtil.dee("创建计划:"+MainApp.gson.toJson(map));
+        LogUtil.dee("创建计划:" + MainApp.gson.toJson(map));
         if (null == planEstimateList) {   //新建
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                     .addPlanEstimate(map, new Callback<EstimatePlanAdd>() {

@@ -25,11 +25,11 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.discuss.bean.HttpCrecter;
-import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -498,20 +498,19 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
-            User user = (User) data.getSerializableExtra(User.class.getName());
+            NewUser user = (NewUser) data.getSerializableExtra("data");
             if (user != null) {
-                String id = user.toShortUser().getId();
+                String id = user.getId();
                 if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
                     Toast("不能@自己");
                     return;
                 }
-                String name = user.toShortUser().getName();
+                String name = user.getName();
                 mHaitSelectUsers.add(new HaitHelper.SelectUser(name, id));
                 String selectName = add$Name(name);
                 int index = et_discuss.getSelectionStart();
                 Editable editable = et_discuss.getText();
                 editable.insert(index, selectName);
-
                 showKeyBoard(et_discuss);
             }
         }
@@ -783,7 +782,6 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
      */
     private void refreshRedDot() {
         setResult(Activity.RESULT_OK);
-        if (!TextUtils.isEmpty(summaryId)) {
             HashMap<String, Object> body = new HashMap<>();
             body.put("summaryId", summaryId);
             LogUtil.d("@刷新红点:" + app.gson.toJson(body));
@@ -801,6 +799,5 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                             finishActivity();
                         }
                     });
-        }
     }
 }

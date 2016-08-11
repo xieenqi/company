@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
 import com.loyo.oa.v2.activityui.order.bean.PlanEstimateList;
 import com.loyo.oa.v2.application.MainApp;
@@ -20,10 +22,10 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -31,7 +33,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 回款计划 列表页面
+ * 【回款计划】 列表页面
  * Created by xeq on 16/8/4.
  */
 public class OrderPlanListActivity extends BaseActivity implements View.OnClickListener {
@@ -44,6 +46,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     private Intent mIntent;
     private Bundle mBundle;
     public int pagForm;//1 审批过来
+    private boolean isAdd;//需要编辑就传true
 
     private ArrayList<PlanEstimateList> mPlanEstimateList = new ArrayList<>();
 
@@ -60,6 +63,8 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         if (null != mIntent) {
             orderId = mIntent.getStringExtra("orderId");
             pagForm = mIntent.getIntExtra(ExtraAndResult.TOKEN_START, 0);
+            isAdd = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
+
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -71,12 +76,14 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         ll_add.setOnTouchListener(Global.GetTouch());
         ll_add.setOnClickListener(this);
         lv_list = (ListView) findViewById(R.id.lv_list);
+
         getPlanList();
+        ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
     }
 
 
     public void rushAdapter() {
-        ll_add.setVisibility(pagForm == 1 ? View.GONE : View.VISIBLE);
+
         if (null == adapter) {
             adapter = new OrderPlanAdapter();
             lv_list.setAdapter(adapter);
@@ -201,6 +208,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
                 holderView.ll_edit = (LinearLayout) convertView.findViewById(R.id.ll_edit);
                 holderView.ll_add = (LinearLayout) convertView.findViewById(R.id.ll_add);
                 holderView.ll_function = (LinearLayout) convertView.findViewById(R.id.ll_function);
+                holderView.iv_tx = (ImageView) convertView.findViewById(R.id.iv_tx);
                 convertView.setTag(holderView);
             } else {
                 holderView = (HolderView) convertView.getTag();
@@ -213,14 +221,15 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     class HolderView {
         public TextView tv_index, tv_time, tv_money, tv_mode, tv_tx, tv_memo;
         public LinearLayout ll_delete, ll_edit, ll_add, ll_function;
+        public ImageView iv_tx;
 
         public void setContentView(final int position, final PlanEstimateList planEstimateList) {
             tv_index.setText("计划" + (position + 1));
             ll_delete.setOnTouchListener(Global.GetTouch());
             ll_edit.setOnTouchListener(Global.GetTouch());
             ll_add.setOnTouchListener(Global.GetTouch());
-            ll_function.setVisibility(pagForm == 1 ? View.GONE : View.VISIBLE);
-            tv_time.setText(DateTool.timet(planEstimateList.planAt + "", "yyyy.MM.dd"));
+            ll_function.setVisibility(isAdd ? View.VISIBLE : View.GONE);
+            tv_time.setText(app.df4.format(new Date(Long.valueOf(planEstimateList.planAt + "") * 1000)));
             tv_money.setText("￥" + planEstimateList.planMoney);
 
             switch (planEstimateList.payeeMethod) {
@@ -262,19 +271,20 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
 
                 case 5:
                     tv_tx.setText("不提醒");
+                    iv_tx.setVisibility(View.GONE);
                     break;
             }
 
             tv_memo.setText(planEstimateList.remark);
 
-            /*意向产品 删除*/
+            /*删除*/
             ll_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     deletePlanList(planEstimateList.id);
                 }
             });
-            /*意向产品 编辑*/
+            /*编辑*/
             ll_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -288,7 +298,17 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
             ll_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    EstimateAdd data = new EstimateAdd();
+                    data.receivedAt = planEstimateList.planAt;
+                    data.receivedMoney = (int) planEstimateList.planMoney;
+                    data.payeeMethod = planEstimateList.payeeMethod;
+                    data.remark = planEstimateList.remark;
+                    mBundle = new Bundle();
+                    mBundle.putString("orderId", orderId);
+                    mBundle.putString("planId", planEstimateList.id);
+                    mBundle.putInt("fromPage", OrderEstimateListActivity.PAGE_GENERATE);
+                    mBundle.putSerializable(ExtraAndResult.RESULT_DATA, data);
+                    app.startActivityForResult(OrderPlanListActivity.this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                 }
             });
         }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:orientation="vertical"
     >
 
     <LinearLayout
@@ -10,22 +11,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         >
+
         <include layout="@layout/include_title"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_restimate"
-        android:layout_below="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_title"
         android:background="@color/title_bg1"
         android:orientation="vertical"
         >
 
         <LinearLayout
-            android:layout_marginTop="@dimen/dimen_10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10"
             android:orientation="horizontal"
             >
 
@@ -40,21 +42,24 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_sp13"
                     android:text="@string/estimate_page_string1"
-                    />
-                <TextView
-                    android:id="@+id/tv_dealprice"
-                    android:layout_marginTop="@dimen/dimen_8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_sp13"
-                    android:text="￥0"
                     />
 
-                </LinearLayout>
+                <com.loyo.oa.v2.customview.CustomTextView
+                    android:id="@+id/tv_dealprice"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="￥100000"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    />
+
+            </LinearLayout>
 
             <View
                 android:layout_width="1dp"
@@ -73,18 +78,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_sp13"
                     android:text="已回款"
-                    />
-                <TextView
-                    android:id="@+id/tv_aleryprice"
-                    android:layout_marginTop="@dimen/dimen_8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_sp13"
-                    android:text="￥0"
+                    />
+
+                <com.loyo.oa.v2.customview.CustomTextView
+                    android:id="@+id/tv_totalprice"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="￥100000"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
                     />
 
             </LinearLayout>
@@ -93,10 +101,10 @@
 
 
         <LinearLayout
-            android:layout_marginBottom="@dimen/dimen_10"
-            android:layout_marginTop="@dimen/dimen_20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_10"
+            android:layout_marginTop="@dimen/dimen_20"
             android:orientation="horizontal"
             >
 
@@ -112,18 +120,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_sp13"
                     android:text="@string/estimate_page_string2"
-                    />
-                <TextView
-                    android:id="@+id/tv_totalprice"
-                    android:layout_marginTop="@dimen/dimen_8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_sp13"
                     android:textColor="@color/white"
-                    android:text="￥0"
+                    android:textSize="@dimen/text_sp13"
+                    />
+
+                <com.loyo.oa.v2.customview.CustomTextView
+                    android:id="@+id/tv_aleryprice"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="￥100000"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
                     />
 
             </LinearLayout>
@@ -145,18 +156,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
                     android:text="@string/estimate_page_string3"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_sp13"
                     />
-                <TextView
+
+                <com.loyo.oa.v2.customview.CustomTextView
                     android:id="@+id/tv_faileprice"
-                    android:layout_marginTop="@dimen/dimen_8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="￥100000"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_sp13"
-                    android:text="￥0"
+                    android:textSize="9sp"
                     />
 
             </LinearLayout>
@@ -165,10 +179,10 @@
 
     <ListView
         android:id="@+id/lv_listview"
-        android:layout_below="@+id/ll_restimate"
-        android:layout_above="@+id/ll_add"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/ll_add"
+        android:layout_below="@+id/ll_restimate"
         android:listSelector="@android:color/transparent"
         android:scrollbars="none"
         >
@@ -178,9 +192,9 @@
         android:id="@+id/ll_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@color/activity_bg"
         android:gravity="center"
-        android:layout_alignParentBottom="true"
         android:minHeight="@dimen/dimen_48"
         android:orientation="horizontal"
         >
