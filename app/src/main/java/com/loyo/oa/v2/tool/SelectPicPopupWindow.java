@@ -32,8 +32,8 @@ import java.util.List;
 public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
     public static final int GET_IMG = 10;
-    private static final int PHOTO = 1;
-    private static final int PICTURE = 2;
+    public static final int PHOTO = 1;
+    public static final int PICTURE = 2;
     private static final String RESTORE_FILEURI = "fileUri";
     private List<String> mSelectPath;
 
