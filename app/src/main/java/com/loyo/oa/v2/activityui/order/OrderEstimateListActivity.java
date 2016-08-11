@@ -65,6 +65,8 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
      */
     public final static int PAGE_DETAILS_ADD = 0x02;
 
+    public final static int PAGE_DETAILS = 0x05;
+
     /**
      * 来自【编辑】订单记录
      */
@@ -74,6 +76,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
      * 来自【生成】订单记录
      */
     public final static int PAGE_GENERATE = 0x04;
+
 
     private Handler mHandler = new Handler() {
 
@@ -95,7 +98,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                         mData.remove(position);
                         rushAdapter();
                         ll_add.setVisibility(View.VISIBLE);
-                    } else if (fromPage == PAGE_DETAILS_ADD) {
+                    } else if (fromPage == PAGE_EDIT) {
                         deleteData();
                     }
 
@@ -116,7 +119,6 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         if (null != mIntent) {
             orderId = mIntent.getStringExtra("orderId");
             fromPage = mIntent.getIntExtra("fromPage", PAGE_ORDER_ADD);
-            LogUtil.dee("fromPage:"+fromPage);
             dealPrice = mIntent.getStringExtra("price");
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
                 mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
@@ -142,7 +144,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_back.setOnTouchListener(Global.GetTouch());
         rushAdapter();
 
-        if (fromPage == PAGE_DETAILS_ADD) {
+        if (fromPage == PAGE_DETAILS) {
             getData();
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         }
@@ -221,9 +223,8 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                 mBundle = new Bundle();
                 mBundle.putString("orderId", orderId);
                 mBundle.putInt("fromPage", fromPage);
-                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                app.startActivityForResult(this, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, OrderEstimateListActivity.PAGE_ORDER_ADD, mBundle);
                 break;
-
         }
     }
 
@@ -239,13 +240,11 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode != RESULT_OK) {
             return;
         }
-
-        if (requestCode == ExtraAndResult.REQUEST_CODE_STAGE) {
-
-            switch (fromPage) {
+            switch (requestCode) {
 
                 case PAGE_ORDER_ADD:
                     if (null == data) {
@@ -257,12 +256,15 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     rushAdapter();
                     break;
 
-
                 case PAGE_DETAILS_ADD:
                     getData();
                     break;
+
+                case PAGE_EDIT:
+                    getData();
+                    break;
+
             }
             mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_DIALOG);
-        }
     }
 }
