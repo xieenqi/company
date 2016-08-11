@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.order.OrderAddEstimateActivity;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
@@ -38,6 +39,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     private Message msg;
     private String orderId;
     private int fromPage;
+    private int shitPage;
 
     public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId, int fromPage) {
         this.mActivity = activity;
@@ -116,13 +118,18 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         holder.btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mIntent = new Intent(mActivity, OrderAddEstimateActivity.class);
-                mIntent.putExtra("size", mEstimateAdd.attachmentCount);
-                mIntent.putExtra("orderId", orderId);
-                //mIntent.putExtra("fromPage", OrderEstimateListActivity.PAGE_EDIT);
-                mIntent.putExtra("fromPage", fromPage);
-                mIntent.putExtra(ExtraAndResult.RESULT_DATA, mData.get(position));
-                mActivity.startActivityForResult(mIntent, ExtraAndResult.REQUEST_CODE_STAGE);
+                mBundle = new Bundle();
+                mBundle.putInt("size", mEstimateAdd.attachmentCount);
+                mBundle.putString("orderId", orderId);
+                if(fromPage == OrderEstimateListActivity.PAGE_DETAILS){
+                    shitPage = OrderEstimateListActivity.PAGE_EDIT;
+                }else{
+                    shitPage = fromPage;
+                }
+                mBundle.putInt("fromPage", shitPage);
+                LogUtil.dee("fromPage:"+fromPage);
+                mBundle.putSerializable(ExtraAndResult.RESULT_DATA, mData.get(position));
+                MainApp.getMainApp().startActivityForResult(mActivity,OrderAddEstimateActivity.class,MainApp.ENTER_TYPE_RIGHT,shitPage,mBundle);
             }
         });
         if (mEstimateAdd.status == 1 || mEstimateAdd.status == 3) {
