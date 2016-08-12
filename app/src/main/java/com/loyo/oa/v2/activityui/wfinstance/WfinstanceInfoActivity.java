@@ -113,6 +113,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     public ArrayList<WfNodes> lstData_WfNodes = new ArrayList<>();
     public ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
     public WfInstance mWfInstance;
+    private String AttachmentUUId;
+    private int AttachmentCount;
 
     @Extra(ExtraAndResult.EXTRA_ID)
     String wfInstanceId;
@@ -283,6 +285,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         tv_product.setText(order.proName);
         tv_plan_value.setText("¥" + order.backMoney + "(" + order.ratePayment + "%)");
+        AttachmentUUId = order.attachmentUUId;
+        AttachmentCount = order.attachmentCount;
     }
 
     /**
@@ -315,6 +319,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
             tv_key.setText(text);
             ll_payment_content.addView(view_value);
         }
+        AttachmentUUId = payment.attachmentUUId;
+        AttachmentCount = payment.attachmentCount;
     }
 
     /**
@@ -417,7 +423,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 layout_memo.setVisibility(View.GONE);
             }
         }
-        tv_attachment_count.setText("附件 (" + mWfInstance.bizExtData.getAttachmentCount() + ")");
+        tv_attachment_count.setText("附件 (" + (AttachmentCount == 0 ? mWfInstance.bizExtData.getAttachmentCount() : AttachmentCount) + ")");
         tv_projectName.setText(null == mWfInstance.ProjectInfo || TextUtils.isEmpty(mWfInstance.ProjectInfo.title) ? "无" : mWfInstance.ProjectInfo.title);
         if (300 == mWfInstance.bizForm.bizCode || 400 == mWfInstance.bizForm.bizCode
                 || 500 == mWfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件  订单审批  回款审批
@@ -676,7 +682,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 isOver = true;// 所有审批附件在详情是不准 操作16.08.12
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("data", mWfInstance.attachments);
-                bundle.putSerializable("uuid", mWfInstance.attachmentUUId);
+                if (TextUtils.isEmpty(AttachmentUUId)) {
+                    bundle.putSerializable("uuid", mWfInstance.attachmentUUId);
+                } else {
+                    bundle.putSerializable("uuid", AttachmentUUId);
+                }
                 bundle.putBoolean("isOver", isOver);
                 bundle.putInt("bizType", 12);
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
