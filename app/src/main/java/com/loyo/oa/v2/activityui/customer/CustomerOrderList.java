@@ -105,7 +105,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
         //超级管理员\权限判断
         if (null != MainApp.user && !MainApp.user.isSuperUser()) {
             try {
-                permission = (Permission) MainApp.rootMap.get("0215");//具体权限你没有做
+                permission = (Permission) MainApp.rootMap.get("0216");//具体权限你没有做
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
