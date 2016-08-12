@@ -511,7 +511,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 _class = SaleManageActivity.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
                 break;
-            case R.id.ll_order://订单管理
+            /*订单管理*/
+            case R.id.ll_order:
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);

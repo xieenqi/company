@@ -22,6 +22,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -40,13 +41,15 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     private String orderId;
     private int fromPage;
     private int requestPage;
+    private boolean isAdd;
 
-    public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId, int fromPage) {
+    public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId, int fromPage,boolean isAdd) {
         this.mActivity = activity;
         this.mData = data;
         this.mHandler = handler;
         this.orderId = orderId;
         this.fromPage = fromPage;
+        this.isAdd = isAdd;
     }
 
     @Override
@@ -134,11 +137,16 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             }
         });
 
-        //当订单状态为待审批 审批中 已通过 已完成时，不能编辑和删除
-        if (mEstimateAdd.status == 1 || mEstimateAdd.status == 2 || mEstimateAdd.status == 4 || mEstimateAdd.status == 5) {
+        //只有订单负责人，有权限操作回款
+        if(!isAdd){
             holder.ll_action.setVisibility(View.GONE);
-        } else {
-            holder.ll_action.setVisibility(View.VISIBLE);
+        }else{
+            //当订单状态为待审批 审批中 已通过 已完成时，不能编辑和删除
+            if (mEstimateAdd.status == 1 || mEstimateAdd.status == 2 || mEstimateAdd.status == 4 || mEstimateAdd.status == 5) {
+                holder.ll_action.setVisibility(View.GONE);
+            } else {
+                holder.ll_action.setVisibility(View.VISIBLE);
+            }
         }
 
         //附件监听
