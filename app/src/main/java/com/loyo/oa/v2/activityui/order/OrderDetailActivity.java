@@ -187,6 +187,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.ll_enclosure://附件
                 mBundle = new Bundle();
+                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD,isAdd);
                 mBundle.putString("uuid", mData.attachmentUUId);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
