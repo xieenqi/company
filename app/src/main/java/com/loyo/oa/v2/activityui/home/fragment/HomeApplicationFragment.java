@@ -289,7 +289,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity", "0213", 0),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
-                new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0215", 1),//新加订单
+                new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0216", 1),//新加订单
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signin.SignInManagerActivity_", "0206", 1),
                 new HomeItem(R.drawable.newmain_project, "项目管理", "com.loyo.oa.v2.activityui.project.ProjectManageActivity_", "0201", 2),
                 new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_", "0202", 2),
@@ -554,7 +554,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 首页业务显示\隐藏权限 判断设置
      */
     public void testJurl() {
-
+        updateUser();
         //超级管理员判断
         if (null != MainApp.user && !MainApp.user.isSuperUser()) {
             if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
