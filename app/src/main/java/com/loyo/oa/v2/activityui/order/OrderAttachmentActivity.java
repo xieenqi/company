@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.ServiceException;
@@ -39,9 +40,11 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -88,11 +91,11 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
     public void initUI() {
         mIntent = getIntent();
-        if(null != mIntent){
+        if (null != mIntent) {
             mUserList = (ArrayList<User>) mIntent.getSerializableExtra("users");
             bizType = mIntent.getIntExtra("bizType", 0);
-            isOver  = mIntent.getBooleanExtra("isOver", false);
-            if(!TextUtils.isEmpty(mIntent.getStringExtra("uuid")) || null != mIntent.getStringExtra("uuid")){
+            isOver = mIntent.getBooleanExtra("isOver", false);
+            if (!TextUtils.isEmpty(mIntent.getStringExtra("uuid")) || null != mIntent.getStringExtra("uuid")) {
                 uuid = mIntent.getStringExtra("uuid");
                 isPic = true;
             }
@@ -108,14 +111,14 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
         tv_upload.setOnClickListener(this);
         img_title_left.setOnClickListener(this);
 
-        if(isPic){
+        if (isPic) {
             getAttachments();
         }
     }
 
     /**
      * 传附件到Oss
-     * */
+     */
     public void uploadOssFile(OSS oss, String bucketName, String oKey, String filePath) {
 
         // 构造上传请求
@@ -136,7 +139,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
                 LogUtil.dee("UploadSuccess");
                 LogUtil.dee("ETag" + result.getETag());
                 LogUtil.dee("RequestId" + result.getRequestId());
-                if(uploadSize == uploadNum){
+                if (uploadSize == uploadNum) {
                     postAttaData();
                     cancelLoading();
                 }
@@ -164,8 +167,8 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
     /**
      * 获取上传Token
-     * */
-    public void getServerToken(final String oKey,final String filePath){
+     */
+    public void getServerToken(final String oKey, final String filePath) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
                 .getServerToken(new Callback<OssToken>() {
                     @Override
@@ -192,8 +195,8 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
     /**
      * 上传附件信息
-     * */
-    public void postAttaData(){
+     */
+    public void postAttaData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
                 .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
@@ -269,8 +272,8 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
     /**
      * 组装附件数据
-     * */
-    public void setAttachmentData(){
+     */
+    public void setAttachmentData() {
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -286,10 +289,10 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
                         attachmentBatch.bizType = 17;
                         attachmentBatch.mime = Utils.getMimeType(newFile.getPath());
                         attachmentBatch.name = uuid + "/" + newFile.getName();
-                        attachmentBatch.size = Integer.parseInt(newFile.length()+"");
+                        attachmentBatch.size = Integer.parseInt(newFile.length() + "");
                         attachment.add(attachmentBatch);
 
-                        getServerToken(uuid + "/" + newFile.getName(),newFile.getPath());
+                        getServerToken(uuid + "/" + newFile.getName(), newFile.getPath());
 
                     }
                 }
@@ -328,18 +331,18 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         mIntent = new Intent();
-        mIntent.putExtra("uuid",uuid);
-        mIntent.putExtra("size",attachmentCount);
-        app.finishActivity(this,MainApp.ENTER_TYPE_LEFT,RESULT_OK,mIntent);
+        mIntent.putExtra("uuid", uuid);
+        mIntent.putExtra("size", attachmentCount);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK && null != data) {
+        if (resultCode != RESULT_OK && null == data) {
             return;
         }
 
@@ -347,13 +350,13 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
             //相册选择回调
             case SelectPicPopupWindow.PICTURE:
-                    pickPhots = new ArrayList<>();
-                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                    for (String path : mSelectPath) {
-                        pickPhots.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
-                    }
-                    setAttachmentData();
-                    break;
+                pickPhots = new ArrayList<>();
+                mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                for (String path : mSelectPath) {
+                    pickPhots.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                }
+                setAttachmentData();
+                break;
         }
     }
 }
