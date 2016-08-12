@@ -158,7 +158,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
                                 status = 2;
                                 break;
                             case 4:
-                                status = 4;
+                                status = 3;
                                 break;
                         }
                         break;
