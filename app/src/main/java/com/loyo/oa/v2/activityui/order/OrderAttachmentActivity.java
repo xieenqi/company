@@ -25,6 +25,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
@@ -67,6 +68,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     private int uploadNum = 0; //上传附件数量
     private boolean isOver;    //当前业务已经结束
     private boolean isPic = false;
+    private boolean isAdd;     //操作权限
 
     private LinearLayout img_title_left;
     private TextView tv_title;
@@ -95,7 +97,8 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
             mUserList = (ArrayList<User>) mIntent.getSerializableExtra("users");
             bizType = mIntent.getIntExtra("bizType", 0);
             isOver = mIntent.getBooleanExtra("isOver", false);
-            if (!TextUtils.isEmpty(mIntent.getStringExtra("uuid")) || null != mIntent.getStringExtra("uuid")) {
+            isAdd  = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD,true);
+            if (null != mIntent.getStringExtra("uuid") && mIntent.getStringExtra("uuid").length() > 5) {
                 uuid = mIntent.getStringExtra("uuid");
                 isPic = true;
             }
@@ -110,6 +113,10 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
         img_title_left.setOnTouchListener(Global.GetTouch());
         tv_upload.setOnClickListener(this);
         img_title_left.setOnClickListener(this);
+
+        if(!isAdd){
+            tv_upload.setVisibility(View.GONE);
+        }
 
         if (isPic) {
             getAttachments();
