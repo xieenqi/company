@@ -34,6 +34,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -63,7 +64,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private ArrayList<ContactLeftExtras> mCusList;
     private ArrayList<SaleIntentionalProduct> productData;//意向产品的数据
     private ArrayList<EstimateAdd> estimateData;          //回款记录数据
-
 
     private EditText et_name;     //订单标题
     private TextView tv_customer; //对应客户
@@ -171,6 +171,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
     public void editData() {
 
+        uuid = mOrderDetail.attachmentUUId;
         customerId = mOrderDetail.customerId;
         customerName = mOrderDetail.customerName;
         productData = mOrderDetail.proInfo;
@@ -193,6 +194,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 生成订单
      */
     void createData() {
+        uuid = mOrderDetail.attachmentUUId;
         customerId = mOrderDetail.customerId;
         customerName = mOrderDetail.customerName;
         productData = mOrderDetail.proInfo;
@@ -307,7 +309,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         map.put("customerId", customerId);
         map.put("customerName", customerName);
         map.put("title", et_name.getText().toString());
-        map.put("attachmentUUId", uuid);
+        if(null == uuid || TextUtils.isEmpty(uuid)){
+            map.put("attachmentUUId", StringUtil.getUUID());
+        }else{
+            map.put("attachmentUUId", uuid);
+        }
         map.put("dealMoney", Float.parseFloat(et_money.getText().toString()));
         map.put("orderNum", et_ordernum.getText().toString());
         map.put("remark", et_remake.getText().toString());
@@ -413,6 +419,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //附件
             case R.id.ll_source:
                 mBundle = new Bundle();
+                mBundle.putInt("bizType",25);
                 mBundle.putString("uuid", uuid);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
