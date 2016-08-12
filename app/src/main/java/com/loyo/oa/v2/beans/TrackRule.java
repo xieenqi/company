@@ -17,6 +17,7 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.TrackLogRecevier;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -24,6 +25,8 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -176,6 +179,55 @@ public class TrackRule implements Serializable {
         StartTrackRuleAlarm(app, trackRule, 30 * 1000);
         //记录最近一次设置轨迹成功的时间
         SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_CHECK_TRACKLOG, DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+    }
+
+
+    /**
+     * 检测轨迹规则 后台是否产生轨迹
+     *
+     * @return
+     */
+    public static boolean checkRule(TrackRule trackRule) {
+        boolean unRuleable = trackRule == null || trackRule.getWeekdays() == null || trackRule.getWeekdays().length() != 7;
+        if (unRuleable) {
+            LogUtil.d("checkRule,轨迹规则【设置】错误，trackRule is null ? : " + (trackRule == null) +
+                    " weekdays : " + (trackRule == null ? "NULL" : trackRule.getWeekdays().length()));
+        }
+
+        int day_of_week = DateTool.get_DAY_OF_WEEK(new Date());
+        day_of_week = day_of_week == 1 ? 7 : day_of_week - 1;
+
+        boolean unInDay = true;
+        if (!TextUtils.isEmpty(trackRule.getWeekdays()) && trackRule.getWeekdays().length() >= day_of_week) {
+            unInDay = '1' != (trackRule.getWeekdays().charAt(day_of_week - 1));
+        }
+        if (unInDay) {
+            LogUtil.d("checkRule,当日未【设置】上报轨迹,weekdays : " + trackRule.getWeekdays() + " dayofweek : " + day_of_week);
+        }
+
+        boolean isInTime = false;
+        SimpleDateFormat sdf = MainApp.getMainApp().df6;
+        String currentDate = sdf.format(new Date());
+        try {
+            Date currDate = sdf.parse(currentDate);
+            Date startDate = sdf.parse(trackRule.startTime);
+            Date endDate = sdf.parse(trackRule.endTime);
+
+            if (currDate.after(startDate) && currDate.before(endDate)) {
+                isInTime = true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!isInTime) {
+            LogUtil.d("checkRule,该时间段内未【设置】上报轨迹");
+        }
+
+        if (!unRuleable && !unInDay && isInTime) {
+            return true;
+        }
+        return false;
     }
 
 }

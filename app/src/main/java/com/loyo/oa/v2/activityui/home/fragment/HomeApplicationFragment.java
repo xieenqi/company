@@ -66,6 +66,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -761,6 +762,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 HttpErrorCheck.checkError(error);
             }
         });
+        UMengTools.sendLocationInfo(address, longitude, latitude);
         LocationUtilGD.sotpLocation();
     }
 
