@@ -205,15 +205,15 @@
 
         <TextView
             android:id="@+id/tv_Remarks"
-            android:layout_marginLeft="@dimen/dimen_10"
-            android:layout_toRightOf="@+id/tv_title_remarks"
-            android:gravity="right"
-            android:paddingTop="@dimen/dimen_5"
-            android:paddingBottom="@dimen/dimen_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimen_10"
             android:layout_marginRight="@dimen/margin_other_view"
+            android:layout_toRightOf="@+id/tv_title_remarks"
+            android:gravity="left"
+            android:paddingBottom="@dimen/dimen_5"
+            android:paddingTop="@dimen/dimen_5"
             android:text=""/>
 
     </RelativeLayout>
