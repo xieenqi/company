@@ -2,13 +2,14 @@ package com.loyo.oa.v2.tool;
 
 import android.content.Context;
 import android.location.LocationManager;
-import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackLog;
+import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
 import com.umeng.analytics.MobclickAgent;
 
@@ -69,7 +70,9 @@ public class UMengTools {
 
     public static void sendLocationInfo(final String address, final double longitude, final double latitude) {
         String oldInfo = SharedUtil.get(MainApp.getMainApp(), "sendLocation");
-        if (!TextUtils.isEmpty(address) && !TextUtils.isEmpty(oldInfo) && address.equals(oldInfo)) {
+        TrackRule trackrule = DBManager.Instance().getTrackRule();
+        if (!TrackRule.checkRule(trackrule) || address.equals(oldInfo)) {
+            LogUtil.d("此时不需要穿轨迹。。。》" + address.equals(oldInfo));
             return;
         }
         ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude
@@ -86,7 +89,7 @@ public class UMengTools {
 
             @Override
             public void failure(RetrofitError error) {
-
+                HttpErrorCheck.checkError(error);
             }
         });
     }
