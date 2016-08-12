@@ -293,12 +293,11 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
                     if (newFile.exists()) {
                         attachmentBatch = new AttachmentBatch();
                         attachmentBatch.UUId = uuid;
-                        attachmentBatch.bizType = 17;
+                        attachmentBatch.bizType = bizType;
                         attachmentBatch.mime = Utils.getMimeType(newFile.getPath());
                         attachmentBatch.name = uuid + "/" + newFile.getName();
                         attachmentBatch.size = Integer.parseInt(newFile.length() + "");
                         attachment.add(attachmentBatch);
-
                         getServerToken(uuid + "/" + newFile.getName(), newFile.getPath());
 
                     }
