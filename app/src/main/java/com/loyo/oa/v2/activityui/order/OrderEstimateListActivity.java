@@ -95,6 +95,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
     public final static int ORDER_PLAN = 0x31;
 
+
     private LinearLayout ll_back;
     private LinearLayout ll_add;
     private TextView tv_title;
@@ -160,13 +161,13 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     public void initUI() {
         mIntent = getIntent();
         if (null != mIntent) {
+            isAdd = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
             orderId = mIntent.getStringExtra("orderId");
             fromPage = mIntent.getIntExtra("fromPage", OrderEstimateListActivity.ORDER_ADD);
             dealPrice = mIntent.getStringExtra("price");
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
                 mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
             }
-            isAdd = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
         }
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
@@ -190,7 +191,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             getData();
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         }
-        mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage);
+        mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage,isAdd);
         lv_listview.setAdapter(mAdapter);
         rushAdapter();
     }
