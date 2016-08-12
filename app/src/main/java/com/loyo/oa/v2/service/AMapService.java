@@ -302,6 +302,7 @@ public class AMapService extends APSService {
 
                 SharedUtil.put(app, "lat", String.valueOf(latitude));
                 SharedUtil.put(app, "lng", String.valueOf(longitude));
+                SharedUtil.remove(app, "address");
                 SharedUtil.put(app, "address", address);
             }
 
