@@ -31,6 +31,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.Calendar;
@@ -240,7 +241,11 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 showLoading("");
                 map = new HashMap<>();
-                map.put("UUID", "");
+                if(null == uuid || TextUtils.isEmpty(uuid)){
+                    map.put("uuid", StringUtil.getUUID());
+                }else{
+                    map.put("uuid", uuid);
+                }
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
                 map.put("orderId", orderId);
                 map.put("attachmentsName", "");
@@ -272,7 +277,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 showLoading("");
                 map = new HashMap<>();
-                map.put("UUID", mEstimateAdd.attachmentUUId);
+                map.put("uuid", mEstimateAdd.attachmentUUId);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
                 map.put("orderId", orderId);
                 map.put("attachmentsName", "");
@@ -303,7 +308,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 showLoading("");
                 map = new HashMap<>();
-                map.put("UUID", "");
+                map.put("uuid", mEstimateAdd.attachmentUUId);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
                 map.put("orderId", orderId);
                 map.put("attachmentsName", "");
@@ -395,6 +400,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //附件
             case R.id.ll_attachment:
                 mBundle = new Bundle();
+                mBundle.putInt("bizType",26);
                 mBundle.putString("uuid", uuid);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;

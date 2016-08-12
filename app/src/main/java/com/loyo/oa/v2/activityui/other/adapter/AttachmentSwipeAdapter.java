@@ -215,20 +215,6 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     holder.layout_action_delete.setVisibility(View.INVISIBLE);
                 }
             }
-//            /**权限设置*/
-//            holder.layout_action_update.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(final View view) {
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("data", attachment);
-//                    bundle.putSerializable("users", users);
-//                    if (null != callback) {
-//                        callback.onRightClick(bundle);
-//                    } else {
-//                        app.startActivityForResult((Activity) mContext, AttachmentRightActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_ATTACHMENT, bundle);
-//                    }
-//                }
-//            });
 
             /**附件删除*/
             holder.layout_action_delete.setOnClickListener(new View.OnClickListener() {
