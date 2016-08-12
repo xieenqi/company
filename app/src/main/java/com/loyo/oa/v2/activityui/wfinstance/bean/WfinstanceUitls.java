@@ -118,6 +118,9 @@ public class WfinstanceUitls {
                 case WfInstance.STATUS_ABORT:
                     order = "我驳回的";
                     break;
+                case WfInstance.STATUS_APPROVED:
+                    order = "未到我审批的";
+                    break;
             }
             boolean isExist = false;
             for (WflnstanceItemData group : groupData) {

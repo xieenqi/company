@@ -483,12 +483,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
 
         //显示菜单
-        if (isPass && mWfInstance.creator != null
-                && mWfInstance.creator.isCurrentUser() && !("300".equals(mWfInstance.bizForm.bizCode + ""))) {
+        if (isPass && mWfInstance.creator != null && mWfInstance.creator.isCurrentUser()) {
             img_title_right.setVisibility(View.VISIBLE);
-        } else if (mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")) {
-            img_title_right.setVisibility(View.VISIBLE);
-        } else if ("400".equals(mWfInstance.bizForm.bizCode + "") || "500".equals(mWfInstance.bizForm.bizCode + "")) {
+        }
+//        else if (mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")) {
+//            img_title_right.setVisibility(View.VISIBLE);
+//        }
+        if ("400".equals(mWfInstance.bizForm.bizCode + "") || "500".equals(mWfInstance.bizForm.bizCode + "")
+                || "300".equals(mWfInstance.bizForm.bizCode + "")) {
             img_title_right.setVisibility(View.GONE);//自动生成的审批不可以编辑删除
         }
     }
@@ -667,9 +669,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
             /*附件上传*/
             case R.id.layout_AttachFile:
 
-                if (null != mWfInstance && (mWfInstance.status == 2 || mWfInstance.status == 4 || mWfInstance.status == 5)) {
-                    isOver = true;
-                }
+//                if (null != mWfInstance && (mWfInstance.status == 2 || mWfInstance.status == 4 || mWfInstance.status == 5)
+//                        || "300".equals(mWfInstance.bizForm.bizCode + "") || "400".equals(mWfInstance.bizForm.bizCode + "")
+//                        || "500".equals(mWfInstance.bizForm.bizCode + "")) {
+//                }
+                isOver = true;// 所有审批附件在详情是不准 操作16.08.12
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("data", mWfInstance.attachments);
                 bundle.putSerializable("uuid", mWfInstance.attachmentUUId);
@@ -695,17 +699,12 @@ public class WfinstanceInfoActivity extends BaseActivity {
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
             case R.id.ll_plan://订单 查看回款记录
-
                 Bundle mBundle = new Bundle();
                 mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_DETAILS);
                 mBundle.putString("price", mWfInstance.order.dealMoney + "");
                 mBundle.putString("orderId", mWfInstance.order.id);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
                 app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
-//                mBundle = new Bundle();
-//                mBundle.putString("orderId", mWfInstance.order.id);
-////                mBundle.putInt(ExtraAndResult.TOKEN_START, 1);
-//                app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
 //            case R.id.ll_payment_order://回款审批到订单详情
 //                Intent mIntent = new Intent();
