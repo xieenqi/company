@@ -107,6 +107,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private Button btn_add;
     private RoundImageView heading;
     private MoreWindowCase mMoreWindowcase;
+    private HomeFragment homefragment;
     private ValidateInfo validateInfo = new ValidateInfo();
 
     private Bundle mBundle;
@@ -187,6 +188,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         }
     };
 
+    public void setHomeFragment(HomeFragment homefragment) {
+        this.homefragment = homefragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -533,6 +537,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                         HttpErrorCheck.checkResponse("a首页红点", response);
                         mItemNumbers = removalRedNumber(homeNumbers);
                         testJurl();
+                        homefragment.onNetworkChanged(true);
                     }
 
                     @Override
