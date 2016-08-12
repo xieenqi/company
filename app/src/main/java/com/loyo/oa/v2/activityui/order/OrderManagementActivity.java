@@ -18,6 +18,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.fragment.MyOrderFragment;
 import com.loyo.oa.v2.activityui.order.fragment.TeamOrderFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -43,6 +45,7 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
     private List<BaseFragment> fragments = new ArrayList<>();
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
+    private Permission permission;
 
 
     @Override
@@ -71,6 +74,20 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setVisibility(View.INVISIBLE);
+        //超级管理员\权限判断
+        if (!MainApp.user.isSuperUser()) {
+            try {
+                permission = (Permission) MainApp.rootMap.get("0328");
+                if (!permission.isEnable()) {
+                    SaleItemStatus = new String[]{"我的订单"};
+                    img_title_arrow.setVisibility(View.INVISIBLE);
+                    layout_title_action.setEnabled(false);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Toast("团队订单权限,code错误:0328");
+            }
+        }
         initTitleItem();
         initChildren();
     }
