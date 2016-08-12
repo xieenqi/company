@@ -162,7 +162,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
                                 break;
                         }
                         break;
-                    case 2:
+                    case 1:
                         if (RowIndex == 0) {
                             bizFormId = "";
                         } else {
