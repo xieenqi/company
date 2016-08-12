@@ -24,22 +24,18 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.LDBManager;
 import com.loyo.oa.v2.point.ITrackLog;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -158,7 +154,7 @@ public class AMapService extends APSService {
             LogUtil.d("=====onLocation轨迹Changed=====aMapLocation");
 
             releaseWakeLock();//释放cpu
-            if (!checkRule()) {
+            if (!TrackRule.checkRule(trackRule)) {
                 SharedUtil.remove(app, "lat");
                 SharedUtil.remove(app, "lng");
                 return;
@@ -306,6 +302,7 @@ public class AMapService extends APSService {
 
                 SharedUtil.put(app, "lat", String.valueOf(latitude));
                 SharedUtil.put(app, "lng", String.valueOf(longitude));
+                SharedUtil.remove(app, "address");
                 SharedUtil.put(app, "address", address);
             }
 
@@ -347,54 +344,6 @@ public class AMapService extends APSService {
         data.setProvider(TextUtils.isEmpty(aMapLocation.getProvider()) ? "" : aMapLocation.getProvider());
 
         return data;
-    }
-
-    /**
-     * 检测轨迹规则 后台是否产生轨迹
-     *
-     * @return
-     */
-    private boolean checkRule() {
-        boolean unRuleable = trackRule == null || trackRule.getWeekdays() == null || trackRule.getWeekdays().length() != 7;
-        if (unRuleable) {
-            LogUtil.d("checkRule,轨迹规则【设置】错误，trackRule is null ? : " + (trackRule == null) +
-                    " weekdays : " + (trackRule == null ? "NULL" : trackRule.getWeekdays().length()));
-        }
-
-        int day_of_week = DateTool.get_DAY_OF_WEEK(new Date());
-        day_of_week = day_of_week == 1 ? 7 : day_of_week - 1;
-
-        boolean unInDay = true;
-        if (!TextUtils.isEmpty(trackRule.getWeekdays()) && trackRule.getWeekdays().length() >= day_of_week) {
-            unInDay = '1' != (trackRule.getWeekdays().charAt(day_of_week - 1));
-        }
-        if (unInDay) {
-            LogUtil.d("checkRule,当日未【设置】上报轨迹,weekdays : " + trackRule.getWeekdays() + " dayofweek : " + day_of_week);
-        }
-
-        boolean isInTime = false;
-        SimpleDateFormat sdf = app.df6;
-        String currentDate = sdf.format(new Date());
-        try {
-            Date currDate = sdf.parse(currentDate);
-            Date startDate = sdf.parse(trackRule.startTime);
-            Date endDate = sdf.parse(trackRule.endTime);
-
-            if (currDate.after(startDate) && currDate.before(endDate)) {
-                isInTime = true;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (!isInTime) {
-            LogUtil.d("checkRule,该时间段内未【设置】上报轨迹");
-        }
-
-        if (!unRuleable && !unInDay && isInTime) {
-            return true;
-        }
-        return false;
     }
 
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddEstimateActivity;
+import com.loyo.oa.v2.activityui.order.OrderAttachmentActivity;
 import com.loyo.oa.v2.activityui.order.OrderEstimateListActivity;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
@@ -153,9 +154,16 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         holder.ll_attachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mBundle = new Bundle();
+                mBundle.putInt("bizType",26);
+                mBundle.putBoolean("isOver",true);
+                mBundle.putString("uuid", mEstimateAdd.attachmentUUId);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
+                MainApp.getMainApp().startActivityForResult(mActivity, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
             }
         });
+
+
         holder.tv_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
