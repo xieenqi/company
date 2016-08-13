@@ -34,6 +34,8 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
+import org.w3c.dom.Text;
+
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -170,7 +172,6 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             newUser.setId(mEstimateAdd.payeeUser.id);
             newUser.setName(mEstimateAdd.payeeUser.name);
             newUser.setAvatar(mEstimateAdd.payeeUser.avatar);
-
             id = mEstimateAdd.id;
             uuid = mEstimateAdd.attachmentUUId;
             estimatedTime = mEstimateAdd.receivedAt;
@@ -243,10 +244,11 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 showLoading("");
                 map = new HashMap<>();
                 if(null == uuid || TextUtils.isEmpty(uuid)){
-                    map.put("uuid", StringUtil.getUUID());
+                    map.put("attachmentUUId", StringUtil.getUUID());
                 }else{
-                    map.put("uuid", uuid);
+                    map.put("attachmentUUId", uuid);
                 }
+                map.put("attachmentCount",attamentSize);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
                 map.put("orderId", orderId);
                 map.put("attachmentsName", "");
@@ -256,7 +258,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("remark", mEstimateAdd.remark);
                 map.put("payMethodString", tv_kind.getText().toString());
                 map.put("payeeUser", mEstimateAdd.payeeUser);
-
+                LogUtil.dee("新建回款 数据:"+MainApp.gson.toJson(map));
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                         .addPayEstimate(map, new Callback<EstimateAdd>() {
                             @Override
@@ -278,7 +280,8 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 showLoading("");
                 map = new HashMap<>();
-                map.put("uuid", mEstimateAdd.attachmentUUId);
+                map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
+                map.put("attachmentCount",attamentSize);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
                 map.put("orderId", orderId);
                 map.put("attachmentsName", "");
@@ -309,7 +312,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 showLoading("");
                 map = new HashMap<>();
-                map.put("uuid", mEstimateAdd.attachmentUUId);
+                map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
                 map.put("orderId", orderId);
                 map.put("attachmentsName", "");
@@ -377,7 +380,11 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 }
                 mEstimateAdd.id = id;
                 mEstimateAdd.attachmentCount = attamentSize;
-                mEstimateAdd.attachmentUUId = uuid;
+                if(null == uuid || TextUtils.isEmpty(uuid)){
+                    mEstimateAdd.attachmentUUId = StringUtil.getUUID();
+                }else{
+                    mEstimateAdd.attachmentUUId = uuid;
+                }
                 mEstimateAdd.payeeUser.id = newUser.getId();
                 mEstimateAdd.payeeUser.name = newUser.getName();
                 mEstimateAdd.payeeUser.avatar = newUser.getAvatar();
