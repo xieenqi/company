@@ -69,9 +69,11 @@ public class UMengTools {
     }
 
     public static void sendLocationInfo(final String address, final double longitude, final double latitude) {
+        final String date = MainApp.getMainApp().df4.format(new Date(System.currentTimeMillis()));
+        LogUtil.d("检查时间: " + date);
         String oldInfo = SharedUtil.get(MainApp.getMainApp(), "sendLocation");
         TrackRule trackrule = DBManager.Instance().getTrackRule();
-        if (!TrackRule.checkRule(trackrule) || address.equals(oldInfo)) {
+        if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {
             LogUtil.d("此时不需要穿轨迹。。。》" + address.equals(oldInfo));
             return;
         }
@@ -84,7 +86,7 @@ public class UMengTools {
             public void success(Object o, Response response) {
                 HttpErrorCheck.checkResponse(" 手动上传轨迹: ", response);
                 SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
-                SharedUtil.put(MainApp.getMainApp(), "sendLocation", address);
+                SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
             }
 
             @Override
