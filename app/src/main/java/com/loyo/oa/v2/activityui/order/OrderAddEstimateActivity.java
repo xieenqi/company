@@ -24,6 +24,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -162,6 +163,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         }
         editEstimate();
     }
+
 
     /**
      * 编辑 记录
@@ -396,7 +398,8 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
             //回款日期
             case R.id.ll_time:
-                estimateTime();
+                setDeadLine();
+                //estimateTime();
                 break;
 
             //收款人
@@ -434,6 +437,28 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 tv_kind.setText(value);
             }
         });
+    }
+
+    /**
+     * 截至日期选择框
+     */
+    void setDeadLine() {
+        DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
+        dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
+            @Override
+            public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
+                String str = year + "." + String.format("%02d", (month + 1)) + "." +
+                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+                tv_time.setText(str);
+                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd HH:mm"));
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+        }, true, "取消");
     }
 
     /**
