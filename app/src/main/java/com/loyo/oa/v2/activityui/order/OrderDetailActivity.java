@@ -63,6 +63,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
      * 来自订单编辑
      */
     public final static int ORDER_EDIT = 0x11;
+
     /**
      * 机会 生成订单
      */

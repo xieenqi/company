@@ -327,7 +327,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         } else {
             addOrderData(map);
         }
-
     }
 
     /**
