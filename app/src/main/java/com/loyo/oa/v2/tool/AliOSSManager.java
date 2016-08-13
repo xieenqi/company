@@ -7,6 +7,13 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
+import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IAttachment;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【阿里云oss】工具类
