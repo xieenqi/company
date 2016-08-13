@@ -254,7 +254,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
             return;
         }
 
-        Attachment.Sort(mListAttachment);
+        //Attachment.Sort(mListAttachment);
         if (null == adapter) {
             adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList, bizType, uuid, isOver);
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
