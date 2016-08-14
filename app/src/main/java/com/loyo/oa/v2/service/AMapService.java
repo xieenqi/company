@@ -163,7 +163,7 @@ public class AMapService extends APSService {
             if (aMapLocation != null) {
                 /*不获取服务器时间*/
                 //getCurrentTime(aMapLocation);
-                dealLocation(aMapLocation, System.currentTimeMillis());
+                dealLocation(aMapLocation);
             } else {
                 LogUtil.d(TAG + "位置回调失败！");
             }
@@ -175,9 +175,8 @@ public class AMapService extends APSService {
      * 处理轨迹
      *
      * @param aMapLocation
-     * @param currentTime
      */
-    private void dealLocation(AMapLocation aMapLocation, long currentTime) {
+    private void dealLocation(AMapLocation aMapLocation) {
         String address = aMapLocation.getAddress();
         float accuracy = aMapLocation.getAccuracy();//定位精度
         String provider = aMapLocation.getProvider();//获取定位提供者
@@ -206,7 +205,7 @@ public class AMapService extends APSService {
         SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
         if (TextUtils.isEmpty(address) ||
-                (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
+                aMapLocation.getLatitude() == 0 || aMapLocation.getLongitude() == 0
                 || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || oldAddress.equals(address)) {
             LogUtil.d("当前位置偏移量很大，直接return");
             //缓存有效定位
