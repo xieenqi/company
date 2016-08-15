@@ -18,7 +18,7 @@ public class EstimateAdd implements Serializable {
     public String attachmentUUId;  //附件id
     public int attachmentCount; //附件个数
     public int payeeMethod;        //付款方式
-    public int status;             //回款记录状态(待审批 未通过等)
+    public int status = -1;             //回款记录状态(待审批 未通过等)
     public String wfId;
     public String remark;          //备注
     public String UUId;
