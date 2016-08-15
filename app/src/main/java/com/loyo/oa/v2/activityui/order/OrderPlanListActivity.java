@@ -51,6 +51,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     private int pagForm;//1 审批过来
     private boolean isAdd;//需要编辑就传true
     private LinearLayout ll_state;
+    private ViewStub emptyView;
 
     private ArrayList<PlanEstimateList> mPlanEstimateList = new ArrayList<>();
 
@@ -81,10 +82,13 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         ll_add.setOnClickListener(this);
         lv_list = (ListView) findViewById(R.id.lv_list);
         ll_state = (LinearLayout) findViewById(R.id.ll_state_baebae);
+        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
         getPlanList();
         if(status == 1 || status == 2){
             ll_state.setVisibility(isAdd ? View.GONE : View.VISIBLE);
+        }else if(status == 4 || status == 5){
+            lv_list.setEmptyView(emptyView);
         }else{
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         }
