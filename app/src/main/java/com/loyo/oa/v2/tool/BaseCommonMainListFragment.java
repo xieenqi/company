@@ -215,7 +215,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
         pagination = tPaginationX;
         ArrayList<T> lstDataTemp = tPaginationX.getRecords();
-        if (null != lstDataTemp && lstDataTemp.size() == 0) {
+        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
             Toast("没有更多数据了");
             return;
         }
@@ -223,8 +223,13 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         if (isTopAdd) {
             lstData.clear();
         }
-
-        lstData.addAll(lstDataTemp);
+        if (!isTopAdd) {
+//            listData.addAll(orderlist.records);
+            lstData.addAll(lstDataTemp);
+        } else {
+//            listData = orderlist.records;
+            lstData = lstDataTemp;
+        }
         pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
         changeAdapter();
         expand();
