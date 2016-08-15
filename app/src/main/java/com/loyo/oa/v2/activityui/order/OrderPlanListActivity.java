@@ -96,7 +96,6 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
 
 
     public void rushAdapter() {
-
         if (null == adapter) {
             adapter = new OrderPlanAdapter();
             lv_list.setAdapter(adapter);

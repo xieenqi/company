@@ -104,6 +104,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
     private ListView lv_listview;
     private EstimateAdd mEstimateAdd;
+    private EstimateList mEstimateList;
     private ArrayList<EstimateAdd> mData = new ArrayList<>();
     private OrderEstimateListAdapter mAdapter;
     private Intent mIntent;
@@ -116,8 +117,8 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private int requestPage;
     private int position;
     private boolean isAdd;
-    int backMoney;
-    double ratePayment;
+    private int backMoney = 0;
+    private double ratePayment = 0.0;
 
     private Handler mHandler = new Handler() {
 
@@ -144,15 +145,13 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     }
 
                     break;
+                //刷新回款记录顶部数据
                 case ExtraAndResult.MSG_SEND:
-                    //详情页面传过来的
-                    tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
-                    tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
-
-                    EstimateAdd data = (EstimateAdd) msg.obj;
-//                    tv_totalprice.setText("￥" + Utils.setValueDouble(data.receivedMoney));
-                    tv_aleryprice.setText("￥" + Utils.setValueDouble(data.billingMoney));
-                    tv_faileprice.setText("￥" + Utils.setValueDouble(Double.valueOf(dealPrice) - data.receivedMoney));
+                    tv_rate_payment.setText("已回款|回款率" + mEstimateList.total.backMoneyRate + "%");
+                    tv_dealprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.dealMoney));
+                    tv_totalprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.backMoney));
+                    tv_aleryprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.billingMoney));
+                    tv_faileprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.notBackMoney));
                     break;
             }
         }
@@ -196,6 +195,10 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_back.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         ll_back.setOnTouchListener(Global.GetTouch());
+
+        //详情页面传过来的
+        tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
+        tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
 
         //如果来自详情，则请求回款记录
         if (fromPage == ORDER_DETAILS) {
@@ -270,11 +273,15 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void success(EstimateList estimateList, Response response) {
                         HttpErrorCheck.checkResponse("回款记录列表", response);
-                        if (null != estimateList.records) {
-                            mData.clear();
-                            mData.addAll(estimateList.records);
-                            rushAdapter();
-                            setTitleNumber();
+                        if(null != estimateList){
+                            mEstimateList = estimateList;
+                            if (null != estimateList.records) {
+                                mData.clear();
+                                mData.addAll(estimateList.records);
+                                rushAdapter();
+                                //setTitleNumber();
+                                mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
+                            }
                         }
                     }
 

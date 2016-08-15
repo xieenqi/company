@@ -9,13 +9,14 @@ import java.util.ArrayList;
 public class EstimateList implements Serializable{
 
     public ArrayList<EstimateAdd> records;
+    public Total total;
 
     public class Total{
-        int proMoney;
-        int dealMoney;
-        int backMoney;
-        int billingMoney;
-        int notBackMoney;
-        String backMoneyRate;
+        public float proMoney;   //产品金额
+        public float dealMoney;  //成交金额
+        public float backMoney;  //回款金额
+        public float billingMoney; //开票总金额
+        public float notBackMoney; //未回款金额
+        public String backMoneyRate; //回款率
     }
 }

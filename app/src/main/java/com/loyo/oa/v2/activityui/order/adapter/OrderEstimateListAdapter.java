@@ -23,6 +23,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -144,7 +145,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             //当订单状态为待审批 审批中 已通过 已完成时，不能编辑和删除
             if (mEstimateAdd.status == 1 || mEstimateAdd.status == 2 || mEstimateAdd.status == 4 || mEstimateAdd.status == 5 || mEstimateAdd.status == 0) {
                 holder.ll_action.setVisibility(View.GONE);
-            } else {
+            } else if(mEstimateAdd.status == 3){
                 holder.ll_action.setVisibility(View.VISIBLE);
             }
         }
