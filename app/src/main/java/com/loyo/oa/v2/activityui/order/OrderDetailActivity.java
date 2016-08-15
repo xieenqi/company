@@ -197,6 +197,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.ll_plan://回款计划
                 mBundle = new Bundle();
+                mBundle.putInt("status", mData.status);
                 mBundle.putString("orderId", mData.id);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, isAdd);
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +23,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
@@ -45,8 +47,11 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     private String orderId;
     private Intent mIntent;
     private Bundle mBundle;
-    public int pagForm;//1 审批过来
+    private int status;
+    private int pagForm;//1 审批过来
     private boolean isAdd;//需要编辑就传true
+    private LinearLayout ll_state;
+    private ViewStub emptyView;
 
     private ArrayList<PlanEstimateList> mPlanEstimateList = new ArrayList<>();
 
@@ -62,9 +67,9 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         mIntent = getIntent();
         if (null != mIntent) {
             orderId = mIntent.getStringExtra("orderId");
+            status  = mIntent.getIntExtra("status",0);
             pagForm = mIntent.getIntExtra(ExtraAndResult.TOKEN_START, 0);
             isAdd = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
-
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -76,9 +81,17 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         ll_add.setOnTouchListener(Global.GetTouch());
         ll_add.setOnClickListener(this);
         lv_list = (ListView) findViewById(R.id.lv_list);
+        ll_state = (LinearLayout) findViewById(R.id.ll_state_baebae);
+        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
         getPlanList();
-        ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
+        if(status == 1 || status == 2){
+            ll_state.setVisibility(isAdd ? View.GONE : View.VISIBLE);
+        }else if(status == 4 || status == 5){
+            lv_list.setEmptyView(emptyView);
+        }else{
+            ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
+        }
     }
 
 

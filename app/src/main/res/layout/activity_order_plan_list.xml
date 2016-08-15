@@ -9,6 +9,21 @@
     >
 
     <include layout="@layout/include_title"/>
+    <LinearLayout
+        android:id="@+id/ll_state_baebae"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+        <include layout="@layout/item_layout_baebae"/>
+    </LinearLayout>
+
+    <ViewStub
+        android:id="@+id/vs_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/layout_nodata"
+        android:layout="@layout/item_layout_nodata"/>
 
     <ListView
         android:id="@+id/lv_list"
