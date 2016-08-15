@@ -302,7 +302,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         //计算产品总金额
         if (null != mSaleDetails.proInfos) {
             for (SaleIntentionalProduct ele : mSaleDetails.proInfos) {
-                totalMoney += ele.totalMoney * ele.quantity;
+                totalMoney += ele.totalMoney;
             }
         }
     }
