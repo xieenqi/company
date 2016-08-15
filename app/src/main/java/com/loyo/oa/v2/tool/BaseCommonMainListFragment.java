@@ -220,14 +220,12 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
             return;
         }
         //下接获取最新时，清空
-        if (isTopAdd) {
-            lstData.clear();
-        }
+//        if (isTopAdd) {
+//            lstData.clear();
+//        }
         if (!isTopAdd) {
-//            listData.addAll(orderlist.records);
             lstData.addAll(lstDataTemp);
         } else {
-//            listData = orderlist.records;
             lstData = lstDataTemp;
         }
         pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);

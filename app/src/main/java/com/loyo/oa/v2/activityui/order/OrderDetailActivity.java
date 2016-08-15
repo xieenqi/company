@@ -178,18 +178,20 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(OrderDetailActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
-            case R.id.ll_record://回款记录
+            case R.id.ll_record://回款记录  mData.backMoney + "(" + mData.ratePayment + "%)");
                 Bundle mBundle = new Bundle();
                 mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_DETAILS);
                 mBundle.putString("price", tv_money.getText().toString());
                 mBundle.putString("orderId", orderId);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, isAdd);
+                mBundle.putInt("已回款", mData.backMoney);
+                mBundle.putDouble("回款率", mData.ratePayment);
                 app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
             case R.id.ll_enclosure://附件
                 mBundle = new Bundle();
-                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD,false);
-                mBundle.putBoolean("isOver",true);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
+                mBundle.putBoolean("isOver", true);
                 mBundle.putString("uuid", mData.attachmentUUId);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;

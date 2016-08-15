@@ -12,9 +12,9 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -222,18 +222,35 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
+            public boolean onTouch(View v, MotionEvent event) {
+                float downY = 0, upY = 0;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        downY = v.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        upY = v.getY();
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                LogUtil.d("一亿个：" + firstVisibleItem);
-                btn_add.setVisibility(firstVisibleItem > staratItem ? View.INVISIBLE : View.VISIBLE);
-                staratItem = firstVisibleItem;
+                        break;
+                }
+                float moveY = downY - upY;
+                return false;
             }
         });
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                LogUtil.d("一亿个：" + firstVisibleItem);
+//                btn_add.setVisibility(firstVisibleItem > staratItem ? View.INVISIBLE : View.VISIBLE);
+//                staratItem = firstVisibleItem;
+//            }
+//        });
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override

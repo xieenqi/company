@@ -99,7 +99,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
     private LinearLayout ll_back;
     private LinearLayout ll_add;
-    private TextView tv_title;
+    private TextView tv_title, tv_rate_payment;
     private CustomTextView tv_dealprice, tv_totalprice, tv_aleryprice, tv_faileprice;  //成交金额、已回款、开票总金额、未回款
 
     private ListView lv_listview;
@@ -116,6 +116,8 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private int requestPage;
     private int position;
     private boolean isAdd;
+    int backMoney;
+    double ratePayment;
 
     private Handler mHandler = new Handler() {
 
@@ -143,8 +145,12 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
                     break;
                 case ExtraAndResult.MSG_SEND:
+                    //详情页面传过来的
+                    tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
+                    tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
+
                     EstimateAdd data = (EstimateAdd) msg.obj;
-                    tv_totalprice.setText("￥" + Utils.setValueDouble(data.receivedMoney));
+//                    tv_totalprice.setText("￥" + Utils.setValueDouble(data.receivedMoney));
                     tv_aleryprice.setText("￥" + Utils.setValueDouble(data.billingMoney));
                     tv_faileprice.setText("￥" + Utils.setValueDouble(Double.valueOf(dealPrice) - data.receivedMoney));
                     break;
@@ -166,6 +172,8 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             orderId = mIntent.getStringExtra("orderId");
             fromPage = mIntent.getIntExtra("fromPage", OrderEstimateListActivity.ORDER_ADD);
             dealPrice = mIntent.getStringExtra("price");
+            backMoney = mIntent.getIntExtra("已回款", 0);
+            ratePayment = mIntent.getDoubleExtra("回款率", 0);
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
                 mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
             }
@@ -174,6 +182,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_add = (LinearLayout) findViewById(R.id.ll_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_rate_payment = (TextView) findViewById(R.id.tv_rate_payment);
         tv_totalprice = (CustomTextView) findViewById(R.id.tv_totalprice);
         tv_aleryprice = (CustomTextView) findViewById(R.id.tv_aleryprice);
         tv_faileprice = (CustomTextView) findViewById(R.id.tv_faileprice);
@@ -187,12 +196,13 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_back.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         ll_back.setOnTouchListener(Global.GetTouch());
+
         //如果来自详情，则请求回款记录
         if (fromPage == ORDER_DETAILS) {
             getData();
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         }
-        mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage,isAdd);
+        mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage, isAdd);
         lv_listview.setAdapter(mAdapter);
         rushAdapter();
     }
@@ -210,7 +220,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             public void run() {
                 int backMoney = 0, ticketMoneyno = 0;
                 for (EstimateAdd ele : mData) {
-                    if (ele.status == 4) {
+                    if (ele.status == 4 || ele.status == 0) {
                         backMoney += ele.receivedMoney;
                         ticketMoneyno += ele.billingMoney;
                     }
