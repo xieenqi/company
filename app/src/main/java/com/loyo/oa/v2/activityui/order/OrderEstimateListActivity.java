@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,50 +41,85 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
      * *****************来自【订单详情】********************
      */
     public final static int ORDER_DETAILS = 0x11;
+
+
     /**
      * 新增回款
      */
     public final static int ODET_EST_ADD = 0x12;
+
     /**
      * 编辑回款
      */
     public final static int ODET_EST_EDIT = 0x13;
+
+    /**
+     * 编辑附件
+     */
+    public final static int ODET_EST_EDITATTAMENT = 0x14;
+
+    /**
+     * 删除回款
+     */
+    public final static int ODET_EST_DELETE = 0x15;
+
+
     /**
      * ****************来自【订单新建】**********************
      */
     public final static int ORDER_ADD = 0x21;
+
     /**
      * 新增回款
      */
     public final static int OADD_EST_ADD = 0x22;
+
     /**
      * 编辑回款
      */
     public final static int OADD_EST_EDIT = 0x23;
+
+    /**
+     * 编辑附件
+     */
+    public final static int OADD_EST_EDITATTAMENT = 0x24;
+
+    /**
+     * 删除回款
+     */
+    public final static int OADD_EST_DELETE = 0x25;
+
+
     /**
      * *******************来自【回款计划】***********************
      */
 
     public final static int ORDER_PLAN = 0x31;
 
+
     private LinearLayout ll_back;
     private LinearLayout ll_add;
     private TextView tv_title, tv_rate_payment;
     private CustomTextView tv_dealprice, tv_totalprice, tv_aleryprice, tv_faileprice;  //成交金额、已回款、开票总金额、未回款
+
     private ListView lv_listview;
     private EstimateAdd mEstimateAdd;
+    private EstimateList mEstimateList;
     private ArrayList<EstimateAdd> mData = new ArrayList<>();
     private OrderEstimateListAdapter mAdapter;
     private Intent mIntent;
     private Bundle mBundle;
+
     private String orderId;
     private String dealPrice;
+
     private int fromPage;
     private int requestPage;
     private int position;
     private boolean isAdd;
-    int backMoney, orderStatus;
-    double ratePayment;
+    private int backMoney = 0;
+    private double ratePayment = 0.0;
+
     private Handler mHandler = new Handler() {
 
         @Override
@@ -109,6 +145,14 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     }
 
                     break;
+                //刷新回款记录顶部数据
+                case ExtraAndResult.MSG_SEND:
+                    tv_rate_payment.setText("已回款|回款率" + mEstimateList.total.backMoneyRate + "%");
+                    tv_dealprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.dealMoney));
+                    tv_totalprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.backMoney));
+                    tv_aleryprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.billingMoney));
+                    tv_faileprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.notBackMoney));
+                    break;
             }
         }
     };
@@ -129,7 +173,6 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             dealPrice = mIntent.getStringExtra("price");
             backMoney = mIntent.getIntExtra("已回款", 0);
             ratePayment = mIntent.getDoubleExtra("回款率", 0);
-            orderStatus = mIntent.getIntExtra("订单待审核", 0);
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
                 mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
             }
@@ -153,13 +196,16 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_add.setOnClickListener(this);
         ll_back.setOnTouchListener(Global.GetTouch());
 
+        //详情页面传过来的
+        tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
+        tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
+
         //如果来自详情，则请求回款记录
         if (fromPage == ORDER_DETAILS) {
             getData();
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         }
         mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage, isAdd);
-        mAdapter.setOrderStatus(orderStatus);
         lv_listview.setAdapter(mAdapter);
         rushAdapter();
     }
@@ -171,11 +217,26 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     /**
      * 计算 已回款、开票总金额、未回款
      */
-    private void setTitleNumber(EstimateList.Total total) {
-        tv_totalprice.setText("￥" + Utils.setValueDouble(total.backMoney));
-        tv_rate_payment.setText("已回款|回款率" + total.backMoneyRate + "%");
-        tv_aleryprice.setText("￥" + Utils.setValueDouble(total.billingMoney));
-        tv_faileprice.setText("￥" + Utils.setValueDouble(total.notBackMoney));
+    private void setTitleNumber() {
+        new Runnable() {
+            @Override
+            public void run() {
+                int backMoney = 0, ticketMoneyno = 0;
+                for (EstimateAdd ele : mData) {
+                    if (ele.status == 4 || ele.status == 0) {
+                        backMoney += ele.receivedMoney;
+                        ticketMoneyno += ele.billingMoney;
+                    }
+                }
+                Message msg = new Message();
+                msg.what = ExtraAndResult.MSG_SEND;
+                EstimateAdd data = new EstimateAdd();//借用此模板
+                data.receivedMoney = backMoney;
+                data.billingMoney = ticketMoneyno;
+                msg.obj = data;
+                mHandler.sendMessage(msg);
+            }
+        }.run();
     }
 
     ;
@@ -212,11 +273,15 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void success(EstimateList estimateList, Response response) {
                         HttpErrorCheck.checkResponse("回款记录列表", response);
-                        if (null != estimateList.records) {
-                            mData.clear();
-                            mData.addAll(estimateList.records);
-                            rushAdapter();
-                            setTitleNumber(estimateList.total);
+                        if(null != estimateList){
+                            mEstimateList = estimateList;
+                            if (null != estimateList.records) {
+                                mData.clear();
+                                mData.addAll(estimateList.records);
+                                rushAdapter();
+                                //setTitleNumber();
+                                mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
+                            }
                         }
                     }
 
