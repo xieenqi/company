@@ -39,7 +39,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     private Intent mIntent;
     private Message msg;
     private String orderId;
-    private int fromPage;
+    private int fromPage, orderStatus;
     private int requestPage;
     private boolean isAdd;
 
@@ -50,6 +50,10 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         this.orderId = orderId;
         this.fromPage = fromPage;
         this.isAdd = isAdd;
+    }
+
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     @Override
@@ -175,7 +179,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 }
             }
         });
-
+        holder.tv_status.setVisibility(orderStatus == 1 ? View.GONE : View.VISIBLE);//订单待审核不显示回款记录状态
         return convertView;
     }
 
