@@ -279,7 +279,6 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                                 mData.clear();
                                 mData.addAll(estimateList.records);
                                 rushAdapter();
-                                //setTitleNumber();
                                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
                             }
                         }
