@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dimen_2"
+            android:layout_marginLeft="@dimen/dimen_10"
             android:layout_toRightOf="@+id/tv_esttime_title"
             android:paddingLeft="@dimen/dimen_2"
             android:paddingRight="@dimen/dimen_2"
@@ -280,6 +280,6 @@
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left"/>
+    <!--<include layout="@layout/include_solid_line_left"/>-->
 
 </LinearLayout>
