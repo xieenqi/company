@@ -9,6 +9,14 @@
     >
 
     <include layout="@layout/include_title"/>
+    <LinearLayout
+        android:id="@+id/ll_state_baebae"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+        <include layout="@layout/item_layout_baebae"/>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/lv_list"
