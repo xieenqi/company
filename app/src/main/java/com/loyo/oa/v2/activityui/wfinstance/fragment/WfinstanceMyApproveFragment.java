@@ -203,15 +203,20 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
                             return;
                         }
                         ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
-                        if (null != lstDataTemp && lstDataTemp.size() == 0) {
+                        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
                             Toast("没有更多数据了");
                             return;
                         }
                         //下接获取最新时，清空
-                        if (isTopAdd) {
-                            lstData.clear();
+//                        if (isTopAdd) {
+//                            lstData.clear();
+//                        }
+//                        lstData.addAll(lstDataTemp);
+                        if (!isTopAdd) {
+                            lstData.addAll(lstDataTemp);
+                        } else {
+                            lstData = lstDataTemp;
                         }
-                        lstData.addAll(lstDataTemp);
                         datas = WfinstanceUitls.convertGroupApproveData(lstData);
                         changeAdapter();
                         expand();
