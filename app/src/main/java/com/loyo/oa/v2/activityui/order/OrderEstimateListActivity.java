@@ -160,7 +160,9 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         tv_title.setText("回款记录");
         if (null != dealPrice)
-            tv_dealprice.setText("￥" + Utils.setValueDouble(dealPrice));
+            if(fromPage == OADD_EST_ADD || fromPage == OADD_EST_EDIT){
+                tv_dealprice.setText("￥" + Utils.setValueDouble(dealPrice));
+            }
         if (null != mData && mData.size() > 0)
             ll_add.setVisibility(View.GONE);
         ll_back.setOnClickListener(this);
@@ -168,8 +170,8 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_back.setOnTouchListener(Global.GetTouch());
 
         //详情页面传过来的
-        tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
-        tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
+/*      tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
+        tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");*/
 
         //如果来自详情，则请求回款记录
         if (fromPage == ORDER_DETAILS) {

@@ -142,7 +142,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 MainApp.getMainApp().startActivityForResult(mActivity, OrderAddEstimateActivity.class, MainApp.ENTER_TYPE_RIGHT, requestPage, mBundle);
             }
         });
-
+        LogUtil.dee("status:"+mEstimateAdd.status);
         //只有订单负责人，有权限操作回款
         if (!isAdd) {
             holder.ll_action.setVisibility(View.GONE);

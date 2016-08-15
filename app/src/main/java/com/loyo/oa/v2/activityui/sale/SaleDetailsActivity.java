@@ -271,7 +271,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             layout_losereson.setVisibility(View.GONE);
         }
         if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
-            img_title_right.setVisibility(mSaleDetails.prob == 100 ? View.VISIBLE : View.GONE);
+            img_title_right.setVisibility((mSaleDetails.prob == 100 && MainApp.user.id.equals(mSaleDetails.creatorId)) ? View.VISIBLE : View.GONE);
             ll_product.setEnabled(false);
             ll_stage.setEnabled(false);
             iv_wfstatus.setVisibility(View.VISIBLE);
@@ -302,7 +302,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         //计算产品总金额
         if (null != mSaleDetails.proInfos) {
             for (SaleIntentionalProduct ele : mSaleDetails.proInfos) {
-                totalMoney += ele.totalMoney * ele.quantity;
+                totalMoney += ele.totalMoney;
             }
         }
     }
