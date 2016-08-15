@@ -40,84 +40,50 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
      * *****************来自【订单详情】********************
      */
     public final static int ORDER_DETAILS = 0x11;
-
-
     /**
      * 新增回款
      */
     public final static int ODET_EST_ADD = 0x12;
-
     /**
      * 编辑回款
      */
     public final static int ODET_EST_EDIT = 0x13;
-
-    /**
-     * 编辑附件
-     */
-    public final static int ODET_EST_EDITATTAMENT = 0x14;
-
-    /**
-     * 删除回款
-     */
-    public final static int ODET_EST_DELETE = 0x15;
-
-
     /**
      * ****************来自【订单新建】**********************
      */
     public final static int ORDER_ADD = 0x21;
-
     /**
      * 新增回款
      */
     public final static int OADD_EST_ADD = 0x22;
-
     /**
      * 编辑回款
      */
     public final static int OADD_EST_EDIT = 0x23;
-
-    /**
-     * 编辑附件
-     */
-    public final static int OADD_EST_EDITATTAMENT = 0x24;
-
-    /**
-     * 删除回款
-     */
-    public final static int OADD_EST_DELETE = 0x25;
-
-
     /**
      * *******************来自【回款计划】***********************
      */
 
     public final static int ORDER_PLAN = 0x31;
 
-
     private LinearLayout ll_back;
     private LinearLayout ll_add;
     private TextView tv_title, tv_rate_payment;
     private CustomTextView tv_dealprice, tv_totalprice, tv_aleryprice, tv_faileprice;  //成交金额、已回款、开票总金额、未回款
-
     private ListView lv_listview;
     private EstimateAdd mEstimateAdd;
     private ArrayList<EstimateAdd> mData = new ArrayList<>();
     private OrderEstimateListAdapter mAdapter;
     private Intent mIntent;
     private Bundle mBundle;
-
     private String orderId;
     private String dealPrice;
-
     private int fromPage;
     private int requestPage;
     private int position;
     private boolean isAdd;
     int backMoney, orderStatus;
     double ratePayment;
-
     private Handler mHandler = new Handler() {
 
         @Override

@@ -232,32 +232,32 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
 
     private void bindData() {
         switch (mData.status) {
-            case 1:
+            case 1://待审核
                 img_title_right.setVisibility(View.GONE);
                 isDelete = false;
                 isEdit = false;
                 isAdd = false;
                 isStop = false;
                 break;
-            case 2:
+            case 2://未通过
                 isDelete = true;
                 isEdit = true;
                 isAdd = false;
                 isStop = false;
                 break;
-            case 3:
+            case 3://进行中
                 isDelete = false;
                 isEdit = false;
                 isAdd = true;
                 isStop = true;
                 break;
-            case 4:
+            case 4://已完成
                 isDelete = false;
                 isEdit = false;
                 isAdd = false;
                 isStop = true;
                 break;
-            case 5:
+            case 5://意外终止
                 isDelete = false;
                 isEdit = false;
                 isAdd = false;
