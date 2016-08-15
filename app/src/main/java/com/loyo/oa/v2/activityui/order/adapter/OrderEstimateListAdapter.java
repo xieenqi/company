@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,7 +171,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         holder.tv_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEstimateAdd.status != 6 && mEstimateAdd.status != 0) {//没有生成审批和不需要审批不可点击进入审批详情
+                if (!TextUtils.isEmpty(mEstimateAdd.wfId)) {//没有生成审批和不需要审批不可点击进入审批详情  mEstimateAdd.status != 6 && mEstimateAdd.status != 0
                     Intent intentWf = new Intent();
                     intentWf.putExtra(ExtraAndResult.EXTRA_ID, mEstimateAdd.wfId);
                     intentWf.setClass(mActivity, WfinstanceInfoActivity_.class);
