@@ -193,6 +193,7 @@
         android:layout_above="@+id/ll_add"
         android:layout_below="@+id/ll_restimate"
         android:listSelector="@android:color/transparent"
+        android:divider="@color/white"
         android:scrollbars="none"
         >
     </ListView>

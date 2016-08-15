@@ -166,7 +166,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         holder.tv_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEstimateAdd.status != 6 || mEstimateAdd.status == 0) {//没有生成审批和不需要审批不可点击进入审批详情
+                if (mEstimateAdd.status != 6 && mEstimateAdd.status != 0) {//没有生成审批和不需要审批不可点击进入审批详情
                     Intent intentWf = new Intent();
                     intentWf.putExtra(ExtraAndResult.EXTRA_ID, mEstimateAdd.wfId);
                     intentWf.setClass(mActivity, WfinstanceInfoActivity_.class);
