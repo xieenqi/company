@@ -305,13 +305,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
         paymentList.add("回款时间：" + DateTool.timet(payment.receivedAt + "", "yyyy.MM.dd"));
         paymentList.add("回款金额：" + "￥" + payment.receivedMoney);
         paymentList.add("开票金额：" + "￥" + payment.billingMoney);
-        paymentList.add("收款人：");
+        paymentList.add("收款人：" + payment.payeeUser.name);
         paymentList.add("收款方式：" + OrderCommon.getPaymentMode(payment.payeeMethod));
-//        if (null != mWfInstance.order.extensionDatas && mWfInstance.order.extensionDatas.size() > 0) {
-//            for (ExtensionDatas ele : mWfInstance.order.extensionDatas) {
-//                paymentList.add(ele.label + "：" + ele.val);
-//            }
-//        }
         paymentList.add("备注：" + payment.remark);
         for (String text : paymentList) {
             View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
