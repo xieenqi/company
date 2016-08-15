@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -116,7 +115,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private int requestPage;
     private int position;
     private boolean isAdd;
-    int backMoney;
+    int backMoney, orderStatus;
     double ratePayment;
 
     private Handler mHandler = new Handler() {
@@ -174,6 +173,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             dealPrice = mIntent.getStringExtra("price");
             backMoney = mIntent.getIntExtra("已回款", 0);
             ratePayment = mIntent.getDoubleExtra("回款率", 0);
+            orderStatus = mIntent.getIntExtra("订单待审核", 0);
             if (null != (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data")) {
                 mData = (ArrayList<EstimateAdd>) mIntent.getSerializableExtra("data");
             }
@@ -203,6 +203,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
         }
         mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage, isAdd);
+        mAdapter.setOrderStatus(orderStatus);
         lv_listview.setAdapter(mAdapter);
         rushAdapter();
     }

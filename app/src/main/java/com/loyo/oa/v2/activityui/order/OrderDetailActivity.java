@@ -186,6 +186,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, isAdd);
                 mBundle.putInt("已回款", mData.backMoney);
                 mBundle.putDouble("回款率", mData.ratePayment);
+                mBundle.putInt("订单待审核", mData.status);//不显示回款记录状态
                 app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
             case R.id.ll_enclosure://附件
