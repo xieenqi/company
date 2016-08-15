@@ -72,6 +72,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private CustomTextView tv_dealprice, tv_totalprice, tv_aleryprice, tv_faileprice;  //成交金额、已回款、开票总金额、未回款
     private ListView lv_listview;
     private EstimateAdd mEstimateAdd;
+    private EstimateList mEstimateList;
     private ArrayList<EstimateAdd> mData = new ArrayList<>();
     private OrderEstimateListAdapter mAdapter;
     private Intent mIntent;
@@ -82,8 +83,11 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     private int requestPage;
     private int position;
     private boolean isAdd;
-    int backMoney, orderStatus;
-    double ratePayment;
+    private int backMoney = 0;
+    private double ratePayment = 0.0;
+    private int orderStatus;
+
+
     private Handler mHandler = new Handler() {
 
         @Override
@@ -109,6 +113,16 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     }
 
                     break;
+
+                //刷新回款记录顶部数据
+                case ExtraAndResult.MSG_SEND:
+                    tv_rate_payment.setText("已回款|回款率" + mEstimateList.total.backMoneyRate + "%");
+                    tv_dealprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.dealMoney));
+                    tv_totalprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.backMoney));
+                    tv_aleryprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.billingMoney));
+                    tv_faileprice.setText("￥" + Utils.setValueDouble(mEstimateList.total.notBackMoney));
+                    break;
+
             }
         }
     };
@@ -153,6 +167,10 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         ll_add.setOnClickListener(this);
         ll_back.setOnTouchListener(Global.GetTouch());
 
+        //详情页面传过来的
+        tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
+        tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
+
         //如果来自详情，则请求回款记录
         if (fromPage == ORDER_DETAILS) {
             getData();
@@ -168,17 +186,6 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         mAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * 计算 已回款、开票总金额、未回款
-     */
-    private void setTitleNumber(EstimateList.Total total) {
-        tv_totalprice.setText("￥" + Utils.setValueDouble(total.backMoney));
-        tv_rate_payment.setText("已回款|回款率" + total.backMoneyRate + "%");
-        tv_aleryprice.setText("￥" + Utils.setValueDouble(total.billingMoney));
-        tv_faileprice.setText("￥" + Utils.setValueDouble(total.notBackMoney));
-    }
-
-    ;
 
     /**
      * 删除订单
@@ -212,11 +219,14 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void success(EstimateList estimateList, Response response) {
                         HttpErrorCheck.checkResponse("回款记录列表", response);
-                        if (null != estimateList.records) {
-                            mData.clear();
-                            mData.addAll(estimateList.records);
-                            rushAdapter();
-                            setTitleNumber(estimateList.total);
+                        if(null != estimateList){
+                            mEstimateList = estimateList;
+                            if (null != estimateList.records) {
+                                mData.clear();
+                                mData.addAll(estimateList.records);
+                                rushAdapter();
+                                mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
+                            }
                         }
                     }
 
