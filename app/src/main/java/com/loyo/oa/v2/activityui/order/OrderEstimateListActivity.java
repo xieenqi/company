@@ -143,16 +143,6 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     }
 
                     break;
-                case ExtraAndResult.MSG_SEND:
-                    //详情页面传过来的
-                    tv_totalprice.setText("￥" + Utils.setValueDouble(backMoney));
-                    tv_rate_payment.setText("已回款|回款率" + ratePayment + "%");
-
-                    EstimateAdd data = (EstimateAdd) msg.obj;
-//                    tv_totalprice.setText("￥" + Utils.setValueDouble(data.receivedMoney));
-                    tv_aleryprice.setText("￥" + Utils.setValueDouble(data.billingMoney));
-                    tv_faileprice.setText("￥" + Utils.setValueDouble(Double.valueOf(dealPrice) - data.receivedMoney));
-                    break;
             }
         }
     };
@@ -215,26 +205,11 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     /**
      * 计算 已回款、开票总金额、未回款
      */
-    private void setTitleNumber() {
-        new Runnable() {
-            @Override
-            public void run() {
-                int backMoney = 0, ticketMoneyno = 0;
-                for (EstimateAdd ele : mData) {
-                    if (ele.status == 4 || ele.status == 0) {
-                        backMoney += ele.receivedMoney;
-                        ticketMoneyno += ele.billingMoney;
-                    }
-                }
-                Message msg = new Message();
-                msg.what = ExtraAndResult.MSG_SEND;
-                EstimateAdd data = new EstimateAdd();//借用此模板
-                data.receivedMoney = backMoney;
-                data.billingMoney = ticketMoneyno;
-                msg.obj = data;
-                mHandler.sendMessage(msg);
-            }
-        }.run();
+    private void setTitleNumber(EstimateList.Total total) {
+        tv_totalprice.setText("￥" + Utils.setValueDouble(total.backMoney));
+        tv_rate_payment.setText("已回款|回款率" + total.backMoneyRate + "%");
+        tv_aleryprice.setText("￥" + Utils.setValueDouble(total.billingMoney));
+        tv_faileprice.setText("￥" + Utils.setValueDouble(total.notBackMoney));
     }
 
     ;
@@ -275,7 +250,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                             mData.clear();
                             mData.addAll(estimateList.records);
                             rushAdapter();
-                            setTitleNumber();
+                            setTitleNumber(estimateList.total);
                         }
                     }
 
