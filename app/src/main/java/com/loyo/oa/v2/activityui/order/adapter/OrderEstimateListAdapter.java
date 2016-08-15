@@ -23,7 +23,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -44,7 +43,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     private int requestPage;
     private boolean isAdd;
 
-    public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId, int fromPage,boolean isAdd) {
+    public OrderEstimateListAdapter(Activity activity, ArrayList<EstimateAdd> data, Handler handler, String orderId, int fromPage, boolean isAdd) {
         this.mActivity = activity;
         this.mData = data;
         this.mHandler = handler;
@@ -139,11 +138,11 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         });
 
         //只有订单负责人，有权限操作回款
-        if(!isAdd){
+        if (!isAdd) {
             holder.ll_action.setVisibility(View.GONE);
-        }else{
+        } else {
             //当订单状态为待审批 审批中 已通过 已完成时，不能编辑和删除
-            if (mEstimateAdd.status == 1 || mEstimateAdd.status == 2 || mEstimateAdd.status == 4 || mEstimateAdd.status == 5) {
+            if (mEstimateAdd.status == 1 || mEstimateAdd.status == 2 || mEstimateAdd.status == 4 || mEstimateAdd.status == 5 || mEstimateAdd.status == 0) {
                 holder.ll_action.setVisibility(View.GONE);
             } else {
                 holder.ll_action.setVisibility(View.VISIBLE);
@@ -155,8 +154,8 @@ public class OrderEstimateListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 mBundle = new Bundle();
-                mBundle.putInt("bizType",26);
-                mBundle.putBoolean("isOver",true);
+                mBundle.putInt("bizType", 26);
+                mBundle.putBoolean("isOver", true);
                 mBundle.putString("uuid", mEstimateAdd.attachmentUUId);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, false);
                 MainApp.getMainApp().startActivityForResult(mActivity, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
@@ -167,7 +166,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         holder.tv_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEstimateAdd.status != 6) {
+                if (mEstimateAdd.status != 6 || mEstimateAdd.status == 0) {//没有生成审批和不需要审批不可点击进入审批详情
                     Intent intentWf = new Intent();
                     intentWf.putExtra(ExtraAndResult.EXTRA_ID, mEstimateAdd.wfId);
                     intentWf.setClass(mActivity, WfinstanceInfoActivity_.class);
