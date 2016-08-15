@@ -16,34 +16,35 @@ public class OrderCommon {
      * 回款记录审批状态
      */
     public static void getEstimateStatus(TextView view, int status) {
-        String statusText = "";
-        int statusBj = R.drawable.retange_blue;
-        switch (status) {
-            case 1:
-                statusText = "待审核";
-                statusBj = R.drawable.retange_purple;
-                break;
-            case 2:
-                statusText = "审批中";
-                statusBj = R.drawable.retange_blue;
-                break;
-            case 3:
-                statusText = "未通过";
-                statusBj = R.drawable.retange_red;
-                break;
-            case 4:
-            case 5:
-            case 0:
-                statusText = "已通过";
-                statusBj = R.drawable.retange_green;
-                break;
-            case 6://未生成审批
-                statusText = "--";
-                statusBj = R.drawable.retange_gray;
-                break;
+        if (status > 0) {
+            String statusText = "";
+            int statusBj = R.drawable.retange_blue;
+            switch (status) {
+                case 1:
+                    statusText = "待审核";
+                    statusBj = R.drawable.retange_purple;
+                    break;
+                case 2:
+                    statusText = "审批中";
+                    statusBj = R.drawable.retange_blue;
+                    break;
+                case 3:
+                    statusText = "未通过";
+                    statusBj = R.drawable.retange_red;
+                    break;
+                case 4:
+                case 5:
+                    statusText = "已通过";
+                    statusBj = R.drawable.retange_green;
+                    break;
+                case 6://未生成审批
+                    statusText = "--";
+                    statusBj = R.drawable.retange_gray;
+                    break;
+            }
+            view.setText(statusText);
+            view.setBackgroundResource(statusBj);
         }
-        view.setText(statusText);
-        view.setBackgroundResource(statusBj);
     }
 
 

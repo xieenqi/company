@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
     private Intent mIntent;
     private Message msg;
     private String orderId;
-    private int fromPage;
+    private int fromPage, orderStatus;
     private int requestPage;
     private boolean isAdd;
 
@@ -51,6 +52,10 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         this.orderId = orderId;
         this.fromPage = fromPage;
         this.isAdd = isAdd;
+    }
+
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     @Override
@@ -167,7 +172,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         holder.tv_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEstimateAdd.status != 6 || mEstimateAdd.status == 0) {//没有生成审批和不需要审批不可点击进入审批详情
+                if (!TextUtils.isEmpty(mEstimateAdd.wfId)) {//没有生成审批和不需要审批不可点击进入审批详情  mEstimateAdd.status != 6 && mEstimateAdd.status != 0
                     Intent intentWf = new Intent();
                     intentWf.putExtra(ExtraAndResult.EXTRA_ID, mEstimateAdd.wfId);
                     intentWf.setClass(mActivity, WfinstanceInfoActivity_.class);
@@ -176,7 +181,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
                 }
             }
         });
-
+        holder.tv_status.setVisibility(orderStatus == 1 ? View.GONE : View.VISIBLE);//订单待审核不显示回款记录状态
         return convertView;
     }
 

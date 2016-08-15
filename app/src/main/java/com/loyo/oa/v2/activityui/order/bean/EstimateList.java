@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by loyo_dev1 on 16/8/8.
  */
-public class EstimateList implements Serializable{
+public class EstimateList implements Serializable {
 
     public ArrayList<EstimateAdd> records;
     public Total total;
@@ -18,5 +18,6 @@ public class EstimateList implements Serializable{
         public float billingMoney; //开票总金额
         public float notBackMoney; //未回款金额
         public String backMoneyRate; //回款率
+
     }
 }
