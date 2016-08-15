@@ -14,46 +14,42 @@ public class OrderCommon {
 
     /**
      * 回款记录审批状态
-     * */
+     */
     public static void getEstimateStatus(TextView view, int status) {
-        if (status > 0) {
-            String statusText = "";
-            int statusBj = R.drawable.retange_blue;
-            switch (status) {
-                case 1:
-                    statusText = "待审核";
-                    statusBj = R.drawable.retange_purple;
-                    break;
-                case 2:
-                    statusText = "审批中";
-                    statusBj = R.drawable.retange_blue;
-                    break;
-                case 3:
-                    statusText = "未通过";
-                    statusBj = R.drawable.retange_red;
-                    break;
-                case 4:
-                    statusText = "已通过";
-                    statusBj = R.drawable.retange_green;
-                    break;
-                case 5:
-                    statusText = "已办结";
-                    statusBj = R.drawable.retange_green;
-                    break;
-                case 6://未生成审批
-                    statusText = "--";
-                    statusBj = R.drawable.retange_gray;
-                    break;
-            }
-            view.setText(statusText);
-            view.setBackgroundResource(statusBj);
+        String statusText = "";
+        int statusBj = R.drawable.retange_blue;
+        switch (status) {
+            case 1:
+                statusText = "待审核";
+                statusBj = R.drawable.retange_purple;
+                break;
+            case 2:
+                statusText = "审批中";
+                statusBj = R.drawable.retange_blue;
+                break;
+            case 3:
+                statusText = "未通过";
+                statusBj = R.drawable.retange_red;
+                break;
+            case 4:
+            case 5:
+            case 0:
+                statusText = "已通过";
+                statusBj = R.drawable.retange_green;
+                break;
+            case 6://未生成审批
+                statusText = "--";
+                statusBj = R.drawable.retange_gray;
+                break;
         }
+        view.setText(statusText);
+        view.setBackgroundResource(statusBj);
     }
 
 
     /**
      * 订单详情审批状态
-     * */
+     */
     public static void getOrderDetailsStatus(TextView view, int status) {
         if (status > 0) {
             String statusText = "";
