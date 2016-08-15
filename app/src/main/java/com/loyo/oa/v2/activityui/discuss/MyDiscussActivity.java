@@ -61,6 +61,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_mydiscuss);
         initView();
         initListener();
+        getData();
     }
 
     private void initView() {
@@ -164,11 +165,13 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         getData();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getData();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        pageIndex = 1;
+//        isTopAdd = true;
+//        getData();
+//    }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
