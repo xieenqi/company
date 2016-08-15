@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
+
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
@@ -42,6 +43,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.tencent.bugly.crashreport.CrashReport;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import cn.jpush.android.api.JPushInterface;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
