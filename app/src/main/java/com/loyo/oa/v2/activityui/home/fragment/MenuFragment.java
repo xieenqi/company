@@ -238,7 +238,7 @@ public class MenuFragment extends BaseFragment {
                 isUpdataData = true;
                 if (Utils.isNetworkAvailable(getActivity())) {
                     //Global.Toast("开始更新");
-                    showLoading("正在更新组织架构，请稍等",false);
+                    showLoading("正在更新组织架构，请稍等", false);
                     rushHomeData();
                     initService();
                 } else {

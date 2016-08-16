@@ -221,7 +221,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void success(EstimateList estimateList, Response response) {
                         HttpErrorCheck.checkResponse("回款记录列表", response);
-                        if(null != estimateList){
+                        if (null != estimateList) {
                             mEstimateList = estimateList;
                             if (null != estimateList.records) {
                                 mData.clear();
