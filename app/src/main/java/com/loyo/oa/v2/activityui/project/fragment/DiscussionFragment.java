@@ -134,7 +134,8 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
      */
     public void scrollToBottom() {
         if (adapter != null && adapter.getCount() > 0) {
-            lv_discuss.getRefreshableView().setSelection(adapter.getCount() - 1);
+//            lv_discuss.getRefreshableView().setSelection(adapter.getCount() - 1);
+            lv_discuss.getRefreshableView().setSelection(lv_discuss.getBottom());
         }
     }
 
@@ -145,10 +146,11 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         HashMap<String, Object> map = new HashMap<>();
         map.put("attachmentUUId", project.attachmentUUId);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? discussions.size() >= 20 ? discussions.size() : 20 : 20);
+        map.put("pageSize", isTopAdd ? discussions.size() >= 2000 ? discussions.size() : 2000 : 2000);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).getDiscussions(map, new RCallback<PaginationX<Discussion>>() {
             @Override
             public void success(PaginationX<Discussion> pagination, Response response) {
+                HttpErrorCheck.checkResponse("项目讨论内容：", response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Discussion> lstData_bulletin_current = pagination.getRecords();
                     mPagination = pagination;
@@ -175,15 +177,16 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        mPagination.setPageIndex(1);
+        isTopAdd = false;
+        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
+
+        isTopAdd = true;
+        mPagination.setPageIndex(1);
         getData();
     }
 
@@ -235,6 +238,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).createDiscussion(body, new RCallback<Discussion>() {
             @Override
             public void success(Discussion d, Response response) {
+                HttpErrorCheck.checkResponse("项目发送讨论内容：", response);
                 isTopAdd = true;
                 mPagination.setPageIndex(1);
                 getData();
