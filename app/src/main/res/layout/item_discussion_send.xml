@@ -61,21 +61,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_8"
                 android:layout_marginTop="@dimen/dimen_3"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_marginBottom="@dimen/dimen_8"
                     android:id="@+id/tv_discuss_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_marginBottom="@dimen/dimen_8"
                     android:layout_marginTop="@dimen/dimen_3"
-                    android:background="@drawable/icon_msg_send_bg"
-                    android:gravity="left|center"
+                    android:background="@drawable/bg_mine"
+                    android:gravity="left|center_vertical"
                     android:lineSpacingExtra="@dimen/dimen_2"
                     android:maxWidth="257dp"
                     android:minHeight="@dimen/dimen_50"
-                    android:textColor="#383838"
+                    android:text="dfhgngntfgnurf"
+                    android:textColor="@color/text33"
+                    android:textIsSelectable="true"
                     android:textSize="14sp"/>
             </LinearLayout>
         </LinearLayout>
