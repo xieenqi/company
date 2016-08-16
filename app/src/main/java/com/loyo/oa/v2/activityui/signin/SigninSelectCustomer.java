@@ -191,6 +191,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 params.put("order", "desc");
                 params.put("position", position);
                 dataRequestvoid(url, params);
+                LocationUtilGD.sotpLocation();
             }
 
             @Override

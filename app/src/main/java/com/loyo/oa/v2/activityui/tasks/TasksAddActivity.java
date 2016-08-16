@@ -340,17 +340,17 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
 
-                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().equals("不重复")) {
+                if (TextUtils.isEmpty(tv_deadline.getText().toString()) && tv_retask.getText().toString().equals("不重复")) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().trim().isEmpty()) {
+                if (TextUtils.isEmpty(tv_deadline.getText().toString()) && tv_retask.getText().toString().trim().isEmpty()) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if (tv_retask.getText().toString().equals("不重复") && mDeadline <= 0) {
+                if (TextUtils.isEmpty(tv_retask.getText().toString()) && mDeadline <= 0) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
@@ -424,7 +424,6 @@ public class TasksAddActivity extends BaseActivity {
     @Click(R.id.layout_remind)
     void remindonClick() {
         if (dialog_Product == null) {
-
             LayoutInflater inflater = getLayoutInflater();
             View layout = inflater.inflate(R.layout.dialog_products_select, null, false);
             AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(layout);
@@ -467,14 +466,14 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void onCancel() {
                 isKind = true;
-                tv_deadline.setText("不截止");
+                tv_deadline.setText("");
                 tv_remind.setTextColor(mContext.getResources().getColor(R.color.gray0990));
                 layout_remind.setEnabled(false);
                 layout_retask.setVisibility(View.VISIBLE);
                 layout_retask_view.setVisibility(View.VISIBLE);
             }
 
-        }, false, "不截止");
+        }, false, "取消");
     }
 
     /**
@@ -585,6 +584,7 @@ public class TasksAddActivity extends BaseActivity {
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
+                        LogUtil.dee("typeFile:"+typedFile);
                         TypedString typedUuid = new TypedString(uuid);
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
                                 new RCallback<Attachment>() {

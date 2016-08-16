@@ -93,7 +93,6 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                 permission = (Permission) MainApp.rootMap.get("0215");
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("发布公告权限,code错误:0402");
             }
         }
     }

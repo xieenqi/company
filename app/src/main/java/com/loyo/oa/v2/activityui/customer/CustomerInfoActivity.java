@@ -129,6 +129,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     private boolean isMem = false;
     private String addres;
     private Intent mIntent;
+    private Bundle mBundle;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
     private Locate mLocate = new Locate();
     private User owner = new User();
@@ -451,9 +452,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 break;
             /*刷新地理位置*/
             case R.id.img_refresh_address:
-                mIntent = new Intent(this, MapModifyView.class);
-                mIntent.putExtra("page", MapModifyView.CUSTOMER_PAGE);
-                startActivityForResult(mIntent, 0x01);
+                mBundle = new Bundle();
+                mBundle.putInt("page", MapModifyView.CUSTOMER_DETAILS_PAGE);
+                if (null != mCustomer.position && mCustomer.position.loc.length > 0) {
+                    mBundle.putDoubleArray("loc", mCustomer.position.loc);
+                    mBundle.putString("address",mCustomer.position.addr);
+                }
+                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
             /*路径规划*/
             case R.id.img_go_where:
@@ -562,17 +567,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             return;
         }
 
-        /*地图微调，数据回调*/
-        if (resultCode == MapModifyView.SERACH_MAP) {
-            positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-            laPosition = positionResultItem.laPosition;
-            loPosition = positionResultItem.loPosition;
-            tv_address.setText(positionResultItem.address);
-            mLocate.addr = positionResultItem.address;
-            mLocate.setLoc(new double[]{loPosition, laPosition});
-        }
-
         switch (requestCode) {
+
+            /**
+             * 地图微调，数据回调
+             * */
+            case MapModifyView.SERACH_MAP:
+
+                positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+                if (null != positionResultItem) {
+                    laPosition = positionResultItem.laPosition;
+                    loPosition = positionResultItem.loPosition;
+                    tv_address.setText(positionResultItem.address);
+                    mLocate.addr = positionResultItem.address;
+                    mLocate.setLoc(new double[]{loPosition, laPosition});
+                }
+
+                break;
 
             /**
              * 负责人回调

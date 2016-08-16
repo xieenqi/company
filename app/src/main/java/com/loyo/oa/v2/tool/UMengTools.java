@@ -4,10 +4,23 @@ import android.content.Context;
 import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.TrackLog;
+import com.loyo.oa.v2.beans.TrackRule;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.point.ITrackLog;
+import com.umeng.analytics.MobclickAgent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 友盟统计相关方法
@@ -41,13 +54,45 @@ public class UMengTools {
                 erroInfo.append("用户信息:" + MainApp.user.name + "-" + MainApp.user.mobile + "-" + MainApp.gson.toJson(MainApp.user.depts));
             }
             LogUtil.d("高德定位设备友盟统计信息：" + erroInfo.toString());
+            MobclickAgent.reportError(context, erroInfo.toString());
         }
     }
 
     /**
      * 上传轨迹失败原因友盟收集
      */
-    public static void sendCustomTrajectory() {
+    public static void sendCustomTrajectory(Context context, RetrofitError error, HashMap<String, Object> jsonObject) {
+        String errInfo = error.getMessage() +
+                " url：" + error.getUrl() + " 定位信息：" + MainApp.gson.toJson(jsonObject)
+                + "用户：" + MainApp.gson.toJson(MainApp.user);
+        MobclickAgent.reportError(context, errInfo.toString());
+    }
 
+    public static void sendLocationInfo(final String address, final double longitude, final double latitude) {
+        final String date = MainApp.getMainApp().df4.format(new Date(System.currentTimeMillis()));
+        LogUtil.d("检查时间: " + date);
+        String oldInfo = SharedUtil.get(MainApp.getMainApp(), "sendLocation");
+        TrackRule trackrule = DBManager.Instance().getTrackRule();
+        if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {
+            LogUtil.d("此时不需要穿轨迹。。。》" + address.equals(oldInfo));
+            return;
+        }
+        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude
+                + "," + latitude, System.currentTimeMillis() / 1000)));
+        final HashMap<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("tracklogs", trackLogs);
+        MainApp.getMainApp().getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new Callback<Object>() {
+            @Override
+            public void success(Object o, Response response) {
+                HttpErrorCheck.checkResponse(" 手动上传轨迹: ", response);
+                SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
+                SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 }

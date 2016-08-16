@@ -132,7 +132,6 @@ public class WeeksDialog {
     private DialogInterface.OnClickListener btnListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int which) {// 按下项所在的索引
-            LogUtil.dee("周报按下的索引:"+singleIndex);
             String date=sourseArray[singleIndex].replace(" (本周)", "").split("-")[1];
             dateR=sourseArray[singleIndex].replace(" (本周)", "");
             if (DateTool.getDateToTimestamp(date,MainApp.getMainApp().df7)<DateTool.getBeginAt_ofWeek())
@@ -141,7 +140,6 @@ public class WeeksDialog {
             }
             resultTview.setText(dateR);
             mHandler.sendEmptyMessage(WorkReportAddActivity.WEEK_RESULT);
-            LogUtil.dee("AAAA:"+sourseToWeek[0]);
         }
     };
 

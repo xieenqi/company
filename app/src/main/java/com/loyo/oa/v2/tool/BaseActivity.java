@@ -64,6 +64,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public static final int ATTENT_ADD = 0X11;   //考勤打卡
     public static final int SALE_ADD = 0X15;   //新建销售机会
     public static final int FOLLOW_ADD = 0X16;   //新建销售机会
+    public static final int ORDER_ADD = 0X17;   //新建订单
     public static final int CUSTOMER_MANAGE = 0X04;//客户管理
     public static final int TASKS_MANAGE = 0X05;//任务管理
     public static final int WORK_MANAGE = 0X06;//工作报告管理

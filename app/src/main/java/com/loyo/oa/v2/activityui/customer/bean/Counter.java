@@ -13,6 +13,7 @@ public class Counter implements Serializable {
     private int task;
     private int visit;
     private int file;
+    public int order;
 
     public int getFile() {
         return file;
@@ -21,6 +22,7 @@ public class Counter implements Serializable {
     public void setFile(int file) {
         this.file = file;
     }
+
     public int getVisit() {
         return visit;
     }

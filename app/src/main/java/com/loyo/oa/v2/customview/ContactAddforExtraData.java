@@ -36,7 +36,7 @@ import java.util.Calendar;
 
 /**
  * com.loyo.oa.v2.customview
- * 描述 : 新增客户联系人 动态字段 【销售机会的动态字段也在用】
+ * 描述 : 新增【客户联系人】【销售机会】动态字段
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
@@ -60,9 +60,6 @@ public class ContactAddforExtraData extends LinearLayout {
         this.extras = extras;
         this.mContact = mContact;//为null 不是联系模块
         bindView(edit, valueColor, valueSize);
-
-        LogUtil.dee("新增联系人 动态字段Contact:" + MainApp.gson.toJson(mContact));
-        LogUtil.dee("新增联系人 动态字段ContactExtras:" + MainApp.gson.toJson(extras));
     }
 
     public ArrayList<ContactLeftExtras> getExtras() {
@@ -307,20 +304,14 @@ public class ContactAddforExtraData extends LinearLayout {
     }
 
     private class BizFiedTextWatcher implements TextWatcher {
-        private ContactLeftExtras extra;
-        boolean isOne = true;
 
+        private ContactLeftExtras extra;
         private BizFiedTextWatcher(ContactLeftExtras extra) {
             this.extra = extra;
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            /*if (!isOne) {
-                extra.val = s.toString();
-            }
-            isOne = false;*/
-
             extra.val = s.toString();
         }
 

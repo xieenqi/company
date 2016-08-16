@@ -285,6 +285,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
                         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
                         app.startActivity(LoginActivity.this, MainHomeActivity.class, MainApp.ENTER_TYPE_RIGHT, true, new Bundle());
+                        SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
                     }
                 });
             }

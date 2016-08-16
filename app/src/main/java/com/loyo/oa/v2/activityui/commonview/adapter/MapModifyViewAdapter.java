@@ -44,8 +44,12 @@ public class MapModifyViewAdapter extends RecyclerView.Adapter<MapModifyViewAdap
     @Override
     public void onBindViewHolder(final MViewHolder holder, int position) {
         PositionResultItem positionResultItem = mData.get(position);
-        holder.address.setText(positionResultItem.address);
-        holder.message.setText(positionResultItem.message);
+        try{
+            holder.address.setText(positionResultItem.address);
+            holder.message.setText(positionResultItem.message);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
 
         if(selectPosition == position){
             holder.selected.setVisibility(View.VISIBLE);

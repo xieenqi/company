@@ -69,6 +69,7 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="cn.jpush.android.ui.PushActivity"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="${applicationId}"/>
             </intent-filter>
@@ -550,6 +551,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
+            android:name=".activityui.customer.CustomerOrderList"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
             android:name=".activityui.customer.FollowContactSelectActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -564,6 +570,33 @@
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom"
             />
+        <!--订单管理 -->
+        <activity
+            android:name=".activityui.order.OrderManagementActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.order.OrderAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".activityui.order.OrderDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.order.OrderPlanListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
+            android:name=".activityui.order.OrderAddPlanActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
             android:name=".activityui.other.PreviewImageAddActivity"
             android:launchMode="singleTop"
@@ -581,6 +614,21 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.commonview.MapSingleView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.order.OrderAttachmentActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.order.OrderEstimateListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.order.OrderAddEstimateActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -608,7 +656,11 @@
         <!-- 高德定位后台服务 -->
         <service
             android:name=".service.AMapService"
-            android:enabled="true"/>
+            android:enabled="true">
+            <intent-filter android:priority="1000">
+                <action android:name="com.loyo.oa.v2.service.AMapService"/>
+            </intent-filter>
+        </service>
 
         <!-- Required SDK核心功能    【激光 推送相关】 -->
         <activity

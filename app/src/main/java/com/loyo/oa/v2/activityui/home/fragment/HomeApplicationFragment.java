@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +30,8 @@ import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
+import com.loyo.oa.v2.activityui.order.OrderAddActivity;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
@@ -63,6 +66,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -97,13 +101,16 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private Boolean inEnable;
     private Boolean outEnable;
     private boolean isJPus = false;//别名是否设置成功
-    private int JpushCount = 0;//激光没有注册成功的次数
-    private int outKind; //0上班  1下班  2加班
+    private int JpushCount = 0;    //激光没有注册成功的次数
+    private int outKind, staratItem; //0上班  1下班  2加班
     private PullToRefreshListView listView;
     private Button btn_add;
     private RoundImageView heading;
     private MoreWindowCase mMoreWindowcase;
+    private HomeFragment homefragment;
     private ValidateInfo validateInfo = new ValidateInfo();
+
+    private Bundle mBundle;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -170,10 +177,20 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     startActivityForResult(new Intent(getActivity(), SaleActivitiesAddActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
+                //新建订单
+                case BaseActivity.ORDER_ADD:
+                    mBundle = new Bundle();
+                    mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
+                    startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    break;
             }
         }
     };
 
+    public void setHomeFragment(HomeFragment homefragment) {
+        this.homefragment = homefragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -205,6 +222,42 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                float downY = 0, upY = 0;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        downY = v.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        upY = v.getY();
+
+                        break;
+                }
+                float moveY = downY - upY;
+                return false;
+            }
+        });
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                LogUtil.d("一亿个：" + firstVisibleItem);
+//                btn_add.setVisibility(firstVisibleItem > staratItem ? View.INVISIBLE : View.VISIBLE);
+//                staratItem = firstVisibleItem;
+//            }
+//        });
+        btn_add.setOnTouchListener(Global.GetTouch());
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMoreWindow(v);
+            }
+        });
         items = DBManager.Instance().getHomeItem();
         if (null != items && items.size() > 0) {
             adapter.setItemData(items);
@@ -220,13 +273,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         DBManager.Instance().putHomeItem(MainApp.gson.toJson(items));
         adapter.setItemData(items);
         adapter.setRedNumbreData(mItemNumbers);
-        btn_add.setOnTouchListener(Global.GetTouch());
-        btn_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMoreWindow(v);
-            }
-        });
         if (null != MainApp.user && null != MainApp.user.avatar && null != heading) {
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }
@@ -264,6 +310,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity", "0213", 0),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
+                new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0216", 1),//新加订单
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signin.SignInManagerActivity_", "0206", 1),
                 new HomeItem(R.drawable.newmain_project, "项目管理", "com.loyo.oa.v2.activityui.project.ProjectManageActivity_", "0201", 2),
                 new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_", "0202", 2),
@@ -276,10 +323,12 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("申请审批", "0204", R.drawable.newmain_post_wif),
                 new MoreWindowItem("提交报告", "0203", R.drawable.newmain_post_report),
                 new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
-                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow),
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
+                new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
                 new MoreWindowItem("考勤打卡", "0000", R.drawable.newmain_post_att),
-                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign)));
+                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign),
+                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
+
 
     }
 
@@ -505,6 +554,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                         HttpErrorCheck.checkResponse("a首页红点", response);
                         mItemNumbers = removalRedNumber(homeNumbers);
                         testJurl();
+                        homefragment.onNetworkChanged(true);
                     }
 
                     @Override
@@ -526,7 +576,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 首页业务显示\隐藏权限 判断设置
      */
     public void testJurl() {
-
+        updateUser();
         //超级管理员判断
         if (null != MainApp.user && !MainApp.user.isSuperUser()) {
             if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
@@ -734,6 +784,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 HttpErrorCheck.checkError(error);
             }
         });
+        UMengTools.sendLocationInfo(address, longitude, latitude);
         LocationUtilGD.sotpLocation();
     }
 

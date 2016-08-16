@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 
@@ -84,13 +84,13 @@ public class HaitHelper {
             bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
             if (null == mFragment) {
                 MainApp.getMainApp().startActivityForResult((Activity) et_scanner.getContext(),
-                        SelectDetUserActivity.class,
+                        SelectDetUserActivity2.class,
                         MainApp.ENTER_TYPE_RIGHT,
                         ExtraAndResult.REQUEST_CODE,
                         bundle);
             } else {
                 mFragment.startActivityForResult(new Intent(mFragment.getActivity(),
-                                SelectDetUserActivity.class).putExtras(bundle),
+                                SelectDetUserActivity2.class).putExtras(bundle),
                         ExtraAndResult.REQUEST_CODE);
             }
         }
@@ -218,15 +218,15 @@ public class HaitHelper {
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && null != data) {
-            User user = (User) data.getSerializableExtra(User.class.getName());
+            NewUser user = (NewUser) data.getSerializableExtra("data");
             if (user != null) {
-                String id = user.toShortUser().getId();
+                String id = user.getId();
                 if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
                     Global.Toast("不能@自己");
-                           // ((BaseActivity) (mFragment != null ? mFragment.getActivity() : et_scanner.getContext())).Toast("不能@自己");
+                    // ((BaseActivity) (mFragment != null ? mFragment.getActivity() : et_scanner.getContext())).Toast("不能@自己");
                     return;
                 }
-                String name = user.toShortUser().getName();
+                String name = user.getName();
                 mHaitSelectUsers.add(new SelectUser(name, id));
                 String selectName = add$Name(name);
                 int index = et_scanner.getSelectionStart();

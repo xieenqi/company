@@ -10,6 +10,7 @@ import java.util.ArrayList;
  */
 public class ContactLeftExtras implements Serializable {
 
+
     public String name;
     public String fieldName;
     public String type;

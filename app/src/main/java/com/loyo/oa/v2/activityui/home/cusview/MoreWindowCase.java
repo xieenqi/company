@@ -204,6 +204,10 @@ public class MoreWindowCase extends PopupWindow {
                         mHandler.sendEmptyMessage(BaseActivity.SIGNIN_ADD);
                         dismiss();
                         break;
+                    case "新建订单":
+                        mHandler.sendEmptyMessage(BaseActivity.ORDER_ADD);
+                        dismiss();
+                        break;
                 }
             }
         });

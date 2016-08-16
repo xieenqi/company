@@ -30,6 +30,8 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,6 +47,7 @@ public class IntentionProductActivity extends BaseActivity {
     private String saleId = "";
     private int resultAction = 0;
     private int fromPage = 0;
+    private TextView tv_addpro;
     private TextView tv_title;
     private CustomTextView tv_saleToal, tv_discount;
     private LinearLayout ll_back, ll_add, ll_statistics;
@@ -52,6 +55,7 @@ public class IntentionProductActivity extends BaseActivity {
     ArrayList<SaleIntentionalProduct> listData = new ArrayList<>();
     SaleProductAdapter saleProductAdapter;
     private int editItemIndex;//改变item的位置记录
+    private boolean isKine = false;
 
     Handler hadler = new Handler() {
         @Override
@@ -78,13 +82,17 @@ public class IntentionProductActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intention_product);
-        init();
         getIntentData();
+        init();
     }
 
     private void init() {
         tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_title.setText("意向产品");
+        tv_addpro = (TextView) findViewById(R.id.tv_addpro);
+        if(fromPage == ActionCode.ORDER_DETAIL){
+            tv_addpro.setText("新增购买产品");
+        }
+        tv_title.setText(fromPage == ActionCode.ORDER_DETAIL ? "购买产品" : "意向产品");
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_back.setOnTouchListener(Global.GetTouch());
         ll_back.setOnClickListener(click);
@@ -97,6 +105,9 @@ public class IntentionProductActivity extends BaseActivity {
         tv_saleToal = (CustomTextView) findViewById(R.id.tv_saleToal);
         tv_discount = (CustomTextView) findViewById(R.id.tv_discount);
         ll_statistics = (LinearLayout) findViewById(R.id.ll_statistics);
+        if (fromPage == ActionCode.ORDER_DETAIL && !isKine) {
+            ll_add.setVisibility(View.GONE);
+        }
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -123,10 +134,10 @@ public class IntentionProductActivity extends BaseActivity {
     private void getIntentData() {
         saleId = getIntent().getStringExtra("saleId");
         fromPage = getIntent().getIntExtra("data", 0);
+        isKine  = getIntent().getBooleanExtra("boolean",false);
         ArrayList<SaleIntentionalProduct> intentData = (ArrayList<SaleIntentionalProduct>) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentData && intentData.size() > 0) {
             listData = intentData;
-            saleProductAdapter.notifyDataSetChanged();
         }
     }
 
@@ -249,7 +260,7 @@ public class IntentionProductActivity extends BaseActivity {
         public LinearLayout ll_delete, ll_edit;
 
         public void setContentView(final int position) {
-            tv_index.setText("意向产品" + (position + 1));
+            tv_index.setText((fromPage == ActionCode.ORDER_DETAIL ? "购买产品" : "意向产品") + (position + 1));
             final SaleIntentionalProduct item = listData.get(position);
             tv_product.setText(item.name);
             tv_toal_price.setText(Utils.setValueDouble(item.costPrice + ""));
@@ -294,6 +305,10 @@ public class IntentionProductActivity extends BaseActivity {
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, product);
                 }
             });
+            if (fromPage == ActionCode.ORDER_DETAIL) {
+                ll_delete.setVisibility(View.GONE);
+                ll_edit.setVisibility(View.GONE);
+            }
         }
     }
 }

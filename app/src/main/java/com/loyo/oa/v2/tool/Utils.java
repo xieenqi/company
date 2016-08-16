@@ -31,6 +31,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -64,7 +65,10 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
@@ -90,6 +94,39 @@ public class Utils {
         windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         return windowManager;
     }
+
+    /**
+     * 图片类型
+     * */
+    public static String getMimeType(String url)
+    {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            type = mime.getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
+
+    /**
+     * @param list
+     */
+    private ArrayList removeDuplicateObj(ArrayList list) {
+        // ................
+        Set someSet = new HashSet(list);
+
+        // 将Set中的集合，放到一个临时的链表中(tempList)
+        Iterator iterator = someSet.iterator();
+        ArrayList tempList = new ArrayList();
+        int i = 0;
+        while (iterator.hasNext()) {
+
+            tempList.add(iterator.next().toString());
+            i++;
+        }
+        return tempList;
+}
 
     /**
      * ScroView嵌套listView，手动计算ListView高度

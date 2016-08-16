@@ -87,7 +87,8 @@ public class MenuFragment extends BaseFragment {
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
                 }
                 if (isUpdataData) {
-                    Toast("数据更新成功！");
+                    cancelLoading();
+                    //Toast("数据更新成功！");
                     isUpdataData = false;
                 }
             } else if ("exite".equals(info) && !isExite) {
@@ -236,7 +237,8 @@ public class MenuFragment extends BaseFragment {
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
                 isUpdataData = true;
                 if (Utils.isNetworkAvailable(getActivity())) {
-                    Global.Toast("开始更新");
+                    //Global.Toast("开始更新");
+                    showLoading("正在更新组织架构，请稍等", false);
                     rushHomeData();
                     initService();
                 } else {

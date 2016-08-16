@@ -9,6 +9,8 @@ public class ExtraAndResult {
     public static final String EXTRA_ID = "extra_id";
     public static final String EXTRA_NAME = "extra_name";
     public static final String EXTRA_DATA = "extra_data";
+    public static final String EXTRA_ADD = "extra_add";
+    public static final String EXTRA_FORM_PAGE = "extra_form_page";
     public static final String EXTRA_OBJ = "extra_obj";
     public static final String EXTRA_STATUS = "extra_status";
     public static final String EXTRA_TYPE = "extra_type";
@@ -54,6 +56,7 @@ public class ExtraAndResult {
     public static final int MSG_WHAT_VISIBLE = 130;
     public static final int MSG_WHAT_DIALOG = 140;
     public static final int MSG_WHAT_HIDEDIALOG = 150;
+    public static final int MSG_SEND = 160;
 
     public static final int REQUEST_CODE_CUSTOMER = 101;
     public static final int REQUEST_CODE_STAGE = 102;

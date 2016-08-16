@@ -20,7 +20,7 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.activityui.customer.bean.CustomerJur;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.bean.HttpAddCustomer;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -28,7 +28,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
@@ -97,8 +96,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<NewTag> tags;
     private Intent mIntent;
+    private Bundle mBundle;
 
-    private  ArrayList<CustomerJur> mCusList;
+    private  ArrayList<ContactLeftExtras> mCusList;
 
     private String uuid = StringUtil.getUUID();
     private String tagItemIds;
@@ -246,9 +246,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*刷新地址*/
             case R.id.img_refresh_address:
-                mIntent = new Intent(this, MapModifyView.class);
-                mIntent.putExtra("page", MapModifyView.CUSTOMER_PAGE);
-                startActivityForResult(mIntent, 0x01);
+
+                mBundle = new Bundle();
+                mBundle.putInt("page",MapModifyView.CUSTOMER_PAGE);
+                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
+
                 break;
 
             /*查重*/
@@ -352,12 +354,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         showLoading("");
         HashMap<String,Object> map = new HashMap<>();
         map.put("bizType",100);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback< ArrayList<CustomerJur>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback< ArrayList<ContactLeftExtras>>() {
             @Override
-            public void success(final ArrayList<CustomerJur> cuslist, final Response response) {
+            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 mCusList = cuslist;
-                for(CustomerJur customerJur : cuslist){
+                for(ContactLeftExtras customerJur : cuslist){
                     if(customerJur.label.contains("联系人") && customerJur.required){
                         cusGuys = true;
                         edt_contract.setHint("请输入联系人姓名(必填)");
@@ -485,15 +487,25 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
 
         /*地图微调，数据回调*/
-        if (resultCode == MapModifyView.SERACH_MAP) {
+/*        if (resultCode == MapModifyView.SERACH_MAP) {
             positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
             laPosition = positionResultItem.laPosition;
             loPosition = positionResultItem.loPosition;
             et_address.setText(positionResultItem.address);
             edit_address_details.setText(positionResultItem.address);
-        }
+        }*/
 
         switch (requestCode) {
+            case  MapModifyView.SERACH_MAP:
+                positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+                if(null != positionResultItem){
+                    laPosition = positionResultItem.laPosition;
+                    loPosition = positionResultItem.loPosition;
+                    et_address.setText(positionResultItem.address);
+                    edit_address_details.setText(positionResultItem.address);
+                }
+                break;
+
             case REQUEST_CUSTOMER_SERACH:
 
                 Bundle bundle1 = data.getExtras();

@@ -10,18 +10,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.order.OrderAddActivity;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
+import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
-import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -29,7 +34,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -166,26 +170,6 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         }*/
     }
 
-    /**
-     * 删除销售机会
-     */
-    public void deleteSale() {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
-                .create(ISale.class)
-                .deleteSaleOpportunity(selectId, new RCallback<SaleDetails>() {
-                    @Override
-                    public void success(SaleDetails saleDetails, Response response) {
-                        HttpErrorCheck.checkResponse("删除", response);
-                        app.finishActivity(SaleDetailsActivity.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, new Intent());
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
 
     /**
      * 编辑销售阶段
@@ -223,7 +207,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     public void bindData() {
 
         //机会 是否 是创建者
-        if (MainApp.user.id.equals(mSaleDetails.creatorId) && mSaleDetails.prob != 100 && !isTeam || MainApp.user.isSuperUser) {
+        if (MainApp.user.id.equals(mSaleDetails.creatorId) && !isTeam || MainApp.user.isSuperUser) {
             img_title_right.setVisibility(View.VISIBLE);
             ll_stage.setEnabled(true);
             ll_product.setEnabled(true);
@@ -287,7 +271,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             layout_losereson.setVisibility(View.GONE);
         }
         if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
-            img_title_right.setVisibility(View.INVISIBLE);
+            img_title_right.setVisibility((mSaleDetails.prob == 100 && MainApp.user.id.equals(mSaleDetails.creatorId)) ? View.VISIBLE : View.GONE);
             ll_product.setEnabled(false);
             ll_stage.setEnabled(false);
             iv_wfstatus.setVisibility(View.VISIBLE);
@@ -317,7 +301,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         //计算产品总金额
         if (null != mSaleDetails.proInfos) {
             for (SaleIntentionalProduct ele : mSaleDetails.proInfos) {
-                totalMoney += ele.totalMoney * ele.quantity;
+                totalMoney += ele.totalMoney;
             }
         }
     }
@@ -331,10 +315,16 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 break;
             //弹出菜单
             case R.id.img_title_right:
-                Intent intent = new Intent(mContext, SaleEditViewActivity.class);
-                intent.putExtra("isDelete", isDelete);
-                intent.putExtra("isEdit", isEdit);
-                startActivityForResult(intent, EDIT_POP_WINDOW);
+//                Intent intent = new Intent(mContext, SaleEditViewActivity.class);
+//                if (mSaleDetails.prob != 100) {
+//                    intent.putExtra("isDelete", isDelete);
+//                    intent.putExtra("isEdit", isEdit);
+//                } else {
+//                    intent.putExtra("isExra", "生成订单");
+//                }
+//                startActivityForResult(intent, EDIT_POP_WINDOW);
+
+                functionBuuton();
                 break;
             //意向产品
             case R.id.ll_product:
@@ -368,6 +358,46 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * 右上角菜单
+     */
+    private void functionBuuton() {
+        ActionSheetDialog dialog = new ActionSheetDialog(SaleDetailsActivity.this).builder();
+        if (mSaleDetails.prob != 100 || mSaleDetails.wfState == 3) {
+            dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    editSale();
+                }
+            });
+        }
+        if (mSaleDetails.prob == 100) {
+            dialog.addSheetItem("生成订单", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    OrderDetail mData = new OrderDetail();
+                    mData.proInfo = mSaleDetails.proInfos;
+                    mData.dealMoney = (float) totalMoney;
+                    mData.customerName = mSaleDetails.cusName;
+                    mData.customerId = mSaleDetails.customerId;
+                    Bundle mBundle = new Bundle();
+                    mBundle.putInt("fromPage", OrderDetailActivity.ORDER_CREATE);
+                    mBundle.putSerializable("data", mData);
+                    app.startActivityForResult(SaleDetailsActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                }
+            });
+        }
+        if (mSaleDetails.prob != 100 || mSaleDetails.wfState == 3) {
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    deleteSale();
+                }
+            });
+        }
+        dialog.show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -383,25 +413,27 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             case ExtraAndResult.MSG_WHAT_DIALOG:
                 resultAction = data.getIntExtra(ExtraAndResult.RESULT_ID, 0);
                 if (resultAction == ActionCode.SALE_DETAILS_EDIT) {
-                    LogUtil.dee("编辑成功回调");
                     getData();
                 }
                 break;
 
-            /**菜单选项*/
-            case EDIT_POP_WINDOW:
-                //编辑回调
-                if (data.getBooleanExtra("edit", false) && null != mSaleDetails) {
-                    Bundle editSale = new Bundle();
-                    editSale.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails);
-                    app.startActivityForResult(SaleDetailsActivity.this, AddMySaleActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_DIALOG, editSale);
-                }
-                //删除回调
-                else if (data.getBooleanExtra("delete", false)) {
-                    deleteSale();
-                }
-                break;
+//            /**菜单选项*/
+//            case EDIT_POP_WINDOW:
+//                //编辑回调
+//                if (data.getBooleanExtra("edit", false) && null != mSaleDetails) {
+//                    Bundle editSale = new Bundle();
+//                    editSale.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails);
+//                    app.startActivityForResult(SaleDetailsActivity.this, AddMySaleActivity.class,
+//                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_DIALOG, editSale);
+//                }
+//                //删除回调
+//                else if (data.getBooleanExtra("delete", false)) {
+//                    deleteSale();
+//                } else if (data.getBooleanExtra("extra", false)) {
+////                    deleteSale();
+//                    Toast("bofgbmdgofb");
+//                }
+//                break;
             /**意向产品*/
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
                 resultAction = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
@@ -428,4 +460,34 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
 
     }
 
+    /**
+     * 编辑机会
+     */
+    private void editSale() {
+        Bundle editSale = new Bundle();
+        editSale.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails);
+        app.startActivityForResult(SaleDetailsActivity.this, AddMySaleActivity.class,
+                MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_DIALOG, editSale);
+    }
+
+    /**
+     * 删除销售机会
+     */
+    public void deleteSale() {
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
+                .create(ISale.class)
+                .deleteSaleOpportunity(selectId, new RCallback<SaleDetails>() {
+                    @Override
+                    public void success(SaleDetails saleDetails, Response response) {
+                        HttpErrorCheck.checkResponse("删除", response);
+                        app.finishActivity(SaleDetailsActivity.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, new Intent());
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
 }
