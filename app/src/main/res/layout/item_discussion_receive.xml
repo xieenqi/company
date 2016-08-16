@@ -63,11 +63,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_3"
-                android:background="@drawable/icon_notice_item_bg"
+                android:background="@drawable/bg_other"
+                android:textIsSelectable="true"
                 android:gravity="left|center"
                 android:maxWidth="257dp"
                 android:minHeight="@dimen/dimen_50"
-                android:textColor="#383838"
+                android:textColor="@color/text33"
                 android:textSize="14sp"/>
         </LinearLayout>
 

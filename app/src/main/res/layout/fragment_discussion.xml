@@ -16,6 +16,9 @@
             android:layout_above="@+id/layout_discuss_action"
             android:background="@color/white"
             android:divider="@null"
+            android:clickable="false"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:scrollbars="none"
             android:paddingBottom="@dimen/dimen_8"/>
 

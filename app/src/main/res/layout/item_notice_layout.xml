@@ -89,6 +89,7 @@
                     android:layout_marginRight="@dimen/dimen_8"
                     android:layout_marginTop="@dimen/dimen_3"
                     android:lineSpacingExtra="1dp"
+                    android:textIsSelectable="true"
                     android:text=""
                     android:textColor="@color/text99"
                     android:textSize="@dimen/text_sp14"/>
