@@ -393,7 +393,7 @@ public class MenuFragment extends BaseFragment {
         MainApp.setToken(null);//避免后台多次调用接口 没有token 导致accst_token无效 的问题
         InitDataService_.intent(app).stop();
         MainApp.user = null;
-
+        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
         //清楚本地登录状态
         SharedUtil.clearInfo(getActivity());
         ExitActivity.getInstance().finishAllActivity();
