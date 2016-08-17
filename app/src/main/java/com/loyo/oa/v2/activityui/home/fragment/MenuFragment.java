@@ -32,11 +32,9 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -293,8 +291,7 @@ public class MenuFragment extends BaseFragment {
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
                 Bundle b = new Bundle();
-                String userId = MainApp.user.id;
-                b.putSerializable("userId", userId!=null?userId:"");
+                b.putSerializable("user", MainApp.user);
                 app.startActivity(getActivity(), ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
 
@@ -310,10 +307,7 @@ public class MenuFragment extends BaseFragment {
      * 更新 组织架构
      */
     void initService() {
-        /* 更新登录用户信息 */
         InitDataService_.intent(getActivity()).start();
-        /* 拉取组织架构 */
-        OrganizationService.startActionFetchAll(MainApp.getMainApp());
     }
 
     /**
@@ -399,11 +393,7 @@ public class MenuFragment extends BaseFragment {
         MainApp.setToken(null);//避免后台多次调用接口 没有token 导致accst_token无效 的问题
         InitDataService_.intent(app).stop();
         MainApp.user = null;
-
-        /* 清空组织架构 */
-        OrganizationManager.clearOrganizationData();
-
-
+        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
         //清楚本地登录状态
         SharedUtil.clearInfo(getActivity());
         ExitActivity.getInstance().finishAllActivity();
