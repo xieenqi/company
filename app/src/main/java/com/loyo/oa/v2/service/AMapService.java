@@ -111,7 +111,7 @@ public class AMapService extends APSService {
     @Override
     public void onDestroy() {
         releaseWakeLock();
-//        stopLocate();
+        stopLocate();
         TrackRule.StartTrackRule(10 * 1000);
         super.onDestroy();
     }

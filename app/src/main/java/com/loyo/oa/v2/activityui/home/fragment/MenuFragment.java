@@ -396,7 +396,8 @@ public class MenuFragment extends BaseFragment {
             }
         });
         //清楚token与用户资料
-//        MainApp.setToken(null);//避免后台多次调用接口 没有token 导致accst_token无效 的问题
+        MainApp.setToken(null);//避免后台多次调用接口 没有token 导致accst_token无效 的问题
+        InitDataService_.intent(app).stop();
         MainApp.user = null;
 
         /* 清空组织架构 */
