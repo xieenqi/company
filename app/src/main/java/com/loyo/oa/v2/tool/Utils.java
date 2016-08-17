@@ -15,7 +15,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -27,7 +26,9 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -36,20 +37,20 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.customer.bean.TagItem;
+import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.point.IAttachment;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -69,6 +70,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
@@ -90,16 +93,15 @@ public class Utils {
         throw new UnsupportedOperationException(); // 防止子类调用
     }
 
-    public static WindowManager getWindowHW(Context mContext){
+    public static WindowManager getWindowHW(Context mContext) {
         windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         return windowManager;
     }
 
     /**
      * 图片类型
-     * */
-    public static String getMimeType(String url)
-    {
+     */
+    public static String getMimeType(String url) {
         String type = null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(url);
         if (extension != null) {
@@ -126,7 +128,7 @@ public class Utils {
             i++;
         }
         return tempList;
-}
+    }
 
     /**
      * ScroView嵌套listView，手动计算ListView高度
@@ -601,6 +603,83 @@ public class Utils {
         ForegroundColorSpan redSpan = new ForegroundColorSpan(color);
         builder.setSpan(redSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
+    }
+
+    /**
+     * 改变文字颜色
+     *
+     * @param content
+     */
+    public static SpannableStringBuilder modifyTextHTTP(String content, int color, int start, int end) {
+
+        if (TextUtils.isEmpty(content) || (start >= content.length() || end > content.length() || start > end || end < 0 || start < 0)) {
+            return null;
+        }
+
+        SpannableStringBuilder builder = new SpannableStringBuilder(content);
+        // ForegroundColorSpan 为文字前景色，BackgroundColorSpan为文字背景色
+        ForegroundColorSpan redSpan = new ForegroundColorSpan(color);
+        builder.setSpan(redSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        builder.setSpan(new URLSpan(content), 2, 5,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
+    }
+
+    public static CharSequence checkAutoLink(String content) {
+
+        String url = "百度 https://www.baidu.com/，腾讯 http://www.qq.com/，淘宝 www.taobao.com/";//此处测试，就不用参数了
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(content);
+
+        Pattern pattern = Pattern.compile("((http|ftp|https):\\/\\/)?[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
+
+        Matcher matcher = pattern.matcher(spannableStringBuilder);
+
+        while (matcher.find()) {
+            setClickableSpan(spannableStringBuilder, matcher);
+        }
+
+//        Pattern pattern2 = Pattern.compile("([\\s>])((www|ftp)\\.[\\w\\\\x80-\\\\xff\\#$%&~/.\\-;:=,?@\\[\\]+]*)");
+//
+//        matcher.reset();
+//
+//        matcher = pattern2.matcher(spannableStringBuilder);-
+//
+//        while (matcher.find()) {
+//            setClickableSpan(spannableStringBuilder, matcher);
+//        }
+
+        return spannableStringBuilder;
+
+    }
+
+    //给符合的设置自定义点击事件
+
+    private static void setClickableSpan(final SpannableStringBuilder clickableHtmlBuilder, final Matcher matcher) {
+
+        int start = matcher.start();
+
+        int end = matcher.end();
+
+        final String url = matcher.group();
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+
+            public void onClick(View view) {
+//
+//                Intent intent = new Intent(context, WebViewActivity.class);
+//
+//                intent.putExtra("url", url);
+//
+//                startActivity(intent);
+                Global.Toast("点击了超链接？？？？？？？？？？？");
+            }
+
+        };
+
+        clickableHtmlBuilder.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
     }
 
     /**
