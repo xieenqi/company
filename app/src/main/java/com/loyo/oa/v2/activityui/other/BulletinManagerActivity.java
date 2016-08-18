@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
@@ -21,12 +22,14 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -89,6 +92,9 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         lv_notice.getRefreshableView().setLayoutManager(layoutManager);
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
         getData();
+
+        Utils.btnHideForRecy(lv_notice.getRefreshableView(),btn_notice_add);
+
     }
 
     /**

@@ -36,6 +36,7 @@ import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,7 +122,6 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent mIntent = new Intent();
-//              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                 mIntent.putExtra(ExtraAndResult.EXTRA_ID, adapter.getItemData(position - 1).id);
                 mIntent.setClass(getActivity(), OrderDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
@@ -131,6 +131,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         adapter = new MyOrderAdapter(app);
         lv_list.setAdapter(adapter);
         getData();
+        Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
     }
 
     private void setFilterData() {
