@@ -174,18 +174,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             }
         });
-
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                scorllW += dx;
-                LogUtil.dee("scorllW:" + scorllW);
-                if (windowW == scorllW) {
-                    Toast("滑动到了 屏幕宽度");
-                }
-            }
-        });
+        Utils.btnHideForListView(lv,btn_add);
     }
 
     /**
@@ -202,8 +191,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
             data_time_tv.setText(dataSelects.get(0).yearMonDay);
             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true);//true 反向显示 false 正常显示
-            //customerDataManager = new CustomerDataManager(1, StaggeredGridLayoutManager.HORIZONTAL);
-            //customerDataManager.setSpeedRatio(0.5);
             recyclerView.setLayoutManager(layoutManager);
             dataSelectAdapter = new DataSelectAdapter(getActivity(), dataSelects, windowW, 2, 0);
             recyclerView.setAdapter(dataSelectAdapter);

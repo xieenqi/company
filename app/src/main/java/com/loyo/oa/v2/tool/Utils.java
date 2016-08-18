@@ -20,6 +20,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.text.Spannable;
@@ -28,15 +29,16 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
+import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
@@ -88,6 +90,8 @@ public class Utils {
     static ProgressDialog progressDialog;
     static ProgressDialog progressDialogAtt;
     static WindowManager windowManager;
+    static boolean scrollFlag;
+    static int lastVisibleItemPosition;
 
     protected Utils() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -1325,4 +1329,82 @@ public class Utils {
         };
         return lengthfilter;
     }
+
+
+
+    /**
+     * 添加按钮，根据滑动显示隐藏(recyclerView)
+     * */
+    public static void btnHideForRecy(RecyclerView recyclerView,final View btn){
+
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //正数下滑 负数上滑
+                if (dy > 0) {
+                    if (btn.getVisibility() == View.VISIBLE)
+                        btn.startAnimation(MainApp.getMainApp().animHide);
+                    btn.setVisibility(View.INVISIBLE);
+                } else {
+                    if (btn.getVisibility() == View.INVISIBLE)
+                        btn.startAnimation(MainApp.getMainApp().animShow);
+                    btn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    /**
+     * 添加按钮，根据滑动显示隐藏(ListView)
+     * */
+    public static void btnHideForListView(final ListView listView,final View btn){
+        lastVisibleItemPosition = 0;
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrollFlag = true;
+                } else {
+                    scrollFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (scrollFlag) {
+                    if (firstVisibleItem > lastVisibleItemPosition) {
+                        LogUtil.dee("上滑");
+                        if (btn.getVisibility() == View.VISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animHide);
+                        btn.setVisibility(View.INVISIBLE);
+                    }
+                    if (firstVisibleItem < lastVisibleItemPosition) {
+                        LogUtil.dee("下滑");
+                        if (btn.getVisibility() == View.INVISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animShow);
+                        btn.setVisibility(View.VISIBLE);
+                    }
+                    if (firstVisibleItem == lastVisibleItemPosition) {
+                        return;
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取listView移动距离
+     * */
+    public static int getScrollY(ListView listView) {
+        View c = listView.getChildAt(0);
+        if (c == null ) {
+            return 0;
+        }
+        int firstVisiblePosition = listView.getFirstVisiblePosition();
+        int top = c.getTop();
+        return -top + firstVisiblePosition * c.getHeight() ;
+    }
+
 }

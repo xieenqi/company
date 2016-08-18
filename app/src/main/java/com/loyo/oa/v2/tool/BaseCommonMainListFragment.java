@@ -85,7 +85,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-
     }
 
     @Override
@@ -179,6 +178,10 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                 return false;
             }
         });
+
+
+        Utils.btnHideForListView(expandableListView,btn_add);
+
     }
 
     /**
