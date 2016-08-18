@@ -348,7 +348,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK && null == data) {
+        if (resultCode != RESULT_OK) {
             return;
         }
 
@@ -356,6 +356,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
             //相册选择回调
             case SelectPicPopupWindow.PICTURE:
+                if(null != data)
                 pickPhots = new ArrayList<>();
                 mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 for (String path : mSelectPath) {
