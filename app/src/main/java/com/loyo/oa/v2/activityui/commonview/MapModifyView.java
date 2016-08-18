@@ -443,16 +443,20 @@ public class MapModifyView extends BaseActivity
                 if (selectPosition == -1) {
                     Toast("请选择地点");
                 } else {
-                    app.latitude = resultItems.get(selectPosition).laPosition;
-                    app.longitude = resultItems.get(selectPosition).loPosition;
-                    app.address = resultItems.get(selectPosition).address;
-                    app.message = resultItems.get(selectPosition).message;
+                    if(resultItems.size() != 0){
+                        app.latitude = resultItems.get(selectPosition).laPosition;
+                        app.longitude = resultItems.get(selectPosition).loPosition;
+                        app.address = resultItems.get(selectPosition).address;
+                        app.message = resultItems.get(selectPosition).message;
 
-                    mIntent = new Intent();
-                    mBundle = new Bundle();
-                    mBundle.putSerializable("data", resultItems.get(selectPosition));
-                    mIntent.putExtras(mBundle);
-                    app.finishActivity(this, MainApp.ENTER_TYPE_RIGHT, -1, mIntent);
+                        mIntent = new Intent();
+                        mBundle = new Bundle();
+                        mBundle.putSerializable("data", resultItems.get(selectPosition));
+                        mIntent.putExtras(mBundle);
+                        app.finishActivity(this, MainApp.ENTER_TYPE_RIGHT, -1, mIntent);
+                    }else{
+                        Toast("无处理结果,请稍后");
+                    }
                 }
 
                 break;
