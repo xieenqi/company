@@ -90,7 +90,7 @@ public class TasksInfoActivity extends BaseActivity {
     public String beProjects;
 
     private String taskId;  //任务ID
-//    private String userId;
+    //    private String userId;
     private String uuid = StringUtil.getUUID();
 
     @ViewById
@@ -230,9 +230,8 @@ public class TasksInfoActivity extends BaseActivity {
 
         boolean isInTask = false; //判断当前用户是否在任务中
         for (int i = 0; i < users.size(); i++) {
-            if (MainApp.user.id.equals(users.get(i).getId())
-                    || isMenberShortDept(users.get(i).getId(), users.get(i).getXpath())
-                    ) {
+            if (null != users.get(i) && (MainApp.user.id.equals(users.get(i).getId())
+                    || isMenberShortDept(users.get(i).getId(), users.get(i).getXpath()))) {
                 isInTask = true;
                 break;
             }
@@ -683,7 +682,7 @@ public class TasksInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updatesTask(id, cid, map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkResponse("更新子任务",response);
+                HttpErrorCheck.checkResponse("更新子任务", response);
                 Toast("更新成功");
             }
 
