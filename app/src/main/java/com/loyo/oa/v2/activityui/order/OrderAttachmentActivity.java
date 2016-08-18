@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.order;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -97,7 +96,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
             mUserList = (ArrayList<User>) mIntent.getSerializableExtra("users");
             bizType = mIntent.getIntExtra("bizType", 0);
             isOver = mIntent.getBooleanExtra("isOver", false);
-            isAdd  = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD,true);
+            isAdd = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, true);
             if (null != mIntent.getStringExtra("uuid") && mIntent.getStringExtra("uuid").length() > 5) {
                 uuid = mIntent.getStringExtra("uuid");
                 isPic = true;
@@ -114,7 +113,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
         tv_upload.setOnClickListener(this);
         img_title_left.setOnClickListener(this);
 
-        if(!isAdd){
+        if (!isAdd) {
             tv_upload.setVisibility(View.GONE);
         }
 
@@ -356,13 +355,14 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
 
             //相册选择回调
             case SelectPicPopupWindow.PICTURE:
-                if(null != data)
-                pickPhots = new ArrayList<>();
-                mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                for (String path : mSelectPath) {
-                    pickPhots.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                if (null != data) {
+                    pickPhots = new ArrayList<>();
+                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    for (String path : mSelectPath) {
+                        pickPhots.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                    }
+                    setAttachmentData();
                 }
-                setAttachmentData();
                 break;
         }
     }
