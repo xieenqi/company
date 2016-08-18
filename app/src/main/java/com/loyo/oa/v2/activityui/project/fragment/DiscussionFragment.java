@@ -3,8 +3,6 @@ package com.loyo.oa.v2.activityui.project.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +32,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.TimeFormatUtil;
-import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -71,6 +68,31 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         if (getArguments() != null && getArguments().containsKey("project")) {
             project = (HttpProject) getArguments().getSerializable("project");
         }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (null == mView) {
+            mInflater = inflater;
+            mView = inflater.inflate(R.layout.fragment_discussion, container, false);
+            lv_discuss = (PullToRefreshListView) mView.findViewById(R.id.lv_discussion);
+            et_comment = (EditText) mView.findViewById(R.id.et_comment);
+            tv_send = (TextView) mView.findViewById(R.id.tv_send);
+            tv_send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sendDiscussion();
+                }
+            });
+            lv_discuss.setMode(PullToRefreshBase.Mode.BOTH);
+            lv_discuss.setOnRefreshListener(this);
+            layout_discuss_action = (ViewGroup) mView.findViewById(R.id.layout_discuss_action);
+
+            mHaitHelper = new HaitHelper(this, et_comment);
+            getData();
+        }
+        return mView;
     }
 
     @Override
@@ -112,7 +134,8 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
      */
     public void scrollToBottom() {
         if (adapter != null && adapter.getCount() > 0) {
-            lv_discuss.getRefreshableView().setSelection(adapter.getCount() - 1);
+//            lv_discuss.getRefreshableView().setSelection(adapter.getCount() - 1);
+            lv_discuss.getRefreshableView().setSelection(lv_discuss.getBottom());
         }
     }
 
@@ -123,10 +146,11 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         HashMap<String, Object> map = new HashMap<>();
         map.put("attachmentUUId", project.attachmentUUId);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? discussions.size() >= 20 ? discussions.size() : 20 : 20);
+        map.put("pageSize", isTopAdd ? discussions.size() >= 2000 ? discussions.size() : 2000 : 2000);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).getDiscussions(map, new RCallback<PaginationX<Discussion>>() {
             @Override
             public void success(PaginationX<Discussion> pagination, Response response) {
+                HttpErrorCheck.checkResponse("项目讨论内容：", response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Discussion> lstData_bulletin_current = pagination.getRecords();
                     mPagination = pagination;
@@ -153,42 +177,19 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        mPagination.setPageIndex(1);
-        getData();
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isTopAdd = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
         getData();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (null == mView) {
-            mInflater = inflater;
-            mView = inflater.inflate(R.layout.fragment_discussion, container, false);
-            lv_discuss = (PullToRefreshListView) mView.findViewById(R.id.lv_discussion);
-            et_comment = (EditText) mView.findViewById(R.id.et_comment);
-            tv_send = (TextView) mView.findViewById(R.id.tv_send);
-            tv_send.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    sendDiscussion();
-                }
-            });
-            lv_discuss.setMode(PullToRefreshBase.Mode.BOTH);
-            lv_discuss.setOnRefreshListener(this);
-            layout_discuss_action = (ViewGroup) mView.findViewById(R.id.layout_discuss_action);
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 
-            mHaitHelper = new HaitHelper(this, et_comment);
-            getData();
-        }
-        return mView;
+        isTopAdd = true;
+        mPagination.setPageIndex(1);
+        getData();
     }
+
 
     public HaitHelper getHaitHelper() {
         return mHaitHelper;
@@ -237,6 +238,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).createDiscussion(body, new RCallback<Discussion>() {
             @Override
             public void success(Discussion d, Response response) {
+                HttpErrorCheck.checkResponse("项目发送讨论内容：", response);
                 isTopAdd = true;
                 mPagination.setPageIndex(1);
                 getData();
@@ -282,23 +284,39 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             final Discussion discussion = getItem(i);
+            Holder holder = null;
             if (null == view) {
+                holder = new Holder();
                 if (getItemViewType(i) == 0) {
-                    view = mInflater.inflate(R.layout.item_discussion_send, viewGroup, false);
+//                    view = mInflater.inflate(R.layout.item_discussion_send, viewGroup, false);
+                    view = mInflater.inflate(R.layout.item_discuss_det_mine, viewGroup, false);
+                    holder.iv = (RoundImageView) view.findViewById(R.id.iv_mine_avatar);
+                    holder.time = (TextView) view.findViewById(R.id.tv_mine_time);
+                    holder.name = (TextView) view.findViewById(R.id.tv_mine);
+                    holder.content = (TextView) view.findViewById(R.id.tv_mine_content);
+                    view.setTag(holder);
                 } else {
-                    view = mInflater.inflate(R.layout.item_discussion_receive, viewGroup, false);
+//                    view = mInflater.inflate(R.layout.item_discussion_receive, viewGroup, false);
+                    view = mInflater.inflate(R.layout.item_discuss_det_other, viewGroup, false);
+                    holder.iv = (RoundImageView) view.findViewById(R.id.iv_other_avatar);
+                    holder.time = (TextView) view.findViewById(R.id.tv_other_time);
+                    holder.name = (TextView) view.findViewById(R.id.tv_other_name);
+                    holder.content = (TextView) view.findViewById(R.id.tv_other_content);
+                    view.setTag(holder);
                 }
+            } else {
+                holder = (Holder) view.getTag();
             }
-            RoundImageView iv = ViewHolder.get(view, R.id.iv_avatar);
-            TextView time = ViewHolder.get(view, R.id.tv_discuss_time);
-            TextView name = ViewHolder.get(view, R.id.tv_discuss_sender);
-            TextView content = ViewHolder.get(view, R.id.tv_discuss_content);
+//            RoundImageView iv = ViewHolder.get(view, R.id.iv_avatar);
+//            TextView time = ViewHolder.get(view, R.id.tv_discuss_time);
+//            TextView name = ViewHolder.get(view, R.id.tv_discuss_sender);
+//            TextView content = ViewHolder.get(view, R.id.tv_discuss_content);
 
-            time.setText(TimeFormatUtil.toMd_Hm(discussion.getCreatedAt()));
-            name.setText(discussion.getCreator().name);
-            content.setText(discussion.getContent());
-            ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, iv);
-            iv.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.time.setText(TimeFormatUtil.toMd_Hm(discussion.getCreatedAt()));
+            holder.name.setText(discussion.getCreator().name);
+            holder.content.setText(discussion.getContent());
+            ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, holder.iv);
+            holder.iv.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if (TextUtils.isEmpty(discussion.getCreator().getId()) || discussion.getCreator().id.equals(MainApp.user.id)) {
@@ -309,7 +327,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                     return true;
                 }
             });
-            iv.setOnClickListener(new View.OnClickListener() {
+            holder.iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (TextUtils.isEmpty(discussion.getCreator().getId()) || discussion.getCreator().id.equals(MainApp.user.id)) {
@@ -321,6 +339,11 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             });
             return view;
         }
+    }
+
+    class Holder {
+        RoundImageView iv;
+        TextView time, name, content;
     }
 
     @Override

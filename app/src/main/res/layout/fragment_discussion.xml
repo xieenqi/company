@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_discuss_action"
-            android:background="@color/white"
+            android:background="@color/activity_bg"
             android:divider="@null"
             android:scrollbars="none"
             android:paddingBottom="@dimen/dimen_8"/>
@@ -24,8 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/activity_bg"
-            android:minHeight="@dimen/dimen_55">
+            android:background="@color/white"
+            android:minHeight="@dimen/dimen_40">
 
             <EditText
                 android:id="@+id/et_comment"
@@ -41,7 +41,7 @@
 
             <View
                 android:layout_width="0.5dp"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:background="@color/activity_split"/>
 
