@@ -36,6 +36,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +85,6 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
-        btn_add.setVisibility(View.GONE);
         expandableListView.setOnRefreshListener(this);
         expandableListView.setEmptyView(emptyView);
         page = 1;
@@ -257,6 +257,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
                 return false;
             }
         });
+        Utils.btnHideForListView(ListView,btn_add);
     }
 
     public void initAdapter() {

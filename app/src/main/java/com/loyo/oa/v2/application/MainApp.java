@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
@@ -110,6 +112,9 @@ public class MainApp extends Application {
     public boolean hasNewVersion = false;
     public static HashMap<String, Object> rootMap;
 
+    public ScaleAnimation animShow;  //显示动画
+    public ScaleAnimation animHide;  //隐藏动画
+
 
     //-------这些数据需要保存在本地-------------
     //下属
@@ -157,7 +162,6 @@ public class MainApp extends Application {
         mainApp = this;
         init();
         loadIndustryCodeTable();
-        //    getWindowWH();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
 
@@ -216,6 +220,15 @@ public class MainApp extends Application {
 
 
     void init() {
+
+        animShow = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animShow.setDuration(120);//设置动画持续时间
+
+        animHide = new ScaleAnimation(1.0f, 0.0f, 1.0f, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animHide.setDuration(120);//设置动画持续时间
+
         CrashReport.initCrashReport(getApplicationContext(), "900037071", Config_project.is_developer_mode);  //初始化bugly SDK  900001993
         Configuration config = getResources().getConfiguration();
         config.locale = Locale.CHINA;

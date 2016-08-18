@@ -15,6 +15,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -103,6 +106,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private boolean isJPus = false;//别名是否设置成功
     private int JpushCount = 0;    //激光没有注册成功的次数
     private int outKind, staratItem; //0上班  1下班  2加班
+    private int windowH;
     private PullToRefreshListView listView;
     private Button btn_add;
     private RoundImageView heading;
@@ -208,6 +212,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home_application, container,
                 false);
+        windowH = Utils.getWindowHW(getActivity()).getDefaultDisplay().getHeight();
+
         //注册拉去组织架构的广播
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
         //检查更新
@@ -222,35 +228,27 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
-        listView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float downY = 0, upY = 0;
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        downY = v.getY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        upY = v.getY();
 
-                        break;
+        //列表滑动监听
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                    btn_add.startAnimation(app.animHide);
+                    btn_add.setVisibility(View.INVISIBLE);
+                }else{
+                    if(btn_add.getVisibility() == View.INVISIBLE){
+                        btn_add.startAnimation(app.animShow);
+                        btn_add.setVisibility(View.VISIBLE);
+                    }
                 }
-                float moveY = downY - upY;
-                return false;
             }
         });
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                LogUtil.d("一亿个：" + firstVisibleItem);
-//                btn_add.setVisibility(firstVisibleItem > staratItem ? View.INVISIBLE : View.VISIBLE);
-//                staratItem = firstVisibleItem;
-//            }
-//        });
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override

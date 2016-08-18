@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -47,6 +49,7 @@ import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenTagPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,7 +90,9 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private String position;
     private int page = 1;
     private int tagPostion;
+    private int lastVisibleItemPosition;
     private boolean isPullUp = false;
+    private boolean scrollFlag;
 
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
@@ -198,6 +203,37 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         btn_add.setOnTouchListener(Global.GetTouch());
         showLoading("");
         getData();
+
+        Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
+
+
+/*        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrollFlag = true;
+                } else {
+                    scrollFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (scrollFlag) {
+                    if (firstVisibleItem > lastVisibleItemPosition) {
+                        LogUtil.dee("上滑");
+                    }
+                    if (firstVisibleItem < lastVisibleItemPosition) {
+                        LogUtil.dee("下滑");
+                    }
+                    if (firstVisibleItem == lastVisibleItemPosition) {
+                        return;
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
+                }
+            }
+        });*/
+
     }
 
     /**
