@@ -145,7 +145,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     }
 
 
-    private static final class MHandler extends Handler {
+    private final class MHandler extends Handler {
         private WeakReference<AttendanceAddActivity> mActivity;
         private static final int TEXT_LEN = 6;
 
@@ -174,10 +174,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                 }
             }
 
-            if (0 == msg.what) {
-                mActivity.get().recycle();
-                mActivity.get().showTimeOutDialog();
-            }
+            if (isRun)
+                if (0 == msg.what) {
+                    mActivity.get().recycle();
+                    mActivity.get().showTimeOutDialog();
+                }
         }
     }
 
@@ -597,5 +598,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         } catch (Exception ex) {
             Global.ProcException(ex);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        recycle();
     }
 }
