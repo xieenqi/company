@@ -22,7 +22,7 @@ android {
         debug {
             storeFile file('D:\\android\\key\\loyo_share.keystore')
 //          storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
-//          storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
+//            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'

@@ -398,6 +398,8 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/sale_wintime"
+                    android:visibility="gone"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_14"
