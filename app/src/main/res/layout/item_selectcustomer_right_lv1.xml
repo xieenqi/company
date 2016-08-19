@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:text="培训组"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text66"
                     android:textSize="11sp" />
 
                 <TextView
@@ -62,7 +62,7 @@
                     android:layout_marginLeft="3dp"
                     android:singleLine="true"
                     android:text=""
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text66"
                     android:textSize="11sp" />
             </LinearLayout>
         </LinearLayout>
@@ -86,5 +86,5 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1"
         android:layout_marginLeft="@dimen/dimen_10"
-        android:background="@color/md_grey_300" />
+        android:background="@color/lineCC" />
 </LinearLayout>

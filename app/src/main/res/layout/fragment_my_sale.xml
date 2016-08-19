@@ -114,7 +114,7 @@
             android:id="@+id/lv_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/whitesmoke"
+            android:background="@color/activity_bg"
             android:cacheColorHint="#00000000"
             android:divider="@null"
             android:drawSelectorOnTop="true"

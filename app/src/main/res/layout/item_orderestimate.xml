@@ -17,7 +17,7 @@
             android:layout_marginLeft="@dimen/margin_other_view"
             android:layout_marginTop="@dimen/dimen_10"
             android:text=""
-            android:textColor="@color/gray"/>
+            android:textColor="@color/text99"/>
 
     </LinearLayout>
 

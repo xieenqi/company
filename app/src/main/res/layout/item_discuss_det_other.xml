@@ -14,7 +14,7 @@
         android:layout_marginTop="@dimen/dimen_8"
         android:gravity="center"
         android:text="2016/03/10"
-        android:textColor="@color/text_black_2"
+        android:textColor="@color/text99"
         android:textSize="@dimen/text_sp12"/>
 
     <TextView
@@ -26,7 +26,7 @@
         android:layout_marginTop="@dimen/dimen_4"
         android:singleLine="true"
         android:text="LIBO"
-        android:textColor="@color/text_black_2"
+        android:textColor="@color/text66"
         android:textSize="@dimen/text_sp12"/>
 
     <LinearLayout
@@ -63,7 +63,7 @@
             android:textIsSelectable="true"
             android:paddingTop="@dimen/dimen_16"
             android:text=""
-            android:textColor="@color/text_black_1"
+            android:textColor="@color/text33"
             android:textSize="@dimen/text_sp14"/>
 
         <RelativeLayout

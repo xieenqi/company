@@ -19,7 +19,7 @@
             android:paddingRight="@dimen/dimen_4"
             android:singleLine="true"
             android:text="成都乐育"
-            android:textColor="@color/text_black_1"
+            android:textColor="@color/text33"
             android:textSize="15sp" />
 
     </LinearLayout>
@@ -27,5 +27,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1"
-        android:background="@color/md_grey_200" />
+        android:background="@color/lineCC" />
 </LinearLayout>
