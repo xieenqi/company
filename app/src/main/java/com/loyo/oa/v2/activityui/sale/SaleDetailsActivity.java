@@ -30,6 +30,7 @@ import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -51,6 +52,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     private final int EDIT_POP_WINDOW = 500;
     private LinearLayout img_title_left;
     private LinearLayout layout_losereson;
+    private LinearLayout sale_wintime;
     private RelativeLayout img_title_right;
     private SaleDetails mSaleDetails;
     private Intent mIntent;
@@ -98,6 +100,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
 
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         layout_losereson = (LinearLayout) findViewById(R.id.layout_losereson);
+        sale_wintime = (LinearLayout) findViewById(R.id.sale_wintime);
         img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
         title = (TextView) findViewById(R.id.title);
         customer = (TextView) findViewById(R.id.customer);
@@ -241,7 +244,6 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         creator.setText(mSaleDetails.getCreatorName());
         creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt() + "") * 1000)));
         updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt() + "") * 1000)));
-        winTime.setText(mSaleDetails.getWinTime() + "");
         text_stagename.setText(mSaleDetails.getStageName());
         productBuffer = new StringBuffer();
         if (null != mSaleDetails.getProInfos()) {
@@ -292,12 +294,18 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                     break;
                 case 4:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);
+                    winTime.setText(DateTool.timet(mSaleDetails.getWinTime() + "", "yyyy.MM.dd HH:mm"));
+                    sale_wintime.setVisibility(View.VISIBLE);
                     break;
                 case 5:
                     iv_wfstatus.setImageResource(R.drawable.img_task_status_finish);
+                    winTime.setText(DateTool.timet(mSaleDetails.getWinTime() + "", "yyyy.MM.dd HH:mm"));
+                    sale_wintime.setVisibility(View.VISIBLE);
                     break;
             }
-
+        }else if(0 == mSaleDetails.wfState && mSaleDetails.stageName.contains("赢单")){
+            winTime.setText(DateTool.timet(mSaleDetails.getUpdatedAt() + "", "yyyy.MM.dd HH:mm"));
+            sale_wintime.setVisibility(View.VISIBLE);
         }
         //计算产品总金额
         if (null != mSaleDetails.proInfos) {

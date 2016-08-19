@@ -31,7 +31,7 @@ public class SaleDetails implements Serializable {
     public int createdAt;          //创建时间
     public int updatedAt;          //更新时间
     public int winTime;            //赢单时间
-    public int wfState = 0;//1【待审批】2【审批中】3【审批不通过】4【审批通过】5【审批完结】
+    public int wfState = 0;//1【待审批】2【审批中】3【审批不通过】4【审批通过】5【审批完结】0【不需要审核的赢单】
     public String wfId;
     public String directorId;      //负责人ID
     public String directorName;    //负责人名字
