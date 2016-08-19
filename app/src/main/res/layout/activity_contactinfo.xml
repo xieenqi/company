@@ -3,7 +3,7 @@
                 xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/gray878"
+                android:background="@color/activity_bg"
                 android:clipToPadding="true"
                 android:fitsSystemWindows="true"
     >
@@ -62,10 +62,10 @@
                 android:id="@+id/layout_phone"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:paddingLeft="@dimen/margin_other_view"
+                android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:background="@color/white"
+                android:paddingLeft="@dimen/margin_other_view"
                 >
 
 
@@ -92,12 +92,12 @@
 
             <LinearLayout
                 android:id="@+id/layout_weixin"
-                android:paddingLeft="@dimen/margin_other_view"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:background="@color/white"
+                android:paddingLeft="@dimen/margin_other_view"
                 >
 
                 <TextView
@@ -127,10 +127,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:paddingLeft="@dimen/margin_other_view"
+                android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:background="@color/white"
+                android:paddingLeft="@dimen/margin_other_view"
                 >
 
                 <TextView
@@ -157,12 +157,12 @@
 
             <LinearLayout
                 android:id="@+id/layout_birthday"
-                android:paddingLeft="@dimen/margin_other_view"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/white"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/margin_other_view">
 
                 <TextView
                     android:id="@+id/tv_birthday_title"
@@ -187,12 +187,12 @@
 
             <LinearLayout
                 android:id="@+id/layout_age"
-                android:paddingLeft="@dimen/margin_other_view"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:gravity="center_vertical"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/margin_other_view">
 
                 <TextView
                     android:id="@+id/tv_age_title"
@@ -213,6 +213,7 @@
                     />
 
             </LinearLayout>
+
             <include layout="@layout/include_solid_line_left"/>
         </LinearLayout>
     </ScrollView>
@@ -222,9 +223,9 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
+        android:background="@color/white"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="@color/white"
         >
 
         <LinearLayout
@@ -254,7 +255,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dimen_5"
             android:layout_marginTop="@dimen/dimen_5"
-            android:background="@color/work_info_solid"
+            android:background="@color/lineCC"
             />
 
         <LinearLayout

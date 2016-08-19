@@ -31,17 +31,11 @@
                 android:inputType="textMultiLine"
                 android:minHeight="@dimen/dimen_120"
                 android:padding="10dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/text33"/>
 
         </LinearLayout>
 
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/dimen_15"
-            android:background="@color/gray0990"
-            />
+        <include layout="@layout/include_solid_line15"/>
 
         <RelativeLayout
             android:id="@+id/layout_child_add_responser"
@@ -59,7 +53,7 @@
                 android:layout_gravity="center_vertical|left"
                 android:layout_marginLeft="5dp"
                 android:text="负责人"
-                android:textColor="@color/black"
+                android:textColor="@color/text33"
                 />
 
             <TextView
@@ -78,11 +72,7 @@
                 />
         </RelativeLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray0990"
-            />
+        <include layout="@layout/include_solid_line_left"/>
 
         <LinearLayout
             android:id="@+id/layout_child_add_action"
@@ -101,7 +91,7 @@
                 android:layout_marginTop="@dimen/dimen_15"
                 android:background="@drawable/round_bg_shpe"
                 android:text="确认完成"
-                android:textColor="@color/whitesmoke"/>
+                android:textColor="@color/white"/>
 
             <Button
                 android:id="@+id/btn_child_add_cancel_complete"
@@ -110,7 +100,7 @@
                 android:layout_marginTop="@dimen/dimen_15"
                 android:background="@drawable/round_bg_shpe"
                 android:text="取消完成"
-                android:textColor="@color/whitesmoke"/>
+                android:textColor="@color/white"/>
             <!--
             <Button
                 android:background="@drawable/round_bg_shpe"

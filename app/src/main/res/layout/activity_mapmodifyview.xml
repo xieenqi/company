@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/mapmod_gray"
+        android:background="@color/activity_bg"
         >
         <TextView
             android:layout_marginBottom="@dimen/dimen_7"
