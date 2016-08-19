@@ -12,7 +12,7 @@
         android:layout_above="@+id/layout_btn"
         android:animateLayoutChanges="true"
         android:cacheColorHint="#00000000"
-        android:divider="@color/activity_split"
+        android:divider="@color/lineCC"
         android:dividerHeight="0.5dp"
         android:drawSelectorOnTop="false"
         android:fadingEdge="none"
@@ -35,7 +35,7 @@
         android:id="@+id/topGroup"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_35"
-        android:background="@color/whitesmoke"
+        android:background="@color/activity_bg"
         android:visibility="gone">
 
     </FrameLayout>

@@ -14,7 +14,7 @@
         android:layout_marginTop="@dimen/dimen_8"
         android:gravity="center"
         android:text="2016/03/10"
-        android:textColor="@color/text_black_2"
+        android:textColor="@color/text99"
         android:textSize="@dimen/text_sp12"/>
 
     <TextView
@@ -27,7 +27,7 @@
         android:gravity="right"
         android:singleLine="true"
         android:text="我"
-        android:textColor="@color/text_black_2"
+        android:textColor="@color/text66"
         android:textSize="@dimen/text_sp12"/>
 
 

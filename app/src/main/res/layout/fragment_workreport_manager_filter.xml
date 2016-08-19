@@ -81,7 +81,7 @@
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:textColor="@color/text1"
+                    android:textColor="@color/text33"
                     android:textSize="@dimen/textsize_content_label"
                     android:paddingLeft="10dp"
                     android:text="提交给我的" />
@@ -112,7 +112,7 @@
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:textColor="@color/text1"
+                    android:textColor="@color/text33"
                     android:textSize="@dimen/textsize_content_label"
                     android:paddingLeft="10dp"
                     android:text="我提交的" />
@@ -143,7 +143,7 @@
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:textColor="@color/text1"
+                    android:textColor="@color/text33"
                     android:textSize="@dimen/textsize_content_label"
                     android:paddingLeft="10dp"
                     android:text="与我相关的" />
@@ -204,7 +204,7 @@
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:textColor="@color/text1"
+                    android:textColor="@color/text33"
                     android:textSize="@dimen/textsize_content_label"
                     android:paddingLeft="10dp"
                     android:text="待点评" />
@@ -235,7 +235,7 @@
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:textColor="@color/text1"
+                    android:textColor="@color/text33"
                     android:textSize="@dimen/textsize_content_label"
                     android:paddingLeft="10dp"
                     android:text="已点评" />
@@ -280,7 +280,7 @@
                 android:id="@+id/lv_subordinates"
                 android:background="@color/white"
                 android:layout_width="match_parent"
-                android:divider="@color/activity_split"
+                android:divider="@color/text33"
                 android:dividerHeight="0.5dp"
                 android:layout_height="wrap_content"></ListView>
 

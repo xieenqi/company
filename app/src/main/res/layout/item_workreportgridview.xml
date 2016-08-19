@@ -48,7 +48,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="8dp"
-            android:background="@color/activity_split"
+            android:background="@color/activity_bg"
             />
     </LinearLayout>
 

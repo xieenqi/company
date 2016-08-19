@@ -33,7 +33,7 @@
         android:layout_below="@id/tv_name"
         android:layout_marginTop="2dp"
         android:text="新建客户"
-        android:textColor="@color/text2"
+        android:textColor="@color/text33"
         android:textSize="12sp" />
 
     <ImageView
@@ -54,7 +54,7 @@
         android:layout_marginTop="1dp"
         android:layout_marginLeft="10dp"
         android:text="123"
-        android:textColor="@color/text2"
+        android:textColor="@color/text33"
         android:textSize="12sp" />
 
     <ImageView
@@ -75,7 +75,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="10dp"
         android:text="暂无签到"
-        android:textColor="@color/text2"
+        android:textColor="@color/text33"
         android:textSize="12sp" />
 
 
