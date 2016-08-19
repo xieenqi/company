@@ -103,10 +103,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/dimen_15"
-                android:background="@color/item_"/>
+            <include layout="@layout/include_solid_line15"/>
 
             <LinearLayout
                 android:id="@+id/ll_stage"
@@ -190,10 +187,7 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/dimen_15"
-                android:background="@color/item_"/>
+            <include layout="@layout/include_solid_line15"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -304,10 +298,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/dimen_15"
-                android:background="@color/item_"/>
+            <include layout="@layout/include_solid_line15"/>
 
 
             <LinearLayout

@@ -105,7 +105,7 @@
         android:layout_marginLeft="@dimen/dimen_16"
         android:layout_marginTop="@dimen/dimen_10"
         android:text="注：绑定后可使用手机号直接登录"
-        android:textColor="@color/grayC9"
+        android:textColor="@color/text99"
         />
 
     <Button

@@ -13,7 +13,7 @@
         android:id="@+id/rv_reason"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/activity_split"
+        android:divider="@color/lineCC"
         android:dividerHeight="0.5dp"/>
 
 </LinearLayout>

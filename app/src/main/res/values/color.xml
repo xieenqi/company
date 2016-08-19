@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
-    <color name="province_line_border">#C7C7C7</color>
-    <color name="white60">#4dffffff</color>
     <color name="white95">#e6ffffff</color>
     <color name="white10">#10ffffff</color>
     <color name="white">#FFFFFF</color>
+    <color name="text33">#333333</color>
+    <color name="text66">#666666</color>
+    <color name="text99">#999999</color>
+    <color name="lineCC">#e6e6e6</color>
+    <color name="title_bg1">#2c9dfc</color>
+    <color name="activity_bg">#f4f4f4</color>
+    <color name="red1">#f5625a</color>
+    <color name="graypy">#EFEFEF</color>
+    <color name="green51">#51c055</color>
+    <color name="lightgray">#D3D3D3</color>
     <color name="black30">#4c000000</color>
+
+    <color name="province_line_border">#C7C7C7</color>
+    <color name="white60">#4dffffff</color>
     <color name="gray878">#F2F2F2</color>
 
     <!-- 白色 -->
@@ -70,7 +79,7 @@
     <color name="magenta">#FF00FF</color>
     <!-- 红紫色 -->
     <color name="red">#FF0000</color>
-    <color name="red1">#f5625a</color>
+
     <!-- 红色 -->
     <color name="oldlace">#FDF5E6</color>
     <!-- 老花色 -->
@@ -130,7 +139,7 @@
     <!-- 淡紫色 -->
     <color name="thistle">#D8BFD8</color>
     <!-- 蓟色 -->
-    <color name="lightgray">#D3D3D3</color>
+
     <!-- 亮灰色 -->
     <color name="lightgrey">#D3D3D3</color>
     <!-- 亮灰色 -->
@@ -198,7 +207,6 @@
     <!-- 天蓝色 -->
 
 
-    <color name="graypy">#EFEFEF</color>
     <color name="gray">#808080</color>
     <!-- 灰色 -->
     <color name="olive">#808000</color>
@@ -313,7 +321,6 @@
     <color name="dialog_blue">#2693FB</color>
     <color name="activity_bg_shadow">#f0f0f0</color>
     <color name="activity_split">#c8c7cc</color>
-    <color name="title_bg1">#2c9dfc</color>
     <color name="line_bg">#d6d6d6</color>
     <color name="text1">#545454</color>
     <color name="text2">#929292</color>
@@ -372,13 +379,9 @@
     <color name="login">#b3b3b3</color>
     <color name="grayC9">#c9c9c9</color>
     <color name="graye9">#e9e9e9</color>
-    <color name="text33">#333333</color>
-    <color name="text66">#666666</color>
-    <color name="text99">#999999</color>
-    <color name="lineCC">#e6e6e6</color>
     <color name="redE8">#e85840</color>
-    <color name="activity_bg">#f4f4f4</color>
-    <color name="green51">#51c055</color>
+
+
     <color name="gray0990">#E7E7E7</color>
     <color name="colore6">#e6e6e6</color>
     <color name="item_bj_fb">#fbfbfb</color>

@@ -49,7 +49,7 @@
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:background="@color/md_grey_300"></View>
+                android:background="@color/lineCC"></View>
 
         </RelativeLayout>
 
@@ -63,14 +63,11 @@
             android:paddingLeft="@dimen/dimen_8"
             android:paddingRight="@dimen/dimen_8"
             android:text="搜索"
-            android:textColor="@color/suodesilei"
+            android:textColor="@color/text66"
             android:textSize="16sp"/>
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/md_grey_300"></View>
+    <include layout="@layout/include_solid_line"/>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -99,7 +99,7 @@
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="@dimen/dimen_5"
                             android:text=""
-                            android:textColor="@color/diseditable"
+                            android:textColor="@color/text33"
                             android:textSize="@dimen/textsize_content3"/>
 
                     </RelativeLayout>
@@ -563,7 +563,7 @@
                 android:layout_width="0.5dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
-                android:background="@color/activity_split"/>
+                android:background="@color/lineCC"/>
 
             <LinearLayout
                 android:id="@+id/layout_nopass"
@@ -586,7 +586,7 @@
                     android:layout_marginTop="3dp"
                     android:background="@color/white"
                     android:text="驳回"
-                    android:textColor="@color/wfinstance_notagree"/>
+                    android:textColor="@color/text99"/>
 
             </LinearLayout>
 

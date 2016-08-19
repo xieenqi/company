@@ -1,94 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
     >
 
     <LinearLayout
         android:layout_width="310dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:background="@drawable/attendance_popview"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         >
 
-
-    <TextView
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp"
-        android:gravity="center"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="已进入加班时间段,请选择"
-        android:textSize="16sp"
-        android:background="@color/dialog_blue"
-        android:textColor="@color/white"
-        />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray0990"
-        />
-    <LinearLayout
-        android:id="@+id/attendance_generalout"
-        android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:gravity="center"
-        android:background="@drawable/attendance_popview_selector"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="正常下班"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            />
-    </LinearLayout>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray0990"
-        />
-
-    <LinearLayout
-        android:id="@+id/attendance_finishout"
-        android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:gravity="center"
-        android:background="@drawable/attendance_popview_selector"
-        >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="完成加班"
-            android:textColor="@color/black"
+            android:background="@color/title_bg1"
+            android:gravity="center"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:text="已进入加班时间段,请选择"
+            android:textColor="@color/white"
             android:textSize="16sp"
             />
-    </LinearLayout>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray0990"
-        />
-    <LinearLayout
-        android:id="@+id/attendance_cancel"
-        android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:gravity="center"
-        android:background="@drawable/attendance_popview_selector"
-        >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="取消"
-            android:textColor="#666666"
-            android:textSize="16sp"
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/lineCC"
             />
-    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/attendance_generalout"
+            android:layout_width="fill_parent"
+            android:layout_height="58dp"
+            android:background="@drawable/attendance_popview_selector"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="正常下班"
+                android:textColor="@color/text33"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
+
+        <include layout="@layout/include_solid_line"/>
+
+        <LinearLayout
+            android:id="@+id/attendance_finishout"
+            android:layout_width="fill_parent"
+            android:layout_height="58dp"
+            android:background="@drawable/attendance_popview_selector"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="完成加班"
+                android:textColor="@color/text33"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
+
+        <include layout="@layout/include_solid_line"/>
+
+        <LinearLayout
+            android:id="@+id/attendance_cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="58dp"
+            android:background="@drawable/attendance_popview_selector"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消"
+                android:textColor="#666666"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
