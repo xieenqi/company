@@ -17,6 +17,7 @@ public class HttpDiscussItem {
     public boolean viewed;
     public String createdAt;
     public String updatedAt;
+    public long newUpdatedAt;
 
     public class Creator {
         public String id;

@@ -134,6 +134,10 @@ public class BaseFragmentActivity extends FragmentActivity {
         super.onSaveInstanceState(outState);
         outState.putString("token", MainApp.getToken());
         outState.putSerializable("user", MainApp.user);
+        if (outState != null) {//此处解决getActivity 为空的情况
+            String FRAGMENTS_TAG = "Android:support:fragments";
+            outState.remove(FRAGMENTS_TAG);
+        }
     }
 
     @Override

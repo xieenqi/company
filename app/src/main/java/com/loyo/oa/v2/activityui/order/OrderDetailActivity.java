@@ -208,6 +208,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void getData() {
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .getSaleDetails(orderId, new Callback<OrderDetail>() {
                     @Override

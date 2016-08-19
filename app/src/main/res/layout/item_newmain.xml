@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_14"
             android:text="CRM"
-            android:textColor="@color/diseditable"
+            android:textColor="@color/text66"
             android:textSize="@dimen/text_sp12"
             />
 

@@ -23,7 +23,7 @@
             android:paddingBottom="18dp"
             android:paddingTop="18dp"
             android:text=""
-            android:textColor="@color/black"
+            android:textColor="@color/text33"
             android:textSize="20sp"
             />
 

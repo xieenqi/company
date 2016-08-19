@@ -32,7 +32,7 @@
             android:layout_toRightOf="@+id/cb1"
             android:gravity="center_vertical"
             android:text="全部可见"
-            android:textColor="@color/text1"
+            android:textColor="@color/text33"
             android:textSize="@dimen/textsize_content_label"/>
 
     </RelativeLayout>
@@ -45,7 +45,7 @@
         android:id="@+id/rv_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/activity_split"
+        android:divider="@color/lineCC"
         android:dividerHeight="0.5dp"
         android:scrollbars="vertical"/>
 

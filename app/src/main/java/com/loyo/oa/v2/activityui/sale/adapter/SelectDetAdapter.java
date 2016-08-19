@@ -62,7 +62,7 @@ public class SelectDetAdapter extends BaseAdapter {
 
         detName.setText(listDepartment.get(position).getName());
         if (position == selectedPosition) {
-            convertView.setBackgroundResource(R.color.beogray);
+            convertView.setBackgroundResource(R.color.activity_bg);
         } else {
             convertView.setBackgroundResource(R.color.white);
         }

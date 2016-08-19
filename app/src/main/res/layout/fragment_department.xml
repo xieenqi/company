@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@drawable/layout_bg1"
-        android:divider="@color/activity_split"
+        android:divider="@color/lineCC"
         android:dividerHeight="0.5dp" />
 
 </LinearLayout>

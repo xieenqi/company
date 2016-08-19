@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/default_menu_back"
+    android:background="@color/activity_bg"
     >
 
     <LinearLayout
@@ -41,6 +41,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/dimen_8"
         android:layout_marginTop="@dimen/dimen_8"
-        android:background="@color/graye9"
+        android:background="@color/activity_bg"
         />
 </RelativeLayout>

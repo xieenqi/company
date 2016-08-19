@@ -13,11 +13,10 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerContactManageActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerContractAddActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class ContactViewGroup extends LinearLayout {
 
         if (getId() > 1) {
             View view = new View(context);
-            view.setBackgroundColor(getResources().getColor(R.color.whitesmoke));
+            view.setBackgroundColor(getResources().getColor(R.color.activity_bg));
             view.setLayoutParams(new ViewGroup.LayoutParams(-1, app.spTopx(15)));
             addView(view);
         }

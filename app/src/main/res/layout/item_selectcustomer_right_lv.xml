@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:text="培训组"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text66"
                     android:textSize="11sp"/>
 
                 <TextView
@@ -62,7 +62,7 @@
                     android:layout_marginLeft="3dp"
                     android:singleLine="true"
                     android:text="高级员工"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text66"
                     android:textSize="11sp"/>
             </LinearLayout>
         </LinearLayout>

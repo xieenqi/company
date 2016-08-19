@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <include  layout="@layout/include_common_title"/>
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/include_common_title"/>
 
     <ListView
-        android:divider="@color/activity_split"
-        android:dividerHeight="0.5dp"
         android:id="@+id/usersListeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="#00000000"
-        android:drawSelectorOnTop="false" />
+        android:divider="@color/lineCC"
+        android:dividerHeight="0.5dp"
+        android:drawSelectorOnTop="false"/>
 
 </LinearLayout>

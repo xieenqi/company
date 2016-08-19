@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="0.5dp"
         android:animateLayoutChanges="true"
-        android:divider="@color/activity_split"
+        android:divider="@color/lineCC"
         android:dividerHeight="0.5dp"/>
     </LinearLayout>
 </LinearLayout>

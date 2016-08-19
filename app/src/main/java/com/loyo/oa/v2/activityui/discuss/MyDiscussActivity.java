@@ -20,6 +20,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -217,7 +218,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         public void onBindViewHolder(final DiscussViewHolder holder, final int position) {
             HttpDiscussItem info = datas.get(position);
             holder.tv_title.setText(info.title);
-            holder.tv_time.setText(info.updatedAt.substring(11, 19));
+            holder.tv_time.setText(info.newUpdatedAt != 0 ? DateTool.getDiffTime(info.newUpdatedAt *1000) : info.updatedAt.substring(11, 19));
             holder.tv_content.setText(info.creator.name + ":" + info.content);
             holder.openItem(datas.get(position));
         }

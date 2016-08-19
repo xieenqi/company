@@ -1,14 +1,17 @@
 package com.loyo.oa.v2.activityui.customer.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Tag;
+
 import java.util.ArrayList;
 
 /**
@@ -23,7 +26,7 @@ public class TagScreenAdapter extends BaseAdapter {
     private int selectPosition;
     private int page;
 
-    public TagScreenAdapter(Context context, final ArrayList<Tag> data, final int page){
+    public TagScreenAdapter(Context context, final ArrayList<Tag> data, final int page) {
         this.mContext = context;
         this.data = data;
         this.page = page;
@@ -44,7 +47,7 @@ public class TagScreenAdapter extends BaseAdapter {
         return 0;
     }
 
-    public void selectPosition(final int position){
+    public void selectPosition(final int position) {
         selectPosition = position;
     }
 
@@ -53,31 +56,31 @@ public class TagScreenAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         tag = data.get(position);
         ViewHolder holder = null;
-        if(null == convertView){
+        if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_list_item,null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_list_item, null);
             holder.name = (TextView) convertView.findViewById(R.id.tv_menu_item);
             holder.index = (ImageView) convertView.findViewById(R.id.iv_menu_select);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        if(page == 1){
-            if(selectPosition == position){
-                convertView.setBackgroundColor(mContext.getResources().getColor(R.color.ececec));
-            }else{
+        if (page == 1) {
+            if (selectPosition == position) {
+                convertView.setBackgroundColor(Color.parseColor("#ECECEC"));
+            } else {
                 convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
             }
-        }else{
-            holder.index.setVisibility(tag.isIndex() ? View.VISIBLE:View.GONE);
+        } else {
+            holder.index.setVisibility(tag.isIndex() ? View.VISIBLE : View.GONE);
         }
 
         holder.name.setText(tag.getName());
         return convertView;
     }
 
-    class ViewHolder{
+    class ViewHolder {
         TextView name;
         ImageView index;
     }
