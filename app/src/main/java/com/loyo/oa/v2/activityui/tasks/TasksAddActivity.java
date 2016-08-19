@@ -467,7 +467,7 @@ public class TasksAddActivity extends BaseActivity {
             public void onCancel() {
                 isKind = true;
                 tv_deadline.setText("");
-                tv_remind.setTextColor(mContext.getResources().getColor(R.color.gray0990));
+                tv_remind.setTextColor(mContext.getResources().getColor(R.color.activity_bg));
                 layout_remind.setEnabled(false);
                 layout_retask.setVisibility(View.VISIBLE);
                 layout_retask_view.setVisibility(View.VISIBLE);

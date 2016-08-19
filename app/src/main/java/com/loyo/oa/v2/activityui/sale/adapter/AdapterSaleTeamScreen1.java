@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.sale.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class AdapterSaleTeamScreen1 extends BaseAdapter {
 
         if(page == 1){
             if(selectPosition == position){
-                convertView.setBackgroundColor(mContext.getResources().getColor(R.color.ececec));
+                convertView.setBackgroundColor(Color.parseColor("#ECECEC"));
             }else{
                 convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
             }

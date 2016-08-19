@@ -91,14 +91,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             edt_password.setText("123456");
 //            layout_check_debug.setVisibility(View.VISIBLE);
             if (Config_project.isRelease) {
-                serverFormalTv.setTextColor(getResources().getColor(R.color.black));
-                serverTestTv.setTextColor(getResources().getColor(R.color.gray));
+                serverFormalTv.setTextColor(getResources().getColor(R.color.text33));
+                serverTestTv.setTextColor(getResources().getColor(R.color.text99));
 
                 serverTestImg.setVisibility(View.INVISIBLE);
                 serverFormalImg.setVisibility(View.VISIBLE);
             } else {
-                serverTestTv.setTextColor(getResources().getColor(R.color.black));
-                serverFormalTv.setTextColor(getResources().getColor(R.color.gray));
+                serverTestTv.setTextColor(getResources().getColor(R.color.text33));
+                serverFormalTv.setTextColor(getResources().getColor(R.color.text99));
 
                 serverTestImg.setVisibility(View.VISIBLE);
                 serverFormalImg.setVisibility(View.INVISIBLE);
@@ -110,8 +110,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void onClick(View view) {
                 Config_project.isRelease = false;
-                serverTestTv.setTextColor(getResources().getColor(R.color.black));
-                serverFormalTv.setTextColor(getResources().getColor(R.color.gray));
+                serverTestTv.setTextColor(getResources().getColor(R.color.text33));
+                serverFormalTv.setTextColor(getResources().getColor(R.color.text99));
                 serverTestImg.setVisibility(View.VISIBLE);
                 serverFormalImg.setVisibility(View.INVISIBLE);
                 LogUtil.d("isRelease:" + Config_project.isRelease);
@@ -123,8 +123,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void onClick(View view) {
                 Config_project.isRelease = true;
-                serverFormalTv.setTextColor(getResources().getColor(R.color.black));
-                serverTestTv.setTextColor(getResources().getColor(R.color.gray));
+                serverFormalTv.setTextColor(getResources().getColor(R.color.text33));
+                serverTestTv.setTextColor(getResources().getColor(R.color.text99));
                 serverTestImg.setVisibility(View.INVISIBLE);
                 serverFormalImg.setVisibility(View.VISIBLE);
                 LogUtil.d("isRelease:" + Config_project.isRelease);
@@ -260,7 +260,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        changeColor(R.color.title_bg1, R.color.red);
+                        changeColor(R.color.title_bg1, R.color.red1);
                         layout_login.setText("登录失败");
                     }
                 });

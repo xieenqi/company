@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,14 +22,14 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.activityui.attendance.PreviewAttendanceActivity_;
+import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import com.loyo.oa.v2.activityui.attendance.adapter.CustomerDataManager;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
-import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attendance.bean.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
 import com.loyo.oa.v2.activityui.attendance.bean.DayofAttendance;
-import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -38,7 +37,9 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.CustomRecyclerView;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -49,8 +50,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
-import com.loyo.oa.v2.customview.AttenDancePopView;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -711,7 +710,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     if (recordOut.getExtraState() == 1) {
                         color = getActivity().getResources().getColor(R.color.text99);
                     } else if (recordOut.getExtraState() == 2) {
-                        color = getActivity().getResources().getColor(R.color.red);
+                        color = getActivity().getResources().getColor(R.color.red1);
                     }
                 }
             }
