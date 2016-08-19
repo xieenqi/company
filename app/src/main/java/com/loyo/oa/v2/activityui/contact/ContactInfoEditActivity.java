@@ -154,7 +154,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 des = "重新获取";
                 mActivity.get().recycle();
                 if (null != tvtime) {
-                    tvtime.setTextColor(ContactInfoEditActivity.this.getResources().getColor(R.color.gray));
+                    tvtime.setTextColor(ContactInfoEditActivity.this.getResources().getColor(R.color.text99));
                     tvtime.setEnabled(true);
                 }
             }

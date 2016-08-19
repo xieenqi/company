@@ -19,9 +19,6 @@
 
 package com.loyo.oa.v2.customview.wheel;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
@@ -35,8 +32,12 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.customview.wheel.adapters.WheelViewAdapter;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Numeric wheel view.
@@ -668,7 +669,7 @@ public class WheelView extends View {
 		centerDrawable.draw(canvas);
 		//*/
 		Paint paint = new Paint();
-		paint.setColor(getResources().getColor(R.color.province_line_border));
+		paint.setColor(getResources().getColor(R.color.lineCC));
 		// 设置线宽
 		paint.setStrokeWidth((float) 3);
 		// 绘制上边直线

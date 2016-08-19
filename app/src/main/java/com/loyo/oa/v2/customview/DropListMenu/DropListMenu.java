@@ -117,7 +117,7 @@ public class DropListMenu extends LinearLayout {
         mMenuPressedTitleTextColor = getResources().getColor(R.color.default_menu_press_text);
         mMenuBackColor = getResources().getColor(R.color.default_menu_back);
         mMenuListBackColor = getResources().getColor(R.color.white);
-        mMenuListSelectorRes = R.color.lightgrey;
+        mMenuListSelectorRes = R.color.activity_bg;
         mMenuTitleTextSize = 18;
         mArrowMarginTitle = 10;
         mShowCheck = true;

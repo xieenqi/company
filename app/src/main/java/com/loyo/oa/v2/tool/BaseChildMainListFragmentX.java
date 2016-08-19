@@ -375,7 +375,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
             PagingGroupData_<BaseBeans> data = (PagingGroupData_<BaseBeans>) pagingGroupDatas.get(groupPos);
             if (data != null && data.getOrderStr() != null) {
                 if (data.getOrderStr().contains("已")) {
-                    tv_title.setTextColor(getResources().getColor(R.color.green));
+                    tv_title.setTextColor(getResources().getColor(R.color.green51));
                 } else {
                     tv_title.setTextColor(getResources().getColor(R.color.title_bg1));
                 }

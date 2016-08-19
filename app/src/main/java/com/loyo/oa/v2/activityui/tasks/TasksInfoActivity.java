@@ -493,11 +493,11 @@ public class TasksInfoActivity extends BaseActivity {
 
             if ("1".equals(reviewer.status)) {
                 tv_task_status.setText("通过");
-                tv_task_status.setTextColor(getResources().getColor(R.color.green));
+                tv_task_status.setTextColor(getResources().getColor(R.color.green51));
                 tv_task_status.setVisibility(View.GONE);
             } else {
                 tv_task_status.setText("不通过");
-                tv_task_status.setTextColor(getResources().getColor(R.color.red));
+                tv_task_status.setTextColor(getResources().getColor(R.color.red1));
             }
             layout_test_Add_area.addView(mView);
         }

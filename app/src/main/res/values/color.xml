@@ -30,6 +30,35 @@
     <color name="progress08">#4ec469</color>
     <color name="progress09">#f8668a</color>
 
+    <color name="md_grey_200">#eeeeee</color>
+    <color name="md_grey_300">#e0e0e0</color>
+    <color name="md_grey_400">#bdbdbd</color>
+    <color name="md_grey_500">#9e9e9e</color>
+    <color name="md_grey_600">#757575</color>
+    <color name="md_grey_700">#616161</color>
+    <color name="md_grey_800">#424242</color>
+    <color name="md_grey_900">#212121</color>
+
+
+    <color name="item_bj_fb">#fbfbfb</color>
+    <color name="isteston">#bf73e6</color>
+    <color name="isfinish">#83c850</color>
+    <color name="pressed">#f0f0f0</color>
+    <color name="halftransparent">#9000</color>
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="task_agree">#92d754</color>
+    <color name="work_info_solid">#e6e6e6</color>
+    <color name="wfinstance_notagree">#ff5652</color>
+    <color name="lightgreen">#90EE90</color>
+    <color name="default_menu_back">#ffffff</color>
+    <color name="default_menu_press_back">#fafafa</color>
+    <color name="default_menu_press_text">#000000</color>
+    <color name="default_menu_text">#00cf9b</color>
+    <color name="divider">#f1f1f1</color>
+    <color name="wfinstance_notprocess">#939292</color>
+    <color name="wfinstance_agree">#34D434</color>
+
+
     <!--<color name="province_line_border">#C7C7C7</color>-->
     <!--<color name="white60">#4dffffff</color>-->
     <!--<color name="gray878">#F2F2F2</color>-->
@@ -204,7 +233,7 @@
     <!--&lt;!&ndash; 暗紫罗兰色 &ndash;&gt;-->
     <!--<color name="mediumpurple">#9370DB</color>-->
     <!--&lt;!&ndash; 中紫色 &ndash;&gt;-->
-    <!--<color name="lightgreen">#90EE90</color>-->
+
     <!--&lt;!&ndash; 亮绿色 &ndash;&gt;-->
     <!--<color name="darkseagreen">#8FBC8F</color>-->
     <!--&lt;!&ndash; 暗海兰色 &ndash;&gt;-->
@@ -330,9 +359,6 @@
     <!--&lt;!&ndash; 黑色 &ndash;&gt;-->
 
 
-    <color name="isteston">#bf73e6</color>
-    <color name="isfinish">#83c850</color>
-    <color name="pressed">#f0f0f0</color>
     <!--<color name="dialog_blue">#2693FB</color>-->
     <!--<color name="activity_bg_shadow">#f0f0f0</color>-->
     <!--<color name="activity_split">#c8c7cc</color>-->
@@ -350,33 +376,22 @@
     <!--<color name="bg_reviewed1">#f56e6e</color>-->
     <!--<color name="bg_reviewed2">#d1d1d1</color>-->
     <!--<color name="map_maker_bg1">#00ba99</color>-->
-    <color name="halftransparent">#9000</color>
-    <color name="background_tab_pressed">#6633B5E5</color>
     <!--<color name="wfinstance_text_not_appove">#c2c2c2</color>-->
     <!--<color name="login_text">#6b6b6b</color>-->
-    <color name="task_agree">#92d754</color>
     <!--<color name="task_notagree">#bfbfbf</color>-->
     <!--<color name="work_info_gray">#fbfbfb</color>-->
-    <color name="work_info_solid">#e6e6e6</color>
     <!--<color name="mapmod_gray">#DEDEDE</color>-->
-
-
 
 
     <!--<color name="task_discussion_attachment_color">#a0a0a0</color>-->
 
-    <!--<color name="wfinstance_notagree">#ff5652</color>-->
-    <!--<color name="wfinstance_notprocess">#939292</color>-->
-    <!--<color name="wfinstance_agree">#34D434</color>-->
+
+
     <!--<color name="tasklist_gray">#8a8a8a</color>-->
     <!--<color name="diseditable">#999999</color>-->
 
     <!--&lt;!&ndash; 多级筛选&ndash;&gt;-->
-    <!--<color name="default_menu_back">#ffffff</color>-->
-    <!--<color name="default_menu_press_back">#fafafa</color>-->
-    <!--<color name="default_menu_press_text">#000000</color>-->
-    <!--<color name="default_menu_text">#00cf9b</color>-->
-    <!--<color name="divider">#f1f1f1</color>-->
+
 
     <!--&lt;!&ndash; 登录界面字体 线的颜色&ndash;&gt;-->
     <!--<color name="login">#b3b3b3</color>-->
@@ -384,10 +399,8 @@
     <!--<color name="graye9">#e9e9e9</color>-->
 
 
-
     <!--<color name="gray0990">#E7E7E7</color>-->
     <!--<color name="colore6">#e6e6e6</color>-->
-    <color name="item_bj_fb">#fbfbfb</color>
     <!--<color name="ececec">#ECECEC</color>-->
     <!--<color name="eeedee">#EEEDEE</color>-->
 
@@ -398,14 +411,6 @@
     <!--&lt;!&ndash; grey &ndash;&gt;-->
     <!--<color name="md_grey_50">#fafafa</color>-->
     <!--<color name="md_grey_100">#f5f5f5</color>-->
-    <color name="md_grey_200">#eeeeee</color>
-    <color name="md_grey_300">#e0e0e0</color>
-    <color name="md_grey_400">#bdbdbd</color>
-    <color name="md_grey_500">#9e9e9e</color>
-    <color name="md_grey_600">#757575</color>
-    <color name="md_grey_700">#616161</color>
-    <color name="md_grey_800">#424242</color>
-    <color name="md_grey_900">#212121</color>
 
 
     <!--&lt;!&ndash; green &ndash;&gt;-->
