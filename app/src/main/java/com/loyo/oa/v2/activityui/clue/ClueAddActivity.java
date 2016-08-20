@@ -15,7 +15,7 @@ public class ClueAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_detail);
+        setContentView(R.layout.activity_add_clue);
         getIntentData();
         initView();
     }
