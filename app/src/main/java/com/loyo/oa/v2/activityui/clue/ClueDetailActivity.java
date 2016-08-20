@@ -65,12 +65,42 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      */
     private void functionButton() {
         ActionSheetDialog dialog = new ActionSheetDialog(ClueDetailActivity.this).builder();
-        dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-            @Override
-            public void onClick(int which) {
+        if (true /* 是否有权限转移客户 */) {
+            dialog.addSheetItem("转移客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
 
-            }
-        });
+                }
+            });
+        }
+
+        if (true /* 是否有权限转移给他人 */) {
+            dialog.addSheetItem("转移给他人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+
+                }
+            });
+        }
+
+        if (true /* 是否有权限编辑 */) {
+            dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+
+                }
+            });
+        }
+
+        if (true /* 是否有权限删除 */) {
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+
+                }
+            });
+        }
+
         dialog.show();
     }
 
