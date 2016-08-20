@@ -29,7 +29,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +38,7 @@ import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
@@ -636,7 +636,7 @@ public class Utils {
 
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(content);
 
-        Pattern pattern = Pattern.compile("((http|ftp|https):\\/\\/)?[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
+        Pattern pattern = Pattern.compile("((https|http|ftp|rtsp|mms)?:\\/\\/)[^\\s]+");
 
         Matcher matcher = pattern.matcher(spannableStringBuilder);
 
@@ -1331,11 +1331,10 @@ public class Utils {
     }
 
 
-
     /**
      * 添加按钮，根据滑动显示隐藏(recyclerView)
-     * */
-    public static void btnHideForRecy(RecyclerView recyclerView,final View btn){
+     */
+    public static void btnHideForRecy(RecyclerView recyclerView, final View btn) {
 
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -1357,8 +1356,8 @@ public class Utils {
 
     /**
      * 添加按钮，根据滑动显示隐藏(ListView)
-     * */
-    public static void btnHideForListView(final ListView listView,final View btn){
+     */
+    public static void btnHideForListView(final ListView listView, final View btn) {
         lastVisibleItemPosition = 0;
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -1392,19 +1391,6 @@ public class Utils {
                 }
             }
         });
-    }
-
-    /**
-     * 获取listView移动距离
-     * */
-    public static int getScrollY(ListView listView) {
-        View c = listView.getChildAt(0);
-        if (c == null ) {
-            return 0;
-        }
-        int firstVisiblePosition = listView.getFirstVisiblePosition();
-        int top = c.getTop();
-        return -top + firstVisiblePosition * c.getHeight() ;
     }
 
 }
