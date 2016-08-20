@@ -134,10 +134,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast("点击");
                 Intent intent = new Intent();
-//                intent.putExtra(ExtraAndResult.IS_TEAM, true);
-//                intent.putExtra("id", adapterSaleTeam.getData().get(position - 1).getId());
                 intent.setClass(getActivity(), ClueDetailActivity.class);
                 startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
