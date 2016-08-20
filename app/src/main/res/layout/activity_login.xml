@@ -39,8 +39,8 @@
             android:gravity="center_vertical"
             android:hint="请输入帐号"
             android:singleLine="true"
-            android:textColor="@color/text33"
-            android:textColorHint="@color/text66"
+            android:textColor="@color/text66"
+            android:textColorHint="@color/text99"
             android:textCursorDrawable="@null"/>
 
     </LinearLayout>
@@ -78,8 +78,8 @@
             android:hint="请输入密码"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:textColor="@color/text33"
-            android:textColorHint="@color/text66"
+            android:textColor="@color/text66"
+            android:textColorHint="@color/text99"
             android:textCursorDrawable="@null"/>
     </LinearLayout>
 

@@ -117,7 +117,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void setValue(String value, int index) {
 //                payeeMethod = index;
-//                tv_kind.setText(value);
+                tv_source.setText(value);
             }
         });
     }
