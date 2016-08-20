@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dimen_6"
-                android:src="@drawable/icon_customer" />
+                android:src="@drawable/icon_follow_up_creator" />
 
             <TextView
                 android:id="@+id/tv_customer"
@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dimen_6"
-                android:src="@drawable/icon_customer" />
+                android:src="@drawable/icon_customer_follow_time" />
 
             <TextView
                 android:layout_width="wrap_content"
