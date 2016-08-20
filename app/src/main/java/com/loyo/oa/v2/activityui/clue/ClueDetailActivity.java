@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.PaymentPopView;
+import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.tool.BaseActivity;
 
 public class ClueDetailActivity extends BaseActivity implements View.OnClickListener {
@@ -86,6 +88,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         layout_wiretel_call = (ViewGroup)findViewById(R.id.layout_wiretel_call) ;
         layout_clue_region = (ViewGroup)findViewById(R.id.layout_clue_region) ;
         layout_clue_source = (ViewGroup)findViewById(R.id.layout_clue_source) ;
+        layout_clue_region.setOnClickListener(this); // 选择地区
+        layout_clue_source.setOnClickListener(this); // 选择来源
 
         contact_mobile = (TextView)findViewById(R.id.tv_contact_mobile);
         contact_wiretel = (TextView)findViewById(R.id.tv_contact_wiretel);
@@ -112,6 +116,14 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             /* 右上弹出菜单 */
             case R.id.img_title_right:
                 functionButton();
+                break;
+            /* 选择地区*/
+            case R.id.layout_clue_region:
+                selectArea();
+                break;
+            /* 选择来源 */
+            case R.id.layout_clue_source:
+                selectSource();
                 break;
 
             default:
@@ -163,6 +175,47 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         }
 
         dialog.show();
+    }
+
+    /**
+     * 显示地区选择Dialog  选择地区
+     */
+    void selectArea() {
+        String[] cityValue = null;
+        if (!clue_region.getText().toString().isEmpty()) {
+            cityValue = clue_region.getText().toString().split(" ");
+        }
+        final SelectCityView selectCityView = new SelectCityView(this, cityValue);
+        selectCityView.setCanceledOnTouchOutside(true);
+        selectCityView.show();
+        selectCityView.setOnclickselectCity(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                String[] cityArr = selectCityView.getResult();
+                clue_region.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2]);
+//                regional.province = cityArr[0];
+//                regional.city = cityArr[1];
+//                regional.county = cityArr[2];
+                selectCityView.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 线索来源选择
+     */
+    private void selectSource() {
+        String[] dataKind = {"广告", "搜索引擎", "研讨会", "客户介绍", "独立开发", "其它"};
+        final PaymentPopView popViewKind = new PaymentPopView(this, dataKind, "线索来源");
+        popViewKind.show();
+        popViewKind.setCanceledOnTouchOutside(true);
+        popViewKind.setCallback(new PaymentPopView.VaiueCallback() {
+            @Override
+            public void setValue(String value, int index) {
+//                payeeMethod = index;
+                clue_source.setText(value);
+            }
+        });
     }
 
 }

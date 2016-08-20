@@ -19,6 +19,7 @@ import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
+import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
@@ -110,7 +111,11 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast("监听");
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), ClueDetailActivity.class);
+                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
             }
         });
         adapter = new MyClueAdapter(getActivity());
