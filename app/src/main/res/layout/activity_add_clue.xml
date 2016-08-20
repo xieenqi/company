@@ -39,7 +39,7 @@
                     android:textSize="@dimen/text_sp15"/>
 
                 <EditText
-                    android:id="@+id/edit_address_details"
+                    android:id="@+id/et_name"
                     style="@style/edtText_normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -76,6 +76,7 @@
                     android:textSize="@dimen/text_sp15"/>
 
                 <EditText
+                    android:id="@+id/et_company"
                     style="@style/edtText_normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -111,6 +112,7 @@
                     android:textSize="@dimen/text_sp15"/>
 
                 <EditText
+                    android:id="@+id/et_phone"
                     style="@style/edtText_normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -145,6 +147,7 @@
                     android:textSize="@dimen/text_sp15"/>
 
                 <EditText
+                    android:id="@+id/et_tel"
                     style="@style/edtText_normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -161,7 +164,7 @@
             <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
-                android:id="@+id/layout_customer_label"
+                android:id="@+id/ll_area"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
@@ -180,14 +183,16 @@
                     android:textSize="@dimen/text_sp15"/>
 
                 <TextView
-                    android:id="@+id/tv_labels"
+                    android:id="@+id/tv_area"
                     style="@style/text_item2"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="请选择"
-                    android:textColor="@color/text66"/>
+                    android:paddingRight="0dp"
+                    android:textColor="@color/text66"
+                    android:textColorHint="@color/text99"/>
 
                 <ImageView
                     android:id="@+id/img_title_right_toUser"
@@ -218,6 +223,7 @@
                     android:textSize="@dimen/text_sp15"/>
 
                 <EditText
+                    android:id="@+id/et_address"
                     style="@style/edtText_normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -234,6 +240,7 @@
             <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
+                android:id="@+id/ll_source"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
@@ -252,13 +259,16 @@
                     android:textSize="@dimen/text_sp15"/>
 
                 <TextView
+                    android:id="@+id/tv_source"
                     style="@style/text_item2"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="请选择"
-                    android:textColor="@color/text66"/>
+                    android:paddingRight="0dp"
+                    android:textColor="@color/text66"
+                    android:textColorHint="@color/text99"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
