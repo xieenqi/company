@@ -622,12 +622,17 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+        <!-- 线索-->
         <activity
             android:name=".activityui.clue.ClueManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-
+        <activity
+            android:name=".activityui.clue.ClueAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
 
         <service
             android:name=".service.InitDataService_"
