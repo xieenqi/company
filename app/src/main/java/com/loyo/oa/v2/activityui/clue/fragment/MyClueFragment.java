@@ -18,34 +18,23 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
+import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
-import com.loyo.oa.v2.activityui.order.OrderAddActivity;
-import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
-import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
-import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【我的线索】
@@ -54,7 +43,7 @@ import retrofit.client.Response;
 public class MyClueFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private Button btn_add;
-    private String[] status = {"全部状态", "未处理", "已处理", "关闭"};
+    private String[] status = {"全部状态", "未处理", "已联系", "关闭"};
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
     private LinearLayout salemy_screen1, salemy_screen2;
     private ImageView salemy_screen1_iv1, salemy_screen1_iv2;
@@ -96,7 +85,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(null == mView){
+        if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_my_order, null);
             initView(mView);
         }
@@ -122,7 +111,11 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast("监听");
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), ClueDetailActivity.class);
+                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
             }
         });
         adapter = new MyClueAdapter(getActivity());
@@ -150,7 +143,10 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
 
             //新建
             case R.id.btn_add:
-                Toast("新建");
+                mBundle = new Bundle();
+//                mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
+                app.startActivityForResult(getActivity(), ClueAddActivity.class, app.ENTER_TYPE_RIGHT,
+                        getActivity().RESULT_FIRST_USER, mBundle);
                 break;
 
             //状态选择

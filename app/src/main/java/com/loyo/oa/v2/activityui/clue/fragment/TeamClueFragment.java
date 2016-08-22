@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.clue.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
@@ -26,6 +28,7 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -131,7 +134,11 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast("点击");
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), ClueDetailActivity.class);
+                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
             }
         });
         adapter = new TeamClueAdapter(getActivity());
@@ -281,6 +288,9 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      */
     private void getData() {
         Toast("请求数据");
+
+        lv_list.onRefreshComplete();
+
     }
 
     @Override

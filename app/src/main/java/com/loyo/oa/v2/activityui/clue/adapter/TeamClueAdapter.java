@@ -61,8 +61,9 @@ public class TeamClueAdapter extends BaseAdapter{
     }
 
     class Holder{
-
-        TextView tv_company_name,tv_customer,tv_time,tv_name;
-
+        TextView tv_company_name; /* 公司名称 */
+        TextView tv_customer;     /* 负责人 */
+        TextView tv_time;         /* 跟进时间 */
+        TextView tv_name;         /* */
     }
 }
