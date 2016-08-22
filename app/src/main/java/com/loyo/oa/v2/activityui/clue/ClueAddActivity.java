@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
@@ -61,6 +62,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         ll_area.setOnClickListener(this);
         ll_source = (LinearLayout) findViewById(R.id.ll_source);
         ll_source.setOnClickListener(this);
+        ClueCommon.getSourceData();
     }
 
     @Override
