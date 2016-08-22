@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.IdName;
 
 import java.util.ArrayList;
@@ -15,5 +16,11 @@ public interface IClue {
     @GET("/salesleads/sources")
     void getSource(Callback<ArrayList<IdName>> callback);
 
+
+    /**
+     * 我的线索列表
+     * */
+    @GET("/salesleads/own")
+    void getMyCluelist(Callback<ClueList> callback);
 
 }
