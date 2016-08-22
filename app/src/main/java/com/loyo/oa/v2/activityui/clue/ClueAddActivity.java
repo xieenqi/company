@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.clue;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -10,9 +11,19 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
+import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+
+import java.util.HashMap;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 线索 新建 页面
@@ -72,6 +83,14 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                 onBackPressed();
                 break;
             case R.id.img_title_right:
+                if (TextUtils.isEmpty(et_name.getText().toString())) {
+                    Toast("请输入线索名称");
+                    return;
+                } else if (TextUtils.isEmpty(et_company.getText().toString())) {
+                    Toast("请输入公司名称");
+                    return;
+                }
+                addDataInfo();
                 break;
             case R.id.ll_area://地区选择
                 selectArea();
@@ -122,5 +141,29 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                 tv_source.setText(value);
             }
         });
+    }
+
+    private void addDataInfo() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("name", et_name.getText().toString());
+        map.put("company_name", et_company.getText().toString());
+        map.put("cellphone", et_phone.getText().toString());
+        map.put("tel", et_tel.getText().toString());
+        map.put("regin", "hmfgion");
+        map.put("address", et_address.getText().toString());
+        map.put("remark", et_remake.getText().toString());
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+                .addClue(map, new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("新建线索：", response);
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 }
