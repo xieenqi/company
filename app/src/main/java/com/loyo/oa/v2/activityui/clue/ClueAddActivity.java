@@ -8,9 +8,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.PaymentPopView;
@@ -20,6 +21,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.HashMap;
 
@@ -77,7 +79,9 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         ll_area.setOnClickListener(this);
         ll_source = (LinearLayout) findViewById(R.id.ll_source);
         ll_source.setOnClickListener(this);
-        dataKind = ClueCommon.getSourceData();
+        dataKind = app.gson.fromJson(SharedUtil.get(app, ExtraAndResult.SOURCES_DATA),
+                new TypeToken<String[]>() {
+                }.getType());
     }
 
     @Override
