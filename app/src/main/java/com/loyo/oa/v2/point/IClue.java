@@ -1,8 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activityui.clue.bean.IdName;
-
-import java.util.ArrayList;
+import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
 
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -13,7 +11,7 @@ import retrofit.http.GET;
  */
 public interface IClue {
     @GET("/salesleads/sources")
-    void getSource(Callback<ArrayList<IdName>> callback);
+    void getSource(Callback<SourcesData> callback);
 
 
 }
