@@ -143,7 +143,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             dialog.addSheetItem("转移客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-
+                    app.startActivityForResult(ClueDetailActivity.this,ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT,0x01,new Bundle());
                 }
             });
         }
@@ -152,7 +152,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             dialog.addSheetItem("转移给他人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    app.startActivityForResult(ClueDetailActivity.this,ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT,0x01,new Bundle());
+
                 }
             });
         }
