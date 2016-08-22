@@ -38,6 +38,7 @@ public class ClueCommon {
                 HttpErrorCheck.checkError(error);
             }
         });
+
         return data.toArray(new String[data.size()]);
     }
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
+import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.PaymentPopView;
@@ -17,6 +18,7 @@ import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
@@ -35,6 +37,8 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
     private TextView tv_title_1, tv_area, tv_source;
     private EditText et_name, et_company, et_phone, et_tel, et_address, et_remake;
     private LinearLayout ll_area, ll_source;
+    private CustomerRegional regional = new CustomerRegional();
+    String[] dataKind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +77,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         ll_area.setOnClickListener(this);
         ll_source = (LinearLayout) findViewById(R.id.ll_source);
         ll_source.setOnClickListener(this);
-        ClueCommon.getSourceData();
+        dataKind = ClueCommon.getSourceData();
     }
 
     @Override
@@ -118,9 +122,9 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
             public void onClick(final View view) {
                 String[] cityArr = selectCityView.getResult();
                 tv_area.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2]);
-//                regional.province = cityArr[0];
-//                regional.city = cityArr[1];
-//                regional.county = cityArr[2];
+                regional.province = cityArr[0];
+                regional.city = cityArr[1];
+                regional.county = cityArr[2];
                 selectCityView.dismiss();
             }
         });
@@ -130,7 +134,6 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
      * 线索来源选择
      */
     private void selectSource() {
-        String[] dataKind = {"广告", "搜索引擎", "研讨会", "客户介绍", "独立开发", "其它"};
         final PaymentPopView popViewKind = new PaymentPopView(this, dataKind, "线索来源");
         popViewKind.show();
         popViewKind.setCanceledOnTouchOutside(true);
@@ -144,14 +147,16 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void addDataInfo() {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", et_name.getText().toString());
         map.put("company_name", et_company.getText().toString());
         map.put("cellphone", et_phone.getText().toString());
         map.put("tel", et_tel.getText().toString());
-        map.put("regin", "hmfgion");
+        map.put("regin", regional);
         map.put("address", et_address.getText().toString());
         map.put("remark", et_remake.getText().toString());
+        LogUtil.d("线索创建参数：" + app.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
                 .addClue(map, new Callback<Object>() {
                     @Override
