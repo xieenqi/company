@@ -31,6 +31,13 @@ public class ClueDetail {
         public long updateAt;
         public long lastActAt;
 
+        public String getRegion() {
+            if (region == null) {
+                return "";
+            }
+            return region.county+" | " + region.province+" | " +region.city;
+        }
+
     }
 
     public class ClueActivity {
