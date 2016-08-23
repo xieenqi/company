@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.clue;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -172,7 +174,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("新建线索：", response);
-
+                        app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
                     }
 
                     @Override
