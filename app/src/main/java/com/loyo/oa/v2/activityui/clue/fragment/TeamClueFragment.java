@@ -18,7 +18,10 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
+import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
+import com.loyo.oa.v2.activityui.clue.bean.ClueList;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
@@ -29,14 +32,24 @@ import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
@@ -45,29 +58,30 @@ import java.util.List;
  */
 public class TeamClueFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
+    private int statusIndex, sortIndex;
+    private int page = 1;
+    private boolean isOk = true;
+    private boolean isPullDown = true, isKind;
+    private String xPath = "", userId = "";
     private String[] status = {"全部状态", "未处理", "已处理", "关闭"};
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
+    private ArrayList<ClueListItem> listData = new ArrayList<>();
+    private List<Department> mDeptSource;  //部门和用户集合
+    private List<Department> newDeptSource = new ArrayList<>();//我的部门
+    private List<SaleTeamScreen> data = new ArrayList<>();
+
     private LinearLayout screen1, screen2, screen3;
     private ImageView screen1_iv1, screen2_iv2, screen3_iv3;
     private TextView saleteam_screen1_commy;
     private WindowManager.LayoutParams windowParams;
-    private int statusIndex, sortIndex;
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
     private ScreenDeptPopupView deptPopupView;
-    private List<Department> mDeptSource;  //部门和用户集合
-    private List<Department> newDeptSource = new ArrayList<>();//我的部门
-    private List<SaleTeamScreen> data = new ArrayList<>();
-    private boolean isOk = true;
+
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private TeamClueAdapter adapter;
-    private int page = 1;
-    private boolean isPullDown = true, isKind;
-    private List<OrderListItem> listData = new ArrayList<>();
-    private String xPath = "", userId = "";
     private View mView;
-
 
     private Handler mHandler = new Handler() {
         @Override
@@ -110,7 +124,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             mView = inflater.inflate(R.layout.fragment_team_order, null);
             initView(mView);
         }
-        getData();
         return mView;
     }
 
@@ -131,6 +144,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
         lv_list.setEmptyView(emptyView);
+        /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -141,9 +155,8 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 
             }
         });
-        adapter = new TeamClueAdapter(getActivity());
-        lv_list.setAdapter(adapter);
-
+        setAdapter();
+        getData();
     }
 
     private void setFilterData() {
@@ -191,6 +204,18 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
             data.add(saleTeamScreen);
         }
+    }
+
+
+    private void setAdapter(){
+
+        if(null == adapter){
+            adapter = new TeamClueAdapter(getActivity(),listData);
+            lv_list.setAdapter(adapter);
+        }else{
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     /**
@@ -287,9 +312,29 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      * 获取团队数据列表
      */
     private void getData() {
-        Toast("请求数据");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 15);
+        map.put("target_id", "");
+        map.put("xpath", MainApp.user.depts.get(0).getShortDept().getXpath());
+        LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
+            @Override
+            public void success(ClueList clueList, Response response) {
+                lv_list.onRefreshComplete();
+                HttpErrorCheck.checkResponse("团队线索列表：", response);
+                listData.clear();
+                listData.addAll(clueList.data.records);
+                setAdapter();
+            }
 
-        lv_list.onRefreshComplete();
+            @Override
+            public void failure(RetrofitError error) {
+                lv_list.onRefreshComplete();
+                HttpErrorCheck.checkError(error);
+            }
+        });
 
     }
 

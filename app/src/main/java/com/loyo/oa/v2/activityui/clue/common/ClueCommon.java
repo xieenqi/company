@@ -31,11 +31,13 @@ public class ClueCommon {
             @Override
             public void success(SourcesData idName, Response response) {
                 HttpErrorCheck.checkResponse("线索来源：", response);
-                for (IdName ele : idName.data) {
-                    data.add(ele.name);
+                if(null != idName){
+                    for (IdName ele : idName.data) {
+                        data.add(ele.name);
+                    }
+                    SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA);
+                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA, MainApp.gson.toJson(data.toArray(new String[data.size()])));
                 }
-                SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA);
-                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA, MainApp.gson.toJson(data.toArray(new String[data.size()])));
             }
 
             @Override

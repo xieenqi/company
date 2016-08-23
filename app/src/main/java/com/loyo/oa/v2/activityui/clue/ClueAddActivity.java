@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.clue;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -139,7 +141,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         dataKind = app.gson.fromJson(SharedUtil.get(app, ExtraAndResult.SOURCES_DATA),
                 new TypeToken<String[]>() {
                 }.getType());
-        if (null == dataKind || !(dataKind.length > 0)) {
+        if (null == dataKind) {
             Toast("数据加载中...");
             ClueCommon.getSourceData();//缓存线索来源数据
             return;
@@ -160,7 +162,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", et_name.getText().toString());
-        map.put("company_name", et_company.getText().toString());
+        map.put("companyName", et_company.getText().toString());
         map.put("cellphone", et_phone.getText().toString());
         map.put("tel", et_tel.getText().toString());
         map.put("regin", regional);
@@ -172,7 +174,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("新建线索：", response);
-
+                        app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
                     }
 
                     @Override
