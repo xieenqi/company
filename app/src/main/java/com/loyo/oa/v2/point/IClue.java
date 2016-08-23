@@ -4,11 +4,15 @@ import android.telecom.Call;
 
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
+import com.loyo.oa.v2.beans.BaseBean;
+import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
+
 import java.util.HashMap;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import retrofit.http.QueryMap;
 import java.util.Map;
 
@@ -46,6 +50,13 @@ public interface IClue {
      */
     @POST("/salesleads")
     void addClue(@Body Map<String, Object> body, Callback<Object> callback);
+
+
+    /**
+     * 获取 线索详情
+     */
+    @GET("/salesleads/mobile/{id}")
+    void getClueDetail(@Path("id") String id, Callback<BaseBean<ClueDetail>> callback);
 
 
 }
