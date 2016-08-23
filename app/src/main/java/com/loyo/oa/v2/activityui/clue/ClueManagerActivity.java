@@ -13,7 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.clue.fragment.MyClueFragment;
 import com.loyo.oa.v2.activityui.clue.fragment.TeamClueFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
@@ -22,6 +24,7 @@ import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -87,6 +90,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
         }
         initTitleItem();
         initChildren();
+        ClueCommon.getSourceData();//缓存线索来源数据
     }
 
     /**
