@@ -139,7 +139,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         dataKind = app.gson.fromJson(SharedUtil.get(app, ExtraAndResult.SOURCES_DATA),
                 new TypeToken<String[]>() {
                 }.getType());
-        if (null == dataKind || !(dataKind.length > 0)) {
+        if (null == dataKind) {
             Toast("数据加载中...");
             ClueCommon.getSourceData();//缓存线索来源数据
             return;
@@ -160,7 +160,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", et_name.getText().toString());
-        map.put("company_name", et_company.getText().toString());
+        map.put("companyName", et_company.getText().toString());
         map.put("cellphone", et_phone.getText().toString());
         map.put("tel", et_tel.getText().toString());
         map.put("regin", regional);
