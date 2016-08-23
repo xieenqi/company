@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-
+import com.loyo.oa.v2.tool.DateTool;
 import java.util.ArrayList;
+
 
 /**
  * 【我的线索】适配器
@@ -22,16 +22,19 @@ public class MyClueAdapter extends BaseAdapter{
     private LayoutInflater inflater;
     private Context mContext;
 
-    public MyClueAdapter(Context context,ArrayList<ClueListItem> mData){
+    public MyClueAdapter(Context context){
         mContext = context;
         inflater = LayoutInflater.from(context);
-        this.mData = mData;
     }
 
+    public void setData(ArrayList<ClueListItem> records) {
+        this.mData = records;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {
-        return mData.size();
+        return null == mData ? 0 : mData.size();
     }
 
     @Override
@@ -61,7 +64,11 @@ public class MyClueAdapter extends BaseAdapter{
 
         holder.tv_name.setText(clueListItem.name);
         holder.tv_company_name.setText(clueListItem.companyName);
-        holder.tv_name.setText(clueListItem.name);
+        if(clueListItem.lastActAt == 0){
+            holder.tv_time.setText("--");
+        }else{
+            holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd"));
+        }
 
         return convertView;
     }

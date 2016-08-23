@@ -154,14 +154,15 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 Intent intent = new Intent();
 
                 intent.putExtra(ExtraAndResult.IS_TEAM, false);
-                intent.putExtra("id", /* 线索id */listData.get(position).id);
+                intent.putExtra("id", /* 线索id */listData.get(position - 1).id);
                 intent.setClass(getActivity(), ClueDetailActivity.class);
                 startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
             }
         });
-        setAdapter();
+        adapter = new TeamClueAdapter(getActivity(),listData);
+        lv_list.setAdapter(adapter);
         getData();
     }
 
@@ -210,18 +211,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
             data.add(saleTeamScreen);
         }
-    }
-
-
-    private void setAdapter(){
-
-        if(null == adapter){
-            adapter = new TeamClueAdapter(getActivity(),listData);
-            lv_list.setAdapter(adapter);
-        }else{
-            adapter.notifyDataSetChanged();
-        }
-
     }
 
     /**
@@ -321,18 +310,25 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("target_id", "");
-        map.put("xpath", MainApp.user.depts.get(0).getShortDept().getXpath());
-        LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
+        map.put("field",sortIndex);
+        map.put("status",statusIndex);
+        LogUtil.dee("发送数据:"+ MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkResponse("团队线索列表：", response);
-                listData.clear();
-                listData.addAll(clueList.data.records);
-                setAdapter();
+                HttpErrorCheck.checkResponse("我的线索列表：", response);
+                try{
+                    if (!isPullDown) {
+                        listData.addAll(clueList.data.records);
+                    } else {
+                        listData = clueList.data.records;
+                    }
+                    adapter.setData(listData);
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -341,7 +337,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 HttpErrorCheck.checkError(error);
             }
         });
-
     }
 
     @Override

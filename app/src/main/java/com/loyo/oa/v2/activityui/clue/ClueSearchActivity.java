@@ -21,9 +21,7 @@ import java.util.HashMap;
 
 public class ClueSearchActivity extends BaseSearchActivity<Customer> {
 
-    private int customerType;
     private Bundle mBundle;
-
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -43,34 +41,14 @@ public class ClueSearchActivity extends BaseSearchActivity<Customer> {
 
     @Override
     public void getData() {
-
-        if(true){
-            Toast("等接口");
-            return;
-        }
-
-
-        String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
+        String url = FinalVariables.SERACH_CLUE_PUBLIC;
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("pageIndex", paginationX.getPageIndex());
         params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
-        params.put("keyWords", strSearch);
+        params.put("field", "");
+        params.put("status",0);
 
-        switch (customerType) {
-            case 1:
-                url = FinalVariables.SEARCH_CUSTOMERS_SELF;
-                break;
-            case 2:
-                url = FinalVariables.SEARCH_CUSTOMERS_TEAM;
-                break;
-            case 3:
-                url = FinalVariables.SEARCH_CUSTOMERS_PUBLIC;
-                break;
-            default:
-
-                break;
-        }
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, this);
     }
 }

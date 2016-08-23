@@ -148,6 +148,10 @@ public final class FinalVariables {
      * 公海客户查询
      **/
     public static final String SEARCH_CUSTOMERS_PUBLIC = Config_project.API_URL_CUSTOMER() + "/customer/sharedsearch";
+    /**
+     * 线索查询
+     * */
+    public static final String SERACH_CLUE_PUBLIC = Config_project.API_URL_CUSTOMER() + "/salesleads/mobile";
 
 
     /**

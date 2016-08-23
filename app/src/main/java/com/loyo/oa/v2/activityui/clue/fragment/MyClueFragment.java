@@ -50,8 +50,9 @@ import retrofit.client.Response;
  */
 public class MyClueFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    private int page = 1;
-    private int statusIndex, sortIndex;
+    private int page = 1;     /*翻页页数*/
+    private int statusIndex;  /*线索状态*/
+    private int sortIndex;    /*线索排序*/
     private boolean isPullDown = true;
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
@@ -125,29 +126,17 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-                mIntent.putExtra("id", /* 线索id */listData.get(position).id);
+                mIntent.putExtra("id", /* 线索id */listData.get(position - 1).id);
                 mIntent.setClass(getActivity(), ClueDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
             }
         });
-        setAdapter();
+        adapter = new MyClueAdapter(getActivity());
+        lv_list.setAdapter(adapter);
         getData();
         Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
-    }
-
-    /**
-     * 绑定适配器
-     * */
-    private void setAdapter(){
-
-        if(null == adapter){
-            adapter = new MyClueAdapter(getActivity(),listData);
-            lv_list.setAdapter(adapter);
-        }else{
-            adapter.notifyDataSetChanged();
-        }
     }
 
     private void setFilterData() {
@@ -231,8 +220,8 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-/*      map.put("kw", "1");
-        map.put("status", 0);*/
+        map.put("field",sortIndex);
+        map.put("status",statusIndex);
         LogUtil.dee("发送数据:"+ MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
@@ -240,9 +229,16 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
                 HttpErrorCheck.checkResponse("我的线索列表：", response);
-                listData.clear();
-                listData.addAll(clueList.data.records);
-                setAdapter();
+                try{
+                    if (!isPullDown) {
+                        listData.addAll(clueList.data.records);
+                    } else {
+                        listData = clueList.data.records;
+                    }
+                    adapter.setData(listData);
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
             }
 
             @Override

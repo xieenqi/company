@@ -33,7 +33,7 @@ public interface IClue {
     /**
      * 我的线索列表
      * */
-    @GET("/salesleads/own")
+    @GET("/salesleads/mobile")
     void getMyCluelist(@QueryMap HashMap<String,Object> map, Callback<ClueList> callback);
 
     /**

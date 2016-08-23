@@ -28,6 +28,10 @@ public class TeamClueAdapter extends BaseAdapter{
         inflater = LayoutInflater.from(context);
     }
 
+    public void setData(ArrayList<ClueListItem> mData){
+        this.mData = mData;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {

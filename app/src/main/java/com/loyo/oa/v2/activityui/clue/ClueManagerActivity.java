@@ -139,7 +139,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
             case R.id.img_title_search_right:
                 Bundle b = new Bundle();
                 b.putInt("from", BaseActivity.CLUE_MANAGE);
-                app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                app.startActivity(this,ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }
