@@ -8,11 +8,26 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBean;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
+import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class ClueDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -52,14 +67,17 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             create_time      /* 创建时间 */ ,
             update_time      /* 更新时间 */ ;
 
+    /* Data */
+    String clueId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clue_detail);
         setTitle("线索详情");
-
         setupViews();
+        getIntenData();
     }
 
     private void setupViews() {
@@ -103,6 +121,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         creator_name = (TextView)findViewById(R.id.tv_creator_name);
         create_time = (TextView)findViewById(R.id.tv_create_time);
         update_time = (TextView)findViewById(R.id.tv_update_time);
+    }
+
+    private void getIntenData() {
+        Intent intent = getIntent();
+        clueId = intent.getStringExtra("id");
+        clueId = clueId!=null?clueId:"";
     }
 
 
@@ -217,6 +241,27 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 clue_source.setText(value);
             }
         });
+    }
+
+    /**
+     *  获取 线索详情
+     */
+    public static void getClueDetail() {
+        final List<String> data = new ArrayList<>();
+        RestAdapterFactory.getInstance()
+                .build(Config_project.API_URL_CUSTOMER())
+                .create(IClue.class)
+                .getClueDetail("", new Callback<BaseBean<ClueDetail>>() {
+                    @Override
+                    public void success(BaseBean<ClueDetail> detail, Response response) {
+                        HttpErrorCheck.checkResponse("线索详情：", response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
 }
