@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
-import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -253,7 +252,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     Bundle mBundle = new Bundle();
                     mBundle.putString(ExtraAndResult.EXTRA_ID, "  ");
                     mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data);
-                    app.startActivityForResult(ClueDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+                    app.startActivityForResult(ClueDetailActivity.this, ClueAddActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                 }
             });
         }
