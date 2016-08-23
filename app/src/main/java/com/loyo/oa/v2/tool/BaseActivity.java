@@ -71,6 +71,8 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public static final int WORK_MANAGE = 0X06;//工作报告管理
     public static final int PEOJECT_MANAGE = 0x07; //项目管理
     public static final int WFIN_MANAGE = 0x09; //审批列表
+    public static final int CLUE_MANAGE = 0x20; //线索列表
+
     public SystemBarTintManager tintManager;
 
     protected void onCreate(Bundle savedInstanceState) {

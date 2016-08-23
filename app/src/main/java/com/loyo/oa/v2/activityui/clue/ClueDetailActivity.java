@@ -2,6 +2,8 @@ package com.loyo.oa.v2.activityui.clue;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -79,6 +81,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         getIntenData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getClueDetail();
+    }
+
     private void setupViews() {
 
         /* Navigation Bar */
@@ -124,8 +132,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     private void getIntenData() {
         Intent intent = getIntent();
-        clueId = intent.getStringExtra("id");
-        clueId = clueId != null ? clueId : "";
+        clueId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
+        if (TextUtils.isEmpty(clueId)) {
+            onBackPressed();
+            Toast("参数不全");
+        }
     }
 
 
@@ -248,12 +259,16 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     /**
      * 获取 线索详情
      */
-    public static void getClueDetail() {
-        final List<String> data = new ArrayList<>();
+    public void getClueDetail() {
+        if (clueId == null) {
+            return;
+        }
+
+        showLoading("");
         RestAdapterFactory.getInstance()
                 .build(Config_project.API_URL_CUSTOMER())
                 .create(IClue.class)
-                .getClueDetail("", new Callback<BaseBean<ClueDetail>>() {
+                .getClueDetail(clueId, new Callback<BaseBean<ClueDetail>>() {
                     @Override
                     public void success(BaseBean<ClueDetail> detail, Response response) {
                         HttpErrorCheck.checkResponse("线索详情：", response);
