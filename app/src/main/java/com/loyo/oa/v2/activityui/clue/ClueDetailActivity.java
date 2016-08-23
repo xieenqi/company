@@ -22,6 +22,8 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
+import java.util.Date;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -68,6 +70,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     String clueId;
     ClueDetail data;
 
+    /* Ref */
+    protected MainApp app;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         setTitle("线索详情");
         setupViews();
         getIntenData();
+        app = (MainApp) getApplicationContext();
     }
 
     @Override
@@ -154,8 +160,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         /* 分区4 */
         responsible_name.setText(data.sales.responsorName);
         creator_name.setText(data.sales.creatorName);
-        create_time.setText("" + data.sales.createAt);
-        update_time.setText("" + data.sales.updateAt);
+        create_time.setText(app.df3.format(new Date(Long.valueOf(data.sales.createAt + "") * 1000)));
+        update_time.setText(app.df3.format(new Date(Long.valueOf(data.sales.updateAt + "") * 1000)));
     }
 
     private void getIntenData() {

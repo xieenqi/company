@@ -54,7 +54,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1"
+                        android:textColor="@color/text99"
                         />
                 </LinearLayout>
 
@@ -84,7 +84,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1"
+                        android:textColor="@color/text99"
                         />
                 </LinearLayout>
 
@@ -113,7 +113,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1"
+                        android:textColor="@color/text99"
                         />
                     <ImageView
                         android:layout_width="wrap_content"
@@ -363,7 +363,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1"
+                        android:textColor="@color/text99"
                         />
 
                     <ImageView
@@ -399,7 +399,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1"
+                        android:textColor="@color/text99"
                         />
 
                     <ImageView
@@ -436,7 +436,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1"
+                        android:textColor="@color/text99"
                         />
                 </LinearLayout>
 
