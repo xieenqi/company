@@ -91,11 +91,13 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                     isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
                     page = 1;
+                    LogUtil.dee("statusIndex:"+statusIndex);
                     break;
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
                     isPullDown = true;
                     sortIndex = (int) msg.getData().get("index");
                     page = 1;
+                    LogUtil.dee("sortIndex:"+sortIndex);
                     break;
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG1:
                     isPullDown = true;
@@ -110,6 +112,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                         userId = saleTeamScreen.getId();
                     }
                     page = 1;
+                    LogUtil.dee("isKind:"+isKind);
                     break;
             }
             getData();
@@ -151,7 +154,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 Intent intent = new Intent();
 
                 intent.putExtra(ExtraAndResult.IS_TEAM, false);
-                intent.putExtra("id", /* 线索id */listData.get(position).id);
+                intent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */listData.get(position).id);
                 intent.setClass(getActivity(), ClueDetailActivity.class);
                 startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);

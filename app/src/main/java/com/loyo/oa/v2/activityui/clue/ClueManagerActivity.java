@@ -18,12 +18,16 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.clue.fragment.MyClueFragment;
 import com.loyo.oa.v2.activityui.clue.fragment.TeamClueFragment;
+import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,13 +44,14 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
     private RelativeLayout layout_title_action, img_title_search_right;
     private TextView tv_title_1;
     private ListView lv_order_title;
-    private float mRotation = 0;
     private Animation rotateAnimation;//标题动画
+    private FragmentManager fragmentManager = getSupportFragmentManager();
+    private Permission permission;
+
+    private int mIndex = -1;
+    private float mRotation = 0;
     private String[] SaleItemStatus = new String[]{"我的线索", "团队线索"};
     private List<BaseFragment> fragments = new ArrayList<>();
-    private FragmentManager fragmentManager = getSupportFragmentManager();
-    private int mIndex = -1;
-    private Permission permission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +78,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
-        img_title_search_right.setVisibility(View.INVISIBLE);
+
         //超级管理员\权限判断
         if (!MainApp.user.isSuperUser()) {
             try {
@@ -116,16 +121,25 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            /*返回*/
             case R.id.img_title_left:
                 onBackPressed();
                 break;
+
             case R.id.ll_category:
                 break;
+
+            /*切换按钮*/
             case R.id.layout_title_action:
                 changeTitleImg();
                 break;
+
+            /*搜索*/
             case R.id.img_title_search_right:
-                Toast("搜索线索");
+                Bundle b = new Bundle();
+                b.putInt("from", BaseActivity.CLUE_MANAGE);
+                app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }
