@@ -139,7 +139,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         dataKind = app.gson.fromJson(SharedUtil.get(app, ExtraAndResult.SOURCES_DATA),
                 new TypeToken<String[]>() {
                 }.getType());
-        if (!(dataKind.length > 0)) {
+        if (null == dataKind || !(dataKind.length > 0)) {
             Toast("数据加载中...");
             ClueCommon.getSourceData();//缓存线索来源数据
             return;

@@ -9,9 +9,5 @@ import java.util.ArrayList;
  * Created by xeq on 16/8/22.
  */
 public class SourcesData extends BaseBean {
-    public Data data;
-
-    public class Data {
-        public ArrayList<IdName> records;
-    }
+    public ArrayList<IdName> data;
 }

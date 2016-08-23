@@ -31,7 +31,7 @@ public class ClueCommon {
             @Override
             public void success(SourcesData idName, Response response) {
                 HttpErrorCheck.checkResponse("线索来源：", response);
-                for (IdName ele : idName.data.records) {
+                for (IdName ele : idName.data) {
                     data.add(ele.name);
                 }
                 SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA);
@@ -40,10 +40,8 @@ public class ClueCommon {
 
             @Override
             public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error);
             }
         });
-
-//        return data.toArray(new String[data.size()]);
     }
 }
