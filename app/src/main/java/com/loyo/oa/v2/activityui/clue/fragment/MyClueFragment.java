@@ -21,20 +21,33 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
+import com.loyo.oa.v2.activityui.clue.bean.ClueList;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【我的线索】
@@ -60,7 +73,8 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
     private Bundle mBundle;
     private View mView;
 
-    private List<OrderListItem> listData = new ArrayList<>();
+
+    private ArrayList<ClueListItem> listData = new ArrayList<>();
 
     private Handler mHandler = new Handler() {
         @Override
@@ -118,11 +132,23 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
 
             }
         });
-        adapter = new MyClueAdapter(getActivity());
-        lv_list.setAdapter(adapter);
+        setAdapter();
         getData();
         Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
     }
+
+    private void setAdapter(){
+
+        if(null == adapter){
+            adapter = new MyClueAdapter(getActivity(),listData);
+            lv_list.setAdapter(adapter);
+        }else{
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
+
 
     private void setFilterData() {
         for (int i = 0; i < sort.length; i++) {
@@ -203,7 +229,29 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
      * 请求列表数据
      */
     private void getData() {
-        Toast("请求数据");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 15);
+/*      map.put("kw", "1");
+        map.put("status", 0);*/
+        LogUtil.dee("发送数据:"+ MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
+            @Override
+            public void success(ClueList clueList, Response response) {
+                lv_list.onRefreshComplete();
+                HttpErrorCheck.checkResponse("我的线索列表：", response);
+                listData.clear();
+                listData.addAll(clueList.data.records);
+                setAdapter();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                lv_list.onRefreshComplete();
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 
     @Override

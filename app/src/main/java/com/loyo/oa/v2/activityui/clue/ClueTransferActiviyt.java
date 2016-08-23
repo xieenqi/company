@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -69,6 +71,8 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
     private TextView tv_labels;
     private LinearLayout layout_customer_label;
     private LinearLayout layout_newContract;
+    private RelativeLayout img_title_left;
+    private RelativeLayout img_title_right;
     private ImageView img_refresh_address;
     private GridView gridView_photo;
 
@@ -124,6 +128,9 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
     public void initUi(){
 
         super.setTitle("线索转换客户");
+
+        img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
+        img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
         edt_name = (EditText) findViewById(R.id.edt_name);
         et_address = (EditText) findViewById(R.id.et_address);
         edit_address_details = (EditText) findViewById(R.id.edit_address_details);
@@ -136,6 +143,15 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
         layout_newContract = (LinearLayout) findViewById(R.id.layout_newContract);
         img_refresh_address = (ImageView) findViewById(R.id.img_refresh_address);
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+
+        img_refresh_address.setOnClickListener(this);
+        tv_search.setOnClickListener(this);
+        img_title_left.setOnClickListener(this);
+        img_title_right.setOnClickListener(this);
+        layout_customer_label.setOnClickListener(this);
+
+        img_title_left.setOnTouchListener(Global.GetTouch());
+        img_title_right.setOnTouchListener(Global.GetTouch());
 
         init_gridView_photo();
         getTempCustomer();
@@ -241,6 +257,7 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
         layout_newContract.addView(view);
     }
 
+
     /**
      * 批量上传附件
      */
@@ -343,6 +360,8 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
 
+
+
         switch (v.getId()){
 
 
@@ -416,6 +435,7 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
 
                 //没有附件
                 if (pickPhots.size() == 0) {
+                    showLoading("");
                     requestCommitTask();
                 } else {
                     newUploadAttachement();
