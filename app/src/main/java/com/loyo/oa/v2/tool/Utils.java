@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.tool;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -630,18 +631,18 @@ public class Utils {
         return builder;
     }
 
-    public static CharSequence checkAutoLink(String content) {
+    public static CharSequence checkAutoLink(String content, Activity activity) {
 
         String url = "百度 https://www.baidu.com/，腾讯 http://www.qq.com/，淘宝 www.taobao.com/";//此处测试，就不用参数了
 
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(content);
 
-        Pattern pattern = Pattern.compile("((https|http|ftp|rtsp|mms)?:\\/\\/)[^\\s]+");
+        Pattern pattern = Pattern.compile("((http{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)");
 
         Matcher matcher = pattern.matcher(spannableStringBuilder);
 
         while (matcher.find()) {
-            setClickableSpan(spannableStringBuilder, matcher);
+            setClickableSpan(spannableStringBuilder, matcher, activity);
         }
 
 //        Pattern pattern2 = Pattern.compile("([\\s>])((www|ftp)\\.[\\w\\\\x80-\\\\xff\\#$%&~/.\\-;:=,?@\\[\\]+]*)");
@@ -660,7 +661,7 @@ public class Utils {
 
     //给符合的设置自定义点击事件
 
-    private static void setClickableSpan(final SpannableStringBuilder clickableHtmlBuilder, final Matcher matcher) {
+    private static void setClickableSpan(final SpannableStringBuilder clickableHtmlBuilder, final Matcher matcher, final Activity activity) {
 
         int start = matcher.start();
 
@@ -671,13 +672,12 @@ public class Utils {
         ClickableSpan clickableSpan = new ClickableSpan() {
 
             public void onClick(View view) {
-//
-//                Intent intent = new Intent(context, WebViewActivity.class);
-//
-//                intent.putExtra("url", url);
-//
-//                startActivity(intent);
-                Global.Toast("点击了超链接？？？？？？？？？？？");
+
+                Intent intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                intent.setData(Uri.parse(url));
+                activity.startActivity(intent);
+//                Global.Toast("点击了超链接？？？？？？？？？？？");
             }
 
         };
