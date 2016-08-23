@@ -152,6 +152,9 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
+
+                intent.putExtra(ExtraAndResult.IS_TEAM, false);
+                intent.putExtra("id", /* 线索id */listData.get(position).id);
                 intent.setClass(getActivity(), ClueDetailActivity.class);
                 startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
