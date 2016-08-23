@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+
+import java.util.ArrayList;
 
 /**
  * 【我的线索】适配器
@@ -15,24 +18,25 @@ import com.loyo.oa.v2.R;
  */
 public class MyClueAdapter extends BaseAdapter{
 
-    public String[] mData = {"阿里巴巴","极致生活","京东到家","打野科技","Link"};
+    private ArrayList<ClueListItem> mData;
     private LayoutInflater inflater;
     private Context mContext;
 
-    public MyClueAdapter(Context context){
+    public MyClueAdapter(Context context,ArrayList<ClueListItem> mData){
         mContext = context;
         inflater = LayoutInflater.from(context);
+        this.mData = mData;
     }
 
 
     @Override
     public int getCount() {
-        return mData.length;
+        return mData.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mData[position];
+        return mData.get(position);
     }
 
     @Override
@@ -42,13 +46,12 @@ public class MyClueAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         Holder holder = null;
+        ClueListItem clueListItem = mData.get(position);
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_myclue, null);
             holder = new Holder();
             holder.tv_company_name = (TextView) convertView.findViewById(R.id.tv_company_name);
-            holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             convertView.setTag(holder);
@@ -56,14 +59,18 @@ public class MyClueAdapter extends BaseAdapter{
             holder = (Holder) convertView.getTag();
         }
 
-        holder.tv_name.setText(mData[position]);
+        holder.tv_name.setText(clueListItem.name);
+        holder.tv_company_name.setText(clueListItem.companyName);
+        holder.tv_name.setText(clueListItem.name);
 
         return convertView;
     }
 
     class Holder{
 
-        TextView tv_company_name,tv_customer,tv_time,tv_name;
+        TextView tv_company_name; //公司名
+        TextView tv_time;         //跟进时间
+        TextView tv_name;         //客户名
 
     }
 

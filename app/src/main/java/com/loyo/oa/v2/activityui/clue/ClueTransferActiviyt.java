@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.customer;
+package com.loyo.oa.v2.activityui.clue;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,19 +6,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.CustomerLabelActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerRepeat;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.bean.HttpAddCustomer;
@@ -29,7 +33,6 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
@@ -40,76 +43,57 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 /**
- * 【新建 客户】 页面
+ * 【线索转移客户】
+ * Created by yyy on 16/8/22.
  */
-@EActivity(R.layout.activity_customer_add)
-public class CustomerAddActivity extends BaseActivity implements View.OnClickListener {
+public class ClueTransferActiviyt extends BaseActivity implements View.OnClickListener{
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
     public static final int REQUEST_CUSTOMER_SERACH = 7;
 
-    @ViewById
-    ViewGroup img_title_left;
-    @ViewById
-    ViewGroup img_title_right;
-    @ViewById
-    EditText edt_name;
-    @ViewById
-    EditText edt_contract;
-    @ViewById
-    EditText edt_contract_tel;
-    @ViewById
-    EditText edt_contract_telnum;
-    @ViewById
-    EditText et_address;
-    @ViewById
-    TextView tv_labels;
-    @ViewById
-    LinearLayout layout_newContract;
-    @ViewById
-    LinearLayout layout_address;
-    @ViewById
-    Button btn_add_new_contract;
-    @ViewById
-    CusGridView gridView_photo;
-
+    private EditText edt_name;
+    private EditText et_address;
     private EditText edit_address_details;
-    private ImageGridViewAdapter imageGridViewAdapter;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
-    private ArrayList<Contact> mContacts = new ArrayList<>();
-    private ArrayList<NewTag> tags;
-    private Intent mIntent;
-    private Bundle mBundle;
-
-    private  ArrayList<ContactLeftExtras> mCusList;
+    private EditText edt_contract;
+    private EditText edt_contract_tel;
+    private EditText edt_contract_telnum;
+    private TextView tv_search;
+    private TextView tv_labels;
+    private LinearLayout layout_customer_label;
+    private LinearLayout layout_newContract;
+    private RelativeLayout img_title_left;
+    private RelativeLayout img_title_right;
+    private ImageView img_refresh_address;
+    private GridView gridView_photo;
 
     private String uuid = StringUtil.getUUID();
-    private String tagItemIds;
-    private String myAddress;
+    private Bundle mBundle;
 
+    private String myAddress;
     private String customer_name;
     private String customerAddress;
     private String customerContract;
     private String customerContractTel;
     private String customerWrietele;
     private String cusotmerDetalisAddress;
+    private String tagItemIds;
+
+    private LocationUtilGD locationGd;
+    private ImageGridViewAdapter imageGridViewAdapter;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private ArrayList<Contact> mContacts = new ArrayList<>();
+    private ArrayList<NewTag> tags;
+    private  ArrayList<ContactLeftExtras> mCusList;
 
     private int bizType = 0x01;
     private int uploadSize;
@@ -118,10 +102,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private double laPosition;//当前位置的经纬度
     private double loPosition;
 
+    private boolean isSave = true;
     private boolean cusGuys = false;  //联系人权限
     private boolean cusPhone = false; //手机权限
     private boolean cusMobile = false;//座机权限
-
     private PositionResultItem positionResultItem;
 
     private Handler mHandler = new Handler() {
@@ -134,13 +118,41 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     };
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_cluetransfer);
+        initUi();
+    }
 
-    @AfterViews
-    void initUI() {
+    public void initUi(){
+
+        super.setTitle("线索转换客户");
+
+        img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
+        img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
+        edt_name = (EditText) findViewById(R.id.edt_name);
+        et_address = (EditText) findViewById(R.id.et_address);
+        edit_address_details = (EditText) findViewById(R.id.edit_address_details);
+        edt_contract = (EditText) findViewById(R.id.edt_contract);
+        edt_contract_tel = (EditText) findViewById(R.id.edt_contract_tel);
+        edt_contract_telnum = (EditText) findViewById(R.id.edt_contract_telnum);
+        tv_search = (TextView) findViewById(R.id.tv_search);
+        tv_labels = (TextView) findViewById(R.id.tv_labels);
+        layout_customer_label = (LinearLayout) findViewById(R.id.layout_customer_label);
+        layout_newContract = (LinearLayout) findViewById(R.id.layout_newContract);
+        img_refresh_address = (ImageView) findViewById(R.id.img_refresh_address);
+        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+
+        img_refresh_address.setOnClickListener(this);
+        tv_search.setOnClickListener(this);
+        img_title_left.setOnClickListener(this);
+        img_title_right.setOnClickListener(this);
+        layout_customer_label.setOnClickListener(this);
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-        edit_address_details = (EditText) findViewById(R.id.edit_address_details);
-        super.setTitle("新建客户");
+
         init_gridView_photo();
         getTempCustomer();
         startLocation();
@@ -149,9 +161,67 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             laPosition = app.latitude;
             loPosition = app.longitude;
         }
+
     }
 
-    LocationUtilGD locationGd;
+    void init_gridView_photo() {
+        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
+        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
+    }
+
+
+    /**
+     * 获取新建客户权限
+     * */
+    public void requestJurisdiction(){
+        showLoading("");
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("bizType",100);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
+            @Override
+            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                mCusList = cuslist;
+                for (ContactLeftExtras customerJur : cuslist) {
+                    if (customerJur.label.contains("联系人") && customerJur.required) {
+                        cusGuys = true;
+                        edt_contract.setHint("请输入联系人姓名(必填)");
+                    } else if (customerJur.label.contains("手机") && customerJur.required) {
+                        cusPhone = true;
+                        edt_contract_tel.setHint("请输入联系人手机号(必填)");
+                    } else if (customerJur.label.contains("座机") && customerJur.required) {
+                        cusMobile = true;
+                        edt_contract_telnum.setHint("请输入联系人座机(必填)");
+                    }
+                }
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+
+    void getTempCustomer() {
+        Customer customer = DBManager.Instance().getCustomer();
+        if (customer == null) return;
+
+        edt_name.setText(customer.name);
+        ArrayList<Contact> contacts = customer.contacts;
+        if (contacts != null && contacts.size() > 0) {
+            for (Contact c : contacts) {
+                if (c.isDefault()) {
+                    edt_contract.setText(c.getName());
+                    edt_contract_tel.setText(c.getTel());
+                } else {
+                    setContract(c);
+                }
+            }
+        }
+    }
 
     /**
      * 获取定位
@@ -175,22 +245,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
-    void getTempCustomer() {
-        Customer customer = DBManager.Instance().getCustomer();
-        if (customer == null) return;
-
-        edt_name.setText(customer.name);
-        ArrayList<Contact> contacts = customer.contacts;
-        if (contacts != null && contacts.size() > 0) {
-            for (Contact c : contacts) {
-                if (c.isDefault()) {
-                    edt_contract.setText(c.getName());
-                    edt_contract_tel.setText(c.getTel());
-                } else {
-                    setContract(c);
-                }
-            }
-        }
+    void setContract(final Contact c) {
+        if (c == null) return;
+        mContacts.add(c);
+        layout_newContract.setVisibility(View.VISIBLE);
+        View view = LayoutInflater.from(this).inflate(R.layout.item_customer_new_contract, null, false);
+        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+        TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
+        tv_name.setText(c.getName());
+        tv_phone.setText(c.getTel());
+        layout_newContract.addView(view);
     }
 
 
@@ -233,23 +297,80 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * 新建客户请求
+     * */
+    public void requestCommitTask() {
+        HttpAddCustomer positionData = new HttpAddCustomer();
+        positionData.loc.addr = customerAddress;
+        positionData.loc.loc.add(loPosition);
+        positionData.loc.loc.add(laPosition);
+        if (tags != null && tags.size() > 0) {
+            for (NewTag tag : tags) {
+                NewTag newtag = new NewTag();
+                newtag.tId = tag.tId;
+                newtag.itemId = tag.itemId;
+                newtag.itemName = tag.itemName;
+                positionData.tags.add(newtag);
+            }
+        }
 
-    void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
-        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
+        HttpAddCustomer locData = new HttpAddCustomer();
+        locData.loc.addr = cusotmerDetalisAddress;
+
+        HashMap<String, Object> map = new HashMap<>();
+        if (pickPhots.size() > 0) {
+            map.put("attachmentCount", pickPhots.size());
+            map.put("uuid", uuid);
+        }
+
+        map.put("position", positionData.loc); //定位数据
+        map.put("loc", locData.loc);          //地址详情数据
+        map.put("name", customer_name);
+        map.put("pname", customerContract);
+        map.put("ptel", customerContractTel);
+        map.put("wiretel", customerWrietele);
+        map.put("tags", positionData.tags);
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
+            @Override
+            public void success(final Customer customer, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                try {
+                    Customer retCustomer = customer;
+                    Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+                    isSave = false;
+                    Intent intent = new Intent();
+                    intent.putExtra(Customer.class.getName(), retCustomer);
+                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);
+
+                } catch (Exception e) {
+                    Global.ProcException(e);
+                }
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
-            R.id.layout_customer_label, R.id.img_refresh_address})
-    public void onClick(final View v) {
-        switch (v.getId()) {
+    @Override
+    public void onClick(View v) {
 
-            /*刷新地址*/
+
+
+        switch (v.getId()){
+
+
+              /*刷新地址*/
             case R.id.img_refresh_address:
 
                 mBundle = new Bundle();
-                mBundle.putInt("page",MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
+                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+                app.startActivityForResult(this,MapModifyView.class, MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
 
                 break;
 
@@ -314,6 +435,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
                 //没有附件
                 if (pickPhots.size() == 0) {
+                    showLoading("");
                     requestCommitTask();
                 } else {
                     newUploadAttachement();
@@ -332,151 +454,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             default:
                 break;
         }
-    }
-
-
-    void setContract(final Contact c) {
-        if (c == null) return;
-        mContacts.add(c);
-        layout_newContract.setVisibility(View.VISIBLE);
-        View view = LayoutInflater.from(this).inflate(R.layout.item_customer_new_contract, null, false);
-        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-        TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
-        tv_name.setText(c.getName());
-        tv_phone.setText(c.getTel());
-        layout_newContract.addView(view);
-    }
-
-    /**
-     * 获取新建客户权限
-     * */
-    public void requestJurisdiction(){
-        showLoading("");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("bizType",100);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback< ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                mCusList = cuslist;
-                for(ContactLeftExtras customerJur : cuslist){
-                    if(customerJur.label.contains("联系人") && customerJur.required){
-                        cusGuys = true;
-                        edt_contract.setHint("请输入联系人姓名(必填)");
-                    }else if(customerJur.label.contains("手机") && customerJur.required){
-                        cusPhone = true;
-                        edt_contract_tel.setHint("请输入联系人手机号(必填)");
-                    }else if(customerJur.label.contains("座机") && customerJur.required){
-                        cusMobile = true;
-                        edt_contract_telnum.setHint("请输入联系人座机(必填)");
-                    }
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
-
-
-    /**
-     * 新建客户请求
-     * */
-    public void requestCommitTask() {
-        HttpAddCustomer positionData = new HttpAddCustomer();
-        positionData.loc.addr = customerAddress;
-        positionData.loc.loc.add(loPosition);
-        positionData.loc.loc.add(laPosition);
-        if (tags != null && tags.size() > 0) {
-            for (NewTag tag : tags) {
-                NewTag newtag = new NewTag();
-                newtag.tId = tag.tId;
-                newtag.itemId = tag.itemId;
-                newtag.itemName = tag.itemName;
-                positionData.tags.add(newtag);
-            }
         }
-
-        HttpAddCustomer locData = new HttpAddCustomer();
-        locData.loc.addr = cusotmerDetalisAddress;
-
-        HashMap<String, Object> map = new HashMap<>();
-        if (pickPhots.size() > 0) {
-            map.put("attachmentCount", pickPhots.size());
-            map.put("uuid", uuid);
-        }
-
-        map.put("position", positionData.loc); //定位数据
-        map.put("loc", locData.loc);          //地址详情数据
-        map.put("name", customer_name);
-        map.put("pname", customerContract);
-        map.put("ptel", customerContractTel);
-        map.put("wiretel", customerWrietele);
-        map.put("tags", positionData.tags);
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                try {
-                    Customer retCustomer = customer;
-                    Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-                    isSave = false;
-                    Intent intent = new Intent();
-                    intent.putExtra(Customer.class.getName(), retCustomer);
-                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);
-
-                } catch (Exception e) {
-                    Global.ProcException(e);
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
-
-    boolean isSave = true;
-    Customer mCustomer;
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        DBManager.Instance().deleteCustomer();
-        if (isSave) {
-            mCustomer = new Customer();
-            mCustomer.name = (edt_name.getText().toString().trim());
-
-            ArrayList<Contact> contacts = new ArrayList<>();
-
-            if (mContacts != null && mContacts.size() > 0) {
-                contacts.addAll(mContacts);
-            }
-
-            Contact defaultContact = new Contact();
-            defaultContact.setName(edt_contract.getText().toString());
-            defaultContact.setTel(edt_contract_tel.getText().toString());
-            defaultContact.setIsDefault(true);
-            contacts.add(0, defaultContact);
-            mCustomer.contacts = contacts;
-
-            mCustomer.owner = null;
-            mCustomer.members = null;
-            mCustomer.tags = null;
-            mCustomer.creator = null;
-
-            DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
-        }
-
-        locationGd.sotpLocation();
-    }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -559,11 +537,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 pickPhots.remove(data.getExtras().getInt("position"));
                 init_gridView_photo();
                 break;
-            default:
 
+            default:
                 break;
         }
     }
+
 
 
 }

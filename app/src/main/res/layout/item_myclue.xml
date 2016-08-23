@@ -32,7 +32,6 @@
                 android:src="@drawable/icon_customer" />
 
             <TextView
-                android:id="@+id/tv_company_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -40,7 +39,7 @@
                 android:textColor="@color/text99" />
 
             <TextView
-                android:id="@+id/tv_company"
+                android:id="@+id/tv_company_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"

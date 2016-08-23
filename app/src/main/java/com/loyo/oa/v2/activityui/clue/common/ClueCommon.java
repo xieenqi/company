@@ -1,11 +1,17 @@
 package com.loyo.oa.v2.activityui.clue.common;
 
 import com.loyo.oa.v2.activityui.clue.bean.IdName;
+import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -20,15 +26,21 @@ public class ClueCommon {
      * 获取 线索来源
      */
     public static void getSourceData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getSource(new Callback<ArrayList<IdName>>() {
+        final List<String> data = new ArrayList<>();
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getSource(new Callback<SourcesData>() {
             @Override
-            public void success(ArrayList<IdName> idName, Response response) {
-
+            public void success(SourcesData idName, Response response) {
+                HttpErrorCheck.checkResponse("线索来源：", response);
+                for (IdName ele : idName.data) {
+                    data.add(ele.name);
+                }
+                SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA);
+                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA, MainApp.gson.toJson(data.toArray(new String[data.size()])));
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                HttpErrorCheck.checkError(error);
             }
         });
     }

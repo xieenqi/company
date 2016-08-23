@@ -13,7 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.clue.fragment.MyClueFragment;
 import com.loyo.oa.v2.activityui.clue.fragment.TeamClueFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
@@ -22,6 +24,7 @@ import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,7 +77,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
         //超级管理员\权限判断
         if (!MainApp.user.isSuperUser()) {
             try {
-                permission = (Permission) MainApp.rootMap.get("0328");
+                permission = (Permission) MainApp.rootMap.get("----");
                 if (!permission.isEnable()) {
                     SaleItemStatus = new String[]{"我的线索"};
                     img_title_arrow.setVisibility(View.INVISIBLE);
@@ -82,11 +85,12 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("团队线索权限,code错误:0328");
+                Toast("团队线索权限,code错误:----");
             }
         }
         initTitleItem();
         initChildren();
+        ClueCommon.getSourceData();//缓存线索来源数据
     }
 
     /**
