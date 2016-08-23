@@ -10,8 +10,8 @@ public class ClueListItem implements Serializable{
 
     public String id;
     public String name;
-    public String company_id;
-    public String company_name;
+    public String companyId;
+    public String companyName;
     public String cellphone;
     public String tel;
     public Region region;

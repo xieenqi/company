@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.clue.common;
 
 import com.loyo.oa.v2.activityui.clue.bean.IdName;
+import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.Config_project;
@@ -23,11 +24,11 @@ public class ClueCommon {
      */
     public static String[] getSourceData() {
         final List<String> data = new ArrayList<>();
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getSource(new Callback<ArrayList<IdName>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getSource(new Callback<SourcesData>() {
             @Override
-            public void success(ArrayList<IdName> idName, Response response) {
+            public void success(SourcesData idName, Response response) {
                 HttpErrorCheck.checkResponse("线索来源：", response);
-                for (IdName ele : idName) {
+                for (IdName ele : idName.data.records) {
                     data.add(ele.name);
                 }
             }
@@ -37,7 +38,6 @@ public class ClueCommon {
                 HttpErrorCheck.checkError(error);
             }
         });
-
-        return (String[]) data.toArray();
+        return data.toArray(new String[data.size()]);
     }
 }

@@ -8,8 +8,9 @@ import java.util.ArrayList;
  */
 public class ClueList {
 
-    private int errcode;
-    private String errmsg;
+    public int errcode;
+    public String errmsg;
+    public mData data;
 
     public class mData {
 
@@ -19,5 +20,4 @@ public class ClueList {
         public ArrayList<ClueListItem> records;
 
     }
-
 }

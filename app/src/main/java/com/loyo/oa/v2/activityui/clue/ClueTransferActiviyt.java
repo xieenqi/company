@@ -150,6 +150,9 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
         img_title_right.setOnClickListener(this);
         layout_customer_label.setOnClickListener(this);
 
+        img_title_left.setOnTouchListener(Global.GetTouch());
+        img_title_right.setOnTouchListener(Global.GetTouch());
+
         init_gridView_photo();
         getTempCustomer();
         startLocation();
@@ -432,6 +435,7 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
 
                 //没有附件
                 if (pickPhots.size() == 0) {
+                    showLoading("");
                     requestCommitTask();
                 } else {
                     newUploadAttachement();
