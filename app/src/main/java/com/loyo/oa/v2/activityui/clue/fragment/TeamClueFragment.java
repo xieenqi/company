@@ -18,7 +18,10 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
+import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
+import com.loyo.oa.v2.activityui.clue.bean.ClueList;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
@@ -29,14 +32,24 @@ import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
@@ -64,7 +77,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     private TeamClueAdapter adapter;
     private int page = 1;
     private boolean isPullDown = true, isKind;
-    private List<OrderListItem> listData = new ArrayList<>();
+    private ArrayList<ClueListItem> listData = new ArrayList<>();
     private String xPath = "", userId = "";
     private View mView;
 
@@ -110,7 +123,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             mView = inflater.inflate(R.layout.fragment_team_order, null);
             initView(mView);
         }
-        getData();
         return mView;
     }
 
@@ -141,9 +153,8 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 
             }
         });
-        adapter = new TeamClueAdapter(getActivity());
-        lv_list.setAdapter(adapter);
-
+        setAdapter();
+        getData();
     }
 
     private void setFilterData() {
@@ -191,6 +202,18 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
             data.add(saleTeamScreen);
         }
+    }
+
+
+    private void setAdapter(){
+
+        if(null == adapter){
+            adapter = new TeamClueAdapter(getActivity(),listData);
+            lv_list.setAdapter(adapter);
+        }else{
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     /**
@@ -287,9 +310,29 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      * 获取团队数据列表
      */
     private void getData() {
-        Toast("请求数据");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 15);
+        map.put("target_id", "");
+        map.put("xpath", MainApp.user.depts.get(0).getShortDept().getXpath());
+        LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
+            @Override
+            public void success(ClueList clueList, Response response) {
+                lv_list.onRefreshComplete();
+                HttpErrorCheck.checkResponse("团队线索列表：", response);
+                listData.clear();
+                listData.addAll(clueList.data.records);
+                setAdapter();
+            }
 
-        lv_list.onRefreshComplete();
+            @Override
+            public void failure(RetrofitError error) {
+                lv_list.onRefreshComplete();
+                HttpErrorCheck.checkError(error);
+            }
+        });
 
     }
 
