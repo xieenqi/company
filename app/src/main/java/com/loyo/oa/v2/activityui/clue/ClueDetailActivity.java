@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.clue;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +21,6 @@ import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -256,7 +252,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 public void onClick(int which) {
                     Bundle mBundle = new Bundle();
                     mBundle.putString(ExtraAndResult.EXTRA_ID, "  ");
-//                    mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, mData);
+                    mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data);
                     app.startActivityForResult(ClueDetailActivity.this, OrderAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
                 }
             });
