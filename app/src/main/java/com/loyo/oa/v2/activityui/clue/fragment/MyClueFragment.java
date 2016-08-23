@@ -125,7 +125,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-                mIntent.putExtra("id", /* 线索id */listData.get(position).id);
+                mIntent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */listData.get(position).id);
                 mIntent.setClass(getActivity(), ClueDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
