@@ -55,26 +55,26 @@ import retrofit.client.Response;
  */
 public class MyClueFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    private Button btn_add;
+    private int page = 1;
+    private int statusIndex, sortIndex;
+    private boolean isPullDown = true;
+    private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
+    private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
+    private ArrayList<ClueListItem> listData = new ArrayList<>();
     private String[] status = {"全部状态", "未处理", "已联系", "关闭"};
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
+
     private LinearLayout salemy_screen1, salemy_screen2;
     private ImageView salemy_screen1_iv1, salemy_screen1_iv2;
     private WindowManager.LayoutParams windowParams;
-    private int statusIndex, sortIndex;
-    private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
-    private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
+    private Button btn_add;
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private MyClueAdapter adapter;
-    private int page = 1;
-    private boolean isPullDown = true;
+
     private Intent mIntent;
     private Bundle mBundle;
     private View mView;
-
-
-    private ArrayList<ClueListItem> listData = new ArrayList<>();
 
     private Handler mHandler = new Handler() {
         @Override
@@ -122,12 +122,13 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
         lv_list.setEmptyView(emptyView);
+        /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), ClueDetailActivity.class);
-                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
+                mIntent = new Intent();
+                mIntent.setClass(getActivity(), ClueDetailActivity.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
             }
@@ -137,6 +138,9 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
     }
 
+    /**
+     * 绑定适配器
+     * */
     private void setAdapter(){
 
         if(null == adapter){
@@ -145,10 +149,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         }else{
             adapter.notifyDataSetChanged();
         }
-
     }
-
-
 
     private void setFilterData() {
         for (int i = 0; i < sort.length; i++) {
@@ -170,7 +171,6 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             //新建
             case R.id.btn_add:
                 mBundle = new Bundle();
-//                mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
                 app.startActivityForResult(getActivity(), ClueAddActivity.class, app.ENTER_TYPE_RIGHT,
                         getActivity().RESULT_FIRST_USER, mBundle);
                 break;
@@ -274,13 +274,12 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
 
         switch (resultCode) {
 
-            //新建小锁回调 线索详细 删除成功刷新列表
+            //新建 删除 编辑,回调函数
             case ExtraAndResult.REQUEST_CODE:
                 isPullDown = true;
                 page = 1;
                 getData();
                 break;
-
         }
     }
 }

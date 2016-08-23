@@ -58,29 +58,30 @@ import retrofit.client.Response;
  */
 public class TeamClueFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
+    private int statusIndex, sortIndex;
+    private int page = 1;
+    private boolean isOk = true;
+    private boolean isPullDown = true, isKind;
+    private String xPath = "", userId = "";
     private String[] status = {"全部状态", "未处理", "已处理", "关闭"};
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
+    private ArrayList<ClueListItem> listData = new ArrayList<>();
+    private List<Department> mDeptSource;  //部门和用户集合
+    private List<Department> newDeptSource = new ArrayList<>();//我的部门
+    private List<SaleTeamScreen> data = new ArrayList<>();
+
     private LinearLayout screen1, screen2, screen3;
     private ImageView screen1_iv1, screen2_iv2, screen3_iv3;
     private TextView saleteam_screen1_commy;
     private WindowManager.LayoutParams windowParams;
-    private int statusIndex, sortIndex;
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
     private ScreenDeptPopupView deptPopupView;
-    private List<Department> mDeptSource;  //部门和用户集合
-    private List<Department> newDeptSource = new ArrayList<>();//我的部门
-    private List<SaleTeamScreen> data = new ArrayList<>();
-    private boolean isOk = true;
+
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private TeamClueAdapter adapter;
-    private int page = 1;
-    private boolean isPullDown = true, isKind;
-    private ArrayList<ClueListItem> listData = new ArrayList<>();
-    private String xPath = "", userId = "";
     private View mView;
-
 
     private Handler mHandler = new Handler() {
         @Override
@@ -143,6 +144,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
         lv_list.setEmptyView(emptyView);
+        /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
