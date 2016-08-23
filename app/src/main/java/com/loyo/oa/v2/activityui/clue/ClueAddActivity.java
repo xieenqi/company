@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -79,9 +80,6 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         ll_area.setOnClickListener(this);
         ll_source = (LinearLayout) findViewById(R.id.ll_source);
         ll_source.setOnClickListener(this);
-        dataKind = app.gson.fromJson(SharedUtil.get(app, ExtraAndResult.SOURCES_DATA),
-                new TypeToken<String[]>() {
-                }.getType());
     }
 
     @Override
@@ -138,6 +136,14 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
      * 线索来源选择
      */
     private void selectSource() {
+        dataKind = app.gson.fromJson(SharedUtil.get(app, ExtraAndResult.SOURCES_DATA),
+                new TypeToken<String[]>() {
+                }.getType());
+        if (!(dataKind.length > 0)) {
+            Toast("数据加载中...");
+            ClueCommon.getSourceData();//缓存线索来源数据
+            return;
+        }
         final PaymentPopView popViewKind = new PaymentPopView(this, dataKind, "线索来源");
         popViewKind.show();
         popViewKind.setCanceledOnTouchOutside(true);

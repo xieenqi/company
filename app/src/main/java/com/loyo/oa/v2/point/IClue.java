@@ -5,10 +5,9 @@ import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
 import java.util.Map;
 
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.GET;
-import retrofit.http.Multipart;
 import retrofit.http.POST;
-import retrofit.http.PartMap;
 
 /**
  * 线索相关接口 相关
@@ -29,7 +28,6 @@ public interface IClue {
      * @param body
      * @param callback
      */
-    @Multipart
     @POST("/salesleads")
-    void addClue(@PartMap Map<String, Object> body, Callback<Object> callback);
+    void addClue(@Body Map<String, Object> body, Callback<Object> callback);
 }
