@@ -218,6 +218,15 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
+                    //线索管理
+                    case CLUE_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), WfinstanceInfoActivity_.class);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
+                        startActivity(mIntent);
+                        break;
+
+
+
                 }
                 hideInputKeyboard(edt_search);
             }
