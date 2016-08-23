@@ -60,9 +60,9 @@ public class TeamClueAdapter extends BaseAdapter{
             holder = (Holder) convertView.getTag();
         }
 
-        holder.tv_name.setText(clueListItem.name);
-        holder.tv_customer.setText(clueListItem.name);
-        holder.tv_time.setText(clueListItem.name);
+        holder.tv_company_name.setText(clueListItem.companyName);
+        holder.tv_customer.setText(clueListItem.admin_name);
+        holder.tv_time.setText(""+clueListItem.ftime);
         holder.tv_name.setText(clueListItem.name);
 
         return convertView;
