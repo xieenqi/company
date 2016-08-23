@@ -43,7 +43,8 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
     private EditText et_name, et_company, et_phone, et_tel, et_address, et_remake;
     private LinearLayout ll_area, ll_source;
     private CustomerRegional regional = new CustomerRegional();
-    String[] dataKind;
+    private String[] dataKind;
+    private String clueId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void getIntentData() {
-//        orderId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
+        clueId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
 //        if (TextUtils.isEmpty(orderId)) {
 //            onBackPressed();
 //            Toast("参数不全");
@@ -67,7 +68,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-        tv_title_1.setText("新建线索");
+        tv_title_1.setText(TextUtils.isEmpty(clueId) ? "新建线索" : "编辑线索");
         img_title_left.setOnClickListener(this);
         img_title_right.setOnClickListener(this);
         et_name = (EditText) findViewById(R.id.et_name);
@@ -174,7 +175,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("新建线索：", response);
-                        app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
+                        app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
                     }
 
                     @Override

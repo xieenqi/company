@@ -53,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_4"
+            android:autoLink="all"
             android:background="@drawable/bg_other"
             android:gravity="center_vertical|left"
             android:maxWidth="@dimen/dimen_200"
@@ -60,10 +61,10 @@
             android:paddingBottom="@dimen/dimen_16"
             android:paddingLeft="@dimen/dimen_24"
             android:paddingRight="@dimen/dimen_16"
-            android:textIsSelectable="true"
             android:paddingTop="@dimen/dimen_16"
             android:text=""
             android:textColor="@color/text33"
+            android:textIsSelectable="true"
             android:textSize="@dimen/text_sp14"/>
 
         <RelativeLayout

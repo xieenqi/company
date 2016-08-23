@@ -152,7 +152,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-
                 intent.putExtra(ExtraAndResult.IS_TEAM, false);
                 intent.putExtra("id", /* 线索id */listData.get(position - 1).id);
                 intent.setClass(getActivity(), ClueDetailActivity.class);
