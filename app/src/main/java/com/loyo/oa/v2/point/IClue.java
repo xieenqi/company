@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.point;
 
+import android.telecom.Call;
+
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
 import java.util.HashMap;
@@ -30,6 +32,12 @@ public interface IClue {
     @GET("/salesleads/own")
     void getMyCluelist(@QueryMap HashMap<String,Object> map, Callback<ClueList> callback);
 
+    /**
+     * 团队线索列表
+     * */
+    @GET("/salesleads/team")
+    void getTeamClielist(@QueryMap HashMap<String,Object> mao, Callback<ClueList> callback);
+
 
     /** 新建线索 表单传输
      *
@@ -38,5 +46,6 @@ public interface IClue {
      */
     @POST("/salesleads")
     void addClue(@Body Map<String, Object> body, Callback<Object> callback);
+
 
 }
