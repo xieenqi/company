@@ -48,6 +48,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
     private String[] dataKind;
     private String clueId;
     private ClueDetail editData;
+    private boolean isEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +93,10 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
 
     private void editClue() {
         if (null == editData) {
+            isEdit = false;
             return;
         }
+        isEdit = true;
         ClueSales sales = editData.sales;
         et_name.setText(sales.name);
         et_company.setText(sales.companyName);
@@ -193,18 +196,34 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         map.put("address", et_address.getText().toString());
         map.put("remark", et_remake.getText().toString());
         LogUtil.d("线索创建参数：" + app.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                .addClue(map, new Callback<Object>() {
-                    @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("新建线索：", response);
-                        app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-                    }
+        if (!isEdit) {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+                    .addClue(map, new Callback<Object>() {
+                        @Override
+                        public void success(Object o, Response response) {
+                            HttpErrorCheck.checkResponse("新建线索：", response);
+                            app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                        }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
+        } else {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+                    .editClue(editData.activity.id, map, new Callback<Object>() {
+                        @Override
+                        public void success(Object o, Response response) {
+                            HttpErrorCheck.checkResponse("【编辑】线索：", response);
+                            onBackPressed();
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
+        }
     }
 }

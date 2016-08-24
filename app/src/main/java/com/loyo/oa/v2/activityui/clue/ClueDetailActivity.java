@@ -187,6 +187,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void success(ClueDetail detail, Response response) {
                         HttpErrorCheck.checkResponse("线索详情：", response);
+                        if (null == detail) {
+                            Toast("没有获取数据");
+                            onBackPressed();
+                            return;
+                        }
                         data = detail;
                         bindData();
                     }
