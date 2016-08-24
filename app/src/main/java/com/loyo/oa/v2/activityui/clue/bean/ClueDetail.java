@@ -1,12 +1,14 @@
 package com.loyo.oa.v2.activityui.clue.bean;
 
+import com.loyo.oa.v2.beans.BaseBean;
+
 import java.io.Serializable;
 
 /**
  * Created by EthanGong on 16/8/23.
  */
 
-public class ClueDetail implements Serializable {
+public class ClueDetail extends BaseBean {
     public ClueSales sales;
     public ClueActivity activity;
 
