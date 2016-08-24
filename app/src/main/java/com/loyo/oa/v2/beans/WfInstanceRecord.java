@@ -16,7 +16,7 @@ public class WfInstanceRecord extends BaseBeans implements Serializable{
     public boolean viewed;
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return status + "";
     }
 

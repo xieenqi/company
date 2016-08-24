@@ -44,7 +44,7 @@ public class BulletinViewer extends BaseBeans {
     }
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return null;
     }
 

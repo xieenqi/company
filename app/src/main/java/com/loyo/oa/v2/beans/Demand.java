@@ -137,7 +137,7 @@ public class Demand extends BaseBeans {
     }
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return "";
     }
 
