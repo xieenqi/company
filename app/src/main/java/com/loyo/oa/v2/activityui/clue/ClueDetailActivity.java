@@ -155,7 +155,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             ll_track.setVisibility(View.VISIBLE);
             tv_track_content.setText(data.data.activity.content);
             tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.remindAt + "") * 1000))
-                    + data.data.activity.contactName + "#" + data.data.activity.typeName);
+                    + "  " + data.data.activity.contactName + " # " + data.data.activity.typeName);
         }
 
         /* 分区3 */
@@ -341,6 +341,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         });
     }
 
+    /**
+     * 编辑线索 1 地区 2 线索来源
+     *
+     * @param function
+     */
     private void editAreaAndSource(int function) {
         HashMap<String, Object> map = new HashMap<>();
         if (1 == function)
@@ -360,5 +365,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         HttpErrorCheck.checkError(error);
                     }
                 });
+    }
+
+    private void deleteClue() {
+
     }
 }

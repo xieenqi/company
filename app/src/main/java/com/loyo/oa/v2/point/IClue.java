@@ -61,6 +61,6 @@ public interface IClue {
     /**
      * 编辑 回款记录
      */
-    @PUT("/saleslead/source/{id}")
+    @PUT("/salesleads/{id}")
     void editClue(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Object> callback);
 }
