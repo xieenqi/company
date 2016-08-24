@@ -156,7 +156,7 @@ public class ProjectMember extends BaseBeans {
     }
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return projectId + "";
     }
 

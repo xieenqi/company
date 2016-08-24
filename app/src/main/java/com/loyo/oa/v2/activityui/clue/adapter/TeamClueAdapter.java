@@ -67,7 +67,7 @@ public class TeamClueAdapter extends BaseAdapter{
 
         holder.tv_name.setText(clueListItem.name);
         holder.tv_company_name.setText(clueListItem.companyName);
-        holder.tv_customer.setText(clueListItem.name);
+        holder.tv_customer.setText(clueListItem.responsorName);
         if(clueListItem.lastActAt != 0){
             holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd HH:mm"));
         }

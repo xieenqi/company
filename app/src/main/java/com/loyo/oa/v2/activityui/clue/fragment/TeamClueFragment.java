@@ -191,7 +191,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 intent.putExtra(ExtraAndResult.IS_TEAM, false);
-                intent.putExtra("id", /* 线索id */listData.get(position - 1).id);
+                intent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */listData.get(position - 1).id);
                 intent.setClass(getActivity(), ClueDetailActivity.class);
                 startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -354,7 +354,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         map.put("userId",userId);
         LogUtil.dee("发送数据:"+ MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IClue.class).getTeamClielist(map, new Callback<ClueList>() {
+                create(IClue.class).getTeamCluelist(map, new Callback<ClueList>() {
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
