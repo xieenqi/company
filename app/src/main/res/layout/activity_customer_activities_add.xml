@@ -71,6 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:gravity="left|top"
                     android:hint="请填写跟进内容"
                     android:minHeight="200dp"

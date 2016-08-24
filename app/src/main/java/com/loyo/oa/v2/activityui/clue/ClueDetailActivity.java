@@ -52,7 +52,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     ViewGroup section2_visit      /* 跟进动态 */,
             ll_track /* 最近跟进详情 */;
 
-    TextView visit_times          /* 跟进次数 */,
+    TextView
             tv_track_content   /* 最近跟进内容 */,
             tv_track_time   /* 最近跟进元信息 */;
 
@@ -74,7 +74,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             creator_name     /* 创建人 */,
             create_time      /* 创建时间 */,
             update_time      /* 更新时间 */,
-            tv_address;
+            tv_address, tv_visit_number;
     private LinearLayout ll_status;
     /* Data */
     String clueId;
@@ -91,7 +91,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         setTitle("线索详情");
         setupViews();
         getIntenData();
-        app = (MainApp) getApplicationContext();
     }
 
     @Override
@@ -117,7 +116,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         section2_visit = (ViewGroup) findViewById(R.id.ll_section2_visit);
         ll_track = (ViewGroup) findViewById(R.id.ll_track);
 
-        visit_times = (TextView) findViewById(R.id.tv_visit_times);
+        tv_visit_number = (TextView) findViewById(R.id.tv_visit_number);
         tv_track_content = (TextView) findViewById(R.id.tv_track_content);
         tv_track_time = (TextView) findViewById(R.id.tv_track_time);
 
@@ -157,8 +156,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         tv_status.setText("" + sales.getStatus());
 
         /* 分区2 */
-        // section2_visit
-        // visit_times
         if (data.data.activity == null) {
             ll_track.setVisibility(View.GONE);
         } else {
@@ -175,7 +172,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         tv_address.setText(sales.address);
         clue_source.setText(sales.source);
         clue_note.setText(sales.remark);
-
+        tv_visit_number.setText("(" + sales.saleActivityCount + ")");
         /* 分区4 */
         responsible_name.setText(sales.responsorName);
         creator_name.setText(sales.creatorName);
@@ -268,7 +265,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     private void functionButton() {
         ActionSheetDialog dialog = new ActionSheetDialog(ClueDetailActivity.this).builder();
         if (true /* 是否有权限转移客户 */) {
-            dialog.addSheetItem("转移客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
                     app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, 0x01, new Bundle());
@@ -458,8 +455,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         switch (requestCode) {
             case SelectDetUserActivity2.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
-//                newUser = u;
-//                tv_responsiblePerson.setText(newUser.getName());
                 transferClue(u.getId());
                 break;
         }

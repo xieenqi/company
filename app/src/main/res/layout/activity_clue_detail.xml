@@ -145,7 +145,7 @@
                     android:text="跟进动态"/>
 
                 <TextView
-                    android:id="@+id/tv_visit_times"
+                    android:id="@+id/tv_visit_number"
                     style="@style/text_item1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

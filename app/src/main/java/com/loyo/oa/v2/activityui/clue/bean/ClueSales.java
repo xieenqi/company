@@ -28,6 +28,7 @@ public class ClueSales implements Serializable {
     public long createAt;
     public long updateAt;
     public long lastActAt;
+    public int saleActivityCount;
 
     public String getRegion() {
         if (region == null) {
