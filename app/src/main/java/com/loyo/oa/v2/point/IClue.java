@@ -9,7 +9,6 @@ import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.http.Body;
-import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -68,6 +67,13 @@ public interface IClue {
     /**
      * 删除 线索/salesleads/batch
      */
-    @DELETE("/salesleads/batch")
+    @PUT("/salesleads/batch/delete")
     void deleteClue(@Body HashMap<String, Object> map, Callback<Object> callback);
+
+
+    /**
+     * 转移 线索/salesleads/batch/transfer
+     */
+    @PUT("/salesleads/batch/transfer")
+    void transferClue(@Body HashMap<String, Object> map, Callback<Object> callback);
 }

@@ -13,8 +13,10 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
+import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
@@ -278,7 +280,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             dialog.addSheetItem("转移给他人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-
+                    SelectDetUserActivity2.startThisForOnly(ClueDetailActivity.this, null);
+                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }
             });
         }
@@ -421,5 +424,44 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         HttpErrorCheck.checkError(error);
                     }
                 });
+    }
+
+    /**
+     * 转移 线索
+     */
+    private void transferClue(String responsorId) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("ids", clueId);
+        map.put("responsorId", responsorId);
+        LogUtil.d(app.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+                .transferClue(map, new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("【转 移】线索：", response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            case SelectDetUserActivity2.REQUEST_ONLY:
+                NewUser u = (NewUser) data.getSerializableExtra("data");
+//                newUser = u;
+//                tv_responsiblePerson.setText(newUser.getName());
+                transferClue(u.getId());
+                break;
+        }
     }
 }
