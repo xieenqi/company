@@ -104,7 +104,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:textColor="@color/text99"
-                android:text="2016.08.10"
+                android:text="--"
                 />
         </LinearLayout>
     </LinearLayout>

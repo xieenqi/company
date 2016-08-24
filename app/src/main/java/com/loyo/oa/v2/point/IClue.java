@@ -3,7 +3,6 @@ package com.loyo.oa.v2.point;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
-import com.loyo.oa.v2.beans.BaseBean;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,21 +24,21 @@ public interface IClue {
     /**
      * 获取 线索来源
      *
-     * @param callback  /saleslead/source
+     * @param callback /saleslead/source
      */
     @GET("/saleslead/source")
     void getSource(Callback<SourcesData> callback);
 
     /**
      * 我的线索列表
-     */
-    @GET("/salesleads/own")
-    void getMyCluelist(@QueryMap HashMap<String, Object> map, Callback<ClueList> callback);
+     * */
+    @GET("/salesleads/mobile")
+    void getMyCluelist(@QueryMap HashMap<String,Object> map, Callback<ClueList> callback);
 
     /**
      * 团队线索列表
      */
-    @GET("/salesleads/team")
+    @GET("/salesleads/mobile/team")
     void getTeamClielist(@QueryMap HashMap<String, Object> mao, Callback<ClueList> callback);
 
 
@@ -57,7 +56,7 @@ public interface IClue {
      * 获取 线索详情
      */
     @GET("/salesleads/mobile/{id}")
-    void getClueDetail(@Path("id") String id, Callback<BaseBean<ClueDetail>> callback);
+    void getClueDetail(@Path("id") String id, Callback<ClueDetail> callback);
 
     /**
      * 编辑 回款记录

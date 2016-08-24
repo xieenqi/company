@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/activity_bg"
-    android:clipToPadding="true"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_bg"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
 
     <!-- Navigation Bar -->
     <include layout="@layout/include_common_title_edit"/>
 
     <!-- 列表 -->
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/scrollView2"
         android:background="@color/white"
-        android:scrollbars="none" >
+        android:scrollbars="none">
 
         <!-- 列表内容 -->
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <!-- 分区一：姓名，公司名称，线索状态 -->
             <LinearLayout
@@ -115,11 +115,12 @@
                         android:hint=""
                         android:textColor="@color/text99"
                         />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow" />
+                        android:src="@drawable/right_arrow"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -136,8 +137,8 @@
                 <RelativeLayout
                     android:id="@+id/ll_section2_visit"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:layout_height="@dimen/dimen_48">
+                    android:layout_height="@dimen/dimen_48"
+                    android:layout_marginLeft="@dimen/margin_other_view">
 
                     <TextView
                         android:id="@+id/tv_visit_title"
@@ -174,18 +175,18 @@
                     android:id="@+id/ll_section2_latest_visit"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_10"
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginRight="@dimen/margin_other_view"
                     android:layout_marginTop="@dimen/dimen_10"
-                    android:layout_marginBottom="@dimen/dimen_10"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_section2_visit_desc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text33"
                         android:text="hahahhahh"
+                        android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp16"/>
 
                     <LinearLayout
@@ -218,8 +219,8 @@
                 <!-- 分区三 -> 手机 -->
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:layout_height="@dimen/dimen_48">
+                    android:layout_height="@dimen/dimen_48"
+                    android:layout_marginLeft="@dimen/margin_other_view">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -370,11 +371,44 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow" />
+                        android:src="@drawable/right_arrow"/>
                 </LinearLayout>
 
                 <include layout="@layout/include_solid_line_left"/>
 
+
+                <!-- 分区三 -> 地区 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:layout_marginRight="@dimen/margin_other_view"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/view_h_title"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:minWidth="@dimen/dimen_60"
+                        android:text="详细地址"/>
+
+                    <TextView
+                        android:id="@+id/tv_address"
+                        style="@style/text_item2"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:hint=""
+                        android:singleLine="false"
+                        android:textColor="@color/text99"
+                        />
+
+                </LinearLayout>
+
+                <include layout="@layout/include_solid_line_left"/>
                 <!-- 分区三 -> 线索来源 -->
                 <LinearLayout
                     android:id="@+id/layout_clue_source"
@@ -406,7 +440,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow" />
+                        android:src="@drawable/right_arrow"/>
                 </LinearLayout>
 
                 <include layout="@layout/include_solid_line_left"/>
@@ -436,6 +470,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
+                        android:singleLine="false"
                         android:textColor="@color/text99"
                         />
                 </LinearLayout>
@@ -448,10 +483,10 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10"
                 android:layout_marginLeft="@dimen/dimen_14"
                 android:layout_marginRight="@dimen/dimen_14"
                 android:layout_marginTop="@dimen/dimen_10"
-                android:layout_marginBottom="@dimen/dimen_10"
                 android:orientation="vertical">
 
                 <!-- 分区四 -> 负责人 -->

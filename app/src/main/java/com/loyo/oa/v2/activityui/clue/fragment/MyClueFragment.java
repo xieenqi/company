@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
@@ -38,8 +39,10 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -50,9 +53,12 @@ import retrofit.client.Response;
  */
 public class MyClueFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    private int page = 1;
-    private int statusIndex, sortIndex;
+    private int page = 1;     /*翻页页数*/
+    private int statusIndex;  /*线索状态*/
+    private int sortIndex;    /*线索排序*/
     private boolean isPullDown = true;
+    private String field = "";
+    private String order = "";
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
     private ArrayList<ClueListItem> listData = new ArrayList<>();
@@ -75,18 +81,50 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+
+                 /*状态选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                     isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
                     page = 1;
-                    LogUtil.dee("statusIndex:"+statusIndex);
+                    LogUtil.dee("statusIndex:" + statusIndex);
                     break;
 
+                /*排序选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
                     isPullDown = true;
                     sortIndex = (int) msg.getData().get("index");
                     page = 1;
-                    LogUtil.dee("sortIndex:"+sortIndex);
+                    LogUtil.dee("sortIndex:" + sortIndex);
+
+                    switch (sortIndex) {
+
+                        /*跟进时间 倒序*/
+                        case 0:
+                            field = "lastActAt";
+                            order = "desc";
+                            break;
+
+                        /*跟进时间 顺序*/
+                        case 1:
+                            field = "lastActAt";
+                            order = "asc";
+                            break;
+
+                        /*创建时间 倒序*/
+                        case 2:
+                            field = "createAt";
+                            order = "desc";
+                            break;
+
+                        /*创建时间 顺序*/
+                        case 3:
+                            field = "createAt";
+                            order = "asc";
+                            break;
+
+                    }
+
                     break;
             }
             getData();
@@ -125,29 +163,17 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-                mIntent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */listData.get(position-1).id);
+                mIntent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */listData.get(position - 1).id);
                 mIntent.setClass(getActivity(), ClueDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
             }
         });
-        setAdapter();
+        adapter = new MyClueAdapter(getActivity());
+        lv_list.setAdapter(adapter);
         getData();
         Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
-    }
-
-    /**
-     * 绑定适配器
-     * */
-    private void setAdapter(){
-
-        if(null == adapter){
-            adapter = new MyClueAdapter(getActivity(),listData);
-            lv_list.setAdapter(adapter);
-        }else{
-            adapter.notifyDataSetChanged();
-        }
     }
 
     private void setFilterData() {
@@ -231,18 +257,26 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-/*      map.put("kw", "1");
-        map.put("status", 0);*/
-        LogUtil.dee("发送数据:"+ MainApp.gson.toJson(map));
+        map.put("field", field);
+        map.put("order", order);
+        map.put("status", statusIndex);
+        LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
                 HttpErrorCheck.checkResponse("我的线索列表：", response);
-                listData.clear();
-                listData.addAll(clueList.data.records);
-                setAdapter();
+                try {
+                    if (!isPullDown) {
+                        listData.addAll(clueList.data.records);
+                    } else {
+                        listData = clueList.data.records;
+                    }
+                    adapter.setData(listData);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

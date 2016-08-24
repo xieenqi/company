@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
+import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
@@ -45,6 +47,8 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
     private CustomerRegional regional = new CustomerRegional();
     private String[] dataKind;
     private String clueId;
+    private ClueDetail editData;
+    private boolean isEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
 
     private void getIntentData() {
         clueId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
+        editData = (ClueDetail) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
 //        if (TextUtils.isEmpty(orderId)) {
 //            onBackPressed();
 //            Toast("参数不全");
@@ -83,6 +88,27 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         ll_area.setOnClickListener(this);
         ll_source = (LinearLayout) findViewById(R.id.ll_source);
         ll_source.setOnClickListener(this);
+        editClue();
+    }
+
+    private void editClue() {
+        if (null == editData) {
+            isEdit = false;
+            return;
+        }
+        isEdit = true;
+        ClueSales sales = editData.data.sales;
+        et_name.setText(sales.name);
+        et_company.setText(sales.companyName);
+        et_phone.setText(sales.cellphone);
+        et_tel.setText(sales.tel);
+        et_address.setText(sales.address);
+        et_remake.setText(sales.remark);
+        tv_area.setText(sales.getRegion());
+        regional.province = sales.region.province;
+        regional.city = sales.region.city;
+        regional.county = sales.region.county;
+        tv_source.setText(sales.source);
     }
 
     @Override
@@ -166,22 +192,39 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         map.put("companyName", et_company.getText().toString());
         map.put("cellphone", et_phone.getText().toString());
         map.put("tel", et_tel.getText().toString());
-        map.put("regin", regional);
+        map.put("region", regional);
         map.put("address", et_address.getText().toString());
         map.put("remark", et_remake.getText().toString());
+        map.put("source", tv_source.getText().toString());
         LogUtil.d("线索创建参数：" + app.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                .addClue(map, new Callback<Object>() {
-                    @Override
-                    public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("新建线索：", response);
-                        app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-                    }
+        if (!isEdit) {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+                    .addClue(map, new Callback<Object>() {
+                        @Override
+                        public void success(Object o, Response response) {
+                            HttpErrorCheck.checkResponse("新建线索：", response);
+                            app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                        }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
+        } else {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+                    .editClue(clueId, map, new Callback<Object>() {
+                        @Override
+                        public void success(Object o, Response response) {
+                            HttpErrorCheck.checkResponse("【编辑】线索：", response);
+                            onBackPressed();
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
+        }
     }
 }
