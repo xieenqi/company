@@ -27,6 +27,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -106,11 +107,9 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
             BaseFragment fragment = null;
             if (i == 0) {
                 Bundle b = new Bundle();
-//                b.putSerializable("stage", mSaleStages);
                 fragment = (BaseFragment) Fragment.instantiate(this, MyClueFragment.class.getName(), b);
             } else {
                 Bundle b = new Bundle();
-//                b.putSerializable("stage", mSaleStages);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamClueFragment.class.getName(), b);
             }
             fragments.add(fragment);
@@ -137,9 +136,20 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
 
             /*搜索*/
             case R.id.img_title_search_right:
+                int type;
+                if (Utils.hasRights()) {
+                    type = mIndex + 1;
+                } else {
+                    if (mIndex == 0) {
+                        type = 1;
+                    } else {
+                        type = 3;
+                    }
+                }
+                LogUtil.dee("type:"+type);
                 Bundle b = new Bundle();
-                b.putInt("from", BaseActivity.CLUE_MANAGE);
-                app.startActivity(this,ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                b.putInt(ExtraAndResult.EXTRA_TYPE,type);
+                app.startActivity(this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }

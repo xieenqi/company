@@ -39,7 +39,7 @@ public interface IClue {
     /**
      * 团队线索列表
      */
-    @GET("/salesleads/team")
+    @GET("/salesleads/mobile/team")
     void getTeamClielist(@QueryMap HashMap<String, Object> mao, Callback<ClueList> callback);
 
 

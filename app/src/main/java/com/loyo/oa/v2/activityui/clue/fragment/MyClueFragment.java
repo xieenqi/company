@@ -54,6 +54,8 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
     private int statusIndex;  /*线索状态*/
     private int sortIndex;    /*线索排序*/
     private boolean isPullDown = true;
+    private String field  = "";
+    private String order  = "";
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
     private ArrayList<ClueListItem> listData = new ArrayList<>();
@@ -76,6 +78,8 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+
+                 /*状态选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                     isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
@@ -83,11 +87,41 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                     LogUtil.dee("statusIndex:"+statusIndex);
                     break;
 
+                /*排序选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
                     isPullDown = true;
                     sortIndex = (int) msg.getData().get("index");
                     page = 1;
                     LogUtil.dee("sortIndex:"+sortIndex);
+
+                    switch (sortIndex){
+
+                        /*跟进时间 倒序*/
+                        case 0:
+                            field = "lastActAt";
+                            order = "desc";
+                            break;
+
+                        /*跟进时间 顺序*/
+                        case 1:
+                            field = "lastActAt";
+                            order = "asc";
+                            break;
+
+                        /*创建时间 倒序*/
+                        case 2:
+                            field = "createAt";
+                            order = "desc";
+                            break;
+
+                        /*创建时间 顺序*/
+                        case 3:
+                            field = "createAt";
+                            order = "asc";
+                            break;
+
+                    }
+
                     break;
             }
             getData();
@@ -220,7 +254,8 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("field",sortIndex);
+        map.put("field",field);
+        map.put("order",order);
         map.put("status",statusIndex);
         LogUtil.dee("发送数据:"+ MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).

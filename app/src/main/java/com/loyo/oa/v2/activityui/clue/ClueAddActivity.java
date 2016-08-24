@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
@@ -45,6 +46,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
     private CustomerRegional regional = new CustomerRegional();
     private String[] dataKind;
     private String clueId;
+    private ClueDetail editData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
 
     private void getIntentData() {
         clueId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
+        editData = (ClueDetail) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_ADD);
 //        if (TextUtils.isEmpty(orderId)) {
 //            onBackPressed();
 //            Toast("参数不全");

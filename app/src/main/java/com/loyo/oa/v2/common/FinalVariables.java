@@ -149,10 +149,13 @@ public final class FinalVariables {
      **/
     public static final String SEARCH_CUSTOMERS_PUBLIC = Config_project.API_URL_CUSTOMER() + "/customer/sharedsearch";
     /**
-     * 线索查询
+     * 我的线索查询
      * */
-    public static final String SERACH_CLUE_PUBLIC = Config_project.API_URL_CUSTOMER() + "/salesleads/mobile";
-
+    public static final String SERACH_CLUE_MY = Config_project.API_URL_CUSTOMER() + "/salesleads/mobile";
+    /**
+     * 团队线索查询
+     * */
+    public static final String SERACH_CLUE_TEAM = Config_project.API_URL_CUSTOMER() + "/salesleads/mobile/team";
 
     /**
      * 登陆

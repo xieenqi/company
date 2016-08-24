@@ -64,10 +64,8 @@ public class MyClueAdapter extends BaseAdapter{
 
         holder.tv_name.setText(clueListItem.name);
         holder.tv_company_name.setText(clueListItem.companyName);
-        if(clueListItem.lastActAt == 0){
-            holder.tv_time.setText("--");
-        }else{
-            holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd"));
+        if(clueListItem.lastActAt != 0){
+            holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd HH:mm"));
         }
 
         return convertView;

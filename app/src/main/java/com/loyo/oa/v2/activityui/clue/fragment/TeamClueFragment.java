@@ -62,7 +62,10 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     private int page = 1;
     private boolean isOk = true;
     private boolean isPullDown = true, isKind;
-    private String xPath = "", userId = "";
+    private String xPath = "";
+    private String userId = "";
+    private String field  = "";
+    private String order  = "";
     private String[] status = {"全部状态", "未处理", "已处理", "关闭"};
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
     private ArrayList<ClueListItem> listData = new ArrayList<>();
@@ -87,18 +90,53 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+
+                /*状态选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                     isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
                     page = 1;
                     LogUtil.dee("statusIndex:"+statusIndex);
                     break;
+
+                /*排序选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
                     isPullDown = true;
                     sortIndex = (int) msg.getData().get("index");
                     page = 1;
-                    LogUtil.dee("sortIndex:"+sortIndex);
+
+                    switch (sortIndex){
+
+                        /*跟进时间 倒序*/
+                        case 0:
+                            field = "lastActAt";
+                            order = "desc";
+                            break;
+
+                        /*跟进时间 顺序*/
+                        case 1:
+                            field = "lastActAt";
+                            order = "asc";
+                            break;
+
+                        /*创建时间 倒序*/
+                        case 2:
+                            field = "createAt";
+                            order = "desc";
+                            break;
+
+                        /*创建时间 顺序*/
+                        case 3:
+                            field = "createAt";
+                            order = "asc";
+                            break;
+
+                    }
+
+
                     break;
+
+                /*部门选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG1:
                     isPullDown = true;
                     SaleTeamScreen saleTeamScreen = (SaleTeamScreen) msg.getData().getSerializable("data");
@@ -309,11 +347,14 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("field",sortIndex);
         map.put("status",statusIndex);
+        map.put("field",field);
+        map.put("order",order);
+        map.put("xpath",xPath);
+        map.put("userId",userId);
         LogUtil.dee("发送数据:"+ MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
+                create(IClue.class).getTeamClielist(map, new Callback<ClueList>() {
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
