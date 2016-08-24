@@ -20,6 +20,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.point.IClue;
@@ -300,7 +301,21 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    deleteClue();
+                    final GeneralPopView dailog = showGeneralDialog(true, true, "线索删除过后不可恢复，\n你确定要删除？");
+                    dailog.setSureOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteClue();
+                            dailog.dismisDialog();
+                        }
+                    });
+                    dailog.setCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dailog.dismisDialog();
+                        }
+                    });
+
                 }
             });
         }
@@ -436,6 +451,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【转 移】线索：", response);
+//                        getClueDetail();
+                        onBackPressed();
                     }
 
                     @Override
@@ -454,8 +471,21 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
         switch (requestCode) {
             case SelectDetUserActivity2.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
-                transferClue(u.getId());
+                final NewUser u = (NewUser) data.getSerializableExtra("data");
+                final GeneralPopView dailog = showGeneralDialog(true, true, "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
+                dailog.setSureOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        transferClue(u.getId());
+                        dailog.dismisDialog();
+                    }
+                });
+                dailog.setCancelOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dailog.dismisDialog();
+                    }
+                });
                 break;
         }
     }
