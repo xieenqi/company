@@ -241,7 +241,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/layout_mobile_send_sms"
+                            android:id="@+id/ll_sms"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
@@ -264,7 +264,7 @@
                             />
 
                         <LinearLayout
-                            android:id="@+id/layout_mobile_call"
+                            android:id="@+id/ll_call"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
@@ -310,7 +310,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/layout_wiretel_call"
+                        android:id="@+id/ll_wiretel_call"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"

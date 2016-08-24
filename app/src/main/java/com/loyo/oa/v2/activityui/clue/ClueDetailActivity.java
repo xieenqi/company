@@ -26,6 +26,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -54,9 +55,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             tv_track_time   /* 最近跟进元信息 */;
 
     /*  分区3 */
-    ViewGroup layout_mobile_send_sms  /* 手机发短信 */,
-            layout_mobile_call        /* 手机拨电话 */,
-            layout_wiretel_call       /* 座机拨电话 */,
+    ViewGroup ll_sms  /* 手机发短信 */,
+            ll_call        /* 手机拨电话 */,
+            ll_wiretel_call       /* 座机拨电话 */,
             layout_clue_region        /* 地区弹出列表 */,
             layout_clue_source        /* 线索来源弹出列表 */;
 
@@ -119,9 +120,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         tv_track_time = (TextView) findViewById(R.id.tv_track_time);
 
         /* 分区3 */
-        layout_mobile_send_sms = (ViewGroup) findViewById(R.id.layout_mobile_send_sms);
-        layout_mobile_call = (ViewGroup) findViewById(R.id.layout_mobile_call);
-        layout_wiretel_call = (ViewGroup) findViewById(R.id.layout_wiretel_call);
+        ll_sms = (ViewGroup) findViewById(R.id.ll_sms);
+        ll_sms.setOnClickListener(this);
+        ll_call = (ViewGroup) findViewById(R.id.ll_call);
+        ll_call.setOnClickListener(this);
+        ll_wiretel_call = (ViewGroup) findViewById(R.id.ll_wiretel_call);
+        ll_wiretel_call.setOnClickListener(this);
         layout_clue_region = (ViewGroup) findViewById(R.id.layout_clue_region);
         layout_clue_source = (ViewGroup) findViewById(R.id.layout_clue_source);
         layout_clue_region.setOnClickListener(this); // 选择地区
@@ -243,7 +247,15 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             case R.id.ll_status:
                 editClueStatus();
                 break;
-
+            case R.id.ll_sms:
+                Utils.sendSms(this, data.data.sales.cellphone);
+                break;
+            case R.id.ll_call:
+                Utils.call(this, data.data.sales.cellphone);
+                break;
+            case R.id.ll_wiretel_call:
+                Utils.call(this, data.data.sales.tel);
+                break;
         }
     }
 
