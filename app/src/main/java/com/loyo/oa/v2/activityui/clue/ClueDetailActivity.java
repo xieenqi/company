@@ -111,6 +111,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         /* 分区2 */
         section2_visit = (ViewGroup) findViewById(R.id.ll_section2_visit);
         ll_track = (ViewGroup) findViewById(R.id.ll_track);
+        section2_visit.setOnClickListener(this); // 选择来源
 
         visit_times = (TextView) findViewById(R.id.tv_visit_times);
         tv_track_content = (TextView) findViewById(R.id.tv_track_content);
@@ -235,11 +236,31 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             case R.id.layout_clue_source:
                 selectSource();
                 break;
+            /* 跟进列表 */
+            case R.id.ll_section2_visit:
+                clueActivity();
+                break;
 
             default:
                 break;
 
         }
+    }
+
+    /**
+     * 跳转跟进列表
+     */
+    private void clueActivity() {
+        Intent intent = new Intent();
+        intent.putExtra(ExtraAndResult.EXTRA_ID, data.data.sales.id);
+        String name = data.data.sales.name;
+        if (TextUtils.isEmpty(name)){
+            name = "";
+        }
+        intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
+        intent.setClass(this, ClueFollowupActivity.class);
+        startActivityForResult(intent, this.RESULT_FIRST_USER);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
 

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.clue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,8 +14,10 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -45,7 +48,8 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
     SaleActivitiesAdapter listAdapter;
     ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
     private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
-    Customer customer;
+    String clueId;
+    String name;
     SaleActivity mSaleActivity;
     private boolean isChanged;
     private boolean isTopAdd = true;
@@ -55,25 +59,32 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clue_followup);
-        if (getIntent() != null) {
-            Bundle bundle = getIntent().getExtras();
-            customer = (Customer) bundle.getSerializable(Customer.class.getName());
-            isMyUser = bundle.getBoolean("isMyUser");
-        }
+        getIntenData();
         setTitle("跟进动态");
         initUI();
         getData();
+    }
+
+    private void getIntenData() {
+        Intent intent = getIntent();
+        clueId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
+        name = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+        if (TextUtils.isEmpty(clueId)) {
+            onBackPressed();
+            Toast("参数不全");
+        }
     }
 
     /**
      * 获取数据
      */
     private void getData() {
-        if (customer != null) {
+        if (clueId != null) {
             HashMap<String, Object> map = new HashMap<>();
+            map.put("salesId", clueId);
             map.put("pageIndex", paginationX.getPageIndex());
             map.put("pageSize", isTopAdd ? lstData_saleActivity_current.size() >= 20 ? lstData_saleActivity_current.size() : 20 : 20);
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivity(customer.getId(), map, new RCallback<PaginationX<SaleActivity>>() {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getSaleactivity(map, new RCallback<PaginationX<SaleActivity>>() {
                 @Override
                 public void success(final PaginationX<SaleActivity> paginationXes, final Response response) {
                     HttpErrorCheck.checkResponse("跟进动态数据:", response);
@@ -103,9 +114,10 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
-        if (!isMyUser) {
-            layout_add.setVisibility(View.GONE);
-        }
+        // TODO:
+//        if (!isMyUser) {
+//            layout_add.setVisibility(View.GONE);
+//        }
         layout_add.setOnTouchListener(Global.GetTouch());
         layout_add.setOnClickListener(this);
         lv_saleActivity = (PullToRefreshListView) findViewById(R.id.lv_saleActivity);
@@ -119,9 +131,11 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.layout_add:
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(Customer.class.getName(), customer);
+                bundle.putString(ExtraAndResult.EXTRA_ID, clueId);
+                bundle.putString(ExtraAndResult.EXTRA_NAME, name);
                 // TODO:
-                //app.startActivityForResult(this, SaleActivitiesAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                //app.startActivityForResult(this, ClueFollowupCreateActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                app.startActivityForResult(this, ClueFollowupCreateActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
             default:
 

@@ -3,6 +3,8 @@ package com.loyo.oa.v2.point;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.SaleActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +15,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 /**
@@ -63,4 +66,22 @@ public interface IClue {
      */
     @PUT("/salesleads/{id}")
     void editClue(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Object> callback);
+
+    /**
+     * 获取跟进
+     * @param map
+     * @param cb
+     */
+
+    @GET("/saleactivity/saleslead")
+    void getSaleactivity(@QueryMap HashMap<String, Object> map, retrofit.Callback<PaginationX<SaleActivity>> cb);
+
+
+    /**
+     * 新建跟进
+     * @param map
+     * @param cb
+     */
+    @POST("/saleactivity/sealslead")
+    void addSaleactivity(@Body HashMap<String, Object> map, Callback<SaleActivity> cb);
 }
