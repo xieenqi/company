@@ -7,9 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
+import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
+import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -19,9 +22,12 @@ import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -40,11 +46,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     /*  分区2 */
     ViewGroup section2_visit      /* 跟进动态 */,
-            section2_latest_visit /* 最近跟进详情 */;
+            ll_track /* 最近跟进详情 */;
 
     TextView visit_times          /* 跟进次数 */,
-            section2_visit_desc   /* 最近跟进内容 */,
-            section2_visit_meta   /* 最近跟进元信息 */;
+            tv_track_content   /* 最近跟进内容 */,
+            tv_track_time   /* 最近跟进元信息 */;
 
     /*  分区3 */
     ViewGroup layout_mobile_send_sms  /* 手机发短信 */,
@@ -70,8 +76,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     String clueId;
     ClueDetail data;
 
-    /* Ref */
-    protected MainApp app;
+    private CustomerRegional regional = new CustomerRegional();
 
 
     @Override
@@ -105,11 +110,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
         /* 分区2 */
         section2_visit = (ViewGroup) findViewById(R.id.ll_section2_visit);
-        section2_latest_visit = (ViewGroup) findViewById(R.id.ll_section2_latest_visit);
+        ll_track = (ViewGroup) findViewById(R.id.ll_track);
 
         visit_times = (TextView) findViewById(R.id.tv_visit_times);
-        section2_visit_desc = (TextView) findViewById(R.id.tv_section2_visit_desc);
-        section2_visit_meta = (TextView) findViewById(R.id.tv_section2_visit_meta);
+        tv_track_content = (TextView) findViewById(R.id.tv_track_content);
+        tv_track_time = (TextView) findViewById(R.id.tv_track_time);
 
         /* 分区3 */
         layout_mobile_send_sms = (ViewGroup) findViewById(R.id.layout_mobile_send_sms);
@@ -145,11 +150,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         // section2_visit
         // visit_times
         if (data.data.activity == null) {
-            section2_latest_visit.setVisibility(View.GONE);
+            ll_track.setVisibility(View.GONE);
         } else {
-            section2_latest_visit.setVisibility(View.VISIBLE);
-            section2_visit_desc.setText(data.data.activity.content);
-            //section2_visit_meta
+            ll_track.setVisibility(View.VISIBLE);
+            tv_track_content.setText(data.data.activity.content);
+            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.remindAt + "") * 1000))
+                    + "  " + data.data.activity.contactName + " # " + data.data.activity.typeName);
         }
 
         /* 分区3 */
@@ -265,7 +271,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void onClick(int which) {
                     Bundle mBundle = new Bundle();
-                    mBundle.putString(ExtraAndResult.EXTRA_ID, "  ");
+                    mBundle.putString(ExtraAndResult.EXTRA_ID, clueId);
                     mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data);
                     app.startActivityForResult(ClueDetailActivity.this, ClueAddActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
@@ -301,10 +307,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             public void onClick(final View view) {
                 String[] cityArr = selectCityView.getResult();
                 clue_region.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2]);
-//                regional.province = cityArr[0];
-//                regional.city = cityArr[1];
-//                regional.county = cityArr[2];
+                regional.province = cityArr[0];
+                regional.city = cityArr[1];
+                regional.county = cityArr[2];
                 selectCityView.dismiss();
+                editAreaAndSource(1);
             }
         });
     }
@@ -313,7 +320,14 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      * 线索来源选择
      */
     private void selectSource() {
-        String[] dataKind = {"广告", "搜索引擎", "研讨会", "客户介绍", "独立开发", "其它"};
+        String[] dataKind = app.gson.fromJson(SharedUtil.get(app, ExtraAndResult.SOURCES_DATA),
+                new TypeToken<String[]>() {
+                }.getType());
+        if (null == dataKind) {
+            Toast("数据加载中...");
+            ClueCommon.getSourceData();//缓存线索来源数据
+            return;
+        }
         final PaymentPopView popViewKind = new PaymentPopView(this, dataKind, "线索来源");
         popViewKind.show();
         popViewKind.setCanceledOnTouchOutside(true);
@@ -322,8 +336,38 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             public void setValue(String value, int index) {
 //                payeeMethod = index;
                 clue_source.setText(value);
+                editAreaAndSource(2);
             }
         });
     }
 
+    /**
+     * 编辑线索 1 地区 2 线索来源
+     *
+     * @param function
+     */
+    private void editAreaAndSource(int function) {
+        HashMap<String, Object> map = new HashMap<>();
+        if (1 == function)
+            map.put("region", regional);
+        if (2 == function)
+            map.put("source", clue_source.getText().toString());
+        LogUtil.d(app.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
+                .editClue(clueId, map, new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("【编辑详情】线索：", response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    private void deleteClue() {
+
+    }
 }
