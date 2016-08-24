@@ -133,33 +133,33 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     public void bindData() {
                 /* 分区1 */
-        section1_username.setText(data.sales.name);
-        section1_company_name.setText(data.sales.companyName);
-        section1_clue_status.setText("" + data.sales.status);
+        section1_username.setText(data.data.sales.name);
+        section1_company_name.setText(data.data.sales.companyName);
+        section1_clue_status.setText("" + data.data.sales.status);
 
         /* 分区2 */
         // section2_visit
         // visit_times
-        if (data.activity == null) {
+        if (data.data.activity == null) {
             section2_latest_visit.setVisibility(View.GONE);
         } else {
             section2_latest_visit.setVisibility(View.VISIBLE);
-            section2_visit_desc.setText(data.activity.content);
+            section2_visit_desc.setText(data.data.activity.content);
             //section2_visit_meta
         }
 
         /* 分区3 */
-        contact_mobile.setText(data.sales.cellPhone);
-        contact_wiretel.setText(data.sales.tel);
-        clue_region.setText(data.sales.getRegion());
-        clue_source.setText(data.sales.source);
-        clue_note.setText(data.sales.remark);
+        contact_mobile.setText(data.data.sales.cellPhone);
+        contact_wiretel.setText(data.data.sales.tel);
+        clue_region.setText(data.data.sales.getRegion());
+        clue_source.setText(data.data.sales.source);
+        clue_note.setText(data.data.sales.remark);
 
         /* 分区4 */
-        responsible_name.setText(data.sales.responsorName);
-        creator_name.setText(data.sales.creatorName);
-        create_time.setText(app.df3.format(new Date(Long.valueOf(data.sales.createAt + "") * 1000)));
-        update_time.setText(app.df3.format(new Date(Long.valueOf(data.sales.updateAt + "") * 1000)));
+        responsible_name.setText(data.data.sales.responsorName);
+        creator_name.setText(data.data.sales.creatorName);
+        create_time.setText(app.df3.format(new Date(Long.valueOf(data.data.sales.createAt + "") * 1000)));
+        update_time.setText(app.df3.format(new Date(Long.valueOf(data.data.sales.updateAt + "") * 1000)));
     }
 
     private void getIntenData() {

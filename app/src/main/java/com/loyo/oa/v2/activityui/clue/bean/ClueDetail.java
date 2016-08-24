@@ -9,9 +9,12 @@ import java.io.Serializable;
  */
 
 public class ClueDetail extends BaseBean {
-    public ClueSales sales;
-    public ClueActivity activity;
+    public Data data;
 
+    public class Data implements Serializable {
+        public ClueSales sales;
+        public ClueActivity activity;
+    }
 
     /**
      * 线索详情 跟进动态

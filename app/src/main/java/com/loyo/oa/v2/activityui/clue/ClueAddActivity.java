@@ -97,7 +97,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
             return;
         }
         isEdit = true;
-        ClueSales sales = editData.sales;
+        ClueSales sales = editData.data.sales;
         et_name.setText(sales.name);
         et_company.setText(sales.companyName);
         et_phone.setText(sales.cellPhone);
@@ -212,7 +212,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                     });
         } else {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                    .editClue(editData.activity.id, map, new Callback<Object>() {
+                    .editClue(clueId, map, new Callback<Object>() {
                         @Override
                         public void success(Object o, Response response) {
                             HttpErrorCheck.checkResponse("【编辑】线索：", response);
