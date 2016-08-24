@@ -165,6 +165,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.remindAt + "") * 1000))
                     + "  " + data.data.activity.contactName + " # " + data.data.activity.typeName);
         }
+        tv_visit_number.setText("(" + sales.saleActivityCount + ")");
 
         /* 分区3 */
         contact_mobile.setText(sales.cellphone);
@@ -173,7 +174,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         tv_address.setText(sales.address);
         clue_source.setText(sales.source);
         clue_note.setText(sales.remark);
-        tv_visit_number.setText("(" + sales.saleActivityCount + ")");
+
         /* 分区4 */
         responsible_name.setText(sales.responsorName);
         creator_name.setText(sales.creatorName);
