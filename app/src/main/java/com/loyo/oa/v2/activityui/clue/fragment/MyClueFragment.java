@@ -23,6 +23,7 @@ import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
@@ -195,9 +196,12 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
 
             //新建
             case R.id.btn_add:
-                mBundle = new Bundle();
-                app.startActivityForResult(getActivity(), ClueAddActivity.class, app.ENTER_TYPE_RIGHT,
-                        getActivity().RESULT_FIRST_USER, mBundle);
+
+                mIntent = new Intent();
+                mIntent.setClass(getActivity(), ClueAddActivity.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
                 break;
 
             //状态选择
@@ -306,8 +310,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (resultCode) {
-
-            //新建 删除 编辑,回调函数
+            //新建 删除 编辑 转移客户,回调函数
             case ExtraAndResult.REQUEST_CODE:
                 isPullDown = true;
                 page = 1;

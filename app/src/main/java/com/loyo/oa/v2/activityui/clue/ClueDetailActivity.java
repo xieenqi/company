@@ -252,7 +252,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             dialog.addSheetItem("转移客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, 0x01, new Bundle());
+                    Bundle mBundle = new Bundle();
+                    mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
+                    app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT,mBundle);
                 }
             });
         }
@@ -360,5 +362,23 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         HttpErrorCheck.checkError(error);
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != RESULT_OK){
+            return;
+        }
+
+        switch (requestCode){
+
+            /*转移客户*/
+            case ExtraAndResult.REQUSET_COMMENT:
+                app.finishActivity(ClueDetailActivity.this,MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
+                break;
+
+        }
     }
 }
