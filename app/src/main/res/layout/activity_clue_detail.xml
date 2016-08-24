@@ -92,6 +92,7 @@
 
                 <!-- 分区一 -> 线索状态 -->
                 <LinearLayout
+                    android:id="@+id/ll_status"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:layout_marginLeft="@dimen/margin_other_view"
@@ -106,7 +107,7 @@
                         android:text="线索状态"/>
 
                     <TextView
-                        android:id="@+id/tv_section1_clue_status"
+                        android:id="@+id/tv_status"
                         style="@style/text_item2"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
@@ -144,7 +145,7 @@
                     android:text="跟进动态"/>
 
                 <TextView
-                    android:id="@+id/tv_visit_times"
+                    android:id="@+id/tv_visit_number"
                     style="@style/text_item1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -240,7 +241,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/layout_mobile_send_sms"
+                            android:id="@+id/ll_sms"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
@@ -263,7 +264,7 @@
                             />
 
                         <LinearLayout
-                            android:id="@+id/layout_mobile_call"
+                            android:id="@+id/ll_call"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
@@ -309,7 +310,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/layout_wiretel_call"
+                        android:id="@+id/ll_wiretel_call"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"

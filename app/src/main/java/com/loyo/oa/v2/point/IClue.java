@@ -31,9 +31,9 @@ public interface IClue {
 
     /**
      * 我的线索列表
-     * */
+     */
     @GET("/salesleads/mobile")
-    void getMyCluelist(@QueryMap HashMap<String,Object> map, Callback<ClueList> callback);
+    void getMyCluelist(@QueryMap HashMap<String, Object> map, Callback<ClueList> callback);
 
     /**
      * 团队线索列表
@@ -59,8 +59,21 @@ public interface IClue {
     void getClueDetail(@Path("id") String id, Callback<ClueDetail> callback);
 
     /**
-     * 编辑 回款记录
+     * 编辑 线索
      */
-    @PUT("/saleslead/source/{id}")
+    @PUT("/salesleads/{id}")
     void editClue(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Object> callback);
+
+    /**
+     * 删除 线索/salesleads/batch
+     */
+    @PUT("/salesleads/batch/delete")
+    void deleteClue(@Body HashMap<String, Object> map, Callback<Object> callback);
+
+
+    /**
+     * 转移 线索/salesleads/batch/transfer
+     */
+    @PUT("/salesleads/batch/transfer")
+    void transferClue(@Body HashMap<String, Object> map, Callback<Object> callback);
 }
