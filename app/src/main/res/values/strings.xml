@@ -61,5 +61,6 @@
     <string name="estimate_page_string9">附件</string>
     <string name="estimate_page_string10">是否开票</string>
     <string name="title_activity_clue_detail">ClueDetailActivity</string>
+    <string name="title_activity_clue_followup">ClueFollowupActivity</string>
 
 </resources>
