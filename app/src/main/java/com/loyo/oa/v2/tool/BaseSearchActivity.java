@@ -21,6 +21,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
+import com.loyo.oa.v2.activityui.clue.bean.ClueList;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.beans.WorkReportRecord;
@@ -220,13 +223,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         break;
                     //线索管理
                     case CLUE_MANAGE:
-                        mIntent = new Intent(getApplicationContext(), WfinstanceInfoActivity_.class);
+                        mIntent = new Intent(getApplicationContext(),ClueDetailActivity.class);
                         mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
-
-
-
                 }
                 hideInputKeyboard(edt_search);
             }
@@ -513,6 +513,18 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 }*/
             }
 
+            else if(o instanceof ClueListItem){
+
+                ClueListItem clueListItem = (ClueListItem) o;
+                if(clueListItem.lastActAt == 0){
+                    time.setText("--");
+                }else{
+                    time.setText("跟进时间：" + DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd"));
+                }
+                title.setText(clueListItem.name);
+                content.setText("公司名称" + clueListItem.companyName);
+
+            }
             return convertView;
         }
     }

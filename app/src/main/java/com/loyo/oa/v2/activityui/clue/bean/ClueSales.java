@@ -4,7 +4,8 @@ import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 
 import java.io.Serializable;
 
-/**线索详情 详情
+/**
+ * 线索详情 详情
  * Created by xeq on 16/8/23.
  */
 public class ClueSales implements Serializable {
@@ -12,7 +13,7 @@ public class ClueSales implements Serializable {
     public String name;
     public String companyId;
     public String companyName;
-    public String cellPhone;
+    public String cellphone;
     public String tel;
 
     public CustomerRegional region;
@@ -32,7 +33,7 @@ public class ClueSales implements Serializable {
         if (region == null) {
             return "";
         }
-        return region.county + " | " + region.province + " | " + region.city;
+        return region.county + " " + region.province + " " + region.city;
     }
 
 }

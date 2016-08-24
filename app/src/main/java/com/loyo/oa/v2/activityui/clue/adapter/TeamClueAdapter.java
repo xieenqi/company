@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.tool.DateTool;
 
 import java.util.ArrayList;
 
@@ -28,10 +29,14 @@ public class TeamClueAdapter extends BaseAdapter{
         inflater = LayoutInflater.from(context);
     }
 
+    public void setData(ArrayList<ClueListItem> mData){
+        this.mData = mData;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {
-        return mData.size();
+        return mData == null ? 0 : mData.size();
     }
 
     @Override
@@ -60,10 +65,12 @@ public class TeamClueAdapter extends BaseAdapter{
             holder = (Holder) convertView.getTag();
         }
 
-        holder.tv_company_name.setText(clueListItem.companyName);
-        holder.tv_customer.setText(clueListItem.admin_name);
-        holder.tv_time.setText(""+clueListItem.ftime);
         holder.tv_name.setText(clueListItem.name);
+        holder.tv_company_name.setText(clueListItem.companyName);
+        holder.tv_customer.setText(clueListItem.name);
+        if(clueListItem.lastActAt != 0){
+            holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd HH:mm"));
+        }
 
         return convertView;
     }
