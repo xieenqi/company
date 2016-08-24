@@ -792,7 +792,10 @@
             android:label="@string/title_activity_clue_detail" />
         <activity
             android:name=".activityui.clue.ClueFollowupActivity"
-            android:label="@string/title_activity_clue_followup"></activity>
+            android:label="@string/title_activity_clue_followup" />
+        <activity
+            android:name=".activityui.clue.ClueFollowupCreateActivity"
+            android:label="@string/title_activity_clue_followup_create"></activity>
     </application>
 
 </manifest>
