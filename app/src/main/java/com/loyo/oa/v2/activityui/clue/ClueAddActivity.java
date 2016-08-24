@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
+import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
@@ -86,6 +87,25 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         ll_area.setOnClickListener(this);
         ll_source = (LinearLayout) findViewById(R.id.ll_source);
         ll_source.setOnClickListener(this);
+        editClue();
+    }
+
+    private void editClue() {
+        if (null == editData) {
+            return;
+        }
+        ClueSales sales = editData.sales;
+        et_name.setText(sales.name);
+        et_company.setText(sales.companyName);
+        et_phone.setText(sales.cellPhone);
+        et_tel.setText(sales.tel);
+//        et_address.setText(sales.);
+        et_remake.setText(sales.remark);
+        tv_area.setText(sales.getRegion());
+        regional.province = sales.region.province;
+        regional.city = sales.region.city;
+        regional.county = sales.region.county;
+        tv_source.setText(sales.source);
     }
 
     @Override

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
@@ -184,11 +183,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance()
                 .build(Config_project.API_URL_CUSTOMER())
                 .create(IClue.class)
-                .getClueDetail(clueId, new Callback<BaseBean<ClueDetail>>() {
+                .getClueDetail(clueId, new Callback<ClueDetail>() {
                     @Override
-                    public void success(BaseBean<ClueDetail> detail, Response response) {
+                    public void success(ClueDetail detail, Response response) {
                         HttpErrorCheck.checkResponse("线索详情：", response);
-                        data = detail.data;
+                        data = detail;
                         bindData();
                     }
 
