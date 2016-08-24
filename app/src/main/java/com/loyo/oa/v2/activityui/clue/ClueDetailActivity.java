@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
+import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -62,7 +63,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     TextView responsible_name/* 负责人 */,
             creator_name     /* 创建人 */,
             create_time      /* 创建时间 */,
-            update_time      /* 更新时间 */;
+            update_time      /* 更新时间 */,
+            tv_address;
 
     /* Data */
     String clueId;
@@ -129,37 +131,40 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         creator_name = (TextView) findViewById(R.id.tv_creator_name);
         create_time = (TextView) findViewById(R.id.tv_create_time);
         update_time = (TextView) findViewById(R.id.tv_update_time);
+        tv_address = (TextView) findViewById(R.id.tv_address);
     }
 
     public void bindData() {
+        ClueSales sales = data.data.sales;
                 /* 分区1 */
-        section1_username.setText(data.sales.name);
-        section1_company_name.setText(data.sales.companyName);
-        section1_clue_status.setText("" + data.sales.status);
+        section1_username.setText(sales.name);
+        section1_company_name.setText(sales.companyName);
+        section1_clue_status.setText("" + sales.status);
 
         /* 分区2 */
         // section2_visit
         // visit_times
-        if (data.activity == null) {
+        if (data.data.activity == null) {
             section2_latest_visit.setVisibility(View.GONE);
         } else {
             section2_latest_visit.setVisibility(View.VISIBLE);
-            section2_visit_desc.setText(data.activity.content);
+            section2_visit_desc.setText(data.data.activity.content);
             //section2_visit_meta
         }
 
         /* 分区3 */
-        contact_mobile.setText(data.sales.cellPhone);
-        contact_wiretel.setText(data.sales.tel);
-        clue_region.setText(data.sales.getRegion());
-        clue_source.setText(data.sales.source);
-        clue_note.setText(data.sales.remark);
+        contact_mobile.setText(sales.cellphone);
+        contact_wiretel.setText(sales.tel);
+        clue_region.setText(sales.getRegion());
+        tv_address.setText(sales.address);
+        clue_source.setText(sales.source);
+        clue_note.setText(sales.remark);
 
         /* 分区4 */
-        responsible_name.setText(data.sales.responsorName);
-        creator_name.setText(data.sales.creatorName);
-        create_time.setText(app.df3.format(new Date(Long.valueOf(data.sales.createAt + "") * 1000)));
-        update_time.setText(app.df3.format(new Date(Long.valueOf(data.sales.updateAt + "") * 1000)));
+        responsible_name.setText(sales.responsorName);
+        creator_name.setText(sales.creatorName);
+        create_time.setText(app.df3.format(new Date(Long.valueOf(sales.createAt + "") * 1000)));
+        update_time.setText(app.df3.format(new Date(Long.valueOf(sales.updateAt + "") * 1000)));
     }
 
     private void getIntenData() {

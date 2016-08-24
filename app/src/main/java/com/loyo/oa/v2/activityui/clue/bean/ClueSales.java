@@ -13,7 +13,7 @@ public class ClueSales implements Serializable {
     public String name;
     public String companyId;
     public String companyName;
-    public String cellPhone;
+    public String cellphone;
     public String tel;
 
     public CustomerRegional region;
