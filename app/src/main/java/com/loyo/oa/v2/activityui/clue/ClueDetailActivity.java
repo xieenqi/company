@@ -173,7 +173,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         tv_status.setText("" + sales.getStatus());
 
         /* 分区2 */
-        if (data.data.activity == null) {
+        if (sales.saleActivityCount > 0) {
             ll_track.setVisibility(View.GONE);
         } else {
             ll_track.setVisibility(View.VISIBLE);
