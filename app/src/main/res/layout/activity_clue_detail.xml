@@ -127,84 +127,70 @@
 
             <include layout="@layout/include_solid_line15"/>
 
-            <!-- 分区二：跟进状态 -->
+
+            <!-- 分区二 -> 跟进动态 -->
+            <RelativeLayout
+                android:id="@+id/ll_section2_visit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_48"
+                android:layout_marginLeft="@dimen/margin_other_view">
+
+                <TextView
+                    android:id="@+id/tv_visit_title"
+                    style="@style/text_item1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="跟进动态"/>
+
+                <TextView
+                    android:id="@+id/tv_visit_times"
+                    style="@style/text_item1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:layout_toRightOf="@+id/tv_visit_title"
+                    android:gravity="center"
+                    android:text="(0)"
+                    android:textColor="@color/text99"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dimen_4"
+                    android:src="@drawable/right_arrow"/>
+            </RelativeLayout>
+
+            <include layout="@layout/include_solid_line_left"/>
+            <!-- 分区二 -> 最近跟进 -->
             <LinearLayout
+                android:id="@+id/ll_track"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="@dimen/dimen_10"
+                android:layout_marginLeft="@dimen/margin_other_view"
+                android:layout_marginRight="@dimen/margin_other_view"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <!-- 分区二 -> 跟进动态 -->
-                <RelativeLayout
-                    android:id="@+id/ll_section2_visit"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_48"
-                    android:layout_marginLeft="@dimen/margin_other_view">
-
-                    <TextView
-                        android:id="@+id/tv_visit_title"
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="跟进动态"/>
-
-                    <TextView
-                        android:id="@+id/tv_visit_times"
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_12"
-                        android:layout_toRightOf="@+id/tv_visit_title"
-                        android:gravity="center"
-                        android:text="(0)"
-                        android:textColor="@color/text99"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/dimen_4"
-                        android:src="@drawable/right_arrow"/>
-                </RelativeLayout>
-
-                <include layout="@layout/include_solid_line_left"/>
-
-
-                <!-- 分区二 -> 最近跟进 -->
-                <LinearLayout
-                    android:id="@+id/ll_section2_latest_visit"
-                    android:layout_width="fill_parent"
+                <TextView
+                    android:id="@+id/tv_track_content"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_10"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:layout_marginRight="@dimen/margin_other_view"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:orientation="vertical">
+                    android:text=""
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp16"/>
 
-                    <TextView
-                        android:id="@+id/tv_section2_visit_desc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="hahahhahh"
-                        android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp16"/>
 
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_3"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tv_section2_visit_meta"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="2016.05.30 13:30 xxx #上门拜访"
-                            android:textColor="@color/text99"
-                            android:textSize="@dimen/text_sp12"/>
-
-                    </LinearLayout>
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_track_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp12"/>
 
             </LinearLayout>
 
