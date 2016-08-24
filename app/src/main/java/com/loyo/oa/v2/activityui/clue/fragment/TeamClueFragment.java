@@ -352,21 +352,21 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         map.put("order",order);
         map.put("xpath",xPath);
         map.put("userId",userId);
-        LogUtil.dee("发送数据:"+ MainApp.gson.toJson(map));
+        LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IClue.class).getTeamCluelist(map, new Callback<ClueList>() {
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
                 HttpErrorCheck.checkResponse("我的线索列表：", response);
-                try{
+                try {
                     if (!isPullDown) {
                         listData.addAll(clueList.data.records);
                     } else {
                         listData = clueList.data.records;
                     }
                     adapter.setData(listData);
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
@@ -391,5 +391,19 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         isPullDown = false;
         page++;
         getData();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (resultCode) {
+            //新建 删除 编辑 转移客户,回调函数
+            case ExtraAndResult.REQUEST_CODE:
+                isPullDown = true;
+                page = 1;
+                getData();
+                break;
+        }
     }
 }

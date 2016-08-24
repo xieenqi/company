@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.CustomerLabelActivity_;
@@ -30,6 +32,7 @@ import com.loyo.oa.v2.activityui.customer.bean.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -39,6 +42,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -78,6 +82,7 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
 
     private String uuid = StringUtil.getUUID();
     private Bundle mBundle;
+    private Intent mIntent;
 
     private String myAddress;
     private String customer_name;
@@ -93,7 +98,7 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<NewTag> tags;
-    private  ArrayList<ContactLeftExtras> mCusList;
+    private ArrayList<ContactLeftExtras> mCusList;
 
     private int bizType = 0x01;
     private int uploadSize;
@@ -107,13 +112,16 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
     private boolean cusPhone = false; //手机权限
     private boolean cusMobile = false;//座机权限
     private PositionResultItem positionResultItem;
+    private ClueSales mCluesales;
 
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(final Message msg) {
             if (msg.what == 0x01) {
                 et_address.setText(myAddress);
-                edit_address_details.setText(myAddress);
+                if(null == mCluesales.address || TextUtils.isEmpty(mCluesales.address)){
+                    edit_address_details.setText(myAddress);
+                }
             }
         }
     };
@@ -125,10 +133,18 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
         initUi();
     }
 
+    public void getIntentData(){
+        mIntent = getIntent();
+        mCluesales = (ClueSales) mIntent.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        if(null == mCluesales){
+            onBackPressed();
+            Toast("参数为Null");
+        }
+    }
+
     public void initUi(){
-
         super.setTitle("线索转换客户");
-
+        getIntentData();
         img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
         img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
         edt_name = (EditText) findViewById(R.id.edt_name);
@@ -161,6 +177,12 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
             laPosition = app.latitude;
             loPosition = app.longitude;
         }
+
+        edt_name.setText(mCluesales.name);                //名字
+        edit_address_details.setText(mCluesales.address); //地址
+        edt_contract.setText(mCluesales.name);            //联系人
+        edt_contract_tel.setText(mCluesales.cellphone);   //手机号
+        edt_contract_telnum.setText(mCluesales.tel);      //座机号
 
     }
 
@@ -325,24 +347,25 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
         }
 
         map.put("position", positionData.loc); //定位数据
-        map.put("loc", locData.loc);          //地址详情数据
+        map.put("loc", locData.loc);           //地址详情数据
         map.put("name", customer_name);
         map.put("pname", customerContract);
         map.put("ptel", customerContractTel);
         map.put("wiretel", customerWrietele);
         map.put("tags", positionData.tags);
-
+        map.put("salesleadId", mCluesales.id);
+        LogUtil.dee("转移客户发送数据:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 try {
                     Customer retCustomer = customer;
-                    Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+                    Toast("转移成功");
                     isSave = false;
                     Intent intent = new Intent();
                     intent.putExtra(Customer.class.getName(), retCustomer);
-                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);
+                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT,RESULT_OK, intent);
 
                 } catch (Exception e) {
                     Global.ProcException(e);

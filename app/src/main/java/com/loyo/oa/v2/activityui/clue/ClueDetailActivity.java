@@ -116,6 +116,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         /* 分区2 */
         section2_visit = (ViewGroup) findViewById(R.id.ll_section2_visit);
         ll_track = (ViewGroup) findViewById(R.id.ll_track);
+        section2_visit.setOnClickListener(this); // 选择来源
 
         tv_visit_number = (TextView) findViewById(R.id.tv_visit_number);
         tv_track_content = (TextView) findViewById(R.id.tv_track_content);
@@ -165,6 +166,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.remindAt + "") * 1000))
                     + "  " + data.data.activity.contactName + " # " + data.data.activity.typeName);
         }
+        tv_visit_number.setText("(" + sales.saleActivityCount + ")");
 
         /* 分区3 */
         contact_mobile.setText(sales.cellphone);
@@ -173,7 +175,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         tv_address.setText(sales.address);
         clue_source.setText(sales.source);
         clue_note.setText(sales.remark);
-        tv_visit_number.setText("(" + sales.saleActivityCount + ")");
+
         /* 分区4 */
         responsible_name.setText(sales.responsorName);
         creator_name.setText(sales.creatorName);
@@ -243,6 +245,10 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             case R.id.layout_clue_source:
                 selectSource();
                 break;
+            /* 跟进列表 */
+            case R.id.ll_section2_visit:
+                clueActivity();
+                break;
 
             case R.id.ll_status:
                 editClueStatus();
@@ -259,6 +265,22 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    /**
+     * 跳转跟进列表
+     */
+    private void clueActivity() {
+        Intent intent = new Intent();
+        intent.putExtra(ExtraAndResult.EXTRA_ID, data.data.sales.id);
+        String name = data.data.sales.name;
+        if (TextUtils.isEmpty(name)){
+            name = "";
+        }
+        intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
+        intent.setClass(this, ClueFollowupActivity.class);
+        startActivityForResult(intent, this.RESULT_FIRST_USER);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+    }
+
 
     /**
      * 右上角菜单
@@ -269,7 +291,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, 0x01, new Bundle());
+                    Bundle mBundle = new Bundle();
+                    mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
+                    app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT,mBundle);
                 }
             });
         }
@@ -487,6 +511,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     }
                 });
                 break;
+
+            /*转移客户*/
+            case ExtraAndResult.REQUSET_COMMENT:
+                app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                break;
+
         }
     }
 }
