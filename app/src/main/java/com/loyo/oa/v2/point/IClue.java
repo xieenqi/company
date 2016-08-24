@@ -3,6 +3,8 @@ package com.loyo.oa.v2.point;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.SaleActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +15,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 /**
@@ -31,9 +34,9 @@ public interface IClue {
 
     /**
      * 我的线索列表
-     * */
+     */
     @GET("/salesleads/mobile")
-    void getMyCluelist(@QueryMap HashMap<String,Object> map, Callback<ClueList> callback);
+    void getMyCluelist(@QueryMap HashMap<String, Object> map, Callback<ClueList> callback);
 
     /**
      * 团队线索列表
@@ -59,8 +62,41 @@ public interface IClue {
     void getClueDetail(@Path("id") String id, Callback<ClueDetail> callback);
 
     /**
-     * 编辑 回款记录
+     * 编辑 线索
      */
     @PUT("/salesleads/{id}")
     void editClue(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Object> callback);
+
+    /**
+     * 获取跟进
+     * @param map
+     * @param cb
+     */
+
+    @GET("/saleactivity/saleslead")
+    void getSaleactivity(@QueryMap HashMap<String, Object> map, retrofit.Callback<PaginationX<SaleActivity>> cb);
+
+
+    /**
+     * 新建跟进
+     * @param map
+     * @param cb
+     */
+    @POST("/saleactivity/sealslead")
+    void addSaleactivity(@Body HashMap<String, Object> map, Callback<SaleActivity> cb);
+
+    /**
+     * 删除
+     * @param map
+     * @param callback
+     */
+    @PUT("/salesleads/batch/delete")
+    void deleteClue(@Body HashMap<String, Object> map, Callback<Object> callback);
+
+
+    /**
+     * 转移 线索/salesleads/batch/transfer
+     */
+    @PUT("/salesleads/batch/transfer")
+    void transferClue(@Body HashMap<String, Object> map, Callback<Object> callback);
 }
