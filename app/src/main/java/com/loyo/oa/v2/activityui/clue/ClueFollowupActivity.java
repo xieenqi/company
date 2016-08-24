@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IClue;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -26,8 +26,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +67,7 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
         Intent intent = getIntent();
         clueId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
         name = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+        isMyUser = intent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
         if (TextUtils.isEmpty(clueId)) {
             onBackPressed();
             Toast("参数不全");
@@ -115,9 +114,9 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         // TODO:
-//        if (!isMyUser) {
-//            layout_add.setVisibility(View.GONE);
-//        }
+        if (!isMyUser) {
+            layout_add.setVisibility(View.GONE);
+        }
         layout_add.setOnTouchListener(Global.GetTouch());
         layout_add.setOnClickListener(this);
         lv_saleActivity = (PullToRefreshListView) findViewById(R.id.lv_saleActivity);

@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
@@ -81,6 +82,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     String clueId;
     ClueDetail data;
     private int clueStatus;
+    private boolean isDelete = false, isAdd = false;
 
     private CustomerRegional regional = new CustomerRegional();
 
@@ -101,7 +103,16 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void setupViews() {
-
+        if (!MainApp.user.isSuperUser()) {
+            try {
+                Permission permission = (Permission) MainApp.rootMap.get("4090");
+                if (!permission.isEnable()) {
+                    isDelete = true;
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
         /* Navigation Bar */
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
@@ -152,6 +163,10 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     public void bindData() {
         ClueSales sales = data.data.sales;
+        if (!MainApp.user.id.equals(sales.creatorId)) {//如果不是负责人有编辑 添加的权限
+            img_title_right.setVisibility(View.GONE);
+            isAdd = false;
+        }
                 /* 分区1 */
         section1_username.setText(sales.name);
         section1_company_name.setText(sales.companyName);
@@ -272,10 +287,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         Intent intent = new Intent();
         intent.putExtra(ExtraAndResult.EXTRA_ID, data.data.sales.id);
         String name = data.data.sales.name;
-        if (TextUtils.isEmpty(name)){
+        if (TextUtils.isEmpty(name)) {
             name = "";
         }
         intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
+        intent.putExtra(ExtraAndResult.EXTRA_ADD, isAdd);
         intent.setClass(this, ClueFollowupActivity.class);
         startActivityForResult(intent, this.RESULT_FIRST_USER);
         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -287,41 +303,35 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      */
     private void functionButton() {
         ActionSheetDialog dialog = new ActionSheetDialog(ClueDetailActivity.this).builder();
-        if (true /* 是否有权限转移客户 */) {
-            dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    Bundle mBundle = new Bundle();
-                    mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
-                    app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT,mBundle);
-                }
-            });
-        }
+        dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                Bundle mBundle = new Bundle();
+                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
+                app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
+            }
+        });
 
-        if (true /* 是否有权限转移给他人 */) {
-            dialog.addSheetItem("转移给他人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    SelectDetUserActivity2.startThisForOnly(ClueDetailActivity.this, null);
-                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                }
-            });
-        }
+        dialog.addSheetItem("转移给他人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                SelectDetUserActivity2.startThisForOnly(ClueDetailActivity.this, null);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            }
+        });
 
-        if (true /* 是否有权限编辑 */) {
-            dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    Bundle mBundle = new Bundle();
-                    mBundle.putString(ExtraAndResult.EXTRA_ID, clueId);
-                    mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data);
-                    app.startActivityForResult(ClueDetailActivity.this, ClueAddActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
-                }
-            });
-        }
+        dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                Bundle mBundle = new Bundle();
+                mBundle.putString(ExtraAndResult.EXTRA_ID, clueId);
+                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data);
+                app.startActivityForResult(ClueDetailActivity.this, ClueAddActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+            }
+        });
 
-        if (true /* 是否有权限删除 */) {
+        if (isDelete)
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
@@ -342,7 +352,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
                 }
             });
-        }
 
         dialog.show();
     }
