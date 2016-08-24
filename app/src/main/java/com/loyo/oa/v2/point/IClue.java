@@ -9,6 +9,7 @@ import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -31,9 +32,9 @@ public interface IClue {
 
     /**
      * 我的线索列表
-     * */
+     */
     @GET("/salesleads/mobile")
-    void getMyCluelist(@QueryMap HashMap<String,Object> map, Callback<ClueList> callback);
+    void getMyCluelist(@QueryMap HashMap<String, Object> map, Callback<ClueList> callback);
 
     /**
      * 团队线索列表
@@ -59,8 +60,14 @@ public interface IClue {
     void getClueDetail(@Path("id") String id, Callback<ClueDetail> callback);
 
     /**
-     * 编辑 回款记录
+     * 编辑 线索
      */
     @PUT("/salesleads/{id}")
     void editClue(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Object> callback);
+
+    /**
+     * 删除 线索/salesleads/batch
+     */
+    @DELETE("/salesleads/batch")
+    void deleteClue(@Body HashMap<String, Object> map, Callback<Object> callback);
 }

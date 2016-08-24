@@ -36,4 +36,19 @@ public class ClueSales implements Serializable {
         return region.county + " " + region.province + " " + region.city;
     }
 
+    public String getStatus() {
+        if (status == 0) {
+            return "";
+        }
+        switch (status) {
+            case 1:
+                return "未处理";
+            case 2:
+                return "已联系";
+            case 3:
+                return "关闭";
+        }
+        return "";
+    }
+
 }
