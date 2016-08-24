@@ -19,7 +19,7 @@ public class WorkReportRecord extends BaseBeans implements Serializable{
 
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return status + "";
     }
 

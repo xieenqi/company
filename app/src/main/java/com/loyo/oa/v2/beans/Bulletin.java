@@ -131,7 +131,7 @@ public class Bulletin extends BaseBeans {
     }
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return MainApp.getMainApp().df3.format(new Date(createdAt * 1000));
     }
 

@@ -166,7 +166,7 @@ public class Task extends BaseBeans implements Serializable {
     }
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return String.valueOf(getCreatedAt());
     }
 

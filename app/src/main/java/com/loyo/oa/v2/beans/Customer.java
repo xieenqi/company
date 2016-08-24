@@ -92,7 +92,7 @@ public class Customer extends BaseBeans {
     public int saleActivityNum;
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return null;
     }
 
