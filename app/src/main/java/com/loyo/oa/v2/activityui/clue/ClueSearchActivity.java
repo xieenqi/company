@@ -139,7 +139,6 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                LogUtil.dee("id - 1 :"+ listData.get(position - 1).id);
                 mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
                 mIntent.putExtra(ExtraAndResult.EXTRA_ID, listData.get(position - 1).id);
                 startActivity(mIntent);
