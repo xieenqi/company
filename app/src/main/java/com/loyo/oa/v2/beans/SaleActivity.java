@@ -38,7 +38,7 @@ public class SaleActivity extends BaseBeans implements Serializable {
 //        ContactName string        `json:"contactName,omitempty"` //联系人
 //    }
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return getCreateAt() + "";
     }
 

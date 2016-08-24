@@ -78,7 +78,7 @@ public class Position extends BaseBeans implements Serializable
     }
 
     @Override
-    String getOrderStr()
+    public String getOrderStr()
     {
         return null;
     }
