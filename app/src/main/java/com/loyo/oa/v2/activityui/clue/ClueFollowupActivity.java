@@ -121,6 +121,8 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
         layout_add.setOnTouchListener(Global.GetTouch());
         layout_add.setOnClickListener(this);
         lv_saleActivity = (PullToRefreshListView) findViewById(R.id.lv_saleActivity);
+        lv_saleActivity.setMode(PullToRefreshBase.Mode.BOTH);
+        lv_saleActivity.setOnRefreshListener(this);
     }
 
     @Override
