@@ -44,6 +44,8 @@ import com.loyo.oa.v2.tool.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.transform.Result;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

@@ -484,6 +484,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【删除详情】线索：", response);
+                        app.finishActivity(ClueDetailActivity.this,MainApp.ENTER_TYPE_LEFT,RESULT_OK,new Intent());
                         onBackPressed();
                     }
 
