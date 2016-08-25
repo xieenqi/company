@@ -612,6 +612,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 Permission p = mappedPermission.get(code);
                 if (p == null || p.enable == false) {
                     items.remove(i);
+                    i--;
                 }
             }
 
@@ -620,6 +621,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 Permission p = mappedPermission.get(code);
                 if (p == null || p.enable == false) {
                     caseItems.remove(i);
+                    i--;
                 }
             }
 
