@@ -627,7 +627,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activityui.clue.ClueTransferActiviyt"
+            android:name=".activityui.clue.ClueTransferActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />

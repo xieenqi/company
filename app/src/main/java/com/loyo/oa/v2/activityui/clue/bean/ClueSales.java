@@ -34,7 +34,7 @@ public class ClueSales implements Serializable {
         if (region == null) {
             return "";
         }
-        return region.county + " " + region.province + " " + region.city;
+        return region.salesleadDisplayText();
     }
 
     public String getStatus() {

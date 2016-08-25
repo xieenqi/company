@@ -91,7 +91,10 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("团队线索权限,code错误:0329");
+                // Toast("团队线索权限,code错误:0329");
+                SaleItemStatus = new String[]{"我的线索"};
+                img_title_arrow.setVisibility(View.INVISIBLE);
+                layout_title_action.setEnabled(false);
             }
         }
         initTitleItem();

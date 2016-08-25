@@ -103,16 +103,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void setupViews() {
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                Permission permission = (Permission) MainApp.rootMap.get("4090");
-                if (!permission.isEnable()) {
-                    isDelete = true;
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
         /* Navigation Bar */
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
@@ -163,17 +153,34 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     public void bindData() {
         ClueSales sales = data.data.sales;
-        if (!MainApp.user.id.equals(sales.creatorId)) {//如果不是负责人有编辑 添加的权限
+        if (!MainApp.user.id.equals(sales.responsorId)) {//如果不是负责人有编辑 添加的权限
             img_title_right.setVisibility(View.GONE);
             isAdd = false;
         }
-                /* 分区1 */
+        else {
+            img_title_right.setVisibility(View.VISIBLE);
+            isAdd = true;
+        }
+
+        if (!MainApp.user.isSuperUser()) {
+            try {
+                Permission permission = (Permission) MainApp.rootMap.get("0409");
+                if (permission.isEnable()) {
+                    isDelete = true;
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /* 分区1 */
         section1_username.setText(sales.name);
         section1_company_name.setText(sales.companyName);
         tv_status.setText("" + sales.getStatus());
 
         /* 分区2 */
-        if (sales.saleActivityCount > 0) {
+        if (sales.saleActivityCount <= 0      /* 没有拜访记录 */
+                || data.data.activity == null /* 当>0时，服务端也可能返空数据 */ ) {
             ll_track.setVisibility(View.GONE);
         } else {
             ll_track.setVisibility(View.VISIBLE);
@@ -308,7 +315,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             public void onClick(int which) {
                 Bundle mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
-                app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
+                app.startActivityForResult(ClueDetailActivity.this, ClueTransferActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
             }
         });
 
@@ -361,8 +368,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      */
     void selectArea() {
         String[] cityValue = null;
-        if (!clue_region.getText().toString().isEmpty()) {
-            cityValue = clue_region.getText().toString().split(" ");
+        if (data!= null && data.data != null && data.data.sales != null
+                && data.data.sales.region != null) {
+            cityValue = data.data.sales.region.toArray();
         }
         final SelectCityView selectCityView = new SelectCityView(this, cityValue);
         selectCityView.setCanceledOnTouchOutside(true);
@@ -371,10 +379,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(final View view) {
                 String[] cityArr = selectCityView.getResult();
-                clue_region.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2]);
+
                 regional.province = cityArr[0];
                 regional.city = cityArr[1];
                 regional.county = cityArr[2];
+                clue_region.setText(regional.salesleadDisplayText());
+
                 selectCityView.dismiss();
                 editAreaAndSource(1);
             }
@@ -426,7 +436,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      *
      * @param function
      */
-    private void editAreaAndSource(int function) {
+    private void editAreaAndSource(final int function) {
         HashMap<String, Object> map = new HashMap<>();
         if (1 == function)
             map.put("region", regional);
@@ -440,11 +450,24 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【编辑详情】线索：", response);
+                        /* 提交成功，更新本地model */
+                        if (1 == function
+                                && data != null && data.data !=null && data.data.sales != null) {
+                            data.data.sales.region = regional;
+                            clue_region.setText(regional.salesleadDisplayText());
+                        }
+
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
+                        /* 提交失败，更新UI至原来状态 */
+                        if (1 == function
+                                &&data != null && data.data !=null && data.data.sales != null) {
+                            clue_region.setText(data.data.sales.region.salesleadDisplayText());
+                        }
+
                     }
                 });
     }

@@ -63,7 +63,8 @@
                 <!-- 分区一 -> 公司名称 -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/view_h_title"
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginRight="@dimen/margin_other_view"
                     android:gravity="center_vertical"
@@ -84,6 +85,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
+                        android:singleLine = 'false'
                         android:textColor="@color/text99"
                         />
                 </LinearLayout>
@@ -436,7 +438,8 @@
                 <LinearLayout
                     android:id="@+id/layout_clue_note"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/view_h_title"
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginRight="@dimen/margin_other_view"
                     android:gravity="center_vertical"
@@ -453,7 +456,7 @@
                         android:id="@+id/tv_clue_note"
                         style="@style/text_item2"
                         android:layout_width="0dp"
-                        android:layout_height="fill_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
