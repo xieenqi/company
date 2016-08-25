@@ -243,22 +243,26 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void wersi() {
-        //为超管或权限为全公司 展示全公司成员
-        if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-            setUser(mDeptSource);
-        }
-        //权限为部门 展示我的部门
-        else if(MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD){
-            deptSort();
-        }
-        //权限为个人 展示自己
-        else if(MainApp.user.role.getDataRange() == Role.SELF){
-            data.clear();
-            saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(MainApp.user.getId());
-            saleTeamScreen.setName(MainApp.user.name);
-            saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
-            data.add(saleTeamScreen);
+        try {
+            //为超管或权限为全公司 展示全公司成员
+            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
+                setUser(mDeptSource);
+            }
+            //权限为部门 展示我的部门
+            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
+                deptSort();
+            }
+            //权限为个人 展示自己
+            else if (MainApp.user.role.getDataRange() == Role.SELF) {
+                data.clear();
+                saleTeamScreen = new SaleTeamScreen();
+                saleTeamScreen.setId(MainApp.user.getId());
+                saleTeamScreen.setName(MainApp.user.name);
+                saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
+                data.add(saleTeamScreen);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 
@@ -466,7 +470,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
                 //时间
                 case R.id.custeam_screen2:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true,tagPostion);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
                     saleCommPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
