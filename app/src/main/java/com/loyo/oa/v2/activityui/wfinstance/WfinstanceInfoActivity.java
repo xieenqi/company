@@ -138,7 +138,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     void initUI() {
         try {
             userId = DBManager.Instance().getUser().id;
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Toast("人员信息不全");
             finish();

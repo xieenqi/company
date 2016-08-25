@@ -215,10 +215,14 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
      * title 状态动画
      */
     void changeTitleImg() {
-        img_title_arrow.setRotation(mRotation);
-        img_title_arrow.startAnimation(rotateAnimation);
-        mRotation = (mRotation == 0f ? 180f : 0f);
-        ll_category.setVisibility(ll_category.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        try {
+            img_title_arrow.setRotation(mRotation);
+            img_title_arrow.startAnimation(rotateAnimation);
+            mRotation = (mRotation == 0f ? 180f : 0f);
+            ll_category.setVisibility(ll_category.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

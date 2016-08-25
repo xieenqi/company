@@ -6,9 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -17,13 +15,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.CustomerLabelActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerRepeat;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
@@ -47,9 +45,12 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.UMengTools;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -254,6 +255,7 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
+                UMengTools.sendLocationInfo(address, longitude, latitude);
                 myAddress = address;
                 mHandler.sendEmptyMessage(0x01);
                 LocationUtilGD.sotpLocation();

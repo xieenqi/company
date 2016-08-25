@@ -27,6 +27,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
@@ -163,6 +164,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 kalo = 0;
                 dataRequestvoid(url, params);
                 LocationUtilGD.sotpLocation();
+                UMengTools.sendLocationInfo(address, longitude, latitude);
             }
 
             @Override
@@ -192,6 +194,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 params.put("position", position);
                 dataRequestvoid(url, params);
                 LocationUtilGD.sotpLocation();
+                UMengTools.sendLocationInfo(address, longitude, latitude);
             }
 
             @Override

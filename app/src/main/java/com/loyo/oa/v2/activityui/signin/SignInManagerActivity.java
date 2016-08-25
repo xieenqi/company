@@ -140,7 +140,10 @@ public class SignInManagerActivity extends BaseFragmentActivity {
     private void changeChild(int index) {
         if (index != mIndex) {
             mIndex = index;
-            fragmentManager.beginTransaction().replace(R.id.layout_list_container, fragments.get(index)).commit();
+            fragmentManager.beginTransaction().replace(R.id.layout_list_container,
+                    fragments.get(index)).commitAllowingStateLoss();
+//            如果在保存玩状态后再给它添加Fragment就会出错。解决办法就
+//            是把commit（）方法替换成 commitAllowingStateLoss()就行了，其效果是一样的。
         }
     }
 

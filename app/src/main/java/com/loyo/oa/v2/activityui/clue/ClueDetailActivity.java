@@ -17,9 +17,11 @@ import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.point.IClue;
@@ -80,6 +82,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     String clueId;
     ClueDetail data;
     private int clueStatus;
+    private boolean isDelete = false, isAdd = false;
 
     private CustomerRegional regional = new CustomerRegional();
 
@@ -100,7 +103,16 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void setupViews() {
-
+        if (!MainApp.user.isSuperUser()) {
+            try {
+                Permission permission = (Permission) MainApp.rootMap.get("4090");
+                if (!permission.isEnable()) {
+                    isDelete = true;
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
         /* Navigation Bar */
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
@@ -151,13 +163,17 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     public void bindData() {
         ClueSales sales = data.data.sales;
+        if (!MainApp.user.id.equals(sales.creatorId)) {//如果不是负责人有编辑 添加的权限
+            img_title_right.setVisibility(View.GONE);
+            isAdd = false;
+        }
                 /* 分区1 */
         section1_username.setText(sales.name);
         section1_company_name.setText(sales.companyName);
         tv_status.setText("" + sales.getStatus());
 
         /* 分区2 */
-        if (data.data.activity == null) {
+        if (sales.saleActivityCount > 0) {
             ll_track.setVisibility(View.GONE);
         } else {
             ll_track.setVisibility(View.VISIBLE);
@@ -165,6 +181,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.remindAt + "") * 1000))
                     + "  " + data.data.activity.contactName + " # " + data.data.activity.typeName);
         }
+        tv_visit_number.setText("(" + sales.saleActivityCount + ")");
 
         /* 分区3 */
         contact_mobile.setText(sales.cellphone);
@@ -173,7 +190,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         tv_address.setText(sales.address);
         clue_source.setText(sales.source);
         clue_note.setText(sales.remark);
-        tv_visit_number.setText("(" + sales.saleActivityCount + ")");
+
         /* 分区4 */
         responsible_name.setText(sales.responsorName);
         creator_name.setText(sales.creatorName);
@@ -270,10 +287,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         Intent intent = new Intent();
         intent.putExtra(ExtraAndResult.EXTRA_ID, data.data.sales.id);
         String name = data.data.sales.name;
-        if (TextUtils.isEmpty(name)){
+        if (TextUtils.isEmpty(name)) {
             name = "";
         }
         intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
+        intent.putExtra(ExtraAndResult.EXTRA_ADD, isAdd);
         intent.setClass(this, ClueFollowupActivity.class);
         startActivityForResult(intent, this.RESULT_FIRST_USER);
         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -285,48 +303,55 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      */
     private void functionButton() {
         ActionSheetDialog dialog = new ActionSheetDialog(ClueDetailActivity.this).builder();
-        if (true /* 是否有权限转移客户 */) {
-            dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    Bundle mBundle = new Bundle();
-                    mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
-                    app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT,mBundle);
-                }
-            });
-        }
+        dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                Bundle mBundle = new Bundle();
+                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
+                app.startActivityForResult(ClueDetailActivity.this, ClueTransferActiviyt.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
+            }
+        });
 
-        if (true /* 是否有权限转移给他人 */) {
-            dialog.addSheetItem("转移给他人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    SelectDetUserActivity2.startThisForOnly(ClueDetailActivity.this, null);
-                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                }
-            });
-        }
+        dialog.addSheetItem("转移给他人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                SelectDetUserActivity2.startThisForOnly(ClueDetailActivity.this, null);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            }
+        });
 
-        if (true /* 是否有权限编辑 */) {
-            dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    Bundle mBundle = new Bundle();
-                    mBundle.putString(ExtraAndResult.EXTRA_ID, clueId);
-                    mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data);
-                    app.startActivityForResult(ClueDetailActivity.this, ClueAddActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
-                }
-            });
-        }
+        dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                Bundle mBundle = new Bundle();
+                mBundle.putString(ExtraAndResult.EXTRA_ID, clueId);
+                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data);
+                app.startActivityForResult(ClueDetailActivity.this, ClueAddActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, mBundle);
+            }
+        });
 
-        if (true /* 是否有权限删除 */) {
+        if (isDelete)
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    deleteClue();
+                    final GeneralPopView dailog = showGeneralDialog(true, true, "线索删除过后不可恢复，\n你确定要删除？");
+                    dailog.setSureOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteClue();
+                            dailog.dismisDialog();
+                        }
+                    });
+                    dailog.setCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dailog.dismisDialog();
+                        }
+                    });
+
                 }
             });
-        }
 
         dialog.show();
     }
@@ -459,6 +484,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【转 移】线索：", response);
+//                        getClueDetail();
+                        onBackPressed();
                     }
 
                     @Override
@@ -477,8 +504,21 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
         switch (requestCode) {
             case SelectDetUserActivity2.REQUEST_ONLY:
-                NewUser u = (NewUser) data.getSerializableExtra("data");
-                transferClue(u.getId());
+                final NewUser u = (NewUser) data.getSerializableExtra("data");
+                final GeneralPopView dailog = showGeneralDialog(true, true, "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
+                dailog.setSureOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        transferClue(u.getId());
+                        dailog.dismisDialog();
+                    }
+                });
+                dailog.setCancelOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dailog.dismisDialog();
+                    }
+                });
                 break;
 
             /*转移客户*/
