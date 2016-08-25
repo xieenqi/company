@@ -46,6 +46,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             img_title_right  /* 右上菜单 */;
 
     /*  分区1 */
+    ViewGroup ll_status      /* 线索状态 */;
     TextView section1_username    /* 姓名 */,
             section1_company_name /* 公司名称 */,
             tv_status  /* 线索状态 */;
@@ -77,13 +78,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             create_time      /* 创建时间 */,
             update_time      /* 更新时间 */,
             tv_address, tv_visit_number;
-    private LinearLayout ll_status;
+
     /* Data */
     String clueId;
     ClueDetail data;
     private int clueStatus;
     private boolean isDelete = false, isAdd = false;
-
     private CustomerRegional regional = new CustomerRegional();
 
 
@@ -110,6 +110,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         img_title_right.setOnClickListener(this);
 
         /* 分区1 */
+        ll_status = (LinearLayout) findViewById(R.id.ll_status);
+        ll_status.setOnClickListener(this); // 选择状态
+
         section1_username = (TextView) findViewById(R.id.tv_section1_username);
         section1_company_name = (TextView) findViewById(R.id.tv_section1_company_name);
         tv_status = (TextView) findViewById(R.id.tv_status);
@@ -147,8 +150,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         create_time = (TextView) findViewById(R.id.tv_create_time);
         update_time = (TextView) findViewById(R.id.tv_update_time);
         tv_address = (TextView) findViewById(R.id.tv_address);
-        ll_status = (LinearLayout) findViewById(R.id.ll_status);
-        ll_status.setOnClickListener(this); // 选择状态
+
     }
 
     public void bindData() {
