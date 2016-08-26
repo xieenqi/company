@@ -12,11 +12,8 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
@@ -77,6 +74,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -241,8 +239,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 if (view.getLastVisiblePosition() == view.getCount() - 1) {
                     btn_add.startAnimation(app.animHide);
                     btn_add.setVisibility(View.INVISIBLE);
-                }else{
-                    if(btn_add.getVisibility() == View.INVISIBLE){
+                } else {
+                    if (btn_add.getVisibility() == View.INVISIBLE) {
                         btn_add.startAnimation(app.animShow);
                         btn_add.setVisibility(View.VISIBLE);
                     }
@@ -601,32 +599,58 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             suitesNew.clear();
             suitesNew.addAll(MainApp.user.newpermission);
 
+            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
             for (Permission permission : suitesNew) {
-                LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
-                for (int i = 0; i < items.size(); i++) {
-                    if (items.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
-                            items.remove(i);
-                        }
-                    }
-                }
-
-                for (int i = 0; i < caseItems.size(); i++) {
-                    if (caseItems.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
-                            caseItems.remove(i);
-                        }
-                    }
-                }
-
-                for (int i = 0; i < caseItems.size(); i++) {
-                    if (caseItems.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
-                            caseItems.remove(i);
-                        }
-                    }
+                if (!TextUtils.isEmpty(permission.code)) {
+                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+                    mappedPermission.put(permission.code, permission);
                 }
             }
+
+            for (int i = 0; i < items.size(); i++) {
+                String code = items.get(i).code;
+                Permission p = mappedPermission.get(code);
+                if ((p == null || p.enable == false) && code != "0") {
+                    items.remove(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < caseItems.size(); i++) {
+                String code = caseItems.get(i).code;
+                Permission p = mappedPermission.get(code);
+                if ((p == null || p.enable == false) && code != "0") {
+                    caseItems.remove(i);
+                    i--;
+                }
+            }
+
+//            for (Permission permission : suitesNew) {
+//                LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+//                for (int i = 0; i < items.size(); i++) {
+//                    if (items.get(i).code.equals(permission.getCode())) {
+//                        if (!permission.isEnable()) {
+//                            items.remove(i);
+//                        }
+//                    }
+//                }
+//
+//                for (int i = 0; i < caseItems.size(); i++) {
+//                    if (caseItems.get(i).code.equals(permission.getCode())) {
+//                        if (!permission.isEnable()) {
+//                            caseItems.remove(i);
+//                        }
+//                    }
+//                }
+//
+//                for (int i = 0; i < caseItems.size(); i++) {
+//                    if (caseItems.get(i).code.equals(permission.getCode())) {
+//                        if (!permission.isEnable()) {
+//                            caseItems.remove(i);
+//                        }
+//                    }
+//                }
+//            }
         }
         initView();
     }
@@ -761,6 +785,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
 
     @Override
     public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
+        UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);

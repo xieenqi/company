@@ -44,6 +44,8 @@ import com.loyo.oa.v2.tool.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.transform.Result;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -136,7 +138,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
-            mView = inflater.inflate(R.layout.fragment_my_order, null);
+            mView = inflater.inflate(R.layout.fragment_my_clue, null);
             initView(mView);
         }
         return mView;
@@ -178,15 +180,16 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void setFilterData() {
-        for (int i = 0; i < sort.length; i++) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(sort[i]);
-            sortData.add(saleTeamScreen);
-        }
         for (int i = 0; i < status.length; i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(status[i]);
             statusData.add(saleTeamScreen);
+        }
+
+        for (int i = 0; i < sort.length; i++) {
+            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
+            saleTeamScreen.setName(sort[i]);
+            sortData.add(saleTeamScreen);
         }
     }
 
@@ -204,8 +207,25 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
 
                 break;
 
-            //状态选择
+            //时间选择
             case R.id.salemy_screen1:
+            {
+                SaleCommPopupView  saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
+                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
+                saleCommPopupView.showAsDropDown(salemy_screen2);
+                openPopWindow(salemy_screen1_iv2);
+                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        closePopupWindow(salemy_screen1_iv2);
+                    }
+                });
+            }
+                break;
+
+            //状态
+            case R.id.salemy_screen2:
+            {
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen1);
@@ -216,20 +236,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                         closePopupWindow(salemy_screen1_iv1);
                     }
                 });
-                break;
-
-            //排序
-            case R.id.salemy_screen2:
-                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
-                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
-                saleCommPopupView.showAsDropDown(salemy_screen2);
-                openPopWindow(salemy_screen1_iv2);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv2);
-                    }
-                });
+            }
                 break;
         }
     }

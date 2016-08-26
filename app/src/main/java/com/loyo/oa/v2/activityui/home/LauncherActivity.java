@@ -20,6 +20,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -44,7 +45,7 @@ public class LauncherActivity extends Activity {
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
-
+                UMengTools.sendLocationInfo(address, longitude, latitude);
             }
 
             @Override

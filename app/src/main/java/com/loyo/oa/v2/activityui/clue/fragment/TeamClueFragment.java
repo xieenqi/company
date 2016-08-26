@@ -18,13 +18,11 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
-import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
@@ -66,7 +64,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     private String userId = "";
     private String field  = "";
     private String order  = "";
-    private String[] status = {"全部状态", "未处理", "已处理", "关闭"};
+    private String[] status = {"全部状态", "未处理", "已联系", "关闭"};
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
     private ArrayList<ClueListItem> listData = new ArrayList<>();
     private List<Department> mDeptSource;  //部门和用户集合
@@ -162,7 +160,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(null == mView){
-            mView = inflater.inflate(R.layout.fragment_team_order, null);
+            mView = inflater.inflate(R.layout.fragment_team_clue, null);
             initView(mView);
         }
         return mView;
@@ -184,7 +182,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        lv_list.setEmptyView(emptyView);
+
         /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -198,7 +196,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 
             }
         });
-        adapter = new TeamClueAdapter(getActivity(),listData);
+        adapter = new TeamClueAdapter(getActivity());
         lv_list.setAdapter(adapter);
         getData();
     }
@@ -294,6 +292,22 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 });
                 break;
             case R.id.screen2://状态筛选
+            {
+                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
+                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
+                saleCommPopupView.showAsDropDown(screen3);
+                openPopWindow(screen3_iv3);
+                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        closePopupWindow(screen3_iv3);
+                    }
+                });
+            }
+
+                break;
+            case R.id.screen3://排序
+            {
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
                 saleCommPopupView.showAsDropDown(screen2);
@@ -304,18 +318,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                         closePopupWindow(screen2_iv2);
                     }
                 });
-                break;
-            case R.id.screen3://排序
-                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
-                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
-                saleCommPopupView.showAsDropDown(screen3);
-                openPopWindow(screen3_iv3);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(screen3_iv3);
-                    }
-                });
+            }
                 break;
         }
     }
@@ -358,6 +361,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
+                lv_list.setEmptyView(emptyView);
                 HttpErrorCheck.checkResponse("我的线索列表：", response);
                 try {
                     if (!isPullDown) {
