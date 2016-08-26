@@ -18,11 +18,13 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
+import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
@@ -62,8 +64,8 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     private boolean isPullDown = true, isKind;
     private String xPath = "";
     private String userId = "";
-    private String field = "";
-    private String order = "";
+    private String field  = "";
+    private String order  = "";
     private String[] status = {"全部状态", "未处理", "已联系", "关闭"};
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
     private ArrayList<ClueListItem> listData = new ArrayList<>();
@@ -94,7 +96,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                     isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
                     page = 1;
-                    LogUtil.dee("statusIndex:" + statusIndex);
+                    LogUtil.dee("statusIndex:"+statusIndex);
                     break;
 
                 /*排序选择回调*/
@@ -103,7 +105,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                     sortIndex = (int) msg.getData().get("index");
                     page = 1;
 
-                    switch (sortIndex) {
+                    switch (sortIndex){
 
                         /*跟进时间 倒序*/
                         case 0:
@@ -148,7 +150,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                         userId = saleTeamScreen.getId();
                     }
                     page = 1;
-                    LogUtil.dee("isKind:" + isKind);
+                    LogUtil.dee("isKind:"+isKind);
                     break;
             }
             getData();
@@ -159,8 +161,8 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (null == mView) {
-            mView = inflater.inflate(R.layout.fragment_team_order, null);
+        if(null == mView){
+            mView = inflater.inflate(R.layout.fragment_team_clue, null);
             initView(mView);
         }
         return mView;
@@ -196,7 +198,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 
             }
         });
-        adapter = new TeamClueAdapter(getActivity());
+        adapter = new TeamClueAdapter(getActivity(),listData);
         lv_list.setAdapter(adapter);
         getData();
     }
@@ -305,7 +307,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 });
             }
 
-            break;
+                break;
             case R.id.screen3://排序
             {
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
@@ -319,7 +321,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                     }
                 });
             }
-            break;
+                break;
         }
     }
 
@@ -350,11 +352,11 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("status", statusIndex);
-        map.put("field", field);
-        map.put("order", order);
-        map.put("xpath", xPath);
-        map.put("userId", userId);
+        map.put("status",statusIndex);
+        map.put("field",field);
+        map.put("order",order);
+        map.put("xpath",xPath);
+        map.put("userId",userId);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IClue.class).getTeamCluelist(map, new Callback<ClueList>() {
