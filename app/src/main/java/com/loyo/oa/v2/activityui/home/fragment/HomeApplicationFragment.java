@@ -74,6 +74,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -598,32 +599,58 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             suitesNew.clear();
             suitesNew.addAll(MainApp.user.newpermission);
 
+            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
             for (Permission permission : suitesNew) {
-                LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
-                for (int i = 0; i < items.size(); i++) {
-                    if (items.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
-                            items.remove(i);
-                        }
-                    }
-                }
-
-                for (int i = 0; i < caseItems.size(); i++) {
-                    if (caseItems.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
-                            caseItems.remove(i);
-                        }
-                    }
-                }
-
-                for (int i = 0; i < caseItems.size(); i++) {
-                    if (caseItems.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
-                            caseItems.remove(i);
-                        }
-                    }
+                if (!TextUtils.isEmpty(permission.code)) {
+                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+                    mappedPermission.put(permission.code, permission);
                 }
             }
+
+            for (int i = 0; i < items.size(); i++) {
+                String code = items.get(i).code;
+                Permission p = mappedPermission.get(code);
+                if (p == null || p.enable == false) {
+                    items.remove(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < caseItems.size(); i++) {
+                String code = caseItems.get(i).code;
+                Permission p = mappedPermission.get(code);
+                if (p == null || p.enable == false) {
+                    caseItems.remove(i);
+                    i--;
+                }
+            }
+
+//            for (Permission permission : suitesNew) {
+//                LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+//                for (int i = 0; i < items.size(); i++) {
+//                    if (items.get(i).code.equals(permission.getCode())) {
+//                        if (!permission.isEnable()) {
+//                            items.remove(i);
+//                        }
+//                    }
+//                }
+//
+//                for (int i = 0; i < caseItems.size(); i++) {
+//                    if (caseItems.get(i).code.equals(permission.getCode())) {
+//                        if (!permission.isEnable()) {
+//                            caseItems.remove(i);
+//                        }
+//                    }
+//                }
+//
+//                for (int i = 0; i < caseItems.size(); i++) {
+//                    if (caseItems.get(i).code.equals(permission.getCode())) {
+//                        if (!permission.isEnable()) {
+//                            caseItems.remove(i);
+//                        }
+//                    }
+//                }
+//            }
         }
         initView();
     }

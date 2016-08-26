@@ -60,7 +60,7 @@ import retrofit.mime.TypedString;
  * 【线索转移客户】
  * Created by yyy on 16/8/22.
  */
-public class ClueTransferActiviyt extends BaseActivity implements View.OnClickListener{
+public class ClueTransferActivity extends BaseActivity implements View.OnClickListener{
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
@@ -179,7 +179,7 @@ public class ClueTransferActiviyt extends BaseActivity implements View.OnClickLi
             loPosition = app.longitude;
         }
 
-        edt_name.setText(mCluesales.name);                //名字
+        edt_name.setText(mCluesales.companyName);         //公司名字
         edit_address_details.setText(mCluesales.address); //地址
         edt_contract.setText(mCluesales.name);            //联系人
         edt_contract_tel.setText(mCluesales.cellphone);   //手机号

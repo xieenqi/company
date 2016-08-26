@@ -118,11 +118,19 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                if (TextUtils.isEmpty(et_name.getText().toString())) {
+                if (TextUtils.isEmpty(et_name.getText().toString().trim())) {
                     Toast("请输入线索名称");
                     return;
-                } else if (TextUtils.isEmpty(et_company.getText().toString())) {
+                } else if (TextUtils.isEmpty(et_company.getText().toString().trim())) {
                     Toast("请输入公司名称");
+                    return;
+                }
+                if (et_name.getText().toString().trim().length() > 20) {
+                    Toast("线索名称应少于20个字符");
+                    return;
+                }
+                if (et_company.getText().toString().trim().length() > 50) {
+                    Toast("公司名称应少于50个字符");
                     return;
                 }
                 addDataInfo();
