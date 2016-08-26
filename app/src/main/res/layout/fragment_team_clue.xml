@@ -27,7 +27,7 @@
                 android:ellipsize="end"
                 android:maxEms="6"
                 android:singleLine="true"
-                android:text="全公司"
+                android:text="部门"
                 />
 
             <ImageView
@@ -58,7 +58,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="全部状态"/>
+                android:text="时间"/>
 
             <ImageView
                 android:id="@+id/screen2_iv2"
@@ -88,7 +88,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="排序"/>
+                android:text="状态"/>
 
             <ImageView
                 android:id="@+id/screen3_iv3"
