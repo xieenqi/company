@@ -158,8 +158,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         if (!MainApp.user.id.equals(sales.responsorId)) {//如果不是负责人有编辑 添加的权限
             img_title_right.setVisibility(View.GONE);
             isAdd = false;
-        }
-        else {
+        } else {
             img_title_right.setVisibility(View.VISIBLE);
             isAdd = true;
         }
@@ -182,13 +181,13 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
         /* 分区2 */
         if (sales.saleActivityCount <= 0      /* 没有拜访记录 */
-                || data.data.activity == null /* 当>0时，服务端也可能返空数据 */ ) {
+                || data.data.activity == null /* 当>0时，服务端也可能返空数据 */) {
             ll_track.setVisibility(View.GONE);
         } else {
             ll_track.setVisibility(View.VISIBLE);
             tv_track_content.setText(data.data.activity.content);
-            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.remindAt + "") * 1000))
-                    + "  " + data.data.activity.contactName + " # " + data.data.activity.typeName);
+            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.createdAt + "") * 1000))
+                    + "  " + data.data.activity.creatorName + " # " + data.data.activity.typeName);
         }
         tv_visit_number.setText("(" + sales.saleActivityCount + ")");
 
@@ -370,7 +369,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      */
     void selectArea() {
         String[] cityValue = null;
-        if (data!= null && data.data != null && data.data.sales != null
+        if (data != null && data.data != null && data.data.sales != null
                 && data.data.sales.region != null) {
             cityValue = data.data.sales.region.toArray();
         }
@@ -454,7 +453,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         HttpErrorCheck.checkResponse("【编辑详情】线索：", response);
                         /* 提交成功，更新本地model */
                         if (1 == function
-                                && data != null && data.data !=null && data.data.sales != null) {
+                                && data != null && data.data != null && data.data.sales != null) {
                             data.data.sales.region = regional;
                             clue_region.setText(regional.salesleadDisplayText());
                         }
@@ -466,7 +465,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         HttpErrorCheck.checkError(error);
                         /* 提交失败，更新UI至原来状态 */
                         if (1 == function
-                                &&data != null && data.data !=null && data.data.sales != null) {
+                                && data != null && data.data != null && data.data.sales != null) {
                             clue_region.setText(data.data.sales.region.salesleadDisplayText());
                         }
 
@@ -486,7 +485,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【删除详情】线索：", response);
-                        app.finishActivity(ClueDetailActivity.this,MainApp.ENTER_TYPE_LEFT,ExtraAndResult.REQUEST_CODE,new Intent());
+                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
                     }
 
                     @Override
