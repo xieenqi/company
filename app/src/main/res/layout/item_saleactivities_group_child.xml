@@ -70,7 +70,8 @@
                 android:id="@+id/iv_imgTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_tx1"/>
+                android:src="@drawable/icon_tx1"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -81,7 +82,8 @@
                 android:paddingLeft="@dimen/dimen_10"
                 android:text=""
                 android:textColor="@color/text99"
-                android:textSize="@dimen/text_sp12"/>
+                android:textSize="@dimen/text_sp12"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
