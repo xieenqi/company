@@ -146,7 +146,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                     if (mIndex == 0) {
                         type = 1;
                     } else {
-                        type = 3;
+                        type = 2;
                     }
                 }
                 LogUtil.dee("type:"+type);
