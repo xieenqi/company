@@ -188,7 +188,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         } else {
             ll_track.setVisibility(View.VISIBLE);
             tv_track_content.setText(data.data.activity.content);
-            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.createdAt + "") * 1000))
+            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.createAt + "") * 1000))
                     + "  " + data.data.activity.creatorName + " # " + data.data.activity.typeName);
         }
         tv_visit_number.setText("(" + sales.saleActivityCount + ")");

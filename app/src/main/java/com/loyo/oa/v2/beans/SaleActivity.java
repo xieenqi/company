@@ -21,8 +21,7 @@ public class SaleActivity extends BaseBeans implements Serializable {
     //精简过后的跟进动态 ben  20160612
     public String id;
     public String creatorName;
-    public long createAt;//客户的跟进动态
-    public long createdAt;//线索的跟进动态
+    public long createAt;
     public String content;
     public String typeName;
     public long remindAt;
