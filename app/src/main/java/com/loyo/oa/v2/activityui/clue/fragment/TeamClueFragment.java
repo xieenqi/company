@@ -162,7 +162,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(null == mView){
-            mView = inflater.inflate(R.layout.fragment_team_order, null);
+            mView = inflater.inflate(R.layout.fragment_team_clue, null);
             initView(mView);
         }
         return mView;
