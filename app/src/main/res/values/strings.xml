@@ -63,5 +63,9 @@
     <string name="title_activity_clue_detail">ClueDetailActivity</string>
     <string name="title_activity_clue_followup">ClueFollowupActivity</string>
     <string name="title_activity_clue_followup_create">ClueFollowupCreateActivity</string>
+    <string name="title_activity_worksheet_manage">WorksheetManageActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
