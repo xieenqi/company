@@ -239,8 +239,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 if (view.getLastVisiblePosition() == view.getCount() - 1) {
                     btn_add.startAnimation(app.animHide);
                     btn_add.setVisibility(View.INVISIBLE);
-                }else{
-                    if(btn_add.getVisibility() == View.INVISIBLE){
+                } else {
+                    if (btn_add.getVisibility() == View.INVISIBLE) {
                         btn_add.startAnimation(app.animShow);
                         btn_add.setVisibility(View.VISIBLE);
                     }
@@ -610,7 +610,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             for (int i = 0; i < items.size(); i++) {
                 String code = items.get(i).code;
                 Permission p = mappedPermission.get(code);
-                if (p == null || p.enable == false) {
+                if ((p == null || p.enable == false) && code != "0") {
                     items.remove(i);
                     i--;
                 }
@@ -619,7 +619,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             for (int i = 0; i < caseItems.size(); i++) {
                 String code = caseItems.get(i).code;
                 Permission p = mappedPermission.get(code);
-                if (p == null || p.enable == false) {
+                if ((p == null || p.enable == false) && code != "0") {
                     caseItems.remove(i);
                     i--;
                 }
