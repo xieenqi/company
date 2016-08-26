@@ -237,6 +237,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(),mContext);
                 lv_listview.setAdapter(nestionListAdapter);
             }catch (NullPointerException e){
+                lv_listview.setVisibility(View.GONE);
                 e.printStackTrace();
             }
 

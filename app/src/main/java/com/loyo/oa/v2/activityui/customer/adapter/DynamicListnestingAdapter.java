@@ -13,13 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.other.PreviewImagefromHttp;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -98,7 +96,7 @@ public class DynamicListnestingAdapter extends BaseAdapter {
         });
 
         holder.tv_image_name.setText(attachment.getOriginalName());
-        holder.tv_image_size.setText(attachment.getSize());
+        holder.tv_image_size.setText(Utils.FormetFileSize(Long.valueOf(attachment.getSize())));
 
         holder.iv_image.setOnClickListener(new View.OnClickListener() {
             @Override
