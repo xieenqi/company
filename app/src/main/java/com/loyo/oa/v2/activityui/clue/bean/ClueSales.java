@@ -25,8 +25,8 @@ public class ClueSales implements Serializable {
     public String creatorName;
     public String responsorId;
     public String responsorName;
-    public long createAt;
-    public long updateAt;
+    public long createdAt;
+    public long updatedAt;
     public long lastActAt;
     public int saleActivityCount;
 

@@ -235,19 +235,19 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
             tv_contact_name.setText("联系人：" + saleActivity.contactName);
             tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
 
-            if (saleActivity.getRemindAt() != 0) {
-                tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
-            } else {
-                tv_time.setText("无");
-            }
+//            if (saleActivity.getRemindAt() != 0) {
+//                tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
+//            } else {
+//                tv_time.setText("无");
+//            }
             //提醒时间没有过当前时间变红色
-            if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
-                tv_time.setTextColor(getResources().getColor(R.color.red1));
-                iv_imgTime.setImageResource(R.drawable.icon_tx2);
-            } else {
-                tv_time.setTextColor(getResources().getColor(R.color.text99));
-                iv_imgTime.setImageResource(R.drawable.icon_tx1);
-            }
+//            if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
+//                tv_time.setTextColor(getResources().getColor(R.color.red1));
+//                iv_imgTime.setImageResource(R.drawable.icon_tx2);
+//            } else {
+//                tv_time.setTextColor(getResources().getColor(R.color.text99));
+//                iv_imgTime.setImageResource(R.drawable.icon_tx1);
+//            }
             if (i == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);
             } else {

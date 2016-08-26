@@ -22,6 +22,7 @@ public class SaleActivity extends BaseBeans implements Serializable {
     public String id;
     public String creatorName;
     public long createAt;
+    public long createdAt; /* add by ethan 2016.8.26 */
     public String content;
     public String typeName;
     public long remindAt;

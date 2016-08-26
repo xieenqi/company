@@ -155,14 +155,16 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     public void bindData() {
         ClueSales sales = data.data.sales;
-        if (!MainApp.user.id.equals(sales.responsorId)) {//如果不是负责人有编辑 添加的权限
-            img_title_right.setVisibility(View.GONE);
-            isAdd = false;
-        }
-        else {
-            img_title_right.setVisibility(View.VISIBLE);
-            isAdd = true;
-        }
+//        if (!MainApp.user.id.equals(sales.responsorId)) {//如果不是负责人有编辑 添加的权限
+////            img_title_right.setVisibility(View.GONE);
+//            isAdd = false;
+//        }
+//        else {
+////            img_title_right.setVisibility(View.VISIBLE);
+//            isAdd = true;
+//        }
+
+        isAdd = true;
 
         if (!MainApp.user.isSuperUser()) {
             try {
@@ -187,7 +189,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         } else {
             ll_track.setVisibility(View.VISIBLE);
             tv_track_content.setText(data.data.activity.content);
-            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.remindAt + "") * 1000))
+            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.createdAt + "") * 1000))
                     + "  " + data.data.activity.contactName + " # " + data.data.activity.typeName);
         }
         tv_visit_number.setText("(" + sales.saleActivityCount + ")");
@@ -203,8 +205,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         /* 分区4 */
         responsible_name.setText(sales.responsorName);
         creator_name.setText(sales.creatorName);
-        create_time.setText(app.df3.format(new Date(Long.valueOf(sales.createAt + "") * 1000)));
-        update_time.setText(app.df3.format(new Date(Long.valueOf(sales.updateAt + "") * 1000)));
+        create_time.setText(app.df3.format(new Date(Long.valueOf(sales.createdAt + "") * 1000)));
+        update_time.setText(app.df3.format(new Date(Long.valueOf(sales.updatedAt + "") * 1000)));
     }
 
     private void getIntenData() {
