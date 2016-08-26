@@ -141,6 +141,9 @@ public class ClueFollowupCreateActivity extends BaseActivity implements View.OnC
                 map.put("sealsleadId", clueId);
                 map.put("content", content);
                 map.put("typeId", tagItemIds);
+                if (contactName != null) {
+                    map.put("contactName", contactName);
+                }
 
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).addSaleactivity(map, new RCallback<SaleActivity>() {
                     @Override
