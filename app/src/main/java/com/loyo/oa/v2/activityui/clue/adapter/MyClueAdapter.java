@@ -6,10 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.application.MainApp;
+
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -65,7 +68,7 @@ public class MyClueAdapter extends BaseAdapter{
         holder.tv_name.setText(clueListItem.name);
         holder.tv_company_name.setText(clueListItem.companyName);
         if(clueListItem.lastActAt != 0){
-            holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd HH:mm"));
+            holder.tv_time.setText(MainApp.getMainApp().df3.format(new Date(Long.valueOf(clueListItem.lastActAt + "") * 1000)));
         }
 
         return convertView;
