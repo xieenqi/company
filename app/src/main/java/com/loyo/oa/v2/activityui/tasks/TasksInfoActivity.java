@@ -795,7 +795,7 @@ public class TasksInfoActivity extends BaseActivity {
     void openUpload() {
         Intent intent = new Intent(this, SelectPicPopupWindow.class);
         intent.putExtra("localpic", true);
-        startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+        startActivityForResult(intent, MainApp.GET_IMG);
     }
 
     /**

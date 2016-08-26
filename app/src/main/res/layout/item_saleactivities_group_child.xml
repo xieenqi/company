@@ -33,6 +33,16 @@
             android:textColor="@color/text66"
             android:textSize="@dimen/text_sp15"/>
 
+        <com.loyo.oa.v2.customview.CustomerListView
+            android:id="@+id/lv_listview"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginBottom="@dimen/dimen_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:listSelector="@android:color/transparent"
+            />
+
 
         <TextView
             android:id="@+id/tv_contact_name"

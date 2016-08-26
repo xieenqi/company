@@ -23,6 +23,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -68,6 +70,9 @@ public class MainApp extends Application {
     public static final int ENTER_TYPE_RIGHT = 4;
     public static final int ENTER_TYPE_ZOOM_OUT = 5;
     public static final int ENTER_TYPE_ZOOM_IN = 6;
+    public static final int GET_IMG = 1013;
+    public static final int PHOTO = 1011;
+    public static final int PICTURE = 1012;
 
     public static long nowTime;
     public static long lastTime;
@@ -290,20 +295,6 @@ public class MainApp extends Application {
         options_3 = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).considerExifParams(true).build();
     }
 
-//    void init_StrictMode() {
-//        if (Config_project.is_developer_mode) {
-//            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-//                    //                    .detectAll()
-//                    .detectDiskReads().detectDiskWrites().detectNetwork()   // or .detectAll() for all detectable problems
-//                    .penaltyLog()
-//                            //                    .penaltyDialog()
-//                    .build());
-//            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-//                    //                    .detectAll()
-//                    .detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
-//        }
-//    }
-
     public static void initImageLoader(Context context) {
 
         File cacheDir = StorageUtils.getOwnCacheDirectory(mainApp.getBaseContext(), "imageloader/Cache");
@@ -329,8 +320,6 @@ public class MainApp extends Application {
         }
 
         ImageLoaderConfiguration config = builder.build();
-
-        // Initialize ImageLoader with configuration
         ImageLoader.getInstance().init(config);
     }
 
@@ -341,10 +330,6 @@ public class MainApp extends Application {
     public int diptoPx(float dipValue) {
 
         float density = getResources().getDisplayMetrics().density;
-        //	 Log.d("diptoPx", "density:" + density);
-        // Log.d("diptoPx", "return:" + (int) (dipValue * density + 0.5f));
-        // DisplayMetrics dm = this.getApplicationContext().getResources().getDisplayMetrics();
-        // Log.d("diptoPx", "dm.densityDpi/ 160:" + (float)dm.densityDpi/ 160f);
         return (int) (dipValue * density + 0.5f);
     }
 
@@ -393,6 +378,19 @@ public class MainApp extends Application {
     //        Log.d(tag, "p.y:" + p.y);
     //        return p;
     //    }
+
+
+    /**
+     * 跳转相册，公用方法
+     * */
+    public void startSelectImage(Activity mActivity,ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots){
+        Intent intent = new Intent(mActivity, MultiImageSelectorActivity.class);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-pickPhots.size()) /*最大可选择图片数量*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
+        mActivity.startActivityForResult(intent, PICTURE);
+    }
 
     /**
      * @param activity
