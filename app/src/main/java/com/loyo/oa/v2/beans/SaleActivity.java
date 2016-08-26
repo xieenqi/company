@@ -27,16 +27,7 @@ public class SaleActivity extends BaseBeans implements Serializable {
     public long remindAt;
     public String contactName;
 
-    //    type SaleActivitySimple struct {
-//        Id          bson.ObjectId `json:"id"`
-//        CreatorName string        `json:"creatorName"` //跟进人
-//        CreateAt    int64         `json:"createAt"`
-//        Content     string        `json:"content,omitempty"`
-//        RemindAt    int64         `json:"remindAt"`
-//        TypeName    string        `json:"typeName,omitempty"`
-//        ContactId   string        `json:"-"`
-//        ContactName string        `json:"contactName,omitempty"` //联系人
-//    }
+
     @Override
     public String getOrderStr() {
         return getCreateAt() + "";

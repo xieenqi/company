@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import uk.co.senab.photoview.PhotoView;
 
 /**
- * 【业务新建】预览图片
+ * 【预览本地图片】
  */
 public class PreviewImageAddActivity extends BaseActivity {
 

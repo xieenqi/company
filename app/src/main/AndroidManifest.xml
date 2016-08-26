@@ -637,7 +637,17 @@
             android:name=".activityui.clue.ClueSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activityui.customer.DynamicAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activityui.other.PreviewImagefromHttp"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
 
         <service
             android:name=".service.InitDataService_"

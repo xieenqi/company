@@ -64,10 +64,10 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     private int bizType;
     private int attachmentCount = 0; //当前附件总数
     private int uploadSize;
-    private int uploadNum = 0; //上传附件数量
-    private boolean isOver;    //当前业务已经结束
+    private int uploadNum = 0;      //上传附件数量
+    private boolean isOver;         //当前业务已经结束
     private boolean isPic = false;
-    private boolean isAdd;     //操作权限
+    private boolean isAdd;          //操作权限
 
     private LinearLayout img_title_left;
     private TextView tv_title;
@@ -320,15 +320,14 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
             //上传
             case R.id.tv_upload:
 
-                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                // 是否显示拍摄图片
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-                // 最大可选择图片数量
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9);
-                // 选择模式
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
+/*              Intent intent = new Intent(this, MultiImageSelectorActivity.class);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true *//*是否显示拍照图片*//*);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9 *//*最大可选择图片数量*//*);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI *//*选择模式*//*);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                startActivityForResult(intent, 2);
+                startActivityForResult(intent, 2);*/
+
+                MainApp.getMainApp().startSelectImage(this, pickPhots);
 
                 break;
 
@@ -354,7 +353,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
         switch (requestCode) {
 
             //相册选择回调
-            case SelectPicPopupWindow.PICTURE:
+            case MainApp.PICTURE:
                 if (null != data) {
                     pickPhots = new ArrayList<>();
                     mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);

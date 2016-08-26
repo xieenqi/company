@@ -16,6 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.FeedBackCommit;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -185,7 +186,7 @@ public class FeedbackActivity extends BaseActivity {
             return;
         }
         switch (requestCode) {
-            case SelectPicPopupWindow.GET_IMG://上传附件
+            case MainApp.GET_IMG://上传附件
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
