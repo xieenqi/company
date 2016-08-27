@@ -2,12 +2,11 @@ package com.loyo.oa.v2.activityui.worksheet.bean;
 
 import com.loyo.oa.v2.activityui.worksheet.common.Groupable;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 
 /**
  * Created by EthanGong on 16/8/27.
  */
-public class WorkSheetEvent implements Groupable, Comparable<WorkSheetEvent>  {
+public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
     public String id;
     public String workSheetId;
     public int order;         // 顺序
@@ -26,7 +25,7 @@ public class WorkSheetEvent implements Groupable, Comparable<WorkSheetEvent>  {
 
     /** 相同状态下，按时间创建排序, 最新排前  */
     @Override
-    public int compareTo(WorkSheetEvent another) {
+    public int compareTo(WorksheetEvent another) {
         if (startTime < another.startTime) {
             return -1;
         }
