@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -19,6 +21,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -40,13 +43,15 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
 
     public static final int ACTIVITIES_ADD = 101;
 
-    ViewGroup img_title_left, layout_add;
-    PullToRefreshListView lv_saleActivity;
-    SaleActivitiesAdapter listAdapter;
-    ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
+    private ViewGroup img_title_left, layout_add;
+    private PullToRefreshListView lv_saleActivity;
+    private SaleActivitiesAdapter listAdapter;
+    private DynamicListnestingAdapter  nestionListAdapter;
+    private ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
     private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
-    Customer customer;
-    SaleActivity mSaleActivity;
+    private Customer customer;
+    private SaleActivity mSaleActivity;
+
     private boolean isChanged;
     private boolean isTopAdd = true;
     boolean isMyUser;
@@ -114,13 +119,21 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
+
+            /*返回*/
             case R.id.img_title_left:
                 onBackPressed();
                 break;
+
+            /*新建*/
             case R.id.layout_add:
+              /*  Bundle bundle = new Bundle();
+                bundle.putSerializable(Customer.class.getName(), customer);
+                app.startActivityForResult(this, SaleActivitiesAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);*/
+
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Customer.class.getName(), customer);
-                app.startActivityForResult(this, SaleActivitiesAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
             default:
 
@@ -206,6 +219,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }
 
+            ListView lv_listview    = ViewHolder.get(convertView,R.id.lv_listview);
             TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
             TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
@@ -218,6 +232,14 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             tv_content.setText(saleActivity.getContent());
             tv_contact_name.setText("联系人：" + saleActivity.contactName);
             tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
+
+            try{
+                nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(),mContext);
+                lv_listview.setAdapter(nestionListAdapter);
+            }catch (NullPointerException e){
+                lv_listview.setVisibility(View.GONE);
+                e.printStackTrace();
+            }
 
             if (saleActivity.getRemindAt() != 0) {
                 tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
