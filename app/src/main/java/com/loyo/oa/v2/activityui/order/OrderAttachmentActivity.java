@@ -320,14 +320,12 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
             //上传
             case R.id.tv_upload:
 
-/*              Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true *//*是否显示拍照图片*//*);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9 *//*最大可选择图片数量*//*);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI *//*选择模式*//*);
+                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍照图片*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9/*最大可选择图片数量*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI /*选择模式*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                startActivityForResult(intent, 2);*/
-
-                MainApp.getMainApp().startSelectImage(this, pickPhots);
+                startActivityForResult(intent,MainApp.PICTURE);
 
                 break;
 
