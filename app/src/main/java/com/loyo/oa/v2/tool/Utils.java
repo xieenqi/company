@@ -105,6 +105,28 @@ public class Utils {
     }
 
     /**
+     * 获取屏幕宽度
+     * */
+    public static int getWindowWidth(Context context){
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+
+        int width = wm.getDefaultDisplay().getWidth();
+        return width;
+    }
+
+    /**
+     * 获取屏幕高度
+     * */
+    public static int getWindowHeight(Context context){
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+
+        int height = wm.getDefaultDisplay().getHeight();
+        return height;
+    }
+
+    /**
      * 转换文件大小
      *
      * @param fileS

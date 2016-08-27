@@ -26,8 +26,10 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -47,9 +49,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
     public static final int ACTIVITIES_ADD = 101;
 
-    private ArrayList<OnSoftKeyboardStateChangedListener> mKeyboardStateListeners;      //软键盘状态监听列表
-    private ViewTreeObserver.OnGlobalLayoutListener mLayoutChangeListener;
-    private boolean mIsSoftKeyboardShowing;
+
     private ViewGroup img_title_left, layout_add;
     private PullToRefreshListView lv_saleActivity;
     private SaleActivitiesAdapter listAdapter;
@@ -62,24 +62,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     private boolean isChanged = false;
     private boolean isTopAdd = true;
     private boolean isMyUser;
-    private int screenHeight;
 
-    public interface OnSoftKeyboardStateChangedListener {
-        public void OnSoftKeyboardStateChanged(boolean isKeyBoardShow, int keyboardHeight);
-    }
-
-    //注册软键盘状态变化监听
-    public void addSoftKeyboardChangedListener(OnSoftKeyboardStateChangedListener listener) {
-        if (listener != null) {
-            mKeyboardStateListeners.add(listener);
-        }
-    }
-    //取消软键盘状态变化监听
-    public void removeSoftKeyboardChangedListener(OnSoftKeyboardStateChangedListener listener) {
-        if (listener != null) {
-            mKeyboardStateListeners.remove(listener);
-        }
-    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -93,32 +76,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         setTitle("跟进动态");
         initUI();
         getData();
-
-        mIsSoftKeyboardShowing = false;
-        mKeyboardStateListeners = new ArrayList<OnSoftKeyboardStateChangedListener>();
-        mLayoutChangeListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                //判断窗口可见区域大小
-                Rect r = new Rect();
-                getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
-                //如果屏幕高度和Window可见区域高度差值大于整个屏幕高度的1/3，则表示软键盘显示中，否则软键盘为隐藏状态。
-                int heightDifference = screenHeight - (r.bottom - r.top);
-                boolean isKeyboardShowing = heightDifference > screenHeight/3;
-
-                //如果之前软键盘状态为显示，现在为关闭，或者之前为关闭，现在为显示，则表示软键盘的状态发生了改变
-                if ((mIsSoftKeyboardShowing && !isKeyboardShowing) || (!mIsSoftKeyboardShowing && isKeyboardShowing)) {
-                    mIsSoftKeyboardShowing = isKeyboardShowing;
-                    for (int i = 0; i < mKeyboardStateListeners.size(); i++) {
-                        OnSoftKeyboardStateChangedListener listener = mKeyboardStateListeners.get(i);
-                        listener.OnSoftKeyboardStateChanged(mIsSoftKeyboardShowing, heightDifference);
-                    }
-                }
-            }
-        };
-        //注册布局变化监听
-        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(mLayoutChangeListener);
-
     }
 
     /**
@@ -241,15 +198,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         super.onBackPressed();
     }
 
-    protected void onDestroy() {
-        //移除布局变化监听
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(mLayoutChangeListener);
-        } else {
-            getWindow().getDecorView().getViewTreeObserver().removeGlobalOnLayoutListener(mLayoutChangeListener);
-        }
-        super.onDestroy();
-    };
+
 
     private class SaleActivitiesAdapter extends BaseAdapter {
 

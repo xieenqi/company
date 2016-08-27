@@ -510,8 +510,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【转 移】线索：", response);
-//                        getClueDetail();
-                        onBackPressed();
+                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
                     }
 
                     @Override

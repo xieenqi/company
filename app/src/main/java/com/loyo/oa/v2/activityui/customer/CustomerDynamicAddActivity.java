@@ -1,13 +1,19 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.sdk.android.oss.ClientException;
@@ -62,19 +68,19 @@ import retrofit.client.Response;
 
 /**
  * 【新建跟进】客户管理
- *
+ * <p/>
  * Create by yyy on 16/08/24
  */
 public class CustomerDynamicAddActivity extends BaseActivity implements View.OnClickListener {
 
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private CusGridView gridView_photo;
-    private LinearLayout layout_image;
+    private LinearLayout layout_image,layout_status;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name;
     private Customer mCustomer;
     private String tagItemIds, contactId, contactName = "无";
-    private LinearLayout ll_customer, ll_contact, ll_contactItem,layout_photo;
+    private LinearLayout ll_customer, ll_contact, ll_contactItem, layout_photo;
     private ImageGridViewAdapter imageGridViewAdapter;
     private OSS oss;
 
@@ -95,6 +101,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,22 +120,20 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         if (mSaleActivity == null) {
             return;
         }
-
         edt.setText(mSaleActivity.getContent());
     }
 
     void initUI() {
         super.setTitle("写跟进");
-
         edt = (EditText) findViewById(R.id.edt);
         layout_image = (LinearLayout) findViewById(R.id.layout_image);
         layout_photo = (LinearLayout) findViewById(R.id.layout_photo);
+        layout_status = (LinearLayout) findViewById(R.id.layout_status);
         layout_image.setOnClickListener(this);
         layout_image.setOnTouchListener(Global.GetTouch());
         tv_remain_time = (TextView) findViewById(R.id.tv_remain_time);
         tv_sale_action = (TextView) findViewById(R.id.tv_sale_action);
         gridView_photo = (CusGridView) findViewById(R.id.gridView_photo);
-
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -160,8 +165,8 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
         ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
-        if(null!=mCustomer){
-            getDefaultContact( mCustomer.contacts);
+        if (null != mCustomer) {
+            getDefaultContact(mCustomer.contacts);
         }
         init_gridView_photo();
     }
@@ -216,13 +221,13 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
 
     /**
      * 提交新建跟进
-     * */
-    public void commitDynamic(){
+     */
+    public void commitDynamic() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("customerId", mCustomer.getId());
         map.put("content", content);
         map.put("typeId", tagItemIds);
-        if(pickPhots.size() != 0){
+        if (pickPhots.size() != 0) {
             map.put("uuid", uuid);
         }
         if (!tv_remain_time.getText().toString().isEmpty() || !tv_remain_time.getText().toString().equals("不提醒")) {
@@ -328,30 +333,32 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
 
     /**
      * 图片列表绑定
-     * */
+     */
     void init_gridView_photo() {
 /*        if(pickPhots.size() != 0){
             layout_photo.setVisibility(View.VISIBLE);
         }*/
-        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
         ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
     /**
      * 获取客户的默认联系人
+     *
      * @param data
      */
-    private void getDefaultContact(ArrayList<Contact> data){
-    for(Contact ele:data){
-        if(!ele.isDefault()){
-            continue;
-        }else {
-            contactId=ele.getId();
-            contactName=ele.getName();
-            tv_contact_name.setText(contactName);
+    private void getDefaultContact(ArrayList<Contact> data) {
+        for (Contact ele : data) {
+            if (!ele.isDefault()) {
+                continue;
+            } else {
+                contactId = ele.getId();
+                contactName = ele.getName();
+                tv_contact_name.setText(contactName);
+            }
         }
     }
-}
+
     /**
      * 选择下次跟进时间
      */
@@ -409,9 +416,9 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                     return;
                 }
 
-                if(pickPhots.size() != 0 /*当前提交有附件*/){
+                if (pickPhots.size() != 0 /*当前提交有附件*/) {
                     setAttachmentData();
-                }else{
+                } else {
                     commitDynamic();
                 }
 
@@ -435,7 +442,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
 
             /*选择图片*/
             case R.id.layout_image:
-                app.startSelectImage(CustomerDynamicAddActivity.this,pickPhots);
+                app.startSelectImage(CustomerDynamicAddActivity.this, pickPhots);
                 break;
 
         }
@@ -503,8 +510,8 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 String customerName = "无";
                 if (null != customer) {
                     mCustomer = customer;
-                    customerName=customer.name;
-                    getDefaultContact( mCustomer.contacts);
+                    customerName = customer.name;
+                    getDefaultContact(mCustomer.contacts);
                 }
                 tv_customer.setText(customerName);
                 ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
