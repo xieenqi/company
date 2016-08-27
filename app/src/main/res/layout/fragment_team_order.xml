@@ -103,14 +103,6 @@
 
     <include layout="@layout/include_solid_line"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="详情"
-        android:id="@+id/button" />
-
-    <include layout="@layout/include_solid_line"/>
-
     <ViewStub
         android:id="@+id/vs_nodata"
         android:layout_width="match_parent"

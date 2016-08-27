@@ -200,6 +200,7 @@ public class ResponsableWorksheetFragment extends BaseFragment implements View.O
             // 跳转详情页面，测试入口
             case R.id.button:
             {
+                Toast("跳转详情页面，测试入口");
 
             }
             break;

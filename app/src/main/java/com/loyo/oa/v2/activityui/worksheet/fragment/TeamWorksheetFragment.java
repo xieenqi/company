@@ -164,7 +164,7 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(null == mView){
-            mView = inflater.inflate(R.layout.fragment_team_order, null);
+            mView = inflater.inflate(R.layout.fragment_team_worksheet, null);
             initView(mView);
         }
         return mView;

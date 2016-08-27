@@ -644,6 +644,11 @@
             android:screenOrientation="portrait"
             />
         <activity
+            android:name=".activityui.worksheet.WorksheetManageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
             android:name=".activityui.other.PreviewImagefromHttp"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

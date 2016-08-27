@@ -200,6 +200,7 @@ public class AssignableWorksheetFragment extends BaseFragment implements View.On
             // 跳转详情页面，测试入口
             case R.id.button:
             {
+                Toast("跳转详情页面，测试入口");
 
             }
             break;
