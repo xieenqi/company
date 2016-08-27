@@ -5,8 +5,8 @@ import java.util.Map;
 /**
  * Created by EthanGong on 16/8/27.
  */
-public interface Groupable<T> {
+public interface Groupable {
 
     /* 分组字段 */
-    public abstract T groupBy();
+    public abstract GroupKey groupBy();
 }

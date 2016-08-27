@@ -12,7 +12,7 @@ import java.util.Map;
 
 
 
-public class Worksheet implements Groupable<WorksheetStatus>, Comparable<Worksheet> {
+public class Worksheet implements Groupable, Comparable<Worksheet> {
 
 
 //    private static final Map<Integer /** groupKey */, Integer /** 排序权值weight */> sSortMap;
