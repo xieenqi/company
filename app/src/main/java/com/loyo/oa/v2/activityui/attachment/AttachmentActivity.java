@@ -169,7 +169,7 @@ public class AttachmentActivity extends BaseActivity {
         Intent intent = new Intent(this, SelectPicPopupWindow.class);
         intent.putExtra("localpic", true);
         intent.putExtra("addpg", false);
-        startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+        startActivityForResult(intent, MainApp.GET_IMG);
     }
 
     @Override
@@ -194,7 +194,7 @@ public class AttachmentActivity extends BaseActivity {
                 break;
 
             //附件上传回调
-            case SelectPicPopupWindow.GET_IMG:
+            case MainApp.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     if (pickPhots == null) {

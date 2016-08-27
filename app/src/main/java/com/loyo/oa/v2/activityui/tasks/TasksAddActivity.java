@@ -34,6 +34,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
@@ -159,6 +160,8 @@ public class TasksAddActivity extends BaseActivity {
     private StringBuffer joinUserId;
     private String uuid = StringUtil.getUUID();
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private List<String> mSelectPath;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
 
 
     @AfterViews
@@ -618,6 +621,7 @@ public class TasksAddActivity extends BaseActivity {
         }
 
         switch (requestCode) {
+
             /*关联客户回调*/
             case FinalVariables.REQUEST_SELECT_CUSTOMER:
                 Customer customer = (Customer) data.getSerializableExtra("data");
@@ -644,25 +648,33 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
-            /*上传附件回调*/
-            case SelectPicPopupWindow.GET_IMG:
-                pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
-                init_gridView_photo();
+            /*相册选择 回调*/
+            case MainApp.PICTURE:
+                if (null != data) {
+                    pickPhotsResult = new ArrayList<>();
+                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    for (String path : mSelectPath) {
+                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                    }
+                    pickPhots.addAll(pickPhotsResult);
+                    init_gridView_photo();
+                }
                 break;
 
-            //附件删除回调
+            /*附件删除回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 pickPhots.remove(data.getExtras().getInt("position"));
                 init_gridView_photo();
                 break;
 
-            //用户单选, 负责人
+            /*用户单选, 负责人*/
             case SelectDetUserActivity2.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 newUser = u;
                 tv_responsiblePerson.setText(newUser.getName());
                 break;
-            //用户选择, 参与人
+
+            /*用户选择, 参与人*/
             case SelectDetUserActivity2.REQUEST_ALL_SELECT:
                 members = (Members) data.getSerializableExtra("data");
                 if (null == members) {

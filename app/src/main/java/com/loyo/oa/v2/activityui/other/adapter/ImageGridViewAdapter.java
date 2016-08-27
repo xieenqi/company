@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.UploadImgUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -116,16 +118,12 @@ public class ImageGridViewAdapter extends BaseAdapter {
                 }
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
-                mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+                mActivity.startActivityForResult(intent, MainApp.GET_IMG);
             }
 
             /*其他业务*/
             else if (pickPhots.size() <= 9) {
-                Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
-                intent.putExtra("localpic", localpic);
-                intent.putExtra("imgsize",(9-pickPhots.size()));
-                intent.putExtra("addpg",true);
-                mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+                MainApp.getMainApp().startSelectImage(mActivity,pickPhots);
             }
         }
     }

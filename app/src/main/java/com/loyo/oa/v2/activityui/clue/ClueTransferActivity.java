@@ -552,7 +552,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
 
 
             /*上传附件回调*/
-            case SelectPicPopupWindow.GET_IMG:
+            case MainApp.GET_IMG:
                 pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
                 init_gridView_photo();
                 break;

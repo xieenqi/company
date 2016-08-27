@@ -197,7 +197,7 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
 
             }
         });
-        adapter = new TeamClueAdapter(getActivity(),listData);
+        adapter = new TeamClueAdapter(getActivity());
         lv_list.setAdapter(adapter);
         getData();
     }
