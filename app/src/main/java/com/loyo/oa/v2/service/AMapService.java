@@ -35,6 +35,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -482,6 +484,18 @@ public class AMapService extends APSService {
         }
         wakeLock = null;
     }
+
+    private void userOnlineTime() {
+        Timer timer=new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+            }
+        },5*60*1000);
+//        timer.purge();
+    }
+
 
     /**
      * 获取最近的一次位置信息
