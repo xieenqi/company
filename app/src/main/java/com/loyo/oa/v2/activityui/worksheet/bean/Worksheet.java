@@ -3,7 +3,9 @@ package com.loyo.oa.v2.activityui.worksheet.bean;
 import com.loyo.oa.v2.activityui.worksheet.common.Groupable;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,4 +61,50 @@ public class Worksheet implements Groupable, Comparable<Worksheet> {
         }
         return 0;
     }
+
+
+    /** 测试数据 */
+    public static Worksheet testInstance() {
+        Worksheet ws = new Worksheet();
+        ws.content = "内容内容内容";
+        return ws;
+    }
+
+
+    public static List<Worksheet> getTestList() {
+        ArrayList<Worksheet> result = new ArrayList<Worksheet>();
+
+        for(int i = 0; i < 3; i ++) {
+            Worksheet ws = testInstance();
+            ws.status = WorksheetStatus.WAITASSIGN;
+            result.add(ws);
+        }
+
+        for(int i = 0; i < 3; i ++) {
+            Worksheet ws = testInstance();
+            ws.status = WorksheetStatus.INPROGRESS;
+            result.add(ws);
+        }
+
+        for(int i = 0; i < 3; i ++) {
+            Worksheet ws = testInstance();
+            ws.status = WorksheetStatus.WAITAPPROVE;
+            result.add(ws);
+        }
+
+        for(int i = 0; i < 3; i ++) {
+            Worksheet ws = testInstance();
+            ws.status = WorksheetStatus.FINISHED;
+            result.add(ws);
+        }
+
+        for(int i = 0; i < 3; i ++) {
+            Worksheet ws = testInstance();
+            ws.status = WorksheetStatus.TEMINATED;
+            result.add(ws);
+        }
+
+        return result;
+    }
+
 }

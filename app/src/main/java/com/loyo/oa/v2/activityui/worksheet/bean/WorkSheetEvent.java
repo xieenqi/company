@@ -2,6 +2,10 @@ package com.loyo.oa.v2.activityui.worksheet.bean;
 
 import com.loyo.oa.v2.activityui.worksheet.common.Groupable;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by EthanGong on 16/8/27.
@@ -33,5 +37,43 @@ public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
             return 1;
         }
         return 0;
+    }
+
+    /** 测试数据 */
+    public static WorksheetEvent testInstance() {
+        WorksheetEvent wse = new WorksheetEvent();
+        wse.content = "内容内容内容";
+        return wse;
+    }
+
+
+    public static List<WorksheetEvent> getTestList() {
+        ArrayList<WorksheetEvent> result = new ArrayList<WorksheetEvent>();
+
+        for(int i = 0; i < 3; i ++) {
+            WorksheetEvent wse = testInstance();
+            wse.status = WorksheetEventStatus.WAITPROCESS;
+            result.add(wse);
+        }
+
+        for(int i = 0; i < 3; i ++) {
+            WorksheetEvent wse = testInstance();
+            wse.status = WorksheetEventStatus.UNACTIVATED;
+            result.add(wse);
+        }
+
+        for(int i = 0; i < 3; i ++) {
+            WorksheetEvent wse = testInstance();
+            wse.status = WorksheetEventStatus.FINISHED;
+            result.add(wse);
+        }
+
+        for(int i = 0; i < 3; i ++) {
+            WorksheetEvent wse = testInstance();
+            wse.status = WorksheetEventStatus.TEMINATED;
+            result.add(wse);
+        }
+
+        return result;
     }
 }
