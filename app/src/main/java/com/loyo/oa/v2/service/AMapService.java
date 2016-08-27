@@ -76,6 +76,7 @@ public class AMapService extends APSService {
 
     private static AMapLocationClient locationClient = null;
     private static AMapLocationClientOption locationOption = null;
+    Timer timer;
 
     public class LocalBinder extends Binder {
         public AMapService getService() {
@@ -95,15 +96,16 @@ public class AMapService extends APSService {
 
     @Override
     public void onCreate() {
-        app = (MainApp) getApplicationContext();
-        ldbManager = new LDBManager();
-        startLocate();
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         acquireWakeLock();
+        app = (MainApp) getApplicationContext();
+        ldbManager = new LDBManager();
+        startLocate();
+        userOnlineTime();
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
         }
@@ -115,6 +117,7 @@ public class AMapService extends APSService {
         releaseWakeLock();
         stopLocate();
         TrackRule.StartTrackRule(10 * 1000);
+        recycleTimer();
         super.onDestroy();
     }
 
@@ -485,15 +488,32 @@ public class AMapService extends APSService {
         wakeLock = null;
     }
 
+    /**
+     * 计时器 记录用户在线
+     */
     private void userOnlineTime() {
-        Timer timer=new Timer();
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
 
             }
-        },5*60*1000);
-//        timer.purge();
+        }, 5 * 60 * 1000);
+    }
+
+    /**
+     * 回收计时器
+     */
+    private void recycleTimer() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
     }
 
 
