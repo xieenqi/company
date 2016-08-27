@@ -1,11 +1,15 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,13 +19,13 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -37,12 +41,15 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【跟进动态】 客户的
+ * 【跟进动态】 客户管理
  */
-public class SaleActivitiesManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class CustomerDynamicManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     public static final int ACTIVITIES_ADD = 101;
 
+    private ArrayList<OnSoftKeyboardStateChangedListener> mKeyboardStateListeners;      //软键盘状态监听列表
+    private ViewTreeObserver.OnGlobalLayoutListener mLayoutChangeListener;
+    private boolean mIsSoftKeyboardShowing;
     private ViewGroup img_title_left, layout_add;
     private PullToRefreshListView lv_saleActivity;
     private SaleActivitiesAdapter listAdapter;
@@ -52,9 +59,27 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
     private Customer customer;
     private SaleActivity mSaleActivity;
 
-    private boolean isChanged;
+    private boolean isChanged = false;
     private boolean isTopAdd = true;
-    boolean isMyUser;
+    private boolean isMyUser;
+    private int screenHeight;
+
+    public interface OnSoftKeyboardStateChangedListener {
+        public void OnSoftKeyboardStateChanged(boolean isKeyBoardShow, int keyboardHeight);
+    }
+
+    //注册软键盘状态变化监听
+    public void addSoftKeyboardChangedListener(OnSoftKeyboardStateChangedListener listener) {
+        if (listener != null) {
+            mKeyboardStateListeners.add(listener);
+        }
+    }
+    //取消软键盘状态变化监听
+    public void removeSoftKeyboardChangedListener(OnSoftKeyboardStateChangedListener listener) {
+        if (listener != null) {
+            mKeyboardStateListeners.remove(listener);
+        }
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -68,6 +93,32 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
         setTitle("跟进动态");
         initUI();
         getData();
+
+        mIsSoftKeyboardShowing = false;
+        mKeyboardStateListeners = new ArrayList<OnSoftKeyboardStateChangedListener>();
+        mLayoutChangeListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                //判断窗口可见区域大小
+                Rect r = new Rect();
+                getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+                //如果屏幕高度和Window可见区域高度差值大于整个屏幕高度的1/3，则表示软键盘显示中，否则软键盘为隐藏状态。
+                int heightDifference = screenHeight - (r.bottom - r.top);
+                boolean isKeyboardShowing = heightDifference > screenHeight/3;
+
+                //如果之前软键盘状态为显示，现在为关闭，或者之前为关闭，现在为显示，则表示软键盘的状态发生了改变
+                if ((mIsSoftKeyboardShowing && !isKeyboardShowing) || (!mIsSoftKeyboardShowing && isKeyboardShowing)) {
+                    mIsSoftKeyboardShowing = isKeyboardShowing;
+                    for (int i = 0; i < mKeyboardStateListeners.size(); i++) {
+                        OnSoftKeyboardStateChangedListener listener = mKeyboardStateListeners.get(i);
+                        listener.OnSoftKeyboardStateChanged(mIsSoftKeyboardShowing, heightDifference);
+                    }
+                }
+            }
+        };
+        //注册布局变化监听
+        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(mLayoutChangeListener);
+
     }
 
     /**
@@ -127,16 +178,12 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
 
             /*新建*/
             case R.id.layout_add:
-              /*  Bundle bundle = new Bundle();
-                bundle.putSerializable(Customer.class.getName(), customer);
-                app.startActivityForResult(this, SaleActivitiesAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);*/
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Customer.class.getName(), customer);
-                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                app.startActivityForResult(this, CustomerDynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
-            default:
 
+            default:
                 break;
         }
     }
@@ -150,6 +197,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
         switch (requestCode) {
             /*新建跟进动态回调*/
             case ACTIVITIES_ADD:
+                isChanged = true;
                 getData();
                 break;
 
@@ -185,16 +233,23 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
 
     @Override
     public void onBackPressed() {
-        if (mSaleActivity != null) {
+        if (isChanged) {
             Intent intent = new Intent();
-            intent.putExtra("data", mSaleActivity);
-            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isChanged ? RESULT_OK : RESULT_CANCELED, intent);
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, FinalVariables.REQUEST_CREATE_TASK, intent);
             return;
         }
-
         super.onBackPressed();
     }
 
+    protected void onDestroy() {
+        //移除布局变化监听
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(mLayoutChangeListener);
+        } else {
+            getWindow().getDecorView().getViewTreeObserver().removeGlobalOnLayoutListener(mLayoutChangeListener);
+        }
+        super.onDestroy();
+    };
 
     private class SaleActivitiesAdapter extends BaseAdapter {
 
@@ -219,6 +274,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }
 
+            LinearLayout ll_layout_time = ViewHolder.get(convertView,R.id.ll_layout_time);
             ListView lv_listview    = ViewHolder.get(convertView,R.id.lv_listview);
             TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
@@ -233,19 +289,21 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             tv_contact_name.setText("联系人：" + saleActivity.contactName);
             tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
 
-            try{
+            if(null != saleActivity.getAttachments() && saleActivity.getAttachments().size() != 0){
+                lv_listview.setVisibility(View.VISIBLE);
                 nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(),mContext);
                 lv_listview.setAdapter(nestionListAdapter);
-            }catch (NullPointerException e){
+            }else{
                 lv_listview.setVisibility(View.GONE);
-                e.printStackTrace();
             }
 
             if (saleActivity.getRemindAt() != 0) {
+                ll_layout_time.setVisibility(View.VISIBLE);
                 tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
-            } else {
-                tv_time.setText("无");
+            }else{
+                ll_layout_time.setVisibility(View.GONE);
             }
+
             //提醒时间没有过当前时间变红色
             if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
                 tv_time.setTextColor(getResources().getColor(R.color.red1));

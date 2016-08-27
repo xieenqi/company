@@ -96,7 +96,7 @@ public class DynamicListnestingAdapter extends BaseAdapter {
         });
 
         holder.tv_image_name.setText(attachment.getOriginalName());
-        holder.tv_image_size.setText(Utils.FormetFileSize(Long.valueOf(attachment.getSize())));
+        holder.tv_image_size.setText("大小:"+Utils.FormetFileSize(Long.valueOf(attachment.getSize())));
 
         holder.iv_image.setOnClickListener(new View.OnClickListener() {
             @Override

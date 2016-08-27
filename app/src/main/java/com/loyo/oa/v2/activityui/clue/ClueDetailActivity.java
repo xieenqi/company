@@ -57,14 +57,14 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     TextView
             tv_track_content   /* 最近跟进内容 */,
-            tv_track_time   /* 最近跟进元信息 */;
+            tv_track_time      /* 最近跟进元信息 */;
 
     /*  分区3 */
-    ViewGroup ll_sms  /* 手机发短信 */,
-            ll_call        /* 手机拨电话 */,
-            ll_wiretel_call       /* 座机拨电话 */,
-            layout_clue_region        /* 地区弹出列表 */,
-            layout_clue_source        /* 线索来源弹出列表 */;
+    ViewGroup ll_sms                /* 手机发短信 */,
+            ll_call                 /* 手机拨电话 */,
+            ll_wiretel_call         /* 座机拨电话 */,
+            layout_clue_region      /* 地区弹出列表 */,
+            layout_clue_source      /* 线索来源弹出列表 */;
 
     TextView contact_mobile  /* 手机 */,
             contact_wiretel  /* 座机 */,
@@ -302,7 +302,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         }
         intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
         intent.putExtra(ExtraAndResult.EXTRA_ADD, isAdd);
-        intent.setClass(this, ClueFollowupActivity.class);
+        intent.setClass(this, ClueDynamicManagerActivity.class);
         startActivityForResult(intent, this.RESULT_FIRST_USER);
         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }

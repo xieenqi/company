@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,7 +19,6 @@ import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -63,11 +61,11 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【新建跟进】
+ * 【新建跟进】客户管理
  *
  * Create by yyy on 16/08/24
  */
-public class DynamicAddActivity extends BaseActivity implements View.OnClickListener {
+public class CustomerDynamicAddActivity extends BaseActivity implements View.OnClickListener {
 
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private CusGridView gridView_photo;
@@ -238,7 +236,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             @Override
             public void success(final SaleActivity saleActivity, final Response response) {
                 HttpErrorCheck.checkResponse("新建跟进动态", response);
-                app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                app.finishActivity(CustomerDynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
             }
 
             @Override
@@ -422,7 +420,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             /*选择客户*/
             case R.id.ll_customer:
                 Bundle b = new Bundle();
-                app.startActivityForResult(DynamicAddActivity.this, SigninSelectCustomer.class,
+                app.startActivityForResult(CustomerDynamicAddActivity.this, SigninSelectCustomer.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 
@@ -431,13 +429,13 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 Bundle bContact = new Bundle();
                 bContact.putSerializable(ExtraAndResult.EXTRA_DATA, mCustomer.contacts);
                 bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                app.startActivityForResult(DynamicAddActivity.this, FollowContactSelectActivity.class,
+                app.startActivityForResult(CustomerDynamicAddActivity.this, FollowContactSelectActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                 break;
 
             /*选择图片*/
             case R.id.layout_image:
-                app.startSelectImage(DynamicAddActivity.this,pickPhots);
+                app.startSelectImage(CustomerDynamicAddActivity.this,pickPhots);
                 break;
 
         }
