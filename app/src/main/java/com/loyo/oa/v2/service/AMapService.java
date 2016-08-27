@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -496,7 +497,18 @@ public class AMapService extends APSService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                app.getRestAdapter().create(ITrackLog.class).getUserOneLine(new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("用户在线：", response);
+                    }
 
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+                userOnlineTime();
             }
         }, 5 * 60 * 1000);
     }

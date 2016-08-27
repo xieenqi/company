@@ -19,5 +19,13 @@ public interface ITrackLog {
     void getTrackRule(retrofit.Callback<TrackRule> cb);
 
     @POST("/tracklog/multiple")
-    void uploadTrackLogs(@Body HashMap<String,Object> tracklogs, Callback<Object> callback);
+    void uploadTrackLogs(@Body HashMap<String, Object> tracklogs, Callback<Object> callback);
+
+    /**
+     * 轨迹用户在线
+     *
+     * @param cb
+     */
+    @GET("/tracklog/record")
+    void getUserOneLine(Callback<Object> cb);
 }
