@@ -584,26 +584,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activityui.other.PreviewImageAddActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.commonview.MapModifyView"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.commonview.MapModifySerachView"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.commonview.MapSingleView"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
             android:name=".activityui.order.OrderAttachmentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -645,10 +625,52 @@
             android:screenOrientation="portrait"
             />
         <activity
+            android:name=".activityui.clue.ClueDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.clue.ClueFollowupActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activityui.clue.ClueFollowupCreateActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <!-- 工单 -->
+        <activity
             android:name=".activityui.worksheet.WorksheetManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             />
+        <activity
+            android:name=".activityui.worksheet.WorksheetDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <!--其它-->
+        <activity
+            android:name=".activityui.other.PreviewImageAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.commonview.MapModifyView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.commonview.MapModifySerachView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.commonview.MapSingleView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.other.PreviewImagefromHttp"
             android:launchMode="singleTop"
@@ -805,15 +827,6 @@
             android:name="UMENG_CHANNEL"
             android:value="应用宝"/>
 
-        <activity
-            android:name=".activityui.clue.ClueDetailActivity"
-            android:label="@string/title_activity_clue_detail"/>
-        <activity
-            android:name=".activityui.clue.ClueFollowupActivity"
-            android:label="@string/title_activity_clue_followup"/>
-        <activity
-            android:name=".activityui.clue.ClueFollowupCreateActivity"
-            android:label="@string/title_activity_clue_followup_create"></activity>
     </application>
 
 </manifest>
