@@ -20,6 +20,14 @@ public class GroupsData {
         Collections.sort(groups);
     }
 
+    public SectionData get(int idx) {
+        return groups.get(idx);
+    }
+
+    public int size() {
+        return groups.size();
+    }
+
     public void addItems(List<Groupable> items) {
         Iterator<Groupable> iterator = items.iterator();
         while (iterator.hasNext()) {
@@ -48,7 +56,7 @@ public class GroupsData {
     }
 
     public class SectionData implements Comparable<SectionData> {
-        GroupKey groupKey;
+        public GroupKey groupKey;
         List<Groupable> data;
 
         public SectionData(){
@@ -72,6 +80,14 @@ public class GroupsData {
                 return 1;
             }
             return 0;
+        }
+
+        public Groupable get(int idx) {
+            return data.get(idx);
+        }
+
+        public int size() {
+            return data.size();
         }
     }
 }

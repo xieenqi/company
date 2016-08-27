@@ -11,12 +11,14 @@ import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
@@ -29,22 +31,29 @@ import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
+import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import retrofit.Callback;
@@ -58,113 +67,51 @@ import retrofit.client.Response;
  */
 public class TeamWorksheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    private int statusIndex, sortIndex;
-    private int page = 1;
-    private boolean isOk = true;
-    private boolean isPullDown = true, isKind;
-    private String xPath = "";
-    private String userId = "";
-    private String field  = "";
-    private String order  = "";
-    private String[] status = {"全部状态", "未处理", "已联系", "关闭"};
-    private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
-    private ArrayList<ClueListItem> listData = new ArrayList<>();
-    private List<Department> mDeptSource;  //部门和用户集合
-    private List<Department> newDeptSource = new ArrayList<>();//我的部门
-    private List<SaleTeamScreen> data = new ArrayList<>();
-
-    private LinearLayout screen1, screen2, screen3;
-    private ImageView screen1_iv1, screen2_iv2, screen3_iv3;
-    private TextView saleteam_screen1_commy;
-    private WindowManager.LayoutParams windowParams;
+    private int page = 1;     /*翻页页数*/
+    private int statusIndex;  /*线索状态*/
+    private int sortIndex;    /*线索排序*/
+    private boolean isPullDown = true;
+    private String field = "";
+    private String order = "";
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
-    private ScreenDeptPopupView deptPopupView;
+    private ArrayList<ClueListItem> listData = new ArrayList<>();
+    private String[] status = {"全部阶段", "待分配", "进行中", "待审核", "已完成", "意外终止"};
+    private String[] sort = {"全部类型", "售后服务工单", "财务支付工单", "技术支持工单", "VIP客户服务工单"};
 
+    private LinearLayout salemy_screen1, salemy_screen2;
+    private ImageView salemy_screen1_iv1, salemy_screen1_iv2;
+    private WindowManager.LayoutParams windowParams;
+    private Button btn_add;
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
-    private TeamClueAdapter adapter;
+    protected PullToRefreshExpandableListView mExpandableListView;
+
+    private Intent mIntent;
     private View mView;
 
     private Button testButton;
 
+    private GroupsData groupsData;
+    private WorksheetListAdapter adapter;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-
-                /*状态选择回调*/
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
-                    isPullDown = true;
-                    statusIndex = (int) msg.getData().get("index");
-                    page = 1;
-                    LogUtil.dee("statusIndex:"+statusIndex);
-                    break;
-
-                /*排序选择回调*/
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
-                    isPullDown = true;
-                    sortIndex = (int) msg.getData().get("index");
-                    page = 1;
-
-                    switch (sortIndex){
-
-                        /*跟进时间 倒序*/
-                        case 0:
-                            field = "lastActAt";
-                            order = "desc";
-                            break;
-
-                        /*跟进时间 顺序*/
-                        case 1:
-                            field = "lastActAt";
-                            order = "asc";
-                            break;
-
-                        /*创建时间 倒序*/
-                        case 2:
-                            field = "createAt";
-                            order = "desc";
-                            break;
-
-                        /*创建时间 顺序*/
-                        case 3:
-                            field = "createAt";
-                            order = "asc";
-                            break;
-
-                    }
-
-
-                    break;
-
-                /*部门选择回调*/
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG1:
-                    isPullDown = true;
-                    SaleTeamScreen saleTeamScreen = (SaleTeamScreen) msg.getData().getSerializable("data");
-                    saleteam_screen1_commy.setText(saleTeamScreen.getName());
-                    isKind = msg.getData().getBoolean("kind");
-                    if (isKind) {
-                        userId = "";
-                        xPath = saleTeamScreen.getxPath();
-                    } else {
-                        xPath = "";
-                        userId = saleTeamScreen.getId();
-                    }
-                    page = 1;
-                    LogUtil.dee("isKind:"+isKind);
-                    break;
-            }
-            getData();
         }
     };
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        groupsData = new GroupsData();
+    }
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(null == mView){
-            mView = inflater.inflate(R.layout.fragment_team_worksheet, null);
+        if (null == mView) {
+            mView = inflater.inflate(R.layout.fragment_self_created_worksheet, null);
             initView(mView);
         }
         return mView;
@@ -172,116 +119,88 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
 
     private void initView(View view) {
         setFilterData();
-        screen1 = (LinearLayout) view.findViewById(R.id.screen1);
-        screen2 = (LinearLayout) view.findViewById(R.id.screen2);
-        screen3 = (LinearLayout) view.findViewById(R.id.screen3);
-        screen1.setOnClickListener(this);
-        screen2.setOnClickListener(this);
-        screen3.setOnClickListener(this);
-        screen1_iv1 = (ImageView) view.findViewById(R.id.screen1_iv1);
-        screen2_iv2 = (ImageView) view.findViewById(R.id.screen2_iv2);
-        screen3_iv3 = (ImageView) view.findViewById(R.id.screen3_iv3);
+        btn_add = (Button) view.findViewById(R.id.btn_add);
+        btn_add.setOnTouchListener(Global.GetTouch());
+        btn_add.setOnClickListener(this);
+        salemy_screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
+        salemy_screen2 = (LinearLayout) view.findViewById(R.id.salemy_screen2);
+        salemy_screen1.setOnClickListener(this);
+        salemy_screen2.setOnClickListener(this);
+        salemy_screen1_iv1 = (ImageView) view.findViewById(R.id.salemy_screen1_iv1);
+        salemy_screen1_iv2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
-        saleteam_screen1_commy = (TextView) view.findViewById(R.id.saleteam_screen1_commy);
-        lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
-        lv_list.setMode(PullToRefreshBase.Mode.BOTH);
-        lv_list.setOnRefreshListener(this);
-
-        /*列表监听*/
-        lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent();
-                intent.putExtra(ExtraAndResult.IS_TEAM, false);
-                intent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */listData.get(position - 1).id);
-                intent.setClass(getActivity(), ClueDetailActivity.class);
-                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
-                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-
-            }
-        });
-        adapter = new TeamClueAdapter(getActivity());
-        lv_list.setAdapter(adapter);
-        getData();
 
         testButton = (Button) view.findViewById(R.id.button);
         testButton.setOnClickListener(this);
+
+        mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
+        mExpandableListView.setOnRefreshListener(this);
+        //mExpandableListView.setEmptyView(emptyView);
+
+        ExpandableListView expandableListView = mExpandableListView.getRefreshableView();
+
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return false;
+            }
+        });
+
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                return false;
+            }
+        });
+
+        initAdapter();
+        expand();
+
+
+        Utils.btnHideForListView(expandableListView,btn_add);
+
+        getData();
+        adapter.notifyDataSetChanged();
+        expand();
     }
 
     private void setFilterData() {
-        for (int i = 0; i < sort.length; i++) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(sort[i]);
-            sortData.add(saleTeamScreen);
-        }
         for (int i = 0; i < status.length; i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(status[i]);
             statusData.add(saleTeamScreen);
         }
-        mDeptSource = Common.getLstDepartment();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isOk) {
-                    if (data.size() == 0) {
-                        wersi();
-                    } else {
-                        isOk = false;
-                        deptPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler);
-                    }
-                }
-            }
-        }).start();
-    }
 
-    public void wersi() {
-        //为超管或权限为全公司 展示全公司成员
-        if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-            setUser(mDeptSource);
-        }
-        //权限为部门 展示我的部门
-        else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
-            deptSort();
-        }
-        //权限为个人 展示自己
-        else if (MainApp.user.role.getDataRange() == Role.SELF) {
-            data.clear();
+        for (int i = 0; i < sort.length; i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(MainApp.user.getId());
-            saleTeamScreen.setName(MainApp.user.name);
-            saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
-            data.add(saleTeamScreen);
+            saleTeamScreen.setName(sort[i]);
+            sortData.add(saleTeamScreen);
         }
     }
 
-    /**
-     * 过滤出我的部门
-     */
-    private void deptSort() {
-        newDeptSource.clear();
-        User user = MainApp.user;
-        for (Department department : mDeptSource) {
-            for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
-                    newDeptSource.add(department);
-                }
-            }
+    public void initAdapter() {
+        if (null == adapter) {
+            adapter = new WorksheetListAdapter(mActivity, groupsData);
+            mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
-        setUser(newDeptSource);
     }
 
-    /**
-     * 组装部门格式
-     */
-    private void setUser(List<Department> values) {
-        data.clear();
-        for (Department department : values) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(department.getId());
-            saleTeamScreen.setName(department.getName());
-            saleTeamScreen.setxPath(department.getXpath());
-            data.add(saleTeamScreen);
+    protected void expand() {
+        for (int i = 0; i < groupsData.size(); i++) {
+            mExpandableListView.getRefreshableView().expandGroup(i, false);//true 自动滑到底部
+        }
+    }
+
+    private  void getData() {
+        List<Worksheet> list = Worksheet.getTestList();
+        loadData(list);
+    }
+
+    private void loadData(List<Worksheet> list) {
+
+        Iterator<Worksheet> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            groupsData.addItem(iterator.next());
         }
     }
 
@@ -292,45 +211,48 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
             // 跳转详情页面，测试入口
             case R.id.button:
             {
+                Toast("跳转详情页面，测试入口");
 
             }
             break;
 
-            case R.id.screen1://人员筛选
-                deptPopupView.showAsDropDown(screen1);
-                openPopWindow(screen1_iv1);
-                deptPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(screen1_iv1);
-                    }
-                });
+            //新建
+            case R.id.btn_add:
+
+                mIntent = new Intent();
+                mIntent.setClass(getActivity(), ClueAddActivity.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
                 break;
-            case R.id.screen2://状态筛选
+
+            //时间选择
+            case R.id.salemy_screen1:
             {
-                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
+                SaleCommPopupView  saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
                         SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
-                saleCommPopupView.showAsDropDown(screen3);
-                openPopWindow(screen3_iv3);
+                saleCommPopupView.showAsDropDown(salemy_screen2);
+                openPopWindow(salemy_screen1_iv2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        closePopupWindow(screen3_iv3);
+                        closePopupWindow(salemy_screen1_iv2);
                     }
                 });
             }
-
             break;
-            case R.id.screen3://排序
+
+            //状态
+            case R.id.salemy_screen2:
             {
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
-                saleCommPopupView.showAsDropDown(screen2);
-                openPopWindow(screen2_iv2);
+                saleCommPopupView.showAsDropDown(salemy_screen1);
+                openPopWindow(salemy_screen1_iv1);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        closePopupWindow(screen2_iv2);
+                        closePopupWindow(salemy_screen1_iv1);
                     }
                 });
             }
@@ -359,57 +281,19 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
     }
 
     /**
-     * 获取团队数据列表
+     * 请求列表数据
      */
-    private void getData() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 15);
-        map.put("status",statusIndex);
-        map.put("field",field);
-        map.put("order",order);
-        map.put("xpath",xPath);
-        map.put("userId",userId);
-        LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IClue.class).getTeamCluelist(map, new Callback<ClueList>() {
-            @Override
-            public void success(ClueList clueList, Response response) {
-                lv_list.onRefreshComplete();
-                lv_list.setEmptyView(emptyView);
-                HttpErrorCheck.checkResponse("我的线索列表：", response);
-                try {
-                    if (!isPullDown) {
-                        listData.addAll(clueList.data.records);
-                    } else {
-                        listData = clueList.data.records;
-                    }
-                    adapter.setData(listData);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         isPullDown = true;
         page = 1;
-        getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isPullDown = false;
         page++;
-        getData();
     }
 
     @Override
@@ -421,7 +305,6 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
             case ExtraAndResult.REQUEST_CODE:
                 isPullDown = true;
                 page = 1;
-                getData();
                 break;
         }
     }
