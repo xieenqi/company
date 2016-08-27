@@ -4,6 +4,13 @@ import com.loyo.oa.v2.R;
 
 /**
  * Created by EthanGong on 16/8/27.
+ *
+ * 工单状态
+ * code : 状态对应数字
+ * name : 状态显示文本
+ * color: 状态显示颜色
+ * icon : 状态icon
+ *
  */
 public enum WorksheetStatus implements GroupKey{
 

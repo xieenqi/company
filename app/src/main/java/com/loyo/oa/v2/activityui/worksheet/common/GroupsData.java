@@ -8,6 +8,9 @@ import java.util.List;
 
 /**
  * Created by EthanGong on 16/8/27.
+ *
+ * 分组数据model
+ *
  */
 public class GroupsData {
     public List<SectionData> groups;
