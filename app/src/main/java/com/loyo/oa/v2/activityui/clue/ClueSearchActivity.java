@@ -15,14 +15,11 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -31,9 +28,7 @@ import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,10 +158,10 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
         map.put("pageIndex", page);
         map.put("pageSize", 15);
         map.put("keyword", strSearch);
-        if(fromPage == 1){
+        if (fromPage == 1) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                     create(IClue.class).getMyCluelist(map, this);
-        }else if(fromPage == 2){
+        } else if (fromPage == 2) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                     create(IClue.class).getTeamCluelist(map, this);
         }
@@ -254,14 +249,16 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
             holder.tv_name.setText(clueListItem.name);
             holder.tv_company_name.setText(clueListItem.companyName);
             holder.tv_customer.setText(clueListItem.name);
-            if(clueListItem.lastActAt != 0){
-                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd HH:mm"));
+            if (clueListItem.lastActAt != 0) {
+                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd HH:mm"));
+            } else {
+                holder.tv_time.setText("--");
             }
 
             return convertView;
         }
 
-        class Holder{
+        class Holder {
             TextView tv_company_name; /* 公司名称 */
             TextView tv_customer;     /* 负责人 */
             TextView tv_time;         /* 跟进时间 */
