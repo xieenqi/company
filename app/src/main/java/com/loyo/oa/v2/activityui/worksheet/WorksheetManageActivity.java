@@ -36,7 +36,6 @@ import java.util.List;
 
 /**
  * 【订单管理】 列表 页面
- * Created by yyy on 16/8/19.
  */
 public class WorksheetManageActivity extends BaseFragmentActivity implements View.OnClickListener {
 
@@ -156,9 +155,9 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
                         type = 3;
                     }
                 }
-                LogUtil.dee("type:"+type);
+                LogUtil.dee("type:" + type);
                 Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE,type);
+                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
                 // app.startActivity(this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
@@ -207,7 +206,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
         if (index != mIndex && fragments.size() > 0) {
             mIndex = index;
             try {
-                fragmentManager.beginTransaction().replace(R.id.fl_order_container, fragments.get(index)).commit();
+                fragmentManager.beginTransaction().replace(R.id.fl_order_container, fragments.get(index)).commitAllowingStateLoss();
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             }
