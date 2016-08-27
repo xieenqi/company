@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -84,6 +85,8 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
     private PullToRefreshListView lv_list;
     private TeamClueAdapter adapter;
     private View mView;
+
+    private Button testButton;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -200,6 +203,9 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
         adapter = new TeamClueAdapter(getActivity());
         lv_list.setAdapter(adapter);
         getData();
+
+        testButton = (Button) view.findViewById(R.id.button);
+        testButton.setOnClickListener(this);
     }
 
     private void setFilterData() {
@@ -282,6 +288,14 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            // 跳转详情页面，测试入口
+            case R.id.button:
+            {
+
+            }
+            break;
+
             case R.id.screen1://人员筛选
                 deptPopupView.showAsDropDown(screen1);
                 openPopWindow(screen1_iv1);

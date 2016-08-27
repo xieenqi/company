@@ -47,8 +47,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【我的线索】
- * Created by yyy on 16/8/19.
+ * 【我分派的工单】
  */
 public class AssignableWorksheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
@@ -75,6 +74,8 @@ public class AssignableWorksheetFragment extends BaseFragment implements View.On
     private Intent mIntent;
     private Bundle mBundle;
     private View mView;
+
+    private Button testButton;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -173,6 +174,9 @@ public class AssignableWorksheetFragment extends BaseFragment implements View.On
         lv_list.setAdapter(adapter);
         getData();
         Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
+
+        testButton = (Button) view.findViewById(R.id.button);
+        testButton.setOnClickListener(this);
     }
 
     private void setFilterData() {
@@ -192,6 +196,14 @@ public class AssignableWorksheetFragment extends BaseFragment implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            // 跳转详情页面，测试入口
+            case R.id.button:
+            {
+
+            }
+            break;
+
 
             //新建
             case R.id.btn_add:
