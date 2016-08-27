@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.worksheet.common;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -17,6 +18,33 @@ public class GroupsData {
     /** 排序分组 */
     public void sort() {
         Collections.sort(groups);
+    }
+
+    public void addItems(List<Groupable> items) {
+        Iterator<Groupable> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            Groupable item = iterator.next();
+            addItem(item);
+        }
+    }
+
+    public void addItem(Groupable item) {
+        GroupKey key = item.groupBy();
+        int i= 0;
+        for ( ; i < groups.size(); i++) {
+            SectionData section = groups.get(i);
+            if (section.groupKey.equals(key)) {
+                section.add(item);
+                break;
+            }
+        }
+
+        if (i == groups.size()) {
+            SectionData newSection = new SectionData();
+            newSection.groupKey = key;
+            newSection.add(item);
+            groups.add(newSection);
+        }
     }
 
     public class SectionData implements Comparable<SectionData> {
