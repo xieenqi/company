@@ -19,7 +19,7 @@ import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.activityui.worksheet.fragment.AssignableWorksheetFragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.ResponsableWorksheetFragment;
-import com.loyo.oa.v2.activityui.worksheet.fragment.SelfCreatedWorksheetFragment;
+import com.loyo.oa.v2.activityui.worksheet.fragment.MyCreatedWorksheetFragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.TeamWorksheetFragment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
@@ -108,7 +108,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
         BaseFragment fragment = null;
 
         Bundle b = new Bundle();
-        fragment = (BaseFragment) Fragment.instantiate(this, SelfCreatedWorksheetFragment.class.getName(), b);
+        fragment = (BaseFragment) Fragment.instantiate(this, MyCreatedWorksheetFragment.class.getName(), b);
         fragments.add(fragment);
 
         b = new Bundle();

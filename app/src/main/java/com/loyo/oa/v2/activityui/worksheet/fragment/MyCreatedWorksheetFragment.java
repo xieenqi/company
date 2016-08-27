@@ -18,13 +18,13 @@ import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
-import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -49,7 +49,7 @@ import retrofit.client.Response;
 /**
  * 【我创建的工单】
  */
-public class SelfCreatedWorksheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class MyCreatedWorksheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private int page = 1;     /*翻页页数*/
     private int statusIndex;  /*线索状态*/
@@ -164,7 +164,7 @@ public class SelfCreatedWorksheetFragment extends BaseFragment implements View.O
                 mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                 mIntent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */listData.get(position - 1).id);
-                mIntent.setClass(getActivity(), ClueDetailActivity.class);
+                mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
@@ -198,10 +198,12 @@ public class SelfCreatedWorksheetFragment extends BaseFragment implements View.O
         switch (v.getId()) {
 
             // 跳转详情页面，测试入口
-            case R.id.button:
-            {
-                Toast("跳转详情页面，测试入口");
-
+            case R.id.button: {
+                mIntent = new Intent();
+                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
             break;
 
@@ -216,9 +218,8 @@ public class SelfCreatedWorksheetFragment extends BaseFragment implements View.O
                 break;
 
             //时间选择
-            case R.id.salemy_screen1:
-            {
-                SaleCommPopupView  saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
+            case R.id.salemy_screen1: {
+                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
                         SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen2);
                 openPopWindow(salemy_screen1_iv2);
@@ -232,8 +233,7 @@ public class SelfCreatedWorksheetFragment extends BaseFragment implements View.O
             break;
 
             //状态
-            case R.id.salemy_screen2:
-            {
+            case R.id.salemy_screen2: {
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen1);
