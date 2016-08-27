@@ -5,14 +5,8 @@ import java.util.Map;
 /**
  * Created by EthanGong on 16/8/27.
  */
-public abstract class Groupable<T> {
+public interface Groupable<T> {
 
     /* 分组字段 */
     public abstract T groupBy();
-
-    /* 排序规则 */
-    public static Map sortMap()
-    {
-        return null;
-    }
 }

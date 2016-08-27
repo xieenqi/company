@@ -12,16 +12,16 @@ import java.util.Map;
 
 
 
-public class Worksheet extends Groupable<WorksheetStatus> implements Comparable<Worksheet> {
+public class Worksheet implements Groupable<WorksheetStatus>, Comparable<Worksheet> {
 
 
-    private static final Map<Integer /** groupKey */, Integer /** 排序权值weight */> sSortMap;
-    static
-    {
-        sSortMap = new HashMap<Integer, Integer>();
-        sSortMap.put(1, 0);
-        sSortMap.put(2, 1);
-    }
+//    private static final Map<Integer /** groupKey */, Integer /** 排序权值weight */> sSortMap;
+//    static
+//    {
+//        sSortMap = new HashMap<Integer, Integer>();
+//        sSortMap.put(1, 0);
+//        sSortMap.put(2, 1);
+//    }
 
     public String id;
     public String companyId;
@@ -47,10 +47,6 @@ public class Worksheet extends Groupable<WorksheetStatus> implements Comparable<
         return status;
     }
 
-    public static Map sortMap()
-    {
-        return sSortMap;
-    }
 
     /** 相同状态下，按时间创建排序, 最新排前  */
     @Override
