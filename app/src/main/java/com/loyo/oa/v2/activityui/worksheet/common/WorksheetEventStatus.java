@@ -89,14 +89,14 @@ public enum WorksheetEventStatus  implements GroupKey {
     public static class EnumSerializer implements JsonSerializer<WorksheetEventStatus>,
             JsonDeserializer<WorksheetEventStatus> {
 
-        // 对象转为Json时调用,实现JsonSerializer<WorksheetStatus>接口
+        // 对象转为Json时调用,实现JsonSerializer<WorksheetEventStatus>接口
         @Override
         public JsonElement serialize(WorksheetEventStatus state, Type arg1,
                                      JsonSerializationContext arg2) {
-            return new JsonPrimitive(state.ordinal());
+            return new JsonPrimitive(state.code);
         }
 
-        // json转为对象时调用,实现JsonDeserializer<WorksheetStatus>接口
+        // json转为对象时调用,实现JsonDeserializer<WorksheetEventStatus>接口
         @Override
         public WorksheetEventStatus deserialize(JsonElement json, Type typeOfT,
                                            JsonDeserializationContext context) throws JsonParseException {

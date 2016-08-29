@@ -102,7 +102,7 @@ public enum WorksheetStatus implements GroupKey{
         @Override
         public JsonElement serialize(WorksheetStatus state, Type arg1,
                                      JsonSerializationContext arg2) {
-            return new JsonPrimitive(state.ordinal());
+            return new JsonPrimitive(state.code);
         }
 
         // json转为对象时调用,实现JsonDeserializer<WorksheetStatus>接口
