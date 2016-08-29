@@ -82,7 +82,7 @@
                     android:focusable="true"
                     android:gravity="left|top"
                     android:hint="请填写跟进内容"
-                    android:minHeight="200dp"
+                    android:minHeight="100dp"
                     android:paddingBottom="@dimen/dimen_10"
                     android:paddingLeft="0dp"
                     android:paddingRight="@dimen/dimen_14"
@@ -260,75 +260,89 @@
     <LinearLayout
         android:id="@+id/layout_status"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_45"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#F1F1F1"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D1D1D1"
+            />
 
         <LinearLayout
-            android:id="@+id/layout_image"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="@dimen/dimen_23"
-                android:layout_height="@dimen/dimen_23"
-                android:background="@drawable/icon_selectimage_view" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_45"
+            android:background="#F3F3F3"
             android:gravity="center"
-            android:visibility="invisible">
+            android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="@dimen/dimen_23"
-                android:layout_height="@dimen/dimen_23"
-                android:background="@drawable/icon_position_modify" />
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_image"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
 
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="invisible">
+                <ImageView
+                    android:layout_width="@dimen/dimen_23"
+                    android:layout_height="@dimen/dimen_23"
+                    android:background="@drawable/icon_selectimage_view" />
+            </LinearLayout>
 
-            <ImageView
-                android:layout_width="@dimen/dimen_23"
-                android:layout_height="@dimen/dimen_23"
-                android:background="@drawable/icon_position_modify" />
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="invisible">
 
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="invisible">
+                <ImageView
+                    android:layout_width="@dimen/dimen_23"
+                    android:layout_height="@dimen/dimen_23"
+                    android:background="@drawable/icon_position_modify" />
+            </LinearLayout>
 
-            <ImageView
-                android:layout_width="@dimen/dimen_23"
-                android:layout_height="@dimen/dimen_23"
-                android:background="@drawable/icon_position_modify" />
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="invisible">
 
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="invisible">
+                <ImageView
+                    android:layout_width="@dimen/dimen_23"
+                    android:layout_height="@dimen/dimen_23"
+                    android:background="@drawable/icon_position_modify" />
+            </LinearLayout>
 
-            <ImageView
-                android:layout_width="@dimen/dimen_25"
-                android:layout_height="@dimen/dimen_25"
-                android:background="@drawable/icon_position_modify" />
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_23"
+                    android:layout_height="@dimen/dimen_23"
+                    android:background="@drawable/icon_position_modify" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_25"
+                    android:layout_height="@dimen/dimen_25"
+                    android:background="@drawable/icon_position_modify" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

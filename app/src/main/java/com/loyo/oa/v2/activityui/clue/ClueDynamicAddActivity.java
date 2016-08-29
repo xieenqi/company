@@ -445,6 +445,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
                     }
                     pickPhots.addAll(pickPhotsResult);
                     init_gridView_photo();
+                    Utils.autoEjetcEdit(edt, 300);
                 }
                 break;
 

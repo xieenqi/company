@@ -1,21 +1,16 @@
 package com.loyo.oa.v2.activityui.customer;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.ServiceException;
@@ -61,6 +56,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -73,6 +70,7 @@ import retrofit.client.Response;
  */
 public class CustomerDynamicAddActivity extends BaseActivity implements View.OnClickListener {
 
+    private InputMethodManager inputManager;
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private CusGridView gridView_photo;
     private LinearLayout layout_image,layout_status;
@@ -537,6 +535,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                     }
                     pickPhots.addAll(pickPhotsResult);
                     init_gridView_photo();
+                    Utils.autoEjetcEdit(edt,300);
                 }
                 break;
 

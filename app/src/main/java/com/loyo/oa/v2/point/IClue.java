@@ -52,7 +52,7 @@ public interface IClue {
      * @param callback
      */
     @POST("/salesleads")
-    void addClue(@Body Map<String, Object> body, Callback<Object> callback);
+    void addClue(@Body Map<String, Object> body, Callback<ClueDetail> callback);
 
 
     /**

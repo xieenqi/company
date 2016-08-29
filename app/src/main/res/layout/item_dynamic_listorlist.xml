@@ -9,9 +9,8 @@
         android:layout_marginBottom="@dimen/dimen_4"
         android:layout_marginTop="@dimen/dimen_4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dimen_40"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
         >
 
         <RelativeLayout
@@ -21,7 +20,7 @@
             <com.loyo.oa.v2.customview.XCRoundRectImageView
                 android:id="@+id/iv_image"
                 android:layout_width="@dimen/dimen_40"
-                android:layout_height="@dimen/dimen_40" />
+                android:layout_height="match_parent" />
 
             <ProgressBar
                 android:id="@+id/pb_progress"
@@ -37,7 +36,6 @@
             android:layout_marginLeft="@dimen/dimen_10"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             >
 
             <TextView
@@ -55,14 +53,11 @@
                 android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10"
                 android:text="--"
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp12"
                 />
 
         </RelativeLayout>
-
     </LinearLayout>
-
 </LinearLayout>

@@ -34,8 +34,10 @@ import android.text.style.URLSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -74,6 +76,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,6 +106,23 @@ public class Utils {
     public static WindowManager getWindowHW(Context mContext) {
         windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         return windowManager;
+    }
+
+    /**
+     * 自动弹出软键盘
+     * time: 设置弹出延迟时间，目的在于等页面渲染完成，否则自动弹出会失效
+     * */
+    public static void autoEjetcEdit(final EditText edt,int time){
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+                           public void run() {
+                               InputMethodManager inputManager =
+                                       (InputMethodManager) edt.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                               inputManager.showSoftInput(edt, 0);
+                           }
+                       },
+                time);
     }
 
     /**
