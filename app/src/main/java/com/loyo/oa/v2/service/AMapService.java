@@ -105,17 +105,19 @@ public class AMapService extends APSService {
         acquireWakeLock();
         app = (MainApp) getApplicationContext();
         ldbManager = new LDBManager();
-        startLocate();
+
         userOnlineTime();
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
+            startLocate();
+            //服务运行 通知栏显示
+            Notification notification = new Notification();
+            notification.flags = Notification.FLAG_ONGOING_EVENT;
+            notification.flags |= Notification.FLAG_NO_CLEAR;
+            notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
+            startForeground(1, notification);
         }
-//服务运行 通知栏显示
-        Notification notification = new Notification();
-        notification.flags = Notification.FLAG_ONGOING_EVENT;
-        notification.flags |= Notification.FLAG_NO_CLEAR;
-        notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
-        startForeground(1, notification);
+
         return START_REDELIVER_INTENT;
     }
 
@@ -216,9 +218,9 @@ public class AMapService extends APSService {
         SharedUtil.put(app, "latOld", String.valueOf(aMapLocation.getLatitude()));
         SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
-        //TextUtils.isEmpty(address) || || oldAddress.equals(address)
+        //TextUtils.isEmpty(address) ||
         if ((aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
-                || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE) {
+                || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || oldAddress.equals(address)) {
             LogUtil.d("当前位置偏移量很大，直接return");
             //缓存有效定位
             return;
@@ -255,10 +257,10 @@ public class AMapService extends APSService {
             LogUtil.d("获取到的distance : " + distance);
             LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE));
 
-            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
-                LogUtil.d("小于请求定位的最小间隔！");
-                return;
-            }
+//            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
+//                LogUtil.d("小于请求定位的最小间隔！");
+//                return;
+//            }
         }
         uploadLocation(aMapLocation);
         if (Global.isConnected()) {
@@ -301,7 +303,7 @@ public class AMapService extends APSService {
         ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(longitude
                 + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("tracklogs", trackLogs);
+        jsonObject.put("trackLogs", trackLogs);//tracklogs
 //新版上传轨迹
         RestAdapterFactory.getInstance().build(Config_project.NEW_UPLOCATION()).create(ITrackLog.class)
                 .newUploadTrack(jsonObject, new Callback<TrackLog>() {
@@ -317,6 +319,7 @@ public class AMapService extends APSService {
 
                     @Override
                     public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
                         LocateData data = buildLocateData(location);
                         ldbManager.addLocateData(data);
                         SharedUtil.putBoolean(app, "isCache", true);
@@ -519,7 +522,9 @@ public class AMapService extends APSService {
      * 计时器 记录用户在线
      */
     private void userOnlineTime() {
-        timer = new Timer();
+        if (null == timer)
+            timer = new Timer();
+
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
