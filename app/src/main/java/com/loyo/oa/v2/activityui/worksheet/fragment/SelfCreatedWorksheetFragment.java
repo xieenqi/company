@@ -21,6 +21,7 @@ import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetAddStep1Activity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
@@ -181,7 +182,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
             case R.id.btn_add:
 
                 mIntent = new Intent();
-                mIntent.setClass(getActivity(), ClueAddActivity.class);
+                mIntent.setClass(getActivity(), WorksheetAddStep1Activity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
