@@ -16,15 +16,6 @@ import java.util.Map;
 
 public class Worksheet implements Groupable, Comparable<Worksheet> {
 
-
-//    private static final Map<Integer /** groupKey */, Integer /** 排序权值weight */> sSortMap;
-//    static
-//    {
-//        sSortMap = new HashMap<Integer, Integer>();
-//        sSortMap.put(1, 0);
-//        sSortMap.put(2, 1);
-//    }
-
     public String id;
     public String companyId;
     public String orderId;      // 订单ID

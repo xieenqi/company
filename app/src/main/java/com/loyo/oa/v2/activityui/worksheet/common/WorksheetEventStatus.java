@@ -31,36 +31,36 @@ public enum WorksheetEventStatus  implements GroupKey {
      */
     OTHERS(Integer.MAX_VALUE){
         public String getName() { return "其他"; }
-        public int getColor() { return R.color.text66; }
-        public int getIcon() { return R.drawable.bg_view_red_circle; }
+        public int getColor() { return R.color.ws_status_4; }
+        public int getIcon() { return R.drawable.icon_ws_status4; }
     },
 
     /** 待处理 */
     WAITPROCESS(1){
         public String getName() { return "待处理"; }
-        public int getColor() { return R.color.text66; }
-        public int getIcon() { return R.drawable.bg_view_red_circle; }
+        public int getColor() { return R.color.ws_status_1; }
+        public int getIcon() { return R.drawable.icon_ws_status1; }
     },
 
     /** 未触发 */
     UNACTIVATED(2){
         public String getName() { return "未触发"; }
-        public int getColor() { return R.color.text66; }
-        public int getIcon() { return R.drawable.bg_view_red_circle; }
+        public int getColor() { return R.color.ws_status_2; }
+        public int getIcon() { return R.drawable.icon_ws_status2; }
     },
 
     /** 已处理 */
     FINISHED(3){
         public String getName() { return "已处理"; }
-        public int getColor() { return R.color.text66; }
-        public int getIcon() { return R.drawable.bg_view_red_circle; }
+        public int getColor() { return R.color.ws_status_3; }
+        public int getIcon() { return R.drawable.icon_ws_status3; }
     },
 
     /** 意外终止 */
     TEMINATED(4){
         public String getName() { return "意外终止"; }
-        public int getColor() { return R.color.text66; }
-        public int getIcon() { return R.drawable.bg_view_red_circle; }
+        public int getColor() { return R.color.ws_status_4; }
+        public int getIcon() { return R.drawable.icon_ws_status4; }
     };
 
     private final int code;
