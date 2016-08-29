@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -105,7 +106,19 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
         mExpandableListView.setOnRefreshListener(this);
         //mExpandableListView.setEmptyView(emptyView);
 
-        setupExpandableListView();
+        setupExpandableListView(
+                new ExpandableListView.OnGroupClickListener() {
+                    @Override
+                    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                        return false;
+                    }
+                },
+                new ExpandableListView.OnChildClickListener() {
+                    @Override
+                    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                        return false;
+                    }
+                });
         initAdapter();
         expand();
 

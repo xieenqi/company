@@ -43,22 +43,11 @@ public abstract class BaseGroupsDataActivity extends BaseFragment implements Pul
         }
     }
 
-    protected  void setupExpandableListView() {
-        ExpandableListView expandableListView = mExpandableListView.getRefreshableView();
-
-        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return false;
-            }
-        });
-
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                return false;
-            }
-        });
+    protected  void setupExpandableListView(ExpandableListView.OnGroupClickListener groupClickListener,
+                                            ExpandableListView.OnChildClickListener childClickListener) {
+        expandableListView = mExpandableListView.getRefreshableView();
+        expandableListView.setOnGroupClickListener(groupClickListener);
+        expandableListView.setOnChildClickListener(childClickListener);
     }
 
     /**
