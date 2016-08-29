@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,6 +18,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 public class WorksheetDetailActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout img_title_left;
     private LinearLayout ll_worksheet_info;
+    private LinearLayout ll_events;
     private TextView tv_title_1;
     private RelativeLayout img_title_right;
 
@@ -35,8 +37,10 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         img_title_right.setOnClickListener(this);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         ll_worksheet_info = (LinearLayout) findViewById(R.id.ll_worksheet_info);
+        ll_events = (LinearLayout) findViewById(R.id.ll_events);
         ll_worksheet_info.setOnClickListener(this);
         tv_title_1.setText("工单详情");
+        loadData();
     }
 
     @Override
@@ -52,6 +56,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 Bundle bundle = new Bundle();
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
+        }
+    }
+
+    private void loadData() {
+        for (int i = 0; i < 3; i++) {
+            View eventView =  LayoutInflater.from(mContext).inflate(R.layout.item_worksheet_event, null, false);
+            ll_events.addView(eventView);
         }
     }
 

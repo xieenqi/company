@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,6 +18,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 public class WorksheetInfoActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout img_title_left;
     private TextView tv_title_1;
+    private LinearLayout ll_attachment;
     private RelativeLayout img_title_right;
 
     @Override
@@ -24,14 +26,22 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worksheet_info);
         initView();
-
+        loadData();
     }
 
     private void initView() {
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
+        ll_attachment = (LinearLayout) findViewById(R.id.ll_attachment);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         tv_title_1.setText("工单信息");
+    }
+
+    private void loadData() {
+        for (int i = 0; i < 3; i++) {
+            View eventView =  LayoutInflater.from(mContext).inflate(R.layout.item_worksheet_event, null, false);
+            ll_attachment.addView(eventView);
+        }
     }
 
     @Override
