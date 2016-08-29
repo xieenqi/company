@@ -797,7 +797,7 @@
             android:value="56f0a2a367e58e2176002ad6"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="应用宝"/>
+            android:value="ukuaiqi"/>
 
         <activity
             android:name=".activityui.clue.ClueDetailActivity"
