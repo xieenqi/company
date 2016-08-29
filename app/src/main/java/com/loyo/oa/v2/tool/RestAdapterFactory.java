@@ -2,6 +2,8 @@ package com.loyo.oa.v2.tool;
 
 import android.os.Build;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.common.Global;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.converter.GsonConverter;
 
 /**
  * com.loyo.oa.v2.tool
@@ -83,7 +86,12 @@ public class RestAdapterFactory {
 
                 }
             };
-            adapter = new RestAdapter.Builder().setEndpoint(url).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+            adapter = new RestAdapter.Builder()
+                    .setEndpoint(url)
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
+                    .setRequestInterceptor(requestInterceptor)
+                    .setConverter(new GsonConverter(GsonUtils.newInstance()))
+                    .build();
             adapters.put(url, new SoftReference<>(adapter));
         }
         return adapter;

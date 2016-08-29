@@ -1,6 +1,15 @@
 package com.loyo.oa.v2.activityui.worksheet.common;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.loyo.oa.v2.R;
+
+import java.lang.reflect.Type;
 
 /**
  * Created by EthanGong on 16/8/27.
@@ -13,6 +22,19 @@ import com.loyo.oa.v2.R;
  *
  */
 public enum WorksheetEventStatus  implements GroupKey {
+
+    /** 其他
+     *
+     * 不应出现的数据
+     * 防备服务端返回非 1 - 4 数据
+     *
+     */
+    OTHERS(-1){
+        public String getName() { return "其他"; }
+        public int getColor() { return R.color.text66; }
+        public int getIcon() { return R.drawable.bg_view_red_circle; }
+    },
+
     /** 待处理 */
     WAITPROCESS(1){
         public String getName() { return "待处理"; }
@@ -60,5 +82,32 @@ public enum WorksheetEventStatus  implements GroupKey {
     public int compareWeight()
     {
         return this.code;
+    }
+
+
+    /** gson 序列化和反序列化 */
+    public static class EnumSerializer implements JsonSerializer<WorksheetEventStatus>,
+            JsonDeserializer<WorksheetEventStatus> {
+
+        // 对象转为Json时调用,实现JsonSerializer<WorksheetStatus>接口
+        @Override
+        public JsonElement serialize(WorksheetEventStatus state, Type arg1,
+                                     JsonSerializationContext arg2) {
+            return new JsonPrimitive(state.ordinal());
+        }
+
+        // json转为对象时调用,实现JsonDeserializer<WorksheetStatus>接口
+        @Override
+        public WorksheetEventStatus deserialize(JsonElement json, Type typeOfT,
+                                           JsonDeserializationContext context) throws JsonParseException {
+            WorksheetEventStatus[] list  = WorksheetEventStatus.values();
+            for (int i = 0; i < list.length; i++) {
+                if (list[i].code == json.getAsInt()) {
+                    return list[i];
+                }
+            }
+            return WorksheetEventStatus.OTHERS;
+        }
+
     }
 }
