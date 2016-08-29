@@ -14,16 +14,15 @@ import com.loyo.oa.v2.tool.BaseActivity;
  * 【 工单详情 】  页面
  * Created by xeq on 16/8/27.
  */
-public class WorksheetDetailActivity extends BaseActivity implements View.OnClickListener {
+public class WorksheetInfoActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout img_title_left;
-    private LinearLayout ll_worksheet_info;
     private TextView tv_title_1;
     private RelativeLayout img_title_right;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_worksheet_detial);
+        setContentView(R.layout.activity_worksheet_info);
         initView();
 
     }
@@ -31,12 +30,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private void initView() {
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
-        img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
-        img_title_right.setOnClickListener(this);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
-        ll_worksheet_info = (LinearLayout) findViewById(R.id.ll_worksheet_info);
-        ll_worksheet_info.setOnClickListener(this);
-        tv_title_1.setText("工单详情");
+        tv_title_1.setText("工单信息");
     }
 
     @Override
@@ -48,10 +43,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             case R.id.img_title_left:
                 onBackPressed();
                 break;
-            case R.id.ll_worksheet_info:
-                Bundle bundle = new Bundle();
-                app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
-                break;
         }
     }
 
@@ -59,7 +50,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
      * 右上角菜单
      */
     private void functionButton() {
-        ActionSheetDialog dialog = new ActionSheetDialog(WorksheetDetailActivity.this).builder();
+        ActionSheetDialog dialog = new ActionSheetDialog(WorksheetInfoActivity.this).builder();
         dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
