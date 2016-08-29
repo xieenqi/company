@@ -193,6 +193,9 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
+    /**
+     * 新建线索
+     * */
     private void addDataInfo() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
@@ -207,11 +210,16 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         LogUtil.d("线索创建参数：" + app.gson.toJson(map));
         if (!isEdit) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                    .addClue(map, new Callback<Object>() {
+                    .addClue(map, new Callback<ClueDetail>() {
                         @Override
-                        public void success(Object o, Response response) {
+                        public void success(ClueDetail clueDetail, Response response) {
                             HttpErrorCheck.checkResponse("新建线索：", response);
-                            app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                            if(clueDetail.errcode != 0){
+                                Toast(clueDetail.errmsg);
+                                return;
+                            }else if(clueDetail.errcode == 0){
+                                app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                            }
                         }
 
                         @Override
