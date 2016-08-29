@@ -77,6 +77,11 @@ public class UMengTools {
             LogUtil.d("此时不需要穿轨迹。。。》" + address.equals(oldInfo));
             return;
         }
+//        upLocation(address, longitude, latitude, date);
+        newUpLocation(address, longitude, latitude, date);
+    }
+
+    private static void upLocation(final String address, final double longitude, final double latitude, final String date) {
         ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude
                 + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> jsonObject = new HashMap<>();
@@ -86,13 +91,41 @@ public class UMengTools {
             public void success(Object o, Response response) {
                 HttpErrorCheck.checkResponse(" 手动上传轨迹: ", response);
                 SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
+
                 SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+//                HttpErrorCheck.checkError(error);
             }
         });
+    }
+
+    private static void newUpLocation(final String address, final double longitude, final double latitude, final String date) {
+        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(longitude
+                + "," + latitude, System.currentTimeMillis() / 1000)));
+        final HashMap<String, Object> map = new HashMap<>();
+        map.put("trackLogs", trackLogs);
+        RestAdapterFactory.getInstance().build(Config_project.NEW_UPLOCATION()).create(ITrackLog.class)
+                .newUploadTrack(map, new Callback<TrackLog>() {
+                    @Override
+                    public void success(TrackLog trackLog, Response response) {
+                        HttpErrorCheck.checkResponse(" new >>>>>>>>>>手动上传轨迹: ", response);
+                        SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
+
+                        SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
+
+                        SharedUtil.put(MainApp.getMainApp(), "lat", String.valueOf(latitude));
+                        SharedUtil.put(MainApp.getMainApp(), "lng", String.valueOf(longitude));
+                        SharedUtil.remove(MainApp.getMainApp(), "address");
+                        SharedUtil.put(MainApp.getMainApp(), "address", address);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 }

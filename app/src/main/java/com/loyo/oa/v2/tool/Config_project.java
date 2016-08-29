@@ -8,7 +8,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static boolean isRelease = false;                               //是否是正式产品
+    public static boolean isRelease = true;                               //是否是正式产品
 
 //  public static final Boolean is_developer_mode = true;                  //生产模式
 
@@ -132,9 +132,11 @@ public class Config_project {
     }
 
     /**
-     * 删除附件
+     * 新版 上传轨迹
      */
-    public static final String DELETE_ENCLOSURE = SERVER_URL_ATTACHMENT() + "/api/v2";
+    public static String NEW_UPLOCATION() {
+        return isRelease ? "http://ukuaiqi.com" : IP;
+    }
 
     public static String API_URL_CUSTOMER() {
         return SERVER_URL_CUSTOMER().concat("/api/v2");
