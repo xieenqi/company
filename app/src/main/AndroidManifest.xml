@@ -77,12 +77,24 @@
             </intent-filter>
         </activity>
 
-        <!-- 启动欢迎页面 -->
+        <!-- login启动欢迎页面 -->
         <activity
             android:name=".activityui.login.WelcomeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+        <activity
+            android:name=".activityui.login.LoginActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".activityui.login.LoginBQQActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <!--设置相关-->
         <activity
             android:name=".activityui.setting.ResetPasswordActivity_"
             android:label="@string/app_name"
@@ -95,22 +107,32 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".customview.multi_image_selector.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".customview.multi_image_selector.CropImageActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <!--工作报告-->
         <activity
             android:name=".activityui.work.WorkReportReviewActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".activityui.work.WorkReportsManageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.work.WorkReportsInfoActivity_"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".activityui.work.WorkReportAddActivity_"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".activityui.work.WorkReportsSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible"/>
+
         <activity
             android:name=".activityui.customer.CommonTagSelectActivity_"
             android:launchMode="standard"
@@ -179,17 +201,7 @@
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".activityui.login.LoginActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".activityui.login.LoginBQQActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
         <activity
             android:name=".activityui.signin.SignInActivity"
             android:launchMode="singleTop"
@@ -297,20 +309,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".activityui.work.WorkReportsManageActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.work.WorkReportsInfoActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".activityui.work.WorkReportAddActivity_"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
         <activity
             android:name=".activityui.wfinstance.WfInstanceManageActivity"
             android:launchMode="singleTop"
@@ -388,11 +387,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>
-        <activity
-            android:name=".activityui.work.WorkReportsSearchActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible"/>
+
         <activity
             android:name=".activityui.wfinstance.WfinstanceSearchActivity"
             android:launchMode="singleTop"
@@ -422,11 +417,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name=".activityui.work.WorkReportModelSelectManageActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <!--<activity-->
+            <!--android:name=".activityui.work.WorkReportModelSelectManageActivity_"-->
+            <!--android:launchMode="singleTop"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:windowSoftInputMode="stateAlwaysHidden"/>-->
         <activity
             android:name=".activityui.tasks.TaskModelSelectManageActivity_"
             android:launchMode="singleTop"
@@ -702,6 +697,17 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             />
+        <activity
+            android:name=".customview.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".customview.multi_image_selector.CropImageActivity_"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <service
             android:name=".service.InitDataService_"
