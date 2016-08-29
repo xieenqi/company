@@ -158,7 +158,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
                 LogUtil.dee("type:" + type);
                 Bundle b = new Bundle();
                 b.putInt(ExtraAndResult.EXTRA_TYPE, type);
-                // app.startActivity(this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                app.startActivity(this, WorksheetSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }
