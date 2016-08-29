@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
@@ -90,8 +91,6 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
     private Intent mIntent;
     private View mView;
 
-    private Button testButton;
-
     private GroupsData groupsData;
     private WorksheetListAdapter adapter;
 
@@ -130,9 +129,6 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
         salemy_screen1_iv2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
 
-        testButton = (Button) view.findViewById(R.id.button);
-        testButton.setOnClickListener(this);
-
         mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
         mExpandableListView.setOnRefreshListener(this);
         //mExpandableListView.setEmptyView(emptyView);
@@ -149,7 +145,13 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                return false;
+                mIntent = new Intent();
+                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
+                return true;
             }
         });
 
@@ -207,14 +209,6 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-            // 跳转详情页面，测试入口
-            case R.id.button:
-            {
-                Toast("跳转详情页面，测试入口");
-
-            }
-            break;
 
             //新建
             case R.id.btn_add:
