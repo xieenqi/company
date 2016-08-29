@@ -29,7 +29,7 @@ public enum WorksheetEventStatus  implements GroupKey {
      * 防备服务端返回非 1 - 4 数据
      *
      */
-    OTHERS(-1){
+    OTHERS(Integer.MAX_VALUE){
         public String getName() { return "其他"; }
         public int getColor() { return R.color.text66; }
         public int getIcon() { return R.drawable.bg_view_red_circle; }
