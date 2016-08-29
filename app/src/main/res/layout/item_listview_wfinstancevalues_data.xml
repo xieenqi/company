@@ -30,7 +30,7 @@
             android:gravity="start|center_vertical"
             android:layout_marginLeft="@dimen/dimen_2"
             android:singleLine="false"
-            android:textColor="@color/black"
+            android:textColor="@color/text33"
             android:textSize="@dimen/text_sp15"
             android:text="---"
             />

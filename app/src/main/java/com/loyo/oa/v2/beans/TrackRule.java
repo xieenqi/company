@@ -61,39 +61,6 @@ public class TrackRule implements Serializable {
         return TextUtils.isEmpty(weekdays) ? "" : weekdays;
     }
 
-
-    /**
-     * 创建轨迹规则,如果网络不通，则使用本地规则
-     *
-     * @param delayMills
-     */
-    public static void StartTrackRule(final long delayMills) {
-        if (TextUtils.isEmpty(MainApp.getToken())) {
-            return;
-        }
-
-        final MainApp app = MainApp.getMainApp();
-
-        if (Global.isConnected()) {
-            app.getRestAdapter().create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
-                @Override
-                public void success(TrackRule trackRule, Response response) {
-                    if (null != trackRule) {
-                        StartTrackRule(trackRule, app);
-                        DBManager.Instance().putTrackRule(MainApp.gson.toJson(trackRule));
-                    }
-                }
-            });
-        } else {
-            TrackRule trackRule = DBManager.Instance().getTrackRule();
-            if (null != trackRule) {
-                StartTrackRule(trackRule, app);
-            }
-        }
-    }
-
-    private static int count = 0;
-
     /**
      * 初始化轨迹规则
      */
@@ -130,6 +97,39 @@ public class TrackRule implements Serializable {
             }
         }
     }
+
+    /**
+     * 创建轨迹规则,如果网络不通，则使用本地规则
+     *
+     * @param delayMills
+     */
+    public static void StartTrackRule(final long delayMills) {
+        if (TextUtils.isEmpty(MainApp.getToken())) {
+            return;
+        }
+
+        final MainApp app = MainApp.getMainApp();
+
+        if (Global.isConnected()) {
+            app.getRestAdapter().create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
+                @Override
+                public void success(TrackRule trackRule, Response response) {
+                    if (null != trackRule) {
+                        StartTrackRule(trackRule, app);
+                        DBManager.Instance().putTrackRule(MainApp.gson.toJson(trackRule));
+                    }
+                }
+            });
+        } else {
+            TrackRule trackRule = DBManager.Instance().getTrackRule();
+            if (null != trackRule) {
+                StartTrackRule(trackRule, app);
+            }
+        }
+    }
+
+    private static int count = 0;
+
 
     public static void initUserData(Context context) {
 //        Intent intent = new Intent(context, InitDataService.class);

@@ -37,6 +37,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,6 +157,8 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
+
+        Utils.btnHideForListView(listView.getRefreshableView(),btn_add);
     }
 
 

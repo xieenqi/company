@@ -62,7 +62,6 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
     }
 
     void getTempSaleActivity() {
-        //        mSaleActivity = DBManager.Instance().getSaleActivity(mCustomer.getId());
         if (mSaleActivity == null) {
             return;
         }

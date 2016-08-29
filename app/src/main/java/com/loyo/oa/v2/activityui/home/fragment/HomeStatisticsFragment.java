@@ -165,11 +165,19 @@ public class HomeStatisticsFragment extends BaseFragment {
             @Override
             public void success(HttpStatistics httpStatistics, Response response) {
                 HttpErrorCheck.checkResponse("销售统计全部数据：", response);
-                setprocessData(httpStatistics.process);
-                setBulkingData(httpStatistics.bulking);
-                setFunnelData(httpStatistics.salechance);
-                setAchievesData(httpStatistics.achieves);
                 srl_refresh.setRefreshing(false);
+                if (null == httpStatistics) {
+                    return;
+                } else {
+                    if (null != httpStatistics.process)
+                        setprocessData(httpStatistics.process);
+                    if (null != httpStatistics.bulking)
+                        setBulkingData(httpStatistics.bulking);
+                    if (null != httpStatistics.salechance)
+                        setFunnelData(httpStatistics.salechance);
+                    if (null != httpStatistics.achieves)
+                        setAchievesData(httpStatistics.achieves);
+                }
             }
 
             @Override

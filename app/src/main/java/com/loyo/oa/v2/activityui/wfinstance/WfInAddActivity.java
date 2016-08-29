@@ -27,6 +27,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWfInstance;
@@ -96,6 +97,8 @@ public class WfInAddActivity extends BaseActivity {
     private BizForm mBizForm;
     private ArrayList<String> startTimeArr = new ArrayList<>();
     private ArrayList<String> endTimeArr = new ArrayList<>();
+    private List<String> mSelectPath;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
     private ArrayList<Boolean> isRequiredList = new ArrayList<>();
@@ -452,13 +455,20 @@ public class WfInAddActivity extends BaseActivity {
         }
         switch (requestCode) {
 
-            //上传附件回调
-            case SelectPicPopupWindow.GET_IMG:
-                pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
-                init_gridView_photo();
+            /*相册选择 回调*/
+            case MainApp.PICTURE:
+                if (null != data) {
+                    pickPhotsResult = new ArrayList<>();
+                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    for (String path : mSelectPath) {
+                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                    }
+                    pickPhots.addAll(pickPhotsResult);
+                    init_gridView_photo();
+                }
                 break;
 
-            /*附件删除*/
+           /*附件删除回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 pickPhots.remove(data.getExtras().getInt("position"));
                 init_gridView_photo();

@@ -82,6 +82,7 @@ public class MenuFragment extends BaseFragment {
                 if (null != user) {
                     if (null != user.avatar && null != riv_head) {
                         ImageLoader.getInstance().displayImage(MainApp.user.avatar, riv_head);
+//                        riv_head.setGrayImg();
                     }
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
@@ -373,28 +374,19 @@ public class MenuFragment extends BaseFragment {
     }
 
     void exit() {
-//        showLoading("退出系统中");
         Set<String> complanTag = new HashSet<>();
         JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), "", complanTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
-//                cancelLoading();
                 LogUtil.d("激光推送已经成功停止（注销）状态" + i);
-//                if (i != 0) {
-//                    Toast("请重试");
-//                    return;
-//                }
-                //设置别名 为空
-
                 JPushInterface.stopPush(app);
             }
         });
-        //清楚token与用户资料
-        MainApp.setToken(null);
+        MainApp.setToken(null);//清楚token与用户资料
+        InitDataService_.intent(app).stop();//避免后台多次调用接口 没有token 导致accst_token无效 的问题
         MainApp.user = null;
-
-        //清楚本地登录状态
-        SharedUtil.clearInfo(getActivity());
+        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
+        SharedUtil.clearInfo(getActivity());//清楚本地登录状态 即缓存信息
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(getActivity(), LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }

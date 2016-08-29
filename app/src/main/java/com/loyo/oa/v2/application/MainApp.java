@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
@@ -21,6 +23,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
@@ -29,6 +32,7 @@ import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -66,6 +70,9 @@ public class MainApp extends Application {
     public static final int ENTER_TYPE_RIGHT = 4;
     public static final int ENTER_TYPE_ZOOM_OUT = 5;
     public static final int ENTER_TYPE_ZOOM_IN = 6;
+    public static final int GET_IMG = 1013;
+    public static final int PHOTO = 1011;
+    public static final int PICTURE = 1012;
 
     public static long nowTime;
     public static long lastTime;
@@ -108,6 +115,9 @@ public class MainApp extends Application {
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
     public static HashMap<String, Object> rootMap;
+
+    public ScaleAnimation animShow;  //显示动画
+    public ScaleAnimation animHide;  //隐藏动画
 
 
     //-------这些数据需要保存在本地-------------
@@ -156,7 +166,6 @@ public class MainApp extends Application {
         mainApp = this;
         init();
         loadIndustryCodeTable();
-        //    getWindowWH();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
 
@@ -215,6 +224,15 @@ public class MainApp extends Application {
 
 
     void init() {
+
+        animShow = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animShow.setDuration(120);//设置动画持续时间
+
+        animHide = new ScaleAnimation(1.0f, 0.0f, 1.0f, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animHide.setDuration(120);//设置动画持续时间
+
         CrashReport.initCrashReport(getApplicationContext(), "900037071", Config_project.is_developer_mode);  //初始化bugly SDK  900001993
         Configuration config = getResources().getConfiguration();
         config.locale = Locale.CHINA;
@@ -277,20 +295,6 @@ public class MainApp extends Application {
         options_3 = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).considerExifParams(true).build();
     }
 
-//    void init_StrictMode() {
-//        if (Config_project.is_developer_mode) {
-//            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-//                    //                    .detectAll()
-//                    .detectDiskReads().detectDiskWrites().detectNetwork()   // or .detectAll() for all detectable problems
-//                    .penaltyLog()
-//                            //                    .penaltyDialog()
-//                    .build());
-//            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-//                    //                    .detectAll()
-//                    .detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
-//        }
-//    }
-
     public static void initImageLoader(Context context) {
 
         File cacheDir = StorageUtils.getOwnCacheDirectory(mainApp.getBaseContext(), "imageloader/Cache");
@@ -316,8 +320,6 @@ public class MainApp extends Application {
         }
 
         ImageLoaderConfiguration config = builder.build();
-
-        // Initialize ImageLoader with configuration
         ImageLoader.getInstance().init(config);
     }
 
@@ -328,10 +330,6 @@ public class MainApp extends Application {
     public int diptoPx(float dipValue) {
 
         float density = getResources().getDisplayMetrics().density;
-        //	 Log.d("diptoPx", "density:" + density);
-        // Log.d("diptoPx", "return:" + (int) (dipValue * density + 0.5f));
-        // DisplayMetrics dm = this.getApplicationContext().getResources().getDisplayMetrics();
-        // Log.d("diptoPx", "dm.densityDpi/ 160:" + (float)dm.densityDpi/ 160f);
         return (int) (dipValue * density + 0.5f);
     }
 
@@ -380,6 +378,19 @@ public class MainApp extends Application {
     //        Log.d(tag, "p.y:" + p.y);
     //        return p;
     //    }
+
+
+    /**
+     * 跳转相册，公用方法
+     * */
+    public void startSelectImage(Activity mActivity,ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots){
+        Intent intent = new Intent(mActivity, MultiImageSelectorActivity.class);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-pickPhots.size()) /*最大可选择图片数量*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
+        mActivity.startActivityForResult(intent, PICTURE);
+    }
 
     /**
      * @param activity

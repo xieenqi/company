@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.loyo.oa.v2"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="internalOnly">
+<manifest package="com.loyo.oa.v2"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:installLocation="internalOnly">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -29,12 +28,11 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!--<uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/>-->
-    <!--升级到系统权限 修改手机连接网路状态权限-->
+    <!-- <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/> -->
+    <!-- 升级到系统权限 修改手机连接网路状态权限 -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.DEVICE_POWER"/>
-
 
     <!-- 激光推送 -->
     <permission
@@ -57,7 +55,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppStartLoadTranslucent"
         android:windowSoftInputMode="adjustUnspecified|stateHidden">
-        <!--android:theme="@style/AppStartLoadTranslucent"-->
+
+        <!-- android:theme="@style/AppStartLoadTranslucent" -->
         <activity
             android:name=".activityui.home.LauncherActivity_"
             android:label="@string/app_name"
@@ -67,7 +66,9 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
+
                 <action android:name="cn.jpush.android.ui.PushActivity"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -234,7 +235,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activityui.customer.SaleActivitiesManageActivity"
+            android:name=".activityui.customer.CustomerDynamicManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -325,11 +326,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".activityui.setting.SettingActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.setting.SettingPasswordActivity_"
             android:launchMode="singleTop"
@@ -465,11 +461,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.commonview.SelectDetUserActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
             android:name=".activityui.commonview.SelectDetUserSerach"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -479,38 +470,34 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.IOSched"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.customer.CustomerManagerActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.wfinstance.WfInAddActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.wfinstance.WfInTypeSelectActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.wfinstance.ProcessSelectActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.wfinstance.WfInEditActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".activityui.commonview.SelectDetUserActivity2"/>
         <activity
             android:name=".activityui.discuss.MyDiscussActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
         <activity
             android:name=".activityui.discuss.HaitMyActivity"
             android:launchMode="singleTop"
@@ -519,7 +506,7 @@
             android:name=".activityui.discuss.DiscussDetialActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-        <!--销售机会 -->
+        <!-- 销售机会 -->
         <activity
             android:name=".activityui.sale.SaleOpportunitiesManagerActivity"
             android:launchMode="singleTop"
@@ -568,9 +555,8 @@
         <activity
             android:name=".activityui.sale.SaleEditViewActivity"
             android:launchMode="singleTop"
-            android:theme="@style/dialog_edit_delete_StyleBottom"
-            />
-        <!--订单管理 -->
+            android:theme="@style/dialog_edit_delete_StyleBottom"/>
+        <!-- 订单管理 -->
         <activity
             android:name=".activityui.order.OrderManagementActivity"
             android:launchMode="singleTop"
@@ -591,7 +577,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-
         <activity
             android:name=".activityui.order.OrderAddPlanActivity"
             android:launchMode="singleTop"
@@ -632,6 +617,37 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+        <!-- 线索 -->
+        <activity
+            android:name=".activityui.clue.ClueManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.clue.ClueAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".activityui.clue.ClueTransferActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".activityui.clue.ClueSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activityui.customer.CustomerDynamicAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activityui.other.PreviewImagefromHttp"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
 
         <service
             android:name=".service.InitDataService_"
@@ -744,7 +760,7 @@
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION"/>
                 <!-- Required  用户注册SDK的intent -->
-                <!--<action android:name="cn.jpush.android.intent.UNREGISTRATION"/>-->
+                <!-- <action android:name="cn.jpush.android.intent.UNREGISTRATION"/> -->
                 <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
                 <!-- Required  用户接收SDK消息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>
@@ -782,5 +798,16 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="ukuaiqi"/>
+
+        <activity
+            android:name=".activityui.clue.ClueDetailActivity"
+            android:label="@string/title_activity_clue_detail"/>
+        <activity
+            android:name=".activityui.clue.ClueDynamicManagerActivity"
+            android:label="@string/title_activity_clue_followup"/>
+        <activity
+            android:name=".activityui.clue.ClueDynamicAddActivity"
+            android:label="@string/title_activity_clue_followup_create"></activity>
     </application>
+
 </manifest>

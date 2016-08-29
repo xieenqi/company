@@ -25,7 +25,7 @@ public class LegWork extends BaseBeans implements Serializable {
     public Customer customer;
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return getCreatedAt() + "";
     }
 

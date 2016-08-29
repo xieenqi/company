@@ -20,4 +20,5 @@ public class HttpMyDiscussItem {
     public boolean isAt;
     public String createdAt;
     public String updatedAt;
+    public long newUpdatedAt;
 }

@@ -39,8 +39,8 @@
             android:gravity="center_vertical"
             android:hint="请输入帐号"
             android:singleLine="true"
-            android:textColor="@color/login"
-            android:textColorHint="@color/login"
+            android:textColor="@color/text66"
+            android:textColorHint="@color/text99"
             android:textCursorDrawable="@null"/>
 
     </LinearLayout>
@@ -50,7 +50,7 @@
         android:layout_height="@dimen/dimen_1"
         android:layout_marginLeft="@dimen/dimen_30"
         android:layout_marginRight="@dimen/dimen_30"
-        android:background="@color/login"/>
+        android:background="@color/lineCC"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,8 +78,8 @@
             android:hint="请输入密码"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:textColor="@color/login"
-            android:textColorHint="@color/login"
+            android:textColor="@color/text66"
+            android:textColorHint="@color/text99"
             android:textCursorDrawable="@null"/>
     </LinearLayout>
 
@@ -89,7 +89,7 @@
         android:layout_height="@dimen/dimen_1"
         android:layout_marginLeft="@dimen/dimen_30"
         android:layout_marginRight="@dimen/dimen_30"
-        android:background="@color/login"/>
+        android:background="@color/lineCC"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="测试环境"
-                android:textColor="@color/black"
+                android:textColor="@color/text33"
                 android:textSize="16sp"
                 />
 
@@ -171,7 +171,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="正式环境"
-                android:textColor="@color/black"
+                android:textColor="@color/text33"
                 android:textSize="16sp"
                 />
 

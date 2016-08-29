@@ -48,7 +48,7 @@ public class WorkReport extends BaseBeans {
     }
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return createdAt + "";
     }
 

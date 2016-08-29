@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
@@ -31,9 +32,6 @@ import java.util.List;
  */
 public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
-    public static final int GET_IMG = 10;
-    public static final int PHOTO = 1;
-    public static final int PICTURE = 2;
     private static final String RESTORE_FILEURI = "fileUri";
     private List<String> mSelectPath;
 
@@ -123,6 +121,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         }
     }
 
+    /*本地展示调用，记得前面加文件路径 "file://" */
     public static class ImageInfo implements Serializable {
         public String path;
 
@@ -157,7 +156,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 // 选择模式
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                startActivityForResult(intent, PICTURE);
+                startActivityForResult(intent, MainApp.PICTURE);
 
                 break;
 
@@ -183,7 +182,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
             LogUtil.d("相机路径：" + fileUri);
             if (null != fileUri) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                startActivityForResult(intent, PHOTO);
+                startActivityForResult(intent, MainApp.PHOTO);
             } else {
                 Global.Toast("相机不可用");
             }
@@ -222,7 +221,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_PICK);
                 intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, PICTURE);
+                startActivityForResult(intent, MainApp.PICTURE);
             } catch (ActivityNotFoundException e) {
                 Global.ProcException(e);
             }
@@ -260,7 +259,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         switch (requestCode) {
 
             //拍照回调
-            case PHOTO:
+            case MainApp.PHOTO:
                 pickArray.add(new ImageInfo(fileUri.toString()));
                 if (pickArray.isEmpty()) {
                     setResult(RESULT_CANCELED);
@@ -271,7 +270,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 break;
 
             //相册选择回调
-            case PICTURE:
+            case MainApp.PICTURE:
                 if (null != data) {
                     mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                     for (String path : mSelectPath) {
@@ -280,13 +279,6 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                     mIntent.putExtra("data", pickArray);
                     setResult(RESULT_OK, mIntent);
                 }
-
-                //选择文件
-           /* if (data.getData() != null) {
-                pickArray.add(new ImageInfo(data.getData().toString()));
-                i.putExtra("data", pickArray);
-                setResult(RESULT_OK, i);
-            }*/
                 break;
 
         }

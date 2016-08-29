@@ -491,7 +491,7 @@ public class WfInEditActivity extends BaseActivity {
         switch (requestCode) {
 
             //上传附件回调
-            case SelectPicPopupWindow.GET_IMG:
+            case MainApp.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     uploadSize = 0;

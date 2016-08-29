@@ -12,19 +12,18 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activityui.customer.SaleActivitiesAddActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
@@ -69,15 +68,14 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -103,6 +101,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private boolean isJPus = false;//别名是否设置成功
     private int JpushCount = 0;    //激光没有注册成功的次数
     private int outKind, staratItem; //0上班  1下班  2加班
+    private int windowH;
     private PullToRefreshListView listView;
     private Button btn_add;
     private RoundImageView heading;
@@ -174,7 +173,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     break;
                 //写跟进
                 case BaseActivity.FOLLOW_ADD:
-                    startActivityForResult(new Intent(getActivity(), SaleActivitiesAddActivity.class), Activity.RESULT_FIRST_USER);
+                    startActivityForResult(new Intent(getActivity(), CustomerDynamicAddActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //新建订单
@@ -208,6 +207,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home_application, container,
                 false);
+        windowH = Utils.getWindowHW(getActivity()).getDefaultDisplay().getHeight();
+
         //注册拉去组织架构的广播
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
         //检查更新
@@ -222,35 +223,27 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
-        listView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float downY = 0, upY = 0;
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        downY = v.getY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        upY = v.getY();
 
-                        break;
+        //列表滑动监听
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                    btn_add.startAnimation(app.animHide);
+                    btn_add.setVisibility(View.INVISIBLE);
+                } else {
+                    if (btn_add.getVisibility() == View.INVISIBLE) {
+                        btn_add.startAnimation(app.animShow);
+                        btn_add.setVisibility(View.VISIBLE);
+                    }
                 }
-                float moveY = downY - upY;
-                return false;
             }
         });
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                LogUtil.d("一亿个：" + firstVisibleItem);
-//                btn_add.setVisibility(firstVisibleItem > staratItem ? View.INVISIBLE : View.VISIBLE);
-//                staratItem = firstVisibleItem;
-//            }
-//        });
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,6 +257,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         }
         LogUtil.d("用户获取的token：---> " + app.getToken());
         updateUser();
+        startTrack();
         return mView;
     }
 
@@ -297,7 +291,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             e.printStackTrace();
         }
         requestNumber();
-        startTrack();
+
     }
 
     /**
@@ -308,6 +302,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", "com.loyo.oa.v2.activityui.other.BulletinManagerActivity_", "0", 0),
                 new HomeItem(R.drawable.newmain_discuss, "我的讨论", "com.loyo.oa.v2.activityui.discuss.MyDiscussActivity", "0", 0),
                 new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity", "0213", 0),
+                new HomeItem(R.drawable.newmain_clue, "销售线索", "com.loyo.oa.v2.activityui.clue.ClueManagerActivity", "0217", 1),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
                 new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0216", 1),//新加订单
@@ -325,7 +320,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
                 new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
-                new MoreWindowItem("考勤打卡", "0000", R.drawable.newmain_post_att),
+                new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
                 new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign),
                 new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
 
@@ -602,32 +597,58 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             suitesNew.clear();
             suitesNew.addAll(MainApp.user.newpermission);
 
+            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
             for (Permission permission : suitesNew) {
-                LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
-                for (int i = 0; i < items.size(); i++) {
-                    if (items.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
-                            items.remove(i);
-                        }
-                    }
-                }
-
-                for (int i = 0; i < caseItems.size(); i++) {
-                    if (caseItems.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
-                            caseItems.remove(i);
-                        }
-                    }
-                }
-
-                for (int i = 0; i < caseItems.size(); i++) {
-                    if (caseItems.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
-                            caseItems.remove(i);
-                        }
-                    }
+                if (!TextUtils.isEmpty(permission.code)) {
+                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+                    mappedPermission.put(permission.code, permission);
                 }
             }
+
+            for (int i = 0; i < items.size(); i++) {
+                String code = items.get(i).code;
+                Permission p = mappedPermission.get(code);
+                if ((p == null || p.enable == false) && code != "0") {
+                    items.remove(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < caseItems.size(); i++) {
+                String code = caseItems.get(i).code;
+                Permission p = mappedPermission.get(code);
+                if ((p == null || p.enable == false) && code != "0") {
+                    caseItems.remove(i);
+                    i--;
+                }
+            }
+
+//            for (Permission permission : suitesNew) {
+//                LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+//                for (int i = 0; i < items.size(); i++) {
+//                    if (items.get(i).code.equals(permission.getCode())) {
+//                        if (!permission.isEnable()) {
+//                            items.remove(i);
+//                        }
+//                    }
+//                }
+//
+//                for (int i = 0; i < caseItems.size(); i++) {
+//                    if (caseItems.get(i).code.equals(permission.getCode())) {
+//                        if (!permission.isEnable()) {
+//                            caseItems.remove(i);
+//                        }
+//                    }
+//                }
+//
+//                for (int i = 0; i < caseItems.size(); i++) {
+//                    if (caseItems.get(i).code.equals(permission.getCode())) {
+//                        if (!permission.isEnable()) {
+//                            caseItems.remove(i);
+//                        }
+//                    }
+//                }
+//            }
         }
         initView();
     }
@@ -762,6 +783,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
 
     @Override
     public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
+        UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);

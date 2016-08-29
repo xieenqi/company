@@ -88,9 +88,11 @@
                     android:layout_marginLeft="@dimen/dimen_8"
                     android:layout_marginRight="@dimen/dimen_8"
                     android:layout_marginTop="@dimen/dimen_3"
+                    android:autoLink="all"
                     android:lineSpacingExtra="1dp"
                     android:text=""
                     android:textColor="@color/text99"
+                    android:textIsSelectable="true"
                     android:textSize="@dimen/text_sp14"/>
 
                 <com.loyo.oa.v2.customview.CusGridView
@@ -101,8 +103,8 @@
                     android:horizontalSpacing="3dp"
                     android:listSelector="@android:color/transparent"
                     android:numColumns="3"
-                    android:verticalSpacing="3dp"
                     android:scrollbars="none"
+                    android:verticalSpacing="3dp"
                     />
 
             </LinearLayout>

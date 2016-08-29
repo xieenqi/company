@@ -22,7 +22,7 @@
                 android:layout_height="match_parent"
                 android:animateLayoutChanges="true"
                 android:cacheColorHint="#00000000"
-                android:divider="@color/activity_split"
+                android:divider="@color/lineCC"
                 android:dividerHeight="0.5dp"
                 android:drawSelectorOnTop="false"
                 android:fadingEdge="none"
@@ -56,7 +56,7 @@
                     android:background="@drawable/round_bg_shpe"
                     android:cacheColorHint="#00000000"
                     android:choiceMode="singleChoice"
-                    android:divider="@color/activity_split"
+                    android:divider="@color/lineCC"
                     android:dividerHeight="@dimen/dimen_0.5"
                     android:padding="@dimen/dimen_0.5">
                 </ListView>

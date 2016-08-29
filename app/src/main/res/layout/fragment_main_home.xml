@@ -17,7 +17,7 @@
             android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
-            android:src="@drawable/img_default_user"/>
+            />
 
         <RadioGroup
             android:id="@+id/tab_menu"

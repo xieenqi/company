@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,12 +29,11 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.adapter.MapModifyViewAdapter;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RecycleViewDivider;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
-import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -443,16 +441,20 @@ public class MapModifyView extends BaseActivity
                 if (selectPosition == -1) {
                     Toast("请选择地点");
                 } else {
-                    app.latitude = resultItems.get(selectPosition).laPosition;
-                    app.longitude = resultItems.get(selectPosition).loPosition;
-                    app.address = resultItems.get(selectPosition).address;
-                    app.message = resultItems.get(selectPosition).message;
+                    if(resultItems.size() != 0){
+                        app.latitude = resultItems.get(selectPosition).laPosition;
+                        app.longitude = resultItems.get(selectPosition).loPosition;
+                        app.address = resultItems.get(selectPosition).address;
+                        app.message = resultItems.get(selectPosition).message;
 
-                    mIntent = new Intent();
-                    mBundle = new Bundle();
-                    mBundle.putSerializable("data", resultItems.get(selectPosition));
-                    mIntent.putExtras(mBundle);
-                    app.finishActivity(this, MainApp.ENTER_TYPE_RIGHT, -1, mIntent);
+                        mIntent = new Intent();
+                        mBundle = new Bundle();
+                        mBundle.putSerializable("data", resultItems.get(selectPosition));
+                        mIntent.putExtras(mBundle);
+                        app.finishActivity(this, MainApp.ENTER_TYPE_RIGHT, -1, mIntent);
+                    }else{
+                        Toast("无处理结果,请稍后");
+                    }
                 }
 
                 break;
@@ -472,6 +474,7 @@ public class MapModifyView extends BaseActivity
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
+                UMengTools.sendLocationInfo(address, longitude, latitude);
                 isTouch = true;
                 isFrist = true;
                 setHeaderItem(latitude,longitude,address,radius);

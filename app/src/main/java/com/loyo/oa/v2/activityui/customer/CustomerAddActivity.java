@@ -30,6 +30,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CusGridView;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
@@ -40,6 +41,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -49,6 +51,7 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -97,8 +100,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<NewTag> tags;
     private Intent mIntent;
     private Bundle mBundle;
-
-    private  ArrayList<ContactLeftExtras> mCusList;
+    private List<String> mSelectPath;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
+    private ArrayList<ContactLeftExtras> mCusList;
 
     private String uuid = StringUtil.getUUID();
     private String tagItemIds;
@@ -162,6 +166,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
+                UMengTools.sendLocationInfo(address, longitude, latitude);
                 myAddress = address;
                 mHandler.sendEmptyMessage(0x01);
                 LocationUtilGD.sotpLocation();
@@ -486,15 +491,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             return;
         }
 
-        /*地图微调，数据回调*/
-/*        if (resultCode == MapModifyView.SERACH_MAP) {
-            positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-            laPosition = positionResultItem.laPosition;
-            loPosition = positionResultItem.loPosition;
-            et_address.setText(positionResultItem.address);
-            edit_address_details.setText(positionResultItem.address);
-        }*/
-
         switch (requestCode) {
             case  MapModifyView.SERACH_MAP:
                 positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
@@ -556,20 +552,26 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
                 break;
 
-
-            /*上传附件回调*/
-            case SelectPicPopupWindow.GET_IMG:
-                pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
-                init_gridView_photo();
+            /*相册选择 回调*/
+            case MainApp.PICTURE:
+                if (null != data) {
+                    pickPhotsResult = new ArrayList<>();
+                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    for (String path : mSelectPath) {
+                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                    }
+                    pickPhots.addAll(pickPhotsResult);
+                    init_gridView_photo();
+                }
                 break;
 
-            /*删除附件回调*/
+           /*附件删除回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 pickPhots.remove(data.getExtras().getInt("position"));
                 init_gridView_photo();
                 break;
-            default:
 
+            default:
                 break;
         }
     }

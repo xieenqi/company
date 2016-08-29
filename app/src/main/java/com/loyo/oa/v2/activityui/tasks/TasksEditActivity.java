@@ -541,7 +541,7 @@ public class TasksEditActivity extends BaseActivity {
                 mTask.setPlanEndAt(0);
                 isKind = true;
                 tv_deadline.setText("不截止");
-                tv_remind.setTextColor(mContext.getResources().getColor(R.color.gray0990));
+                tv_remind.setTextColor(mContext.getResources().getColor(R.color.text99));
                 layout_remind.setEnabled(false);
                 layout_retask.setVisibility(View.VISIBLE);
                 layout_retask_view.setVisibility(View.VISIBLE);
@@ -728,7 +728,7 @@ public class TasksEditActivity extends BaseActivity {
                 break;
 
 
-            case SelectPicPopupWindow.GET_IMG:
+            case MainApp.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {

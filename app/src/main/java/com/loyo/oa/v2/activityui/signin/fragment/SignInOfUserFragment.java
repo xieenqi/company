@@ -117,6 +117,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
             dataSelectInit();
             initTimeStr(defaultPosition);
             getData();
+
+            Utils.btnHideForListView(lv.getRefreshableView(), btn_add);
         }
         return mView;
     }

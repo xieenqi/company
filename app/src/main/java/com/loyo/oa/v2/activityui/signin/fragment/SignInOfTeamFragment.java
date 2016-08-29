@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.signin.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,40 +12,38 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attendance.adapter.CustomerDataManager;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
 import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
+import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.signin.LegworksListActivity_;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.bean.PaginationLegWork;
 import com.loyo.oa.v2.beans.TeamLegworkDetail;
-import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CustomRecyclerView;
+import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ILegwork;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
-import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -109,7 +108,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
             });
 
             dataSelectInit();
-            duration = DateTool.timet(dataSelects.get(0).mapOftime,"yyyy-MM-dd");
+            duration = DateTool.timet(dataSelects.get(0).mapOftime, "yyyy-MM-dd");
             endAt = DateTool.getEndAt_ofDay();
             onPullDownToRefresh(lv);
         }
@@ -121,18 +120,18 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void dataSelectInit(){
+    public void dataSelectInit() {
         int year = Integer.parseInt(DateTool.getNowTime("yyyy"));
 
-        dataSelects = DateTool.getYearAllofDay(2015,year);
+        dataSelects = DateTool.getYearAllofDay(2015, year);
         Collections.reverse(dataSelects);
         dataSelects.remove(dataSelects.size() - 1);
         windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
         data_time_tv.setText(dataSelects.get(0).yearMonDay);
-        layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
+        layoutManager = new LinearLayoutManager(getActivity(), 1, true);//true 反向显示 false 正常显示
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2,0);
+        dataSelectAdapter = new DataSelectAdapter(getActivity(), dataSelects, windowW, 2, 0);
         recyclerView.setAdapter(dataSelectAdapter);
         endAt = Long.valueOf(dataSelects.get(0).mapOftime);
 
@@ -198,8 +197,8 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
 
         String teamVisitStr = "团队共拜访 " + visitNum + " 次 ";
         String teamVisitCustomerStr = "，共拜访 " + visitCustomerNum + " 位客户";
-        tv_count_title1.setText(Utils.modifyTextColor(teamVisitStr, getResources().getColor(R.color.title_bg1), "团队共拜访 ".length(), "团队共拜访 ".length() + visitNum.length()));
-        tv_count_title2.setText(Utils.modifyTextColor(teamVisitCustomerStr, getResources().getColor(R.color.title_bg1), "，共拜访 ".length(), "，共拜访 ".length() + visitCustomerNum.length()));
+        tv_count_title1.setText(Utils.modifyTextColor(teamVisitStr, Color.parseColor("#2c9dfc"), "团队共拜访 ".length(), "团队共拜访 ".length() + visitNum.length()));
+        tv_count_title2.setText(Utils.modifyTextColor(teamVisitCustomerStr, Color.parseColor("#2c9dfc"), "，共拜访 ".length(), "，共拜访 ".length() + visitCustomerNum.length()));
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.tool;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -15,41 +16,46 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
+import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.customer.bean.TagItem;
+import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.point.IAttachment;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -62,6 +68,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +76,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
@@ -85,21 +96,83 @@ public class Utils {
     static ProgressDialog progressDialog;
     static ProgressDialog progressDialogAtt;
     static WindowManager windowManager;
+    static boolean scrollFlag;
+    static int lastVisibleItemPosition;
 
     protected Utils() {
         throw new UnsupportedOperationException(); // 防止子类调用
     }
 
-    public static WindowManager getWindowHW(Context mContext){
+    public static WindowManager getWindowHW(Context mContext) {
         windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         return windowManager;
     }
 
     /**
-     * 图片类型
+     * 自动弹出软键盘
+     * time: 设置弹出延迟时间，目的在于等页面渲染完成，否则自动弹出会失效
      * */
-    public static String getMimeType(String url)
-    {
+    public static void autoEjetcEdit(final EditText edt,int time){
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+                           public void run() {
+                               InputMethodManager inputManager =
+                                       (InputMethodManager) edt.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                               inputManager.showSoftInput(edt, 0);
+                           }
+                       },
+                time);
+    }
+
+    /**
+     * 获取屏幕宽度
+     * */
+    public static int getWindowWidth(Context context){
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+
+        int width = wm.getDefaultDisplay().getWidth();
+        return width;
+    }
+
+    /**
+     * 获取屏幕高度
+     * */
+    public static int getWindowHeight(Context context){
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+
+        int height = wm.getDefaultDisplay().getHeight();
+        return height;
+    }
+
+    /**
+     * 转换文件大小
+     *
+     * @param fileS
+     * @return
+     */
+    public static String FormetFileSize(long fileS) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        String fileSizeString = "";
+        if (fileS < 1024) {
+            fileSizeString = df.format((double) fileS) + "B";
+        } else if (fileS < 1048576) {
+            fileSizeString = df.format((double) fileS / 1024) + "K";
+        } else if (fileS < 1073741824) {
+            fileSizeString = df.format((double) fileS / 1048576) + "M";
+        } else {
+            fileSizeString = df.format((double) fileS / 1073741824) + "G";
+        }
+        return fileSizeString;
+    }
+
+
+    /**
+     * 图片类型
+     */
+    public static String getMimeType(String url) {
         String type = null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(url);
         if (extension != null) {
@@ -126,7 +199,7 @@ public class Utils {
             i++;
         }
         return tempList;
-}
+    }
 
     /**
      * ScroView嵌套listView，手动计算ListView高度
@@ -503,6 +576,7 @@ public class Utils {
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(it);
                 LocationUtilGD.sotpLocation();
+                UMengTools.sendLocationInfo(address, longitude, latitude);
             }
 
             @Override
@@ -601,6 +675,82 @@ public class Utils {
         ForegroundColorSpan redSpan = new ForegroundColorSpan(color);
         builder.setSpan(redSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
+    }
+
+    /**
+     * 改变文字颜色
+     *
+     * @param content
+     */
+    public static SpannableStringBuilder modifyTextHTTP(String content, int color, int start, int end) {
+
+        if (TextUtils.isEmpty(content) || (start >= content.length() || end > content.length() || start > end || end < 0 || start < 0)) {
+            return null;
+        }
+
+        SpannableStringBuilder builder = new SpannableStringBuilder(content);
+        // ForegroundColorSpan 为文字前景色，BackgroundColorSpan为文字背景色
+        ForegroundColorSpan redSpan = new ForegroundColorSpan(color);
+        builder.setSpan(redSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        builder.setSpan(new URLSpan(content), 2, 5,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
+    }
+
+    public static CharSequence checkAutoLink(String content, Activity activity) {
+
+        String url = "百度 https://www.baidu.com/，腾讯 http://www.qq.com/，淘宝 www.taobao.com/";//此处测试，就不用参数了
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(content);
+
+        Pattern pattern = Pattern.compile("((http{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)");
+
+        Matcher matcher = pattern.matcher(spannableStringBuilder);
+
+        while (matcher.find()) {
+            setClickableSpan(spannableStringBuilder, matcher, activity);
+        }
+
+//        Pattern pattern2 = Pattern.compile("([\\s>])((www|ftp)\\.[\\w\\\\x80-\\\\xff\\#$%&~/.\\-;:=,?@\\[\\]+]*)");
+//
+//        matcher.reset();
+//
+//        matcher = pattern2.matcher(spannableStringBuilder);-
+//
+//        while (matcher.find()) {
+//            setClickableSpan(spannableStringBuilder, matcher);
+//        }
+
+        return spannableStringBuilder;
+
+    }
+
+    //给符合的设置自定义点击事件
+
+    private static void setClickableSpan(final SpannableStringBuilder clickableHtmlBuilder, final Matcher matcher, final Activity activity) {
+
+        int start = matcher.start();
+
+        int end = matcher.end();
+
+        final String url = matcher.group();
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+
+            public void onClick(View view) {
+
+                Intent intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                intent.setData(Uri.parse(url));
+                activity.startActivity(intent);
+//                Global.Toast("点击了超链接？？？？？？？？？？？");
+            }
+
+        };
+
+        clickableHtmlBuilder.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
     }
 
     /**
@@ -1246,4 +1396,68 @@ public class Utils {
         };
         return lengthfilter;
     }
+
+
+    /**
+     * 添加按钮，根据滑动显示隐藏(recyclerView)
+     */
+    public static void btnHideForRecy(RecyclerView recyclerView, final View btn) {
+
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //正数下滑 负数上滑
+                if (dy > 0) {
+                    if (btn.getVisibility() == View.VISIBLE)
+                        btn.startAnimation(MainApp.getMainApp().animHide);
+                    btn.setVisibility(View.INVISIBLE);
+                } else {
+                    if (btn.getVisibility() == View.INVISIBLE)
+                        btn.startAnimation(MainApp.getMainApp().animShow);
+                    btn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    /**
+     * 添加按钮，根据滑动显示隐藏(ListView)
+     */
+    public static void btnHideForListView(final ListView listView, final View btn) {
+        lastVisibleItemPosition = 0;
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrollFlag = true;
+                } else {
+                    scrollFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (scrollFlag) {
+                    if (firstVisibleItem > lastVisibleItemPosition) {
+                        LogUtil.dee("上滑");
+                        if (btn.getVisibility() == View.VISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animHide);
+                        btn.setVisibility(View.INVISIBLE);
+                    }
+                    if (firstVisibleItem < lastVisibleItemPosition) {
+                        LogUtil.dee("下滑");
+                        if (btn.getVisibility() == View.INVISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animShow);
+                        btn.setVisibility(View.VISIBLE);
+                    }
+                    if (firstVisibleItem == lastVisibleItemPosition) {
+                        return;
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
+                }
+            }
+        });
+    }
+
 }

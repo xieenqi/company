@@ -24,6 +24,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -139,6 +140,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
 
     @Override
     public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
+        UMengTools.sendLocationInfo(address, longitude, latitude);
         initMap(latitude, longitude);
         LocationUtilGD.sotpLocation();
     }

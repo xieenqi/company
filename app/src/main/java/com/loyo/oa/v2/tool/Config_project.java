@@ -132,9 +132,11 @@ public class Config_project {
     }
 
     /**
-     * 删除附件
+     * 新版 上传轨迹
      */
-    public static final String DELETE_ENCLOSURE = SERVER_URL_ATTACHMENT() + "/api/v2";
+    public static String NEW_UPLOCATION() {
+        return isRelease ? "http://ukuaiqi.com" : IP;
+    }
 
     public static String API_URL_CUSTOMER() {
         return SERVER_URL_CUSTOMER().concat("/api/v2");

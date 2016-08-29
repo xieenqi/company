@@ -327,7 +327,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
 
-            case SelectPicPopupWindow.GET_IMG:
+            case MainApp.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {

@@ -23,6 +23,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.RoundImageView;
@@ -165,7 +166,7 @@ public class HaitMyActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(final HaitViewHolder holder, final int position) {
             HttpMyDiscussItem info = datas.get(position);
-            holder.tv_time.setText(info.updatedAt.substring(11, 19));
+            holder.tv_time.setText(info.newUpdatedAt != 0 ? DateTool.getDiffTime(info.newUpdatedAt * 1000) : info.updatedAt.substring(11, 19));
             holder.tv_content.setText(info.atContent);
             holder.tv_title.setText(parseTitle(info.creator.name, info.title));
             ImageLoader.getInstance().displayImage(info.creator.avatar, holder.iv_avatar);

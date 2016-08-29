@@ -41,6 +41,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -70,6 +71,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -159,6 +161,8 @@ public class WorkReportAddActivity extends BaseActivity {
     private ArrayList<Attachment> lstData_Attachment = null;
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
+    private List<String> mSelectPath;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
@@ -924,10 +928,17 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 break;
 
-            /*上传附件回调*/
-            case SelectPicPopupWindow.GET_IMG:
-                pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
-                init_gridView_photo();
+            /*相册选择 回调*/
+            case MainApp.PICTURE:
+                if (null != data) {
+                    pickPhotsResult = new ArrayList<>();
+                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    for (String path : mSelectPath) {
+                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                    }
+                    pickPhots.addAll(pickPhotsResult);
+                    init_gridView_photo();
+                }
                 break;
 
             /*删除附件回调*/

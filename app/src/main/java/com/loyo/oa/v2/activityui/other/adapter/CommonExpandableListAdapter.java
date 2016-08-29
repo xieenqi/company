@@ -34,7 +34,7 @@ import java.util.Date;
  */
 public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter_<T> {
 
-    private int textColor = R.color.tasklist_gray;
+    private int textColor = R.color.text66;
     private boolean isOk;
 
     public CommonExpandableListAdapter(final Context context, final ArrayList<PagingGroupData_<T>> data) {
@@ -165,7 +165,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     }
                 } else {
                     isOk = false;
-                    textColor = R.color.tasklist_gray;
+                    textColor = R.color.text66;
                     Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"));
                     if (nowTime > task.planendAt && task.status == Task.STATUS_PROCESSING) {
                         timeOut.setVisibility(View.VISIBLE);
