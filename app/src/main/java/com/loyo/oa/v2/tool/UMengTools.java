@@ -115,11 +115,6 @@ public class UMengTools {
                         SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
 
                         SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
-
-                        SharedUtil.put(MainApp.getMainApp(), "lat", String.valueOf(latitude));
-                        SharedUtil.put(MainApp.getMainApp(), "lng", String.valueOf(longitude));
-                        SharedUtil.remove(MainApp.getMainApp(), "address");
-                        SharedUtil.put(MainApp.getMainApp(), "address", address);
                     }
 
                     @Override

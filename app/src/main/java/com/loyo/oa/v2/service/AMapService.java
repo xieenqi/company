@@ -24,11 +24,14 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.LDBManager;
 import com.loyo.oa.v2.point.ITrackLog;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
-import com.loyo.oa.v2.tool.UMengTools;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -214,7 +217,7 @@ public class AMapService extends APSService {
         SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
         //TextUtils.isEmpty(address) || || oldAddress.equals(address)
-        if (aMapLocation.getLatitude() == 0 || aMapLocation.getLongitude() == 0
+        if ((aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
                 || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE) {
             LogUtil.d("当前位置偏移量很大，直接return");
             //缓存有效定位
@@ -295,14 +298,32 @@ public class AMapService extends APSService {
         final double latitude = location.getLatitude();
         final double longitude = location.getLongitude();
         final String address = location.getAddress();
+        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(longitude
+                + "," + latitude, System.currentTimeMillis() / 1000)));
+        final HashMap<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("tracklogs", trackLogs);
+//新版上传轨迹
+        RestAdapterFactory.getInstance().build(Config_project.NEW_UPLOCATION()).create(ITrackLog.class)
+                .newUploadTrack(jsonObject, new Callback<TrackLog>() {
+                    @Override
+                    public void success(TrackLog trackLog, Response response) {
+                        HttpErrorCheck.checkResponse(" new >>>> 【后台】 >>>>>上传轨迹: ", response);
 
-        UMengTools.sendLocationInfo(address, longitude, latitude);
+                        SharedUtil.put(MainApp.getMainApp(), "lat", String.valueOf(latitude));
+                        SharedUtil.put(MainApp.getMainApp(), "lng", String.valueOf(longitude));
+                        SharedUtil.remove(MainApp.getMainApp(), "address");
+                        SharedUtil.put(MainApp.getMainApp(), "address", address);
+                    }
 
-//        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude
-//                + "," + latitude, System.currentTimeMillis() / 1000)));
-//        final HashMap<String, Object> jsonObject = new HashMap<>();
-//        jsonObject.put("tracklogs", trackLogs);
-//
+                    @Override
+                    public void failure(RetrofitError error) {
+                        LocateData data = buildLocateData(location);
+                        ldbManager.addLocateData(data);
+                        SharedUtil.putBoolean(app, "isCache", true);
+                    }
+                });
+
+
 //        app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
 //            @Override
 //            public void success(Object trackLog, Response response) {
