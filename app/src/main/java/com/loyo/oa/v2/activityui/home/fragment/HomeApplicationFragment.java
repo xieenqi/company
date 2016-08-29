@@ -257,6 +257,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         }
         LogUtil.d("用户获取的token：---> " + app.getToken());
         updateUser();
+        startTrack();
         return mView;
     }
 
@@ -290,7 +291,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             e.printStackTrace();
         }
         requestNumber();
-        startTrack();
+
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.service;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
@@ -19,16 +20,15 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LocateData;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.LDBManager;
 import com.loyo.oa.v2.point.ITrackLog;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
-import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.UMengTools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,11 +105,19 @@ public class AMapService extends APSService {
         acquireWakeLock();
         app = (MainApp) getApplicationContext();
         ldbManager = new LDBManager();
-        startLocate();
+
         userOnlineTime();
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
+            startLocate();
+            //服务运行 通知栏显示
+            Notification notification = new Notification();
+            notification.flags = Notification.FLAG_ONGOING_EVENT;
+            notification.flags |= Notification.FLAG_NO_CLEAR;
+            notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
+            startForeground(1, notification);
         }
+
         return START_REDELIVER_INTENT;
     }
 
@@ -210,8 +218,8 @@ public class AMapService extends APSService {
         SharedUtil.put(app, "latOld", String.valueOf(aMapLocation.getLatitude()));
         SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
-        if (TextUtils.isEmpty(address) ||
-                aMapLocation.getLatitude() == 0 || aMapLocation.getLongitude() == 0
+        //TextUtils.isEmpty(address) ||
+        if ((aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
                 || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || oldAddress.equals(address)) {
             LogUtil.d("当前位置偏移量很大，直接return");
             //缓存有效定位
@@ -249,10 +257,10 @@ public class AMapService extends APSService {
             LogUtil.d("获取到的distance : " + distance);
             LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE));
 
-            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
-                LogUtil.d("小于请求定位的最小间隔！");
-                return;
-            }
+//            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
+//                LogUtil.d("小于请求定位的最小间隔！");
+//                return;
+//            }
         }
         uploadLocation(aMapLocation);
         if (Global.isConnected()) {
@@ -292,45 +300,66 @@ public class AMapService extends APSService {
         final double latitude = location.getLatitude();
         final double longitude = location.getLongitude();
         final String address = location.getAddress();
-
-        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude
+        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(longitude
                 + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("tracklogs", trackLogs);
+        jsonObject.put("trackLogs", trackLogs);//tracklogs
+//新版上传轨迹
+        RestAdapterFactory.getInstance().build(Config_project.NEW_UPLOCATION()).create(ITrackLog.class)
+                .newUploadTrack(jsonObject, new Callback<TrackLog>() {
+                    @Override
+                    public void success(TrackLog trackLog, Response response) {
+                        HttpErrorCheck.checkResponse(" new >>>> 【后台】 >>>>>上传轨迹: ", response);
 
-        app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
-            @Override
-            public void success(Object trackLog, Response response) {
-                LogUtil.d("【轨迹上报成功！!!!!!!!！！】,address : " + address);
-                HttpErrorCheck.checkResponse("上报轨迹", response);
-                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
+                        SharedUtil.put(MainApp.getMainApp(), "lat", String.valueOf(latitude));
+                        SharedUtil.put(MainApp.getMainApp(), "lng", String.valueOf(longitude));
+                        SharedUtil.remove(MainApp.getMainApp(), "address");
+                        SharedUtil.put(MainApp.getMainApp(), "address", address);
+                    }
 
-                SharedUtil.put(app, "lat", String.valueOf(latitude));
-                SharedUtil.put(app, "lng", String.valueOf(longitude));
-                SharedUtil.remove(app, "address");
-                SharedUtil.put(app, "address", address);
-            }
+                    @Override
+                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+                        LocateData data = buildLocateData(location);
+                        ldbManager.addLocateData(data);
+                        SharedUtil.putBoolean(app, "isCache", true);
+                    }
+                });
 
-            @Override
-            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-                LogUtil.d(TAG + " 【 轨迹 】,轨迹上报失败");
-                LocateData data = buildLocateData(location);
-                ldbManager.addLocateData(data);
-                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "2|" + app.df1.format(new Date()));
-                //fixes bugly1043 空指针异常 v3.1.1 ykb 07-15
-                UMengTools.sendCustomErroInfo(getApplicationContext(), location);
-                String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
-                if (null != MainApp.user)
-                    Global.ProcException(new Exception(" 轨迹上【搜集】报失败:" + error.getMessage() +
-                            " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(jsonObject)
-                            + "用户：" + app.gson.toJson(MainApp.user)));
-                SharedUtil.putBoolean(app, "isCache", true);
-//                isCache = true;
-                UMengTools.sendCustomTrajectory(app, error, jsonObject);
-                super.failure(error);
-            }
-        });
+
+//        app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
+//            @Override
+//            public void success(Object trackLog, Response response) {
+//                LogUtil.d("【轨迹上报成功！!!!!!!!！！】,address : " + address);
+//                HttpErrorCheck.checkResponse("上报轨迹", response);
+//                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
+//
+//                SharedUtil.put(app, "lat", String.valueOf(latitude));
+//                SharedUtil.put(app, "lng", String.valueOf(longitude));
+//                SharedUtil.remove(app, "address");
+//                SharedUtil.put(app, "address", address);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+////                HttpErrorCheck.checkError(error);
+//                LogUtil.d(TAG + " 【 轨迹 】,轨迹上报失败");
+//                LocateData data = buildLocateData(location);
+//                ldbManager.addLocateData(data);
+//                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "2|" + app.df1.format(new Date()));
+//                //fixes bugly1043 空指针异常 v3.1.1 ykb 07-15
+//                UMengTools.sendCustomErroInfo(getApplicationContext(), location);
+//                String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
+//                if (null != MainApp.user)
+//                    Global.ProcException(new Exception(" 轨迹上【搜集】报失败:" + error.getMessage() +
+//                            " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(jsonObject)
+//                            + "用户：" + app.gson.toJson(MainApp.user)));
+//                SharedUtil.putBoolean(app, "isCache", true);
+////                isCache = true;
+//                UMengTools.sendCustomTrajectory(app, error, jsonObject);
+//                super.failure(error);
+//            }
+//        });
     }
 
     /**
@@ -493,7 +522,9 @@ public class AMapService extends APSService {
      * 计时器 记录用户在线
      */
     private void userOnlineTime() {
-        timer = new Timer();
+        if (null == timer)
+            timer = new Timer();
+
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
