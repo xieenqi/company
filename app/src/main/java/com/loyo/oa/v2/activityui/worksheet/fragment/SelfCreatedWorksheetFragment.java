@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -28,10 +27,7 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -41,12 +37,12 @@ import java.util.List;
 /**
  * 【我创建的工单】
  */
-public class SelfCreatedWorksheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity implements View.OnClickListener {
 
-    private int page = 1;     /*翻页页数*/
+
     private int statusIndex;  /*线索状态*/
     private int sortIndex;    /*线索排序*/
-    private boolean isPullDown = true;
+
     private String field = "";
     private String order = "";
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
@@ -60,16 +56,12 @@ public class SelfCreatedWorksheetFragment extends BaseFragment implements View.O
     private WindowManager.LayoutParams windowParams;
     private Button btn_add;
     private ViewStub emptyView;
-    private PullToRefreshListView lv_list;
-    protected PullToRefreshExpandableListView mExpandableListView;
 
     private Intent mIntent;
     private View mView;
 
     private Button testButton;
 
-    private GroupsData groupsData;
-    private WorksheetListAdapter adapter;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -113,25 +105,9 @@ public class SelfCreatedWorksheetFragment extends BaseFragment implements View.O
         mExpandableListView.setOnRefreshListener(this);
         //mExpandableListView.setEmptyView(emptyView);
 
-        ExpandableListView expandableListView = mExpandableListView.getRefreshableView();
-
-        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return false;
-            }
-        });
-
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                return false;
-            }
-        });
-
+        setupExpandableListView();
         initAdapter();
         expand();
-
 
         Utils.btnHideForListView(expandableListView,btn_add);
 
@@ -154,6 +130,7 @@ public class SelfCreatedWorksheetFragment extends BaseFragment implements View.O
         }
     }
 
+    @Override
     public void initAdapter() {
         if (null == adapter) {
             adapter = new WorksheetListAdapter(mActivity, groupsData);
@@ -161,15 +138,17 @@ public class SelfCreatedWorksheetFragment extends BaseFragment implements View.O
         }
     }
 
-    protected void expand() {
-        for (int i = 0; i < groupsData.size(); i++) {
-            mExpandableListView.getRefreshableView().expandGroup(i, false);//true 自动滑到底部
-        }
-    }
 
-    private  void getData() {
+    @Override
+    protected  void getData() {
         List<Worksheet> list = Worksheet.getTestList();
+
+        if (isPullDown) {
+            groupsData.clear();
+        }
+
         loadData(list);
+        mExpandableListView.onRefreshComplete();
     }
 
     private void loadData(List<Worksheet> list) {
@@ -256,21 +235,6 @@ public class SelfCreatedWorksheetFragment extends BaseFragment implements View.O
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
-    /**
-     * 请求列表数据
-     */
-
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = true;
-        page = 1;
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isPullDown = false;
-        page++;
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -58,6 +58,10 @@ public class GroupsData {
         }
     }
 
+    public void clear() {
+        groups.clear();
+    }
+
     public class SectionData implements Comparable<SectionData> {
         public GroupKey groupKey;
         List<Groupable> data;
