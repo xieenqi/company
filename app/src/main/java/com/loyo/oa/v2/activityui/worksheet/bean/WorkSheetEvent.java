@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by EthanGong on 16/8/27.
  */
-public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
+class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
     public String id;
     public String workSheetId;
     public int order;         // 顺序
