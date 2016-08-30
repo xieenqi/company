@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * 【我分派的工单】
  */
-public class AssignableWorkSheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class AssignableWorksheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private int page = 1;     /*翻页页数*/
     private int statusIndex;  /*线索状态*/

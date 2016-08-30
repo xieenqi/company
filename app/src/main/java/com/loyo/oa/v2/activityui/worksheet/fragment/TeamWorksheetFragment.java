@@ -42,7 +42,7 @@ import java.util.List;
  * 【团队线索】
  * Created by yyy on 16/8/19.
  */
-public class TeamWorkSheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class TeamWorksheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private int page = 1;     /*翻页页数*/
     private int statusIndex;  /*线索状态*/

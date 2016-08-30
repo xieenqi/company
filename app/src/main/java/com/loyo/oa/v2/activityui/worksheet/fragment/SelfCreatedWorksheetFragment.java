@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * 【我创建的工单】
  */
-public class SelfCreatedWorkSheetFragment extends BaseGroupsDataActivity implements View.OnClickListener {
+public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity implements View.OnClickListener {
 
 
     private int statusIndex;  /*线索状态*/
