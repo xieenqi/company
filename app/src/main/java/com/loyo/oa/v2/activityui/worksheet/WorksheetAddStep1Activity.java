@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.worksheet;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -12,25 +11,8 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
-import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.SaleActivity;
-import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.ViewUtil;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 新建跟进动态

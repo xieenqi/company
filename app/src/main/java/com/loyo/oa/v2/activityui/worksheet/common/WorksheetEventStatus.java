@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
  * icon : 状态icon
  *
  */
-public enum WorksheetEventStatus  implements GroupKey {
+public enum WorksheetEventStatus implements GroupKey {
 
     /** 其他
      *
@@ -99,7 +99,7 @@ public enum WorksheetEventStatus  implements GroupKey {
         // json转为对象时调用,实现JsonDeserializer<WorksheetEventStatus>接口
         @Override
         public WorksheetEventStatus deserialize(JsonElement json, Type typeOfT,
-                                           JsonDeserializationContext context) throws JsonParseException {
+                                                JsonDeserializationContext context) throws JsonParseException {
             WorksheetEventStatus[] list  = WorksheetEventStatus.values();
             for (int i = 0; i < list.length; i++) {
                 if (list[i].code == json.getAsInt()) {

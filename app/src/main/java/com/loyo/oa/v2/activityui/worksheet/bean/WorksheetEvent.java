@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.worksheet.bean;
 
 import com.loyo.oa.v2.activityui.worksheet.common.Groupable;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,8 @@ import java.util.List;
 /**
  * Created by EthanGong on 16/8/27.
  */
-class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
+
+public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
     public String id;
     public String workSheetId;
     public int order;         // 顺序
