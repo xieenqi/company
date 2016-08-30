@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 
@@ -32,14 +36,21 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private LinearLayout img_title_left;
     private LinearLayout ll_worksheet_info;
     private LinearLayout ll_events;
-    private TextView tv_title_1;
+    private TextView tv_title_1, tv_title, tv_status, tv_assignment, tv_complete_number, tv_setting;
     private RelativeLayout img_title_right;
+    private Button bt_confirm;
     private String worksheetId;
+    private BaseBeanT<WorksheetDetial> mData;
     //处理事件
     private Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
+            switch (msg.what) {
+                case ExtraAndResult.REQUEST_CODE_CUSTOMER:
+                    Bundle bundle = new Bundle();
+                    app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
+                    break;
+            }
         }
     };
 
@@ -71,17 +82,25 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         ll_events = (LinearLayout) findViewById(R.id.ll_events);
         ll_worksheet_info.setOnClickListener(this);
         tv_title_1.setText("工单详情");
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_status = (TextView) findViewById(R.id.tv_status);
+        tv_assignment = (TextView) findViewById(R.id.tv_assignment);
+        tv_complete_number = (TextView) findViewById(R.id.tv_complete_number);
+        tv_setting = (TextView) findViewById(R.id.tv_setting);
+        tv_setting.setOnClickListener(this);
+        bt_confirm = (Button) findViewById(R.id.bt_confirm);
+        bt_confirm.setOnClickListener(this);
         getData();
-        loadData();
     }
 
     private void getData() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                getWorksheetDetail("57c52813b0207a0615000001", new Callback<Object>() {
+                getWorksheetDetail("57c52813b0207a0615000001", new Callback<BaseBeanT<WorksheetDetial>>() {
                     @Override
-                    public void success(Object o, Response response) {
+                    public void success(BaseBeanT<WorksheetDetial> result, Response response) {
                         HttpErrorCheck.checkResponse("工单详情：", response);
-
+                        mData = result;
+                        loadData();
                     }
 
                     @Override
@@ -105,12 +124,18 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 Bundle bundle = new Bundle();
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
+            case R.id.tv_setting://批量设置
+                break;
+            case R.id.bt_confirm://提交完成
+                break;
         }
     }
 
     private void loadData() {
-        for (int i = 0; i < 8; i++) {
-            WorksheetEventLayout eventView = new WorksheetEventLayout(this, handler);
+        tv_title.setText(mData.data.title);
+        tv_assignment.setText("分派人：");
+        for (int i = 0; i < mData.data.sheetEventsSupporter.size(); i++) {
+            WorksheetEventLayout eventView = new WorksheetEventLayout(this, handler, mData.data.sheetEventsSupporter.get(i));
             ll_events.addView(eventView);
         }
     }

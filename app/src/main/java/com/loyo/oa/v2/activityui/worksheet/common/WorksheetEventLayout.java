@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.worksheet.common;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
 
 /**
@@ -23,9 +27,9 @@ public class WorksheetEventLayout extends LinearLayout {
     private ImageView iv_status, iv_action;
     private TextView tv_content, tv_name, tv_time;
 
-    public WorksheetEventLayout(Context context, Handler handler) {
+    public WorksheetEventLayout(Context context, Handler handler, WorksheetEventsSupporter data) {
         super(context);
-        bindView(context);
+        bindView(context, handler, data);
     }
 
     public WorksheetEventLayout(Context context, AttributeSet attrs) {
@@ -36,7 +40,7 @@ public class WorksheetEventLayout extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    private void bindView(Context context) {
+    private void bindView(Context context, final Handler handler, WorksheetEventsSupporter data) {
         View eventView = LayoutInflater.from(context).inflate(R.layout.item_worksheet_event, null, false);
         iv_avatar = (RoundImageView) eventView.findViewById(R.id.iv_avatar);
         iv_status = (ImageView) eventView.findViewById(R.id.iv_status);
@@ -44,6 +48,15 @@ public class WorksheetEventLayout extends LinearLayout {
         tv_content = (TextView) eventView.findViewById(R.id.tv_content);
         tv_name = (TextView) eventView.findViewById(R.id.tv_name);
         tv_time = (TextView) eventView.findViewById(R.id.tv_time);
+        eventView.setOnTouchListener(Global.GetTouch());
+        eventView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Message msg = new Message();
+                msg.what = ExtraAndResult.REQUEST_CODE_CUSTOMER;
+                handler.sendMessage(msg);
+            }
+        });
         this.addView(eventView);
     }
 }
