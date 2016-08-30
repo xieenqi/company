@@ -635,10 +635,20 @@
             android:screenOrientation="portrait"
             />
         <activity
+            android:name=".activityui.clue.ClueDynamicAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
             android:name=".activityui.clue.ClueFollowupCreateActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".activityui.clue.ClueDynamicManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <!-- 工单 -->
         <activity
             android:name=".activityui.worksheet.WorksheetManageActivity"
@@ -673,7 +683,8 @@
         <activity android:name=".activityui.worksheet.WorksheetSubmitActivity"
                   android:launchMode="singleTop"
                   android:screenOrientation="portrait"
-                  android:windowSoftInputMode="stateAlwaysHidden"/>
+                 android:windowSoftInputMode="stateHidden|adjustResize"
+            />
 
         <!--其它-->
         <activity
@@ -712,6 +723,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
+
 
         <service
             android:name=".service.InitDataService_"
