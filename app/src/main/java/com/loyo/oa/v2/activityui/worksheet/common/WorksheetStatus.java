@@ -77,7 +77,7 @@ public enum WorksheetStatus implements GroupKey{
         public int getIcon() { return R.drawable.icon_ws_status4; }
     };
 
-    private final int code;
+    public final int code;
     private WorksheetStatus(int code) {
         this.code = code;
     }
