@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.fragment.AssignableWorksheetFragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.ResponsableWorksheetFragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.SelfCreatedWorksheetFragment;
@@ -58,6 +59,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_management);
         init();
+        WorksheetConfig.getWorksheetTypes(true/* 没有数据就从网络获取 */);
     }
 
     private void init() {

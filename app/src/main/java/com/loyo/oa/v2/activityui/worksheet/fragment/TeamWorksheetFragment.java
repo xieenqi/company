@@ -23,19 +23,29 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
@@ -114,7 +124,7 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return false;
+                return true;
             }
         });
 
@@ -169,9 +179,37 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
         }
     }
 
-    private  void getData() {
-        List<Worksheet> list = Worksheet.getTestList();
-        loadData(list);
+    protected  void getData() {
+//        * templateId  工单类型id
+//        * status      1:待分派 2:处理中 3:待审核 4:已完成 5:意外中止
+//        * pageIndex
+//        * pageSize
+//        * xpath       部门xpath
+//        * userid      用户id
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 15);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IWorksheet.class).getTeamWorksheetList(map, new Callback<WorksheetListWrapper>() {
+            @Override
+            public void success(WorksheetListWrapper listWrapper, Response response) {
+                mExpandableListView.onRefreshComplete();
+                HttpErrorCheck.checkResponse("团队工单列表：", response);
+                if (isPullDown) {
+                    groupsData.clear();
+                }
+                loadData(listWrapper.data.records);
+                mExpandableListView.setEmptyView(emptyView);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                mExpandableListView.onRefreshComplete();
+                HttpErrorCheck.checkError(error);
+            }
+        });
+
     }
 
     private void loadData(List<Worksheet> list) {
@@ -180,7 +218,10 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }
+        adapter.notifyDataSetChanged();
+        expand();
     }
+
 
     @Override
     public void onClick(View v) {
@@ -258,12 +299,14 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         isPullDown = true;
         page = 1;
+        getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isPullDown = false;
         page++;
+        getData();
     }
 
     @Override

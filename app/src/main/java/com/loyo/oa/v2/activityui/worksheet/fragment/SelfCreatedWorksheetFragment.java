@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
@@ -24,16 +25,27 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetAddStep1Activity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
+import com.loyo.oa.v2.point.IWorksheet;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【我创建的工单】
@@ -155,22 +167,45 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
 
     @Override
     protected  void getData() {
-        List<Worksheet> list = Worksheet.getTestList();
 
-        if (isPullDown) {
-            groupsData.clear();
-        }
+//        * templateId  工单类型id
+//        * status      1:待分派 2:处理中 3:待审核 4:已完成 5:意外中止
+//        * keyword     关键字查询
+//        * type tab    1:我创建的 2:我分派的
+//        * pageIndex
+//        * pageSize
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 15);
+        map.put("type", 1/* 我创建的 */);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IWorksheet.class).getMyWorksheetList(map, new Callback<WorksheetListWrapper>() {
+            @Override
+            public void success(WorksheetListWrapper listWrapper, Response response) {
+                mExpandableListView.onRefreshComplete();
+                HttpErrorCheck.checkResponse("我的工单列表：", response);
+                if (isPullDown) {
+                    groupsData.clear();
+                }
+                loadData(listWrapper.data.records);
+                mExpandableListView.setEmptyView(emptyView);
+            }
 
-        loadData(list);
-        mExpandableListView.onRefreshComplete();
+            @Override
+            public void failure(RetrofitError error) {
+                mExpandableListView.onRefreshComplete();
+                HttpErrorCheck.checkError(error);
+            }
+        });
+
     }
 
     private void loadData(List<Worksheet> list) {
-
         Iterator<Worksheet> iterator = list.iterator();
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }
+        adapter.notifyDataSetChanged();
     }
 
     @Override

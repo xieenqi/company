@@ -39,6 +39,7 @@ public class Worksheet implements Groupable, Comparable<Worksheet> {
     public String id;
     public String companyId;
     public String orderId;      // 订单ID
+    public String orderName;    // 订单
     public String templateId;   // 模板ID
     public String title;        // 标题
     public String content;      // 内容
