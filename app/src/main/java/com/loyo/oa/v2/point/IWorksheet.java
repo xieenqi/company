@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplateListWrapper;
@@ -34,6 +36,19 @@ public interface IWorksheet {
      */
     @GET("/worksheets/self")
     void getMyWorksheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
+
+    /**
+     * 我负责的列表
+     * <p/>
+     * 参数
+     * templateId  工单类型id
+     * status      1:待处理 2:未触发 3:已处理 ?4:意外中止
+     * keyword     关键字查询
+     * pageIndex
+     * pageSize
+     */
+    @GET("/worksheet/event/mobile")
+    void getResponsableWorksheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetEventListWrapper> callback);
 
     /**
      * 团队工单列表
