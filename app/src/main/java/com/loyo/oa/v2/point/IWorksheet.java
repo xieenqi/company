@@ -1,14 +1,8 @@
 package com.loyo.oa.v2.point;
 
-/**
- * Created by EthanGong on 16/8/30.
- */
-
 import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetListWrapper;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetTemplateListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetWrapper;
-import com.loyo.oa.v2.beans.BaseBean;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +11,7 @@ import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
 public interface IWorkSheet {
@@ -81,4 +76,10 @@ public interface IWorkSheet {
      */
     @GET("/worksheet/setting")
     void getWorkSheetTypesList(Callback<WorkSheetTemplateListWrapper> callback);
+
+    /**
+     * 获取工单详细信息
+     */
+    @GET("/worksheets/{id}")
+    void getWorkSheetDetail(@Path("id") String id, Callback<Object> callback);
 }
