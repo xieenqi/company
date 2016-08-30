@@ -1,13 +1,15 @@
 package com.loyo.oa.v2.activityui.worksheet;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.tool.BaseActivity;
 
@@ -21,8 +23,16 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private LinearLayout ll_events;
     private TextView tv_title_1;
     private RelativeLayout img_title_right;
+    //处理事件
+    private Handler handler = new Handler() {
+        @Override
+        public void dispatchMessage(Message msg) {
+            super.dispatchMessage(msg);
+        }
+    };
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worksheet_detial);
@@ -60,8 +70,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void loadData() {
-        for (int i = 0; i < 3; i++) {
-            View eventView =  LayoutInflater.from(mContext).inflate(R.layout.item_worksheet_event, null, false);
+        for (int i = 0; i < 13; i++) {
+            WorksheetEventLayout eventView = new WorksheetEventLayout(this, handler);
             ll_events.addView(eventView);
         }
     }

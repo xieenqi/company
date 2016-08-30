@@ -9,10 +9,10 @@ import java.io.Serializable;
  * Created by EthanGong on 16/8/23.
  */
 
-public class ClueDetail extends BaseBean {
-    public Data data;
+public class ClueDetailWrapper extends BaseBean {
+    public ClueDetail data;
 
-    public class Data implements Serializable {
+    public class ClueDetail implements Serializable {
         public ClueSales sales;
         public SaleActivity activity;
     }

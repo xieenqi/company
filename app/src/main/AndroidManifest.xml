@@ -418,10 +418,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <!--<activity-->
-            <!--android:name=".activityui.work.WorkReportModelSelectManageActivity_"-->
-            <!--android:launchMode="singleTop"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:windowSoftInputMode="stateAlwaysHidden"/>-->
+        <!--android:name=".activityui.work.WorkReportModelSelectManageActivity_"-->
+        <!--android:launchMode="singleTop"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:windowSoftInputMode="stateAlwaysHidden"/>-->
         <activity
             android:name=".activityui.tasks.TaskModelSelectManageActivity_"
             android:launchMode="singleTop"
