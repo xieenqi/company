@@ -61,7 +61,7 @@ import retrofit.client.Response;
 /**
  * 【我负责的工单】
  */
-public class ResponsableWorksheetFragment extends BaseGroupsDataActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class ResponsableWorksheetFragment extends BaseGroupsDataFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private int statusIndex;  /* 工单状态Index */
     private int typeIndex;    /* 工单类型Index */
@@ -248,7 +248,6 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataActivity impleme
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("type", 1/* 我创建的 */);
         if (statusIndex > 0 && statusIndex < statusFilters.size()) {
             map.put("status", statusFilters.get(statusIndex).code);
         }

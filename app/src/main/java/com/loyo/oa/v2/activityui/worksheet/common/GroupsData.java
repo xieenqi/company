@@ -62,6 +62,18 @@ public class GroupsData {
         groups.clear();
     }
 
+    public Groupable get(int section, int pos) {
+        if (section < 0 || section >= groups.size()) {
+            return null;
+        }
+        SectionData sectionData = groups.get(section);
+        if (pos < 0 || pos  >= sectionData.size()) {
+            return null;
+        }
+        return sectionData.get(pos);
+
+    }
+
     public class SectionData implements Comparable<SectionData> {
         public GroupKey groupKey;
         List<Groupable> data;
