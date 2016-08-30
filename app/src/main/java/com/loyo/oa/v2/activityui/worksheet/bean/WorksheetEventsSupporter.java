@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet.bean;
 
+import com.loyo.oa.v2.beans.NewUser;
+
 import java.io.Serializable;
 
 /**
@@ -12,5 +14,6 @@ public class WorksheetEventsSupporter implements Serializable {
     public long startTime;
     public long endTime;
     public int status;
+    public NewUser responsor;
 
 }

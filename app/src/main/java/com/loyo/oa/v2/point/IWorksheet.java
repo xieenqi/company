@@ -14,6 +14,7 @@ import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
@@ -82,8 +83,13 @@ public interface IWorksheet {
     void getWorksheetDetail(@Path("id") String id, Callback<BaseBeanT<WorksheetDetial>> callback);
 
     /**
+     * 设置事件 负责人
+     */
+    @PUT("worksheet/event/responsor/{id}")
+    void setEventPerson(@Path("id") String id, @Body Map<String, Object> body, Callback<Object> callback);
+
+    /**
      * 订单列表
-     *
      * 参数
      * pageIndex
      * pageSize
@@ -91,4 +97,5 @@ public interface IWorksheet {
      */
     @GET("/order/work/list")
     void getWorksheetOrdersList(@QueryMap HashMap<String, Object> map, Callback<WorksheetOrderListWrapper> callback);
+
 }

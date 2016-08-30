@@ -11,13 +11,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetCommon;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -46,9 +48,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         @Override
         public void dispatchMessage(Message msg) {
             switch (msg.what) {
-                case ExtraAndResult.REQUEST_CODE_CUSTOMER:
+                case ExtraAndResult.REQUEST_CODE_CUSTOMER://到事件详情
                     Bundle bundle = new Bundle();
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
+                    break;
+                case ExtraAndResult.REQUEST_CODE_STAGE://设置负责人
+                    SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
+                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
             }
         }
@@ -133,7 +139,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
     private void loadData() {
         tv_title.setText(mData.data.title);
-        tv_assignment.setText("分派人：");
+        tv_assignment.setText("分派人：" + mData.data.dispatcher.getName());
+        WorksheetCommon.setStatus(tv_status, mData.data.status);
         for (int i = 0; i < mData.data.sheetEventsSupporter.size(); i++) {
             WorksheetEventLayout eventView = new WorksheetEventLayout(this, handler, mData.data.sheetEventsSupporter.get(i));
             ll_events.addView(eventView);
@@ -154,6 +161,21 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+             /*用户单选, 负责人*/
+            case SelectDetUserActivity2.REQUEST_ONLY:
+                NewUser u = (NewUser) data.getSerializableExtra("data");
+//                newUser = u;
+//                tv_responsiblePerson.setText(newUser.getName());
+                break;
+        }
     }
 
 }
