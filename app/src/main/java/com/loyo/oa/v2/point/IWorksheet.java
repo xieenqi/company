@@ -5,6 +5,7 @@ package com.loyo.oa.v2.point;
  */
 
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 
 import java.util.HashMap;
 
@@ -33,7 +34,7 @@ public interface IWorksheet {
      *
      */
     @GET("/worksheets/self")
-    void getMyWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<ClueList> callback);
+    void getMyWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
 
     /**
      * 团队工单列表
@@ -50,5 +51,5 @@ public interface IWorksheet {
      *
      */
     @GET("/worksheets/self")
-    void getTeamWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<ClueList> callback);
+    void getTeamWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
 }
