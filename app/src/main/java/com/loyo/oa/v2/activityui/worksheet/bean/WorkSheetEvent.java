@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.worksheet.bean;
 
 import com.loyo.oa.v2.activityui.worksheet.common.Groupable;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 
 import java.util.ArrayList;
 import java.util.List;
