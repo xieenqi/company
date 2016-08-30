@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplateListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
 
@@ -82,5 +83,16 @@ public interface IWorksheet {
      */
     @GET("/worksheets/{id}")
     void getWorksheetDetail(@Path("id") String id, Callback<Object> callback);
+
+    /**
+     * 订单列表
+     *
+     * 参数
+     * pageIndex
+     * pageSize
+     * keyword 订单标题关键字查询
+     */
+    @GET("/order/work/list")
+    void getWorksheetOrdersList(@QueryMap HashMap<String, Object> map, Callback<WorksheetOrderListWrapper> callback);
 
 }
