@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplateListWrapper;
@@ -47,7 +48,7 @@ public interface IWorksheet {
      * userid      用户id
      *
      */
-    @GET("/worksheets/self")
+    @GET("/worksheets/team")
     void getTeamWorksheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
 
 
