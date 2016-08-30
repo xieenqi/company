@@ -1,8 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet.bean;
 
 import com.loyo.oa.v2.activityui.worksheet.common.Groupable;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
+import com.loyo.oa.v2.activityui.worksheet.common.WorkSheetEventStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * Created by EthanGong on 16/8/27.
  */
-public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
+public class WorkSheetEvent implements Groupable, Comparable<WorkSheetEvent>  {
     public String id;
     public String workSheetId;
     public int order;         // 顺序
@@ -18,10 +17,10 @@ public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
     public String responsorId;// 负责人ID
     public long startTime;
     public long endTime;
-    public WorksheetEventStatus status;
+    public WorkSheetEventStatus status;
 
     @Override
-    public WorksheetEventStatus groupBy()
+    public WorkSheetEventStatus groupBy()
     {
         return status;
     }
@@ -29,7 +28,7 @@ public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
 
     /** 相同状态下，按时间创建排序, 最新排前  */
     @Override
-    public int compareTo(WorksheetEvent another) {
+    public int compareTo(WorkSheetEvent another) {
         if (startTime < another.startTime) {
             return -1;
         }
@@ -40,37 +39,37 @@ public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
     }
 
     /** 测试数据 */
-    public static WorksheetEvent testInstance() {
-        WorksheetEvent wse = new WorksheetEvent();
+    public static WorkSheetEvent testInstance() {
+        WorkSheetEvent wse = new WorkSheetEvent();
         wse.content = "内容内容内容";
         return wse;
     }
 
 
-    public static List<WorksheetEvent> getTestList() {
-        ArrayList<WorksheetEvent> result = new ArrayList<WorksheetEvent>();
+    public static List<WorkSheetEvent> getTestList() {
+        ArrayList<WorkSheetEvent> result = new ArrayList<WorkSheetEvent>();
 
         for(int i = 0; i < 3; i ++) {
-            WorksheetEvent wse = testInstance();
-            wse.status = WorksheetEventStatus.WAITPROCESS;
+            WorkSheetEvent wse = testInstance();
+            wse.status = WorkSheetEventStatus.WAITPROCESS;
             result.add(wse);
         }
 
         for(int i = 0; i < 3; i ++) {
-            WorksheetEvent wse = testInstance();
-            wse.status = WorksheetEventStatus.UNACTIVATED;
+            WorkSheetEvent wse = testInstance();
+            wse.status = WorkSheetEventStatus.UNACTIVATED;
             result.add(wse);
         }
 
         for(int i = 0; i < 3; i ++) {
-            WorksheetEvent wse = testInstance();
-            wse.status = WorksheetEventStatus.FINISHED;
+            WorkSheetEvent wse = testInstance();
+            wse.status = WorkSheetEventStatus.FINISHED;
             result.add(wse);
         }
 
         for(int i = 0; i < 3; i ++) {
-            WorksheetEvent wse = testInstance();
-            wse.status = WorksheetEventStatus.TEMINATED;
+            WorkSheetEvent wse = testInstance();
+            wse.status = WorkSheetEventStatus.TEMINATED;
             result.add(wse);
         }
 

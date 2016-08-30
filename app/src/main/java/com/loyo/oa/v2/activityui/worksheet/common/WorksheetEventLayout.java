@@ -13,17 +13,17 @@ import com.loyo.oa.v2.R;
  * 工单事件流程
  * Created by xeq on 16/8/30.
  */
-public class WorksheetEventLayout extends LinearLayout {
-    public WorksheetEventLayout(Context context, Handler handler) {
+public class WorkSheetEventLayout extends LinearLayout {
+    public WorkSheetEventLayout(Context context, Handler handler) {
         super(context);
         bindView(context);
     }
 
-    public WorksheetEventLayout(Context context, AttributeSet attrs) {
+    public WorkSheetEventLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public WorksheetEventLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public WorkSheetEventLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

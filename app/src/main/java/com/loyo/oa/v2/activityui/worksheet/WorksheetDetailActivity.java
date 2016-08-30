@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
+import com.loyo.oa.v2.activityui.worksheet.common.WorkSheetEventLayout;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.tool.BaseActivity;
 
@@ -17,7 +17,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
  * 【 工单详情 】  页面
  * Created by xeq on 16/8/27.
  */
-public class WorksheetDetailActivity extends BaseActivity implements View.OnClickListener {
+public class WorkSheetDetailActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout img_title_left;
     private LinearLayout ll_worksheet_info;
     private LinearLayout ll_events;
@@ -64,14 +64,14 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.ll_worksheet_info:
                 Bundle bundle = new Bundle();
-                app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
+                app.startActivityForResult(this, WorkSheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
         }
     }
 
     private void loadData() {
         for (int i = 0; i < 13; i++) {
-            WorksheetEventLayout eventView = new WorksheetEventLayout(this, handler);
+            WorkSheetEventLayout eventView = new WorkSheetEventLayout(this, handler);
             ll_events.addView(eventView);
         }
     }
@@ -80,7 +80,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
      * 右上角菜单
      */
     private void functionButton() {
-        ActionSheetDialog dialog = new ActionSheetDialog(WorksheetDetailActivity.this).builder();
+        ActionSheetDialog dialog = new ActionSheetDialog(WorkSheetDetailActivity.this).builder();
         dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {

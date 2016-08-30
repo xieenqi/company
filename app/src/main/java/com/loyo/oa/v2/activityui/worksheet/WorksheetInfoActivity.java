@@ -15,7 +15,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
  * 【 工单详情 】  页面
  * Created by xeq on 16/8/27.
  */
-public class WorksheetInfoActivity extends BaseActivity implements View.OnClickListener {
+public class WorkSheetInfoActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout img_title_left;
     private TextView tv_title_1;
     private LinearLayout ll_attachment;
@@ -60,7 +60,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
      * 右上角菜单
      */
     private void functionButton() {
-        ActionSheetDialog dialog = new ActionSheetDialog(WorksheetInfoActivity.this).builder();
+        ActionSheetDialog dialog = new ActionSheetDialog(WorkSheetInfoActivity.this).builder();
         dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {

@@ -641,32 +641,32 @@
             android:windowSoftInputMode="stateHidden"/>
         <!-- 工单 -->
         <activity
-            android:name=".activityui.worksheet.WorksheetManageActivity"
+            android:name=".activityui.worksheet.WorkSheetManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".activityui.worksheet.WorksheetDetailActivity"
+            android:name=".activityui.worksheet.WorkSheetDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.worksheet.WorksheetInfoActivity"
+            android:name=".activityui.worksheet.WorkSheetInfoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.worksheet.WorksheetSearchActivity"
+            android:name=".activityui.worksheet.WorkSheetSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.worksheet.WorksheetAddStep1Activity"
+            android:name=".activityui.worksheet.WorkSheetAddStep1Activity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activityui.worksheet.WorksheetAddStep2Activity"
+            android:name=".activityui.worksheet.WorkSheetAddStep2Activity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>

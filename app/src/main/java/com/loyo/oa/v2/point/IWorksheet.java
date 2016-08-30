@@ -4,21 +4,19 @@ package com.loyo.oa.v2.point;
  * Created by EthanGong on 16/8/30.
  */
 
-import com.loyo.oa.v2.activityui.clue.bean.ClueList;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetListWrapper;
+import com.loyo.oa.v2.beans.BaseBean;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
-public interface IWorksheet {
+public interface IWorkSheet {
 
 
     /**
@@ -34,7 +32,7 @@ public interface IWorksheet {
      *
      */
     @GET("/worksheets/self")
-    void getMyWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
+    void getMyWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<WorkSheetListWrapper> callback);
 
     /**
      * 团队工单列表
@@ -51,5 +49,23 @@ public interface IWorksheet {
      *
      */
     @GET("/worksheets/self")
-    void getTeamWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
+    void getTeamWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<WorkSheetListWrapper> callback);
+
+
+    /**
+     * 新建工单
+     *
+     * @param body
+     * {
+     *  "title"      :"工单001",
+     *  "orderId"    :"57c3ef26ebe07f2d0b000001",
+     *  "orderName"  :"新建的工单",
+     *  "templateId" :"57c3ef26ebe07f2d0b000001",
+     *  "content"    : "工单事件很多哟!"
+     * }
+     *
+     * @param callback
+     */
+    @POST("/worksheets")
+    void addWorksheet(@Body Map<String, Object> body, Callback<BaseBean> callback);
 }

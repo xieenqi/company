@@ -9,57 +9,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
-import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
-import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
-import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
-import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
-import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
-import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
+import com.loyo.oa.v2.activityui.worksheet.WorkSheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
-import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheet;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
-import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -147,7 +123,7 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-                mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
+                mIntent.setClass(getActivity(), WorkSheetDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
@@ -194,13 +170,13 @@ public class TeamWorksheetFragment extends BaseFragment implements View.OnClickL
     }
 
     private  void getData() {
-        List<Worksheet> list = Worksheet.getTestList();
+        List<WorkSheet> list = WorkSheet.getTestList();
         loadData(list);
     }
 
-    private void loadData(List<Worksheet> list) {
+    private void loadData(List<WorkSheet> list) {
 
-        Iterator<Worksheet> iterator = list.iterator();
+        Iterator<WorkSheet> iterator = list.iterator();
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }

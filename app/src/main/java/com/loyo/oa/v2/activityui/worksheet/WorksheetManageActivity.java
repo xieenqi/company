@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * 【订单管理】 列表 页面
  */
-public class WorksheetManageActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class WorkSheetManageActivity extends BaseFragmentActivity implements View.OnClickListener {
 
     private ImageView img_title_arrow;
     private LinearLayout img_title_left, ll_category;
@@ -158,7 +158,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
                 LogUtil.dee("type:" + type);
                 Bundle b = new Bundle();
                 b.putInt(ExtraAndResult.EXTRA_TYPE, type);
-                app.startActivity(this, WorksheetSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                app.startActivity(this, WorkSheetSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }
