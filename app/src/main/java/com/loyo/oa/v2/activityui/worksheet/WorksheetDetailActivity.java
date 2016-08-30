@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -44,7 +45,12 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
+            switch (msg.what) {
+                case ExtraAndResult.REQUEST_CODE_CUSTOMER:
+                    Bundle bundle = new Bundle();
+                    app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
+                    break;
+            }
         }
     };
 
