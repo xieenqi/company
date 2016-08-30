@@ -36,9 +36,9 @@ public class WorksheetConfig {
                     for (WorksheetTemplate template : listWrapper.data) {
                         data.add(template);
                     }
+                    String json = MainApp.gson.toJson(data);
                     SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES);
-                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES,
-                            MainApp.gson.toJson(data));
+                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES, json);
                 }
             }
 
@@ -53,7 +53,7 @@ public class WorksheetConfig {
     public static ArrayList<WorksheetTemplate> getWorksheetTypes() {
         ArrayList<WorksheetTemplate> result =
                 MainApp.getMainApp().gson.fromJson(
-                        SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA),
+                        SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES),
                         new TypeToken<ArrayList<WorksheetTemplate>>(){}.getType());
         return result;
     }
@@ -61,10 +61,9 @@ public class WorksheetConfig {
     // TODO:  增加网络获取的回调
     /* 读取缓存，如果没有缓冲，从网络获取 */
     public static ArrayList<WorksheetTemplate> getWorksheetTypes(boolean fetchIfEmpty) {
-        ArrayList<WorksheetTemplate> result =
-                MainApp.getMainApp().gson.fromJson(
-                        SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.SOURCES_DATA),
-                        new TypeToken<ArrayList<WorksheetTemplate>>(){}.getType());
+        ArrayList<WorksheetTemplate> result = null;
+        String json = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES);
+        result = MainApp.getMainApp().gson.fromJson(json, new TypeToken<ArrayList<WorksheetTemplate>>(){}.getType());
 
         if (fetchIfEmpty && result == null) {
             fetchWorksheetTypes();
