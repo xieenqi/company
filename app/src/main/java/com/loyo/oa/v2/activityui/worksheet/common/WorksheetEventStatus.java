@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
  * icon : 状态icon
  *
  */
-public enum WorkSheetEventStatus implements GroupKey {
+public enum WorksheetEventStatus implements GroupKey {
 
     /** 其他
      *
@@ -64,7 +64,7 @@ public enum WorkSheetEventStatus implements GroupKey {
     };
 
     private final int code;
-    private WorkSheetEventStatus(int code) {
+    private WorksheetEventStatus(int code) {
         this.code = code;
     }
 
@@ -86,27 +86,27 @@ public enum WorkSheetEventStatus implements GroupKey {
 
 
     /** gson 序列化和反序列化 */
-    public static class EnumSerializer implements JsonSerializer<WorkSheetEventStatus>,
-            JsonDeserializer<WorkSheetEventStatus> {
+    public static class EnumSerializer implements JsonSerializer<WorksheetEventStatus>,
+            JsonDeserializer<WorksheetEventStatus> {
 
-        // 对象转为Json时调用,实现JsonSerializer<WorkSheetEventStatus>接口
+        // 对象转为Json时调用,实现JsonSerializer<WorksheetEventStatus>接口
         @Override
-        public JsonElement serialize(WorkSheetEventStatus state, Type arg1,
+        public JsonElement serialize(WorksheetEventStatus state, Type arg1,
                                      JsonSerializationContext arg2) {
             return new JsonPrimitive(state.code);
         }
 
-        // json转为对象时调用,实现JsonDeserializer<WorkSheetEventStatus>接口
+        // json转为对象时调用,实现JsonDeserializer<WorksheetEventStatus>接口
         @Override
-        public WorkSheetEventStatus deserialize(JsonElement json, Type typeOfT,
+        public WorksheetEventStatus deserialize(JsonElement json, Type typeOfT,
                                                 JsonDeserializationContext context) throws JsonParseException {
-            WorkSheetEventStatus[] list  = WorkSheetEventStatus.values();
+            WorksheetEventStatus[] list  = WorksheetEventStatus.values();
             for (int i = 0; i < list.length; i++) {
                 if (list[i].code == json.getAsInt()) {
                     return list[i];
                 }
             }
-            return WorkSheetEventStatus.OTHERS;
+            return WorksheetEventStatus.OTHERS;
         }
 
     }

@@ -7,10 +7,10 @@ import java.util.ArrayList;
 /**
  * Created by EthanGong on 16/8/30.
  */
-public class WorkSheetTemplateListWrapper extends BaseBean{
-    public ArrayList<WorkSheetTemplate> data;
+public class WorksheetTemplateListWrapper extends BaseBean{
+    public ArrayList<WorksheetTemplate> data;
 
-    public ArrayList<WorkSheetTemplate> getList() {
+    public ArrayList<WorksheetTemplate> getList() {
         return data;
     }
 }

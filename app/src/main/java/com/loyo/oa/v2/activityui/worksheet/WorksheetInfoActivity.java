@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.tool.BaseActivity;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  * Created by yyy on 16/8/30.
  */
 
-public class WorkSheetInfoActivity extends BaseActivity implements View.OnClickListener {
+public class WorksheetInfoActivity extends BaseActivity implements View.OnClickListener {
 
 
     private WorkSheetListNestingAdapter mAdapter;
@@ -55,6 +56,7 @@ public class WorkSheetInfoActivity extends BaseActivity implements View.OnClickL
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
+        tv_title_1.setOnClickListener(this);
         tv_Assignment_name = (TextView) findViewById(R.id.tv_Assignment_name);
         tv_boom = (TextView) findViewById(R.id.tv_boom);
         tv_related_order = (TextView) findViewById(R.id.tv_related_order);
@@ -93,6 +95,9 @@ public class WorkSheetInfoActivity extends BaseActivity implements View.OnClickL
             case R.id.img_title_left:
                 onBackPressed();
                 break;
+            case R.id.tv_title_1:
+                app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT,false,new Bundle());
+                break;
         }
     }
 
@@ -100,7 +105,7 @@ public class WorkSheetInfoActivity extends BaseActivity implements View.OnClickL
      * 右上角菜单
      */
     private void functionButton() {
-        ActionSheetDialog dialog = new ActionSheetDialog(WorkSheetInfoActivity.this).builder();
+        ActionSheetDialog dialog = new ActionSheetDialog(WorksheetInfoActivity.this).builder();
         dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {

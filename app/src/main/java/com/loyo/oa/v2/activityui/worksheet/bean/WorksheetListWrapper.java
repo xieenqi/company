@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by EthanGong on 16/8/30.
  */
-public class WorkSheetListWrapper extends BaseBean {
+public class WorksheetListWrapper extends BaseBean {
 
     public WorksheetList data;
 
@@ -16,6 +16,6 @@ public class WorkSheetListWrapper extends BaseBean {
         public int pageIndex;
         public int pageSize;
         public int totalRecords;
-        public ArrayList<WorkSheet> records;
+        public ArrayList<Worksheet> records;
     }
 }

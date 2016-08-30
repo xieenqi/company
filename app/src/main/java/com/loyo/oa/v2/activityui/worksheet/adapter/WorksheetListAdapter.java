@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 
 /**
@@ -26,7 +26,7 @@ public class WorksheetListAdapter extends BaseGroupsDataAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_worksheet, null, false);
         }
 
-        WorkSheet ws = (WorkSheet) getChild(groupPosition, childPosition);
+        Worksheet ws = (Worksheet) getChild(groupPosition, childPosition);
         return convertView;
     }
 }

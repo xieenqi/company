@@ -44,7 +44,7 @@ import retrofit.client.Response;
  * Create by yyy on 16/08/23
  */
 
-public class WorkSheetSearchActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback<ClueList> {
+public class WorksheetSearchActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback<ClueList> {
 
 
     private String strSearch;
@@ -236,7 +236,7 @@ public class WorkSheetSearchActivity extends BaseActivity implements PullToRefre
             ClueListItem clueListItem = listData.get(position);
             Holder holder = null;
             if (convertView == null) {
-                convertView = LayoutInflater.from(WorkSheetSearchActivity.this).inflate(R.layout.item_teamclue, null);
+                convertView = LayoutInflater.from(WorksheetSearchActivity.this).inflate(R.layout.item_teamclue, null);
                 holder = new Holder();
                 holder.tv_company_name = (TextView) convertView.findViewById(R.id.tv_company_name);
                 holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);

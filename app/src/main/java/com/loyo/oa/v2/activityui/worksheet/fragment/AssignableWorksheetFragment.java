@@ -21,9 +21,9 @@ import com.loyo.oa.v2.activityui.clue.ClueAddActivity;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.activityui.worksheet.WorkSheetDetailActivity;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * 【我分派的工单】
  */
-public class AssignableWorkSheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class AssignableWorksheetFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private int page = 1;     /*翻页页数*/
     private int statusIndex;  /*线索状态*/
@@ -122,7 +122,7 @@ public class AssignableWorkSheetFragment extends BaseFragment implements View.On
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-                mIntent.setClass(getActivity(), WorkSheetDetailActivity.class);
+                mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
@@ -169,13 +169,13 @@ public class AssignableWorkSheetFragment extends BaseFragment implements View.On
     }
 
     private  void getData() {
-        List<WorkSheet> list = WorkSheet.getTestList();
+        List<Worksheet> list = Worksheet.getTestList();
         loadData(list);
     }
 
-    private void loadData(List<WorkSheet> list) {
+    private void loadData(List<Worksheet> list) {
 
-        Iterator<WorkSheet> iterator = list.iterator();
+        Iterator<Worksheet> iterator = list.iterator();
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }

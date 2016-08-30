@@ -17,7 +17,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 /**
  * 新建跟进动态
  */
-public class WorkSheetAddStep1Activity extends BaseActivity implements View.OnClickListener {
+public class WorksheetAddStep1Activity extends BaseActivity implements View.OnClickListener {
 
     private ViewGroup img_title_left, img_title_right, layout_sale_action;
     private EditText edt;
@@ -80,7 +80,7 @@ public class WorkSheetAddStep1Activity extends BaseActivity implements View.OnCl
             case R.id.img_title_right:
 
                 Intent mIntent = new Intent();
-                mIntent.setClass(this, WorkSheetAddStep2Activity.class);
+                mIntent.setClass(this, WorksheetAddStep2Activity.class);
                 startActivityForResult(mIntent, this.RESULT_FIRST_USER);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 

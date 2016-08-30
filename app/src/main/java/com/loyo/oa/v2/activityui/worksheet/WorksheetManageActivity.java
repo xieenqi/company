@@ -17,10 +17,10 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
-import com.loyo.oa.v2.activityui.worksheet.fragment.AssignableWorkSheetFragment;
-import com.loyo.oa.v2.activityui.worksheet.fragment.ResponsableWorkSheetFragment;
-import com.loyo.oa.v2.activityui.worksheet.fragment.SelfCreatedWorkSheetFragment;
-import com.loyo.oa.v2.activityui.worksheet.fragment.TeamWorkSheetFragment;
+import com.loyo.oa.v2.activityui.worksheet.fragment.AssignableWorksheetFragment;
+import com.loyo.oa.v2.activityui.worksheet.fragment.ResponsableWorksheetFragment;
+import com.loyo.oa.v2.activityui.worksheet.fragment.SelfCreatedWorksheetFragment;
+import com.loyo.oa.v2.activityui.worksheet.fragment.TeamWorksheetFragment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * 【订单管理】 列表 页面
  */
-public class WorkSheetManageActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class WorksheetManageActivity extends BaseFragmentActivity implements View.OnClickListener {
 
     private ImageView img_title_arrow;
     private LinearLayout img_title_left, ll_category;
@@ -108,19 +108,19 @@ public class WorkSheetManageActivity extends BaseFragmentActivity implements Vie
         BaseFragment fragment = null;
 
         Bundle b = new Bundle();
-        fragment = (BaseFragment) Fragment.instantiate(this, SelfCreatedWorkSheetFragment.class.getName(), b);
+        fragment = (BaseFragment) Fragment.instantiate(this, SelfCreatedWorksheetFragment.class.getName(), b);
         fragments.add(fragment);
 
         b = new Bundle();
-        fragment = (BaseFragment) Fragment.instantiate(this, AssignableWorkSheetFragment.class.getName(), b);
+        fragment = (BaseFragment) Fragment.instantiate(this, AssignableWorksheetFragment.class.getName(), b);
         fragments.add(fragment);
 
         b = new Bundle();
-        fragment = (BaseFragment) Fragment.instantiate(this, ResponsableWorkSheetFragment.class.getName(), b);
+        fragment = (BaseFragment) Fragment.instantiate(this, ResponsableWorksheetFragment.class.getName(), b);
         fragments.add(fragment);
 
         b = new Bundle();
-        fragment = (BaseFragment) Fragment.instantiate(this, TeamWorkSheetFragment.class.getName(), b);
+        fragment = (BaseFragment) Fragment.instantiate(this, TeamWorksheetFragment.class.getName(), b);
         fragments.add(fragment);
 
         changeChild(0);
@@ -158,7 +158,7 @@ public class WorkSheetManageActivity extends BaseFragmentActivity implements Vie
                 LogUtil.dee("type:" + type);
                 Bundle b = new Bundle();
                 b.putInt(ExtraAndResult.EXTRA_TYPE, type);
-                app.startActivity(this, WorkSheetSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                app.startActivity(this, WorksheetSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }

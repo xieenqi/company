@@ -39,7 +39,7 @@
     <color name="md_grey_800">#424242</color>
     <color name="md_grey_900">#212121</color>
 
-    <!-- WorkSheet/WorkSheetEvent 状态 -->
+    <!-- Worksheet/WorksheetEvent 状态 -->
     <color name="ws_status_1">#bf73e6</color>
     <color name="ws_status_2">#2c9dfc</color>
     <color name="ws_status_3">#51c055</color>

@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
  * icon : 状态icon
  *
  */
-public enum WorkSheetStatus implements GroupKey{
+public enum WorksheetStatus implements GroupKey{
 
     /** 其他
      *
@@ -71,7 +71,7 @@ public enum WorkSheetStatus implements GroupKey{
     };
 
     private final int code;
-    private WorkSheetStatus(int code) {
+    private WorksheetStatus(int code) {
         this.code = code;
     }
 
@@ -94,27 +94,27 @@ public enum WorkSheetStatus implements GroupKey{
 
 
     /** gson 序列化和反序列化 */
-    public static class EnumSerializer implements JsonSerializer<WorkSheetStatus>,
-            JsonDeserializer<WorkSheetStatus> {
+    public static class EnumSerializer implements JsonSerializer<WorksheetStatus>,
+            JsonDeserializer<WorksheetStatus> {
 
-        // 对象转为Json时调用,实现JsonSerializer<WorkSheetStatus>接口
+        // 对象转为Json时调用,实现JsonSerializer<WorksheetStatus>接口
         @Override
-        public JsonElement serialize(WorkSheetStatus state, Type arg1,
+        public JsonElement serialize(WorksheetStatus state, Type arg1,
                                      JsonSerializationContext arg2) {
             return new JsonPrimitive(state.code);
         }
 
-        // json转为对象时调用,实现JsonDeserializer<WorkSheetStatus>接口
+        // json转为对象时调用,实现JsonDeserializer<WorksheetStatus>接口
         @Override
-        public WorkSheetStatus deserialize(JsonElement json, Type typeOfT,
+        public WorksheetStatus deserialize(JsonElement json, Type typeOfT,
                                            JsonDeserializationContext context) throws JsonParseException {
-            WorkSheetStatus[] list  = WorkSheetStatus.values();
+            WorksheetStatus[] list  = WorksheetStatus.values();
             for (int i = 0; i < list.length; i++) {
                 if (list[i].code == json.getAsInt()) {
                     return list[i];
                 }
             }
-            return WorkSheetStatus.OTHERS;
+            return WorksheetStatus.OTHERS;
         }
 
     }

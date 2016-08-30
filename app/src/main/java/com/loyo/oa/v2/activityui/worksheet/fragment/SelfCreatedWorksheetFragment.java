@@ -20,11 +20,11 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.activityui.worksheet.WorkSheetAddStep1Activity;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetAddStep1Activity;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
-import com.loyo.oa.v2.activityui.worksheet.WorkSheetDetailActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * 【我创建的工单】
  */
-public class SelfCreatedWorkSheetFragment extends BaseGroupsDataActivity implements View.OnClickListener {
+public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity implements View.OnClickListener {
 
 
     private int statusIndex;  /*线索状态*/
@@ -113,7 +113,7 @@ public class SelfCreatedWorkSheetFragment extends BaseGroupsDataActivity impleme
                     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                         mIntent = new Intent();
                         mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
-                        mIntent.setClass(getActivity(), WorkSheetDetailActivity.class);
+                        mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
                         startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
@@ -155,7 +155,7 @@ public class SelfCreatedWorkSheetFragment extends BaseGroupsDataActivity impleme
 
     @Override
     protected  void getData() {
-        List<WorkSheet> list = WorkSheet.getTestList();
+        List<Worksheet> list = Worksheet.getTestList();
 
         if (isPullDown) {
             groupsData.clear();
@@ -165,9 +165,9 @@ public class SelfCreatedWorkSheetFragment extends BaseGroupsDataActivity impleme
         mExpandableListView.onRefreshComplete();
     }
 
-    private void loadData(List<WorkSheet> list) {
+    private void loadData(List<Worksheet> list) {
 
-        Iterator<WorkSheet> iterator = list.iterator();
+        Iterator<Worksheet> iterator = list.iterator();
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }
@@ -181,7 +181,7 @@ public class SelfCreatedWorkSheetFragment extends BaseGroupsDataActivity impleme
             case R.id.btn_add:
 
                 mIntent = new Intent();
-                mIntent.setClass(getActivity(), WorkSheetAddStep1Activity.class);
+                mIntent.setClass(getActivity(), WorksheetAddStep1Activity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 

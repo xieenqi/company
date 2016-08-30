@@ -35,7 +35,7 @@ import retrofit.client.Response;
 /**
  * 新建跟进动态
  */
-public class WorkSheetAddStep2Activity extends BaseActivity implements View.OnClickListener {
+public class WorksheetAddStep2Activity extends BaseActivity implements View.OnClickListener {
 
     private ViewGroup img_title_left, img_title_right, layout_sale_action;
     private EditText edt;
@@ -142,7 +142,7 @@ public class WorkSheetAddStep2Activity extends BaseActivity implements View.OnCl
                     @Override
                     public void success(final SaleActivity saleActivity, final Response response) {
                         HttpErrorCheck.checkResponse("新建跟进动态", response);
-                        app.finishActivity(WorkSheetAddStep2Activity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                        app.finishActivity(WorksheetAddStep2Activity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                     }
 
                     @Override

@@ -63,7 +63,7 @@ public class WorkSheetListNestingAdapter extends BaseAdapter {
         final Attachment attachment = attachments.get(position);
         if(convertView == null){
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_dynamic_listorlist,null);
+            convertView = inflater.inflate(R.layout.item_worksheet_listorlist,null);
             holder.pb_progress = (ProgressBar) convertView.findViewById(R.id.pb_progress);
             holder.iv_image = (ImageView) convertView.findViewById(R.id.iv_image);
             holder.tv_image_name = (TextView) convertView.findViewById(R.id.tv_image_name);
