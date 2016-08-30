@@ -26,7 +26,10 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -58,11 +61,11 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
 
     private String field = "";
     private String order = "";
-    private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
+
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
-    private ArrayList<ClueListItem> listData = new ArrayList<>();
-    private String[] status = {"全部阶段", "待分配", "进行中", "待审核", "已完成", "意外终止"};
-    private String[] sort = {"全部类型", "售后服务工单", "财务支付工单", "技术支持工单", "VIP客户服务工单"};
+    private ArrayList<SaleTeamScreen> typeData = new ArrayList<>();
+    private ArrayList<WorksheetStatus> statusFilters;
+    private ArrayList<WorksheetTemplate> typeFilters;
 
     private LinearLayout salemy_screen1, salemy_screen2;
     private ImageView salemy_screen1_iv1, salemy_screen1_iv2;
@@ -83,6 +86,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         groupsData = new GroupsData();
+        initFilters();
     }
 
 
@@ -97,7 +101,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
     }
 
     private void initView(View view) {
-        setFilterData();
+
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
@@ -142,17 +146,36 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
         expand();
     }
 
+    private void initFilters() {
+        statusFilters = new ArrayList<WorksheetStatus>();
+        statusFilters.add(WorksheetStatus.Null);
+        statusFilters.add(WorksheetStatus.WAITASSIGN);
+        statusFilters.add(WorksheetStatus.INPROGRESS);
+        statusFilters.add(WorksheetStatus.WAITAPPROVE);
+        statusFilters.add(WorksheetStatus.FINISHED);
+        statusFilters.add(WorksheetStatus.TEMINATED);
+
+        typeFilters = new ArrayList<WorksheetTemplate>();
+        typeFilters.add(WorksheetTemplate.Null);
+
+        ArrayList<WorksheetTemplate> types = WorksheetConfig.getWorksheetTypes(true);
+        if (types != null) {
+            typeFilters.addAll(types);
+        }
+        setFilterData();
+    }
+
     private void setFilterData() {
-        for (int i = 0; i < status.length; i++) {
+        for (int i = 0; i < statusFilters.size(); i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(status[i]);
+            saleTeamScreen.setName(statusFilters.get(i).getName());
             statusData.add(saleTeamScreen);
         }
 
-        for (int i = 0; i < sort.length; i++) {
+        for (int i = 0; i < typeFilters.size(); i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(sort[i]);
-            sortData.add(saleTeamScreen);
+            saleTeamScreen.setName(typeFilters.get(i).name);
+            typeData.add(saleTeamScreen);
         }
     }
 
@@ -224,21 +247,6 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
 
             //时间选择
             case R.id.salemy_screen1: {
-                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
-                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
-                saleCommPopupView.showAsDropDown(salemy_screen2);
-                openPopWindow(salemy_screen1_iv2);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv2);
-                    }
-                });
-            }
-            break;
-
-            //状态
-            case R.id.salemy_screen2: {
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen1);
@@ -247,6 +255,22 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
                     @Override
                     public void onDismiss() {
                         closePopupWindow(salemy_screen1_iv1);
+                    }
+                });
+
+            }
+            break;
+
+            //状态
+            case R.id.salemy_screen2: {
+                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, typeData,
+                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
+                saleCommPopupView.showAsDropDown(salemy_screen2);
+                openPopWindow(salemy_screen1_iv2);
+                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        closePopupWindow(salemy_screen1_iv2);
                     }
                 });
             }
