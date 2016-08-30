@@ -163,7 +163,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataActivity implements Vie
                 new ExpandableListView.OnGroupClickListener() {
                     @Override
                     public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                        return false;
+                        return true;
                     }
                 },
                 new ExpandableListView.OnChildClickListener() {
@@ -280,6 +280,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataActivity implements Vie
             groupsData.addItem(iterator.next());
         }
         adapter.notifyDataSetChanged();
+        expand();
     }
 
     @Override

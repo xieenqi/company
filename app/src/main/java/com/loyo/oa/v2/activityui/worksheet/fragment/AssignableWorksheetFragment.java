@@ -162,7 +162,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataActivity implemen
                 new ExpandableListView.OnGroupClickListener() {
                     @Override
                     public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                        return false;
+                        return true;
                     }
                 },
                 new ExpandableListView.OnChildClickListener() {
@@ -280,6 +280,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataActivity implemen
             groupsData.addItem(iterator.next());
         }
         adapter.notifyDataSetChanged();
+        expand();
     }
 
     @Override
