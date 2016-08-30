@@ -86,10 +86,11 @@ public class AssignableWorksheetFragment extends BaseGroupsDataActivity implemen
                  /*  状态 */
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                 {
-                    isPullDown = true;
+
                     int newIndex =  (int) msg.getData().get("index");
                     if (statusIndex != newIndex) {
                         statusIndex = newIndex;
+                        isPullDown = true;
                         page = 1;
                         tv_tab1.setText(statusFilters.get(statusIndex).getName());
                         showLoading("加载中...");
@@ -101,10 +102,11 @@ public class AssignableWorksheetFragment extends BaseGroupsDataActivity implemen
                 /* 类型 */
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
                 {
-                    isPullDown = true;
+
                     int newIndex =  (int) msg.getData().get("index");
                     if (typeIndex != newIndex) {
                         typeIndex = newIndex;
+                        isPullDown = true;
                         page = 1;
                         tv_tab2.setText(typeFilters.get(typeIndex).name);
                         showLoading("加载中...");
