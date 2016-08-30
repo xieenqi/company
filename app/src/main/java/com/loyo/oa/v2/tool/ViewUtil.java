@@ -189,7 +189,7 @@ public class ViewUtil {
         public boolean onTouch(View v, MotionEvent event) {
             Log.d(TAG, "onTouch 触摸监听 OnTouchListener_view_transparency event.getAction():" + event.getAction());
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                v.setAlpha(0.25f);
+                v.setAlpha(0.5f);
             } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
                 v.setAlpha(1);
             }

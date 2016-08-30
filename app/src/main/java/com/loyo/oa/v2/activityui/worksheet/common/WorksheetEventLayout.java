@@ -15,6 +15,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * 工单事件流程
@@ -48,12 +49,24 @@ public class WorksheetEventLayout extends LinearLayout {
         tv_content = (TextView) eventView.findViewById(R.id.tv_content);
         tv_name = (TextView) eventView.findViewById(R.id.tv_name);
         tv_time = (TextView) eventView.findViewById(R.id.tv_time);
+        tv_content.setText(data.content);
+        tv_name.setText(data.responsor.getName());
+        ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
         eventView.setOnTouchListener(Global.GetTouch());
         eventView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Message msg = new Message();
                 msg.what = ExtraAndResult.REQUEST_CODE_CUSTOMER;
+                handler.sendMessage(msg);
+            }
+        });
+        iv_action.setOnTouchListener(Global.GetTouch());
+        iv_action.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Message msg = new Message();
+                msg.what = ExtraAndResult.REQUEST_CODE_STAGE;
                 handler.sendMessage(msg);
             }
         });

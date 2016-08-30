@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet.bean;
 
+import com.loyo.oa.v2.beans.NewUser;
+
 import java.util.ArrayList;
 
 /**
@@ -12,12 +14,12 @@ public class WorksheetDetial {
     public String title;
     public String content;
     public String uuid;
+    public NewUser dispatcher;
+    public int triggerMode;//1 流程触发 2 定时触发
     //    public String id;
 //    public String id;
 //    public String id;
 //    public String id;
-//    public String id;
-//    public String id;
     public ArrayList<WorksheetEventsSupporter> sheetEventsSupporter;
-    public int status;
+    public int status;//1.待分派  2.进行中 3.待审核 4.已完成 5.意外终止
 }
