@@ -150,10 +150,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null == mCustomer) {
             return;
         }
-        //推送过来的公海客户
-//        if (1 == customerType && !mCustomer.lock) {
-//            customerType = 3;
-//        }
+
         /*超级管理员,我的客户,Web权限控制判断*/
         if (MainApp.user.isSuperUser() && customerType == 3) {
             img_public.setVisibility(View.VISIBLE);
@@ -183,17 +180,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * */
         isMyUser = (customerType != 3) ? true : false;
 
-        LogUtil.dee("customerType:"+customerType);
-        LogUtil.dee("isMenber:"+ isMenber(mCustomer));
-
-/*        if (customerType != 3 && customerType != 0 && !(customerType == 1 && isMenber(mCustomer))) {
-            img_title_right.setOnTouchListener(Global.GetTouch());
-        } else {
-            img_title_right.setVisibility(View.INVISIBLE);
-        }*/
-        /*loca true :自己或团队
-               false:公海
-            owner id:  ==自己 表示自己的客户 !=自己 表示团队客户      */
         if(mCustomer.lock){
             if(null != mCustomer.owner){
                 if(mCustomer.owner.id.equals(MainApp.user.getId())){
@@ -238,9 +224,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
+
         //突出显示跟进动态
         tv_sale_number.setText("(" + mCustomer.saleActivityNum + ")");
         if (null != mCustomer.saleActivityInfo) {
+            tv_follow_content.setVisibility(View.VISIBLE);
+            tv_follow_crecter_type.setVisibility(View.VISIBLE);
             tv_follow_content.setText(mCustomer.saleActivityInfo.content);
             tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
                     mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
@@ -495,7 +484,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_sale_activity:
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
-                _class = SaleActivitiesManageActivity.class;
+                _class = CustomerDynamicManageActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;
             /*拜访签到*/
@@ -574,7 +563,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
-//                getData();
                 /*如果修改了负责人，不是自己，则finish该页面*/
                 try {
                     Bundle bundle = data.getExtras();
@@ -588,10 +576,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
                 break;
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
-//                getData();
                 break;
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS:
-//                getData();
                 break;
             default:
                 break;
@@ -600,6 +586,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         switch (resultCode) {
             case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
                 isPutOcen = true;
+                break;
+            //新建跟进 回调
+            case FinalVariables.REQUEST_CREATE_TASK:
                 break;
         }
     }

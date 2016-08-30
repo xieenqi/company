@@ -568,7 +568,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         });
     }
 
-    @OnActivityResult(SelectPicPopupWindow.GET_IMG)
+    @OnActivityResult(MainApp.GET_IMG)
     void onGetImageResult(final Intent data) {
         if (null == data) {
             return;

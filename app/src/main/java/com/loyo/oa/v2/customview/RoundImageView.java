@@ -5,6 +5,8 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
@@ -20,8 +22,6 @@ import android.widget.ImageView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.LogUtil;
-
-import java.io.Serializable;
 
 
 /**
@@ -241,5 +241,16 @@ public class RoundImageView extends ImageView implements Parcelable {//实现接
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
+    }
+
+    /**
+     * 头像的灰度处理
+     */
+    public void setGrayImg() {
+//        ColorMatrix matrix = new ColorMatrix();
+//        matrix.setSaturation(0.1f);
+//        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+//        this.setColorFilter(filter);
+        this.setAlpha(0.5f);
     }
 }

@@ -171,7 +171,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                 }
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
-                mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+                mActivity.startActivityForResult(intent, MainApp.GET_IMG);
             }
 
             /*拜访签到*/
@@ -180,7 +180,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                 intent.putExtra("localpic", localpic);
                 intent.putExtra("imgsize", (9 - mListData.size()));
                 intent.putExtra("addpg", true);
-                mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+                mActivity.startActivityForResult(intent, MainApp.GET_IMG);
             }
         }
     }

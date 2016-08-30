@@ -21,23 +21,13 @@ public class SaleActivity extends BaseBeans implements Serializable {
     //精简过后的跟进动态 ben  20160612
     public String id;
     public String creatorName;
-    public long createAt;//客户的跟进动态
-    public long createdAt;//线索的跟进动态
+    public long createAt;
     public String content;
     public String typeName;
     public long remindAt;
     public String contactName;
 
-    //    type SaleActivitySimple struct {
-//        Id          bson.ObjectId `json:"id"`
-//        CreatorName string        `json:"creatorName"` //跟进人
-//        CreateAt    int64         `json:"createAt"`
-//        Content     string        `json:"content,omitempty"`
-//        RemindAt    int64         `json:"remindAt"`
-//        TypeName    string        `json:"typeName,omitempty"`
-//        ContactId   string        `json:"-"`
-//        ContactName string        `json:"contactName,omitempty"` //联系人
-//    }
+
     @Override
     public String getOrderStr() {
         return getCreateAt() + "";

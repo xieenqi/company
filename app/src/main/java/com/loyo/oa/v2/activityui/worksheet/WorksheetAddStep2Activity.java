@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.clue;
+package com.loyo.oa.v2.activityui.worksheet;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,26 +12,19 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
-import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
-import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IClue;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.customview.DateTimePickDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +35,7 @@ import retrofit.client.Response;
 /**
  * 新建跟进动态
  */
-public class ClueFollowupCreateActivity extends BaseActivity implements View.OnClickListener {
+public class WorksheetAddStep2Activity extends BaseActivity implements View.OnClickListener {
 
     private ViewGroup img_title_left, img_title_right, layout_sale_action;
     private EditText edt;
@@ -54,7 +47,7 @@ public class ClueFollowupCreateActivity extends BaseActivity implements View.OnC
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_clue_followup_create);
+        setContentView(R.layout.activity_worksheet_add_step2);
 
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
@@ -75,10 +68,10 @@ public class ClueFollowupCreateActivity extends BaseActivity implements View.OnC
     }
 
     void initUI() {
-        super.setTitle("写跟进");
+        super.setTitle("填写工单内容");
 
         edt = (EditText) findViewById(R.id.edt);
-        tv_sale_action = (TextView) findViewById(R.id.tv_sale_action);
+//        tv_sale_action = (TextView) findViewById(R.id.tv_sale_action);
 
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
@@ -86,9 +79,9 @@ public class ClueFollowupCreateActivity extends BaseActivity implements View.OnC
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(touch);
 
-        layout_sale_action = (ViewGroup) findViewById(R.id.layout_sale_action);
-        layout_sale_action.setOnClickListener(this);
-        layout_sale_action.setOnTouchListener(touch);
+//        layout_sale_action = (ViewGroup) findViewById(R.id.layout_sale_action);
+//        layout_sale_action.setOnClickListener(this);
+//        layout_sale_action.setOnTouchListener(touch);
 
 
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
@@ -96,13 +89,13 @@ public class ClueFollowupCreateActivity extends BaseActivity implements View.OnC
         img_title_right.setOnTouchListener(touch);
 
 
-        ll_contactItem = (LinearLayout) findViewById(R.id.ll_contactItem);
-        ll_contact = (LinearLayout) findViewById(R.id.ll_contact);
-        ll_contact.setOnClickListener(this);
-        ll_contact.setOnTouchListener(touch);
-        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
-        ll_contactItem.setVisibility(null == clueId ? View.GONE : View.VISIBLE);
-        tv_contact_name.setText(contactName);
+//        ll_contactItem = (LinearLayout) findViewById(R.id.ll_contactItem);
+//        ll_contact = (LinearLayout) findViewById(R.id.ll_contact);
+//        ll_contact.setOnClickListener(this);
+//        ll_contact.setOnTouchListener(touch);
+//        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
+//        ll_contactItem.setVisibility(null == clueId ? View.GONE : View.VISIBLE);
+//        tv_contact_name.setText(contactName);
     }
 
     @Override
@@ -149,7 +142,7 @@ public class ClueFollowupCreateActivity extends BaseActivity implements View.OnC
                     @Override
                     public void success(final SaleActivity saleActivity, final Response response) {
                         HttpErrorCheck.checkResponse("新建跟进动态", response);
-                        app.finishActivity(ClueFollowupCreateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                        app.finishActivity(WorksheetAddStep2Activity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                     }
 
                     @Override

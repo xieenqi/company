@@ -409,6 +409,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     private void setAttendance() {
         if (null == validateInfo) {
+            LogUtil.dee("return validateInfo = null");
             return;
         }
 
@@ -605,6 +606,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
+        LogUtil.d("位置回调成功");
         UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
@@ -612,6 +614,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
+                LogUtil.d("check回调成功");
                 attendanceRecords = attendanceRecord;
                 HttpErrorCheck.checkResponse("考勤信息：", response);
                 attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
@@ -625,6 +628,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
+                LogUtil.d("check回调失败");
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -633,6 +637,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void OnLocationGDFailed() {
+        LogUtil.d("位置回调失败");
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
         Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();

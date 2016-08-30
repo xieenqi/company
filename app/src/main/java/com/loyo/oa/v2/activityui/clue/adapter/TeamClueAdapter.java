@@ -24,8 +24,7 @@ public class TeamClueAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context mContext;
 
-    public TeamClueAdapter(Context context, ArrayList<ClueListItem> mData) {
-        this.mData = mData;
+    public TeamClueAdapter(Context context) {
         mContext = context;
         inflater = LayoutInflater.from(context);
     }
@@ -42,7 +41,7 @@ public class TeamClueAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return mData.get(position);
+        return position;
     }
 
     @Override
@@ -65,14 +64,7 @@ public class TeamClueAdapter extends BaseAdapter {
             holder = (Holder) convertView.getTag();
         }
         ClueListItem clueListItem = mData.get(position);
-        holder.tv_name.setText(clueListItem.name);
-        holder.tv_company_name.setText(clueListItem.companyName);
-        holder.tv_customer.setText(clueListItem.responsorName);
-        if (clueListItem.lastActAt != 0) {
-            holder.tv_time.setText(MainApp.getMainApp().df3.format(new Date(Long.valueOf(clueListItem.lastActAt + "") * 1000)));
-//            app.df3.format(new Date(Long.valueOf(sales.updateAt + "") * 1000))
-        }
-
+        holder.setContentView(clueListItem);
         return convertView;
     }
 
@@ -81,5 +73,18 @@ public class TeamClueAdapter extends BaseAdapter {
         TextView tv_customer;     /* 负责人 */
         TextView tv_time;         /* 跟进时间 */
         TextView tv_name;         /* 客户名称 */
+
+        public void setContentView(ClueListItem clueListItem) {
+            tv_name.setText(clueListItem.name);
+            tv_company_name.setText(clueListItem.companyName);
+            tv_customer.setText(clueListItem.responsorName);
+            if (clueListItem.lastActAt != 0) {
+                tv_time.setText(MainApp.getMainApp().df3.format(new Date(Long.valueOf(clueListItem.lastActAt + "") * 1000)));
+//            app.df3.format(new Date(Long.valueOf(sales.updateAt + "") * 1000))
+            }else {
+                tv_time.setText("--");
+            }
+
+        }
     }
 }

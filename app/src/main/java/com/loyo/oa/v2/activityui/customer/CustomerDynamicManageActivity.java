@@ -1,26 +1,35 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -34,22 +43,26 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【跟进动态】 客户的
+ * 【跟进动态】 客户管理
  */
-public class SaleActivitiesManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class CustomerDynamicManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     public static final int ACTIVITIES_ADD = 101;
 
-    ViewGroup img_title_left, layout_add;
-    PullToRefreshListView lv_saleActivity;
-    SaleActivitiesAdapter listAdapter;
-    ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
+
+    private ViewGroup img_title_left, layout_add;
+    private PullToRefreshListView lv_saleActivity;
+    private SaleActivitiesAdapter listAdapter;
+    private DynamicListnestingAdapter  nestionListAdapter;
+    private ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
     private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
-    Customer customer;
-    SaleActivity mSaleActivity;
-    private boolean isChanged;
+    private Customer customer;
+    private SaleActivity mSaleActivity;
+
+    private boolean isChanged = false;
     private boolean isTopAdd = true;
-    boolean isMyUser;
+    private boolean isMyUser;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -114,16 +127,20 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
+
+            /*返回*/
             case R.id.img_title_left:
                 onBackPressed();
                 break;
+
+            /*新建*/
             case R.id.layout_add:
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Customer.class.getName(), customer);
-                app.startActivityForResult(this, SaleActivitiesAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                app.startActivityForResult(this, CustomerDynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
-            default:
 
+            default:
                 break;
         }
     }
@@ -137,6 +154,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
         switch (requestCode) {
             /*新建跟进动态回调*/
             case ACTIVITIES_ADD:
+                isChanged = true;
                 getData();
                 break;
 
@@ -172,15 +190,14 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
 
     @Override
     public void onBackPressed() {
-        if (mSaleActivity != null) {
+        if (isChanged) {
             Intent intent = new Intent();
-            intent.putExtra("data", mSaleActivity);
-            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isChanged ? RESULT_OK : RESULT_CANCELED, intent);
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, FinalVariables.REQUEST_CREATE_TASK, intent);
             return;
         }
-
         super.onBackPressed();
     }
+
 
 
     private class SaleActivitiesAdapter extends BaseAdapter {
@@ -206,6 +223,8 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }
 
+            LinearLayout ll_layout_time = ViewHolder.get(convertView,R.id.ll_layout_time);
+            ListView lv_listview    = ViewHolder.get(convertView,R.id.lv_listview);
             TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
             TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
@@ -219,11 +238,21 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             tv_contact_name.setText("联系人：" + saleActivity.contactName);
             tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
 
-            if (saleActivity.getRemindAt() != 0) {
-                tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
-            } else {
-                tv_time.setText("无");
+            if(null != saleActivity.getAttachments() && saleActivity.getAttachments().size() != 0){
+                lv_listview.setVisibility(View.VISIBLE);
+                nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(),mContext);
+                lv_listview.setAdapter(nestionListAdapter);
+            }else{
+                lv_listview.setVisibility(View.GONE);
             }
+
+            if (saleActivity.getRemindAt() != 0) {
+                ll_layout_time.setVisibility(View.VISIBLE);
+                tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
+            }else{
+                ll_layout_time.setVisibility(View.GONE);
+            }
+
             //提醒时间没有过当前时间变红色
             if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
                 tv_time.setTextColor(getResources().getColor(R.color.red1));

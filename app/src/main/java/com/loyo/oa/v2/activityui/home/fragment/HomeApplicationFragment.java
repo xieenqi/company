@@ -17,14 +17,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activityui.customer.SaleActivitiesAddActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
@@ -69,7 +68,6 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -78,7 +76,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -176,7 +173,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     break;
                 //写跟进
                 case BaseActivity.FOLLOW_ADD:
-                    startActivityForResult(new Intent(getActivity(), SaleActivitiesAddActivity.class), Activity.RESULT_FIRST_USER);
+                    startActivityForResult(new Intent(getActivity(), CustomerDynamicAddActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //新建订单
@@ -260,6 +257,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         }
         LogUtil.d("用户获取的token：---> " + app.getToken());
         updateUser();
+        startTrack();
         return mView;
     }
 
@@ -293,7 +291,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             e.printStackTrace();
         }
         requestNumber();
-        startTrack();
+
     }
 
     /**
@@ -308,6 +306,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
                 new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0216", 1),//新加订单
+                new HomeItem(R.drawable.newmain_worksheet, "工单管理", "com.loyo.oa.v2.activityui.worksheet.WorksheetManageActivity", "0"/* 测试是始终显示 */, 1),//新加工单
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signin.SignInManagerActivity_", "0206", 1),
                 new HomeItem(R.drawable.newmain_project, "项目管理", "com.loyo.oa.v2.activityui.project.ProjectManageActivity_", "0201", 2),
                 new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_", "0202", 2),
@@ -322,7 +321,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
                 new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
-                new MoreWindowItem("考勤打卡", "0000", R.drawable.newmain_post_att),
+                new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
                 new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign),
                 new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
 
@@ -624,33 +623,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     i--;
                 }
             }
-
-//            for (Permission permission : suitesNew) {
-//                LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
-//                for (int i = 0; i < items.size(); i++) {
-//                    if (items.get(i).code.equals(permission.getCode())) {
-//                        if (!permission.isEnable()) {
-//                            items.remove(i);
-//                        }
-//                    }
-//                }
-//
-//                for (int i = 0; i < caseItems.size(); i++) {
-//                    if (caseItems.get(i).code.equals(permission.getCode())) {
-//                        if (!permission.isEnable()) {
-//                            caseItems.remove(i);
-//                        }
-//                    }
-//                }
-//
-//                for (int i = 0; i < caseItems.size(); i++) {
-//                    if (caseItems.get(i).code.equals(permission.getCode())) {
-//                        if (!permission.isEnable()) {
-//                            caseItems.remove(i);
-//                        }
-//                    }
-//                }
-//            }
         }
         initView();
     }

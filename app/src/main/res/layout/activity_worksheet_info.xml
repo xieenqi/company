@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_common_title"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/dimen_8"
+                android:paddingLeft="@dimen/margin_other_view"
+                android:paddingTop="@dimen/dimen_10"
+                >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_5"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dimen_10"
+                            android:layout_weight="1"
+                            android:text="高德高德个"
+                            android:textColor="@color/text33"
+                            android:textSize="@dimen/text_sp16"/>
+
+                        <TextView
+                            android:id="@+id/tv_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/retange_green"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dimen_2"
+                            android:paddingRight="@dimen/dimen_2"
+                            android:text="已完成"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_sp11"
+                            />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="赵云 2016-02-23 15:32 提交"
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp12"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dimen_4"
+                    android:src="@drawable/right_arrow"/>
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left"/>
+
+            <TextView
+                android:id="@+id/tv_track_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="pplication,I am using Listview for displaying data using dom parsing,I want to footer in listview,when i click footer additional more data add to list view,I attached image,i would like that design and process,pl"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp16"/>
+
+            <LinearLayout
+                android:id="@+id/ll_attachment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left"/>
+            <!--  分派人 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="分派人: "
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp16"/>
+
+                <TextView
+                    android:id="@+id/tv_responsible_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp16"/>
+
+            </LinearLayout>
+
+            <!-- 触发方式 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="触发方式: "
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp16"/>
+
+                <TextView
+                    android:id="@+id/tv_creator_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp16"/>
+
+            </LinearLayout>
+
+            <!-- 关联订单 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="关联订单: "
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp16"/>
+
+                <TextView
+                    android:id="@+id/tv_create_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp16"/>
+
+            </LinearLayout>
+
+            <!-- 事件负责人 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="事件负责人: "
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp16"/>
+
+                <TextView
+                    android:id="@+id/tv_update_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp16"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

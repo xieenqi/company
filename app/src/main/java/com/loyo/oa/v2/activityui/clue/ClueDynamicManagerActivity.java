@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
@@ -22,33 +24,34 @@ import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【跟进动态】 线索
+ * 【跟进动态】 销售线索
  */
-public class ClueFollowupActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class ClueDynamicManagerActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     public static final int ACTIVITIES_ADD = 101;
 
-    ViewGroup img_title_left, layout_add;
-    PullToRefreshListView lv_saleActivity;
-    SaleActivitiesAdapter listAdapter;
-    ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
+    private ViewGroup img_title_left, layout_add;
+    private PullToRefreshListView lv_saleActivity;
+    private SaleActivitiesAdapter listAdapter;
+    private DynamicListnestingAdapter  nestionListAdapter;
+    private ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
     private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
-    String clueId;
-    String name;
-    SaleActivity mSaleActivity;
+    private String clueId;
+    private String name;
+    private SaleActivity mSaleActivity;
     private boolean isChanged;
     private boolean isTopAdd = true;
     boolean isMyUser;
@@ -113,7 +116,6 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
-        // TODO:
         if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
@@ -127,19 +129,21 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
+
+            /*返回*/
             case R.id.img_title_left:
                 onBackPressed();
                 break;
+
+            /*新建线索*/
             case R.id.layout_add:
                 Bundle bundle = new Bundle();
                 bundle.putString(ExtraAndResult.EXTRA_ID, clueId);
                 bundle.putString(ExtraAndResult.EXTRA_NAME, name);
-                // TODO:
-                //app.startActivityForResult(this, ClueFollowupCreateActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
-                app.startActivityForResult(this, ClueFollowupCreateActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                app.startActivityForResult(this, ClueDynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
-            default:
 
+            default:
                 break;
         }
     }
@@ -222,6 +226,7 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }
 
+            ListView lv_listview    = ViewHolder.get(convertView,R.id.lv_listview);
             TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
             TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
@@ -235,19 +240,14 @@ public class ClueFollowupActivity extends BaseActivity implements View.OnClickLi
             tv_contact_name.setText("联系人：" + saleActivity.contactName);
             tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
 
-//            if (saleActivity.getRemindAt() != 0) {
-//                tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
-//            } else {
-//                tv_time.setText("无");
-//            }
-            //提醒时间没有过当前时间变红色
-//            if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
-//                tv_time.setTextColor(getResources().getColor(R.color.red1));
-//                iv_imgTime.setImageResource(R.drawable.icon_tx2);
-//            } else {
-//                tv_time.setTextColor(getResources().getColor(R.color.text99));
-//                iv_imgTime.setImageResource(R.drawable.icon_tx1);
-//            }
+            if(null != saleActivity.getAttachments() && saleActivity.getAttachments().size() != 0){
+                lv_listview.setVisibility(View.VISIBLE);
+                nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(),mContext);
+                lv_listview.setAdapter(nestionListAdapter);
+            }else{
+                lv_listview.setVisibility(View.GONE);
+            }
+
             if (i == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);
             } else {

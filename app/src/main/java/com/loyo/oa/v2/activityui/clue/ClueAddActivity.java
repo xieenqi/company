@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
+import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
@@ -47,7 +47,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
     private CustomerRegional regional = new CustomerRegional();
     private String[] dataKind;
     private String clueId;
-    private ClueDetail editData;
+    private ClueDetailWrapper editData;
     private boolean isEdit = false;
 
     @Override
@@ -60,7 +60,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
 
     private void getIntentData() {
         clueId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
-        editData = (ClueDetail) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        editData = (ClueDetailWrapper) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
 //        if (TextUtils.isEmpty(orderId)) {
 //            onBackPressed();
 //            Toast("参数不全");
@@ -193,6 +193,9 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
+    /**
+     * 新建线索
+     * */
     private void addDataInfo() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
@@ -207,11 +210,16 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         LogUtil.d("线索创建参数：" + app.gson.toJson(map));
         if (!isEdit) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
-                    .addClue(map, new Callback<Object>() {
+                    .addClue(map, new Callback<ClueDetailWrapper>() {
                         @Override
-                        public void success(Object o, Response response) {
+                        public void success(ClueDetailWrapper clueDetailWrapper, Response response) {
                             HttpErrorCheck.checkResponse("新建线索：", response);
-                            app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                            if(clueDetailWrapper.errcode != 0){
+                                Toast(clueDetailWrapper.errmsg);
+                                return;
+                            }else if(clueDetailWrapper.errcode == 0){
+                                app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                            }
                         }
 
                         @Override

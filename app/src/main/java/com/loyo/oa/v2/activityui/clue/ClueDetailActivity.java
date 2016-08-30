@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
+import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
@@ -57,14 +57,14 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     TextView
             tv_track_content   /* 最近跟进内容 */,
-            tv_track_time   /* 最近跟进元信息 */;
+            tv_track_time      /* 最近跟进元信息 */;
 
     /*  分区3 */
-    ViewGroup ll_sms  /* 手机发短信 */,
-            ll_call        /* 手机拨电话 */,
-            ll_wiretel_call       /* 座机拨电话 */,
-            layout_clue_region        /* 地区弹出列表 */,
-            layout_clue_source        /* 线索来源弹出列表 */;
+    ViewGroup ll_sms                /* 手机发短信 */,
+            ll_call                 /* 手机拨电话 */,
+            ll_wiretel_call         /* 座机拨电话 */,
+            layout_clue_region      /* 地区弹出列表 */,
+            layout_clue_source      /* 线索来源弹出列表 */;
 
     TextView contact_mobile  /* 手机 */,
             contact_wiretel  /* 座机 */,
@@ -81,7 +81,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     /* Data */
     String clueId;
-    ClueDetail data;
+    ClueDetailWrapper data;
     private int clueStatus;
     private boolean isDelete = false, isAdd = false;
     private CustomerRegional regional = new CustomerRegional();
@@ -188,7 +188,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         } else {
             ll_track.setVisibility(View.VISIBLE);
             tv_track_content.setText(data.data.activity.content);
-            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.createdAt + "") * 1000))
+            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.createAt + "") * 1000))
                     + "  " + data.data.activity.creatorName + " # " + data.data.activity.typeName);
         }
         tv_visit_number.setText("(" + sales.saleActivityCount + ")");
@@ -229,9 +229,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance()
                 .build(Config_project.API_URL_CUSTOMER())
                 .create(IClue.class)
-                .getClueDetail(clueId, new Callback<ClueDetail>() {
+                .getClueDetail(clueId, new Callback<ClueDetailWrapper>() {
                     @Override
-                    public void success(ClueDetail detail, Response response) {
+                    public void success(ClueDetailWrapper detail, Response response) {
                         HttpErrorCheck.checkResponse("线索详情：", response);
                         if (null == detail) {
                             Toast("没有获取数据");
@@ -302,7 +302,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         }
         intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
         intent.putExtra(ExtraAndResult.EXTRA_ADD, isAdd);
-        intent.setClass(this, ClueFollowupActivity.class);
+        intent.setClass(this, ClueDynamicManagerActivity.class);
         startActivityForResult(intent, this.RESULT_FIRST_USER);
         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
@@ -510,8 +510,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【转 移】线索：", response);
-//                        getClueDetail();
-                        onBackPressed();
+                        app.finishActivity(ClueDetailActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
                     }
 
                     @Override

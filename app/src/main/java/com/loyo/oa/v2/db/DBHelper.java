@@ -75,7 +75,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
 
         } catch (SQLException e) {
-            Log.e(DBHelper.class.getName(), "不能创建 database", e);
+            LogUtil.d(DBHelper.class.getName(), "不能创建 database"+ e.getErrorCode());
             throw new RuntimeException(e);
         }
     }
