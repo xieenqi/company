@@ -59,6 +59,8 @@ public class WorkSheet implements Groupable, Comparable<WorkSheet> {
     public int totalCount;
     public int finishCount;
 
+    public ArrayList<WorkSheetEvent> workSheetEvents;
+
 
     @Override
     public WorkSheetStatus groupBy()

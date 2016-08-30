@@ -5,6 +5,7 @@ package com.loyo.oa.v2.point;
  */
 
 import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetWrapper;
 import com.loyo.oa.v2.beans.BaseBean;
 
 import java.util.HashMap;
@@ -61,11 +62,12 @@ public interface IWorkSheet {
      *  "orderId"    :"57c3ef26ebe07f2d0b000001",
      *  "orderName"  :"新建的工单",
      *  "templateId" :"57c3ef26ebe07f2d0b000001",
-     *  "content"    : "工单事件很多哟!"
+     *  "content"    : "工单事件很多哟!",
+     *  "uuid"       :"57c3ef26ebe07f2d0b000001"
      * }
      *
      * @param callback
      */
     @POST("/worksheets")
-    void addWorksheet(@Body Map<String, Object> body, Callback<BaseBean> callback);
+    void addWorksheet(@Body Map<String, Object> body, Callback<WorkSheetWrapper> callback);
 }
