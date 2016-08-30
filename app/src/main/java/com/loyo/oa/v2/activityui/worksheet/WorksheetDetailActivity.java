@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.worksheet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -30,6 +33,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private LinearLayout ll_events;
     private TextView tv_title_1;
     private RelativeLayout img_title_right;
+    private String worksheetId;
     //处理事件
     private Handler handler = new Handler() {
         @Override
@@ -39,12 +43,21 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     };
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worksheet_detial);
+        getIntentData();
         initView();
 
+    }
+
+    private void getIntentData() {
+        Intent intent = getIntent();
+        worksheetId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
+//        if (TextUtils.isEmpty(worksheetId)) {
+//            Toast("参数不全");
+//            onBackPressed();
+//        }
     }
 
     private void initView() {
@@ -63,15 +76,16 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
     private void getData() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                getWorksheetDetail("", new Callback<Object>() {
+                getWorksheetDetail("57c52813b0207a0615000001", new Callback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("工单详情：", response);
 
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-
+                        HttpErrorCheck.checkError(error);
                     }
                 });
 
@@ -94,7 +108,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void loadData() {
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < 8; i++) {
             WorksheetEventLayout eventView = new WorksheetEventLayout(this, handler);
             ll_events.addView(eventView);
         }
