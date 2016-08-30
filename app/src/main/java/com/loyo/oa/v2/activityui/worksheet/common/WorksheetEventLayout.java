@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.customview.RoundImageView;
 
 /**
@@ -23,7 +24,7 @@ public class WorksheetEventLayout extends LinearLayout {
     private ImageView iv_status, iv_action;
     private TextView tv_content, tv_name, tv_time;
 
-    public WorksheetEventLayout(Context context, Handler handler) {
+    public WorksheetEventLayout(Context context, Handler handler, WorksheetEventsSupporter data) {
         super(context);
         bindView(context);
     }

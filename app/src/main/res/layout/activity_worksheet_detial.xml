@@ -70,6 +70,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_assignment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="分派人:张三"
@@ -103,6 +104,7 @@
                     android:textSize="@dimen/text_sp12"/>
 
                 <TextView
+                    android:id="@+id/tv_complete_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -112,6 +114,7 @@
                     android:textSize="@dimen/text_sp12"/>
 
                 <TextView
+                    android:id="@+id/tv_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="批量设置"
@@ -131,8 +134,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_other_view"
                 android:orientation="vertical">
+
                 <Button
-                    android:id="@+id/btn_confirm"
+                    android:id="@+id/bt_confirm"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_45"
                     android:background="@drawable/round_bg_shpe"
