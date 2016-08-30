@@ -25,7 +25,7 @@ import com.loyo.oa.v2.tool.BaseFragment;
  *     expand
  * 5.
  */
-public abstract class BaseGroupsDataActivity extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
+public abstract class BaseGroupsDataFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
     protected PullToRefreshExpandableListView mExpandableListView;
     protected ExpandableListView expandableListView;
     protected BaseGroupsDataAdapter adapter;

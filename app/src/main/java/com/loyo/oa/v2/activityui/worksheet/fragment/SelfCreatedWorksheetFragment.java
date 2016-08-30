@@ -56,7 +56,7 @@ import retrofit.client.Response;
 /**
  * 【我创建的工单】
  */
-public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity implements View.OnClickListener {
+public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment implements View.OnClickListener {
 
 
     private int statusIndex;  /* 工单状态Index */

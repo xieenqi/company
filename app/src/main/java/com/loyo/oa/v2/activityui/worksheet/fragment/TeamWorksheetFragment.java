@@ -58,7 +58,7 @@ import retrofit.client.Response;
  * 【团队线索】
  * Created by yyy on 16/8/19.
  */
-public class TeamWorksheetFragment extends BaseGroupsDataActivity implements View.OnClickListener {
+public class TeamWorksheetFragment extends BaseGroupsDataFragment implements View.OnClickListener {
 
     private int statusIndex;  /* 工单状态Index */
     private int typeIndex;    /* 工单类型Index */
