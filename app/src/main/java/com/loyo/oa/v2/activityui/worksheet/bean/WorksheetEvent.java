@@ -12,13 +12,25 @@ import java.util.List;
 
 public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
     public String id;
+    public String companyId;
     public String workSheetId;
+    public String wsId;
+    public String workSheetName;
+
+    public String templateId;
+    public String templateName;
+
+    public int triggerMode;
     public int order;         // 顺序
     public String content;    // 事件描述
     public String responsorId;// 负责人ID
+    public String responsor;
     public long startTime;
     public long endTime;
+    public int daysDeadline;
+    public int daysLater;
     public WorksheetEventStatus status;
+    /* handleInfoList */
 
     @Override
     public WorksheetEventStatus groupBy()

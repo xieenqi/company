@@ -61,9 +61,16 @@ public enum WorksheetEventStatus implements GroupKey {
         public String getName() { return "意外终止"; }
         public int getColor() { return R.color.ws_status_4; }
         public int getIcon() { return R.drawable.icon_ws_status4; }
+    },
+
+    /** 全部类型 */
+    Null(-1){
+        public String getName() { return "全部类型"; }
+        public int getColor() { return R.color.ws_status_4; }
+        public int getIcon() { return R.drawable.icon_ws_status4; }
     };
 
-    private final int code;
+    public final int code;
     private WorksheetEventStatus(int code) {
         this.code = code;
     }
