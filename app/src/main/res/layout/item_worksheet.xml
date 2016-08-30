@@ -22,16 +22,19 @@
                 android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="内容工单内"
+                android:text=""
                 android:textColor="@color/text33"
-                android:textSize="@dimen/text_sp15" />
+                android:textSize="@dimen/text_sp15"
+                android:layout_toLeftOf="@+id/tv_progress"
+                android:layout_alignParentLeft="true"/>
 
             <TextView
                 android:id="@+id/tv_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5"
                 android:layout_alignParentRight="true"
-                android:text="完成度(0/3)"
+                android:text=""
                 android:textColor="@color/title_bg1"
                 android:textSize="@dimen/text_sp15" />
 

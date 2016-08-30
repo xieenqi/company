@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplateListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
 
@@ -30,7 +32,7 @@ public interface IWorksheet {
      *
      */
     @GET("/worksheets/self")
-    void getMyWorkSheetlist(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
+    void getMyWorksheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
 
     /**
      * 团队工单列表
@@ -46,8 +48,8 @@ public interface IWorksheet {
      * userid      用户id
      *
      */
-    @GET("/worksheets/self")
-    void getTeamWorkSheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
+    @GET("/worksheets/team")
+    void getTeamWorksheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
 
 
     /**
@@ -66,7 +68,7 @@ public interface IWorksheet {
      * @param callback
      */
     @POST("/worksheets")
-    void addWorkSheet(@Body Map<String, Object> body, Callback<WorksheetWrapper> callback);
+    void addWorksheet(@Body Map<String, Object> body, Callback<WorksheetWrapper> callback);
 
     /**
      * 工单类型列表
@@ -75,11 +77,23 @@ public interface IWorksheet {
      *
      */
     @GET("/worksheet/setting")
-    void getWorkSheetTypesList(Callback<WorksheetTemplateListWrapper> callback);
+    void getWorksheetTypesList(Callback<WorksheetTemplateListWrapper> callback);
 
     /**
      * 获取工单详细信息
      */
     @GET("/worksheets/{id}")
     void getWorksheetDetail(@Path("id") String id, Callback<Object> callback);
+
+    /**
+     * 订单列表
+     *
+     * 参数
+     * pageIndex
+     * pageSize
+     * keyword 订单标题关键字查询
+     */
+    @GET("/order/work/list")
+    void getWorksheetOrdersList(@QueryMap HashMap<String, Object> map, Callback<WorksheetOrderListWrapper> callback);
+
 }

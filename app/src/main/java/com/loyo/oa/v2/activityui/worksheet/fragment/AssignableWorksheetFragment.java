@@ -24,19 +24,29 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【我分派的工单】
@@ -168,9 +178,38 @@ public class AssignableWorksheetFragment extends BaseFragment implements View.On
         }
     }
 
-    private  void getData() {
-        List<Worksheet> list = Worksheet.getTestList();
-        loadData(list);
+    protected  void getData() {
+
+//        * templateId  工单类型id
+//        * status      1:待分派 2:处理中 3:待审核 4:已完成 5:意外中止
+//        * keyword     关键字查询
+//        * type tab    1:我创建的 2:我分派的
+//        * pageIndex
+//        * pageSize
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", page);
+        map.put("pageSize", 15);
+        map.put("type", 2/* 我分派的 */);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IWorksheet.class).getMyWorksheetList(map, new Callback<WorksheetListWrapper>() {
+            @Override
+            public void success(WorksheetListWrapper listWrapper, Response response) {
+                mExpandableListView.onRefreshComplete();
+                HttpErrorCheck.checkResponse("我的工单列表：", response);
+                if (isPullDown) {
+                    groupsData.clear();
+                }
+                loadData(listWrapper.data.records);
+                mExpandableListView.setEmptyView(emptyView);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                mExpandableListView.onRefreshComplete();
+                HttpErrorCheck.checkError(error);
+            }
+        });
+
     }
 
     private void loadData(List<Worksheet> list) {
@@ -179,6 +218,8 @@ public class AssignableWorksheetFragment extends BaseFragment implements View.On
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }
+        adapter.notifyDataSetChanged();
+        expand();
     }
 
     @Override
