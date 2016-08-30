@@ -34,10 +34,9 @@
 
             <TextView
                 android:id="@+id/tv_time"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/dimen_8"
-                android:layout_weight="1"
                 android:gravity="center_vertical|left"
                 android:text="08-23 | 09-08截至"
                 android:textColor="@color/text99"
@@ -93,6 +92,16 @@
         android:textColor="@color/text33"
         android:textSize="@dimen/text_sp16"
         />
+
+    <Button
+        android:id="@+id/bt_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_45"
+        android:layout_margin="@dimen/margin_other_view"
+        android:background="@drawable/round_bg_shpe"
+        android:text="重做"
+        android:textColor="@color/white"
+        android:visibility="visible"/>
 
     <View
         android:layout_width="match_parent"
