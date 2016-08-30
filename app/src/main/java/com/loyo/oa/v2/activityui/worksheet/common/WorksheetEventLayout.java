@@ -37,7 +37,12 @@ public class WorksheetEventLayout extends LinearLayout {
 
     private void bindView(Context context) {
         View eventView = LayoutInflater.from(context).inflate(R.layout.item_worksheet_event, null, false);
-
+        iv_avatar = (RoundImageView) eventView.findViewById(R.id.iv_avatar);
+        iv_status = (RoundImageView) eventView.findViewById(R.id.iv_status);
+        iv_action = (RoundImageView) eventView.findViewById(R.id.iv_action);
+        tv_content = (TextView) eventView.findViewById(R.id.tv_content);
+        tv_name = (TextView) eventView.findViewById(R.id.tv_name);
+        tv_time = (TextView) eventView.findViewById(R.id.tv_time);
         this.addView(eventView);
     }
 }

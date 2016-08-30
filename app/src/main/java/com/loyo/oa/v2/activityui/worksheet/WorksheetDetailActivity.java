@@ -11,7 +11,14 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【 工单详情 】  页面
@@ -50,7 +57,24 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         ll_events = (LinearLayout) findViewById(R.id.ll_events);
         ll_worksheet_info.setOnClickListener(this);
         tv_title_1.setText("工单详情");
+        getData();
         loadData();
+    }
+
+    private void getData() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
+                getWorksheetDetail("", new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+
     }
 
     @Override
