@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
+import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
@@ -81,7 +81,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     /* Data */
     String clueId;
-    ClueDetail data;
+    ClueDetailWrapper data;
     private int clueStatus;
     private boolean isDelete = false, isAdd = false;
     private CustomerRegional regional = new CustomerRegional();
@@ -229,9 +229,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance()
                 .build(Config_project.API_URL_CUSTOMER())
                 .create(IClue.class)
-                .getClueDetail(clueId, new Callback<ClueDetail>() {
+                .getClueDetail(clueId, new Callback<ClueDetailWrapper>() {
                     @Override
-                    public void success(ClueDetail detail, Response response) {
+                    public void success(ClueDetailWrapper detail, Response response) {
                         HttpErrorCheck.checkResponse("线索详情：", response);
                         if (null == detail) {
                             Toast("没有获取数据");
