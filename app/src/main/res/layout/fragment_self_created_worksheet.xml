@@ -23,9 +23,10 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tv_tab1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="时间"/>
+                android:text="全部阶段"/>
 
             <ImageView
                 android:id="@+id/salemy_screen1_iv1"
@@ -53,9 +54,10 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tv_tab2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="状态"/>
+                android:text="全部类型"/>
 
             <ImageView
                 android:id="@+id/salemy_screen1_iv2"

@@ -15,12 +15,14 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
+import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddStep1Activity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
@@ -37,6 +39,7 @@ import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -56,11 +59,8 @@ import retrofit.client.Response;
 public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity implements View.OnClickListener {
 
 
-    private int statusIndex;  /*线索状态*/
-    private int sortIndex;    /*线索排序*/
-
-    private String field = "";
-    private String order = "";
+    private int statusIndex;  /* 工单状态Index */
+    private int typeIndex;    /* 工单类型Index */
 
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> typeData = new ArrayList<>();
@@ -69,6 +69,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
 
     private LinearLayout salemy_screen1, salemy_screen2;
     private ImageView salemy_screen1_iv1, salemy_screen1_iv2;
+    private TextView tv_tab1, tv_tab2;
     private WindowManager.LayoutParams windowParams;
     private Button btn_add;
     private ViewStub emptyView;
@@ -80,6 +81,40 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            switch (msg.what) {
+
+                 /*  状态 */
+                case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
+                {
+                    isPullDown = true;
+                    int newIndex =  (int) msg.getData().get("index");
+                    if (statusIndex != newIndex) {
+                        statusIndex = newIndex;
+                        page = 1;
+                        tv_tab1.setText(statusFilters.get(statusIndex).getName());
+                        showLoading("加载中...");
+                        getData();
+                    }
+                }
+                    break;
+
+                /* 类型 */
+                case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
+                {
+                    isPullDown = true;
+                    int newIndex =  (int) msg.getData().get("index");
+                    if (typeIndex != newIndex) {
+                        typeIndex = newIndex;
+                        page = 1;
+                        tv_tab2.setText(typeFilters.get(typeIndex).name);
+                        showLoading("加载中...");
+                        getData();
+                    }
+                }
+
+                    break;
+            }
+
         }
     };
 
@@ -111,6 +146,12 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
         salemy_screen2.setOnClickListener(this);
         salemy_screen1_iv1 = (ImageView) view.findViewById(R.id.salemy_screen1_iv1);
         salemy_screen1_iv2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
+        tv_tab1 = (TextView) view.findViewById(R.id.tv_tab1);
+        tv_tab2 = (TextView) view.findViewById(R.id.tv_tab2);
+
+        tv_tab1.setText(statusFilters.get(statusIndex).getName());
+        tv_tab2.setText(typeFilters.get(typeIndex).name);
+
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
 
         mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
@@ -141,9 +182,8 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
 
         Utils.btnHideForListView(expandableListView,btn_add);
 
+        showLoading("加载中...");
         getData();
-        adapter.notifyDataSetChanged();
-        expand();
     }
 
     private void initFilters() {
@@ -163,6 +203,9 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
             typeFilters.addAll(types);
         }
         setFilterData();
+
+        statusIndex = 0;
+        typeIndex = 0;
     }
 
     private void setFilterData() {
@@ -201,6 +244,14 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
         map.put("pageIndex", page);
         map.put("pageSize", 15);
         map.put("type", 1/* 我创建的 */);
+        if (statusIndex > 0 && statusIndex < statusFilters.size()) {
+            map.put("status", statusFilters.get(statusIndex).code);
+        }
+
+        if (typeIndex > 0 && typeIndex < typeFilters.size()) {
+            map.put("templateId", typeFilters.get(typeIndex).id);
+        }
+
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IWorksheet.class).getMyWorksheetList(map, new Callback<WorksheetListWrapper>() {
             @Override
@@ -264,7 +315,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
             //状态
             case R.id.salemy_screen2: {
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, typeData,
-                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
+                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, typeIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen2);
                 openPopWindow(salemy_screen1_iv2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
