@@ -5,6 +5,8 @@ package com.loyo.oa.v2.point;
  */
 
 import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetTemplate;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetTemplateListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorkSheetWrapper;
 import com.loyo.oa.v2.beans.BaseBean;
 
@@ -33,7 +35,7 @@ public interface IWorkSheet {
      *
      */
     @GET("/worksheets/self")
-    void getMyWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<WorkSheetListWrapper> callback);
+    void getMyWorkSheetlist(@QueryMap HashMap<String, Object> map, Callback<WorkSheetListWrapper> callback);
 
     /**
      * 团队工单列表
@@ -50,7 +52,7 @@ public interface IWorkSheet {
      *
      */
     @GET("/worksheets/self")
-    void getTeamWorksheetlist(@QueryMap HashMap<String, Object> map, Callback<WorkSheetListWrapper> callback);
+    void getTeamWorkSheetList(@QueryMap HashMap<String, Object> map, Callback<WorkSheetListWrapper> callback);
 
 
     /**
@@ -69,5 +71,14 @@ public interface IWorkSheet {
      * @param callback
      */
     @POST("/worksheets")
-    void addWorksheet(@Body Map<String, Object> body, Callback<WorkSheetWrapper> callback);
+    void addWorkSheet(@Body Map<String, Object> body, Callback<WorkSheetWrapper> callback);
+
+    /**
+     * 工单类型列表
+     *
+     * 参数 无
+     *
+     */
+    @GET("/worksheet/setting")
+    void getWorkSheetTypesList(Callback<WorkSheetTemplateListWrapper> callback);
 }
