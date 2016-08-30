@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activityui.clue.bean.ClueDetail;
+import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -15,7 +15,6 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
-import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 /**
@@ -52,14 +51,14 @@ public interface IClue {
      * @param callback
      */
     @POST("/salesleads")
-    void addClue(@Body Map<String, Object> body, Callback<ClueDetail> callback);
+    void addClue(@Body Map<String, Object> body, Callback<ClueDetailWrapper> callback);
 
 
     /**
      * 获取 线索详情
      */
     @GET("/salesleads/mobile/{id}")
-    void getClueDetail(@Path("id") String id, Callback<ClueDetail> callback);
+    void getClueDetail(@Path("id") String id, Callback<ClueDetailWrapper> callback);
 
     /**
      * 编辑 线索
