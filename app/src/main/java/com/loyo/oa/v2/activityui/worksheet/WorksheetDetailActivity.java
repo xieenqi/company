@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
@@ -26,7 +25,6 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

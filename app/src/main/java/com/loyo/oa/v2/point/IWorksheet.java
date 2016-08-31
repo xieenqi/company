@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.point;
 
+import android.telecom.Call;
+
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
@@ -112,5 +114,12 @@ public interface IWorksheet {
      */
     @GET("/order/work/list")
     void getWorksheetOrdersList(@QueryMap HashMap<String, Object> map, Callback<WorksheetOrderListWrapper> callback);
+
+    /**
+     * 提交事件处理信息
+     * */
+    @PUT("/worksheet/event/submit/{id}")
+    void setEventSubmit(@Path("id") String id,@Body HashMap<String,Object> map,Callback<Object> callback);
+
 
 }
