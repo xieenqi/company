@@ -26,6 +26,7 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
@@ -293,7 +294,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
 
                 mIntent = new Intent();
                 mIntent.setClass(getActivity(), WorksheetAddActivity.class);
-                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                startActivityForResult(mIntent, ExtraAndResult.REQUEST_CODE);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
                 break;
@@ -356,11 +357,19 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (resultCode) {
+        switch (requestCode) {
             //新建 删除 编辑 转移客户,回调函数
             case ExtraAndResult.REQUEST_CODE:
-                isPullDown = true;
-                page = 1;
+
+                if (data != null) {
+                    boolean needRefresh = data.getBooleanExtra(ExtraAndResult.EXTRA_BOOLEAN, false);
+                    if (needRefresh) {
+                        isPullDown = true;
+                        page = 1;
+                        getData();
+                    }
+                }
+
                 break;
         }
     }

@@ -138,6 +138,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
+        btn_add.setVisibility(View.GONE);
         salemy_screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
         salemy_screen2 = (LinearLayout) view.findViewById(R.id.salemy_screen2);
         salemy_screen1.setOnClickListener(this);
@@ -222,9 +223,16 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new ResponsableWorksheetsAdapter(mActivity, groupsData);
+            adapter = new ResponsableWorksheetsAdapter(mActivity, this, groupsData);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
+    }
+
+    public void refresh() {
+        isPullDown = true;
+        page = 1;
+        showLoading("");
+        getData();
     }
 
 

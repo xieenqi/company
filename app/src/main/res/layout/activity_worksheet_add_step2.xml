@@ -70,7 +70,7 @@
                     android:layout_height="0px"
                     android:layout_weight="1"
                     android:gravity="left|top"
-                    android:hint="请输入工单要求，选填"
+                    android:hint="请输入工单内容，选填"
                     android:minHeight="200dp"
                     android:paddingBottom="@dimen/dimen_10"
                     android:paddingLeft="0dp"

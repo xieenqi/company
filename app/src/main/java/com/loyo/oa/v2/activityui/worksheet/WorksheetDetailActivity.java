@@ -151,8 +151,10 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private void loadData() {
         if (MainApp.user.id.equals(mData.data.dispatcher.getId()))
             isAssignment = true;
-        if (MainApp.user.id.equals(mData.data.creator.getId()))
+        if (MainApp.user.id.equals(mData.data.creator.getId())) {
             isCreated = true;
+            img_title_right.setVisibility(View.INVISIBLE);
+        }
         if (ll_events.getChildCount() > 0) {
             ll_events.removeAllViews();
         }
