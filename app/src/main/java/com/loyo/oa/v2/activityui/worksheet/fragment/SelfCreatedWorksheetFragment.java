@@ -80,10 +80,9 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
             switch (msg.what) {
 
                  /*  状态 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
-                {
+                case TeamSaleFragment.SALETEAM_SCREEN_TAG2: {
 
-                    int newIndex =  (int) msg.getData().get("index");
+                    int newIndex = (int) msg.getData().get("index");
                     if (statusIndex != newIndex) {
                         statusIndex = newIndex;
                         isPullDown = true;
@@ -93,13 +92,12 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
                         getData();
                     }
                 }
-                    break;
+                break;
 
                 /* 类型 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
-                {
+                case TeamSaleFragment.SALETEAM_SCREEN_TAG3: {
 
-                    int newIndex =  (int) msg.getData().get("index");
+                    int newIndex = (int) msg.getData().get("index");
                     if (typeIndex != newIndex) {
                         typeIndex = newIndex;
                         isPullDown = true;
@@ -110,7 +108,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
                     }
                 }
 
-                    break;
+                break;
             }
 
         }
@@ -166,8 +164,12 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
                 new ExpandableListView.OnChildClickListener() {
                     @Override
                     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                        Worksheet ws = (Worksheet) adapter.getChild(groupPosition, childPosition);
+                        String wsId = ws.id != null ? ws.id:"";
+
                         mIntent = new Intent();
-                        mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, wsId);
                         mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
                         startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -178,7 +180,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
         initAdapter();
         expand();
 
-        Utils.btnHideForListView(expandableListView,btn_add);
+        Utils.btnHideForListView(expandableListView, btn_add);
 
         //showLoading("加载中...");
         getData();
@@ -230,7 +232,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
 
 
     @Override
-    protected  void getData() {
+    protected void getData() {
 
 //        * templateId  工单类型id
 //        * status      1:待分派 2:处理中 3:待审核 4:已完成 5:意外中止
@@ -277,6 +279,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }
+        groupsData.sort();
         adapter.notifyDataSetChanged();
         expand();
     }

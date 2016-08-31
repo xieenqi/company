@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -72,10 +73,10 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private void getIntentData() {
         Intent intent = getIntent();
         worksheetId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
-//        if (TextUtils.isEmpty(worksheetId)) {
-//            Toast("参数不全");
-//            onBackPressed();
-//        }
+        if (TextUtils.isEmpty(worksheetId)) {
+            Toast("参数不全");
+            onBackPressed();
+        }
     }
 
     private void initView() {
@@ -100,8 +101,9 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void getData() {
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                getWorksheetDetail("57c52813b0207a0615000001", new Callback<BaseBeanT<WorksheetDetial>>() {
+                getWorksheetDetail(worksheetId, new Callback<BaseBeanT<WorksheetDetial>>() {
                     @Override
                     public void success(BaseBeanT<WorksheetDetial> result, Response response) {
                         HttpErrorCheck.checkResponse("工单详情：", response);
