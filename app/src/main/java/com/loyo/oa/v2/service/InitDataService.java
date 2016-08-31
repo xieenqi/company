@@ -92,7 +92,7 @@ public class InitDataService extends IntentService {
 
         // TODO: 建立单独的获取配置Service
         /* 获取配置数据 */
-        WorksheetConfig.getWorksheetTypes();
+        WorksheetConfig.fetchWorksheetTypes();
     }
 
     /**
