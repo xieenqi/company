@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * 新建跟进动态
  */
-public class WorksheetAddActivity extends FragmentActivity implements View.OnClickListener {
+public class WorksheetAddActivity extends BaseFragmentActivity implements View.OnClickListener {
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
 

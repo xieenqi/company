@@ -93,10 +93,10 @@ public class GroupsData {
             int anotherWeight = another.groupKey.compareWeight();
 
             if (weight > anotherWeight) {
-                return -1;
+                return 1;
             }
             else if (weight < anotherWeight) {
-                return 1;
+                return -1;
             }
             return 0;
         }

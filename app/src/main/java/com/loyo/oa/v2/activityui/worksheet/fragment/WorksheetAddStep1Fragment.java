@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -14,7 +15,9 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
+import com.loyo.oa.v2.activityui.worksheet.WSOrderSelectActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -28,7 +31,7 @@ import java.util.ArrayList;
 public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnClickListener {
 
     private View mView;
-    private ViewGroup img_title_left, img_title_right, ll_worksheet_type;
+    private ViewGroup img_title_left, img_title_right, ll_order, ll_worksheet_type;
     TextView tv_title_1, tv_worksheet_type;
 
     WorksheetTemplate selectedType;
@@ -55,6 +58,9 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
 
         ll_worksheet_type = (ViewGroup) mView.findViewById(R.id.ll_worksheet_type);
         ll_worksheet_type.setOnClickListener(this);
+
+        ll_order = (ViewGroup) mView.findViewById(R.id.ll_order);
+        ll_order.setOnClickListener(this);
 
 
         img_title_right = (ViewGroup) mView.findViewById(R.id.img_title_right);
@@ -85,6 +91,9 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
             case R.id.img_title_right:
                 ((WorksheetAddActivity)getActivity()).nextStep();
                 break;
+            case R.id.ll_order:
+                selectOrder();
+                break;
             case R.id.ll_worksheet_type:
                 selectType();
                 break;
@@ -114,5 +123,23 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
                 tv_worksheet_type.setText(value);
             }
         });
+    }
+
+    public void selectOrder() {
+        Intent mIntent = new Intent();
+        mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+        mIntent.setClass(getActivity(), WSOrderSelectActivity.class);
+        startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (resultCode) {
+            //新建 删除 编辑 转移客户,回调函数
+            case ExtraAndResult.REQUEST_CODE:
+                break;
+        }
     }
 }
