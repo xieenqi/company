@@ -108,9 +108,28 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
      */
     private void changeChild(int index) {
         if (index != mIndex && fragments.size() > 0) {
+
+            boolean push = true;
+            if (mIndex > index) {
+                push = false;
+            }
+
             mIndex = index;
             try {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                if (push) {
+                    fragmentTransaction.setCustomAnimations(
+                            R.anim.enter_righttoleft, R.anim.exit_righttoleft,
+                            R.anim.enter_righttoleft, R.anim.exit_lefttoright
+                    );
+                }
+                else {
+                    fragmentTransaction.setCustomAnimations(
+                            R.anim.enter_lefttoright, R.anim.exit_lefttoright,
+                            R.anim.enter_righttoleft, R.anim.exit_lefttoright
+                    );
+                }
                 fragmentTransaction.replace(R.id.fl_order_container, fragments.get(index));
                 fragmentTransaction.commit();
             } catch (IllegalStateException e) {
