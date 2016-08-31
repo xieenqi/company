@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
+import com.loyo.oa.v2.activityui.worksheet.common.EventHandleInfoList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -30,7 +31,7 @@ import retrofit.client.Response;
  * Created by xeq on 16/8/30.
  */
 public class EventDetialActivity extends BaseActivity implements View.OnClickListener {
-    private LinearLayout ll_back;
+    private LinearLayout ll_back, ll_handleInfoList;
     private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status;
     private Button bt_confirm;
     private Bundle mBundle;
@@ -67,6 +68,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_type = (TextView) findViewById(R.id.tv_type);
         tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
         tv_status = (TextView) findViewById(R.id.tv_status);
+        ll_handleInfoList = (LinearLayout) findViewById(R.id.ll_handleInfoList);
         getData();
     }
 
@@ -80,7 +82,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
 
             case R.id.bt_confirm:
                 mBundle = new Bundle();
-                mBundle.putString(ExtraAndResult.CC_USER_ID, "57c63f25526f1552f2000003" /*事件id*/);
+                mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
                 mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x10 /*提交完成:0x01,打回重做0x02*/);
                 app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 break;
@@ -114,6 +116,9 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "流程触发" : "定时触发"));
         tv_worksheet.setText("所属工单：" + mData.title);
         setStatus();
+        for (int i = 0; i < mData.handleInfoList.size(); i++) {
+            ll_handleInfoList.addView(new EventHandleInfoList(this));
+        }
     }
 
     private void setStatus() {

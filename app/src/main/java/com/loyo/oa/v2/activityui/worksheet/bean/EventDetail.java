@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * 工单 事件详情
@@ -20,6 +21,6 @@ public class EventDetail implements Serializable {
     public int daysDeadline;
     public int status;
     public long updatedAt;
-//    public List<Object> handleInfoList;
+    public ArrayList<EventHandleInfoItem> handleInfoList;
 
 }

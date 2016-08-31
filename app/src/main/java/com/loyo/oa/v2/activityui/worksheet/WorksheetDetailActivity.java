@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,7 +44,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private LinearLayout ll_events;
     private TextView tv_title_1, tv_title, tv_status, tv_assignment, tv_complete_number, tv_setting;
     private RelativeLayout img_title_right;
-    private Button bt_confirm;
     private String worksheetId, eventId;
     private BaseBeanT<WorksheetDetial> mData;
     private boolean isAssignment, isCreated;//分派人 ，创建人
@@ -105,8 +103,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_complete_number = (TextView) findViewById(R.id.tv_complete_number);
         tv_setting = (TextView) findViewById(R.id.tv_setting);
         tv_setting.setOnClickListener(this);
-        bt_confirm = (Button) findViewById(R.id.bt_confirm);
-        bt_confirm.setOnClickListener(this);
         getData();
     }
 

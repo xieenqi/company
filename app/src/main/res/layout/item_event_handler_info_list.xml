@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_other_view"
+        android:orientation="horizontal">
+
+        <com.loyo.oa.v2.customview.RoundImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dimen_40"
+            android:layout_height="@dimen/dimen_40"
+            android:src="@drawable/img_default_user"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_8"
+                android:layout_marginRight="@dimen/dimen_8"
+                android:gravity="center_vertical|left"
+                android:text="08-23 | 09-08截至"
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp11"/>
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top"
+                android:padding="@dimen/dimen_4"
+                android:text="name"
+                android:textColor="@color/text33"
+                android:textSize="15sp"/>
+
+            <com.loyo.oa.v2.customview.CustomerListView
+                android:id="@+id/lv_listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_other_view"
+                android:layout_marginRight="@dimen/margin_other_view"
+                android:listSelector="@android:color/transparent"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <include layout="@layout/include_solid_line_left"/>
+</LinearLayout>
