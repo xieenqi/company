@@ -80,10 +80,9 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
             switch (msg.what) {
 
                  /*  状态 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
-                {
+                case TeamSaleFragment.SALETEAM_SCREEN_TAG2: {
 
-                    int newIndex =  (int) msg.getData().get("index");
+                    int newIndex = (int) msg.getData().get("index");
                     if (statusIndex != newIndex) {
                         statusIndex = newIndex;
                         isPullDown = true;
@@ -93,13 +92,12 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
                         getData();
                     }
                 }
-                    break;
+                break;
 
                 /* 类型 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
-                {
+                case TeamSaleFragment.SALETEAM_SCREEN_TAG3: {
 
-                    int newIndex =  (int) msg.getData().get("index");
+                    int newIndex = (int) msg.getData().get("index");
                     if (typeIndex != newIndex) {
                         typeIndex = newIndex;
                         isPullDown = true;
@@ -110,7 +108,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
                     }
                 }
 
-                    break;
+                break;
             }
 
         }
@@ -182,7 +180,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
         initAdapter();
         expand();
 
-        Utils.btnHideForListView(expandableListView,btn_add);
+        Utils.btnHideForListView(expandableListView, btn_add);
 
         //showLoading("加载中...");
         getData();
@@ -234,7 +232,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
 
 
     @Override
-    protected  void getData() {
+    protected void getData() {
 
 //        * templateId  工单类型id
 //        * status      1:待分派 2:处理中 3:待审核 4:已完成 5:意外中止
