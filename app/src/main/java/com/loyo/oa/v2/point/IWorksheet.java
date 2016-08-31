@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
@@ -100,8 +99,14 @@ public interface IWorksheet {
     /**
      * 设置事件 负责人
      */
-    @PUT("worksheet/event/responsor/{id}")
+    @PUT("/worksheet/event/responsor/{id}")
     void setEventPerson(@Path("id") String id, @Body Map<String, Object> body, Callback<Object> callback);
+
+    /**
+     * 设置所有事件 批量设置负责人
+     */
+    @PUT("/worksheet/event/responsor")
+    void setAllEventPerson(@Body Map<String, Object> body, Callback<Object> callback);
 
     /**
      * 订单列表
