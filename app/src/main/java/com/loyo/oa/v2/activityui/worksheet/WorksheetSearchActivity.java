@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,11 +22,22 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.activityui.worksheet.adapter.BaseGroupsDataAdapter;
+import com.loyo.oa.v2.activityui.worksheet.adapter.ResponsableWorksheetsAdapter;
+import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IClue;
+import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -33,42 +45,43 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【线索搜索】
- * <p/>
- * Create by yyy on 16/08/23
+ * 【工单搜索】
  */
 
-public class WorksheetSearchActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback<ClueList> {
+public class WorksheetSearchActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
 
-
-    private String strSearch;
     private EditText edt_search;
     private ImageView iv_clean;
-    private PullToRefreshListView expandableListView_search;
-    private ArrayList<ClueListItem> listData = new ArrayList<>();
-    private CommonSearchAdapter adapter;
-    private Bundle mBundle;
-    private LayoutInflater mInflater;
+    private PullToRefreshExpandableListView expandableListView;
     private ViewStub emptyView;
 
-    private int fromPage;
+    private WorksheetListType searchType;
     private int page = 1;
     private boolean isPullDown = true;
+    private Bundle mBundle;
+    private String strSearch;
+    protected GroupsData groupsData;
 
-    private Intent mIntent;
+    private BaseGroupsDataAdapter adapter;
+
+    private LayoutInflater mInflater;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_search);
+        setContentView(R.layout.activity_worksheet_search);
+        groupsData = new GroupsData();
         initView();
+
     }
 
     /**
@@ -76,7 +89,7 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
      */
     void initView() {
         mBundle = getIntent().getExtras();
-        fromPage = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
+        searchType = (WorksheetListType) mBundle.getSerializable(ExtraAndResult.EXTRA_TYPE);
         mInflater = LayoutInflater.from(this);
         emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
@@ -122,23 +135,51 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
             }
         });
         edt_search.requestFocus();
-        expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
-        expandableListView_search.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-        expandableListView_search.setOnRefreshListener(this);
 
-        ListView expandableListView = expandableListView_search.getRefreshableView();
-        adapter = new CommonSearchAdapter();
+        expandableListView = (PullToRefreshExpandableListView)findViewById(R.id.expandableListView);
+        expandableListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        expandableListView.setOnRefreshListener(this);
         expandableListView.setEmptyView(emptyView);
-        expandableListView.setAdapter(adapter);
 
-        /**列表监听器*/
-        expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ExpandableListView innerListView = expandableListView.getRefreshableView();
+        if (searchType != WorksheetListType.RESPONSABLE) {
+            adapter = new WorksheetListAdapter(this, groupsData);
+        }
+        else {
+            adapter = new ResponsableWorksheetsAdapter(this, groupsData);
+        }
+
+        innerListView.setAdapter(adapter);
+        innerListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
-                mIntent.putExtra(ExtraAndResult.EXTRA_ID, listData.get(position - 1).id);
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
+        innerListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                Intent mIntent = new Intent(getApplicationContext(), WorksheetDetailActivity.class);
+
+                String wsId = null;
+                if (searchType == WorksheetListType.RESPONSABLE) {
+                    WorksheetEvent wse =(WorksheetEvent) groupsData.get(groupPosition, childPosition - 1);
+                    wsId = wse.wsId != null? wse.wsId:wse.workSheetId;
+                }
+                else {
+                    Worksheet ws =(Worksheet) groupsData.get(groupPosition, childPosition - 1);
+                    wsId = ws.id;
+                }
+                if (wsId == null) {
+                    wsId = "";
+                }
+
+                mIntent.putExtra(ExtraAndResult.EXTRA_ID, wsId);
                 startActivity(mIntent);
                 hideInputKeyboard(edt_search);
+
+                return true;
             }
         });
     }
@@ -151,45 +192,116 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
         getData();
     }
 
-    /**
-     * 我的/团队搜索
-     */
-    private void getData() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 15);
-        map.put("keyword", strSearch);
-        if(fromPage == 1){
+    protected  void getData() {
+
+        if (searchType == WorksheetListType.SELF_CREATED || searchType == WorksheetListType.ASSIGNABLE) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("pageIndex", page);
+            map.put("pageSize", 15);
+            map.put("type", searchType == WorksheetListType.SELF_CREATED
+                    ?1/* 我创建的 */ :2/* 我分派的 */);
+            map.put("keyword", strSearch);
+
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(IClue.class).getMyCluelist(map, this);
-        }else if(fromPage == 2){
+                    create(IWorksheet.class).getMyWorksheetList(map, new Callback<WorksheetListWrapper>() {
+                @Override
+                public void success(WorksheetListWrapper listWrapper, Response response) {
+                    expandableListView.onRefreshComplete();
+                    HttpErrorCheck.checkResponse("我的工单列表：", response);
+                    if (isPullDown) {
+                        groupsData.clear();
+                    }
+                    loadData(listWrapper.data.records);
+                    expandableListView.setEmptyView(emptyView);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    expandableListView.onRefreshComplete();
+                    HttpErrorCheck.checkError(error);
+                }
+            });
+        }
+        else if (searchType == WorksheetListType.RESPONSABLE){
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("pageIndex", page);
+            map.put("pageSize", 15);
+            map.put("keyword", strSearch);
+
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(IClue.class).getTeamCluelist(map, this);
+                    create(IWorksheet.class).getResponsableWorksheetList(map, new Callback<WorksheetEventListWrapper>() {
+                @Override
+                public void success(WorksheetEventListWrapper listWrapper, Response response) {
+                    expandableListView.onRefreshComplete();
+                    HttpErrorCheck.checkResponse("我负责的工单列表：", response);
+                    if (isPullDown) {
+                        groupsData.clear();
+                    }
+                    loadWorksheetEvents(listWrapper.data.records);
+                    expandableListView.setEmptyView(emptyView);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    expandableListView.onRefreshComplete();
+                    HttpErrorCheck.checkError(error);
+                }
+            });
+
+        }
+        else if (searchType == WorksheetListType.TEAM){
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("pageIndex", page);
+            map.put("pageSize", 15);
+            map.put("keyword", strSearch);
+
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                    create(IWorksheet.class).getTeamWorksheetList(map, new Callback<WorksheetListWrapper>() {
+                @Override
+                public void success(WorksheetListWrapper listWrapper, Response response) {
+                    expandableListView.onRefreshComplete();
+                    HttpErrorCheck.checkResponse("团队工单列表：", response);
+                    if (isPullDown) {
+                        groupsData.clear();
+                    }
+                    loadData(listWrapper.data.records);
+                    expandableListView.setEmptyView(emptyView);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    expandableListView.onRefreshComplete();
+                    HttpErrorCheck.checkError(error);
+                }
+            });
+        }
+
+
+    }
+
+    private void loadData(List<Worksheet> list) {
+        Iterator<Worksheet> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            groupsData.addItem(iterator.next());
+        }
+        adapter.notifyDataSetChanged();
+        expand();
+    }
+
+    private void loadWorksheetEvents(List<WorksheetEvent> list) {
+        Iterator<WorksheetEvent> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            groupsData.addItem(iterator.next());
+        }
+        adapter.notifyDataSetChanged();
+        expand();
+    }
+
+    protected void expand() {
+        for (int i = 0; i < groupsData.size(); i++) {
+            expandableListView.getRefreshableView().expandGroup(i, false);//true 自动滑到底部
         }
     }
-
-    @Override
-    public void success(ClueList clueList, Response response) {
-        expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkResponse("我的线索列表：", response);
-        try {
-            if (!isPullDown) {
-                listData.addAll(clueList.data.records);
-            } else {
-                listData = clueList.data.records;
-            }
-            adapter.setAdapter();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void failure(RetrofitError error) {
-        expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkError(error);
-    }
-
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
@@ -207,62 +319,6 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
 
     protected void changeAdapter() {
         adapter.notifyDataSetChanged();
-    }
-
-    public class CommonSearchAdapter extends BaseAdapter {
-
-
-        public void setAdapter() {
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return listData == null ? 0 : listData.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return 0;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup viewGroup) {
-            ClueListItem clueListItem = listData.get(position);
-            Holder holder = null;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(WorksheetSearchActivity.this).inflate(R.layout.item_teamclue, null);
-                holder = new Holder();
-                holder.tv_company_name = (TextView) convertView.findViewById(R.id.tv_company_name);
-                holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
-                holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-                holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-                convertView.setTag(holder);
-            } else {
-                holder = (Holder) convertView.getTag();
-            }
-
-            holder.tv_name.setText(clueListItem.name);
-            holder.tv_company_name.setText(clueListItem.companyName);
-            holder.tv_customer.setText(clueListItem.name);
-            if(clueListItem.lastActAt != 0){
-                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd HH:mm"));
-            }
-
-            return convertView;
-        }
-
-        class Holder{
-            TextView tv_company_name; /* 公司名称 */
-            TextView tv_customer;     /* 负责人 */
-            TextView tv_time;         /* 跟进时间 */
-            TextView tv_name;         /* 客户名称 */
-        }
     }
 
     @Override

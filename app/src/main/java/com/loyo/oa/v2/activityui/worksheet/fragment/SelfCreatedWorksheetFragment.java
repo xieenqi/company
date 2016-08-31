@@ -21,7 +21,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
-import com.loyo.oa.v2.activityui.worksheet.WorksheetAddStep1Activity;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
@@ -52,7 +52,7 @@ import retrofit.client.Response;
 /**
  * 【我创建的工单】
  */
-public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity implements View.OnClickListener {
+public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment implements View.OnClickListener {
 
 
     private int statusIndex;  /* 工单状态Index */
@@ -178,7 +178,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
 
         Utils.btnHideForListView(expandableListView, btn_add);
 
-        showLoading("加载中...");
+        //showLoading("加载中...");
         getData();
     }
 
@@ -287,7 +287,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
             case R.id.btn_add:
 
                 mIntent = new Intent();
-                mIntent.setClass(getActivity(), WorksheetAddStep1Activity.class);
+                mIntent.setClass(getActivity(), WorksheetAddActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
