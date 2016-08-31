@@ -73,9 +73,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layout_solid"
+                android:visibility="gone"
                 android:layout_marginBottom="@dimen/dimen_50"
                 android:orientation="horizontal"
                 android:background="#F3F3F3"
@@ -85,11 +87,12 @@
                 >
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dimen_50"
+                    android:layout_height="@dimen/dimen_50"
                     android:background="@drawable/icon_edit_location" />
 
                 <LinearLayout
+                    android:id="@+id/layout_address_info"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="0.8"
@@ -107,11 +110,15 @@
                         />
 
                     <TextView
+                        android:id="@+id/tv_address"
                         android:layout_marginTop="@dimen/dimen_4"
                         android:layout_marginLeft="@dimen/dimen_10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="四川省成都市金牛区"
+                        android:maxLines="20"
+                        android:ellipsize="end"
+                        android:singleLine="true"
                         android:textSize="@dimen/text_sp11"
                         android:textColor="@color/text66"
                         />
