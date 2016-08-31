@@ -166,8 +166,11 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                 new ExpandableListView.OnChildClickListener() {
                     @Override
                     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                        Worksheet ws = (Worksheet) adapter.getChild(groupPosition, childPosition);
+                        String wsId = ws.id != null ? ws.id:"";
+
                         mIntent = new Intent();
-                        mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, wsId);
                         mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
                         startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -276,6 +279,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }
+        groupsData.sort();
         adapter.notifyDataSetChanged();
         expand();
     }
