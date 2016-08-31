@@ -9,7 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorksheet;
@@ -29,10 +31,11 @@ import retrofit.client.Response;
  */
 public class EventDetialActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout ll_back;
-    private TextView tv_title;
+    private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status;
     private Button bt_confirm;
     private Bundle mBundle;
     private String eventId, worksheetId;
+    private EventDetail mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,11 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         bt_confirm.setOnClickListener(this);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_title.setText("事件详情");
+        tv_content = (TextView) findViewById(R.id.tv_content);
+        tv_responsor = (TextView) findViewById(R.id.tv_responsor);
+        tv_type = (TextView) findViewById(R.id.tv_type);
+        tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
+        tv_status = (TextView) findViewById(R.id.tv_status);
         getData();
     }
 
@@ -84,10 +92,12 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         HashMap<String, Object> map = new HashMap<>();
         map.put("wsId", worksheetId);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                getEventDetail(eventId, map, new Callback<Object>() {
+                getEventDetail(eventId, map, new Callback<BaseBeanT<EventDetail>>() {
                     @Override
-                    public void success(Object o, Response response) {
+                    public void success(BaseBeanT<EventDetail> o, Response response) {
                         HttpErrorCheck.checkResponse("事件详细：", response);
+                        mData = o.data;
+                        bindData();
                     }
 
                     @Override
@@ -98,4 +108,34 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
 
     }
 
+    private void bindData() {
+        tv_content.setText(mData.content);
+        tv_responsor.setText("负责人：" + mData.responsorName);
+        tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "流程触发" : "定时触发"));
+        tv_worksheet.setText("所属工单：" + mData.title);
+        setStatus();
+    }
+
+    private void setStatus() {
+        if (mData.status != 0) {
+            String info = "";
+            int bj = R.drawable.retange_gray;
+            switch (mData.status) {
+                case 1://待处理
+                    info = "待处理";
+                    bj = R.drawable.retange_purple;
+                    break;
+                case 2://未触发
+                    info = "未触发";
+                    bj = R.drawable.retange_gray;
+                    break;
+                case 3://已完成
+                    info = "已完成";
+                    bj = R.drawable.retange_gray;
+                    break;
+            }
+            tv_status.setText(info);
+            tv_status.setBackgroundResource(bj);
+        }
+    }
 }

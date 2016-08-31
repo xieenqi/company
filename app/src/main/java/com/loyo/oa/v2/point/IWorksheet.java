@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
@@ -128,5 +129,5 @@ public interface IWorksheet {
      * 获取 工单 事件详情  /worksheet/event/mobile/:id?wsId=工单id
      */
     @GET("/worksheet/event/mobile/{id}")
-    void getEventDetail(@Path("id") String id, @QueryMap HashMap<String, Object> map, Callback<Object> callback);
+    void getEventDetail(@Path("id") String id, @QueryMap HashMap<String, Object> map, Callback<BaseBeanT<EventDetail>> callback);
 }

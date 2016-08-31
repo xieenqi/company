@@ -98,7 +98,8 @@ public class WorksheetEventLayout extends LinearLayout {
         }
         if (isCreated)//创建者没有操作权限
             iv_action.setVisibility(INVISIBLE);
-        ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
+        if (null != data.responsor)
+            ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
         eventView.setOnTouchListener(Global.GetTouch());
         eventView.setOnClickListener(new OnClickListener() {
             @Override
