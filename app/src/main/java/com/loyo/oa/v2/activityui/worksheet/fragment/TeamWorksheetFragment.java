@@ -138,6 +138,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
+        btn_add.setVisibility(View.GONE);
         salemy_screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
         salemy_screen2 = (LinearLayout) view.findViewById(R.id.salemy_screen2);
         salemy_screen1.setOnClickListener(this);
@@ -293,7 +294,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
 
                 mIntent = new Intent();
                 mIntent.setClass(getActivity(), WorksheetAddActivity.class);
-                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+                startActivityForResult(mIntent, ExtraAndResult.REQUEST_CODE);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
                 break;

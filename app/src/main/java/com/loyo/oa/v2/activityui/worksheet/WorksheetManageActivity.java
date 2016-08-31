@@ -157,8 +157,10 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
                         break;
                     case 1:
                         type = WorksheetListType.ASSIGNABLE;
+                        break;
                     case 2:
                         type = WorksheetListType.RESPONSABLE;
+                        break;
                     case 3:
                         type = WorksheetListType.TEAM;
                         break;

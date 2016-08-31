@@ -81,7 +81,6 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
         setContentView(R.layout.activity_worksheet_search);
         groupsData = new GroupsData();
         initView();
-
     }
 
     /**
@@ -164,11 +163,11 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
 
                 String wsId = null;
                 if (searchType == WorksheetListType.RESPONSABLE) {
-                    WorksheetEvent wse =(WorksheetEvent) groupsData.get(groupPosition, childPosition - 1);
+                    WorksheetEvent wse =(WorksheetEvent) groupsData.get(groupPosition, childPosition);
                     wsId = wse.wsId != null? wse.wsId:wse.workSheetId;
                 }
                 else {
-                    Worksheet ws =(Worksheet) groupsData.get(groupPosition, childPosition - 1);
+                    Worksheet ws =(Worksheet) groupsData.get(groupPosition, childPosition);
                     wsId = ws.id;
                 }
                 if (wsId == null) {

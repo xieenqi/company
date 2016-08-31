@@ -16,6 +16,7 @@ public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
     public String workSheetId;
     public String wsId;
     public String workSheetName;
+    public String title;
 
     public String templateId;
     public String templateName;
@@ -27,6 +28,7 @@ public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
     public String responsor;
     public long startTime;
     public long endTime;
+    public long updatedAt;
     public int daysDeadline;
     public int daysLater;
     public WorksheetEventStatus status;
