@@ -34,6 +34,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -150,6 +151,11 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
         innerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                WorksheetOrder order = (WorksheetOrder) adapter.getItem(position);
+                Intent intent = new Intent();
+                intent.putExtra(ExtraAndResult.EXTRA_OBJ, order);
+                app.finishActivity(WSOrderSelectActivity.this, MainApp.ENTER_TYPE_LEFT, 0, intent);
                 hideInputKeyboard(edt_search);
             }
         });
@@ -191,6 +197,20 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
     }
 
     private void loadData(List<WorksheetOrder> list) {
+
+        if (listData == null) {
+            listData = new ArrayList<WorksheetOrder>();
+        }
+
+        if (isPullDown) {
+            listData.clear();
+        }
+
+        if (list != null) {
+            listData.addAll(list);
+        }
+
+        listData.addAll(WorksheetOrder.testData());
     }
 
     @Override
@@ -232,7 +252,7 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
 
         @Override
         public Object getItem(int position) {
-            return 0;
+            return listData.get(position);
         }
 
         @Override
