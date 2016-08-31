@@ -4,13 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
+import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 
 import java.util.Date;
 
@@ -34,7 +37,15 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             holder.tv_worksheet = (TextView) convertView.findViewById(R.id.tv_worksheet);
             holder.tv_deadline = (TextView) convertView.findViewById(R.id.tv_deadline);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-            holder.tv_progress = (TextView) convertView.findViewById(R.id.tv_progress);
+            holder.iv_action = (ImageView) convertView.findViewById(R.id.iv_action);
+            final ViewHolder holderFinal = holder;
+            holder.iv_action.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WorksheetEvent wse = holderFinal.wse;
+
+                }
+            });
             convertView.setTag(holder);
 
         }
@@ -54,19 +65,23 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
         TextView tv_deadline;
 
         TextView tv_time;
-        TextView tv_progress;
+        ImageView iv_action;
+
+        WorksheetEvent wse;
 
         public void loadData(WorksheetEvent wse) {
+            this.wse = wse;
             tv_content.setText(wse.content);
             tv_worksheet.setText(wse.title);
             tv_deadline.setText(wse.daysDeadline + "天");
 
             tv_time.setText(app.df3.format(new Date(wse.updatedAt*1000)));
-            if (wse.status == WorksheetEventStatus.WAITPROCESS) {
-                tv_progress.setVisibility(View.VISIBLE);
+            // if (wse.status == WorksheetEventStatus.WAITPROCESS) {
+            if (wse.status == WorksheetEventStatus.UNACTIVATED) { //  测试
+                iv_action.setVisibility(View.VISIBLE);
             }
             else {
-                tv_progress.setVisibility(View.GONE);
+                iv_action.setVisibility(View.GONE);
             }
         }
     }
