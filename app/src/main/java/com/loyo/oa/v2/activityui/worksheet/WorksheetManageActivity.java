@@ -17,7 +17,9 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
 import com.loyo.oa.v2.activityui.worksheet.fragment.AssignableWorksheetFragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.ResponsableWorksheetFragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.SelfCreatedWorksheetFragment;
@@ -147,19 +149,25 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
 
             /*搜索*/
             case R.id.img_title_search_right:
-                int type;
-                if (Utils.hasRights()) {
-                    type = mIndex + 1;
-                } else {
-                    if (mIndex == 0) {
-                        type = 1;
-                    } else {
-                        type = 3;
-                    }
+
+                WorksheetListType type = WorksheetListType.SELF_CREATED;
+                switch (mIndex){
+                    case 0:
+                        type = WorksheetListType.SELF_CREATED;
+                        break;
+                    case 1:
+                        type = WorksheetListType.ASSIGNABLE;
+                    case 2:
+                        type = WorksheetListType.RESPONSABLE;
+                    case 3:
+                        type = WorksheetListType.TEAM;
+                        break;
+                    default:
+                            break;
                 }
-                LogUtil.dee("type:" + type);
+
                 Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
+                b.putSerializable(ExtraAndResult.EXTRA_TYPE, type);
                 app.startActivity(this, WorksheetSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
