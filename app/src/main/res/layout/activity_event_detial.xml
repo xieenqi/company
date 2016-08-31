@@ -16,10 +16,11 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_other_view"
-            android:text="这点性能损耗还是可以接受的，在开发效率之间选择是可以接送的。性能完全可以在其他地方找回来"
+            android:text=""
             android:textColor="@color/text33"
             android:textSize="@dimen/text_sp16"
             />
@@ -46,11 +47,10 @@
                 android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/retange_green"
                 android:gravity="center"
                 android:paddingLeft="@dimen/dimen_2"
                 android:paddingRight="@dimen/dimen_2"
-                android:text="已完成"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_sp11"
                 />
@@ -60,35 +60,38 @@
     <include layout="@layout/include_solid_line_left"/>
 
     <TextView
+        android:id="@+id/tv_responsor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_other_view"
         android:layout_marginRight="@dimen/margin_other_view"
         android:layout_marginTop="@dimen/dimen_10"
-        android:text="负责人：刘鹏"
+        android:text="负责人："
         android:textColor="@color/text33"
         android:textSize="@dimen/text_sp16"
         />
 
     <TextView
+        android:id="@+id/tv_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_other_view"
         android:layout_marginRight="@dimen/margin_other_view"
         android:layout_marginTop="@dimen/dimen_10"
-        android:text="触发方式：定时触发"
+        android:text="触发方式："
         android:textColor="@color/text33"
         android:textSize="@dimen/text_sp16"
         />
 
     <TextView
+        android:id="@+id/tv_worksheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_10"
         android:layout_marginLeft="@dimen/margin_other_view"
         android:layout_marginRight="@dimen/margin_other_view"
         android:layout_marginTop="@dimen/dimen_10"
-        android:text="所属工单：xxxxx"
+        android:text="所属工单："
         android:textColor="@color/text33"
         android:textSize="@dimen/text_sp16"
         />

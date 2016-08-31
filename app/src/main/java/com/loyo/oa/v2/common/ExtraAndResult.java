@@ -7,6 +7,7 @@ package com.loyo.oa.v2.common;
 public class ExtraAndResult {
 
     public static final String EXTRA_ID = "extra_id";
+    public static final String EXTRA_ID2 = "extra_id2";
     public static final String EXTRA_NAME = "extra_name";
     public static final String EXTRA_DATA = "extra_data";
     public static final String EXTRA_ADD = "extra_add";

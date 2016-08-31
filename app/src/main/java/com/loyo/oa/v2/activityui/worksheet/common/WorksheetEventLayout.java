@@ -54,7 +54,7 @@ public class WorksheetEventLayout extends LinearLayout {
         tv_name = (TextView) eventView.findViewById(R.id.tv_name);
         tv_time = (TextView) eventView.findViewById(R.id.tv_time);
         tv_content.setText(data.content);
-        tv_name.setText(data.responsor.getName());
+        tv_name.setText(null == data.responsor ? "未设置" : data.responsor.getName());
 
         if (MainApp.user.id.equals(data.responsorId))
             isresponsor = true;
@@ -98,12 +98,14 @@ public class WorksheetEventLayout extends LinearLayout {
         }
         if (isCreated)//创建者没有操作权限
             iv_action.setVisibility(INVISIBLE);
-        ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
+        if (null != data.responsor)
+            ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
         eventView.setOnTouchListener(Global.GetTouch());
         eventView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Message msg = new Message();
+                msg.obj = data.id;
                 msg.what = ExtraAndResult.REQUEST_CODE_CUSTOMER;
                 handler.sendMessage(msg);
             }
