@@ -18,111 +18,111 @@
             android:layout_marginBottom="@dimen/dimen_10"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_content"
+            <LinearLayout
+                android:id="@+id/ll_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="事件内容"
-                android:textColor="@color/text33"
-                android:textSize="@dimen/text_sp15" />
+                android:orientation="vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/ll_mata"
+                android:layout_marginRight="@dimen/dimen_5">
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_5"
+                    android:text="事件内容"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15" />
 
-            <TextView
-                android:id="@+id/tv_progress"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_5"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_6"
+                        android:src="@drawable/icon_follow_up_creator" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="所属工单："
+                        android:textColor="@color/text99" />
+
+                    <TextView
+                        android:id="@+id/tv_worksheet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text99" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_6"
+                        android:src="@drawable/icon_customer_follow_time" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="事件限时："
+                        android:textColor="@color/text99" />
+
+                    <TextView
+                        android:id="@+id/tv_deadline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text99"
+                        android:text="--"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_mata"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="完成度(0/3)"
-                android:textColor="@color/title_bg1"
-                android:textSize="@dimen/text_sp15" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text=""
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="@dimen/dimen_5"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp12" />
+
+                <ImageView
+                    android:id="@+id/iv_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/icon_worksheet_compile"
+                    />
+            </LinearLayout>
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_5"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dimen_6"
-                android:src="@drawable/icon_follow_up_creator" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="创建人："
-                android:textColor="@color/text99" />
-
-            <TextView
-                android:id="@+id/tv_creator_name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textColor="@color/text99" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_order"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_5"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dimen_6"
-                android:src="@drawable/icon_customer_follow_time" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="分派人："
-                android:textColor="@color/text99" />
-
-            <TextView
-                android:id="@+id/tv_order"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textColor="@color/text99"
-                android:text="--"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_assigner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_5"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dimen_6"
-                android:src="@drawable/icon_customer_follow_time" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="所属订单："
-                android:textColor="@color/text99" />
-
-            <TextView
-                android:id="@+id/tv_assigner"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textColor="@color/text99"
-                android:text="--"
-                />
-        </LinearLayout>
     </LinearLayout>
     <include layout="@layout/include_solid_line_left"/>
 </LinearLayout>

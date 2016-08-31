@@ -32,6 +32,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -121,7 +122,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         init_gridView_photo();
 
         if (mActivity != null) {
-            edt_title.setText(mActivity.selectedOrder.title + mActivity.selectedType.name);
+            edt_title.setText(mActivity.selectedOrder.title +"-"+ mActivity.selectedType.name);
         }
     }
 
@@ -212,7 +213,9 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
             @Override
             public void success(WorksheetWrapper wrapper, Response response) {
                 if (wrapper.errcode == 0) {
-                    mActivity.finish();
+                    Intent intent = new Intent();
+                    intent.putExtra(ExtraAndResult.EXTRA_BOOLEAN, true);
+                    app.finishActivity(getActivity(), MainApp.ENTER_TYPE_LEFT, 0, intent);
                 }
                 else {
                     Toast("" + wrapper.errmsg);
