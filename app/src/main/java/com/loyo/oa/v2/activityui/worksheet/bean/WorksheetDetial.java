@@ -23,4 +23,9 @@ public class WorksheetDetial {
 //    public String id;
     public ArrayList<WorksheetEventsSupporter> sheetEventsSupporter;
     public int status;//1.待分派  2.进行中 3.待审核 4.已完成 5.意外终止
+
+
+
+
+
 }
