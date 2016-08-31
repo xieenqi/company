@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_common_title"/>
+    <include layout="@layout/include_common_title" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -48,9 +48,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/dimen_10"
-                            android:text="高德高德个"
+                            android:text=""
                             android:textColor="@color/text33"
-                            android:textSize="@dimen/text_sp16"/>
+                            android:textSize="@dimen/text_sp16" />
 
                         <TextView
                             android:id="@+id/tv_status"
@@ -62,21 +62,22 @@
                             android:paddingRight="@dimen/dimen_2"
                             android:text="已完成"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_sp11"/>
+                            android:textSize="@dimen/text_sp11" />
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_commit_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="赵云 2016-02-23 15:32 提交"
+                        android:text=""
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12"/>
+                        android:textSize="@dimen/text_sp12" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <TextView
                 android:id="@+id/tv_track_content"
@@ -86,29 +87,28 @@
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:layout_marginTop="@dimen/dimen_10"
-                android:text="pplication,I am using Listview for displaying data using dom parsing,I want to footer in listview,when i click footer additional more data add to list view,I attached image,i would like that design and process,pl"
                 android:textColor="@color/text33"
-                android:textSize="@dimen/text_sp16"/>
+                android:textSize="@dimen/text_sp16" />
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_listview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:listSelector="@android:color/transparent"
                 />
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
             <!--  分派人 -->
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dimen_10"
+                android:layout_marginTop="@dimen/dimen_10"
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
-                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -121,7 +121,7 @@
                         android:layout_height="wrap_content"
                         android:text="分派人 : "
                         android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_Assignment_name"
@@ -145,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:text="触发方式 : "
                         android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_boom"
@@ -169,14 +169,15 @@
                         android:layout_height="wrap_content"
                         android:text="关联订单 : "
                         android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_related_order"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textColor="@color/title_bg1"
+                        android:textSize="@dimen/text_sp14"
+                        />
 
                 </LinearLayout>
 
@@ -192,14 +193,14 @@
                         android:layout_height="wrap_content"
                         android:text="事件负责人 : "
                         android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_responsible_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -214,64 +215,83 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_other_view"
-                android:layout_marginRight="@dimen/margin_other_view"
                 android:orientation="vertical"
+                android:layout_marginRight="@dimen/margin_other_view"
+                android:layout_marginLeft="@dimen/margin_other_view"
                 >
 
 
                 <LinearLayout
+                    android:layout_marginTop="@dimen/dimen_15"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_15"
                     android:orientation="horizontal"
                     >
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="确认时间 : "
+                        android:textColor="@color/text66"
+                        android:textSize="@dimen/text_sp13"
+                        android:text="分派时间 : "
+                        />
+                    <TextView
+                        android:id="@+id/tv_assignment_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:textColor="@color/text66"
                         android:textSize="@dimen/text_sp13"
                         />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="08-28 10:31"
-                        android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp13"
-                        />
-
-                </LinearLayout>
+                    </LinearLayout>
 
 
                 <LinearLayout
+                    android:layout_marginTop="@dimen/dimen_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_15"
-                    android:layout_marginTop="@dimen/dimen_10"
                     android:orientation="horizontal"
                     >
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="更新时间 : "
                         android:textColor="@color/text66"
                         android:textSize="@dimen/text_sp13"
+                        android:text="完成时间 : "
                         />
-
                     <TextView
+                        android:id="@+id/tv_finish_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="08-28 10:31"
                         android:textColor="@color/text66"
                         android:textSize="@dimen/text_sp13"
                         />
 
                 </LinearLayout>
-            </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginBottom="@dimen/dimen_15"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text66"
+                        android:textSize="@dimen/text_sp13"
+                        android:text="终止时间 : "
+                        />
+                    <TextView
+                        android:id="@+id/tv_termination_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text66"
+                        android:textSize="@dimen/text_sp13"
+                        />
+
+                </LinearLayout>
+                </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
