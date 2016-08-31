@@ -59,7 +59,7 @@ public class MenuFragment extends BaseFragment {
     private GestureDetector gesture; //手势识别
     private float minDistance = 120;//手势滑动最小距离
     private float minVelocity = 200;//手势滑动最小速度
-    private LinearLayout ll_user, ll_pwd, ll_feed_back, ll__update, ll_version, ll_exit;
+    private LinearLayout ll_user, ll_pwd, ll_feed_back, ll__update, ll_version, ll_exit, ll_clean;
     private RoundImageView riv_head;
     private TextView tv_name, tv_member, tv_version_info;
     private ImageView iv_new_version;
@@ -163,6 +163,7 @@ public class MenuFragment extends BaseFragment {
         ll__update = (LinearLayout) view.findViewById(R.id.ll__update);
         ll_version = (LinearLayout) view.findViewById(R.id.ll_version);
         ll_exit = (LinearLayout) view.findViewById(R.id.ll_exit);
+        ll_clean = (LinearLayout) view.findViewById(R.id.ll_clean);
         riv_head = (RoundImageView) view.findViewById(R.id.riv_head);
         tv_name = (TextView) view.findViewById(R.id.tv_name);
         tv_member = (TextView) view.findViewById(R.id.tv_member);
@@ -174,6 +175,7 @@ public class MenuFragment extends BaseFragment {
         ll__update.setOnTouchListener(touch);
         ll_version.setOnTouchListener(touch);
         ll_exit.setOnTouchListener(touch);
+        ll_clean.setOnTouchListener(touch);
         try {
             PackageInfo pi = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
             tv_version_info.setText("(当前v" + pi.versionName + ")");
@@ -274,6 +276,13 @@ public class MenuFragment extends BaseFragment {
             case R.id.ll_exit:
                 exit();
                 isExite = false;
+                break;
+            //清除缓存
+            case R.id.ll_clean:
+                showLoading("清除本地磁盘缓存");
+                ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
+                cancelLoading();
+                Toast("清除完成");
                 break;
         }
 

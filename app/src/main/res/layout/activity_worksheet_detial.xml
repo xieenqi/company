@@ -51,7 +51,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/dimen_10"
                             android:layout_weight="1"
-                            android:text="高德高德个"
+                            android:text=""
                             android:textColor="@color/text33"
                             android:textSize="@dimen/text_sp16"/>
 
@@ -59,11 +59,9 @@
                             android:id="@+id/tv_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/retange_green"
                             android:gravity="center"
                             android:paddingLeft="@dimen/dimen_2"
                             android:paddingRight="@dimen/dimen_2"
-                            android:text="已完成"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_sp11"
                             />
@@ -73,7 +71,7 @@
                         android:id="@+id/tv_assignment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="分派人:张三"
+                        android:text="分派人:"
                         android:textColor="@color/text99"
                         android:textSize="@dimen/text_sp12"/>
 
