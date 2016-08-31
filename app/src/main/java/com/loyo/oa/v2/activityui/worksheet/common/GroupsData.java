@@ -58,6 +58,10 @@ public class GroupsData {
         }
     }
 
+    public void remove(Groupable item) {
+        //
+    }
+
     public void clear() {
         groups.clear();
     }

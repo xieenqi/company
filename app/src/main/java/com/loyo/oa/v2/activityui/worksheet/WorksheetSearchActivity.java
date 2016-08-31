@@ -81,7 +81,6 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
         setContentView(R.layout.activity_worksheet_search);
         groupsData = new GroupsData();
         initView();
-
     }
 
     /**

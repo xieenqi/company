@@ -223,9 +223,16 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new ResponsableWorksheetsAdapter(mActivity, groupsData);
+            adapter = new ResponsableWorksheetsAdapter(mActivity, this, groupsData);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
+    }
+
+    public void refresh() {
+        isPullDown = true;
+        page = 1;
+        showLoading("");
+        getData();
     }
 
 
