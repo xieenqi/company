@@ -78,8 +78,10 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_search);
+        setContentView(R.layout.activity_worksheet_search);
+        groupsData = new GroupsData();
         initView();
+
     }
 
     /**
