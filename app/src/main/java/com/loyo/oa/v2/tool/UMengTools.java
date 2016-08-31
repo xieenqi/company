@@ -73,12 +73,15 @@ public class UMengTools {
         LogUtil.d("检查时间: " + date);
         String oldInfo = SharedUtil.get(MainApp.getMainApp(), "sendLocation");
         TrackRule trackrule = DBManager.Instance().getTrackRule();
-        if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {
-            LogUtil.d("此时不需要穿轨迹。。。》" + address.equals(oldInfo));
+        if(null == trackrule){
+            LogUtil.d("trackrule为null，就不继续执行");
             return;
         }
-//        upLocation(address, longitude, latitude, date);
-        newUpLocation(address, longitude, latitude, date);
+        if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {
+            LogUtil.d("此时不需要穿轨迹" + address.equals(oldInfo));
+            return;
+        }
+            newUpLocation(address, longitude, latitude, date);
     }
 
     private static void upLocation(final String address, final double longitude, final double latitude, final String date) {
@@ -91,7 +94,6 @@ public class UMengTools {
             public void success(Object o, Response response) {
                 HttpErrorCheck.checkResponse(" 手动上传轨迹: ", response);
                 SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
-
                 SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
             }
 
@@ -103,6 +105,7 @@ public class UMengTools {
     }
 
     private static void newUpLocation(final String address, final double longitude, final double latitude, final String date) {
+        LogUtil.d("newUpLocation");
         ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(longitude
                 + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> map = new HashMap<>();
