@@ -18,8 +18,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.bean.ClueList;
-import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
@@ -39,8 +37,6 @@ import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -84,10 +80,9 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
             switch (msg.what) {
 
                  /*  状态 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
-                {
+                case TeamSaleFragment.SALETEAM_SCREEN_TAG2: {
 
-                    int newIndex =  (int) msg.getData().get("index");
+                    int newIndex = (int) msg.getData().get("index");
                     if (statusIndex != newIndex) {
                         statusIndex = newIndex;
                         isPullDown = true;
@@ -97,13 +92,12 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
                         getData();
                     }
                 }
-                    break;
+                break;
 
                 /* 类型 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
-                {
+                case TeamSaleFragment.SALETEAM_SCREEN_TAG3: {
 
-                    int newIndex =  (int) msg.getData().get("index");
+                    int newIndex = (int) msg.getData().get("index");
                     if (typeIndex != newIndex) {
                         typeIndex = newIndex;
                         isPullDown = true;
@@ -114,7 +108,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
                     }
                 }
 
-                    break;
+                break;
             }
 
         }
@@ -182,7 +176,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
         initAdapter();
         expand();
 
-        Utils.btnHideForListView(expandableListView,btn_add);
+        Utils.btnHideForListView(expandableListView, btn_add);
 
         showLoading("加载中...");
         getData();
@@ -234,7 +228,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataActivity impleme
 
 
     @Override
-    protected  void getData() {
+    protected void getData() {
 
 //        * templateId  工单类型id
 //        * status      1:待分派 2:处理中 3:待审核 4:已完成 5:意外中止

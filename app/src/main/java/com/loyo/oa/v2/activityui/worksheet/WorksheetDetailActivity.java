@@ -100,6 +100,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void getData() {
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
                 getWorksheetDetail("57c52813b0207a0615000001", new Callback<BaseBeanT<WorksheetDetial>>() {
                     @Override
