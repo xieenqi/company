@@ -84,6 +84,7 @@ public class MapSingleView extends BaseActivity implements View.OnClickListener{
             laPosition = mIntent.getDoubleExtra("la", 0);
             loPosition = mIntent.getDoubleExtra("lo", 0);
             address    = mIntent.getStringExtra("address");
+
         }
         mapView = (MapView) findViewById(R.id.mapView);
         latlng = new LatLng(laPosition,loPosition);

@@ -175,8 +175,9 @@
                         android:id="@+id/tv_related_order"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textColor="@color/title_bg1"
+                        android:textSize="@dimen/text_sp14"
+                        />
 
                 </LinearLayout>
 

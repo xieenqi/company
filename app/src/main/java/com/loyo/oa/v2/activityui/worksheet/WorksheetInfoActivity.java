@@ -8,26 +8,19 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetCommon;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -64,6 +57,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
     private WorkSheetListNestingAdapter mAdapter;
     private BaseBeanT<WorksheetInfo> mWorksheetInfo;
     private Intent mIntent;
+    private Bundle mBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +72,6 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
-        img_title_left.setOnClickListener(this);
         tv_title_1          = (TextView) findViewById(R.id.tv_title_1);
         tv_Assignment_name  = (TextView) findViewById(R.id.tv_Assignment_name);
         tv_boom             = (TextView) findViewById(R.id.tv_boom);
@@ -91,6 +84,8 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         tv_track_content    = (TextView) findViewById(R.id.tv_track_content);
         tv_title            = (TextView) findViewById(R.id.tv_title);
         tv_status           = (TextView) findViewById(R.id.tv_status);
+        img_title_left.setOnClickListener(this);
+        tv_related_order.setOnClickListener(this);
         tv_title_1.setText("工单信息");
         requestData();
     }
@@ -159,8 +154,11 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.img_title_right:
-
+            //跳转订单
+            case R.id.tv_related_order:
+                mBundle = new Bundle();
+                mBundle.putSerializable(ExtraAndResult.EXTRA_ID,mWorksheetInfo.data.orderId);
+                app.startActivity(this, OrderDetailActivity.class, MainApp.ENTER_TYPE_RIGHT,false,mBundle);
                 break;
 
             //返回
@@ -172,5 +170,4 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
                 break;
         }
     }
-
 }
