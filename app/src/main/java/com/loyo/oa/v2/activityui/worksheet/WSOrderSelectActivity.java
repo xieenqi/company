@@ -152,7 +152,7 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                WorksheetOrder order = (WorksheetOrder) adapter.getItem(position);
+                WorksheetOrder order = (WorksheetOrder) adapter.getItem(position-1);
                 Intent intent = new Intent();
                 intent.putExtra(ExtraAndResult.EXTRA_OBJ, order);
                 app.finishActivity(WSOrderSelectActivity.this, MainApp.ENTER_TYPE_LEFT, 0, intent);
@@ -210,7 +210,7 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
             listData.addAll(list);
         }
 
-        listData.addAll(WorksheetOrder.testData());
+//        listData.addAll(WorksheetOrder.testData());
     }
 
     @Override
