@@ -168,7 +168,11 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
                     @Override
                     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                         mIntent = new Intent();
-                        mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+
+                        WorksheetEvent wse =(WorksheetEvent) groupsData.get(groupPosition, childPosition);
+                        String wsId = wse.wsId != null? wse.wsId:wse.workSheetId;
+
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, wsId);
                         mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
                         startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
