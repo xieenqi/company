@@ -40,13 +40,13 @@
                     android:textSize="@dimen/text_sp15"/>
 
                 <EditText
-                    android:id="@+id/edt_contract"
+                    android:id="@+id/edt_title"
                     style="@style/edtText_normal"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
-                    android:hint="请输入联系人姓名"
+                    android:hint="请输工单标题"
                     android:inputType="textPersonName"
                     android:maxLength="20"
                     android:paddingRight="0dp"
