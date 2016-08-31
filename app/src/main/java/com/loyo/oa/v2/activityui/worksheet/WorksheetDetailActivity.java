@@ -25,6 +25,9 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -40,8 +43,10 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private TextView tv_title_1, tv_title, tv_status, tv_assignment, tv_complete_number, tv_setting;
     private RelativeLayout img_title_right;
     private Button bt_confirm;
-    private String worksheetId;
+    private String worksheetId, eventId;
     private BaseBeanT<WorksheetDetial> mData;
+    private boolean isAssignment, isCreated;//分派人 ，创建人
+
     //处理事件
     private Handler handler = new Handler() {
         @Override
@@ -52,6 +57,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
                     break;
                 case ExtraAndResult.REQUEST_CODE_STAGE://设置负责人
+
+                    eventId = (String) msg.obj;
                     SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
                     overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
@@ -131,6 +138,9 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
             case R.id.tv_setting://批量设置
+                eventId = "";
+                SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
             case R.id.bt_confirm://提交完成
                 break;
@@ -138,12 +148,22 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void loadData() {
+        if (MainApp.user.id.equals(mData.data.dispatcher.getId()))
+            isAssignment = true;
+        if (MainApp.user.id.equals(mData.data.creator.getId()))
+            isCreated = true;
+        if (ll_events.getChildCount() > 0) {
+            ll_events.removeAllViews();
+        }
         tv_title.setText(mData.data.title);
         tv_assignment.setText("分派人：" + mData.data.dispatcher.getName());
         WorksheetCommon.setStatus(tv_status, mData.data.status);
-        for (int i = 0; i < mData.data.sheetEventsSupporter.size(); i++) {
-            WorksheetEventLayout eventView = new WorksheetEventLayout(this, handler, mData.data.sheetEventsSupporter.get(i));
-            ll_events.addView(eventView);
+        if (null != mData.data.sheetEventsSupporter) {
+            for (int i = 0; i < mData.data.sheetEventsSupporter.size(); i++) {
+                WorksheetEventLayout eventView = new WorksheetEventLayout(this, handler, mData.data.sheetEventsSupporter.get(i),
+                        isAssignment, isCreated, mData.data.status);
+                ll_events.addView(eventView);
+            }
         }
     }
 
@@ -172,10 +192,65 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
              /*用户单选, 负责人*/
             case SelectDetUserActivity2.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
-//                newUser = u;
-//                tv_responsiblePerson.setText(newUser.getName());
+                if (!TextUtils.isEmpty(eventId)) {
+                    setEventPersonal(u.getId());
+                } else {
+                    setAllEventPersonal(u.getId());
+                }
                 break;
         }
+    }
+
+    /**
+     * 设置事件负责人
+     */
+    private void setEventPersonal(String userId) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("responsorId", userId);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
+                setEventPerson(eventId, map, new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("设置事件负责人：", response);
+                        getData();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+
+                    }
+                });
+
+    }
+
+    /**
+     * 设置事件负责人
+     */
+    private void setAllEventPersonal(String userId) {
+        List<String> eventIsList = new ArrayList<>();
+        for (int i = 0; i < mData.data.sheetEventsSupporter.size(); i++) {
+            eventIsList.add(mData.data.sheetEventsSupporter.get(i).id);
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("responsorId", userId);
+        map.put("eventIds", eventIsList);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
+                setAllEventPerson(map, new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("设置all事件负责人：", response);
+                        getData();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+
+                    }
+                });
+
     }
 
 }

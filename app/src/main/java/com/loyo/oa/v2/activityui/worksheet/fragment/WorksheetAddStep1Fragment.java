@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.worksheet.WSOrderSelectActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -32,9 +35,10 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
 
     private View mView;
     private ViewGroup img_title_left, img_title_right, ll_order, ll_worksheet_type;
-    TextView tv_title_1, tv_worksheet_type;
+    TextView tv_title_1, tv_worksheet_type, tv_order;
 
     WorksheetTemplate selectedType;
+    WorksheetOrder    selectedOrder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,8 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
         tv_title_1.setText("选择订单和工单类型");
 
         tv_worksheet_type = (TextView) mView.findViewById(R.id.tv_worksheet_type);
+
+        tv_order = (TextView) mView.findViewById(R.id.tv_order);
     }
 
     @Override
@@ -89,7 +95,16 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
                 getActivity().finish();
                 break;
             case R.id.img_title_right:
-                ((WorksheetAddActivity)getActivity()).nextStep();
+                if (selectedOrder == null) {
+                    Toast("请选择订单");
+                }
+                else if (selectedType == null) {
+                    Toast("请选择工单类型");
+                }
+                else {
+                    ((WorksheetAddActivity)getActivity()).nextStep();
+                }
+
                 break;
             case R.id.ll_order:
                 selectOrder();
@@ -121,6 +136,7 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
             public void setValue(String value, int index) {
                 selectedType = types.get(index-1);
                 tv_worksheet_type.setText(value);
+                ((WorksheetAddActivity)getActivity()).selectedType = selectedType;
             }
         });
     }
@@ -129,16 +145,23 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
         Intent mIntent = new Intent();
         mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
         mIntent.setClass(getActivity(), WSOrderSelectActivity.class);
-        startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+        startActivityForResult(mIntent, ExtraAndResult.REQUEST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (resultCode) {
-            //新建 删除 编辑 转移客户,回调函数
+        switch (requestCode) {
             case ExtraAndResult.REQUEST_CODE:
+                if (data != null) {
+                    WorksheetOrder order = (WorksheetOrder) data.getSerializableExtra(ExtraAndResult.EXTRA_OBJ);
+                    if (order != null) {
+                        selectedOrder = order;
+                        ((WorksheetAddActivity)getActivity()).selectedOrder = order;
+                        tv_order.setText(order.title);
+                    }
+                }
                 break;
         }
     }

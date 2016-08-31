@@ -294,11 +294,10 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
         map.put("uuid",uuid);
         map.put("address",httpLoc);
         LogUtil.dee("提交事件信息："+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorksheet.class).setEventSubmit(id,map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).setEventSubmit(id,map, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse("提交事情处理信息",response);
-                
             }
 
             @Override

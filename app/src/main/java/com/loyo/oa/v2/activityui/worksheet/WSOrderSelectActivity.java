@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.worksheet.adapter.BaseGroupsDataAdapter;
 import com.loyo.oa.v2.activityui.worksheet.adapter.ResponsableWorksheetsAdapter;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
@@ -32,6 +34,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -42,6 +45,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,7 +85,6 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
         setContentView(R.layout.activity_public_search); // activity_public_search
         initView();
         doSearch();
-
     }
 
     /**
@@ -148,6 +151,11 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
         innerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                WorksheetOrder order = (WorksheetOrder) adapter.getItem(position-1);
+                Intent intent = new Intent();
+                intent.putExtra(ExtraAndResult.EXTRA_OBJ, order);
+                app.finishActivity(WSOrderSelectActivity.this, MainApp.ENTER_TYPE_LEFT, 0, intent);
                 hideInputKeyboard(edt_search);
             }
         });
@@ -189,6 +197,20 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
     }
 
     private void loadData(List<WorksheetOrder> list) {
+
+        if (listData == null) {
+            listData = new ArrayList<WorksheetOrder>();
+        }
+
+        if (isPullDown) {
+            listData.clear();
+        }
+
+        if (list != null) {
+            listData.addAll(list);
+        }
+
+//        listData.addAll(WorksheetOrder.testData());
     }
 
     @Override
@@ -230,7 +252,7 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
 
         @Override
         public Object getItem(int position) {
-            return 0;
+            return listData.get(position);
         }
 
         @Override
@@ -240,37 +262,30 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
 
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
-//            ClueListItem clueListItem = listData.get(position);
-//            Holder holder = null;
-//            if (convertView == null) {
-//                convertView = LayoutInflater.from(WSOrderSelectActivity.this).inflate(R.layout.item_teamclue, null);
-//                holder = new Holder();
-//                holder.tv_company_name = (TextView) convertView.findViewById(R.id.tv_company_name);
-//                holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
-//                holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-//                holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-//                convertView.setTag(holder);
-//            } else {
-//                holder = (Holder) convertView.getTag();
-//            }
-//
-//            holder.tv_name.setText(clueListItem.name);
-//            holder.tv_company_name.setText(clueListItem.companyName);
-//            holder.tv_customer.setText(clueListItem.name);
-//            if (clueListItem.lastActAt != 0) {
-//                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd HH:mm"));
-//            } else {
-//                holder.tv_time.setText("--");
-//            }
+            WorksheetOrder order = listData.get(position);
+            Holder holder = null;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(WSOrderSelectActivity.this).inflate(R.layout.item_worksheet_order, null);
+                holder = new Holder();
+                holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
+                holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+                holder.tv_money = (TextView) convertView.findViewById(R.id.tv_money);
+                holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
+                holder.tv_product = (TextView) convertView.findViewById(R.id.tv_product);
+                convertView.setTag(holder);
+            } else {
+                holder = (Holder) convertView.getTag();
+            }
 
+            holder.tv_title.setText(order.title);
+            holder.tv_money.setText(Utils.setValueDouble(order.dealMoney));
+            holder.tv_customer.setText(order.customerName);
+            holder.tv_product.setText(order.proName);
             return convertView;
         }
 
         class Holder {
-            TextView tv_company_name; /* 公司名称 */
-            TextView tv_customer;     /* 负责人 */
-            TextView tv_time;         /* 跟进时间 */
-            TextView tv_name;         /* 客户名称 */
+            TextView tv_title, tv_name, tv_money, tv_customer, tv_product;
         }
     }
 }
