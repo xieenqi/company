@@ -16,8 +16,8 @@ public class WorksheetDetial {
     public String uuid;
     public NewUser dispatcher;
     public int triggerMode;//1 流程触发 2 定时触发
+    public String dispatcherId;//分派人id
     //    public String id;
-//    public String id;
 //    public String id;
 //    public String id;
     public ArrayList<WorksheetEventsSupporter> sheetEventsSupporter;
