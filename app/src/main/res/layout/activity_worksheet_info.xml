@@ -48,7 +48,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/dimen_10"
-                            android:text="高德高德个"
+                            android:text=""
                             android:textColor="@color/text33"
                             android:textSize="@dimen/text_sp16" />
 
@@ -66,9 +66,10 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_commit_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="赵云 2016-02-23 15:32 提交"
+                        android:text=""
                         android:textColor="@color/text99"
                         android:textSize="@dimen/text_sp12" />
 
@@ -86,7 +87,6 @@
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:layout_marginTop="@dimen/dimen_10"
-                android:text="pplication,I am using Listview for displaying data using dom parsing,I want to footer in listview,when i click footer additional more data add to list view,I attached image,i would like that design and process,pl"
                 android:textColor="@color/text33"
                 android:textSize="@dimen/text_sp16" />
 
@@ -231,18 +231,41 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/text66"
                         android:textSize="@dimen/text_sp13"
-                        android:text="确认时间 : "
+                        android:text="分派时间 : "
                         />
+                    <TextView
+                        android:id="@+id/tv_assignment_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text66"
+                        android:textSize="@dimen/text_sp13"
+                        />
+
+                    </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text66"
                         android:textSize="@dimen/text_sp13"
-                        android:text="08-28 10:31"
+                        android:text="完成时间 : "
+                        />
+                    <TextView
+                        android:id="@+id/tv_finish_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text66"
+                        android:textSize="@dimen/text_sp13"
                         />
 
-                    </LinearLayout>
-
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_marginBottom="@dimen/dimen_15"
@@ -256,14 +279,14 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/text66"
                         android:textSize="@dimen/text_sp13"
-                        android:text="更新时间 : "
+                        android:text="终止时间 : "
                         />
                     <TextView
+                        android:id="@+id/tv_termination_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text66"
                         android:textSize="@dimen/text_sp13"
-                        android:text="08-28 10:31"
                         />
 
                 </LinearLayout>

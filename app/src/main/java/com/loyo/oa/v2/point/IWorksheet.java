@@ -4,10 +4,12 @@ import android.telecom.Call;
 
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplateListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.beans.BaseBeanT;
 
 import java.util.HashMap;
@@ -126,5 +128,10 @@ public interface IWorksheet {
     @PUT("/worksheet/event/submit/{id}")
     void setEventSubmit(@Path("id") String id,@Body HashMap<String,Object> map,Callback<Object> callback);
 
+    /**
+     * 获取工单信息
+     * */
+    @GET("/worksheets/detail/{id}")
+    void getWorksheetInfo(@Path("id") String id,Callback<BaseBeanT<WorksheetInfo>> callback);
 
 }

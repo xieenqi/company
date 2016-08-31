@@ -298,6 +298,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
             @Override
             public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse("提交事情处理信息",response);
+                finish();
             }
 
             @Override

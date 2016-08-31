@@ -135,6 +135,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.ll_worksheet_info:
                 Bundle bundle = new Bundle();
+                bundle.putSerializable(ExtraAndResult.CC_USER_ID,mData.data.id);
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
             case R.id.tv_setting://批量设置
