@@ -13,14 +13,36 @@ import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
+import com.loyo.oa.v2.activityui.worksheet.fragment.ResponsableWorksheetFragment;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
+import com.loyo.oa.v2.point.IWorksheet;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.Date;
+import java.util.HashMap;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by EthanGong on 16/8/27.
  */
 public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
+
+    private ResponsableWorksheetFragment mFragment;
+
+    public ResponsableWorksheetsAdapter(final Context context, final ResponsableWorksheetFragment fragment, final GroupsData data) {
+        super();
+        mContext = context;
+        groupsData = data;
+        mFragment = fragment;
+    }
+
     public ResponsableWorksheetsAdapter(final Context context, final GroupsData data) {
         super();
         mContext = context;
@@ -42,7 +64,30 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             holder.iv_action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WorksheetEvent wse = holderFinal.wse;
+                    final WorksheetEvent wse = holderFinal.wse;
+                    if (wse.id == null) {
+                        return;
+                    }
+                    if (mFragment == null) {
+                        return;
+                    }
+
+                    HashMap<String,Object> map = new HashMap<>();
+                    map.put("type",1/* 1为提交完成，2为打回重做 */);
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class)
+                            .setEventSubmit(wse.id, map, new RCallback<Object>() {
+                        @Override
+                        public void success(final Object o, final Response response) {
+                            HttpErrorCheck.checkResponse("提交事情处理信息",response);
+                            mFragment.refresh();
+                        }
+
+                        @Override
+                        public void failure(final RetrofitError error) {
+                            super.failure(error);
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
 
                 }
             });
@@ -76,8 +121,8 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             tv_deadline.setText(wse.daysDeadline + "天");
 
             tv_time.setText(app.df3.format(new Date(wse.updatedAt*1000)));
-            // if (wse.status == WorksheetEventStatus.WAITPROCESS) {
-            if (wse.status == WorksheetEventStatus.UNACTIVATED) { //  测试
+            if (wse.status == WorksheetEventStatus.WAITPROCESS) {
+            // if (mFragment!= null && wse.status == WorksheetEventStatus.UNACTIVATED) { //  测试
                 iv_action.setVisibility(View.VISIBLE);
             }
             else {
