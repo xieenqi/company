@@ -117,7 +117,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_worksheet.setText("所属工单：" + mData.title);
         setStatus();
         for (int i = 0; i < mData.handleInfoList.size(); i++) {
-            ll_handleInfoList.addView(new EventHandleInfoList(this));
+            ll_handleInfoList.addView(new EventHandleInfoList(this, mData.handleInfoList.get(i)));
         }
     }
 
