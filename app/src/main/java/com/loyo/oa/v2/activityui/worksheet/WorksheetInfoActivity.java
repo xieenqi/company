@@ -69,7 +69,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
     private void initView() {
         mIntent = getIntent();
         id = mIntent.getStringExtra(ExtraAndResult.CC_USER_ID);
-
+        showLoading("");
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         tv_title_1          = (TextView) findViewById(R.id.tv_title_1);
@@ -132,7 +132,6 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
      * 获取工单信息
      * */
     private void requestData(){
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
                 getWorksheetInfo(id, new Callback<BaseBeanT<WorksheetInfo>>() {
                     @Override

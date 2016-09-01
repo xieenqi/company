@@ -79,7 +79,6 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     private int fromPage;                //判断来自的页面(打回重做0x10 提交完成0x11)
     private int type;                    //type 1为提交完成，2为打回重做
     private int bizType = 29;            //附件type
-    private String result_address = "";  //回调的地址
     private String uuid = StringUtil.getUUID();
     private String ak,sk,token,expiration;
     private String id;                  //时间Id
@@ -284,7 +283,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     }
 
     /**
-     * 提交数据
+     * 提交事件处理数据
      */
     void commitDynamic(){
 
@@ -308,6 +307,8 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
             }
         });
     }
+
+
 
 
     @Override
@@ -350,6 +351,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
 
             /*删除地址*/
             case R.id.layout_delete_location:
+                httpLoc = new HttpLoc();
                 layout_address.setVisibility(View.GONE);
                 break;
 
@@ -358,7 +360,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                 mIntent = new Intent(WorksheetSubmitActivity.this, MapSingleView.class);
                 mIntent.putExtra("la",laPosition);
                 mIntent.putExtra("lo",loPosition);
-                mIntent.putExtra("address",result_address);
+                mIntent.putExtra("address",httpLoc.addr);
                 startActivity(mIntent);
                 break;
 
@@ -407,7 +409,6 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                     loPosition = positionResultItem.loPosition;
                     layout_address.setVisibility(View.VISIBLE);
                     tv_address.setText(positionResultItem.address);
-                    result_address = positionResultItem.address;
                 }
                 break;
 
