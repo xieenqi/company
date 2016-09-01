@@ -131,6 +131,7 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
 
         final ArrayList<WorksheetTemplate> types = WorksheetConfig.getWorksheetTypes(true);
         if (types == null || types.size() == 0) {
+            showGeneralDialog(true, false, "无可选工单类型！");
             return;
         }
 
@@ -145,6 +146,14 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
         popViewKind.setCallback(new PaymentPopView.VaiueCallback() {
             @Override
             public void setValue(String value, int index) {
+
+                WorksheetTemplate template = types.get(index-1);
+                if (template.hasItems == false) {
+
+                    showGeneralDialog(true, false, "该工单类型未配置模版，\n请选择其他类型！");
+                    return;
+                }
+
                 selectedType = types.get(index-1);
                 tv_worksheet_type.setText(value);
                 ((WorksheetAddActivity)getActivity()).selectedType = selectedType;
