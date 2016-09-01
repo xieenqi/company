@@ -104,7 +104,8 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
         });
 
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
-        isMyUser = true;
+        isMyUser = detail.directorId != null
+                && detail.directorId.equals(MainApp.getMainApp().user.id);
         if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
