@@ -782,22 +782,22 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
      */
     private void refreshRedDot() {
         setResult(Activity.RESULT_OK);
-            HashMap<String, Object> body = new HashMap<>();
-            body.put("summaryId", summaryId);
-            LogUtil.d("@刷新红点:" + app.gson.toJson(body));
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
-                    .updateReadDot(body, new RCallback<Object>() {
-                        @Override
-                        public void success(final Object d, final Response response) {
-                            HttpErrorCheck.checkResponse(response);
-                            finishActivity();
-                        }
+        HashMap<String, Object> body = new HashMap<>();
+        body.put("summaryId", summaryId);
+        LogUtil.d("@刷新红点:" + app.gson.toJson(body));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
+                .updateReadDot(body, new RCallback<Object>() {
+                    @Override
+                    public void success(final Object d, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        finishActivity();
+                    }
 
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
-                            finishActivity();
-                        }
-                    });
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        finishActivity();
+                    }
+                });
     }
 }

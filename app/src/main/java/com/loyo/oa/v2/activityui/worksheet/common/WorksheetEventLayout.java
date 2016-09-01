@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.worksheet.common;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -29,6 +31,7 @@ public class WorksheetEventLayout extends LinearLayout {
     private ImageView iv_status, iv_action;
     private TextView tv_content, tv_name, tv_time;
     private boolean isAssignment, isresponsor, isCreated;//是分派人 ，是负责人,是创建者
+    private int action; //1 事件选取负责人  2事件重做  3事件提交完成
 
     public WorksheetEventLayout(Context context, Handler handler, WorksheetEventsSupporter data,
                                 boolean isAssignment, boolean isCreated, int worksheetStatus) {
@@ -56,8 +59,11 @@ public class WorksheetEventLayout extends LinearLayout {
         tv_content.setText(data.content);
         tv_name.setText(null == data.responsor ? "未设置" : data.responsor.getName());
 
-        if (MainApp.user.id.equals(data.responsorId))
+        if (MainApp.user.id.equals(data.responsorId)) {
             isresponsor = true;
+        }
+        if (isCreated)//创建者没有操作权限最小权限
+            iv_action.setVisibility(INVISIBLE);
         //处理事件状态
         switch (data.status) {
             case 1://待处理
@@ -73,31 +79,48 @@ public class WorksheetEventLayout extends LinearLayout {
         //处理工单的状态
         switch (worksheetStatus) {//1.待分派  2.进行中 3.待审核 4.已完成 5.意外终止
             case 1://待分派
-
+                if (isAssignment && !(TextUtils.isEmpty(data.responsorId))) {//有负责人
+                    iv_action.setImageResource(R.drawable.icon_worksheet_setting);
+                    ((WorksheetDetailActivity) context).setSetting();
+                    action = 1;
+                } else {//没有负责人
+                    iv_action.setImageResource(R.drawable.icon_worksheet_assignment);
+                    action = 1;
+                    ((WorksheetDetailActivity) context).setSetting();
+                }
                 break;
             case 2://进行中
-                if (isAssignment && data.status == 1)
+                if (isAssignment && data.status == 1) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_setting);
-                if (isAssignment && data.status == 2)
+                    ((WorksheetDetailActivity) context).setSetting();
+                    action = 1;
+                }
+                if (isAssignment && data.status == 2) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_setting);
-                if (isAssignment && data.status == 3)
+                    ((WorksheetDetailActivity) context).setSetting();
+                    action = 1;
+                }
+                if (isAssignment && data.status == 3) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_redo);
-                if (isresponsor && data.status == 1)
+                    action = 2;
+                }
+                if (isresponsor && data.status == 1) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_compile);
+                    action = 3;
+                }
                 break;
             case 3://待审核
-                if (isAssignment && data.status == 3)
+                if (isAssignment && data.status == 3) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_redo);
+                    action = 2;
+                }
                 break;
             case 4://已完成
-                if (isAssignment && data.status == 3)
-                    iv_action.setVisibility(INVISIBLE);
                 break;
             case 5://意外终止
                 break;
         }
-        if (isCreated)//创建者没有操作权限
-            iv_action.setVisibility(INVISIBLE);
+
         if (null != data.responsor)
             ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
         eventView.setOnTouchListener(Global.GetTouch());
@@ -106,6 +129,7 @@ public class WorksheetEventLayout extends LinearLayout {
             public void onClick(View v) {
                 Message msg = new Message();
                 msg.obj = data.id;
+                msg.arg1 = action;
                 msg.what = ExtraAndResult.REQUEST_CODE_CUSTOMER;
                 handler.sendMessage(msg);
             }
@@ -116,7 +140,17 @@ public class WorksheetEventLayout extends LinearLayout {
             public void onClick(View v) {
                 Message msg = new Message();
                 msg.obj = data.id;
-                msg.what = ExtraAndResult.REQUEST_CODE_STAGE;
+                switch (action) {
+                    case 1:
+                        msg.what = ExtraAndResult.REQUEST_CODE_STAGE;
+                        break;
+                    case 2:
+                        msg.what = ExtraAndResult.REQUEST_CODE_PRODUCT;
+                        break;
+                    case 3:
+                        msg.what = ExtraAndResult.REQUEST_CODE_TYPE;
+                        break;
+                }
                 handler.sendMessage(msg);
             }
         });

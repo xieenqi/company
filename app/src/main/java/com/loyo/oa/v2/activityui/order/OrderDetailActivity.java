@@ -53,7 +53,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             tv_creator_time, tv_wfname, tv_order_number, tv_memo;
 
 
-    /** 新增工单 2016-09-01 */
+    /**
+     * 新增工单 2016-09-01
+     */
     private LinearLayout ll_worksheet; /* 工单cell */
     private TextView tv_worksheet;     /* 工单数  */
 
@@ -110,7 +112,8 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Subscribe
-    public void onWorksheetCreated(Worksheet data) {
+    public void
+    onWorksheetCreated(Worksheet data) {
         // 刷新数目
         getData();
     }
@@ -314,7 +317,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_plan.setText("回款计划（" + mData.planNum + "）");
         tv_record.setText("回款记录（" + mData.recordNum + "）");
         tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
-        tv_worksheet.setText("工单" + "("+ mData.recordNum +")");
+        tv_worksheet.setText("工单" + "(" + mData.recordNum + ")");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_plan_value.setText(mData.planMoney + "");

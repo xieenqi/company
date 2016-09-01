@@ -117,7 +117,8 @@
                     android:layout_height="wrap_content"
                     android:text="批量设置"
                     android:textColor="@color/title_bg1"
-                    android:textSize="@dimen/text_sp12"/>
+                    android:textSize="@dimen/text_sp12"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 
