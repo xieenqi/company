@@ -41,7 +41,7 @@
                 android:layout_height="match_parent"
                 android:gravity="top"
                 android:padding="@dimen/dimen_4"
-                android:text="name"
+                android:text=""
                 android:textColor="@color/text33"
                 android:textSize="15sp"/>
 
