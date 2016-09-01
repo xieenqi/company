@@ -40,9 +40,14 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
     WorksheetTemplate selectedType;
     WorksheetOrder    selectedOrder;
 
+    WorksheetAddActivity mActivity;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = (WorksheetAddActivity)getActivity();
+        selectedOrder = mActivity.selectedOrder;
+        selectedType = mActivity.selectedType;
     }
 
     @Nullable
@@ -64,8 +69,6 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
         ll_worksheet_type.setOnClickListener(this);
 
         ll_order = (ViewGroup) mView.findViewById(R.id.ll_order);
-        ll_order.setOnClickListener(this);
-
 
         img_title_right = (ViewGroup) mView.findViewById(R.id.img_title_right);
         img_title_right.setOnClickListener(this);
@@ -76,6 +79,14 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
         tv_worksheet_type = (TextView) mView.findViewById(R.id.tv_worksheet_type);
 
         tv_order = (TextView) mView.findViewById(R.id.tv_order);
+
+
+        if (selectedOrder != null) {
+            tv_order.setText(selectedOrder.title);
+        }
+        else {
+            ll_order.setOnClickListener(this);
+        }
     }
 
     @Override

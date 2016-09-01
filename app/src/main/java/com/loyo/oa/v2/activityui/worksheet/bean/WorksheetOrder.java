@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.worksheet.bean;
 
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.io.Serializable;
@@ -9,6 +10,8 @@ import java.util.List;
 /**
  * Created by EthanGong on 16/8/30.
  */
+
+
 public class WorksheetOrder implements Serializable {
 
     public String id;
@@ -24,6 +27,16 @@ public class WorksheetOrder implements Serializable {
         ws.id = StringUtil.getUUID();
         ws.dealMoney = "1000";
         ws.customerName = "金牌客户";
+        return ws;
+    }
+
+    public static WorksheetOrder converFromDetail(OrderDetail detail) {
+        WorksheetOrder ws = new WorksheetOrder();
+        ws.proName = detail.proName;
+        ws.title = detail.title;
+        ws.id = detail.id;
+        ws.dealMoney = String.valueOf(detail.dealMoney);
+        ws.customerName = detail.customerName;
         return ws;
     }
 

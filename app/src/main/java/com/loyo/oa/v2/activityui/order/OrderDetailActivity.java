@@ -48,6 +48,12 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
             tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name,
             tv_creator_time, tv_wfname, tv_order_number, tv_memo;
+
+
+    /** 新增工单 2016-09-01 */
+    private LinearLayout ll_worksheet; /* 工单cell */
+    private TextView tv_worksheet;     /* 工单数  */
+
     private OrderDetail mData;
     private String orderId;
     private Bundle mBundle;
@@ -138,6 +144,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         ll_plan = (LinearLayout) findViewById(R.id.ll_plan);
         ll_plan.setOnClickListener(this);
         ll_wflayout = (LinearLayout) findViewById(R.id.ll_wflayout);
+        ll_worksheet = (LinearLayout) findViewById(R.id.ll_worksheet);
+        ll_worksheet.setOnClickListener(this);
+        tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
 
     }
 
@@ -202,6 +211,11 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 mBundle.putString("orderId", mData.id);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, isAdd);
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
+                break;
+            case R.id.ll_worksheet://工单
+                mBundle = new Bundle();
+                mBundle.putSerializable(ExtraAndResult.EXTRA_OBJ, mData);
+                app.startActivityForResult(this, OrderWorksheetsActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
         }
 
@@ -283,6 +297,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_plan.setText("回款计划（" + mData.planNum + "）");
         tv_record.setText("回款记录（" + mData.recordNum + "）");
         tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
+        tv_worksheet.setText("工单" + "("+ mData.recordNum +")");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_plan_value.setText(mData.planMoney + "");

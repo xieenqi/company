@@ -73,6 +73,8 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
         setContentView(R.layout.activity_worksheet_add);
         init();
         WorksheetConfig.getWorksheetTypes(true/* 没有数据就从网络获取 */);
+        getIntent().getExtras();
+        selectedOrder = (WorksheetOrder) getIntent().getExtras().getSerializable(ExtraAndResult.EXTRA_OBJ);
     }
 
     private void init() {
