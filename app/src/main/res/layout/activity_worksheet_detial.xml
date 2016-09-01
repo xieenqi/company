@@ -127,22 +127,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_other_view"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/bt_confirm"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_45"
-                    android:background="@drawable/round_bg_shpe"
-                    android:text="确认"
-                    android:textColor="@color/white"
-                    android:visibility="visible"/>
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
