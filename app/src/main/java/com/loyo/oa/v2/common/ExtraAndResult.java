@@ -94,7 +94,7 @@ public class ExtraAndResult {
     /**
      * 工单事件变更事件
      */
-    public static final int WORKSHEET_EVENT_CHANGE = 303;
+    public static final int WORKSHEET_EVENT_CHANGE = 304;
 
     protected ExtraAndResult() {
         throw new UnsupportedOperationException(); // 防止子类调用
