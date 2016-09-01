@@ -122,12 +122,6 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
         super.onCreate(savedInstanceState);
         groupsData = new GroupsData();
         initFilters();
-        AppBus.getInstance().register(this);
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        AppBus.getInstance().unregister(this);
     }
 
     @Subscribe

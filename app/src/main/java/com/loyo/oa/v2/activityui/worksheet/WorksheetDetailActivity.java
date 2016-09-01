@@ -25,6 +25,7 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -254,7 +255,10 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
                     }
                 });
-
     }
 
+    @Subscribe
+    public void onWorkSheetDetailsRush(WorksheetDetial event){
+        Toast("回调刷新");
+    }
 }

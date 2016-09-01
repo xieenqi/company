@@ -124,15 +124,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
         super.onCreate(savedInstanceState);
         groupsData = new GroupsData();
         initFilters();
-        AppBus.getInstance().register(this);
     }
-
-    public void onDestroy() {
-        super.onDestroy();
-        AppBus.getInstance().unregister(this);
-    }
-
-
 
     /* 工单信息变更 */
     @Subscribe

@@ -99,14 +99,6 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_order_detail);
         getIntentData();
         initView();
-        //注册到bus事件总线中
-        AppBus.getInstance().register(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        AppBus.getInstance().unregister(this);
     }
 
     @Subscribe

@@ -87,15 +87,6 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
 
         initView();
         getData();
-
-        //注册到bus事件总线中
-        AppBus.getInstance().register(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        AppBus.getInstance().unregister(this);
     }
 
     @Subscribe
