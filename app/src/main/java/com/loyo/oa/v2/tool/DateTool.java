@@ -58,7 +58,8 @@ public class DateTool {
     public static final String DATE_FORMATE_HOUR_MINUTE = "HH:mm";
 
     public static final String DATE_FORMATE_SPLITE_BY_POINT = "yyyy.MM.dd HH:mm";
-
+    //MM-dd HH:mm
+    public static final String DATE_FORMATE_HOUR_YEAR = "MM-dd HH:mm";
     public static Calendar calendar;
 
     protected DateTool() {
@@ -193,18 +194,19 @@ public class DateTool {
         SimpleDateFormat format = null;
         String strTime = "";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
-        long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date);
+        long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date * 1000);
         // 一天内
         if (time <= DAY_MILLIS) {
             format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
-            strTime = "今天".concat(format.format(new Date(date)));
-        }
-        // 昨天
-        else if (time <= 2 * DAY_MILLIS) {
+            strTime = "今天  ".concat(format.format(new Date(date)));
+        } else if (time <= 2 * DAY_MILLIS) {// 昨天
             format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
             strTime = "昨天  ".concat(format.format(new Date(date)));
+        } else if (time <= 365 * DAY_MILLIS) {// 一年内
+            format = new SimpleDateFormat(DATE_FORMATE_HOUR_YEAR, Locale.getDefault());
+            strTime = format.format(new Date(date));
         } else {
-            format = new SimpleDateFormat(DATE_FORMATE_SPLITE_BY_POINT, Locale.getDefault());
+            format = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES, Locale.getDefault());
             strTime = format.format(new Date(date));
         }
 
@@ -223,7 +225,7 @@ public class DateTool {
         String strTime = "";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
         long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date);
-        LogUtil.d("检查过了多少时间>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ：" + getDiffTime(date));
+        LogUtil.d("检查过了多少时间>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ：" + getDiffTime(date));
         return time < dateNUmber * DAY_MILLIS ? false : true;
     }
 

@@ -87,7 +87,7 @@ public class SignInListAdapter extends BaseAdapter {
             tv_address.setText("地址: " + legWork.position);
         }
         tv_position.setText("签到: "+legWork.address);
-        tv_time.setText(DateTool.getDiffTime(legWork.getCreatedAt() * 1000));
+        tv_time.setText(DateTool.getDiffTime(legWork.getCreatedAt()));
 
         return view;
     }
