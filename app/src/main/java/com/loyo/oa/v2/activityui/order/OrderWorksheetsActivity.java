@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.Event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -39,6 +40,7 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,6 +86,22 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
         }
 
         initView();
+        getData();
+
+        //注册到bus事件总线中
+        AppBus.getInstance().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppBus.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void onWorksheetCreated(Worksheet data) {
+        isPullDown = true;
+        page = 1;
         getData();
     }
 
@@ -204,11 +222,6 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
 
     protected void changeAdapter() {
         adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

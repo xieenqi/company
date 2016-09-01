@@ -27,11 +27,13 @@ import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
+import com.loyo.oa.v2.common.Event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -215,6 +217,13 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                 if (wrapper.errcode == 0) {
                     Intent intent = new Intent();
                     intent.putExtra(ExtraAndResult.EXTRA_BOOLEAN, true);
+
+                    Worksheet ws = wrapper.data;
+                    if (ws == null) {
+                        ws = new Worksheet();
+                    }
+                    AppBus.getInstance().post(ws);
+
                     app.finishActivity(getActivity(), MainApp.ENTER_TYPE_LEFT, 0, intent);
                 }
                 else {

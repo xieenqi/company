@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.worksheet.bean;
 import com.loyo.oa.v2.activityui.worksheet.common.Groupable;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ import java.util.List;
 //        "finishCount": 0
 //}
 
-public class Worksheet implements Groupable, Comparable<Worksheet> {
+public class Worksheet implements Groupable, Comparable<Worksheet>, Serializable {
 
     public String id;
     public String companyId;
