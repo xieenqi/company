@@ -71,6 +71,7 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
     private LayoutInflater mInflater;
 
     boolean isMyUser;
+    boolean canAddWorksheet;
 
 
     @Override
@@ -80,6 +81,7 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
         groupsData = new GroupsData();
         mBundle = getIntent().getExtras();
         detail = ( OrderDetail) mBundle.getSerializable(ExtraAndResult.EXTRA_OBJ);
+        canAddWorksheet = (boolean)mBundle.getSerializable(ExtraAndResult.EXTRA_BOOLEAN);
         if (detail == null || detail.id == null) {
             Toast("参数错误");
             finish();
@@ -115,9 +117,13 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         isMyUser = detail.directorId != null
                 && detail.directorId.equals(MainApp.getMainApp().user.id);
-        if (!isMyUser) {
+        if (!isMyUser ) {
             layout_add.setVisibility(View.GONE);
         }
+        if (!canAddWorksheet) {
+            layout_add.setVisibility(View.GONE);
+        }
+
         layout_add.setOnClickListener(this);
 
         expandableListView = (PullToRefreshExpandableListView)findViewById(R.id.expandableListView);
