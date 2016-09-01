@@ -29,6 +29,7 @@ public class OrderDetail implements Serializable {
     public int attachmentCount;
     public int recordNum;
     public int planNum;
+    public int worksheetNum;
     public long createdAt;
     public String proName;
     public String wfId;

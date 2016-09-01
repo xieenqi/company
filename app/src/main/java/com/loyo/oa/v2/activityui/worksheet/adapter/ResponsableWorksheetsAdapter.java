@@ -19,6 +19,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -120,7 +121,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             tv_worksheet.setText(wse.title);
             tv_deadline.setText(wse.daysDeadline + "天");
 
-            tv_time.setText(app.df3.format(new Date(wse.updatedAt*1000)));
+            tv_time.setText(DateTool.getDiffTime(wse.updatedAt*1000));
             if (wse.status == WorksheetEventStatus.WAITPROCESS) {
             // if (mFragment!= null && wse.status == WorksheetEventStatus.UNACTIVATED) { //  测试
                 iv_action.setVisibility(View.VISIBLE);

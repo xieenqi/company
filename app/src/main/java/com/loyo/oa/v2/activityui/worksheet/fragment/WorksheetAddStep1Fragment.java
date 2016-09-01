@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -131,6 +132,14 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
 
         final ArrayList<WorksheetTemplate> types = WorksheetConfig.getWorksheetTypes(true);
         if (types == null || types.size() == 0) {
+            final GeneralPopView pop = showGeneralDialog(true, false, "无可选工单类型！");
+            pop.setNoCancelOnclick( new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    pop.dismiss();
+                }
+            });
+
             return;
         }
 
@@ -145,6 +154,20 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
         popViewKind.setCallback(new PaymentPopView.VaiueCallback() {
             @Override
             public void setValue(String value, int index) {
+
+                WorksheetTemplate template = types.get(index-1);
+                if (template.hasItems == false) {
+
+                    final GeneralPopView pop = showGeneralDialog(true, false, "该工单类型未配置模版，\n请选择其他类型！");
+                    pop.setNoCancelOnclick( new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            pop.dismiss();
+                        }
+                    });
+                    return;
+                }
+
                 selectedType = types.get(index-1);
                 tv_worksheet_type.setText(value);
                 ((WorksheetAddActivity)getActivity()).selectedType = selectedType;
