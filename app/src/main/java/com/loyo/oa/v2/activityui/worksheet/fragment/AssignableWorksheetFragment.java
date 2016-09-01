@@ -122,13 +122,8 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
         super.onCreate(savedInstanceState);
         groupsData = new GroupsData();
         initFilters();
-        AppBus.getInstance().register(this);
     }
 
-    public void onDestroy() {
-        super.onDestroy();
-        AppBus.getInstance().unregister(this);
-    }
 
     @Subscribe
     public void onWorksheetCreated(WorksheetChangeEvent event) {

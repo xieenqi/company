@@ -53,7 +53,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             tv_creator_time, tv_wfname, tv_order_number, tv_memo;
 
 
-    /** 新增工单 2016-09-01 */
+    /**
+     * 新增工单 2016-09-01
+     */
     private LinearLayout ll_worksheet; /* 工单cell */
     private TextView tv_worksheet;     /* 工单数  */
 
@@ -110,7 +112,8 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Subscribe
-    public void onWorksheetCreated(Worksheet data) {
+    public void
+    onWorksheetCreated(Worksheet data) {
         // 刷新数目
         getData();
     }
@@ -230,14 +233,8 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
             case R.id.ll_worksheet://工单
-                // 1待审核 2未通过 3进行中 4已完成 5意外终止 6
-                boolean canAddWorksheet = false;
-                if (mData.status == 3 || mData.status == 4) {
-                    canAddWorksheet = true;
-                }
                 mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_OBJ, mData);
-                mBundle.putBoolean(ExtraAndResult.EXTRA_BOOLEAN, canAddWorksheet);
                 app.startActivityForResult(this, OrderWorksheetsActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
         }
@@ -320,7 +317,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_plan.setText("回款计划（" + mData.planNum + "）");
         tv_record.setText("回款记录（" + mData.recordNum + "）");
         tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
-        tv_worksheet.setText("工单" + "("+ mData.worksheetNum +")");
+        tv_worksheet.setText("工单" + "(" + mData.recordNum + ")");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_plan_value.setText(mData.planMoney + "");

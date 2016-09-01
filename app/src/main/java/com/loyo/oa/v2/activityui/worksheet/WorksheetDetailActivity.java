@@ -25,6 +25,7 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,13 +58,25 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     Bundle bundle = new Bundle();
                     bundle.putString(ExtraAndResult.EXTRA_ID, (String) msg.obj);
                     bundle.putString(ExtraAndResult.EXTRA_ID2, mData.data.id);
+                    bundle.putInt(ExtraAndResult.EXTRA_STATUS, msg.arg1 == 2 ? 0x02 : 0x10);
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
                     break;
                 case ExtraAndResult.REQUEST_CODE_STAGE://设置负责人
-
                     eventId = (String) msg.obj;
                     SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
                     overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    break;
+                case ExtraAndResult.REQUEST_CODE_PRODUCT://事件重做
+                    Bundle mBundle = new Bundle();
+                    mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
+                    mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x01,打回重做0x02*/);
+                    app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                    break;
+                case ExtraAndResult.REQUEST_CODE_TYPE://事件提交完成
+                    Bundle bd = new Bundle();
+                    bd.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
+                    bd.putInt(ExtraAndResult.EXTRA_DATA, 0x10 /*提交完成:0x01,打回重做0x02*/);
+                    app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bd);
                     break;
             }
         }
@@ -92,6 +105,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         img_title_left.setOnClickListener(this);
         img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
         img_title_right.setOnClickListener(this);
+        img_title_right.setVisibility(View.INVISIBLE);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         ll_worksheet_info = (LinearLayout) findViewById(R.id.ll_worksheet_info);
         ll_events = (LinearLayout) findViewById(R.id.ll_events);
@@ -136,7 +150,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.ll_worksheet_info:
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ExtraAndResult.CC_USER_ID,mData.data.id);
+                bundle.putSerializable(ExtraAndResult.CC_USER_ID, mData.data.id);
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
             case R.id.tv_setting://批量设置
@@ -150,11 +164,14 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void loadData() {
-        if (MainApp.user.id.equals(mData.data.dispatcher.getId()))
+        if (MainApp.user.id.equals(mData.data.dispatcher.getId())) {
             isAssignment = true;
+            img_title_right.setVisibility(View.VISIBLE);
+        }
         if (MainApp.user.id.equals(mData.data.creator.getId())) {
             isCreated = true;
             img_title_right.setVisibility(View.INVISIBLE);
+            tv_setting.setVisibility(View.INVISIBLE);
         }
         if (ll_events.getChildCount() > 0) {
             ll_events.removeAllViews();
@@ -179,12 +196,32 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-//                Bundle mBundle = new Bundle();
-//                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
-//                app.startActivityForResult(ClueDetailActivity.this, ClueTransferActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
+                stopWorksheet();
             }
         });
         dialog.show();
+    }
+
+    /**
+     * 终止 工单
+     */
+    private void stopWorksheet() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("status", 5);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
+                setStpoWorksheet(worksheetId, map, new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("意外终止工单：", response);
+                        Toast("操作成功");
+                        onBackPressed();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
     @Override
@@ -254,7 +291,17 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
                     }
                 });
-
     }
 
+    /**
+     * 调用此方法  批量设置按钮 显现出来
+     */
+    public void setSetting() {
+        tv_setting.setVisibility(View.VISIBLE);
+    }
+
+    @Subscribe
+    public void onWorkSheetDetailsRush(WorksheetDetial event) {
+        Toast("回调刷新");
+    }
 }
