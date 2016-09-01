@@ -54,6 +54,72 @@
                 android:listSelector="@android:color/transparent"
                 />
 
+            <LinearLayout
+                android:id="@+id/ll_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_solid"
+                android:layout_marginBottom="@dimen/dimen_50"
+                android:layout_marginLeft="@dimen/margin_other_view"
+                android:layout_marginRight="@dimen/margin_other_view"
+                android:layout_marginTop="@dimen/margin_other_view"
+                android:background="#F3F3F3"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_50"
+                    android:layout_height="@dimen/dimen_50"
+                    android:background="@drawable/icon_edit_location"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_address_info"
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_10"
+                        android:text="当前位置"
+                        android:textColor="@color/text66"
+                        android:textSize="@dimen/text_sp12"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_10"
+                        android:layout_marginTop="@dimen/dimen_4"
+                        android:ellipsize="end"
+                        android:maxLines="20"
+                        android:singleLine="true"
+                        android:text="四川省成都市金牛区"
+                        android:textColor="@color/text66"
+                        android:textSize="@dimen/text_sp11"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_delete_location"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:gravity="center"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/right_arrow"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

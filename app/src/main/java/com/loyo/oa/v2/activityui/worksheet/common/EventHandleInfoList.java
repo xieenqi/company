@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet.common;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventHandleInfoItem;
 import com.loyo.oa.v2.customview.CustomerListView;
@@ -19,8 +21,9 @@ import com.loyo.oa.v2.customview.RoundImageView;
  */
 public class EventHandleInfoList extends LinearLayout {
     private RoundImageView iv_avatar;
-    private TextView tv_time, tv_content;
+    private TextView tv_time, tv_content, tv_address;
     private CustomerListView lv_listview;
+    private LinearLayout ll_address;
 
     public EventHandleInfoList(Context context, EventHandleInfoItem data) {
         super(context);
@@ -36,18 +39,34 @@ public class EventHandleInfoList extends LinearLayout {
     }
 
 
-    private void bindView(Context context, EventHandleInfoItem data) {
+    private void bindView(final Context context, final EventHandleInfoItem data) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_event_handler_info_list, null, false);
         iv_avatar = (RoundImageView) view.findViewById(R.id.iv_avatar);
         tv_time = (TextView) view.findViewById(R.id.tv_time);
         tv_content = (TextView) view.findViewById(R.id.tv_content);
+        tv_address = (TextView) view.findViewById(R.id.tv_address);
         lv_listview = (CustomerListView) view.findViewById(R.id.lv_listview);
+        ll_address = (LinearLayout) view.findViewById(R.id.ll_address);
         tv_content.setText(data.content);
         tv_time.setText(data.creatorName + "  " + data.createdAt + (data.type == 1 ? " 提交完成" : " 打回重做"));
 //        ImageLoader.getInstance().displayImage(data.);
         if (null != data.attachments && data.attachments.size() > 0) {
             WorkSheetListNestingAdapter mAdapter = new WorkSheetListNestingAdapter(data.attachments, context);
             lv_listview.setAdapter(mAdapter);
+        }
+        if (null != data.address) {
+            ll_address.setVisibility(VISIBLE);
+            tv_address.setText(data.address.addr);
+            ll_address.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent mIntent = new Intent(context, MapSingleView.class);
+                    mIntent.putExtra("la", data.address.getLoc()[1]);
+                    mIntent.putExtra("lo", data.address.getLoc()[0]);
+                    mIntent.putExtra("address", data.address.addr);
+                    context.startActivity(mIntent);
+                }
+            });
         }
         this.addView(view);
     }
