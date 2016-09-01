@@ -68,6 +68,17 @@ public interface IWorksheet {
     @GET("/worksheets/team")
     void getTeamWorksheetList(@QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
 
+    /**
+     * 团队工单列表
+     * <p/>
+     * 参数
+     * oid 具体订单号
+     * pageIndex
+     * pageSize
+     */
+    @GET("/worksheets/order/{oid}")
+    void getWorksheetListByOrder(@Path("oid") String oid, @QueryMap HashMap<String, Object> map, Callback<WorksheetListWrapper> callback);
+
 
     /**
      * 新建工单

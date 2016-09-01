@@ -579,6 +579,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
+            android:name=".activityui.order.OrderWorksheetsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
             android:name=".activityui.order.OrderAddPlanActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
