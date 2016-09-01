@@ -314,7 +314,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_plan.setText("回款计划（" + mData.planNum + "）");
         tv_record.setText("回款记录（" + mData.recordNum + "）");
         tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
-        tv_worksheet.setText("工单" + "("+ mData.recordNum +")");
+        tv_worksheet.setText("工单" + "("+ mData.worksheetNum +")");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_plan_value.setText(mData.planMoney + "");
