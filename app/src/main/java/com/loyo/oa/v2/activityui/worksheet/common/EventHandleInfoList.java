@@ -14,6 +14,7 @@ import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventHandleInfoItem;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.tool.DateTool;
 
 /**
  * 事件 详情  处理信息列表
@@ -48,7 +49,7 @@ public class EventHandleInfoList extends LinearLayout {
         lv_listview = (CustomerListView) view.findViewById(R.id.lv_listview);
         ll_address = (LinearLayout) view.findViewById(R.id.ll_address);
         tv_content.setText(data.content);
-        tv_time.setText(data.creatorName + "  " + data.createdAt + (data.type == 1 ? " 提交完成" : " 打回重做"));
+        tv_time.setText(data.creatorName + "  " + DateTool.getDiffTime(data.createdAt * 1000) + (data.type == 1 ? " 提交完成" : " 打回重做"));
 //        ImageLoader.getInstance().displayImage(data.);
         if (null != data.attachments && data.attachments.size() > 0) {
             WorkSheetListNestingAdapter mAdapter = new WorkSheetListNestingAdapter(data.attachments, context);
