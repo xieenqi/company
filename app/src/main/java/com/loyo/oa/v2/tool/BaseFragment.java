@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.common.Event.AppBus;
 import com.loyo.oa.v2.customview.GeneralPopView;
 
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {
@@ -25,7 +26,14 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         super.onCreate(savedInstanceState);
         app = MainApp.getMainApp();
         mActivity = getActivity();
+        AppBus.getInstance().register(this);
     }
+
+    public void onDestroy() {
+        super.onDestroy();
+        AppBus.getInstance().unregister(this);
+    }
+
 
     @Override
     public void onAttach(Activity activity) {

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
-def AAVersion = '3.3.2'
+def AAVersion = '4.1.0'
 def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
 
 android {
@@ -107,7 +107,7 @@ android {
         compile 'io.reactivex:rxandroid:1.0.1'
         compile 'com.yalantis:contextmenu:1.0.4'
         compile "org.androidannotations:androidannotations-api:$AAVersion"
-        compile 'com.squareup:otto:+'
+        compile 'com.squareup:otto:1.3.8'
         //compile 'com.squareup.okhttp3:okhttp:3.2.0'
         /*compile files('libs/android-async-http-1.4.6.jar')
         compile files('libs/universal-image-loader-1.9.3.jar')

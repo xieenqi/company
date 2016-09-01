@@ -262,7 +262,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
             holder.tv_name.setText(mData.directorName);
 
             holder.tv_product.setText(mData.proName);
-            holder.tv_time.setText(DateTool.getDiffTime(Long.valueOf(mData.createdAt + "") * 1000));
+            holder.tv_time.setText(DateTool.getDiffTime(Long.valueOf(mData.createdAt + "")));
             return convertView;
         }
 

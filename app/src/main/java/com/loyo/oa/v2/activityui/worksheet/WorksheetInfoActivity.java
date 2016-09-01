@@ -70,6 +70,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         mIntent = getIntent();
         id = mIntent.getStringExtra(ExtraAndResult.CC_USER_ID);
         showLoading("");
+
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         tv_title_1          = (TextView) findViewById(R.id.tv_title_1);
@@ -105,19 +106,19 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
                 tv_responsible_name.setText(mWorksheetInfo.data.responsorNames);
 
                 if(mWorksheetInfo.data.confirmedAt != 0){
-                    tv_assignment_time.setText(DateTool.timet(mWorksheetInfo.data.confirmedAt+"",DateTool.DATE_FORMATE_AT_MINUTES));
+                    tv_assignment_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.confirmedAt));
                 }else{
                     tv_assignment_time.setText("--");
                 }
 
                 if (mWorksheetInfo.data.completedAt != 0) {
-                    tv_finish_time.setText(DateTool.timet(mWorksheetInfo.data.completedAt + "", DateTool.DATE_FORMATE_AT_MINUTES));
+                    tv_finish_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.completedAt));
                 } else {
                     tv_finish_time.setText("--");
                 }
 
                 if (mWorksheetInfo.data.completedAt != 0) {
-                    tv_termination_time.setText(DateTool.timet(mWorksheetInfo.data.completedAt + "", DateTool.DATE_FORMATE_AT_MINUTES));
+                    tv_termination_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.completedAt));
                 } else {
                     tv_termination_time.setText("--");
                 }

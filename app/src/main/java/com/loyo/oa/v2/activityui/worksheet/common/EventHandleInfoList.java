@@ -49,7 +49,7 @@ public class EventHandleInfoList extends LinearLayout {
         lv_listview = (CustomerListView) view.findViewById(R.id.lv_listview);
         ll_address = (LinearLayout) view.findViewById(R.id.ll_address);
         tv_content.setText(data.content);
-        tv_time.setText(data.creatorName + "  " + DateTool.getDiffTime(data.createdAt * 1000) + (data.type == 1 ? " 提交完成" : " 打回重做"));
+        tv_time.setText(data.creatorName + "  " + DateTool.getDiffTime(data.createdAt) + (data.type == 1 ? " 提交完成" : " 打回重做"));
 //        ImageLoader.getInstance().displayImage(data.);
         if (null != data.attachments && data.attachments.size() > 0) {
             WorkSheetListNestingAdapter mAdapter = new WorkSheetListNestingAdapter(data.attachments, context);

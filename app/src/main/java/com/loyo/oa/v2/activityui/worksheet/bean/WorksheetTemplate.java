@@ -15,8 +15,6 @@ public class WorksheetTemplate {
     public boolean enabled;
     public String name;
     public boolean isSystem;
-
-
-
+    public boolean hasItems;
 
 }

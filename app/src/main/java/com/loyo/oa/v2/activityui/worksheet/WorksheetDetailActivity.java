@@ -25,6 +25,7 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -292,30 +293,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 });
     }
 
-//    /**
-//     * 事件 提交完成 与 事件重做
-//     *
-//     * @param type
-//     * @param eventId
-//     */
-//    private void setEventAction(int type, String eventId) {
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("type", type); // 1为提交完成，2为打回重做
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-//                setEventSubmit(eventId, map, new Callback<Object>() {
-//                    @Override
-//                    public void success(Object o, Response response) {
-//                        HttpErrorCheck.checkResponse("事件处理操作：", response);
-//                        getData();
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                    }
-//                });
-//    }
-
     /**
      * 调用此方法  批量设置按钮 显现出来
      */
@@ -323,4 +300,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_setting.setVisibility(View.VISIBLE);
     }
 
+    @Subscribe
+    public void onWorkSheetDetailsRush(WorksheetDetial event) {
+        Toast("回调刷新");
+    }
 }
