@@ -121,7 +121,12 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             tv_worksheet.setText(wse.title);
             tv_deadline.setText(wse.daysDeadline + "天");
 
-            tv_time.setText(DateTool.getDiffTime(wse.updatedAt*1000));
+            //TODO 我负责的 未触发不显示触发时间
+            if(wse.status == WorksheetEventStatus.UNACTIVATED){
+                tv_time.setText("--");
+            }else{
+                tv_time.setText(DateTool.getDiffTime(wse.updatedAt*1000));
+            }
             if (wse.status == WorksheetEventStatus.WAITPROCESS) {
             // if (mFragment!= null && wse.status == WorksheetEventStatus.UNACTIVATED) { //  测试
                 iv_action.setVisibility(View.VISIBLE);

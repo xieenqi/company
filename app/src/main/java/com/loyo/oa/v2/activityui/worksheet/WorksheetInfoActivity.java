@@ -118,7 +118,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
                 }
 
                 if (mWorksheetInfo.data.completedAt != 0) {
-                    tv_termination_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.completedAt));
+                    tv_termination_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.interruptAt));
                 } else {
                     tv_termination_time.setText("--");
                 }
