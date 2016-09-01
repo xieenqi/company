@@ -8,7 +8,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_other_view"
+        android:layout_marginBottom="@dimen/margin_other_view"
+        android:layout_marginLeft="@dimen/margin_other_view"
+        android:layout_marginTop="@dimen/margin_other_view"
         android:orientation="horizontal">
 
         <com.loyo.oa.v2.customview.RoundImageView
@@ -28,7 +30,7 @@
                 android:id="@+id/tv_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_8"
+                android:layout_marginLeft="@dimen/dimen_14"
                 android:layout_marginRight="@dimen/dimen_8"
                 android:gravity="center_vertical|left"
                 android:text="08-23 | 09-08截至"
@@ -39,9 +41,10 @@
                 android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_8"
                 android:gravity="top"
                 android:padding="@dimen/dimen_4"
-                android:text=""
+                android:text="dgfgdg"
                 android:textColor="@color/text33"
                 android:textSize="15sp"/>
 
@@ -59,18 +62,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layout_solid"
-                android:layout_marginBottom="@dimen/dimen_50"
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:layout_marginTop="@dimen/margin_other_view"
                 android:background="#F3F3F3"
                 android:orientation="horizontal"
-                android:visibility="gone"
                 >
 
                 <ImageView
-                    android:layout_width="@dimen/dimen_50"
-                    android:layout_height="@dimen/dimen_50"
+                    android:layout_width="@dimen/dimen_40"
+                    android:layout_height="@dimen/dimen_40"
                     android:background="@drawable/icon_edit_location"/>
 
                 <LinearLayout

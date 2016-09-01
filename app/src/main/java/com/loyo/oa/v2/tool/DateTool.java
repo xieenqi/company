@@ -58,7 +58,8 @@ public class DateTool {
     public static final String DATE_FORMATE_HOUR_MINUTE = "HH:mm";
 
     public static final String DATE_FORMATE_SPLITE_BY_POINT = "yyyy.MM.dd HH:mm";
-
+    //MM-dd HH:mm
+    public static final String DATE_FORMATE_HOUR_YEAR = "MM-dd HH:mm";
     public static Calendar calendar;
 
     protected DateTool() {
@@ -198,13 +199,14 @@ public class DateTool {
         if (time <= DAY_MILLIS) {
             format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
             strTime = "今天".concat(format.format(new Date(date)));
-        }
-        // 昨天
-        else if (time <= 2 * DAY_MILLIS) {
+        } else if (time <= 2 * DAY_MILLIS) {// 昨天
             format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
             strTime = "昨天  ".concat(format.format(new Date(date)));
+        } else if (time <= 365 * DAY_MILLIS) {// 一年内
+            format = new SimpleDateFormat(DATE_FORMATE_HOUR_YEAR, Locale.getDefault());
+            strTime = format.format(new Date(date));
         } else {
-            format = new SimpleDateFormat(DATE_FORMATE_SPLITE_BY_POINT, Locale.getDefault());
+            format = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES, Locale.getDefault());
             strTime = format.format(new Date(date));
         }
 
