@@ -31,6 +31,8 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
+import com.loyo.oa.v2.common.Event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -40,6 +42,7 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,6 +122,19 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
         super.onCreate(savedInstanceState);
         groupsData = new GroupsData();
         initFilters();
+        AppBus.getInstance().register(this);
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        AppBus.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void onWorksheetCreated(WorksheetChangeEvent event) {
+        isPullDown = true;
+        page = 1;
+        getData();
     }
 
 
