@@ -93,7 +93,6 @@ public final class Common {
         return MainApp.lstUserGroupData == null ? new ArrayList<UserGroupData>() : MainApp.lstUserGroupData;
     }
 
-
     /**
      * 获取部门所有人员（包含部门下属所有部门里的人员）
      *
