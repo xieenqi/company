@@ -51,22 +51,42 @@ public class WorksheetConfig {
 
     /* 读取缓存 */
     public static ArrayList<WorksheetTemplate> getWorksheetTypes() {
-        ArrayList<WorksheetTemplate> result =
+        ArrayList<WorksheetTemplate> raw =
                 MainApp.getMainApp().gson.fromJson(
                         SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES),
                         new TypeToken<ArrayList<WorksheetTemplate>>(){}.getType());
+
+
+        ArrayList<WorksheetTemplate> result = new ArrayList<WorksheetTemplate>();
+        if (raw != null) {
+            for (int i = 0; i < raw.size(); i++) {
+                if (raw.get(i).enabled) {
+                    result.add(raw.get(i));
+                }
+            }
+        }
+
         return result;
     }
 
     // TODO:  增加网络获取的回调
     /* 读取缓存，如果没有缓冲，从网络获取 */
     public static ArrayList<WorksheetTemplate> getWorksheetTypes(boolean fetchIfEmpty) {
-        ArrayList<WorksheetTemplate> result = null;
+        ArrayList<WorksheetTemplate> raw = null;
         String json = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES);
-        result = MainApp.getMainApp().gson.fromJson(json, new TypeToken<ArrayList<WorksheetTemplate>>(){}.getType());
+        raw = MainApp.getMainApp().gson.fromJson(json, new TypeToken<ArrayList<WorksheetTemplate>>(){}.getType());
 
-        if (fetchIfEmpty && result == null) {
+        if (fetchIfEmpty && raw == null) {
             fetchWorksheetTypes();
+        }
+
+        ArrayList<WorksheetTemplate> result = new ArrayList<WorksheetTemplate>();
+        if (raw != null) {
+            for (int i = 0; i < raw.size(); i++) {
+                if (raw.get(i).enabled) {
+                    result.add(raw.get(i));
+                }
+            }
         }
 
         return result;
