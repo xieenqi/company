@@ -158,8 +158,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     void startLocation() {
         mLocationFlag = false;
-        tv_address.setText("获取当前位置中...");
-
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
