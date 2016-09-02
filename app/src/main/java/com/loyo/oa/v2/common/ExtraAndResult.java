@@ -96,6 +96,12 @@ public class ExtraAndResult {
      */
     public static final int WORKSHEET_EVENT_CHANGE = 304;
 
+    public static final int WORKSHEET_EVENT_TRANSFER = 305;
+    public static final int WORKSHEET_EVENT_DISPATCH = 306;
+    public static final int WORKSHEET_EVENT_REDO     = 307;
+    public static final int WORKSHEET_EVENT_FINISH = 308;
+    public static final int WORKSHEET_EVENT_DETAIL = 309;
+
     protected ExtraAndResult() {
         throw new UnsupportedOperationException(); // 防止子类调用
     }

@@ -69,7 +69,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         @Override
         public void dispatchMessage(Message msg) {
             switch (msg.what) {
-                case ExtraAndResult.REQUEST_CODE_CUSTOMER://到事件详情
+                case ExtraAndResult.WORKSHEET_EVENT_DETAIL://到事件详情
                     LogUtil.dee("arg1:" + msg.arg1);
                     Bundle bundle = new Bundle();
                     bundle.putString(ExtraAndResult.EXTRA_ID, (String) msg.obj);
@@ -80,18 +80,19 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                         bundle.putInt(ExtraAndResult.EXTRA_STATUS, 0x10);
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
                     break;
-                case ExtraAndResult.REQUEST_CODE_STAGE://设置负责人
+                case ExtraAndResult.WORKSHEET_EVENT_TRANSFER://设置负责人
+                case ExtraAndResult.WORKSHEET_EVENT_DISPATCH://设置负责人
                     eventId = (String) msg.obj;
                     SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
                     overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
-                case ExtraAndResult.REQUEST_CODE_PRODUCT://事件重做
+                case ExtraAndResult.WORKSHEET_EVENT_REDO://事件重做
                     Bundle mBundle = new Bundle();
                     mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
                     mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x01,打回重做0x02*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                     break;
-                case ExtraAndResult.REQUEST_CODE_TYPE://事件提交完成
+                case ExtraAndResult.WORKSHEET_EVENT_FINISH://事件提交完成
                     Bundle bd = new Bundle();
                     bd.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
                     bd.putInt(ExtraAndResult.EXTRA_DATA, 0x10 /*提交完成:0x01,打回重做0x02*/);
