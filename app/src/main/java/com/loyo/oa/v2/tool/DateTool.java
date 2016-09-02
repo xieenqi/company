@@ -192,7 +192,7 @@ public class DateTool {
      */
     public static String getDiffTime(long date) {
         SimpleDateFormat format = null;
-        String strTime = "";
+        String strTime = "--";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
         long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date * 1000);
         // 一天内

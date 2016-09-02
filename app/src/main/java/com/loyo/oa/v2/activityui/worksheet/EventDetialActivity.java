@@ -34,13 +34,12 @@ import retrofit.client.Response;
 public class EventDetialActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout ll_back, ll_handleInfoList;
-    private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status, tv_time;
+    private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status, tv_time, tv_day;
     private Button bt_confirm;
     private Bundle mBundle;
     private String eventId, worksheetId;
     private EventDetail mData;
-    private int bundleCode = 0;
-    private String typeTxt;
+    private int eventActionStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         Intent intent = getIntent();
         eventId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
         worksheetId = intent.getStringExtra(ExtraAndResult.EXTRA_ID2);
-        bundleCode = intent.getIntExtra(ExtraAndResult.EXTRA_STATUS, 0);
+        eventActionStatus = intent.getIntExtra(ExtraAndResult.EXTRA_STATUS, 0);
         if (TextUtils.isEmpty(worksheetId) || TextUtils.isEmpty(eventId)) {
             Toast("参数不全");
             onBackPressed();
@@ -74,10 +73,11 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
         tv_status = (TextView) findViewById(R.id.tv_status);
         tv_time = (TextView) findViewById(R.id.tv_time);
+        tv_day = (TextView) findViewById(R.id.tv_day);
         ll_handleInfoList = (LinearLayout) findViewById(R.id.ll_handleInfoList);
-        if (bundleCode != 0) {
-            bt_confirm.setVisibility(View.VISIBLE);
-            bt_confirm.setText(bundleCode == 0x01 ? "提交完成" : "打回重做");
+        if (eventActionStatus != 0) {
+            bt_confirm.setVisibility(View.GONE);
+            bt_confirm.setText(eventActionStatus == 0X01 ? "提交完成" : "打回重做");
         }
         getData();
     }
@@ -93,7 +93,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
             case R.id.bt_confirm:
                 mBundle = new Bundle();
                 mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
-                mBundle.putInt(ExtraAndResult.EXTRA_DATA, bundleCode /*提交完成:0x01,打回重做0x02*/);
+                mBundle.putInt(ExtraAndResult.EXTRA_DATA, eventActionStatus /*提交完成:0x01,打回重做0x02*/);
                 app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 break;
         }
@@ -122,12 +122,12 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
 
     private void bindData() {
         tv_content.setText(mData.content);
-        tv_responsor.setText("负责人：" + mData.responsorName);
+        tv_responsor.setText("负责人：" + (null == mData.responsorName ? "未分派" : mData.responsorName));
         tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "流程触发" : "定时触发"));
         tv_worksheet.setText("所属工单：" + mData.title);
-
-        tv_time.setText(mData.startTime == 0 ? "--" : DateTool.getDiffTime(mData.startTime) + " | " +
-                (mData.daysDeadline == 0 ? "--" : mData.daysDeadline + "内完成"));
+        tv_day.setText("限时：" + (mData.daysDeadline == 0 ? "不限时" : mData.daysDeadline + "天"));
+        tv_time.setText((mData.startTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.startTime + ""))) + " | " +
+                (mData.endTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.endTime + "")) + "截止"));
         setStatus();
         for (int i = 0; i < mData.handleInfoList.size(); i++) {
             ll_handleInfoList.addView(new EventHandleInfoList(this, mData.handleInfoList.get(i)));
