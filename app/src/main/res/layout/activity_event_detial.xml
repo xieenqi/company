@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/white"
               android:clipToPadding="true"
               android:fitsSystemWindows="true"
-              android:orientation="vertical">
+              >
 
     <include layout="@layout/include_title"/>
 
@@ -124,16 +124,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>
 
-            <Button
-                android:id="@+id/bt_confirm"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_45"
-                android:layout_margin="@dimen/margin_other_view"
-                android:background="@drawable/round_bg_shpe"
-                android:text="重做"
-                android:textColor="@color/white"
-                android:visibility="gone"/>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -141,4 +131,38 @@
                 android:background="@color/activity_bg"/>
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:id="@+id/btn_complete1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_other_view"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/margin_other_view"
+            android:background="@color/title_bg1"
+            android:textColor="@color/white"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_complete2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_other_view"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/margin_other_view"
+            android:background="@color/title_bg1"
+            android:textColor="@color/white"
+            android:visibility="gone"
+           />
+
+        </LinearLayout>
+</RelativeLayout>

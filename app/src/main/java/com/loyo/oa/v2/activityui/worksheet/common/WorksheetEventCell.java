@@ -113,7 +113,7 @@ public class WorksheetEventCell extends LinearLayout {
             @Override
             public void onClick(View v) {
                 Message msg = new Message();
-                msg.obj = data.id;
+                msg.obj = data;
                 //msg.arg1 = action;
                 msg.what = ExtraAndResult.REQUEST_CODE_CUSTOMER;
                 handler.sendMessage(msg);

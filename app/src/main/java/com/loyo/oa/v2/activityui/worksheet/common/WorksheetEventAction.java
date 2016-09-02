@@ -22,12 +22,9 @@ import javax.xml.transform.Transformer;
 public enum  WorksheetEventAction implements Serializable {
 
     None{
-        public int getIcon() {
-            return R.drawable.icon_worksheet_setting;
-        }
-        public boolean visible() {
-            return false;
-        }
+        public int getIcon() {return R.drawable.icon_worksheet_setting;}
+        public boolean visible() { return false;}
+        public String getBtnTitle(){return "无";}
     },
 
     Transfer{
@@ -37,14 +34,14 @@ public enum  WorksheetEventAction implements Serializable {
         public boolean visible() {
             return true;
         }
+        public String getBtnTitle(){ return "转移"; }
     },
     Dispatch {
         public int getIcon() {
             return R.drawable.icon_worksheet_assignment;
         }
-        public boolean visible() {
-            return true;
-        }
+        public boolean visible() { return true; }
+        public String getBtnTitle(){ return "分派";}
     },
     Redo {
         public int getIcon() {
@@ -53,6 +50,7 @@ public enum  WorksheetEventAction implements Serializable {
         public boolean visible() {
             return true;
         }
+        public String getBtnTitle(){ return "重做";}
     },
     Finish {
         public int getIcon() {
@@ -61,6 +59,7 @@ public enum  WorksheetEventAction implements Serializable {
         public boolean visible() {
             return true;
         }
+        public String getBtnTitle(){return "提交完成";}
     };
 
     private WorksheetEventAction(){
@@ -69,6 +68,7 @@ public enum  WorksheetEventAction implements Serializable {
 
     /** 获取显示图标*/
     public abstract int getIcon();
+    public abstract String getBtnTitle();
     public abstract boolean visible();
 
 

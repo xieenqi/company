@@ -70,14 +70,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         public void dispatchMessage(Message msg) {
             switch (msg.what) {
                 case ExtraAndResult.REQUEST_CODE_CUSTOMER://到事件详情
-                    LogUtil.dee("arg1:" + msg.arg1);
                     Bundle bundle = new Bundle();
-                    bundle.putString(ExtraAndResult.EXTRA_ID, (String) msg.obj);
+                    WSRole role = getRoleforEvent((WorksheetEventsSupporter) msg.obj);
+                    ArrayList<WorksheetEventAction> actions = actionsForRole((WorksheetEventsSupporter) msg.obj, role);
+                    bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, (WorksheetEventsSupporter) msg.obj);
+                    bundle.putSerializable(ExtraAndResult.EXTRA_DATA,actions);
                     bundle.putString(ExtraAndResult.EXTRA_ID2, mData.data.id);
-                    if (msg.arg1 == WorksheetEventLayout.ACTION_REDO)
-                        bundle.putInt(ExtraAndResult.EXTRA_STATUS, 0x02);
-                    if (msg.arg1 == WorksheetEventLayout.ACTION_COMPILE)
-                        bundle.putInt(ExtraAndResult.EXTRA_STATUS, 0x10);
+
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
                     break;
                 case ExtraAndResult.REQUEST_CODE_STAGE://设置负责人
@@ -216,25 +215,33 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
 
             WorksheetEventsSupporter event = detail.sheetEventsSupporter.get(i);
-            boolean isResponsor = MainApp.user.id.equals(event.responsorId);
+            WSRole role = getRoleforEvent(event);
 
-            /* 同一人可能同时有多个角色，也就有多个操作 */
-            WSRole role = new WSRole();
-            if (isAssignment) {
-                role.addRole(WSRole.Dispatcher);
-            }
-            if (isCreated) {
-                role.addRole(WSRole.Creator);
-            }
-            if (isResponsor) {
-                role.addRole(WSRole.Responsor);
-            }
+            getRoleforEvent(event);
 
             WorksheetEventCell cell = new WorksheetEventCell(this, handler);
             cell.loadData(event, role, actionsForRole(event, role));
 
             ll_events.addView(cell);
         }
+    }
+
+    public WSRole getRoleforEvent(WorksheetEventsSupporter event){
+
+        boolean isResponsor = MainApp.user.id.equals(event.responsorId);
+        /* 同一人可能同时有多个角色，也就有多个操作 */
+
+        WSRole role = new WSRole();
+        if (isAssignment) {
+            role.addRole(WSRole.Dispatcher);
+        }
+        if (isCreated) {
+            role.addRole(WSRole.Creator);
+        }
+        if (isResponsor) {
+            role.addRole(WSRole.Responsor);
+        }
+        return role;
     }
 
     public ArrayList<WorksheetEventAction> actionsForRole(WorksheetEventsSupporter event, WSRole role) {
