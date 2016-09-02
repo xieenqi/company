@@ -13,12 +13,9 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetCommon;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventAction;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventCell;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
@@ -39,7 +36,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +51,7 @@ import retrofit.client.Response;
 public class WorksheetDetailActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout img_title_left;
     private LinearLayout ll_worksheet_info;
-    private LinearLayout ll_events;
+    private LinearLayout ll_events, ll_wran;
     private Button bt_confirm;
     private TextView tv_title_1, tv_title, tv_status, tv_assignment, tv_complete_number, tv_setting;
     private RelativeLayout img_title_right;
@@ -140,6 +136,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         bt_confirm = (Button) findViewById(R.id.bt_confirm);
         bt_confirm.setOnClickListener(this);
         bt_confirm.setOnTouchListener(Global.GetTouch());
+        ll_wran = (LinearLayout) findViewById(R.id.ll_wran);
         getData();
     }
 
@@ -196,6 +193,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         if (MainApp.user.id.equals(mData.data.dispatcher.getId())) {
             isAssignment = true;
             img_title_right.setVisibility(View.VISIBLE);
+            if (mData.data.status == WorksheetStatus.WAITASSIGN)
+                ll_wran.setVisibility(View.VISIBLE);
         }
         if (MainApp.user.id.equals(mData.data.creator.getId())) {
             isCreated = true;
