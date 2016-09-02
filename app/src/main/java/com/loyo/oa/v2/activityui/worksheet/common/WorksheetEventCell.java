@@ -92,16 +92,16 @@ public class WorksheetEventCell extends LinearLayout {
                 msg.obj = data.id;
                 switch (theAction) {
                     case Transfer:
-                        msg.what = ExtraAndResult.REQUEST_CODE_STAGE;
+                        msg.what = ExtraAndResult.WORKSHEET_EVENT_TRANSFER;
                         break;
                     case Dispatch:
-                        msg.what = ExtraAndResult.REQUEST_CODE_PRODUCT;
+                        msg.what = ExtraAndResult.WORKSHEET_EVENT_DISPATCH;
                         break;
                     case Redo:
-                        msg.what = ExtraAndResult.REQUEST_CODE_TYPE;
+                        msg.what = ExtraAndResult.WORKSHEET_EVENT_REDO;
                         break;
                     case Finish:
-                        msg.what = ExtraAndResult.REQUEST_CODE_TYPE;
+                        msg.what = ExtraAndResult.WORKSHEET_EVENT_FINISH;
                         break;
                 }
                 handler.sendMessage(msg);
@@ -115,7 +115,7 @@ public class WorksheetEventCell extends LinearLayout {
                 Message msg = new Message();
                 msg.obj = data.id;
                 //msg.arg1 = action;
-                msg.what = ExtraAndResult.REQUEST_CODE_CUSTOMER;
+                msg.what = ExtraAndResult.WORKSHEET_EVENT_DETAIL;
                 handler.sendMessage(msg);
             }
         });
