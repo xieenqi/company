@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.util.Linkify;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -612,9 +613,12 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             tvMineTime = (TextView) itemView.findViewById(R.id.tv_mine_time);
             tvMine = (TextView) itemView.findViewById(R.id.tv_mine);
             tvContent = (TextView) itemView.findViewById(R.id.tv_mine_content);
-
+            try{
+                tvContent.setAutoLinkMask(Linkify.ALL);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
             tvContent.setMaxWidth(screenWidth / 2);
-
             ivMineAvatar = (RoundImageView) itemView.findViewById(R.id.iv_mine_avatar);
         }
     }
@@ -630,7 +634,11 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             mTvOtherTime = (TextView) itemView.findViewById(R.id.tv_other_time);
             mTvOtherName = (TextView) itemView.findViewById(R.id.tv_other_name);
             mTvOtherContent = (TextView) itemView.findViewById(R.id.tv_other_content);
-
+            try {
+                mTvOtherContent.setAutoLinkMask(Linkify.ALL);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
             mTvOtherContent.setMaxWidth((int) (screenWidth / 1.6f));
 
             mIvOtherAvatar = (RoundImageView) itemView.findViewById(R.id.iv_other_avatar);
@@ -683,16 +691,16 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-            View view = null;
+            View mView = null;
             RecyclerView.ViewHolder holder = null;
             switch (viewType) {
                 case DiscussSendMode.mine:
-                    view = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_mine, null);
-                    holder = new DiscussDetMineViewHolder(view);
+                    mView = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_mine, null);
+                    holder = new DiscussDetMineViewHolder(mView);
                     return holder;
                 case DiscussSendMode.other:
-                    view = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_other, null);
-                    holder = new DiscussDetOtherViewHolder(view);
+                    mView = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_other, null);
+                    holder = new DiscussDetOtherViewHolder(mView);
                     return holder;
             }
             return null;
