@@ -10,8 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by EthanGong on 16/9/1.
  */
-public class WorksheetEventCell  extends LinearLayout {
+public class WorksheetEventCell extends LinearLayout {
 
     View content;
     private RoundImageView iv_avatar;
@@ -57,8 +55,7 @@ public class WorksheetEventCell  extends LinearLayout {
         WorksheetEventAction action = null;
         if (actions.size() == 0) {
             action = WorksheetEventAction.None;
-        }
-        else {
+        } else {
             action = actions.get(0);
             for (int i = 0; i < actions.size(); i++) {
                 if (actions.get(i) == WorksheetEventAction.Finish) {
@@ -81,7 +78,7 @@ public class WorksheetEventCell  extends LinearLayout {
         iv_status.setImageResource(data.status.getIcon());
 
         /* 操作按钮 */
-        iv_action.setVisibility(action.visible()?View.VISIBLE:View.INVISIBLE);
+        iv_action.setVisibility(action.visible() ? View.VISIBLE : View.INVISIBLE);
         iv_action.setImageResource(action.getIcon());
 
         /* 事件 */

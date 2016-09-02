@@ -36,12 +36,14 @@ import retrofit.client.Response;
 public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
 
     private ResponsableWorksheetFragment mFragment;
+    private long nowTime;
 
     public ResponsableWorksheetsAdapter(final Context context, final ResponsableWorksheetFragment fragment, final GroupsData data) {
         super();
         mContext = context;
         groupsData = data;
         mFragment = fragment;
+        nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime("yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
     }
 
     public ResponsableWorksheetsAdapter(final Context context, final GroupsData data) {
@@ -57,6 +59,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_worksheet_event_wrapper, null, false);
             holder.tv_content = (TextView) convertView.findViewById(R.id.tv_content);
+            holder.tv_endtime_tag = (TextView) convertView.findViewById(R.id.tv_endtime_tag);
             holder.tv_worksheet = (TextView) convertView.findViewById(R.id.tv_worksheet);
             holder.tv_deadline = (TextView) convertView.findViewById(R.id.tv_deadline);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
@@ -109,6 +112,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
         TextView tv_content;
         TextView tv_worksheet;
         TextView tv_deadline;
+        TextView tv_endtime_tag;
 
         TextView tv_time;
         ImageView iv_action;
@@ -119,16 +123,31 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             this.wse = wse;
             tv_content.setText(wse.content);
             tv_worksheet.setText(wse.title);
-            tv_deadline.setText(wse.daysDeadline + "天");
+
+            if(wse.endTime != 0){
+                /*是否超时判断*/
+                if(nowTime > wse.endTime){
+                    tv_deadline.setTextColor(mContext.getColor(R.color.red1));
+                    tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
+                    tv_endtime_tag.setVisibility(View.VISIBLE);
+                }else{
+                    tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
+                    tv_endtime_tag.setVisibility(View.GONE);
+                }
+            }else{
+                tv_deadline.setText("--");
+                tv_endtime_tag.setVisibility(View.GONE);
+            }
+
 
             //TODO 我负责的 未触发不显示触发时间
             if(wse.status == WorksheetEventStatus.UNACTIVATED){
-                tv_time.setText("--");
+                tv_time.setText(" ");
             }else{
-                tv_time.setText(DateTool.getDiffTime(wse.updatedAt*1000));
+                tv_time.setText(DateTool.getDiffTime(wse.updatedAt));
             }
+
             if (wse.status == WorksheetEventStatus.WAITPROCESS) {
-            // if (mFragment!= null && wse.status == WorksheetEventStatus.UNACTIVATED) { //  测试
                 iv_action.setVisibility(View.VISIBLE);
             }
             else {
