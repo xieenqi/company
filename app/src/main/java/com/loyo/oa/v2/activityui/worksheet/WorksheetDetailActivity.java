@@ -13,18 +13,17 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetCommon;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventAction;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventCell;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
@@ -39,7 +38,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +53,11 @@ import retrofit.client.Response;
 public class WorksheetDetailActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout img_title_left;
     private LinearLayout ll_worksheet_info;
-    private LinearLayout ll_events;
+    private LinearLayout ll_events, ll_wran;
     private Button bt_confirm;
     private TextView tv_title_1, tv_title, tv_status, tv_assignment, tv_complete_number, tv_setting;
     private RelativeLayout img_title_right;
     private String worksheetId, eventId;
-    private BaseBeanT<WorksheetDetail> mData;
     private WorksheetDetail detail;
     private boolean isAssignment, isCreated;//分派人 ，创建人
 
@@ -69,15 +66,14 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         @Override
         public void dispatchMessage(Message msg) {
             switch (msg.what) {
+
                 case ExtraAndResult.WORKSHEET_EVENT_DETAIL://到事件详情
-                    LogUtil.dee("arg1:" + msg.arg1);
                     Bundle bundle = new Bundle();
-                    bundle.putString(ExtraAndResult.EXTRA_ID, (String) msg.obj);
-                    bundle.putString(ExtraAndResult.EXTRA_ID2, mData.data.id);
-                    if (msg.arg1 == WorksheetEventLayout.ACTION_REDO)
-                        bundle.putInt(ExtraAndResult.EXTRA_STATUS, 0x02);
-                    if (msg.arg1 == WorksheetEventLayout.ACTION_COMPILE)
-                        bundle.putInt(ExtraAndResult.EXTRA_STATUS, 0x10);
+                    WSRole role = getRoleforEvent((WorksheetEventsSupporter) msg.obj);
+                    ArrayList<WorksheetEventAction> actions = actionsForRole((WorksheetEventsSupporter) msg.obj, role);
+                    bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, (WorksheetEventsSupporter) msg.obj);
+                    bundle.putSerializable(ExtraAndResult.EXTRA_DATA,actions);
+                    bundle.putString(ExtraAndResult.EXTRA_ID2,detail.id);
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
                     break;
                 case ExtraAndResult.WORKSHEET_EVENT_TRANSFER://设置负责人
@@ -89,13 +85,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 case ExtraAndResult.WORKSHEET_EVENT_REDO://事件重做
                     Bundle mBundle = new Bundle();
                     mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
-                    mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x01,打回重做0x02*/);
+                    mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x01 /*提交完成:0x02,打回重做0x01*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                     break;
                 case ExtraAndResult.WORKSHEET_EVENT_FINISH://事件提交完成
                     Bundle bd = new Bundle();
                     bd.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
-                    bd.putInt(ExtraAndResult.EXTRA_DATA, 0x10 /*提交完成:0x01,打回重做0x02*/);
+                    bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bd);
                     break;
             }
@@ -140,6 +136,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         bt_confirm = (Button) findViewById(R.id.bt_confirm);
         bt_confirm.setOnClickListener(this);
         bt_confirm.setOnTouchListener(Global.GetTouch());
+        ll_wran = (LinearLayout) findViewById(R.id.ll_wran);
         getData();
     }
 
@@ -151,11 +148,10 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     public void success(BaseBeanT<WorksheetDetail> result, Response response) {
                         HttpErrorCheck.checkResponse("工单详情：", response);
                         if (result.errcode == 0) {
-                            mData = result;
-                            detail = mData.data;
+                            detail = result.data;
                             loadData();
                         } else {
-                            Toast("" + mData.errmsg);
+                            Toast("" + result.errmsg);
                         }
                     }
 
@@ -178,7 +174,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.ll_worksheet_info:
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ExtraAndResult.CC_USER_ID, mData.data.id);
+                bundle.putSerializable(ExtraAndResult.CC_USER_ID, detail.id);
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
             case R.id.tv_setting://批量设置
@@ -193,11 +189,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void loadData() {
-        if (MainApp.user.id.equals(mData.data.dispatcher.getId())) {
+        if (MainApp.user.id.equals(detail.dispatcher.getId())) {
             isAssignment = true;
             img_title_right.setVisibility(View.VISIBLE);
+            if (detail.status == WorksheetStatus.WAITASSIGN)
+                ll_wran.setVisibility(View.VISIBLE);
         }
-        if (MainApp.user.id.equals(mData.data.creator.getId())) {
+        if (MainApp.user.id.equals(detail.creator.getId())) {
             isCreated = true;
             img_title_right.setVisibility(View.INVISIBLE);
             tv_setting.setVisibility(View.INVISIBLE);
@@ -208,34 +206,43 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_title.setText(detail.title);
         tv_assignment.setText("分派人：" + detail.dispatcher.getName());
         tv_status.setText(detail.status.getName());
-        tv_status.setBackgroundColor(detail.status.getColor());
+        tv_status.setBackgroundResource(detail.status.getStatusBackground());
 
         if (null == detail.sheetEventsSupporter) {
             return;
         }
 
+        ll_events.removeAllViews();
         for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
 
             WorksheetEventsSupporter event = detail.sheetEventsSupporter.get(i);
-            boolean isResponsor = MainApp.user.id.equals(event.responsorId);
+            WSRole role = getRoleforEvent(event);
 
-            /* 同一人可能同时有多个角色，也就有多个操作 */
-            WSRole role = new WSRole();
-            if (isAssignment) {
-                role.addRole(WSRole.Dispatcher);
-            }
-            if (isCreated) {
-                role.addRole(WSRole.Creator);
-            }
-            if (isResponsor) {
-                role.addRole(WSRole.Responsor);
-            }
+            getRoleforEvent(event);
 
             WorksheetEventCell cell = new WorksheetEventCell(this, handler);
             cell.loadData(event, role, actionsForRole(event, role));
 
             ll_events.addView(cell);
         }
+    }
+
+    public WSRole getRoleforEvent(WorksheetEventsSupporter event){
+
+        boolean isResponsor = MainApp.user.id.equals(event.responsorId);
+        /* 同一人可能同时有多个角色，也就有多个操作 */
+
+        WSRole role = new WSRole();
+        if (isAssignment) {
+            role.addRole(WSRole.Dispatcher);
+        }
+        if (isCreated) {
+            role.addRole(WSRole.Creator);
+        }
+        if (isResponsor) {
+            role.addRole(WSRole.Responsor);
+        }
+        return role;
     }
 
     public ArrayList<WorksheetEventAction> actionsForRole(WorksheetEventsSupporter event, WSRole role) {
@@ -332,8 +339,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
      */
     private void setAllEventPersonal(String userId) {
         List<String> eventIsList = new ArrayList<>();
-        for (int i = 0; i < mData.data.sheetEventsSupporter.size(); i++) {
-            eventIsList.add(mData.data.sheetEventsSupporter.get(i).id);
+        for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
+            eventIsList.add(detail.sheetEventsSupporter.get(i).id);
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("responsorId", userId);
@@ -361,8 +368,32 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_setting.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 转移\分派
+     * */
     @Subscribe
-    public void onWorkSheetDetailsRush(WorksheetDetail event) {
-        Toast("回调刷新");
+    public void onWorkSheetDetailsRush(WorksheetEventChangeEvent event) {
+        Toast("onWorkSheetDetailsRush 刷新！！");
+        getData();
     }
+
+
+    /**
+     * 重做回调
+     * */
+    @Subscribe
+    public void onWorkSheetDetailsRedo(WorksheetInfo event) {
+        Toast("onWorkSheetDetailsRedo 刷新！！");
+        getData();
+    }
+
+    /**
+     * 提交完成 回调
+     * */
+    @Subscribe
+    public void onWorkSheetDetailsFinish(WorksheetDetail event) {
+        Toast("onWorkSheetDetailsFinish 刷新！！");
+        getData();
+    }
+
 }

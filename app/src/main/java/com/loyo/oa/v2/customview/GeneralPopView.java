@@ -37,6 +37,14 @@ public class GeneralPopView extends Dialog {
             findViewById(R.id.dialog_nocancelpopview_ll).setVisibility(View.GONE);
             findViewById(R.id.dialog_generalpopview_ll).setVisibility(View.VISIBLE);
         }
+
+        findViewById(R.id.dialog_generalpopview_cancel).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dismisDialog();
+            }
+        });
     }
 
     public void setMessage(String strMessage) {

@@ -30,6 +30,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
@@ -279,10 +280,15 @@ public class MenuFragment extends BaseFragment {
                 break;
             //清除缓存
             case R.id.ll_clean:
-                showLoading("清除本地磁盘缓存");
-                ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-                cancelLoading();
-                Toast("清除完成");
+                final GeneralPopView dialog = showGeneralDialog(true, true, "确认清除缓存？");
+                dialog.setSureOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
+                        dialog.dismiss();
+                    }
+                });
+
                 break;
         }
 

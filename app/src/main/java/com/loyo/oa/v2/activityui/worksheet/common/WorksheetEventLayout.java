@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.worksheet.common;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -71,6 +69,7 @@ public class WorksheetEventLayout extends LinearLayout {
             iv_action.setVisibility(INVISIBLE);
         if (isAssignment)
             iv_action.setVisibility(VISIBLE);
+
         //处理事件状态
 //        switch (data.status) {
 //            case 1://待处理

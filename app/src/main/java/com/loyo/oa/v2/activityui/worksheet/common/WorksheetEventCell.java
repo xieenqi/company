@@ -75,7 +75,7 @@ public class WorksheetEventCell extends LinearLayout {
         }
 
         /* 状态按钮 */
-        iv_status.setImageResource(data.status.getIcon());
+        iv_status.setImageResource(data.status.getStatusIcon());
 
         /* 操作按钮 */
         iv_action.setVisibility(action.visible() ? View.VISIBLE : View.INVISIBLE);
@@ -113,7 +113,7 @@ public class WorksheetEventCell extends LinearLayout {
             @Override
             public void onClick(View v) {
                 Message msg = new Message();
-                msg.obj = data.id;
+                msg.obj = data;
                 //msg.arg1 = action;
                 msg.what = ExtraAndResult.WORKSHEET_EVENT_DETAIL;
                 handler.sendMessage(msg);
