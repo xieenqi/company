@@ -13,86 +13,183 @@ import java.lang.reflect.Type;
 
 /**
  * Created by EthanGong on 16/8/27.
- *
+ * <p/>
  * 工单事件状态
  * code : 状态对应数字
  * name : 状态显示文本
  * color: 状态显示颜色
  * icon : 状态icon
- *
  */
 public enum WorksheetEventStatus implements GroupKey {
 
-    /** 其他
-     *
+    /**
+     * 其他
+     * <p/>
      * 不应出现的数据
      * 防备服务端返回非 1 - 4 数据
-     *
      */
-    OTHERS(Integer.MAX_VALUE){
-        public String getName() { return "其他"; }
-        public int getColor() { return R.color.ws_status_4; }
-        public int getIcon() { return R.drawable.icon_ws_status4; }
+    OTHERS(Integer.MAX_VALUE) {
+        public String getName() {
+            return "其他";
+        }
+
+        public int getColor() {
+            return R.color.ws_status_4;
+        }
+
+        public int getIcon() {
+            return R.drawable.icon_ws_status4;
+        }
+
+        public int getStatusIcon() {
+            return R.drawable.icon_ws_status4;
+        }
     },
 
-    /** 待处理 */
-    WAITPROCESS(1){
-        public String getName() { return "待处理"; }
-        public int getColor() { return R.color.ws_status_1; }
-        public int getIcon() { return R.drawable.icon_ws_status1; }
+    /**
+     * 待处理
+     */
+    WAITPROCESS(1) {
+        public String getName() {
+            return "待处理";
+        }
+
+        public int getColor() {
+            return R.color.ws_status_1;
+        }
+
+        public int getIcon() {
+            return R.drawable.icon_ws_status1;
+        }
+
+        public int getStatusIcon() {
+            return R.drawable.icon_worcksheet_status2;
+        }
     },
 
-    /** 未触发 */
-    UNACTIVATED(2){
-        public String getName() { return "未触发"; }
-        public int getColor() { return R.color.ws_status_2; }
-        public int getIcon() { return R.drawable.icon_ws_status2; }
+    /**
+     * 未触发
+     */
+    UNACTIVATED(2) {
+        public String getName() {
+            return "未触发";
+        }
+
+        public int getColor() {
+            return R.color.ws_status_2;
+        }
+
+        public int getIcon() {
+            return R.drawable.icon_ws_status2;
+        }
+
+        public int getStatusIcon() {
+            return R.drawable.icon_worcksheet_status1;
+        }
     },
 
-    /** 已处理 */
-    FINISHED(3){
-        public String getName() { return "已处理"; }
-        public int getColor() { return R.color.ws_status_3; }
-        public int getIcon() { return R.drawable.icon_ws_status3; }
+    /**
+     * 已处理
+     */
+    FINISHED(3) {
+        public String getName() {
+            return "已处理";
+        }
+
+        public int getColor() {
+            return R.color.ws_status_3;
+        }
+
+        public int getIcon() {
+            return R.drawable.icon_ws_status3;
+        }
+
+        public int getStatusIcon() {
+            return R.drawable.icon_worcksheet_status3;
+        }
     },
 
-    /** 意外终止 */
-    TEMINATED(4){
-        public String getName() { return "意外终止"; }
-        public int getColor() { return R.color.ws_status_4; }
-        public int getIcon() { return R.drawable.icon_ws_status4; }
+    /**
+     * 意外终止
+     */
+    TEMINATED(4) {
+        public String getName() {
+            return "意外终止";
+        }
+
+        public int getColor() {
+            return R.color.ws_status_4;
+        }
+
+        public int getIcon() {
+            return R.drawable.icon_ws_status4;
+        }
+
+        public int getStatusIcon() {
+            return R.drawable.icon_ws_status4;
+        }
     },
 
-    /** 全部类型 */
-    Null(-1){
-        public String getName() { return "全部类型"; }
-        public int getColor() { return R.color.ws_status_4; }
-        public int getIcon() { return R.drawable.icon_ws_status4; }
+    /**
+     * 全部类型
+     */
+    Null(-1) {
+        public String getName() {
+            return "全部类型";
+        }
+
+        public int getColor() {
+            return R.color.ws_status_4;
+        }
+
+        public int getIcon() {
+            return R.drawable.icon_ws_status4;
+        }
+
+        public int getStatusIcon() {
+            return R.drawable.icon_ws_status4;
+        }
+
     };
 
     public final int code;
+
     private WorksheetEventStatus(int code) {
         this.code = code;
     }
 
 
-    /** 获取显示内容 */
+    /**
+     * 获取显示内容
+     */
     public abstract String getName();
 
-    /** 获取显示颜色*/
+    /**
+     * 获取显示颜色
+     */
     public abstract int getColor();
 
-    /** 获取显示图标*/
+    /**
+     * 获取显示图标
+     */
     public abstract int getIcon();
 
-    /** 获取排序权值 */
-    public int compareWeight()
-    {
+    /**
+     * 获取显示图标
+     */
+    public abstract int getStatusIcon();
+
+    /**
+     * 获取排序权值
+     */
+    public int compareWeight() {
         return this.code;
     }
 
 
-    /** gson 序列化和反序列化 */
+    /**
+     * gson 序列化和反序列化
+     */
     public static class EnumSerializer implements JsonSerializer<WorksheetEventStatus>,
             JsonDeserializer<WorksheetEventStatus> {
 
@@ -107,7 +204,7 @@ public enum WorksheetEventStatus implements GroupKey {
         @Override
         public WorksheetEventStatus deserialize(JsonElement json, Type typeOfT,
                                                 JsonDeserializationContext context) throws JsonParseException {
-            WorksheetEventStatus[] list  = WorksheetEventStatus.values();
+            WorksheetEventStatus[] list = WorksheetEventStatus.values();
             for (int i = 0; i < list.length; i++) {
                 if (list[i].code == json.getAsInt()) {
                     return list[i];

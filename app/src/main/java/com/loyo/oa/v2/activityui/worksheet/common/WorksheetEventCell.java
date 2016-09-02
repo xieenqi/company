@@ -75,7 +75,7 @@ public class WorksheetEventCell extends LinearLayout {
         }
 
         /* 状态按钮 */
-        iv_status.setImageResource(data.status.getIcon());
+        iv_status.setImageResource(data.status.getStatusIcon());
 
         /* 操作按钮 */
         iv_action.setVisibility(action.visible() ? View.VISIBLE : View.INVISIBLE);
