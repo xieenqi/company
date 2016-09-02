@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IWorksheet;
@@ -44,6 +46,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private LinearLayout img_title_left;
     private LinearLayout ll_worksheet_info;
     private LinearLayout ll_events;
+    private Button bt_confirm;
     private TextView tv_title_1, tv_title, tv_status, tv_assignment, tv_complete_number, tv_setting;
     private RelativeLayout img_title_right;
     private String worksheetId, eventId;
@@ -122,6 +125,9 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_complete_number = (TextView) findViewById(R.id.tv_complete_number);
         tv_setting = (TextView) findViewById(R.id.tv_setting);
         tv_setting.setOnClickListener(this);
+        bt_confirm = (Button) findViewById(R.id.bt_confirm);
+        bt_confirm.setOnClickListener(this);
+        bt_confirm.setOnTouchListener(Global.GetTouch());
         getData();
     }
 
@@ -164,6 +170,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
             case R.id.bt_confirm://提交完成
+                stopWorksheet(4);
                 break;
         }
     }
@@ -180,6 +187,9 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         }
         if (ll_events.getChildCount() > 0) {
             ll_events.removeAllViews();
+        }
+        if (isAssignment && mData.data.status == 3) {
+            bt_confirm.setVisibility(View.VISIBLE);
         }
         tv_title.setText(mData.data.title);
         tv_assignment.setText("分派人：" + mData.data.dispatcher.getName());
@@ -198,28 +208,32 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
      */
     private void functionButton() {
         ActionSheetDialog dialog = new ActionSheetDialog(WorksheetDetailActivity.this).builder();
-        dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+        dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                stopWorksheet();
+                stopWorksheet(5);
             }
         });
         dialog.show();
     }
 
     /**
-     * 终止 工单
+     * 终止 工单  修改工单状态
+     *
+     * @param status 5 意外终止  4 已完成
      */
-    private void stopWorksheet() {
+    private void stopWorksheet(int status) {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("status", 5);
+        map.put("status", status);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
                 setStpoWorksheet(worksheetId, map, new Callback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("意外终止工单：", response);
+                        getData();
                         Toast("操作成功");
-                        onBackPressed();
+//                        onBackPressed();
                     }
 
                     @Override
