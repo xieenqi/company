@@ -33,6 +33,7 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
 
@@ -66,10 +67,14 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         public void dispatchMessage(Message msg) {
             switch (msg.what) {
                 case ExtraAndResult.REQUEST_CODE_CUSTOMER://到事件详情
+                    LogUtil.dee("arg1:" + msg.arg1);
                     Bundle bundle = new Bundle();
                     bundle.putString(ExtraAndResult.EXTRA_ID, (String) msg.obj);
                     bundle.putString(ExtraAndResult.EXTRA_ID2, mData.data.id);
-                    bundle.putInt(ExtraAndResult.EXTRA_STATUS, msg.arg1 == 2 ? 0x02 : 0x10);
+                    if (msg.arg1 == WorksheetEventLayout.ACTION_REDO)
+                        bundle.putInt(ExtraAndResult.EXTRA_STATUS, 0x02);
+                    if (msg.arg1 == WorksheetEventLayout.ACTION_COMPILE)
+                        bundle.putInt(ExtraAndResult.EXTRA_STATUS, 0x10);
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
                     break;
                 case ExtraAndResult.REQUEST_CODE_STAGE://设置负责人

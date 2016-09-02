@@ -18,6 +18,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
@@ -31,13 +32,15 @@ import retrofit.client.Response;
  * Created by xeq on 16/8/30.
  */
 public class EventDetialActivity extends BaseActivity implements View.OnClickListener {
+
     private LinearLayout ll_back, ll_handleInfoList;
-    private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status;
+    private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status, tv_time;
     private Button bt_confirm;
     private Bundle mBundle;
     private String eventId, worksheetId;
     private EventDetail mData;
-    private int eventActionStatus;
+    private int bundleCode = 0;
+    private String typeTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         Intent intent = getIntent();
         eventId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
         worksheetId = intent.getStringExtra(ExtraAndResult.EXTRA_ID2);
-        eventActionStatus = intent.getIntExtra(ExtraAndResult.EXTRA_STATUS, 0);
+        bundleCode = intent.getIntExtra(ExtraAndResult.EXTRA_STATUS, 0);
         if (TextUtils.isEmpty(worksheetId) || TextUtils.isEmpty(eventId)) {
             Toast("参数不全");
             onBackPressed();
@@ -70,10 +73,11 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_type = (TextView) findViewById(R.id.tv_type);
         tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
         tv_status = (TextView) findViewById(R.id.tv_status);
+        tv_time = (TextView) findViewById(R.id.tv_time);
         ll_handleInfoList = (LinearLayout) findViewById(R.id.ll_handleInfoList);
-        if (eventActionStatus != 0) {
-            bt_confirm.setVisibility(View.GONE);
-            bt_confirm.setText(eventActionStatus == 0X01 ? "提交完成" : "打回重做");
+        if (bundleCode != 0) {
+            bt_confirm.setVisibility(View.VISIBLE);
+            bt_confirm.setText(bundleCode == 0x01 ? "提交完成" : "打回重做");
         }
         getData();
     }
@@ -89,7 +93,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
             case R.id.bt_confirm:
                 mBundle = new Bundle();
                 mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
-                mBundle.putInt(ExtraAndResult.EXTRA_DATA, eventActionStatus /*提交完成:0x01,打回重做0x02*/);
+                mBundle.putInt(ExtraAndResult.EXTRA_DATA, bundleCode /*提交完成:0x01,打回重做0x02*/);
                 app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 break;
         }
@@ -121,6 +125,9 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_responsor.setText("负责人：" + mData.responsorName);
         tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "流程触发" : "定时触发"));
         tv_worksheet.setText("所属工单：" + mData.title);
+
+        tv_time.setText(mData.startTime == 0 ? "--" : DateTool.getDiffTime(mData.startTime) + " | " +
+                (mData.daysDeadline == 0 ? "--" : mData.daysDeadline + "内完成"));
         setStatus();
         for (int i = 0; i < mData.handleInfoList.size(); i++) {
             ll_handleInfoList.addView(new EventHandleInfoList(this, mData.handleInfoList.get(i)));
@@ -142,7 +149,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                     break;
                 case 3://已完成
                     info = "已完成";
-                    bj = R.drawable.retange_gray;
+                    bj = R.drawable.retange_green;
                     break;
             }
             tv_status.setText(info);

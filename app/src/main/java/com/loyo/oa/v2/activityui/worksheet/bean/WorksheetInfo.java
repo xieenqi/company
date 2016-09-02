@@ -31,5 +31,6 @@ public class WorksheetInfo extends BaseBean{
     public long   updatedAt;
     public long   completedAt; //完成时间
     public long   confirmedAt; //确认时间
+    public long   interruptAt; //终止时间
 
 }
