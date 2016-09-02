@@ -28,7 +28,7 @@ public class WorksheetCommon {
                 break;
             case 4:
                 info = "已完成";
-                bj = R.drawable.retange_gray;
+                bj = R.drawable.retange_green;
                 break;
             case 5:
                 info = "意外终止";

@@ -63,8 +63,7 @@ public class WorksheetEventLayout extends LinearLayout {
         tv_time = (TextView) eventView.findViewById(R.id.tv_time);
         tv_content.setText(data.content);
         tv_name.setText(null == data.responsor ? "未设置" : data.responsor.getName());
-        tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime) + " | " +
-                (data.endTime == 0 ? "--" : DateTool.getDiffTime(data.endTime) + "截止"));
+        tv_time.setText((data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime)) + " | " + (data.endTime == 0 ? "--" : DateTool.getDiffTime(data.endTime) + "截止"));
         if (MainApp.user.id.equals(data.responsorId)) {
             isresponsor = true;
         }

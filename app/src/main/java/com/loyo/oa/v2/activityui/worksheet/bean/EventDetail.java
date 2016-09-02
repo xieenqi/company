@@ -18,6 +18,7 @@ public class EventDetail implements Serializable {
     public String responsorId;
     public String responsorName;
     public long startTime;
+    public long endTime;
     public int daysDeadline;//多少天内完成
     public int daysLater;//多少天后触发
     public int status;

@@ -88,7 +88,6 @@
                     android:layout_marginLeft="@dimen/dimen_8"
                     android:layout_marginRight="@dimen/dimen_8"
                     android:layout_marginTop="@dimen/dimen_3"
-                    android:autoLink="all"
                     android:lineSpacingExtra="1dp"
                     android:text=""
                     android:textColor="@color/text99"

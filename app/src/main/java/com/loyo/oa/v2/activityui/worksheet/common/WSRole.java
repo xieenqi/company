@@ -15,20 +15,20 @@ import java.lang.reflect.Type;
 
 /**
  * Created by EthanGong on 16/9/2.
- *
+ * <p/>
  * 工单相关人员角色
- *
  */
 
 
 public class WSRole implements Serializable {
 
-    public static WSRole None       = new WSRole(0);      /* 无角色，默认 0 */
-    public static WSRole Creator    = new WSRole(1 << 0); /* 创建者角色  1 */
-    public static WSRole Responsor  = new WSRole(1 << 1); /* 负责人角色  2 */
+    public static WSRole None = new WSRole(0);      /* 无角色，默认 0 */
+    public static WSRole Creator = new WSRole(1 << 0); /* 创建者角色  1 */
+    public static WSRole Responsor = new WSRole(1 << 1); /* 负责人角色  2 */
     public static WSRole Dispatcher = new WSRole(1 << 2); /* 分派人角色  4 */
 
     private int roleCode = 0;
+
     private WSRole(int roleCode) {
         this.roleCode = roleCode;
     }
@@ -42,7 +42,7 @@ public class WSRole implements Serializable {
     }
 
     public void removeRole(WSRole role) {
-        roleCode = roleCode & (~ role.roleCode);
+        roleCode = roleCode & (~role.roleCode);
     }
 
     public boolean hasRole(WSRole role) {
@@ -50,11 +50,11 @@ public class WSRole implements Serializable {
         return code != 0;
     }
 
-    public  boolean equals(Object obj) {
-        if (obj==null || obj.getClass() != WSRole.class) {
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != WSRole.class) {
             return false;
         }
-        return this.roleCode == ((WSRole)obj).roleCode;
+        return this.roleCode == ((WSRole) obj).roleCode;
     }
 
     public boolean isResponsor() {
@@ -65,7 +65,9 @@ public class WSRole implements Serializable {
         return hasRole(Dispatcher);
     }
 
-    /** gson 序列化和反序列化 */
+    /**
+     * gson 序列化和反序列化
+     */
     public static class WSRoleSerializer implements JsonSerializer<WSRole>,
             JsonDeserializer<WSRole> {
 
@@ -79,7 +81,7 @@ public class WSRole implements Serializable {
         // json转为对象时调用,实现JsonDeserializer<WSRole>接口
         @Override
         public WSRole deserialize(JsonElement json, Type typeOfT,
-                                           JsonDeserializationContext context) throws JsonParseException {
+                                  JsonDeserializationContext context) throws JsonParseException {
             int roleCode = json.getAsInt();
             return new WSRole(roleCode);
         }
@@ -89,10 +91,10 @@ public class WSRole implements Serializable {
     /* 测试 */
 
     public void debug() {
-        Log.v("wsrole", "WSRole code = "+roleCode);
+        Log.v("wsrole", "WSRole code = " + roleCode);
     }
 
-    public static void test(){
+    public static void test() {
 
         WSRole role = new WSRole();
         role.addRole(WSRole.Creator);
@@ -108,7 +110,7 @@ public class WSRole implements Serializable {
         }
         role.addRole(WSRole.Dispatcher);
         role.debug();
-        if (! role.hasRole(Dispatcher)) {
+        if (!role.hasRole(Dispatcher)) {
             Log.v("wsrole", "error");
         }
 
