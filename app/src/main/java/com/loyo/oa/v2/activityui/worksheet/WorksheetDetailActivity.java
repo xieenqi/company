@@ -137,11 +137,11 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         bt_confirm.setOnClickListener(this);
         bt_confirm.setOnTouchListener(Global.GetTouch());
         ll_wran = (LinearLayout) findViewById(R.id.ll_wran);
+        showLoading("");
         getData();
     }
 
     private void getData() {
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
                 getWorksheetDetail(worksheetId, new Callback<BaseBeanT<WorksheetDetail>>() {
                     @Override
@@ -280,6 +280,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("意外终止工单：", response);
+                        showLoading("");
                         getData();
                         Toast("操作成功");
 //                        onBackPressed();
@@ -322,6 +323,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("设置事件负责人：", response);
+                        showLoading("");
                         getData();
                     }
 
@@ -350,6 +352,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("设置all事件负责人：", response);
+                        showLoading("");
                         getData();
                     }
 
@@ -373,7 +376,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
      * */
     @Subscribe
     public void onWorkSheetDetailsRush(WorksheetEventChangeEvent event) {
-        Toast("onWorkSheetDetailsRush 刷新！！");
+
         getData();
     }
 
@@ -383,7 +386,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
      * */
     @Subscribe
     public void onWorkSheetDetailsRedo(WorksheetInfo event) {
-        Toast("onWorkSheetDetailsRedo 刷新！！");
+
         getData();
     }
 
@@ -392,7 +395,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
      * */
     @Subscribe
     public void onWorkSheetDetailsFinish(WorksheetDetail event) {
-        Toast("onWorkSheetDetailsFinish 刷新！！");
+
         getData();
     }
 
