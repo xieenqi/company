@@ -73,56 +73,56 @@ public class WorksheetEventLayout extends LinearLayout {
         if (isAssignment)
             iv_action.setVisibility(VISIBLE);
         //处理事件状态
-        switch (data.status) {
-            case 1://待处理
-                iv_status.setImageResource(R.drawable.icon_worcksheet_status2);
-                break;
-            case 2://未触发
-                iv_status.setImageResource(R.drawable.icon_worcksheet_status1);
-                break;
-            case 3://已完成
-                iv_status.setImageResource(R.drawable.icon_worcksheet_status3);
-                break;
-        }
-        //处理工单的状态
-        switch (worksheetStatus) {//1.待分派  2.进行中 3.待审核 4.已完成 5.意外终止
-            case 1://待分派
-                if (isAssignment && !(TextUtils.isEmpty(data.responsorId))) {//有负责人
-                    iv_action.setImageResource(R.drawable.icon_worksheet_setting);
-                    ((WorksheetDetailActivity) context).setSetting();
-                    action = ACTION_PERSON;
-                } else {//没有负责人
-                    iv_action.setImageResource(R.drawable.icon_worksheet_assignment);
-                    action = ACTION_PERSON;
-                    ((WorksheetDetailActivity) context).setSetting();
-                }
-                break;
-            case 2://进行中
-                if (isAssignment && data.status == 1) {
-                    iv_action.setImageResource(R.drawable.icon_worksheet_setting);
-                    action = ACTION_PERSON;
-                } else if (isAssignment && data.status == 2) {
-                    iv_action.setImageResource(R.drawable.icon_worksheet_setting);
-                    action = ACTION_PERSON;
-                } else if (isAssignment && data.status == 3) {
-                    iv_action.setImageResource(R.drawable.icon_worksheet_redo);
-                    action = ACTION_REDO;
-                } else if (isresponsor && data.status == 1) {
-                    iv_action.setImageResource(R.drawable.icon_worksheet_compile);
-                    action = ACTION_COMPILE;
-                }
-                break;
-            case 3://待审核
-                if (isAssignment && data.status == 3) {
-                    iv_action.setImageResource(R.drawable.icon_worksheet_redo);
-                    action = ACTION_REDO;
-                }
-                break;
-            case 4://已完成
-                break;
-            case 5://意外终止
-                break;
-        }
+//        switch (data.status) {
+//            case 1://待处理
+//                iv_status.setImageResource(R.drawable.icon_worcksheet_status2);
+//                break;
+//            case 2://未触发
+//                iv_status.setImageResource(R.drawable.icon_worcksheet_status1);
+//                break;
+//            case 3://已完成
+//                iv_status.setImageResource(R.drawable.icon_worcksheet_status3);
+//                break;
+//        }
+//        //处理工单的状态
+//        switch (worksheetStatus) {//1.待分派  2.进行中 3.待审核 4.已完成 5.意外终止
+//            case 1://待分派
+//                if (isAssignment && !(TextUtils.isEmpty(data.responsorId))) {//有负责人
+//                    iv_action.setImageResource(R.drawable.icon_worksheet_setting);
+//                    ((WorksheetDetailActivity) context).setSetting();
+//                    action = ACTION_PERSON;
+//                } else {//没有负责人
+//                    iv_action.setImageResource(R.drawable.icon_worksheet_assignment);
+//                    action = ACTION_PERSON;
+//                    ((WorksheetDetailActivity) context).setSetting();
+//                }
+//                break;
+//            case 2://进行中
+//                if (isAssignment && data.status == 1) {
+//                    iv_action.setImageResource(R.drawable.icon_worksheet_setting);
+//                    action = ACTION_PERSON;
+//                } else if (isAssignment && data.status == 2) {
+//                    iv_action.setImageResource(R.drawable.icon_worksheet_setting);
+//                    action = ACTION_PERSON;
+//                } else if (isAssignment && data.status == 3) {
+//                    iv_action.setImageResource(R.drawable.icon_worksheet_redo);
+//                    action = ACTION_REDO;
+//                } else if (isresponsor && data.status == 1) {
+//                    iv_action.setImageResource(R.drawable.icon_worksheet_compile);
+//                    action = ACTION_COMPILE;
+//                }
+//                break;
+//            case 3://待审核
+//                if (isAssignment && data.status == 3) {
+//                    iv_action.setImageResource(R.drawable.icon_worksheet_redo);
+//                    action = ACTION_REDO;
+//                }
+//                break;
+//            case 4://已完成
+//                break;
+//            case 5://意外终止
+//                break;
+//        }
 
         if (null != data.responsor) {
             ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
