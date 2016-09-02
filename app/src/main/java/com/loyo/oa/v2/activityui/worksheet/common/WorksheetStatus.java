@@ -40,6 +40,10 @@ public enum WorksheetStatus implements GroupKey {
         public int getIcon() {
             return R.drawable.icon_ws_status4;
         }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_gray;
+        }
     },
 
     /**
@@ -56,6 +60,10 @@ public enum WorksheetStatus implements GroupKey {
 
         public int getIcon() {
             return R.drawable.icon_ws_status1;
+        }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_purple;
         }
     },
 
@@ -74,6 +82,10 @@ public enum WorksheetStatus implements GroupKey {
         public int getIcon() {
             return R.drawable.icon_ws_status2;
         }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_blue;
+        }
     },
 
     /**
@@ -90,6 +102,10 @@ public enum WorksheetStatus implements GroupKey {
 
         public int getIcon() {
             return R.drawable.icon_ws_status2;
+        }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_blue;
         }
     },
 
@@ -108,6 +124,10 @@ public enum WorksheetStatus implements GroupKey {
         public int getIcon() {
             return R.drawable.icon_ws_status3;
         }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_green;
+        }
     },
 
     /**
@@ -125,6 +145,10 @@ public enum WorksheetStatus implements GroupKey {
         public int getIcon() {
             return R.drawable.icon_ws_status4;
         }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_gray;
+        }
     },
 
     /**
@@ -141,6 +165,10 @@ public enum WorksheetStatus implements GroupKey {
 
         public int getIcon() {
             return R.drawable.icon_ws_status4;
+        }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_gray;
         }
     };
 
@@ -160,6 +188,11 @@ public enum WorksheetStatus implements GroupKey {
      * 获取显示颜色
      */
     public abstract int getColor();
+
+    /**
+     * 工单状态 背景
+     */
+    public abstract int getStatusBackground();
 
     /**
      * 获取显示图标

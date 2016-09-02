@@ -207,7 +207,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_title.setText(detail.title);
         tv_assignment.setText("分派人：" + detail.dispatcher.getName());
         tv_status.setText(detail.status.getName());
-        tv_status.setBackgroundColor(detail.status.getColor());
+        tv_status.setBackgroundResource(detail.status.getStatusBackground());
 
         if (null == detail.sheetEventsSupporter) {
             return;
