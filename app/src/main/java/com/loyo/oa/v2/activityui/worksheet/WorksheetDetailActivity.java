@@ -56,7 +56,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private TextView tv_title_1, tv_title, tv_status, tv_assignment, tv_complete_number, tv_setting;
     private RelativeLayout img_title_right;
     private String worksheetId, eventId;
-    private BaseBeanT<WorksheetDetail> mData;
     private WorksheetDetail detail;
     private boolean isAssignment, isCreated;//分派人 ，创建人
 
@@ -69,7 +68,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     LogUtil.dee("arg1:" + msg.arg1);
                     Bundle bundle = new Bundle();
                     bundle.putString(ExtraAndResult.EXTRA_ID, (String) msg.obj);
-                    bundle.putString(ExtraAndResult.EXTRA_ID2, mData.data.id);
+                    bundle.putString(ExtraAndResult.EXTRA_ID2, detail.id);
                     if (msg.arg1 == WorksheetEventLayout.ACTION_REDO)
                         bundle.putInt(ExtraAndResult.EXTRA_STATUS, 0x02);
                     if (msg.arg1 == WorksheetEventLayout.ACTION_COMPILE)
@@ -148,11 +147,10 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     public void success(BaseBeanT<WorksheetDetail> result, Response response) {
                         HttpErrorCheck.checkResponse("工单详情：", response);
                         if (result.errcode == 0) {
-                            mData = result;
-                            detail = mData.data;
+                            detail = result.data;
                             loadData();
                         } else {
-                            Toast("" + mData.errmsg);
+                            Toast("" + result.errmsg);
                         }
                     }
 
@@ -175,7 +173,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.ll_worksheet_info:
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ExtraAndResult.CC_USER_ID, mData.data.id);
+                bundle.putSerializable(ExtraAndResult.CC_USER_ID, detail.id);
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
             case R.id.tv_setting://批量设置
@@ -190,13 +188,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void loadData() {
-        if (MainApp.user.id.equals(mData.data.dispatcher.getId())) {
+        if (MainApp.user.id.equals(detail.dispatcher.getId())) {
             isAssignment = true;
             img_title_right.setVisibility(View.VISIBLE);
-            if (mData.data.status == WorksheetStatus.WAITASSIGN)
+            if (detail.status == WorksheetStatus.WAITASSIGN)
                 ll_wran.setVisibility(View.VISIBLE);
         }
-        if (MainApp.user.id.equals(mData.data.creator.getId())) {
+        if (MainApp.user.id.equals(detail.creator.getId())) {
             isCreated = true;
             img_title_right.setVisibility(View.INVISIBLE);
             tv_setting.setVisibility(View.INVISIBLE);
@@ -331,8 +329,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
      */
     private void setAllEventPersonal(String userId) {
         List<String> eventIsList = new ArrayList<>();
-        for (int i = 0; i < mData.data.sheetEventsSupporter.size(); i++) {
-            eventIsList.add(mData.data.sheetEventsSupporter.get(i).id);
+        for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
+            eventIsList.add(detail.sheetEventsSupporter.get(i).id);
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("responsorId", userId);
