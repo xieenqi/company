@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetCommon;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventAction;
@@ -25,6 +26,7 @@ import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
@@ -69,7 +71,9 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         @Override
         public void dispatchMessage(Message msg) {
             switch (msg.what) {
-                case ExtraAndResult.REQUEST_CODE_CUSTOMER://到事件详情
+
+                case ExtraAndResult.WORKSHEET_EVENT_DETAIL://到事件详情
+
                     Bundle bundle = new Bundle();
                     WSRole role = getRoleforEvent((WorksheetEventsSupporter) msg.obj);
                     ArrayList<WorksheetEventAction> actions = actionsForRole((WorksheetEventsSupporter) msg.obj, role);
@@ -79,21 +83,22 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
                     break;
-                case ExtraAndResult.REQUEST_CODE_STAGE://设置负责人
+                case ExtraAndResult.WORKSHEET_EVENT_TRANSFER://设置负责人
+                case ExtraAndResult.WORKSHEET_EVENT_DISPATCH://设置负责人
                     eventId = (String) msg.obj;
                     SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
                     overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
-                case ExtraAndResult.REQUEST_CODE_PRODUCT://事件重做
+                case ExtraAndResult.WORKSHEET_EVENT_REDO://事件重做
                     Bundle mBundle = new Bundle();
                     mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
-                    mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x01,打回重做0x02*/);
+                    mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x01 /*提交完成:0x02,打回重做0x01*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                     break;
-                case ExtraAndResult.REQUEST_CODE_TYPE://事件提交完成
+                case ExtraAndResult.WORKSHEET_EVENT_FINISH://事件提交完成
                     Bundle bd = new Bundle();
                     bd.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
-                    bd.putInt(ExtraAndResult.EXTRA_DATA, 0x10 /*提交完成:0x01,打回重做0x02*/);
+                    bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bd);
                     break;
             }
@@ -212,6 +217,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             return;
         }
 
+        ll_events.removeAllViews();
         for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
 
             WorksheetEventsSupporter event = detail.sheetEventsSupporter.get(i);
@@ -367,8 +373,32 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_setting.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 转移\分派
+     * */
     @Subscribe
-    public void onWorkSheetDetailsRush(WorksheetDetail event) {
-        Toast("回调刷新");
+    public void onWorkSheetDetailsRush(WorksheetEventChangeEvent event) {
+        Toast("onWorkSheetDetailsRush 刷新！！");
+        getData();
     }
+
+
+    /**
+     * 重做回调
+     * */
+    @Subscribe
+    public void onWorkSheetDetailsRedo(WorksheetInfo event) {
+        Toast("onWorkSheetDetailsRedo 刷新！！");
+        getData();
+    }
+
+    /**
+     * 提交完成 回调
+     * */
+    @Subscribe
+    public void onWorkSheetDetailsFinish(WorksheetDetail event) {
+        Toast("onWorkSheetDetailsFinish 刷新！！");
+        getData();
+    }
+
 }

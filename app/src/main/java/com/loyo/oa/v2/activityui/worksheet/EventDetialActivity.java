@@ -9,23 +9,33 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.common.EventHandleInfoList;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventAction;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
+import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.Event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -56,27 +66,39 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
             case R.id.btn_complete1:
                 mBundle = new Bundle();
                 mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
-                WorksheetEventAction aciton = actions.get(0);
-                switch (aciton) {
+                WorksheetEventAction aciton1 = actions.get(0);
+                switch (aciton1) {
                     case Transfer:
-                        
-                        break;
                     case Dispatch:
+                        SelectDetUserActivity2.startThisForOnly(EventDetialActivity.this, null);
+                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                         break;
                     case Redo:
                     case Finish:
-                        int code2 = aciton == WorksheetEventAction.Redo?0X02:0X01;
+                        int code2 = aciton1 == WorksheetEventAction.Redo?0X01:0X02;
                         mBundle.putInt(ExtraAndResult.EXTRA_DATA,code2/*提交完成:0x01,打回重做0x02*/);
                         app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                         break;
                 }
                 break;
+
             case R.id.btn_complete2:
                 mBundle = new Bundle();
                 mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
-                int code2 = actions.get(1) ==WorksheetEventAction.Redo?0X02:0X01;
-                mBundle.putInt(ExtraAndResult.EXTRA_DATA,code2/*提交完成:0x01,打回重做0x02*/);
-                app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                WorksheetEventAction aciton2 = actions.get(1);
+                switch (aciton2) {
+                    case Transfer:
+                    case Dispatch:
+                        SelectDetUserActivity2.startThisForOnly(EventDetialActivity.this, null);
+                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                        break;
+                    case Redo:
+                    case Finish:
+                        int code2 = aciton2 == WorksheetEventAction.Redo?0X01:0X02;
+                        mBundle.putInt(ExtraAndResult.EXTRA_DATA,code2/*提交完成:0x01,打回重做0x02*/);
+                        app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                        break;
+                }
                 break;
         }
     }
@@ -108,6 +130,8 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         ll_back.setOnClickListener(this);
         btn_complete1.setOnClickListener(this);
         btn_complete2.setOnClickListener(this);
+        btn_complete1.setOnTouchListener(Global.GetTouch());
+        btn_complete2.setOnTouchListener(Global.GetTouch());
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_title.setText("事件详情");
         tv_content = (TextView) findViewById(R.id.tv_content);
@@ -122,17 +146,23 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void setRoleinit(){
-        for(WorksheetEventAction workEvent : actions){
-            btn_complete1.setVisibility(workEvent.visible() ? View.VISIBLE : View.GONE);
-            btn_complete1.setText(workEvent.getBtnTitle());
+        btn_complete1.setVisibility(View.GONE);
+        btn_complete2.setVisibility(View.GONE);
+
+        for(int i = 0;i<actions.size();i++){
+            if(i == 0){
+                btn_complete1.setVisibility(actions.get(i).visible() ? View.VISIBLE : View.GONE);
+                btn_complete1.setText(actions.get(i).getBtnTitle());
+            }else if(i == 1){
+                btn_complete2.setVisibility(actions.get(i).visible() ? View.VISIBLE : View.GONE);
+                btn_complete2.setText(actions.get(i).getBtnTitle());
+            }
         }
     }
 
 
-
-
-
     private void getData() {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("wsId", worksheetId);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
@@ -161,6 +191,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_time.setText((mData.startTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.startTime + ""))) + " | " +
                 (mData.endTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.endTime + "")) + "截止"));
         setStatus();
+        ll_handleInfoList.removeAllViews();
         for (int i = 0; i < mData.handleInfoList.size(); i++) {
             ll_handleInfoList.addView(new EventHandleInfoList(this, mData.handleInfoList.get(i)));
         }
@@ -187,6 +218,88 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
             }
             tv_status.setText(info);
             tv_status.setBackgroundResource(bj);
+        }
+    }
+
+
+    /**
+     * 重做回调
+     * */
+    @Subscribe
+    public void onWorkSheetDetailsRedo(WorksheetInfo event) {
+        Toast("重做 刷新");
+        for(int i =0 ; i <actions.size(); i++) {
+            if (actions.get(i) == WorksheetEventAction.Redo) {
+                actions.remove(i);
+                i--;
+            }
+        }
+
+        setRoleinit();
+        getData();
+    }
+
+    /**
+     * 提交完成 回调
+     * */
+    @Subscribe
+    public void onWorkSheetDetailsFinish(WorksheetDetail event) {
+        Toast("完成 刷新");
+        for(int i =0 ; i <actions.size(); i++) {
+            if (actions.get(i) == WorksheetEventAction.Finish) {
+                actions.remove(i);
+                i--;
+            }
+        }
+
+        setRoleinit();
+        getData();
+    }
+
+    /**
+     * 设置事件负责人
+     */
+    private void setEventPersonal(String userId) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("responsorId", userId);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
+                setEventPerson(eventId, map, new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("设置事件负责人：", response);
+                        for(int i =0 ; i <actions.size(); i++) {
+                            if (actions.get(i) == WorksheetEventAction.Transfer || actions.get(i) ==  WorksheetEventAction.Dispatch) {
+                                actions.remove(i);
+                                i--;
+                            }
+                        }
+
+                        setRoleinit();
+                        getData();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+
+                    }
+                });
+
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+             /*用户单选, 负责人*/
+            case SelectDetUserActivity2.REQUEST_ONLY:
+                NewUser u = (NewUser) data.getSerializableExtra("data");
+                setEventPersonal(u.getId());
+                AppBus.getInstance().post(new WorksheetEventChangeEvent());
+                break;
         }
     }
 }

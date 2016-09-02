@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.bean.HttpLoc;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
@@ -77,7 +78,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     /** Data */
     private int uploadSize;
     private int uploadNum = 0;           //上传附件数量
-    private int fromPage;                //判断来自的页面(打回重做0x10 提交完成0x11)
+    private int fromPage;                //判断来自的页面(打回重做0x10 提交完成0x02)
     private int type;                    //type 1为提交完成，2为打回重做
     private int bizType = 29;            //附件type
     private String uuid = StringUtil.getUUID();
@@ -109,7 +110,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
 
     void initUI(){
         mIntent = getIntent();
-        fromPage = mIntent.getIntExtra(ExtraAndResult.EXTRA_DATA, 0x10);
+        fromPage = mIntent.getIntExtra(ExtraAndResult.EXTRA_DATA, 0x01);
         id       = mIntent.getStringExtra(ExtraAndResult.CC_USER_ID);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         tv_address = (TextView) findViewById(R.id.tv_address);
@@ -124,7 +125,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
         gridView_photo   = (CusGridView) findViewById(R.id.gridView_photo);
         view_edit = (EditText) findViewById(R.id.view_edit);
 
-        if(fromPage == 0x10){
+        if(fromPage == 0x01){
             super.setTitle("打回重做");
             view_edit.setHint("请输入重做原因，必填");
             type = 2;
@@ -297,8 +298,12 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).setEventSubmit(id,map, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkResponse("提交事情处理信息",response);
-                AppBus.getInstance().post(new WorksheetDetail());
+                HttpErrorCheck.checkResponse("提交事情处理信息", response);
+                if(type == 1){
+                    AppBus.getInstance().post(new WorksheetDetail());
+                }else{
+                    AppBus.getInstance().post(new WorksheetInfo());
+                }
                 app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
             }
 
@@ -320,7 +325,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
 
             /*提交*/
             case R.id.img_title_right:
-                if(fromPage == 0x10){
+                if(fromPage == 0x01){
                     if(TextUtils.isEmpty(view_edit.getText().toString())){
                         Toast("请输入重做原因！");
                         return;
