@@ -56,7 +56,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="@dimen/dimen_8"
-                android:autoLink="all"
                 android:background="@drawable/bg_mine"
                 android:gravity="center_vertical|left"
                 android:maxWidth="@dimen/dimen_200"

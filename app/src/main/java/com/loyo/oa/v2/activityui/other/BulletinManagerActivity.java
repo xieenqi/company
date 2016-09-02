@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -205,6 +206,12 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             tv_time = (TextView) itemView.findViewById(R.id.tv_notice_time);
             tv_title = (TextView) itemView.findViewById(R.id.tv_notice_title);
             tv_content = (TextView) itemView.findViewById(R.id.tv_notice_content);
+            try{
+                tv_content.setAutoLinkMask(Linkify.ALL);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+
             tv_name = (TextView) itemView.findViewById(R.id.tv_notice_publisher);
             iv_avatar = (RoundImageView) itemView.findViewById(R.id.iv_notice_publisher_avatar);
             gridView = (CusGridView) itemView.findViewById(R.id.gv_notice_attachemnts);

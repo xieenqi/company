@@ -35,8 +35,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     private Bundle mBundle;
     private String eventId, worksheetId;
     private EventDetail mData;
-    private int bundleCode = 0;
-    private String typeTxt;
+    private int eventActionStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         Intent intent = getIntent();
         eventId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
         worksheetId = intent.getStringExtra(ExtraAndResult.EXTRA_ID2);
-        bundleCode = intent.getIntExtra(ExtraAndResult.EXTRA_STATUS, 0);
+        eventActionStatus = intent.getIntExtra(ExtraAndResult.EXTRA_STATUS, 0);
         if (TextUtils.isEmpty(worksheetId) || TextUtils.isEmpty(eventId)) {
             Toast("参数不全");
             onBackPressed();
@@ -70,9 +69,9 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
         tv_status = (TextView) findViewById(R.id.tv_status);
         ll_handleInfoList = (LinearLayout) findViewById(R.id.ll_handleInfoList);
-        if (bundleCode != 0) {
-            bt_confirm.setVisibility(View.VISIBLE);
-            bt_confirm.setText(typeTxt);
+        if (eventActionStatus != 0) {
+            bt_confirm.setVisibility(View.GONE);
+            bt_confirm.setText(eventActionStatus == 0X01 ? "提交完成" : "打回重做");
         }
         getData();
     }
@@ -88,7 +87,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
             case R.id.bt_confirm:
                 mBundle = new Bundle();
                 mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
-                mBundle.putInt(ExtraAndResult.EXTRA_DATA, bundleCode /*提交完成:0x01,打回重做0x02*/);
+                mBundle.putInt(ExtraAndResult.EXTRA_DATA, eventActionStatus /*提交完成:0x01,打回重做0x02*/);
                 app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 break;
         }
