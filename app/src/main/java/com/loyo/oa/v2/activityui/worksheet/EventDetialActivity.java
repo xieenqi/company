@@ -142,6 +142,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_time = (TextView) findViewById(R.id.tv_time);
         tv_day = (TextView) findViewById(R.id.tv_day);
         ll_handleInfoList = (LinearLayout) findViewById(R.id.ll_handleInfoList);
+        showLoading("");
         getData();
     }
 
@@ -162,7 +163,6 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
 
 
     private void getData() {
-        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("wsId", worksheetId);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
