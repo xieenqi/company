@@ -12,9 +12,18 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
+import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetCommon;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventAction;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventCell;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventLayout;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
@@ -27,6 +36,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +56,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private TextView tv_title_1, tv_title, tv_status, tv_assignment, tv_complete_number, tv_setting;
     private RelativeLayout img_title_right;
     private String worksheetId, eventId;
-    private BaseBeanT<WorksheetDetial> mData;
+    private BaseBeanT<WorksheetDetail> mData;
+    private WorksheetDetail detail;
     private boolean isAssignment, isCreated;//分派人 ，创建人
 
     //处理事件
@@ -123,12 +134,18 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private void getData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
-                getWorksheetDetail(worksheetId, new Callback<BaseBeanT<WorksheetDetial>>() {
+                getWorksheetDetail(worksheetId, new Callback<BaseBeanT<WorksheetDetail>>() {
                     @Override
-                    public void success(BaseBeanT<WorksheetDetial> result, Response response) {
+                    public void success(BaseBeanT<WorksheetDetail> result, Response response) {
                         HttpErrorCheck.checkResponse("工单详情：", response);
-                        mData = result;
-                        loadData();
+                        if (result.errcode == 0) {
+                            mData = result;
+                            detail = mData.data;
+                            loadData();
+                        }
+                        else {
+                            Toast(""+mData.errmsg);
+                        }
                     }
 
                     @Override
@@ -176,16 +193,44 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         if (ll_events.getChildCount() > 0) {
             ll_events.removeAllViews();
         }
-        tv_title.setText(mData.data.title);
-        tv_assignment.setText("分派人：" + mData.data.dispatcher.getName());
-        WorksheetCommon.setStatus(tv_status, mData.data.status);
-        if (null != mData.data.sheetEventsSupporter) {
-            for (int i = 0; i < mData.data.sheetEventsSupporter.size(); i++) {
-                WorksheetEventLayout eventView = new WorksheetEventLayout(this, handler, mData.data.sheetEventsSupporter.get(i),
-                        isAssignment, isCreated, mData.data.status);
-                ll_events.addView(eventView);
-            }
+        tv_title.setText(detail.title);
+        tv_assignment.setText("分派人：" + detail.dispatcher.getName());
+        tv_status.setText(detail.status.getName());
+        tv_status.setBackgroundColor(detail.status.getColor());
+
+        if (null == detail.sheetEventsSupporter) {
+            return;
         }
+
+        for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
+
+            WorksheetEventsSupporter event = detail.sheetEventsSupporter.get(i);
+            boolean isResponsor = MainApp.user.id.equals(event.responsorId);
+
+            /* 同一人可能同时有多个角色，也就有多个操作 */
+            WSRole role = new WSRole();
+            if (isAssignment) {
+                role.addRole(WSRole.Dispatcher);
+            }
+            if (isCreated) {
+                role.addRole(WSRole.Creator);
+            }
+            if (isResponsor) {
+                role.addRole(WSRole.Responsor);
+            }
+
+            WorksheetEventCell cell = new WorksheetEventCell(this, handler);
+            cell.loadData(event, role, actionsForRole(event, role));
+
+            ll_events.addView(cell);
+        }
+    }
+
+    public ArrayList<WorksheetEventAction> actionsForRole(WorksheetEventsSupporter event, WSRole role) {
+        WorksheetStatus status = detail.status;
+        WorksheetEventStatus eventStatus = event.status;
+        boolean hasResponsor = (event.responsorId != null);
+        return WorksheetPermisssion.actionsFor(status, role, eventStatus, hasResponsor);
     }
 
     /**
@@ -301,7 +346,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     @Subscribe
-    public void onWorkSheetDetailsRush(WorksheetDetial event) {
+    public void onWorkSheetDetailsRush(WorksheetDetail event) {
         Toast("回调刷新");
     }
 }

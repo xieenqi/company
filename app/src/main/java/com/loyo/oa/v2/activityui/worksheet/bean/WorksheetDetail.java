@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.worksheet.bean;
 
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.beans.NewUser;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  * 工单详情 数据bean
  * Created by xeq on 16/8/30.
  */
-public class WorksheetDetial {
+public class WorksheetDetail {
 
     public String id;
     public String title;
@@ -22,10 +23,6 @@ public class WorksheetDetial {
     //    public String id;
 //    public String id;
     public ArrayList<WorksheetEventsSupporter> sheetEventsSupporter;
-    public int status;//1.待分派  2.进行中 3.待审核 4.已完成 5.意外终止
-
-
-
-
+    public WorksheetStatus status;
 
 }
