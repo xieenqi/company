@@ -26,6 +26,9 @@
                 android:id="@+id/tv_tab1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="150dp"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:text="全部阶段"/>
 
             <ImageView
@@ -57,6 +60,9 @@
                 android:id="@+id/tv_tab2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="150dp"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:text="全部类型"/>
 
             <ImageView
