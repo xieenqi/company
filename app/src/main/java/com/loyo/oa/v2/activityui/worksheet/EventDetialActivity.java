@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
 import com.loyo.oa.v2.activityui.worksheet.common.EventHandleInfoList;
@@ -17,8 +18,11 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.HashMap;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -30,7 +34,7 @@ import retrofit.client.Response;
 public class EventDetialActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout ll_back, ll_handleInfoList;
-    private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status;
+    private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status, tv_time, tv_day;
     private Button bt_confirm;
     private Bundle mBundle;
     private String eventId, worksheetId;
@@ -68,6 +72,8 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_type = (TextView) findViewById(R.id.tv_type);
         tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
         tv_status = (TextView) findViewById(R.id.tv_status);
+        tv_time = (TextView) findViewById(R.id.tv_time);
+        tv_day = (TextView) findViewById(R.id.tv_day);
         ll_handleInfoList = (LinearLayout) findViewById(R.id.ll_handleInfoList);
         if (eventActionStatus != 0) {
             bt_confirm.setVisibility(View.GONE);
@@ -116,9 +122,12 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
 
     private void bindData() {
         tv_content.setText(mData.content);
-        tv_responsor.setText("负责人：" + mData.responsorName);
+        tv_responsor.setText("负责人：" + (null == mData.responsorName ? "未分派" : mData.responsorName));
         tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "流程触发" : "定时触发"));
         tv_worksheet.setText("所属工单：" + mData.title);
+        tv_day.setText("限时：" + (mData.daysDeadline == 0 ? "不限时" : mData.daysDeadline + "天"));
+        tv_time.setText((mData.startTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.startTime + ""))) + " | " +
+                (mData.endTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.endTime + "")) + "截止"));
         setStatus();
         for (int i = 0; i < mData.handleInfoList.size(); i++) {
             ll_handleInfoList.addView(new EventHandleInfoList(this, mData.handleInfoList.get(i)));
@@ -140,7 +149,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                     break;
                 case 3://已完成
                     info = "已完成";
-                    bj = R.drawable.retange_gray;
+                    bj = R.drawable.retange_green;
                     break;
             }
             tv_status.setText(info);

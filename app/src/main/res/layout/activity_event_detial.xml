@@ -50,7 +50,6 @@
                         android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/dimen_8"
                         android:gravity="center_vertical|left"
-                        android:text="08-23 | 09-08截至"
                         android:textColor="@color/text99"
                         android:textSize="@dimen/text_sp11"/>
 
@@ -78,6 +77,18 @@
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:layout_marginTop="@dimen/dimen_10"
                 android:text="负责人："
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp16"
+                />
+
+            <TextView
+                android:id="@+id/tv_day"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_other_view"
+                android:layout_marginRight="@dimen/margin_other_view"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:text="限时："
                 android:textColor="@color/text33"
                 android:textSize="@dimen/text_sp16"
                 />
@@ -121,7 +132,7 @@
                 android:background="@drawable/round_bg_shpe"
                 android:text="重做"
                 android:textColor="@color/white"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <View
                 android:layout_width="match_parent"
