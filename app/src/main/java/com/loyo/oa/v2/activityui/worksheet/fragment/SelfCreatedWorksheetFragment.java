@@ -29,7 +29,9 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
+import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
 import com.loyo.oa.v2.common.Event.AppBus;
@@ -122,6 +124,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
         super.onCreate(savedInstanceState);
         groupsData = new GroupsData();
         initFilters();
+        WorksheetPermisssion.test();
     }
 
     @Subscribe

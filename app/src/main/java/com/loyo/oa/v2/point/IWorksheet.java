@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
@@ -107,7 +107,7 @@ public interface IWorksheet {
      * 获取工单详细信息
      */
     @GET("/worksheets/{id}")
-    void getWorksheetDetail(@Path("id") String id, Callback<BaseBeanT<WorksheetDetial>> callback);
+    void getWorksheetDetail(@Path("id") String id, Callback<BaseBeanT<WorksheetDetail>> callback);
 
     /**
      * 设置事件 负责人
