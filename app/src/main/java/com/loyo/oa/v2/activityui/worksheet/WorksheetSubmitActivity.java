@@ -24,8 +24,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.bean.HttpLoc;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetial;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
@@ -299,7 +298,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
             @Override
             public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse("提交事情处理信息",response);
-                AppBus.getInstance().post(new WorksheetDetial());
+                AppBus.getInstance().post(new WorksheetDetail());
                 app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
             }
 
