@@ -153,9 +153,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                             mData = result;
                             detail = mData.data;
                             loadData();
-                        }
-                        else {
-                            Toast(""+mData.errmsg);
+                        } else {
+                            Toast("" + mData.errmsg);
                         }
                     }
 
