@@ -18,6 +18,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.tool.DateTool;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
@@ -26,6 +27,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  */
 
 public class WorksheetEventLayout extends LinearLayout {
+
+    public static int ACTION_PERSON = 1;
+    public static int ACTION_REDO = 2;
+    public static int ACTION_COMPILE = 3;
 
     private RoundImageView iv_avatar;
     private ImageView iv_status, iv_action;
@@ -58,12 +63,15 @@ public class WorksheetEventLayout extends LinearLayout {
         tv_time = (TextView) eventView.findViewById(R.id.tv_time);
         tv_content.setText(data.content);
         tv_name.setText(null == data.responsor ? "未设置" : data.responsor.getName());
-
+        tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime) + " | " +
+                (data.endTime == 0 ? "--" : DateTool.getDiffTime(data.endTime) + "截止"));
         if (MainApp.user.id.equals(data.responsorId)) {
             isresponsor = true;
         }
         if (isCreated)//创建者没有操作权限最小权限
             iv_action.setVisibility(INVISIBLE);
+        if (isAssignment)
+            iv_action.setVisibility(VISIBLE);
         //处理事件状态
         switch (data.status) {
             case 1://待处理
@@ -82,37 +90,32 @@ public class WorksheetEventLayout extends LinearLayout {
                 if (isAssignment && !(TextUtils.isEmpty(data.responsorId))) {//有负责人
                     iv_action.setImageResource(R.drawable.icon_worksheet_setting);
                     ((WorksheetDetailActivity) context).setSetting();
-                    action = 1;
+                    action = ACTION_PERSON;
                 } else {//没有负责人
                     iv_action.setImageResource(R.drawable.icon_worksheet_assignment);
-                    action = 1;
+                    action = ACTION_PERSON;
                     ((WorksheetDetailActivity) context).setSetting();
                 }
                 break;
             case 2://进行中
                 if (isAssignment && data.status == 1) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_setting);
-                    ((WorksheetDetailActivity) context).setSetting();
-                    action = 1;
-                }
-                if (isAssignment && data.status == 2) {
+                    action = ACTION_PERSON;
+                } else if (isAssignment && data.status == 2) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_setting);
-                    ((WorksheetDetailActivity) context).setSetting();
-                    action = 1;
-                }
-                if (isAssignment && data.status == 3) {
+                    action = ACTION_PERSON;
+                } else if (isAssignment && data.status == 3) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_redo);
-                    action = 2;
-                }
-                if (isresponsor && data.status == 1) {
+                    action = ACTION_REDO;
+                } else if (isresponsor && data.status == 1) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_compile);
-                    action = 3;
+                    action = ACTION_COMPILE;
                 }
                 break;
             case 3://待审核
                 if (isAssignment && data.status == 3) {
                     iv_action.setImageResource(R.drawable.icon_worksheet_redo);
-                    action = 2;
+                    action = ACTION_REDO;
                 }
                 break;
             case 4://已完成
@@ -121,8 +124,9 @@ public class WorksheetEventLayout extends LinearLayout {
                 break;
         }
 
-        if (null != data.responsor)
+        if (null != data.responsor) {
             ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
+        }
         eventView.setOnTouchListener(Global.GetTouch());
         eventView.setOnClickListener(new OnClickListener() {
             @Override

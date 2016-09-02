@@ -121,7 +121,7 @@
                 android:background="@drawable/round_bg_shpe"
                 android:text="重做"
                 android:textColor="@color/white"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <View
                 android:layout_width="match_parent"
