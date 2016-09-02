@@ -127,7 +127,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             if(wse.endTime != 0){
                 /*是否超时判断*/
                 if(nowTime > wse.endTime){
-                    tv_deadline.setTextColor(mContext.getColor(R.color.red1));
+                    tv_deadline.setTextColor(mContext.getResources().getColor(R.color.red1));
                     tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
                     tv_endtime_tag.setVisibility(View.VISIBLE);
                 }else{
