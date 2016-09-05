@@ -1,7 +1,5 @@
 package com.loyo.oa.v2.activityui.worksheet.common;
 
-import android.util.Log;
-
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplateListWrapper;
@@ -12,10 +10,8 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

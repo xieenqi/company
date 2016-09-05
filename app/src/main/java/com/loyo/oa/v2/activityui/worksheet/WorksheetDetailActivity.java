@@ -81,12 +81,14 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 case ExtraAndResult.WORKSHEET_EVENT_REDO://事件重做
+                    eventId = (String) msg.obj;
                     Bundle mBundle = new Bundle();
                     mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
                     mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x01 /*提交完成:0x02,打回重做0x01*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                     break;
                 case ExtraAndResult.WORKSHEET_EVENT_FINISH://事件提交完成
+                    eventId = (String) msg.obj;
                     Bundle bd = new Bundle();
                     bd.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
                     bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
@@ -170,9 +172,9 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             case R.id.img_title_left:
                 onBackPressed();
                 break;
-            case R.id.ll_worksheet_info:
+            case R.id.ll_worksheet_info://进入事件详情
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ExtraAndResult.CC_USER_ID, detail.id);
+                bundle.putSerializable(ExtraAndResult.CC_USER_ID,eventId);
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
             case R.id.tv_setting://批量设置
