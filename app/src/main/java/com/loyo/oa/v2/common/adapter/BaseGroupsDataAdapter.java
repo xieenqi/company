@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.worksheet.adapter;
+package com.loyo.oa.v2.common.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,13 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
+import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.tool.ViewHolder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by EthanGong on 16/8/27.

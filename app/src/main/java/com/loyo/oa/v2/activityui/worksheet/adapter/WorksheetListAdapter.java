@@ -7,12 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
-import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
-import com.loyo.oa.v2.application.MainApp;
-
-import java.util.Date;
+import com.loyo.oa.v2.common.GroupsData;
+import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 
 /**
  * Created by EthanGong on 16/8/27.

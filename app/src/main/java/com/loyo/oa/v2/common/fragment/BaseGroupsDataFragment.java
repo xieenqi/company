@@ -1,10 +1,9 @@
-package com.loyo.oa.v2.activityui.worksheet.fragment;
+package com.loyo.oa.v2.common.fragment;
 
-import android.view.View;
 import android.widget.ExpandableListView;
 
-import com.loyo.oa.v2.activityui.worksheet.adapter.BaseGroupsDataAdapter;
-import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
+import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
+import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.tool.BaseFragment;
