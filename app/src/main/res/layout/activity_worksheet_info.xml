@@ -215,6 +215,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_15"
+                android:layout_marginBottom="@dimen/dimen_15"
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:orientation="vertical"
@@ -225,7 +227,7 @@
                     android:id="@+id/ll_assignment_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_15"
+
                     android:orientation="horizontal"
                     >
 
@@ -278,7 +280,6 @@
                     android:id="@+id/ll_termination_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_15"
                     android:layout_marginTop="@dimen/dimen_10"
                     android:orientation="horizontal"
                     >
