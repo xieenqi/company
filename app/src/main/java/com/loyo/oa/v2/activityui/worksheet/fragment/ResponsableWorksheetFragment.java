@@ -231,12 +231,14 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     }
 
     private void setFilterData() {
+        statusData.clear();
         for (int i = 0; i < statusFilters.size(); i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(statusFilters.get(i).getName());
             statusData.add(saleTeamScreen);
         }
 
+        typeData.clear();
         for (int i = 0; i < typeFilters.size(); i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(typeFilters.get(i).name);

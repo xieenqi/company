@@ -275,12 +275,14 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                 }
             }
         }).start();
+        statusData.clear();
         for (int i = 0; i < statusFilters.size(); i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(statusFilters.get(i).getName());
             statusData.add(saleTeamScreen);
         }
 
+        typeData.clear();
         for (int i = 0; i < typeFilters.size(); i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(typeFilters.get(i).name);
@@ -291,7 +293,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new WorksheetListAdapter(mActivity, groupsData);
+            adapter = new WorksheetListAdapter(mActivity, groupsData,false);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
     }
