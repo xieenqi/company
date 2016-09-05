@@ -83,7 +83,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     private int bizType = 29;            //附件type
     private String uuid = StringUtil.getUUID();
     private String ak,sk,token,expiration;
-    private String id;                  //时间Id
+    private String id;                  //事件Id
     private double laPosition;          //当前位置的经纬度
     private double loPosition;
     private HttpLoc httpLoc = new HttpLoc();
@@ -112,6 +112,10 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
         mIntent = getIntent();
         fromPage = mIntent.getIntExtra(ExtraAndResult.EXTRA_DATA, 0x01);
         id       = mIntent.getStringExtra(ExtraAndResult.CC_USER_ID);
+        if(TextUtils.isEmpty(id)){
+            Toast("参数不全");
+            onBackPressed();
+        }
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         tv_address = (TextView) findViewById(R.id.tv_address);
 
