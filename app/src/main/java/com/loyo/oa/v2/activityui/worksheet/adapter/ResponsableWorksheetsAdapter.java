@@ -53,9 +53,9 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_worksheet_event_wrapper, null, false);
             holder.tv_content = (TextView) convertView.findViewById(R.id.tv_content);
-            holder.tv_endtime_tag = (TextView) convertView.findViewById(R.id.tv_endtime_tag);
             holder.tv_worksheet = (TextView) convertView.findViewById(R.id.tv_worksheet);
             holder.tv_deadline = (TextView) convertView.findViewById(R.id.tv_deadline);
+            holder.tv_deadline_title = (TextView) convertView.findViewById(R.id.tv_deadline_title);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
             holder.iv_action = (ImageView) convertView.findViewById(R.id.iv_action);
             final ViewHolder holderFinal = holder;
@@ -68,7 +68,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                     }
 
                     HashMap<String,Object> map = new HashMap<>();
-                    map.put("type",1/* 1为提交完成，2为打回重做 */);
+                    map.put("type", 1/* 1为提交完成，2为打回重做 */);
                     RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class)
                             .setEventSubmit(wse.id, map, new RCallback<Object>() {
                         @Override
@@ -105,7 +105,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
         TextView tv_content;
         TextView tv_worksheet;
         TextView tv_deadline;
-        TextView tv_endtime_tag;
+        TextView tv_deadline_title;
 
         TextView tv_time;
         ImageView iv_action;
@@ -117,20 +117,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             tv_content.setText(wse.content);
             tv_worksheet.setText(wse.title);
 
-            if(wse.endTime != 0){
-                /*是否超时判断*/
-                if(nowTime > wse.endTime){
-                    tv_deadline.setTextColor(mContext.getResources().getColor(R.color.red1));
-                    tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
-                    tv_endtime_tag.setVisibility(View.VISIBLE);
-                }else{
-                    tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
-                    tv_endtime_tag.setVisibility(View.GONE);
-                }
-            }else{
-                tv_deadline.setText("--");
-                tv_endtime_tag.setVisibility(View.GONE);
-            }
+            tv_deadline.setText(wse.daysDeadline + "天");
 
 
             //TODO 我负责的 未触发不显示触发时间
