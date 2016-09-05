@@ -229,7 +229,7 @@ public class BulletinAddActivity extends BaseActivity {
 
     /**
      * 相册选择 回调
-     * */
+     */
     @OnActivityResult(MainApp.PICTURE)
     void onPhotoResult(final Intent data) {
 
@@ -247,11 +247,13 @@ public class BulletinAddActivity extends BaseActivity {
 
     /**
      * 相册删除 回调
-     * */
+     */
     @OnActivityResult(FinalVariables.REQUEST_DEAL_ATTACHMENT)
     void onDeletePhotoResult(final Intent data) {
-        pickPhots.remove(data.getExtras().getInt("position"));
-        init_gridView_photo();
+        if (data != null) {
+            pickPhots.remove(data.getExtras().getInt("position"));
+            init_gridView_photo();
+        }
     }
 
     @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
