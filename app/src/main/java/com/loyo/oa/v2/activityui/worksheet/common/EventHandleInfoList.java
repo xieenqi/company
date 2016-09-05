@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.worksheet.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.EventHandleInfoItem;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 
 /**
  * 事件 详情  处理信息列表
@@ -55,7 +57,7 @@ public class EventHandleInfoList extends LinearLayout {
             WorkSheetListNestingAdapter mAdapter = new WorkSheetListNestingAdapter(data.attachments, context);
             lv_listview.setAdapter(mAdapter);
         }
-        if (null != data.address) {
+        if (null != data.address && !TextUtils.isEmpty(data.address.addr)) {
             ll_address.setVisibility(VISIBLE);
             tv_address.setText(data.address.addr);
             ll_address.setOnClickListener(new OnClickListener() {

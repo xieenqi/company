@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.tool.DateTool;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -73,6 +75,10 @@ public class WorksheetEventCell extends LinearLayout {
         if (null != data.responsor) {
             ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
         }
+
+        tv_time.setText((data.startTime == 0 ? "--" :
+                DateTool.getDiffTime(data.startTime))
+                + " | " + (data.endTime == 0 ? "--" : DateTool.getDiffTime(data.endTime) + "截止"));
 
         /* 状态按钮 */
         iv_status.setImageResource(data.status.getStatusIcon());
