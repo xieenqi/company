@@ -536,7 +536,6 @@ public class AMapService extends APSService {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
                     }
                 });
                 userOnlineTime();

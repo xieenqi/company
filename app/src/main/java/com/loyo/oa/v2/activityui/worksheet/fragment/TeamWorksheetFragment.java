@@ -293,7 +293,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new WorksheetListAdapter(mActivity, groupsData);
+            adapter = new WorksheetListAdapter(mActivity, groupsData,false);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
     }
