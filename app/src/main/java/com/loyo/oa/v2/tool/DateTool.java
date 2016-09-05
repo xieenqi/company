@@ -263,6 +263,17 @@ public class DateTool {
         return result;
     }
 
+    public static String getPrettyTimeStringFromTimestamp(long timeStamp) {
+
+        String timeStampString = String.valueOf(timeStamp);
+        if (timeStampString.length() >= 13) {
+            return getPrettyTimeStringFromMillis(timeStamp);
+        }
+        else  {
+            return getPrettyTimeStringFromSeconds(timeStamp);
+        }
+    }
+
     /**
      * 是否过来我们设置的天数
      *
