@@ -89,10 +89,6 @@ public class InitDataService extends IntentService {
         } catch (Exception ex) {
             Global.ProcException(ex);
         }
-
-        // TODO: 建立单独的获取配置Service
-        /* 获取配置数据 */
-        WorksheetConfig.fetchWorksheetTypes();
     }
 
     /**

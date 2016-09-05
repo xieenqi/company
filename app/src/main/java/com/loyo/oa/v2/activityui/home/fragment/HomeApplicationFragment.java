@@ -38,6 +38,7 @@ import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.TrackRule;
@@ -203,6 +204,10 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             e.printStackTrace();
         }
         initData();
+
+        // TODO: 建立单独的获取配置Service
+        /* 获取配置数据 */
+        WorksheetConfig.fetchWorksheetTypes();
     }
 
     @Override
