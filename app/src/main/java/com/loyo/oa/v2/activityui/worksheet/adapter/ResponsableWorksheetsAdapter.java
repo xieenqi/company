@@ -131,8 +131,10 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             //TODO 我负责的 未触发不显示触发时间
             if(wse.status == WorksheetEventStatus.UNACTIVATED){
                 tv_time.setText(""+wse.daysLater+"天以后触发");
+                tv_time.setVisibility(View.INVISIBLE);
             }else{
                 tv_time.setText(DateTool.getDiffTime(wse.startTime));
+                tv_time.setVisibility(View.VISIBLE);
             }
 
             if (wse.status == WorksheetEventStatus.WAITPROCESS) {
