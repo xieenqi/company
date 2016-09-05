@@ -241,6 +241,28 @@ public class DateTool {
         return result;
     }
 
+    public static String getPrettyTimeStringFromMillis(long millis) {
+
+        String result = "--"; // empty return
+
+        long diffTime = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - millis);
+
+        if (diffTime <= DAY_MILLIS) {              /** 一天内 */
+            result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 2 * DAY_MILLIS) {   /** 昨天 */
+            result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 365 * DAY_MILLIS) { /** 一年内 */
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
+
+        } else {                                   /** 大于一年，显示年份 */
+            result = FORMATE_AT_MINUTES.format(new Date(millis));
+        }
+
+        return result;
+    }
+
     /**
      * 是否过来我们设置的天数
      *
