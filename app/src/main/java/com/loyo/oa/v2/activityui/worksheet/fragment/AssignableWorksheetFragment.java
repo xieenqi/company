@@ -27,13 +27,13 @@ import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
-import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
+import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
-import com.loyo.oa.v2.common.Event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.fragment.BaseGroupsDataFragment;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
@@ -273,12 +273,13 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的工单列表：", response);
+
                 if (isPullDown) {
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
                 mExpandableListView.setEmptyView(emptyView);
+                HttpErrorCheck.checkResponse("我的工单列表：", response);
             }
 
             @Override
@@ -296,8 +297,13 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
             groupsData.addItem(iterator.next());
         }
         groupsData.sort();
-        adapter.notifyDataSetChanged();
-        expand();
+        try{
+            adapter.notifyDataSetChanged();
+            expand();
+        }
+        catch (Exception e){
+
+        }
     }
 
     @Override

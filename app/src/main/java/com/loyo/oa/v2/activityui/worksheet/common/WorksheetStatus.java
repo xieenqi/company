@@ -8,6 +8,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.common.GroupKey;
 
 import java.lang.reflect.Type;
 

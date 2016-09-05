@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.common.Event;
+package com.loyo.oa.v2.common.event;
 
 import android.os.Bundle;
 

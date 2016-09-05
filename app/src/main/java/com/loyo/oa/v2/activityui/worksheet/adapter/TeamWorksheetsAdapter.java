@@ -14,13 +14,12 @@ import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 /**
  * Created by EthanGong on 16/8/27.
  */
-public class WorksheetListAdapter extends BaseGroupsDataAdapter {
+public class TeamWorksheetsAdapter extends BaseGroupsDataAdapter {
 
     private boolean fromSelfCreated;
 
-    public WorksheetListAdapter(final Context context, final GroupsData data,final boolean selfC) {
+    public TeamWorksheetsAdapter(final Context context, final GroupsData data) {
         super();
-        fromSelfCreated = selfC;
         mContext = context;
         groupsData = data;
     }
@@ -30,11 +29,12 @@ public class WorksheetListAdapter extends BaseGroupsDataAdapter {
 
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_worksheet, null, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_team_worksheet, null, false);
             holder = new ViewHolder();
             holder.tv_content = (TextView) convertView.findViewById(R.id.tv_content);
             holder.tv_progress = (TextView) convertView.findViewById(R.id.tv_progress);
             holder.tv_creator_name = (TextView) convertView.findViewById(R.id.tv_creator_name);
+            holder.tv_dispatcher_name = (TextView) convertView.findViewById(R.id.tv_dispatcher_name);
             holder.tv_order = (TextView) convertView.findViewById(R.id.tv_order);
             holder.tv_creator_show = (TextView) convertView.findViewById(R.id.tv_creator_show);
             convertView.setTag(holder);
@@ -54,19 +54,17 @@ public class WorksheetListAdapter extends BaseGroupsDataAdapter {
         TextView tv_content;      // 工单名称
         TextView tv_progress;     // 进度
         TextView tv_creator_name; // 分派者姓名
+        TextView tv_dispatcher_name; // 分派者姓名
         TextView tv_order;        // 订单
         TextView tv_creator_show; // 分派人\创建人
 
         public void loadData(Worksheet ws) {
             tv_content.setText(ws.title);
             tv_creator_name.setText(ws.creatorName);
+            tv_dispatcher_name.setText(ws.dispatcherName);
             tv_order.setText(ws.orderName);
             tv_progress.setText("完成度( "+ws.finishCount + "/" + ws.totalCount + " )");
-            if(fromSelfCreated){
-                tv_creator_show.setText("分派人: ");
-            }else{
-                tv_creator_show.setText("创建人: ");
-            }
+
         }
     }
 }
