@@ -147,7 +147,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                 tv_time.setText(DateTool.getDiffTime(wse.startTime));
             }
 
-            if (wse.status == WorksheetEventStatus.WAITPROCESS) {
+            if (wse.status == WorksheetEventStatus.WAITPROCESS && mFragment!= null) {
                 iv_action.setVisibility(View.VISIBLE);
             }
             else {
