@@ -118,7 +118,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
                     tv_assignment_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.confirmedAt));
                 }else{
                     tv_assignment_time.setText("--");
-                    ll_assignment_time.setVisibility(View.INVISIBLE);
+                    ll_assignment_time.setVisibility(View.GONE);
                 }
 
                 if (mWorksheetInfo.data.completedAt != 0) {
@@ -126,7 +126,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
                     tv_finish_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.completedAt));
                 } else {
                     tv_finish_time.setText("--");
-                    ll_finish_time.setVisibility(View.INVISIBLE);
+                    ll_finish_time.setVisibility(View.GONE);
                 }
 
                 if (mWorksheetInfo.data.interruptAt != 0) {
@@ -134,7 +134,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
                     tv_termination_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.interruptAt));
                 } else {
                     tv_termination_time.setText("--");
-                    ll_termination_time.setVisibility(View.INVISIBLE);
+                    ll_termination_time.setVisibility(View.GONE);
                 }
         WorksheetCommon.setStatus(tv_status, mWorksheetInfo.data.status);
         if(null != mWorksheetInfo.data.attachment && mWorksheetInfo.data.attachment.size() > 0){
