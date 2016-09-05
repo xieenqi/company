@@ -62,7 +62,7 @@ public class WorksheetListAdapter extends BaseGroupsDataAdapter {
 
         public void loadData(Worksheet ws) {
             tv_content.setText(ws.title);
-            tv_creator_name.setText(ws.dispatcherName);
+            tv_creator_name.setText(ws.creatorName);
             tv_order.setText(ws.orderName);
             tv_progress.setText("完成度( "+ws.finishCount + "/" + ws.totalCount + " )");
             if(fromSelfCreated){
