@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.KeyEvent;
 import android.view.View;
@@ -705,11 +706,14 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             if (holder.getClass() == DiscussDetMineViewHolder.class) {
                 DiscussDetMineViewHolder mineHolder = (DiscussDetMineViewHolder) holder;
                 mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+//                mineHolder.tvContent.setAutoLinkMask(0x01);
                 try {
                     mineHolder.tvContent.setText(info.content);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
+                mineHolder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+                Linkify.addLinks(mineHolder.tvMineTime, Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
 
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
                 mineHolder.ivMineAvatar.setTag(selectUser);
