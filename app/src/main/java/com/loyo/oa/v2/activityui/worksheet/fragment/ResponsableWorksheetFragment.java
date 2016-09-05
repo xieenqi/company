@@ -136,7 +136,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
     /* 工单事件信息变更 */
     @Subscribe
-    public void onWorksheetEventCreated(WorksheetEventChangeEvent event) {
+    public void onWorksheetEventUpdated(WorksheetEventChangeEvent event) {
         isPullDown = true;
         page = 1;
         getData();
@@ -247,7 +247,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new ResponsableWorksheetsAdapter(mActivity, this, groupsData);
+            adapter = new ResponsableWorksheetsAdapter(mActivity, groupsData);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
     }
