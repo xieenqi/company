@@ -200,22 +200,62 @@ public class DateTool {
      * @return 时差的大致表达形式
      */
     public static String getDiffTime(long seconds) {
-        String strTime = "--";
+        String result = "--";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
         long millis = seconds * 1000;
-        long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - millis);
+        long diffTime = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - millis);
         // 一天内
-        if (time <= DAY_MILLIS) {
-            strTime = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
-        } else if (time <= 2 * DAY_MILLIS) {// 昨天
-            strTime = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
-        } else if (time <= 365 * DAY_MILLIS) {// 一年内
-            strTime = FORMATE_HOUR_YEAR.format(new Date(millis));
+        if (diffTime <= DAY_MILLIS) {
+            result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+        } else if (diffTime <= 2 * DAY_MILLIS) {// 昨天
+            result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+        } else if (diffTime <= 365 * DAY_MILLIS) {// 一年内
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
         } else {
-            strTime = FORMATE_AT_MINUTES.format(new Date(millis));
+            result = FORMATE_AT_MINUTES.format(new Date(millis));
         }
 
-        return strTime;
+        return result;
+    }
+
+
+    public static String getPrettyTimeStringFromMillis(long millis) {
+
+        String result = "--"; // empty return
+
+        long diffTime = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - millis);
+
+        if (diffTime <= DAY_MILLIS) {              /** 一天内 */
+            result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 2 * DAY_MILLIS) {   /** 昨天 */
+            result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 365 * DAY_MILLIS) { /** 一年内 */
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
+
+        } else {                                   /** 大于一年，显示年份 */
+            result = FORMATE_AT_MINUTES.format(new Date(millis));
+        }
+
+        return result;
+    }
+
+    public static String getPrettyTimeStringFromSeconds(long seconds) {
+
+        return getPrettyTimeStringFromMillis(seconds * 1000);
+
+    }
+
+    public static String getPrettyTimeStringFromTimestamp(long timeStamp) {
+
+        String timeStampString = String.valueOf(timeStamp);
+        if (timeStampString.length() >= 13) {
+            return getPrettyTimeStringFromMillis(timeStamp);
+        }
+        else  {
+            return getPrettyTimeStringFromSeconds(timeStamp);
+        }
     }
 
     /**
