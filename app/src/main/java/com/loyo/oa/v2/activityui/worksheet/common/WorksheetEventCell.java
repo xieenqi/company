@@ -49,7 +49,10 @@ public class WorksheetEventCell extends LinearLayout {
         this.addView(content);
     }
 
-    public void loadData(final WorksheetEventsSupporter data, final WSRole role, final ArrayList<WorksheetEventAction> actions) {
+    public void loadData(final WorksheetEventsSupporter data,
+                         final WSRole role,
+                         final ArrayList<WorksheetEventAction> actions,
+                         final WorksheetStatus worksheetStatus) {
         this.data = data;
 
 
@@ -76,9 +79,10 @@ public class WorksheetEventCell extends LinearLayout {
             ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
         }
 
-        tv_time.setText((data.startTime == 0 ? "--" :
-                DateTool.getDiffTime(data.startTime))
-                + " | " + (data.endTime == 0 ? "--" : DateTool.getDiffTime(data.endTime) + "截止"));
+        String timeString =  data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime);
+        timeString = timeString + " | " + (data.endTime == 0 ? "--" : DateTool.getDiffTime(data.endTime) + "截止");
+
+        tv_time.setText(timeString);
 
         /* 状态按钮 */
         iv_status.setImageResource(data.status.getStatusIcon());
