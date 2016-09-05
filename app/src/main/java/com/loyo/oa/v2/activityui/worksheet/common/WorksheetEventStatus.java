@@ -44,6 +44,10 @@ public enum WorksheetEventStatus implements GroupKey {
         public int getStatusIcon() {
             return R.drawable.icon_ws_status4;
         }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_gray;
+        }
     },
 
     /**
@@ -64,6 +68,10 @@ public enum WorksheetEventStatus implements GroupKey {
 
         public int getStatusIcon() {
             return R.drawable.icon_worcksheet_status2;
+        }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_purple;
         }
     },
 
@@ -86,6 +94,10 @@ public enum WorksheetEventStatus implements GroupKey {
         public int getStatusIcon() {
             return R.drawable.icon_worcksheet_status1;
         }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_gray;
+        }
     },
 
     /**
@@ -106,6 +118,10 @@ public enum WorksheetEventStatus implements GroupKey {
 
         public int getStatusIcon() {
             return R.drawable.icon_worcksheet_status3;
+        }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_green;
         }
     },
 
@@ -128,6 +144,10 @@ public enum WorksheetEventStatus implements GroupKey {
         public int getStatusIcon() {
             return R.drawable.icon_ws_status4;
         }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_gray;
+        }
     },
 
     /**
@@ -148,6 +168,10 @@ public enum WorksheetEventStatus implements GroupKey {
 
         public int getStatusIcon() {
             return R.drawable.icon_ws_status4;
+        }
+
+        public int getStatusBackground() {
+            return R.drawable.retange_gray;
         }
 
     };
@@ -178,6 +202,8 @@ public enum WorksheetEventStatus implements GroupKey {
      * 获取显示图标
      */
     public abstract int getStatusIcon();
+
+    public abstract int getStatusBackground();
 
     /**
      * 获取排序权值
