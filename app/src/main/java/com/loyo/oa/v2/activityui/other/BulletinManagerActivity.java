@@ -206,12 +206,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             tv_time = (TextView) itemView.findViewById(R.id.tv_notice_time);
             tv_title = (TextView) itemView.findViewById(R.id.tv_notice_title);
             tv_content = (TextView) itemView.findViewById(R.id.tv_notice_content);
-            try{
-                tv_content.setAutoLinkMask(Linkify.ALL);
-            }catch (NullPointerException e){
-                e.printStackTrace();
-            }
-
             tv_name = (TextView) itemView.findViewById(R.id.tv_notice_publisher);
             iv_avatar = (RoundImageView) itemView.findViewById(R.id.iv_notice_publisher_avatar);
             gridView = (CusGridView) itemView.findViewById(R.id.gv_notice_attachemnts);
@@ -241,9 +235,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             final Bulletin bulletin = mBulletins.get(position);
             holder.tv_time.setText(app.df3.format(new Date(bulletin.createdAt * 1000)));
             holder.tv_title.setText(bulletin.title);
-//            CharSequence builder = Utils.checkAutoLink(bulletin.content, BulletinManagerActivity.this);
             holder.tv_content.setText(bulletin.content);
-//            holder.tv_content.setMovementMethod(LinkMovementMethod.getInstance());
 
             holder.tv_name.setText(bulletin.getUserName() + " " + (
                     creatorIsEmpty(bulletin.creator) ? bulletin.creator.depts.get(0).getShortDept().getName() : "")

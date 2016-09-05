@@ -295,11 +295,6 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                     holder.time = (TextView) view.findViewById(R.id.tv_mine_time);
                     holder.name = (TextView) view.findViewById(R.id.tv_mine);
                     holder.content = (TextView) view.findViewById(R.id.tv_mine_content);
-                    try{
-                        holder.content.setAutoLinkMask(Linkify.ALL);
-                    }catch (NullPointerException e){
-                        e.printStackTrace();
-                    }
                     view.setTag(holder);
                 } else {
 //                    view = mInflater.inflate(R.layout.item_discussion_receive, viewGroup, false);

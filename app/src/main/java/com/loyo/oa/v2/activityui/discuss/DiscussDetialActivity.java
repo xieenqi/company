@@ -634,13 +634,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             mTvOtherTime = (TextView) itemView.findViewById(R.id.tv_other_time);
             mTvOtherName = (TextView) itemView.findViewById(R.id.tv_other_name);
             mTvOtherContent = (TextView) itemView.findViewById(R.id.tv_other_content);
-            try {
-                mTvOtherContent.setAutoLinkMask(Linkify.ALL);
-            }catch (NullPointerException e){
-                e.printStackTrace();
-            }
             mTvOtherContent.setMaxWidth((int) (screenWidth / 1.6f));
-
             mIvOtherAvatar = (RoundImageView) itemView.findViewById(R.id.iv_other_avatar);
         }
     }
