@@ -8,7 +8,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static boolean isRelease = true;                               //是否是正式产品
+    public static boolean isRelease = false;                               //是否是正式产品
 
 //  public static final Boolean is_developer_mode = true;                  //生产模式
 
@@ -40,7 +40,7 @@ public class Config_project {
         /**
          * 账号中心
          */
-         public static String account = "http://user.ukuaiqi.com";
+        public static String account = "http://user.ukuaiqi.com";
 
         /**
          * crm 客户管理crm.ukuaiqi.co
