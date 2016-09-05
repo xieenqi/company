@@ -118,7 +118,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                     item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
                 } else if (wfNodes.getActive() == 2) {
                     item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
-                    item_info.tv_result.setText("处理中");
+                    item_info.tv_result.setText("待处理");//处理中  20160905 要求修改
                     item_info.tv_comment.setVisibility(View.GONE);
                     item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
                 } else if (wfNodes.getActive() == 3) {
