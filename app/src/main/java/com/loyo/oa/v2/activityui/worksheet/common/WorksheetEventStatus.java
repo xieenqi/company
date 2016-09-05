@@ -8,6 +8,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.customview.RoundImageView;
 
 import java.lang.reflect.Type;
 
@@ -41,7 +42,7 @@ public enum WorksheetEventStatus implements GroupKey {
             return R.drawable.icon_ws_status4;
         }
 
-        public int getStatusIcon() {
+        public int getStatusIcon(RoundImageView view) {
             return R.drawable.icon_ws_status4;
         }
 
@@ -59,14 +60,14 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_1;
+            return R.color.ws_status_2;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status1;
+            return R.drawable.icon_ws_status2;
         }
 
-        public int getStatusIcon() {
+        public int getStatusIcon(RoundImageView view) {
             return R.drawable.icon_worcksheet_status2;
         }
 
@@ -84,14 +85,15 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_2;
+            return R.color.ws_status_5;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status2;
+            return R.drawable.icon_ws_status5;
         }
 
-        public int getStatusIcon() {
+        public int getStatusIcon(RoundImageView view) {
+            view.setAlpha(0.8f);
             return R.drawable.icon_worcksheet_status1;
         }
 
@@ -109,14 +111,14 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_3;
+            return R.color.ws_status_4;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status3;
+            return R.drawable.icon_ws_status4;
         }
 
-        public int getStatusIcon() {
+        public int getStatusIcon(RoundImageView view) {
             return R.drawable.icon_worcksheet_status3;
         }
 
@@ -141,7 +143,7 @@ public enum WorksheetEventStatus implements GroupKey {
             return R.drawable.icon_ws_status4;
         }
 
-        public int getStatusIcon() {
+        public int getStatusIcon(RoundImageView view) {
             return R.drawable.icon_ws_status4;
         }
 
@@ -166,7 +168,7 @@ public enum WorksheetEventStatus implements GroupKey {
             return R.drawable.icon_ws_status4;
         }
 
-        public int getStatusIcon() {
+        public int getStatusIcon(RoundImageView view) {
             return R.drawable.icon_ws_status4;
         }
 
@@ -201,7 +203,7 @@ public enum WorksheetEventStatus implements GroupKey {
     /**
      * 获取显示图标
      */
-    public abstract int getStatusIcon();
+    public abstract int getStatusIcon(RoundImageView view);
 
     public abstract int getStatusBackground();
 

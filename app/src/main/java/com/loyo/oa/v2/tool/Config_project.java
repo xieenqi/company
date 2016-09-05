@@ -40,7 +40,7 @@ public class Config_project {
         /**
          * 账号中心
          */
-         public static String account = "http://user.ukuaiqi.com";
+        public static String account = "http://user.ukuaiqi.com";
 
         /**
          * crm 客户管理crm.ukuaiqi.co

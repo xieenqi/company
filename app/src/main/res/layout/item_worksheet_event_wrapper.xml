@@ -75,10 +75,11 @@
                         android:src="@drawable/icon_customer_follow_time" />
 
                     <TextView
+                        android:id="@+id/tv_deadline_title"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="截止时间："
+                        android:text="事件限时："
                         android:textColor="@color/text99" />
 
                     <TextView
@@ -88,14 +89,6 @@
                         android:gravity="center_vertical"
                         android:textColor="@color/text99"
                         android:text=""
-                        />
-                    <TextView
-                        android:id="@+id/tv_endtime_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:text=" (超时)"
-                        android:textColor="@color/red1"
                         />
                 </LinearLayout>
 

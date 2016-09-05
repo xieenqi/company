@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.tool;
 
 import android.app.DatePickerDialog;
+import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -202,10 +203,15 @@ public class DateTool {
     public static String getDiffTime(long seconds) {
         String result = "--";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
-        long millis = seconds * 1000;
-        long diffTime = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - millis);
+        long millis = Long.valueOf(""+seconds) * 1000;
+
+        long morning = getCurrentMoringMillis() + DAY_MILLIS;
+        long diffTime = morning - millis;
         // 一天内
-        if (diffTime <= DAY_MILLIS) {
+        if (diffTime < 0) {
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
+        }
+        else if (diffTime <= DAY_MILLIS) {
             result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
         } else if (diffTime <= 2 * DAY_MILLIS) {// 昨天
             result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
@@ -223,9 +229,12 @@ public class DateTool {
 
         String result = "--"; // empty return
 
-        long diffTime = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - millis);
+        long diffTime = getCurrentMoringMillis() + DAY_MILLIS - millis;
 
-        if (diffTime <= DAY_MILLIS) {              /** 一天内 */
+        if (diffTime < 0) {
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
+        }
+        else if (diffTime <= DAY_MILLIS) {              /** 一天内 */
             result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
 
         } else if (diffTime <= 2 * DAY_MILLIS) {   /** 昨天 */
