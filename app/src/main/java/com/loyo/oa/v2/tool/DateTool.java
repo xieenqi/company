@@ -17,6 +17,10 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateTool {
+
+
+
+
     /**
      * 1s==1000ms
      */
@@ -61,6 +65,11 @@ public class DateTool {
     //MM-dd HH:mm
     public static final String DATE_FORMATE_HOUR_YEAR = "MM-dd HH:mm";
     public static Calendar calendar;
+
+
+    static SimpleDateFormat FORMATE_HOUR_MINUTE = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
+    static SimpleDateFormat FORMATE_HOUR_YEAR = new SimpleDateFormat(DATE_FORMATE_HOUR_YEAR, Locale.getDefault());
+    static SimpleDateFormat FORMATE_AT_MINUTES = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES, Locale.getDefault());
 
     protected DateTool() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -187,30 +196,82 @@ public class DateTool {
     /**
      * 获取当前时间距离指定日期时差的大致表达形式
      *
-     * @param date 日期
+     * @param seconds 日期
      * @return 时差的大致表达形式
      */
-    public static String getDiffTime(long date) {
-        SimpleDateFormat format = null;
-        String strTime = "--";
+    public static String getDiffTime(long seconds) {
+        String result = "--";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
-        long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date * 1000);
+        long millis = seconds * 1000;
+        long diffTime = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - millis);
         // 一天内
-        if (time <= DAY_MILLIS) {
-            format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
-            strTime = "今天  ".concat(format.format(new Date(date)));
-        } else if (time <= 2 * DAY_MILLIS) {// 昨天
-            format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
-            strTime = "昨天  ".concat(format.format(new Date(date)));
-        } else if (time <= 365 * DAY_MILLIS) {// 一年内
-            format = new SimpleDateFormat(DATE_FORMATE_HOUR_YEAR, Locale.getDefault());
-            strTime = format.format(new Date(date));
+        if (diffTime <= DAY_MILLIS) {
+            result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+        } else if (diffTime <= 2 * DAY_MILLIS) {// 昨天
+            result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+        } else if (diffTime <= 365 * DAY_MILLIS) {// 一年内
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
         } else {
-            format = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES, Locale.getDefault());
-            strTime = format.format(new Date(date));
+            result = FORMATE_AT_MINUTES.format(new Date(millis));
         }
 
-        return strTime;
+        return result;
+    }
+
+    public static String getPrettyTimeStringFromSeconds(long seconds) {
+
+        String result = "--"; // empty return
+
+        long millis = seconds * 1000;
+        long diffTime = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - millis);
+
+        if (diffTime <= DAY_MILLIS) {              /** 一天内 */
+            result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 2 * DAY_MILLIS) {   /** 昨天 */
+            result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 365 * DAY_MILLIS) { /** 一年内 */
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
+
+        } else {                                   /** 大于一年，显示年份 */
+            result = FORMATE_AT_MINUTES.format(new Date(millis));
+        }
+
+        return result;
+    }
+
+    public static String getPrettyTimeStringFromMillis(long millis) {
+
+        String result = "--"; // empty return
+
+        long diffTime = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - millis);
+
+        if (diffTime <= DAY_MILLIS) {              /** 一天内 */
+            result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 2 * DAY_MILLIS) {   /** 昨天 */
+            result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 365 * DAY_MILLIS) { /** 一年内 */
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
+
+        } else {                                   /** 大于一年，显示年份 */
+            result = FORMATE_AT_MINUTES.format(new Date(millis));
+        }
+
+        return result;
+    }
+
+    public static String getPrettyTimeStringFromTimestamp(long timeStamp) {
+
+        String timeStampString = String.valueOf(timeStamp);
+        if (timeStampString.length() >= 13) {
+            return getPrettyTimeStringFromMillis(timeStamp);
+        }
+        else  {
+            return getPrettyTimeStringFromSeconds(timeStamp);
+        }
     }
 
     /**
