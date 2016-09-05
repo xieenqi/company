@@ -222,6 +222,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_assignment_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_15"
@@ -248,6 +249,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_finish_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10"
@@ -273,6 +275,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_termination_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_15"
