@@ -173,9 +173,9 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             case R.id.img_title_left:
                 onBackPressed();
                 break;
-            case R.id.ll_worksheet_info://进入事件详情
+            case R.id.ll_worksheet_info://进入事件信息
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ExtraAndResult.CC_USER_ID,eventId);
+                bundle.putSerializable(ExtraAndResult.CC_USER_ID,detail.id);
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
             case R.id.tv_setting://批量设置
