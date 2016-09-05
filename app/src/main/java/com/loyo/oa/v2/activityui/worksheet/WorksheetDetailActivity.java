@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
@@ -189,19 +190,25 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void loadData() {
+        tv_setting.setVisibility(View.INVISIBLE);
+        img_title_right.setVisibility(View.INVISIBLE);
         if (MainApp.user.id.equals(detail.dispatcher.getId())) {
             isAssignment = true;
-            img_title_right.setVisibility(View.VISIBLE);
+            if (detail.status != WorksheetStatus.TEMINATED) {
+                img_title_right.setVisibility(View.VISIBLE);
+            }
             if (detail.status == WorksheetStatus.WAITASSIGN)
                 ll_wran.setVisibility(View.VISIBLE);
             if (detail.status == WorksheetStatus.WAITAPPROVE)
                 bt_confirm.setVisibility(View.VISIBLE);
+
+            if (detail.status == WorksheetStatus.WAITASSIGN) {
+                tv_setting.setVisibility(View.VISIBLE);
+            }
         }
-        if (MainApp.user.id.equals(detail.creator.getId())) {
-            isCreated = true;
-            img_title_right.setVisibility(View.INVISIBLE);
-            tv_setting.setVisibility(View.INVISIBLE);
-        }
+
+        isCreated = MainApp.user.id.equals(detail.creator.getId());
+
         if (ll_events.getChildCount() > 0) {
             ll_events.removeAllViews();
         }
@@ -210,11 +217,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_status.setText(detail.status.getName());
         tv_status.setBackgroundResource(detail.status.getStatusBackground());
 
+        tv_complete_number.setText("  ( " + detail.getFinshedNum() + "/" + detail.getTotalNum() +  " )");
+
+        ll_events.removeAllViews();
+
         if (null == detail.sheetEventsSupporter) {
             return;
         }
-
-        ll_events.removeAllViews();
         for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
 
             WorksheetEventsSupporter event = detail.sheetEventsSupporter.get(i);
@@ -223,7 +232,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             getRoleforEvent(event);
 
             WorksheetEventCell cell = new WorksheetEventCell(this, handler);
-            cell.loadData(event, role, actionsForRole(event, role));
+            cell.loadData(event, role, actionsForRole(event, role), detail.status);
 
             ll_events.addView(cell);
         }
@@ -231,17 +240,15 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
     public WSRole getRoleforEvent(WorksheetEventsSupporter event) {
 
-        boolean isResponsor = MainApp.user.id.equals(event.responsorId);
         /* 同一人可能同时有多个角色，也就有多个操作 */
-
         WSRole role = new WSRole();
-        if (isAssignment) {
+        if (MainApp.user.id.equals(detail.dispatcher.getId())) {
             role.addRole(WSRole.Dispatcher);
         }
-        if (isCreated) {
+        if (MainApp.user.id.equals(detail.creator.getId())) {
             role.addRole(WSRole.Creator);
         }
-        if (isResponsor) {
+        if (MainApp.user.id.equals(event.responsorId)) {
             role.addRole(WSRole.Responsor);
         }
         return role;

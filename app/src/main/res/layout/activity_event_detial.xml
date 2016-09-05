@@ -148,7 +148,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="@dimen/margin_other_view"
-                    android:background="@color/title_bg1"
+                    android:background="@drawable/bg_blue_rect"
                     android:textColor="@color/white"
                     android:visibility="gone"/>
 
@@ -160,7 +160,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="@dimen/margin_other_view"
-                    android:background="@color/title_bg1"
+                    android:background="@drawable/bg_blue_rect"
                     android:textColor="@color/white"
                     android:visibility="gone"
                     />

@@ -34,11 +34,11 @@ public enum WorksheetStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_4;
+            return R.color.ws_status_5;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status4;
+            return R.drawable.icon_ws_status5;
         }
 
         public int getStatusBackground() {
@@ -97,11 +97,11 @@ public enum WorksheetStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_2;
+            return R.color.ws_status_3;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status2;
+            return R.drawable.icon_ws_status3;
         }
 
         public int getStatusBackground() {
@@ -118,11 +118,11 @@ public enum WorksheetStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_3;
+            return R.color.ws_status_4;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status3;
+            return R.drawable.icon_ws_status4;
         }
 
         public int getStatusBackground() {
@@ -139,11 +139,11 @@ public enum WorksheetStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_4;
+            return R.color.ws_status_5;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status4;
+            return R.drawable.icon_ws_status5;
         }
 
         public int getStatusBackground() {
@@ -160,11 +160,11 @@ public enum WorksheetStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_4;
+            return R.color.ws_status_5;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status4;
+            return R.drawable.icon_ws_status5;
         }
 
         public int getStatusBackground() {

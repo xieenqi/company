@@ -185,7 +185,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     private void bindData() {
         tv_content.setText(mData.content);
         tv_responsor.setText("负责人：" + (null == mData.responsorName ? "未分派" : mData.responsorName));
-        tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "流程触发" : "定时触发"));
+        tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "自动流转" : "定时触发"));
         tv_worksheet.setText("所属工单：" + mData.title);
         tv_day.setText("限时：" + (mData.daysDeadline == 0 ? "不限时" : mData.daysDeadline + "天"));
         tv_time.setText((mData.startTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.startTime + ""))) + " | " +
@@ -199,26 +199,8 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void setStatus() {
-        if (mData.status != 0) {
-            String info = "";
-            int bj = R.drawable.retange_gray;
-            switch (mData.status) {
-                case 1://待处理
-                    info = "待处理";
-                    bj = R.drawable.retange_purple;
-                    break;
-                case 2://未触发
-                    info = "未触发";
-                    bj = R.drawable.retange_gray;
-                    break;
-                case 3://已完成
-                    info = "已完成";
-                    bj = R.drawable.retange_green;
-                    break;
-            }
-            tv_status.setText(info);
-            tv_status.setBackgroundResource(bj);
-        }
+        tv_status.setText(mData.status.getName());
+        tv_status.setBackgroundResource(mData.status.getStatusBackground());
     }
 
 

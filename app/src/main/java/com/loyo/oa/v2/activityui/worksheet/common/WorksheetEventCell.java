@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.tool.DateTool;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -47,7 +49,10 @@ public class WorksheetEventCell extends LinearLayout {
         this.addView(content);
     }
 
-    public void loadData(final WorksheetEventsSupporter data, final WSRole role, final ArrayList<WorksheetEventAction> actions) {
+    public void loadData(final WorksheetEventsSupporter data,
+                         final WSRole role,
+                         final ArrayList<WorksheetEventAction> actions,
+                         final WorksheetStatus worksheetStatus) {
         this.data = data;
 
 
@@ -73,6 +78,11 @@ public class WorksheetEventCell extends LinearLayout {
         if (null != data.responsor) {
             ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
         }
+
+        String timeString =  data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime);
+        timeString = timeString + " | " + (data.endTime == 0 ? "--" : DateTool.getDiffTime(data.endTime) + "截止");
+
+        tv_time.setText(timeString);
 
         /* 状态按钮 */
         iv_status.setImageResource(data.status.getStatusIcon());
