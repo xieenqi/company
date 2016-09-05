@@ -10,8 +10,10 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -28,7 +30,7 @@ public class WorksheetConfig {
             @Override
             public void success(WorksheetTemplateListWrapper listWrapper, Response response) {
                 HttpErrorCheck.checkResponse("类型列表：", response);
-                if(0 == listWrapper.errcode && listWrapper.data != null){
+                if (0 == listWrapper.errcode && listWrapper.data != null) {
                     for (WorksheetTemplate template : listWrapper.data) {
                         data.add(template);
                     }
@@ -40,7 +42,6 @@ public class WorksheetConfig {
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -50,7 +51,8 @@ public class WorksheetConfig {
         ArrayList<WorksheetTemplate> raw =
                 MainApp.getMainApp().gson.fromJson(
                         SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES),
-                        new TypeToken<ArrayList<WorksheetTemplate>>(){}.getType());
+                        new TypeToken<ArrayList<WorksheetTemplate>>() {
+                        }.getType());
 
 
         ArrayList<WorksheetTemplate> result = new ArrayList<WorksheetTemplate>();
@@ -70,7 +72,8 @@ public class WorksheetConfig {
     public static ArrayList<WorksheetTemplate> getWorksheetTypes(boolean fetchIfEmpty) {
         ArrayList<WorksheetTemplate> raw = null;
         String json = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES);
-        raw = MainApp.getMainApp().gson.fromJson(json, new TypeToken<ArrayList<WorksheetTemplate>>(){}.getType());
+        raw = MainApp.getMainApp().gson.fromJson(json, new TypeToken<ArrayList<WorksheetTemplate>>() {
+        }.getType());
 
         if (fetchIfEmpty && raw == null) {
             fetchWorksheetTypes();
@@ -89,7 +92,7 @@ public class WorksheetConfig {
     }
 
     /* 清除缓存 */
-    private  static void clearWorksheetTypes() {
+    private static void clearWorksheetTypes() {
         SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.WORKSHEET_TYPES);
     }
 }
