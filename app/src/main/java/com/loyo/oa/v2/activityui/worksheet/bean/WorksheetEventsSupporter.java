@@ -15,9 +15,20 @@ import java.util.List;
 public class WorksheetEventsSupporter implements Serializable {
     public String id;
     public String content;
-    public long startTime;
-    public long endTime;
+
     public WorksheetEventStatus status;//1 待处理 2 未触发 3 已处理
     public NewUser responsor;
     public String responsorId;
+
+    public int triggerMode;
+
+
+    public long createdAt;
+    public long updatedAt;
+    public long startTime;
+    public long endTime;
+    public long finishTime;
+
+    public int daysDeadline;
+    public int daysLater;
 }

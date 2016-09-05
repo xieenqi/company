@@ -34,7 +34,10 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
     /** UI */
     private ListView lv_listview;
-    private LinearLayout img_title_left;
+    private LinearLayout img_title_left,
+            ll_assignment_time,
+            ll_finish_time,
+            ll_termination_time;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, /*标题*/
             tv_title,            /*工单标题*/
@@ -85,6 +88,11 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         tv_track_content    = (TextView) findViewById(R.id.tv_track_content);
         tv_title            = (TextView) findViewById(R.id.tv_title);
         tv_status           = (TextView) findViewById(R.id.tv_status);
+
+        ll_assignment_time  = (LinearLayout) findViewById(R.id.ll_assignment_time);
+        ll_finish_time      = (LinearLayout) findViewById(R.id.ll_finish_time);
+        ll_termination_time = (LinearLayout) findViewById(R.id.ll_termination_time);
+
         img_title_left.setOnClickListener(this);
         tv_related_order.setOnClickListener(this);
         tv_title_1.setText("工单信息");
@@ -106,21 +114,27 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
                 tv_responsible_name.setText(mWorksheetInfo.data.responsorNames);
 
                 if(mWorksheetInfo.data.confirmedAt != 0){
+                    ll_assignment_time.setVisibility(View.VISIBLE);
                     tv_assignment_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.confirmedAt));
                 }else{
                     tv_assignment_time.setText("--");
+                    ll_assignment_time.setVisibility(View.INVISIBLE);
                 }
 
                 if (mWorksheetInfo.data.completedAt != 0) {
+                    ll_finish_time.setVisibility(View.VISIBLE);
                     tv_finish_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.completedAt));
                 } else {
                     tv_finish_time.setText("--");
+                    ll_finish_time.setVisibility(View.INVISIBLE);
                 }
 
-                if (mWorksheetInfo.data.completedAt != 0) {
+                if (mWorksheetInfo.data.interruptAt != 0) {
+                    ll_termination_time.setVisibility(View.VISIBLE);
                     tv_termination_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.interruptAt));
                 } else {
                     tv_termination_time.setText("--");
+                    ll_termination_time.setVisibility(View.INVISIBLE);
                 }
         WorksheetCommon.setStatus(tv_status, mWorksheetInfo.data.status);
         if(null != mWorksheetInfo.data.attachment && mWorksheetInfo.data.attachment.size() > 0){

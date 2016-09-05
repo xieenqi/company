@@ -205,6 +205,8 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             }
         }
 
+        isCreated = MainApp.user.id.equals(detail.creator.getId());
+
         if (ll_events.getChildCount() > 0) {
             ll_events.removeAllViews();
         }
@@ -213,12 +215,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_status.setText(detail.status.getName());
         tv_status.setBackgroundResource(detail.status.getStatusBackground());
 
-        tv_complete_number.setText("");
+        tv_complete_number.setText("  ( " + detail.getFinshedNum() + "/" + detail.getTotalNum() +  " )");
+
+        ll_events.removeAllViews();
+
         if (null == detail.sheetEventsSupporter) {
             return;
         }
-
-        ll_events.removeAllViews();
         for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
 
             WorksheetEventsSupporter event = detail.sheetEventsSupporter.get(i);
@@ -235,17 +238,15 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
     public WSRole getRoleforEvent(WorksheetEventsSupporter event) {
 
-        boolean isResponsor = MainApp.user.id.equals(event.responsorId);
         /* 同一人可能同时有多个角色，也就有多个操作 */
-
         WSRole role = new WSRole();
-        if (isAssignment) {
+        if (MainApp.user.id.equals(detail.dispatcher.getId())) {
             role.addRole(WSRole.Dispatcher);
         }
-        if (isCreated) {
+        if (MainApp.user.id.equals(detail.creator.getId())) {
             role.addRole(WSRole.Creator);
         }
-        if (isResponsor) {
+        if (MainApp.user.id.equals(event.responsorId)) {
             role.addRole(WSRole.Responsor);
         }
         return role;
