@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical">
+    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,7 +65,8 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/dimen_5"
             android:gravity="center"
-            android:maxLength="5"
+            android:maxWidth="40dp"
+            android:maxLines="3"
             android:text="刘小雅"
             android:textColor="@color/text99"
             android:textSize="@dimen/text_sp11"/>
@@ -74,10 +75,31 @@
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/dimen_8"
             android:layout_marginRight="@dimen/dimen_8"
+            android:gravity="center_vertical|left"
+            android:text=""
+            android:textColor="@color/text99"
+            android:textSize="@dimen/text_sp11"/>
+
+        <View
+            android:id="@+id/seperator"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/lineCC"
+            />
+
+        <TextView
+            android:id="@+id/tv_time2"
+            android:layout_width="0dp"
             android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginRight="@dimen/dimen_8"
             android:gravity="center_vertical|left"
             android:text="08-23 | 09-08截至"
             android:textColor="@color/text99"
