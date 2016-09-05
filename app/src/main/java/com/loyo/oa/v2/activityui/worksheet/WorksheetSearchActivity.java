@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -42,6 +43,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,6 +183,14 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
                 return true;
             }
         });
+    }
+
+    /* 工单事件信息变更 */
+    @Subscribe
+    public void onWorksheetEventUpdated(WorksheetEventChangeEvent event) {
+        isPullDown = true;
+        page = 1;
+        getData();
     }
 
     /**

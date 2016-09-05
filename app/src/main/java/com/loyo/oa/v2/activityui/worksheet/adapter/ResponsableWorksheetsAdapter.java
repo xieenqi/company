@@ -13,8 +13,10 @@ import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.activityui.worksheet.fragment.ResponsableWorksheetFragment;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.Event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 import com.loyo.oa.v2.point.IWorksheet;
@@ -35,21 +37,13 @@ import retrofit.client.Response;
  */
 public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
 
-    private ResponsableWorksheetFragment mFragment;
     private long nowTime;
-
-    public ResponsableWorksheetsAdapter(final Context context, final ResponsableWorksheetFragment fragment, final GroupsData data) {
-        super();
-        mContext = context;
-        groupsData = data;
-        mFragment = fragment;
-        nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime("yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
-    }
 
     public ResponsableWorksheetsAdapter(final Context context, final GroupsData data) {
         super();
         mContext = context;
         groupsData = data;
+        nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime("yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
     }
 
     @Override
@@ -72,9 +66,6 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                     if (wse.id == null) {
                         return;
                     }
-                    if (mFragment == null) {
-                        return;
-                    }
 
                     HashMap<String,Object> map = new HashMap<>();
                     map.put("type",1/* 1为提交完成，2为打回重做 */);
@@ -83,7 +74,9 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                         @Override
                         public void success(final Object o, final Response response) {
                             HttpErrorCheck.checkResponse("提交事情处理信息",response);
-                            mFragment.refresh();
+                            WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
+                            event.data = wse;
+                            AppBus.getInstance().post(event);
                         }
 
                         @Override
@@ -147,7 +140,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                 tv_time.setText(DateTool.getDiffTime(wse.startTime));
             }
 
-            if (wse.status == WorksheetEventStatus.WAITPROCESS && mFragment!= null) {
+            if (wse.status == WorksheetEventStatus.WAITPROCESS) {
                 iv_action.setVisibility(View.VISIBLE);
             }
             else {
