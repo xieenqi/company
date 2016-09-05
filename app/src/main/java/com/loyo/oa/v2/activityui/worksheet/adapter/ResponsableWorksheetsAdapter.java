@@ -127,7 +127,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             if(wse.endTime != 0){
                 /*是否超时判断*/
                 if(nowTime > wse.endTime){
-                    tv_deadline.setTextColor(mContext.getColor(R.color.red1));
+                    tv_deadline.setTextColor(mContext.getResources().getColor(R.color.red1));
                     tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
                     tv_endtime_tag.setVisibility(View.VISIBLE);
                 }else{
@@ -142,9 +142,9 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
 
             //TODO 我负责的 未触发不显示触发时间
             if(wse.status == WorksheetEventStatus.UNACTIVATED){
-                tv_time.setText(" ");
+                tv_time.setText("--");
             }else{
-                tv_time.setText(DateTool.getDiffTime(wse.updatedAt));
+                tv_time.setText(DateTool.getDiffTime(wse.startTime));
             }
 
             if (wse.status == WorksheetEventStatus.WAITPROCESS) {
