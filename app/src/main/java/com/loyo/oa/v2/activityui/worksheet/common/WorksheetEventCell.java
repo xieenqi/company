@@ -18,6 +18,7 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by EthanGong on 16/9/1.
@@ -27,7 +28,7 @@ public class WorksheetEventCell extends LinearLayout {
     View content;
     private RoundImageView iv_avatar;
     private ImageView iv_status, iv_action;
-    private TextView tv_content, tv_name, tv_time;
+    private TextView tv_content, tv_name, tv_time, tv_time2;
 
     Handler handler;
 
@@ -42,6 +43,7 @@ public class WorksheetEventCell extends LinearLayout {
         tv_content = (TextView) content.findViewById(R.id.tv_content);
         tv_name = (TextView) content.findViewById(R.id.tv_name);
         tv_time = (TextView) content.findViewById(R.id.tv_time);
+        tv_time2 = (TextView) content.findViewById(R.id.tv_time2);
 
         this.handler = handler;
 
@@ -78,10 +80,21 @@ public class WorksheetEventCell extends LinearLayout {
             ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
         }
 
-        String timeString = data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime);
-        timeString = timeString + " | " + (data.endTime == 0 ? "--" : DateTool.getDiffTime(data.endTime) + "截止");
-
-        tv_time.setText(timeString);
+        tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime));
+        if (data.endTime != 0) {
+            if ( data.endTime < (new Date()).getTime()/1000) {
+                tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止" +"(超时)");
+                tv_time2.setTextColor(getResources().getColor(R.color.red1));
+            }
+            else {
+                tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止");
+                tv_time2.setTextColor(getResources().getColor(R.color.text99));
+            }
+        }
+        else {
+            tv_time2.setText("--");
+            tv_time2.setTextColor(getResources().getColor(R.color.text99));
+        }
 
         /* 状态按钮 */
         iv_status.setImageResource(data.status.getStatusIcon(iv_avatar));
