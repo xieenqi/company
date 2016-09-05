@@ -213,6 +213,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_status.setText(detail.status.getName());
         tv_status.setBackgroundResource(detail.status.getStatusBackground());
 
+        tv_complete_number.setText("");
         if (null == detail.sheetEventsSupporter) {
             return;
         }
@@ -226,7 +227,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             getRoleforEvent(event);
 
             WorksheetEventCell cell = new WorksheetEventCell(this, handler);
-            cell.loadData(event, role, actionsForRole(event, role));
+            cell.loadData(event, role, actionsForRole(event, role), detail.status);
 
             ll_events.addView(cell);
         }
