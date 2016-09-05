@@ -1,6 +1,4 @@
-package com.loyo.oa.v2.activityui.worksheet.common;
-
-import java.util.Map;
+package com.loyo.oa.v2.common;
 
 /**
  * Created by EthanGong on 16/8/27.

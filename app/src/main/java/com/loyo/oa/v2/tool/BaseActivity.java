@@ -28,7 +28,7 @@ import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.Event.AppBus;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;

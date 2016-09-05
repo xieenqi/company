@@ -1,7 +1,6 @@
-package com.loyo.oa.v2.activityui.worksheet.common;
+package com.loyo.oa.v2.common;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
