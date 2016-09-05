@@ -287,12 +287,14 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
             @Override
             public void success(WorksheetEventListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我负责的工单列表：", response);
+
                 if (isPullDown) {
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
                 mExpandableListView.setEmptyView(emptyView);
+
+                HttpErrorCheck.checkResponse("我负责的工单列表：", response);
             }
 
             @Override

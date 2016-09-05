@@ -272,12 +272,13 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的工单列表：", response);
+
                 if (isPullDown) {
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
                 mExpandableListView.setEmptyView(emptyView);
+                HttpErrorCheck.checkResponse("我的工单列表：", response);
             }
 
             @Override
