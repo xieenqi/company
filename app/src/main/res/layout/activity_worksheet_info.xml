@@ -36,7 +36,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dimen_5"
@@ -47,7 +47,9 @@
                             android:id="@+id/tv_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dimen_10"
+                            android:layout_marginLeft="@dimen/dimen_10"
+                            android:layout_marginRight="@dimen/dimen_5"
+                            android:layout_toLeftOf="@+id/tv_status"
                             android:text=""
                             android:textColor="@color/text33"
                             android:textSize="@dimen/text_sp16"/>
@@ -58,12 +60,15 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/retange_green"
                             android:gravity="center"
+                            android:layout_marginLeft="@dimen/dimen_5"
+                            android:layout_marginRight="@dimen/dimen_10"
+                            android:layout_alignParentRight="true"
                             android:paddingLeft="@dimen/dimen_2"
                             android:paddingRight="@dimen/dimen_2"
                             android:text="已完成"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_sp11"/>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tv_commit_info"
