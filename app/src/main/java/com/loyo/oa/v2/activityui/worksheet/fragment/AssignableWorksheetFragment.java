@@ -120,8 +120,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        groupsData = new GroupsData();
-        initFilters();
+
     }
 
 
@@ -138,6 +137,8 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_self_created_worksheet, null);
+            groupsData = new GroupsData();
+            initFilters();
             initView(mView);
         }
         return mView;

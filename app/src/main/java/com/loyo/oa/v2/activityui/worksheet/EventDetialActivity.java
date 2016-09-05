@@ -7,12 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.common.EventHandleInfoList;
@@ -21,7 +19,6 @@ import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -32,11 +29,8 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

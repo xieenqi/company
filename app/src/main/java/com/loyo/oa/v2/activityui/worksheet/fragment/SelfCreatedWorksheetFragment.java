@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
@@ -26,15 +25,12 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
-import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
-import com.loyo.oa.v2.common.Event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -45,7 +41,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.squareup.otto.Subscribe;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -122,9 +117,6 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        groupsData = new GroupsData();
-        initFilters();
-        WorksheetPermisssion.test();
     }
 
     @Subscribe
@@ -140,6 +132,8 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_self_created_worksheet, null);
+            groupsData = new GroupsData();
+            initFilters();
             initView(mView);
         }
         return mView;
