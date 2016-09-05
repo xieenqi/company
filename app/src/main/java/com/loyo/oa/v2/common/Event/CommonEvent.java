@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.common.Event;
+package com.loyo.oa.v2.common.event;
 
 /**
  * Created by EthanGong on 16/9/1.
