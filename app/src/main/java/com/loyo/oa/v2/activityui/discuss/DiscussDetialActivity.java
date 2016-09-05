@@ -10,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -632,7 +630,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             mTvOtherName = (TextView) itemView.findViewById(R.id.tv_other_name);
             mTvOtherContent = (TextView) itemView.findViewById(R.id.tv_other_content);
             mTvOtherContent.setMaxWidth((int) (screenWidth / 1.6f));
-            mTvOtherContent.setAutoLinkMask(Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
+//            mTvOtherContent.setAutoLinkMask(Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
             mIvOtherAvatar = (RoundImageView) itemView.findViewById(R.id.iv_other_avatar);
         }
     }
@@ -712,14 +710,12 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-                mineHolder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-                Linkify.addLinks(mineHolder.tvMineTime, Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
+//                mineHolder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+//                Linkify.addLinks(mineHolder.tvMineTime, Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
 
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
                 mineHolder.ivMineAvatar.setTag(selectUser);
 
-//                mineHolder.ivMineAvatar.setOnLongClickListener(onAvaterLongClicklistener);
-//                ImageLoader.getInstance().displayImage(Config_project.);
                 ImageLoader.getInstance().displayImage(info.creator.avatar, mineHolder.ivMineAvatar);
             } else if (holder.getClass() == DiscussDetOtherViewHolder.class) {
                 DiscussDetOtherViewHolder otherHolder = (DiscussDetOtherViewHolder) holder;
