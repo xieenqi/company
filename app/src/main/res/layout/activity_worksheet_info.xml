@@ -36,8 +36,8 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dimen_5"
                         android:gravity="center_vertical"
@@ -45,12 +45,13 @@
 
                         <TextView
                             android:id="@+id/tv_title"
+                            android:layout_alignParentLeft="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dimen_10"
-                            android:layout_marginRight="@dimen/dimen_5"
-                            android:layout_toLeftOf="@+id/tv_status"
                             android:text=""
+                            android:maxLines="20"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:textColor="@color/text33"
                             android:textSize="@dimen/text_sp16"/>
 
@@ -61,18 +62,17 @@
                             android:gravity="center"
                             android:layout_marginLeft="@dimen/dimen_5"
                             android:layout_marginRight="@dimen/dimen_10"
-                            android:layout_alignParentRight="true"
                             android:paddingLeft="@dimen/dimen_2"
                             android:paddingRight="@dimen/dimen_2"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_sp11"/>
-                    </RelativeLayout>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_commit_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text="123"
                         android:textColor="@color/text99"
                         android:textSize="@dimen/text_sp12"/>
 
