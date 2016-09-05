@@ -131,7 +131,7 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
         expandableListView.setOnRefreshListener(this);
 
         ExpandableListView innerListView = expandableListView.getRefreshableView();
-        adapter = new WorksheetListAdapter(this, groupsData);
+        adapter = new WorksheetListAdapter(this, groupsData,false);
 
         innerListView.setAdapter(adapter);
         innerListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
