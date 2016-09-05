@@ -22,7 +22,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.WorkReport;
-import com.loyo.oa.v2.common.Event.AppBus;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

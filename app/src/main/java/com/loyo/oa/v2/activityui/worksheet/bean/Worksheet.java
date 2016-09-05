@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.worksheet.bean;
 
-import com.loyo.oa.v2.activityui.worksheet.common.Groupable;
+import com.loyo.oa.v2.common.Groupable;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 
 import java.io.Serializable;

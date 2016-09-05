@@ -6,27 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
-import com.loyo.oa.v2.activityui.worksheet.common.GroupsData;
+import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
-import com.loyo.oa.v2.activityui.worksheet.fragment.ResponsableWorksheetFragment;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Event.AppBus;
+import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
-import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
