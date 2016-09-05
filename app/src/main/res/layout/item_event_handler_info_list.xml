@@ -67,6 +67,7 @@
                 android:layout_marginTop="@dimen/margin_other_view"
                 android:background="#F3F3F3"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 >
 
                 <ImageView
@@ -101,7 +102,7 @@
                         android:ellipsize="end"
                         android:maxLines="20"
                         android:singleLine="true"
-                        android:text="四川省成都市金牛区"
+                        android:text=""
                         android:textColor="@color/text66"
                         android:textSize="@dimen/text_sp11"
                         />
