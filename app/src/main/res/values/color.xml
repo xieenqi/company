@@ -39,11 +39,12 @@
     <color name="md_grey_800">#424242</color>
     <color name="md_grey_900">#212121</color>
 
-    <!-- Worksheet/WorksheetEvent 状态 -->
-    <color name="ws_status_1">#bf73e6</color>
-    <color name="ws_status_2">#2c9dfc</color>
-    <color name="ws_status_3">#51c055</color>
-    <color name="ws_status_4">#999999</color>
+    <!-- Worksheet/WorksheetEvent 状态   -->
+    <color name="ws_status_1">#ff6363</color>
+    <color name="ws_status_2">#bf73e6</color>
+    <color name="ws_status_3">#2c9dfc</color>
+    <color name="ws_status_4">#83c850</color>
+    <color name="ws_status_5">#b3b3b3</color>
 
 
     <color name="item_bj_fb">#fbfbfb</color>

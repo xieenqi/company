@@ -185,7 +185,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     private void bindData() {
         tv_content.setText(mData.content);
         tv_responsor.setText("负责人：" + (null == mData.responsorName ? "未分派" : mData.responsorName));
-        tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "流程触发" : "定时触发"));
+        tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "自动流转" : "定时触发"));
         tv_worksheet.setText("所属工单：" + mData.title);
         tv_day.setText("限时：" + (mData.daysDeadline == 0 ? "不限时" : mData.daysDeadline + "天"));
         tv_time.setText((mData.startTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.startTime + ""))) + " | " +

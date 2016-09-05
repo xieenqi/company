@@ -96,7 +96,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
                 tv_title.setText(mWorksheetInfo.data.title);
                 tv_Assignment_name.setText(mWorksheetInfo.data.dispatcherName);
                 if(mWorksheetInfo.data.triggerMode == 1){
-                    tv_boom.setText("流程触发");
+                    tv_boom.setText("自动流转");
                 }else{
                     tv_boom.setText("定时触发");
                 }

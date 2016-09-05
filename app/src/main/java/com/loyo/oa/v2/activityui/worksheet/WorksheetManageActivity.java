@@ -89,14 +89,10 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
                 permission = (Permission) MainApp.rootMap.get("0330");
                 if (!permission.isEnable()) {
                     SaleItemStatus = new String[]{"我创建的", "我分派的", "我负责的"};
-                    img_title_arrow.setVisibility(View.INVISIBLE);
-                    layout_title_action.setEnabled(false);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
                 SaleItemStatus = new String[]{"我创建的", "我分派的", "我负责的"};
-                img_title_arrow.setVisibility(View.INVISIBLE);
-                layout_title_action.setEnabled(false);
             }
         }
         initTitleItem();
