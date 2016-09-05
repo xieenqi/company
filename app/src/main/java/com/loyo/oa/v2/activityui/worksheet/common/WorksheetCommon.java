@@ -16,11 +16,11 @@ public class WorksheetCommon {
         switch (status) {
             case 1:
                 info = "待分派";
-                bj = R.drawable.retange_purple;
+                bj = R.drawable.retange_red;
                 break;
             case 2:
                 info = "进行中";
-                bj = R.drawable.retange_blue;
+                bj = R.drawable.retange_purple;
                 break;
             case 3:
                 info = "待审核";

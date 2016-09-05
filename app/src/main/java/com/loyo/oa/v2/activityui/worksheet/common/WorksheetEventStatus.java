@@ -59,11 +59,11 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_1;
+            return R.color.ws_status_2;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status1;
+            return R.drawable.icon_ws_status2;
         }
 
         public int getStatusIcon() {
@@ -84,11 +84,11 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_2;
+            return R.color.ws_status_5;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status2;
+            return R.drawable.icon_ws_status5;
         }
 
         public int getStatusIcon() {
@@ -109,11 +109,11 @@ public enum WorksheetEventStatus implements GroupKey {
         }
 
         public int getColor() {
-            return R.color.ws_status_3;
+            return R.color.ws_status_4;
         }
 
         public int getIcon() {
-            return R.drawable.icon_ws_status3;
+            return R.drawable.icon_ws_status4;
         }
 
         public int getStatusIcon() {

@@ -63,7 +63,7 @@ public enum WorksheetStatus implements GroupKey {
         }
 
         public int getStatusBackground() {
-            return R.drawable.retange_purple;
+            return R.drawable.retange_red;
         }
     },
 
@@ -84,7 +84,7 @@ public enum WorksheetStatus implements GroupKey {
         }
 
         public int getStatusBackground() {
-            return R.drawable.retange_blue;
+            return R.drawable.retange_purple;
         }
     },
 
