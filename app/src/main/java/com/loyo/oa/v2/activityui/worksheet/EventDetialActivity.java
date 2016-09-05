@@ -227,7 +227,6 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
      * */
     @Subscribe
     public void onWorkSheetDetailsRedo(WorksheetInfo event) {
-        Toast("重做 刷新");
         for(int i =0 ; i <actions.size(); i++) {
             if (actions.get(i) == WorksheetEventAction.Redo) {
                 actions.remove(i);
