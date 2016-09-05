@@ -244,7 +244,6 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
      * */
     @Subscribe
     public void onWorkSheetDetailsFinish(WorksheetDetail event) {
-        Toast("完成 刷新");
         for(int i =0 ; i <actions.size(); i++) {
             if (actions.get(i) == WorksheetEventAction.Finish) {
                 actions.remove(i);
