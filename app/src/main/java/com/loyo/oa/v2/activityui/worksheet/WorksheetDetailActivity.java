@@ -215,13 +215,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_status.setText(detail.status.getName());
         tv_status.setBackgroundResource(detail.status.getStatusBackground());
 
-        tv_complete_number.setText("(" + detail.getFinshedNum() + "/" + detail.getTotalNum() +  ")");
-        
+        tv_complete_number.setText("  ( " + detail.getFinshedNum() + "/" + detail.getTotalNum() +  " )");
+
+        ll_events.removeAllViews();
+
         if (null == detail.sheetEventsSupporter) {
             return;
         }
-
-        ll_events.removeAllViews();
         for (int i = 0; i < detail.sheetEventsSupporter.size(); i++) {
 
             WorksheetEventsSupporter event = detail.sheetEventsSupporter.get(i);
