@@ -199,26 +199,8 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void setStatus() {
-        if (mData.status != 0) {
-            String info = "";
-            int bj = R.drawable.retange_gray;
-            switch (mData.status) {
-                case 1://待处理
-                    info = "待处理";
-                    bj = R.drawable.retange_purple;
-                    break;
-                case 2://未触发
-                    info = "未触发";
-                    bj = R.drawable.retange_gray;
-                    break;
-                case 3://已完成
-                    info = "已完成";
-                    bj = R.drawable.retange_green;
-                    break;
-            }
-            tv_status.setText(info);
-            tv_status.setBackgroundResource(bj);
-        }
+        tv_status.setText(mData.status.getName());
+        tv_status.setBackgroundResource(mData.status.getStatusBackground());
     }
 
 

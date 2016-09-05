@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet.bean;
 
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -21,7 +23,7 @@ public class EventDetail implements Serializable {
     public long endTime;
     public int daysDeadline;//多少天内完成
     public int daysLater;//多少天后触发
-    public int status;
+    public WorksheetEventStatus status;
     public long updatedAt;
     public ArrayList<EventHandleInfoItem> handleInfoList;
 
