@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.worksheet.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
@@ -33,11 +36,13 @@ import retrofit.client.Response;
 public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
 
     private long nowTime;
+    private int fromPage;
 
-    public ResponsableWorksheetsAdapter(final Context context, final GroupsData data) {
+    public ResponsableWorksheetsAdapter(final Context context, final GroupsData data, int fromPage) {
         super();
         mContext = context;
         groupsData = data;
+        this.fromPage = fromPage;
         nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime("yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
     }
 
@@ -64,6 +69,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
 
                     WorksheetEventFinishAction action = new WorksheetEventFinishAction();
                     action.data = wse;
+                    action.eventCode = fromPage;
                     AppBus.getInstance().post(action);
 
                 }
