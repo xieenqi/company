@@ -28,6 +28,7 @@ import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
@@ -138,7 +139,7 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
             adapter = new WorksheetListAdapter(this, groupsData,false);
         }
         else {
-            adapter = new ResponsableWorksheetsAdapter(this, groupsData);
+            adapter = new ResponsableWorksheetsAdapter(this, groupsData, WorksheetEventFinishAction.FROM_SEARCH_LIST);
         }
 
         innerListView.setAdapter(adapter);
@@ -193,7 +194,7 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
 
     @Subscribe
     public void onWorkSheetEventFinishAction(WorksheetEventFinishAction action) {
-        if (action.data != null) {
+        if (action.data != null && action.eventCode == WorksheetEventFinishAction.FROM_SEARCH_LIST) {
             finishEvent(action.data);
         }
     }
