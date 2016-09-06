@@ -15,6 +15,9 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.StatFs;
 
+/**
+ * 对文件 的操作
+ */
 public class FileTool {
 
 	public static File mkdirFile(String filePath) {

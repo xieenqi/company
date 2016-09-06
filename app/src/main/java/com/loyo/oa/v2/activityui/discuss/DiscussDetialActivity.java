@@ -613,7 +613,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             tvMine = (TextView) itemView.findViewById(R.id.tv_mine);
             tvContent = (TextView) itemView.findViewById(R.id.tv_mine_content);
             tvContent.setMaxWidth(screenWidth / 2);
-//            tvContent.setAutoLinkMask(Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
+//            tvContent.setAutoLinkMask(Linkify.WEB_URLS);
             ivMineAvatar = (RoundImageView) itemView.findViewById(R.id.iv_mine_avatar);
         }
     }
