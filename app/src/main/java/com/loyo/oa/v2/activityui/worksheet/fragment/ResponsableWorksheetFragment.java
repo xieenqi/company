@@ -136,7 +136,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
     @Subscribe
     public void onWorkSheetEventFinishAction(WorksheetEventFinishAction action) {
-        if (action.data != null) {
+        if (action.data != null && action.eventCode == WorksheetEventFinishAction.FROM_RESPONSABLE_LIST) {
             finishEvent(action.data);
         }
     }
@@ -266,7 +266,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new ResponsableWorksheetsAdapter(mActivity, groupsData);
+            adapter = new ResponsableWorksheetsAdapter(mActivity, groupsData, WorksheetEventFinishAction.FROM_RESPONSABLE_LIST);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
     }
