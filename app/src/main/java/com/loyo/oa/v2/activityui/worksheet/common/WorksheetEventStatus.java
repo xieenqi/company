@@ -158,7 +158,7 @@ public enum WorksheetEventStatus implements GroupKey {
      */
     Null(-1) {
         public String getName() {
-            return "全部类型";
+            return "全部状态";
         }
 
         public int getColor() {
