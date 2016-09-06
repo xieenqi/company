@@ -563,7 +563,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
                         super.failure(error);
                     }
                 });
