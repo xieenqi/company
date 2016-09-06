@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,23 +22,18 @@ import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
-import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
-import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrderListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CusGridView;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.AliOSSManager;
@@ -54,12 +48,10 @@ import com.loyo.oa.v2.tool.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.http.PUT;
 
 public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnClickListener  {
     private View mView;
@@ -278,6 +270,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                 // 本地异常如网络异常等
                 if (clientExcepion != null) {
                     clientExcepion.printStackTrace();
+                    Toast("网络异常，请稍后重试！");
                 }
 
                 // 服务异常
@@ -286,7 +279,11 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                     LogUtil.dee("RequestId" + serviceException.getRequestId());
                     LogUtil.dee("HostId" + serviceException.getHostId());
                     LogUtil.dee("RawMessage" + serviceException.getRawMessage());
+
+                    Toast("" + serviceException.getRawMessage());
                 }
+
+
             }
         });
     }
