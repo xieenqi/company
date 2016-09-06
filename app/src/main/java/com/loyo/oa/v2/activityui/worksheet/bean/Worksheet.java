@@ -35,7 +35,7 @@ import java.util.List;
 //        "finishCount": 0
 //}
 
-public class Worksheet implements Groupable, Comparable<Worksheet>, Serializable {
+public class Worksheet implements Groupable<Worksheet>, Serializable {
 
     public String id;
     public String companyId;
@@ -72,13 +72,12 @@ public class Worksheet implements Groupable, Comparable<Worksheet>, Serializable
 
 
     /** 相同状态下，按时间创建排序, 最新排前  */
-    @Override
     public int compareTo(Worksheet another) {
         if (createdAt < another.createdAt) {
-            return -1;
+            return 1;
         }
         else if (createdAt > another.createdAt) {
-            return 1;
+            return -1;
         }
         return 0;
     }

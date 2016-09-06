@@ -22,6 +22,15 @@ public class GroupsData {
         Collections.sort(groups);
     }
 
+    public void sortByRecursely() {
+        Collections.sort(groups);
+        Iterator<SectionData> iterator = groups.iterator();
+        while (iterator.hasNext()) {
+            SectionData next = iterator.next();
+            next.sort();
+        }
+    }
+
     public SectionData get(int idx) {
         return groups.get(idx);
     }
@@ -110,6 +119,11 @@ public class GroupsData {
 
         public int size() {
             return data.size();
+        }
+
+        /** 排序分组 */
+        public void sort() {
+            Collections.sort(data);
         }
     }
 }
