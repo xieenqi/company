@@ -192,11 +192,16 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
             Toast("标题不能为空");
             return;
         }
+        if (title.length() > 50) {
+            Toast("标题长度不能超过50个字符");
+            return;
+        }
 
         String content = edt.getText().toString().trim();
         String orderId = mActivity.selectedOrder.id;
         String orderName = mActivity.selectedOrder.title;
         String templateId = mActivity.selectedType.id;
+
 
         final HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("title", title);

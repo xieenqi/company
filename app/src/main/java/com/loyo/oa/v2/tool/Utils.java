@@ -10,7 +10,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -68,6 +72,9 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -108,11 +115,31 @@ public class Utils {
         return windowManager;
     }
 
+
+    /**
+     * 图片二值化
+     * */
+    public static Bitmap toGrayscale(Bitmap bmpOriginal) {
+        int width, height;
+        height = bmpOriginal.getHeight();
+        width = bmpOriginal.getWidth();
+
+        Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        Canvas c = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(bmpOriginal, 0, 0, paint);
+        return bmpGrayscale;
+    }
+
     /**
      * 自动弹出软键盘
      * time: 设置弹出延迟时间，目的在于等页面渲染完成，否则自动弹出会失效
-     * */
-    public static void autoEjetcEdit(final EditText edt,int time){
+     */
+    public static void autoEjetcEdit(final EditText edt, int time) {
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -127,8 +154,8 @@ public class Utils {
 
     /**
      * 获取屏幕宽度
-     * */
-    public static int getWindowWidth(Context context){
+     */
+    public static int getWindowWidth(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
 
@@ -138,8 +165,8 @@ public class Utils {
 
     /**
      * 获取屏幕高度
-     * */
-    public static int getWindowHeight(Context context){
+     */
+    public static int getWindowHeight(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
 

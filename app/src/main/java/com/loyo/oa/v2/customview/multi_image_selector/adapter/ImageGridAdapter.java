@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.customview.multi_image_selector.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,7 @@ import android.widget.ImageView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -242,14 +243,24 @@ public class ImageGridAdapter extends BaseAdapter {
             LogUtil.d("文件的路径：" + data.path);
             if (mItemSize > 0) {
                 // 显示图片
-                Picasso.with(mContext)
-                        .load(imageFile)
-                        .placeholder(R.drawable.default_error)
-                        .error(R.drawable.default_error)
-                        .resize(mItemSize, mItemSize)
-                        .centerCrop()
-                        .into(image);
-//                ImageLoader.getInstance().displayImage(Uri.parse(data.path) + "", image);
+//                Picasso.with(mContext)//图片过大会导致oom
+//                        .load(imageFile)
+////                        .placeholder(R.drawable.default_error)
+//                        .error(R.drawable.default_error)
+//                        .resize(mItemSize, mItemSize)
+////                        .centerCrop()
+//                        .into(image, new Callback() {
+//                            @Override
+//                            public void onSuccess() {
+//
+//                            }
+//
+//                            @Override
+//                            public void onError() {
+//
+//                            }
+//                        });
+                ImageLoader.getInstance().displayImage("file://" + Uri.parse(data.path), image);
             }
         }
     }
