@@ -53,7 +53,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
 
     private int mIndex = -1;
     private float mRotation = 0;
-    private String[] SaleItemStatus = new String[]{"我创建的", "我分派的", "我负责的", "团队工单"};
+    private String[] SaleItemStatus = new String[]{"我负责的", "我创建的", "我分派的", "团队工单"};
     private List<BaseFragment> fragments = new ArrayList<>();
 
     @Override
@@ -88,11 +88,11 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
             try {
                 permission = (Permission) MainApp.rootMap.get("0330");
                 if (!permission.isEnable()) {
-                    SaleItemStatus = new String[]{"我创建的", "我分派的", "我负责的"};
+                    SaleItemStatus = new String[]{"我负责的", "我创建的", "我分派的"};
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                SaleItemStatus = new String[]{"我创建的", "我分派的", "我负责的"};
+                SaleItemStatus = new String[]{"我负责的", "我创建的", "我分派的"};
             }
         }
         initTitleItem();
@@ -108,15 +108,16 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
         BaseFragment fragment = null;
 
         Bundle b = new Bundle();
+
+        fragment = (BaseFragment) Fragment.instantiate(this, ResponsableWorksheetFragment.class.getName(), b);
+        fragments.add(fragment);
+
+        b = new Bundle();
         fragment = (BaseFragment) Fragment.instantiate(this, SelfCreatedWorksheetFragment.class.getName(), b);
         fragments.add(fragment);
 
         b = new Bundle();
         fragment = (BaseFragment) Fragment.instantiate(this, AssignableWorksheetFragment.class.getName(), b);
-        fragments.add(fragment);
-
-        b = new Bundle();
-        fragment = (BaseFragment) Fragment.instantiate(this, ResponsableWorksheetFragment.class.getName(), b);
         fragments.add(fragment);
 
         b = new Bundle();
