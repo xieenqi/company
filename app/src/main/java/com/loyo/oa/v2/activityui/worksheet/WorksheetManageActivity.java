@@ -16,8 +16,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
-import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
+import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetCategoryAdapter;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
 import com.loyo.oa.v2.activityui.worksheet.fragment.AssignableWorksheetFragment;
@@ -30,8 +29,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +50,8 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
 
     private int mIndex = -1;
     private float mRotation = 0;
-    private String[] SaleItemStatus = new String[]{"我负责的", "我创建的", "我分派的", "团队工单"};
+    private WorksheetListType[] SaleItemStatus = new WorksheetListType[]
+            {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE, WorksheetListType.TEAM};
     private List<BaseFragment> fragments = new ArrayList<>();
 
     @Override
@@ -88,11 +86,13 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
             try {
                 permission = (Permission) MainApp.rootMap.get("0330");
                 if (!permission.isEnable()) {
-                    SaleItemStatus = new String[]{"我负责的", "我创建的", "我分派的"};
+                    SaleItemStatus = new WorksheetListType[]
+                            {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE};
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                SaleItemStatus = new String[]{"我负责的", "我创建的", "我分派的"};
+                SaleItemStatus = new WorksheetListType[]
+                        {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE};
             }
         }
         initTitleItem();
@@ -147,22 +147,9 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
             /*搜索*/
             case R.id.img_title_search_right:
 
-                WorksheetListType type = WorksheetListType.SELF_CREATED;
-                switch (mIndex){
-                    case 0:
-                        type = WorksheetListType.RESPONSABLE;
-                        break;
-                    case 1:
-                        type = WorksheetListType.SELF_CREATED;
-                        break;
-                    case 2:
-                        type = WorksheetListType.ASSIGNABLE;
-                        break;
-                    case 3:
-                        type = WorksheetListType.TEAM;
-                        break;
-                    default:
-                            break;
+                WorksheetListType type = WorksheetListType.RESPONSABLE;
+                if (mIndex >=0 && mIndex < SaleItemStatus.length) {
+                    type = SaleItemStatus[mIndex];
                 }
 
                 Bundle b = new Bundle();
@@ -193,13 +180,13 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
     }
 
     void initTitleItem() {
-        CommonCategoryAdapter TitleItemAdapter = new CommonCategoryAdapter(this, Arrays.asList(SaleItemStatus));
+        WorksheetCategoryAdapter TitleItemAdapter = new WorksheetCategoryAdapter(this, Arrays.asList(SaleItemStatus));
         lv_order_title.setAdapter(TitleItemAdapter);
         lv_order_title.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 changeTitleImg();
-                tv_title_1.setText(SaleItemStatus[position]);
+                tv_title_1.setText(SaleItemStatus[position].getTitle());
                 changeChild(position);
             }
         });

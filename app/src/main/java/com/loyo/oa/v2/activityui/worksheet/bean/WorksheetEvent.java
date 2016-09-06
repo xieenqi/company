@@ -10,7 +10,7 @@ import java.util.List;
  * Created by EthanGong on 16/8/27.
  */
 
-public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
+public class WorksheetEvent implements Groupable<WorksheetEvent>  {
     public String id;
     public String companyId;
     public String workSheetId;
@@ -42,13 +42,12 @@ public class WorksheetEvent implements Groupable, Comparable<WorksheetEvent>  {
 
 
     /** 相同状态下，按时间创建排序, 最新排前  */
-    @Override
     public int compareTo(WorksheetEvent another) {
         if (startTime < another.startTime) {
-            return -1;
+            return 1;
         }
         else if (startTime > another.startTime) {
-            return 1;
+            return -1;
         }
         return 0;
     }
