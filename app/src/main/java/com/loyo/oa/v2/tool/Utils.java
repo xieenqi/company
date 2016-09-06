@@ -114,7 +114,7 @@ public class Utils {
         windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         return windowManager;
     }
-    
+
 
     /**
      * 图片二值化
