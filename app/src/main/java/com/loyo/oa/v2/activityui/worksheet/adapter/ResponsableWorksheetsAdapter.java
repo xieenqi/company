@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
@@ -61,24 +62,9 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                         return;
                     }
 
-                    HashMap<String,Object> map = new HashMap<>();
-                    map.put("type",1/* 1为提交完成，2为打回重做 */);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class)
-                            .setEventSubmit(wse.id, map, new RCallback<Object>() {
-                                @Override
-                                public void success(final Object o, final Response response) {
-                                    HttpErrorCheck.checkResponse("提交事情处理信息",response);
-                                    WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
-                                    event.data = wse;
-                                    AppBus.getInstance().post(event);
-                                }
-
-                                @Override
-                                public void failure(final RetrofitError error) {
-                                    super.failure(error);
-                                    HttpErrorCheck.checkError(error);
-                                }
-                            });
+                    WorksheetEventFinishAction action = new WorksheetEventFinishAction();
+                    action.data = wse;
+                    AppBus.getInstance().post(action);
 
                 }
             });
