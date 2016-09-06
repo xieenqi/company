@@ -65,7 +65,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
     }
 
     private void init() {
-        setTitle("我创建的");
+        setTitle("我负责的");
         img_title_arrow = (ImageView) findViewById(R.id.img_title_arrow);
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnTouchListener(Global.GetTouch());

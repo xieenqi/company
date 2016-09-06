@@ -19,6 +19,8 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,8 +34,6 @@ public class WorksheetEventCell extends LinearLayout {
     private RoundImageView iv_avatar;
     private ImageView iv_status, iv_action;
     private TextView tv_content, tv_name, tv_time, tv_time2;
-    private Bitmap headMap;
-    private Bitmap garyMap;
 
     Handler handler;
 
@@ -74,21 +74,43 @@ public class WorksheetEventCell extends LinearLayout {
                     break;
                 }
             }
-
+        }
 
         /* 事件内容 */
         tv_content.setText(data.content);
-
         /* 负责人姓名 */
         tv_name.setText(null == data.responsor ? "未设置" : data.responsor.getName());
-        }
+
         if (null != data.responsor) {
-            headMap = ImageLoader.getInstance().loadImageSync(data.responsor.getAvatar());
-            if(data.status == WorksheetEventStatus.UNACTIVATED){
-                iv_avatar.setImageBitmap(Utils.toGrayscale(headMap));
-            }else{
-                iv_avatar.setImageBitmap(headMap);
-            }
+            ImageLoader.getInstance().loadImage(data.responsor.getAvatar(), new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String s, View view) {
+
+                }
+
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+                }
+
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    if(null != bitmap){
+                        if(data.status == WorksheetEventStatus.UNACTIVATED){
+                            iv_avatar.setImageBitmap(Utils.toGrayscale(bitmap));
+                        }else{
+                            iv_avatar.setImageBitmap(bitmap);
+                        }
+                    }
+                }
+
+                @Override
+                public void onLoadingCancelled(String s, View view) {
+
+                }
+            });
+
+
         }
 
         tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime));

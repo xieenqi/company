@@ -381,7 +381,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
 
             // 选人
             case R.id.salemy_screen0: {
-                deptPopupView.showAsDropDown(salemy_screen1_iv0);
+                deptPopupView.showAsDropDown(salemy_screen0);
                 openPopWindow(salemy_screen1_iv0);
                 deptPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
