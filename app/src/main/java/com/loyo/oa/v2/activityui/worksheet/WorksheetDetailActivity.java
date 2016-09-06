@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
@@ -29,14 +30,17 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -171,7 +175,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.ll_worksheet_info://进入事件信息
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ExtraAndResult.CC_USER_ID,detail.id);
+                bundle.putSerializable(ExtraAndResult.CC_USER_ID, detail.id);
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
                 break;
             case R.id.tv_setting://批量设置
@@ -213,7 +217,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         tv_status.setText(detail.status.getName());
         tv_status.setBackgroundResource(detail.status.getStatusBackground());
 
-        tv_complete_number.setText("  ( " + detail.getFinshedNum() + "/" + detail.getTotalNum() +  " )");
+        tv_complete_number.setText("  ( " + detail.getFinshedNum() + "/" + detail.getTotalNum() + " )");
 
         ll_events.removeAllViews();
 
@@ -265,7 +269,15 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                stopWorksheet(5);
+                final GeneralPopView warn = showGeneralDialog(true, false, "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
+                        "您确定要终止吗？");
+                warn.setNoCancelOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        stopWorksheet(5);
+                        warn.dismisDialog();
+                    }
+                });
             }
         });
         dialog.show();

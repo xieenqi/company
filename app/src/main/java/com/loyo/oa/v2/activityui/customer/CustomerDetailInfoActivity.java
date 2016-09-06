@@ -32,7 +32,6 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -84,7 +83,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     void initViews() {
         setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
-        showLoading("");
+        showLoading("", false);
     }
 
     @Override
@@ -180,15 +179,15 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * */
         isMyUser = (customerType != 3) ? true : false;
 
-        if(mCustomer.lock){
-            if(null != mCustomer.owner){
-                if(mCustomer.owner.id.equals(MainApp.user.getId())){
+        if (mCustomer.lock) {
+            if (null != mCustomer.owner) {
+                if (mCustomer.owner.id.equals(MainApp.user.getId())) {
                     img_title_right.setOnTouchListener(Global.GetTouch());
-                }else{
+                } else {
                     img_title_right.setVisibility(View.INVISIBLE);
                 }
             }
-        }else{
+        } else {
             img_title_right.setVisibility(View.INVISIBLE);
         }
 

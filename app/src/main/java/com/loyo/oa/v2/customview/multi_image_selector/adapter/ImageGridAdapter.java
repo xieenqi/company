@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -244,11 +245,21 @@ public class ImageGridAdapter extends BaseAdapter {
                 // 显示图片
                 Picasso.with(mContext)
                         .load(imageFile)
-                        .placeholder(R.drawable.default_error)
+//                        .placeholder(R.drawable.default_error)
                         .error(R.drawable.default_error)
                         .resize(mItemSize, mItemSize)
-                        .centerCrop()
-                        .into(image);
+//                        .centerCrop()
+                        .into(image, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
 //                ImageLoader.getInstance().displayImage(Uri.parse(data.path) + "", image);
             }
         }
