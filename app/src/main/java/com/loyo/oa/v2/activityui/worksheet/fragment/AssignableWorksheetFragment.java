@@ -120,8 +120,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        groupsData = new GroupsData();
-        initFilters();
+
     }
 
 
@@ -138,6 +137,8 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_self_created_worksheet, null);
+            groupsData = new GroupsData();
+            initFilters();
             initView(mView);
         }
         return mView;
@@ -272,12 +273,13 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的工单列表：", response);
+
                 if (isPullDown) {
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
                 mExpandableListView.setEmptyView(emptyView);
+                HttpErrorCheck.checkResponse("我的工单列表：", response);
             }
 
             @Override
@@ -295,8 +297,13 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
             groupsData.addItem(iterator.next());
         }
         groupsData.sort();
-        adapter.notifyDataSetChanged();
-        expand();
+        try{
+            adapter.notifyDataSetChanged();
+            expand();
+        }
+        catch (Exception e){
+
+        }
     }
 
     @Override

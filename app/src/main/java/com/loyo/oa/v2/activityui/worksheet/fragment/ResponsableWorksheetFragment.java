@@ -122,8 +122,6 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        groupsData = new GroupsData();
-        initFilters();
     }
 
     /* 工单信息变更 */
@@ -148,6 +146,8 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_self_created_worksheet, null);
+            groupsData = new GroupsData();
+            initFilters();
             initView(mView);
         }
         return mView;
@@ -287,12 +287,14 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
             @Override
             public void success(WorksheetEventListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我负责的工单列表：", response);
+
                 if (isPullDown) {
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
                 mExpandableListView.setEmptyView(emptyView);
+
+                HttpErrorCheck.checkResponse("我负责的工单列表：", response);
             }
 
             @Override
@@ -310,8 +312,13 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
             groupsData.addItem(iterator.next());
         }
         groupsData.sort();
-        adapter.notifyDataSetChanged();
-        expand();
+        try{
+            adapter.notifyDataSetChanged();
+            expand();
+        }
+        catch (Exception e){
+
+        }
     }
 
     @Override
