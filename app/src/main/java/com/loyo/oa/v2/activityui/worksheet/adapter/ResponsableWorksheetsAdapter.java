@@ -1,8 +1,6 @@
 package com.loyo.oa.v2.activityui.worksheet.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,24 +9,12 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
-import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
-import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
-import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
-import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
+import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-
-import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by EthanGong on 16/8/27.
@@ -108,7 +94,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             tv_deadline.setTextColor(mContext.getResources().getColor(R.color.text99));
             if(wse.endTime != 0){
                 /*是否超时判断*/
-                if(nowTime > wse.endTime){
+                if(nowTime > wse.endTime && wse.status != WorksheetEventStatus.FINISHED){
                     tv_deadline.setTextColor(mContext.getResources().getColor(R.color.red1));
                     tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
                     tv_endtime_tag.setVisibility(View.VISIBLE);
