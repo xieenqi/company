@@ -225,6 +225,7 @@ public class ImageGridAdapter extends BaseAdapter {
         void bindData(final Image data) {
             if (data == null) return;
             // 处理单选和多选状态
+
             if (showSelectIndicator) {
                 indicator.setVisibility(View.VISIBLE);
                 if (mSelectedImages.contains(data)) {

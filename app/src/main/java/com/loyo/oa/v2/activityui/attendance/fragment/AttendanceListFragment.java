@@ -174,7 +174,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             }
         });
-        Utils.btnHideForListView(lv,btn_add);
+        Utils.btnHideForListView(lv, btn_add);
     }
 
     /**
@@ -543,7 +543,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         map.put("qtype", type);
         map.put("qtime", qtime);
         map.put("pageIndex", page);
-        map.put("pageSize", 20);
+        map.put("pageSize", 2000);
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {

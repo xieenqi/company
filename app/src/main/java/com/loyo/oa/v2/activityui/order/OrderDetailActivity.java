@@ -22,11 +22,11 @@ import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -349,14 +349,30 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    terminationOrder();
+                    final GeneralPopView wran = showGeneralDialog(true, false, "此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
+                            "意外终止后不可恢复，你确定要终止吗？");
+                    wran.setNoCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            terminationOrder();
+                            wran.dismisDialog();
+                        }
+                    });
                 }
             });
         if (isDelete)
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    deleteOrder();
+                    final GeneralPopView wran = showGeneralDialog(true, false, "删除不可恢复\n确定删除？");
+                    wran.setNoCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteOrder();
+                            wran.dismisDialog();
+                        }
+                    });
+
                 }
             });
         dialog.show();
