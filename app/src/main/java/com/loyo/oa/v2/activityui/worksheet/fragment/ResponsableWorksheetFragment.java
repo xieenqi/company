@@ -231,7 +231,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
         statusFilters.add(WorksheetEventStatus.WAITPROCESS);
         statusFilters.add(WorksheetEventStatus.UNACTIVATED);
         statusFilters.add(WorksheetEventStatus.FINISHED);
-        statusFilters.add(WorksheetEventStatus.TEMINATED);
+//        statusFilters.add(WorksheetEventStatus.TEMINATED);
 
         typeFilters = new ArrayList<WorksheetTemplate>();
         typeFilters.add(WorksheetTemplate.Null);
