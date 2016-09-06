@@ -143,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="批量设置"
-                    android:textColor="@color/title_bg1"
+                    android:textColor="@color/red1"
                     android:textSize="@dimen/text_sp12"
                     android:visibility="invisible"/>
 

@@ -105,7 +105,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         setContentView(R.layout.activity_worksheet_detial);
         getIntentData();
         initView();
-
     }
 
     private void getIntentData() {
