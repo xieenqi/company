@@ -44,6 +44,8 @@
             android:layout_height="match_parent"
             android:gravity="top"
             android:padding="@dimen/dimen_4"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:text=""
             android:textColor="@color/text33"
             android:textSize="15sp"/>
