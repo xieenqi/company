@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.ServiceException;
@@ -53,6 +54,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -61,29 +63,33 @@ import retrofit.client.Response;
  * 【提交完成/打回重做】工单
  * Created by yyy on 16/8/30.
  */
-public class WorksheetSubmitActivity extends BaseActivity implements View.OnClickListener{
+public class WorksheetSubmitActivity extends BaseActivity implements View.OnClickListener {
 
-    /** UI */
-    private TextView    tv_title_1;
-    private TextView    tv_address;        //定位内容
+    /**
+     * UI
+     */
+    private TextView tv_title_1;
+    private TextView tv_address;        //定位内容
     private CusGridView gridView_photo;    //图片gridView
-    private EditText    view_edit;         //输入content
+    private EditText view_edit;         //输入content
     private RelativeLayout img_title_right;
-    private LinearLayout   img_title_left,  //返回
-                           layout_image,    //图片
-                           layout_location, //定位
-                           layout_address,  //定位layout
-                   layout_delete_location,  //定位删除
-                   layout_address_info;     //定位信息
+    private LinearLayout img_title_left,  //返回
+            layout_image,    //图片
+            layout_location, //定位
+            layout_address,  //定位layout
+            layout_delete_location,  //定位删除
+            layout_address_info;     //定位信息
 
-    /** Data */
+    /**
+     * Data
+     */
     private int uploadSize;
     private int uploadNum = 0;           //上传附件数量
     private int fromPage;                //判断来自的页面(打回重做0x10 提交完成0x02)
     private int type;                    //type 1为提交完成，2为打回重做
     private int bizType = 29;            //附件type
     private String uuid = StringUtil.getUUID();
-    private String ak,sk,token,expiration;
+    private String ak, sk, token, expiration;
     private String id;                  //事件Id
     private double laPosition;          //当前位置的经纬度
     private double loPosition;
@@ -96,7 +102,9 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
 
 
-    /** Other */
+    /**
+     * Other
+     */
     private ImageGridViewAdapter imageGridViewAdapter;
     private OSS oss;
     private Bundle mBundle;
@@ -109,32 +117,32 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
         initUI();
     }
 
-    void initUI(){
+    void initUI() {
         mIntent = getIntent();
         fromPage = mIntent.getIntExtra(ExtraAndResult.EXTRA_DATA, 0x01);
-        id       = mIntent.getStringExtra(ExtraAndResult.CC_USER_ID);
-        if(TextUtils.isEmpty(id)){
+        id = mIntent.getStringExtra(ExtraAndResult.CC_USER_ID);
+        if (TextUtils.isEmpty(id)) {
             Toast("参数不全");
             onBackPressed();
         }
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         tv_address = (TextView) findViewById(R.id.tv_address);
 
-        img_title_right  = (RelativeLayout) findViewById(R.id.img_title_right);
-        img_title_left   = (LinearLayout) findViewById(R.id.img_title_left);
-        layout_image     = (LinearLayout) findViewById(R.id.layout_image);
-        layout_location  = (LinearLayout) findViewById(R.id.layout_location);
-        layout_address   = (LinearLayout) findViewById(R.id.layout_address);
-        layout_address_info   = (LinearLayout) findViewById(R.id.layout_address_info);
-        layout_delete_location   = (LinearLayout) findViewById(R.id.layout_delete_location);
-        gridView_photo   = (CusGridView) findViewById(R.id.gridView_photo);
+        img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
+        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
+        layout_image = (LinearLayout) findViewById(R.id.layout_image);
+        layout_location = (LinearLayout) findViewById(R.id.layout_location);
+        layout_address = (LinearLayout) findViewById(R.id.layout_address);
+        layout_address_info = (LinearLayout) findViewById(R.id.layout_address_info);
+        layout_delete_location = (LinearLayout) findViewById(R.id.layout_delete_location);
+        gridView_photo = (CusGridView) findViewById(R.id.gridView_photo);
         view_edit = (EditText) findViewById(R.id.view_edit);
 
-        if(fromPage == 0x01){
+        if (fromPage == 0x01) {
             super.setTitle("打回重做");
             view_edit.setHint("请输入重做原因，必填");
             type = 2;
-        }else{
+        } else {
             super.setTitle("提交完成");
             view_edit.setHint("请输入完成内容，非必填");
             type = 1;
@@ -230,6 +238,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                     }
                 });
     }
+
     /**
      * 获取上传Token
      */
@@ -292,26 +301,26 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     /**
      * 提交事件处理数据
      */
-    void commitDynamic(){
+    void commitDynamic() {
 
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("type",type);
-        map.put("content",view_edit.getText().toString());
-        map.put("uuid",uuid);
-        map.put("address",httpLoc);
-        LogUtil.dee("提交事件信息："+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).setEventSubmit(id,map, new RCallback<Object>() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("content", view_edit.getText().toString());
+        map.put("uuid", uuid);
+        map.put("address", httpLoc);
+        LogUtil.dee("提交事件信息：" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).setEventSubmit(id, map, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse("提交事情处理信息", response);
-                if(type == 1){
+                if (type == 1) {
                     AppBus.getInstance().post(new WorksheetDetail());
 
                     WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
                     event.bundle = new Bundle();
                     event.bundle.putString(ExtraAndResult.EXTRA_ID, id);
                     AppBus.getInstance().post(event);
-                }else{
+                } else {
                     AppBus.getInstance().post(new WorksheetInfo());
                 }
                 app.finishActivity(WorksheetSubmitActivity.this, MainApp.ENTER_TYPE_LEFT, 0, new Intent());
@@ -326,17 +335,15 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     }
 
 
-
-
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
             /*提交*/
             case R.id.img_title_right:
-                if(fromPage == 0x01){
-                    if(TextUtils.isEmpty(view_edit.getText().toString())){
+                if (fromPage == 0x01) {
+                    if (TextUtils.isEmpty(view_edit.getText().toString())) {
                         Toast("请输入重做原因！");
                         return;
                     }
@@ -363,7 +370,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
             case R.id.layout_location:
                 mBundle = new Bundle();
                 mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
+                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
 
             /*删除地址*/
@@ -375,9 +382,9 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
             /*位置信息*/
             case R.id.layout_address_info:
                 mIntent = new Intent(WorksheetSubmitActivity.this, MapSingleView.class);
-                mIntent.putExtra("la",laPosition);
-                mIntent.putExtra("lo",loPosition);
-                mIntent.putExtra("address",httpLoc.addr);
+                mIntent.putExtra("la", laPosition);
+                mIntent.putExtra("lo", loPosition);
+                mIntent.putExtra("address", httpLoc.addr);
                 startActivity(mIntent);
                 break;
 
@@ -393,7 +400,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
             return;
         }
 
-        switch (requestCode){
+        switch (requestCode) {
 
             /*相册选择 回调*/
             case MainApp.PICTURE:
@@ -416,9 +423,9 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                 break;
 
             /*地址定位 回调*/
-            case  MapModifyView.SERACH_MAP:
+            case MapModifyView.SERACH_MAP:
                 positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-                if(null != positionResultItem){
+                if (null != positionResultItem) {
                     httpLoc.loc.add(positionResultItem.loPosition);
                     httpLoc.loc.add(positionResultItem.laPosition);
                     httpLoc.addr = positionResultItem.address;

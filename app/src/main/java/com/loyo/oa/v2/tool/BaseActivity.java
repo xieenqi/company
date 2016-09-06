@@ -218,7 +218,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     }
 
 
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -368,6 +367,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public void hideInputKeyboard(EditText et) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
+
+    /**
+     * 手动 显示软键盘
+     */
+    public void showInputKeyboard(EditText view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
 
     /**
