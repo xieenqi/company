@@ -147,22 +147,9 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
             /*搜索*/
             case R.id.img_title_search_right:
 
-                WorksheetListType type = WorksheetListType.SELF_CREATED;
-                switch (mIndex){
-                    case 0:
-                        type = WorksheetListType.RESPONSABLE;
-                        break;
-                    case 1:
-                        type = WorksheetListType.SELF_CREATED;
-                        break;
-                    case 2:
-                        type = WorksheetListType.ASSIGNABLE;
-                        break;
-                    case 3:
-                        type = WorksheetListType.TEAM;
-                        break;
-                    default:
-                            break;
+                WorksheetListType type = WorksheetListType.RESPONSABLE;
+                if (mIndex >=0 && mIndex < SaleItemStatus.length) {
+                    type = SaleItemStatus[mIndex];
                 }
 
                 Bundle b = new Bundle();
