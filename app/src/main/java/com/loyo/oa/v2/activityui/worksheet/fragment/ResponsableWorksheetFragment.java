@@ -23,10 +23,13 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetSubmitActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.ResponsableWorksheetsAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
@@ -122,8 +125,20 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        groupsData = new GroupsData();
-        initFilters();
+    }
+
+    public void finishEvent(WorksheetEvent event){
+        Bundle bd = new Bundle();
+        bd.putString(ExtraAndResult.CC_USER_ID, event.id /*事件id*/);
+        bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
+        app.startActivity(getActivity(), WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bd);
+    }
+
+    @Subscribe
+    public void onWorkSheetEventFinishAction(WorksheetEventFinishAction action) {
+        if (action.data != null) {
+            finishEvent(action.data);
+        }
     }
 
     /* 工单信息变更 */
@@ -148,6 +163,8 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_self_created_worksheet, null);
+            groupsData = new GroupsData();
+            initFilters();
             initView(mView);
         }
         return mView;
@@ -287,12 +304,14 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
             @Override
             public void success(WorksheetEventListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我负责的工单列表：", response);
+
                 if (isPullDown) {
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
                 mExpandableListView.setEmptyView(emptyView);
+
+                HttpErrorCheck.checkResponse("我负责的工单列表：", response);
             }
 
             @Override
@@ -310,8 +329,13 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
             groupsData.addItem(iterator.next());
         }
         groupsData.sort();
-        adapter.notifyDataSetChanged();
-        expand();
+        try{
+            adapter.notifyDataSetChanged();
+            expand();
+        }
+        catch (Exception e){
+
+        }
     }
 
     @Override

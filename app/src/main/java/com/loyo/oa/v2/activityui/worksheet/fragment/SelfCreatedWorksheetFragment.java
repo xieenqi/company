@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
@@ -27,13 +26,12 @@ import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
-import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.fragment.BaseGroupsDataFragment;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
@@ -43,7 +41,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.squareup.otto.Subscribe;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -120,9 +117,6 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        groupsData = new GroupsData();
-        initFilters();
-        WorksheetPermisssion.test();
     }
 
     @Subscribe
@@ -138,6 +132,8 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_self_created_worksheet, null);
+            groupsData = new GroupsData();
+            initFilters();
             initView(mView);
         }
         return mView;
@@ -272,12 +268,13 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的工单列表：", response);
+
                 if (isPullDown) {
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
                 mExpandableListView.setEmptyView(emptyView);
+                HttpErrorCheck.checkResponse("我的工单列表：", response);
             }
 
             @Override
@@ -295,8 +292,13 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
             groupsData.addItem(iterator.next());
         }
         groupsData.sort();
-        adapter.notifyDataSetChanged();
-        expand();
+        try{
+            adapter.notifyDataSetChanged();
+            expand();
+        }
+        catch (Exception e){
+
+        }
     }
 
     @Override

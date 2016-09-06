@@ -158,9 +158,10 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        groupsData = new GroupsData();
-        initFilters();
+        LogUtil.dee("onCreate:");
+
     }
+
 
     @Subscribe
     public void onWorksheetCreated(WorksheetChangeEvent event) {
@@ -175,6 +176,8 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_team_worksheet, null);
+            groupsData = new GroupsData();
+            initFilters();
             initView(mView);
         }
         return mView;
@@ -332,12 +335,14 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("团队工单列表：", response);
+
                 if (isPullDown) {
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
                 mExpandableListView.setEmptyView(emptyView);
+
+                HttpErrorCheck.checkResponse("团队工单列表：", response);
             }
 
             @Override
@@ -356,6 +361,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         }
         groupsData.sort();
         adapter.notifyDataSetChanged();
+        LogUtil.dee("size:"+groupsData.size());
         expand();
     }
 
