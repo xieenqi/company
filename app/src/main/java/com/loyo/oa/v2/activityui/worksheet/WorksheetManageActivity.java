@@ -150,13 +150,13 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
                 WorksheetListType type = WorksheetListType.SELF_CREATED;
                 switch (mIndex){
                     case 0:
-                        type = WorksheetListType.SELF_CREATED;
+                        type = WorksheetListType.RESPONSABLE;
                         break;
                     case 1:
-                        type = WorksheetListType.ASSIGNABLE;
+                        type = WorksheetListType.SELF_CREATED;
                         break;
                     case 2:
-                        type = WorksheetListType.RESPONSABLE;
+                        type = WorksheetListType.ASSIGNABLE;
                         break;
                     case 3:
                         type = WorksheetListType.TEAM;
