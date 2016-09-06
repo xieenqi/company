@@ -50,70 +50,73 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dimen_40"
         android:layout_marginLeft="@dimen/margin_other_view"
         android:layout_marginRight="@dimen/margin_other_view"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/dimen_40"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_name"
+    >
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dimen_5"
-            android:gravity="center"
-            android:maxWidth="40dp"
-            android:maxLines="3"
-            android:text="刘小雅"
-            android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp11"/>
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:gravity="center"
+                android:maxLines="5"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="刘小雅"
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp11"/>
 
 
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dimen_8"
-            android:layout_marginRight="@dimen/dimen_8"
-            android:gravity="center_vertical|left"
-            android:text=""
-            android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp11"/>
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_8"
+                android:layout_marginRight="@dimen/dimen_8"
+                android:gravity="center_vertical|left"
+                android:text="2015-5-1"
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp11"/>
 
-        <View
-            android:id="@+id/seperator"
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/lineCC"
-            />
+            <View
+                android:id="@+id/seperator"
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/lineCC"
+                />
 
-        <TextView
-            android:id="@+id/tv_time2"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dimen_8"
-            android:layout_marginRight="@dimen/dimen_8"
-            android:gravity="center_vertical|left"
-            android:text="08-23 | 09-08截至"
-            android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp11"/>
+            <TextView
+                android:id="@+id/tv_time2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_8"
+                android:layout_marginRight="@dimen/dimen_8"
+                android:gravity="center_vertical|left"
+                android:text="08-23 | 09-08截至"
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp11"/>
 
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/iv_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <include layout="@layout/include_solid_line15"/>
 </LinearLayout>
