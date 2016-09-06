@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 import com.loyo.oa.v2.activityui.worksheet.adapter.ResponsableWorksheetsAdapter;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
@@ -26,6 +28,7 @@ import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
@@ -136,7 +139,7 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
             adapter = new WorksheetListAdapter(this, groupsData,false);
         }
         else {
-            adapter = new ResponsableWorksheetsAdapter(this, groupsData);
+            adapter = new ResponsableWorksheetsAdapter(this, groupsData, WorksheetEventFinishAction.FROM_SEARCH_LIST);
         }
 
         innerListView.setAdapter(adapter);
@@ -174,12 +177,26 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
         });
     }
 
+    public void finishEvent(WorksheetEvent event){
+        Bundle bd = new Bundle();
+        bd.putString(ExtraAndResult.CC_USER_ID, event.id /*事件id*/);
+        bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
+        app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bd);
+    }
+
     /* 工单事件信息变更 */
     @Subscribe
     public void onWorksheetEventUpdated(WorksheetEventChangeEvent event) {
         isPullDown = true;
         page = 1;
         getData();
+    }
+
+    @Subscribe
+    public void onWorkSheetEventFinishAction(WorksheetEventFinishAction action) {
+        if (action.data != null && action.eventCode == WorksheetEventFinishAction.FROM_SEARCH_LIST) {
+            finishEvent(action.data);
+        }
     }
 
     /**

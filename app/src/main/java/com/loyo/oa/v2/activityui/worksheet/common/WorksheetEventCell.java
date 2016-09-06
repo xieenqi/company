@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.worksheet.common;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -29,6 +32,8 @@ public class WorksheetEventCell extends LinearLayout {
     private RoundImageView iv_avatar;
     private ImageView iv_status, iv_action;
     private TextView tv_content, tv_name, tv_time, tv_time2;
+    private Bitmap headMap;
+    private Bitmap garyMap;
 
     Handler handler;
 
@@ -69,15 +74,21 @@ public class WorksheetEventCell extends LinearLayout {
                     break;
                 }
             }
-        }
+
 
         /* 事件内容 */
         tv_content.setText(data.content);
 
         /* 负责人姓名 */
         tv_name.setText(null == data.responsor ? "未设置" : data.responsor.getName());
+        }
         if (null != data.responsor) {
-            ImageLoader.getInstance().displayImage(data.responsor.getAvatar(), iv_avatar);
+            headMap = ImageLoader.getInstance().loadImageSync(data.responsor.getAvatar());
+            if(data.status == WorksheetEventStatus.UNACTIVATED){
+                iv_avatar.setImageBitmap(Utils.toGrayscale(headMap));
+            }else{
+                iv_avatar.setImageBitmap(headMap);
+            }
         }
 
         tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime));

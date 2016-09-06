@@ -26,6 +26,7 @@ import com.loyo.oa.v2.activityui.customer.bean.HttpLoc;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
@@ -305,6 +306,11 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                 HttpErrorCheck.checkResponse("提交事情处理信息", response);
                 if(type == 1){
                     AppBus.getInstance().post(new WorksheetDetail());
+
+                    WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
+                    event.bundle = new Bundle();
+                    event.bundle.putString(ExtraAndResult.EXTRA_ID, id);
+                    AppBus.getInstance().post(event);
                 }else{
                     AppBus.getInstance().post(new WorksheetInfo());
                 }

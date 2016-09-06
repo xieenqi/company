@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.worksheet.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
@@ -32,11 +36,13 @@ import retrofit.client.Response;
 public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
 
     private long nowTime;
+    private int fromPage;
 
-    public ResponsableWorksheetsAdapter(final Context context, final GroupsData data) {
+    public ResponsableWorksheetsAdapter(final Context context, final GroupsData data, int fromPage) {
         super();
         mContext = context;
         groupsData = data;
+        this.fromPage = fromPage;
         nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime("yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
     }
 
@@ -61,24 +67,10 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                         return;
                     }
 
-                    HashMap<String,Object> map = new HashMap<>();
-                    map.put("type",1/* 1为提交完成，2为打回重做 */);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class)
-                            .setEventSubmit(wse.id, map, new RCallback<Object>() {
-                                @Override
-                                public void success(final Object o, final Response response) {
-                                    HttpErrorCheck.checkResponse("提交事情处理信息",response);
-                                    WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
-                                    event.data = wse;
-                                    AppBus.getInstance().post(event);
-                                }
-
-                                @Override
-                                public void failure(final RetrofitError error) {
-                                    super.failure(error);
-                                    HttpErrorCheck.checkError(error);
-                                }
-                            });
+                    WorksheetEventFinishAction action = new WorksheetEventFinishAction();
+                    action.data = wse;
+                    action.eventCode = fromPage;
+                    AppBus.getInstance().post(action);
 
                 }
             });

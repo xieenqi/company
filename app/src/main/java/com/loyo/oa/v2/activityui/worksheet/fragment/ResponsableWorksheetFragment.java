@@ -23,10 +23,13 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetSubmitActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.ResponsableWorksheetsAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
@@ -122,6 +125,20 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    public void finishEvent(WorksheetEvent event){
+        Bundle bd = new Bundle();
+        bd.putString(ExtraAndResult.CC_USER_ID, event.id /*事件id*/);
+        bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
+        app.startActivity(getActivity(), WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bd);
+    }
+
+    @Subscribe
+    public void onWorkSheetEventFinishAction(WorksheetEventFinishAction action) {
+        if (action.data != null && action.eventCode == WorksheetEventFinishAction.FROM_RESPONSABLE_LIST) {
+            finishEvent(action.data);
+        }
     }
 
     /* 工单信息变更 */
@@ -249,7 +266,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new ResponsableWorksheetsAdapter(mActivity, groupsData);
+            adapter = new ResponsableWorksheetsAdapter(mActivity, groupsData, WorksheetEventFinishAction.FROM_RESPONSABLE_LIST);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
     }
