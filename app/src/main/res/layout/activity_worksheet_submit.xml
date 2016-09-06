@@ -154,12 +154,12 @@
                 android:id="@+id/layout_image"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.6"
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="@dimen/dimen_23"
-                    android:layout_height="@dimen/dimen_23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/icon_selectimage_view" />
             </LinearLayout>
 
@@ -167,12 +167,12 @@
                 android:id="@+id/layout_location"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.6"
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="@dimen/dimen_23"
-                    android:layout_height="@dimen/dimen_23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/icon_add_location" />
             </LinearLayout>
 

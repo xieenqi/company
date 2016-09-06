@@ -5,15 +5,16 @@
               android:background="@color/white"
               android:clipToPadding="true"
               android:fitsSystemWindows="true"
-            android:orientation="vertical"
+              android:orientation="vertical"
     >
-        <include layout="@layout/include_title"/>
+
+    <include layout="@layout/include_title"/>
 
     <ScrollView
-        android:layout_below="@+id/layout_head"
-        android:layout_above="@+id/layout_bottom"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/layout_bottom"
+        android:layout_below="@+id/layout_head"
         android:scrollbars="none">
 
         <LinearLayout
@@ -21,7 +22,6 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical">
-
 
 
             <LinearLayout
@@ -144,10 +144,7 @@
                     android:id="@+id/btn_complete1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_other_view"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="@dimen/margin_other_view"
+                    android:layout_margin="@dimen/margin_other_view"
                     android:background="@drawable/bg_blue_rect"
                     android:textColor="@color/white"
                     android:visibility="gone"/>
@@ -156,10 +153,7 @@
                     android:id="@+id/btn_complete2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_other_view"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="@dimen/margin_other_view"
+                    android:layout_margin="@dimen/margin_other_view"
                     android:background="@drawable/bg_blue_rect"
                     android:textColor="@color/white"
                     android:visibility="gone"
