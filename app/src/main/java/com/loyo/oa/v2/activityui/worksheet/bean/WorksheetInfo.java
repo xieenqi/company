@@ -30,7 +30,7 @@ public class WorksheetInfo extends BaseBean{
     public long   createdAt;
     public long   updatedAt;
     public long   completedAt; //完成时间
-    public long   confirmedAt; //确认时间
+    public long   confirmedAt; //确认时间, 多个事件确定负责人的时间，对应界面上分派时间（区别于dispatcherAt）
     public long   interruptAt; //终止时间
 
 }

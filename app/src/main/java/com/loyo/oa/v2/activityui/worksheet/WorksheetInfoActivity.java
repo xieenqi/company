@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
@@ -21,6 +22,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -37,7 +39,8 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
     private LinearLayout img_title_left,
             ll_assignment_time,
             ll_finish_time,
-            ll_termination_time;
+            ll_termination_time,
+            ll_times_container;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, /*标题*/
             tv_title,            /*工单标题*/
@@ -92,6 +95,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         ll_assignment_time  = (LinearLayout) findViewById(R.id.ll_assignment_time);
         ll_finish_time      = (LinearLayout) findViewById(R.id.ll_finish_time);
         ll_termination_time = (LinearLayout) findViewById(R.id.ll_termination_time);
+        ll_times_container  = (LinearLayout) findViewById(R.id.ll_times_container);
 
         img_title_left.setOnClickListener(this);
         tv_related_order.setOnClickListener(this);
@@ -101,41 +105,48 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
     private void bindData(){
 
-                tv_title.setText(mWorksheetInfo.data.title);
-                tv_Assignment_name.setText(mWorksheetInfo.data.dispatcherName);
-                if(mWorksheetInfo.data.triggerMode == 1){
-                    tv_boom.setText("自动流转");
-                }else{
-                    tv_boom.setText("定时触发");
-                }
-                tv_commit_info.setText(mWorksheetInfo.data.creatorName+" "+DateTool.timet(mWorksheetInfo.data.createdAt+"",DateTool.DATE_FORMATE_AT_MINUTES)+" 提交");
-                tv_track_content.setText(mWorksheetInfo.data.content);
-                tv_related_order.setText(mWorksheetInfo.data.orderName);
-                tv_responsible_name.setText(mWorksheetInfo.data.responsorNames);
+        tv_title.setText(mWorksheetInfo.data.title);
+        tv_Assignment_name.setText(mWorksheetInfo.data.dispatcherName);
+        if(mWorksheetInfo.data.triggerMode == 1){
+            tv_boom.setText("自动流转");
+        }else{
+            tv_boom.setText("定时触发");
+        }
+        tv_commit_info.setText(mWorksheetInfo.data.creatorName+" "+ DateTool.timet(mWorksheetInfo.data.createdAt+"",DateTool.DATE_FORMATE_AT_MINUTES)+" 提交");
+        tv_track_content.setText(mWorksheetInfo.data.content);
+        tv_related_order.setText(mWorksheetInfo.data.orderName);
+        tv_responsible_name.setText(mWorksheetInfo.data.responsorNames);
 
-                if(mWorksheetInfo.data.confirmedAt != 0){
-                    ll_assignment_time.setVisibility(View.VISIBLE);
-                    tv_assignment_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.confirmedAt));
-                }else{
-                    tv_assignment_time.setText("--");
-                    ll_assignment_time.setVisibility(View.GONE);
-                }
+        if(mWorksheetInfo.data.confirmedAt != 0){
+            ll_assignment_time.setVisibility(View.VISIBLE);
+            tv_assignment_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.confirmedAt));
+        }else{
+            tv_assignment_time.setText("--");
+            ll_assignment_time.setVisibility(View.GONE);
+        }
 
-                if (mWorksheetInfo.data.completedAt != 0) {
-                    ll_finish_time.setVisibility(View.VISIBLE);
-                    tv_finish_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.completedAt));
-                } else {
-                    tv_finish_time.setText("--");
-                    ll_finish_time.setVisibility(View.GONE);
-                }
+        if (mWorksheetInfo.data.completedAt != 0) {
+            ll_finish_time.setVisibility(View.VISIBLE);
+            tv_finish_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.completedAt));
+        } else {
+            tv_finish_time.setText("--");
+            ll_finish_time.setVisibility(View.GONE);
+        }
 
-                if (mWorksheetInfo.data.interruptAt != 0) {
-                    ll_termination_time.setVisibility(View.VISIBLE);
-                    tv_termination_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.interruptAt));
-                } else {
-                    tv_termination_time.setText("--");
-                    ll_termination_time.setVisibility(View.GONE);
-                }
+        if (mWorksheetInfo.data.interruptAt != 0) {
+            ll_termination_time.setVisibility(View.VISIBLE);
+            tv_termination_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.interruptAt));
+        } else {
+            tv_termination_time.setText("--");
+            ll_termination_time.setVisibility(View.GONE);
+        }
+
+        if (mWorksheetInfo.data.confirmedAt == 0
+                && mWorksheetInfo.data.completedAt == 0
+                && mWorksheetInfo.data.interruptAt == 0) {
+            ll_times_container.setVisibility(View.GONE);
+        }
+
         WorksheetCommon.setStatus(tv_status, mWorksheetInfo.data.status);
         if(null != mWorksheetInfo.data.attachment && mWorksheetInfo.data.attachment.size() > 0){
             mAdapter = new WorkSheetListNestingAdapter(mWorksheetInfo.data.attachment,this);
