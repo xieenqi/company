@@ -11,5 +11,8 @@
         android:id="@+id/fl_order_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        >
+
+        <include layout="@layout/include_navigation_close_next"/>
+    </FrameLayout>
 </LinearLayout>

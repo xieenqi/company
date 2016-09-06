@@ -197,8 +197,11 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             if (detail.status != WorksheetStatus.TEMINATED) {
                 img_title_right.setVisibility(View.VISIBLE);
             }
-            if (detail.status == WorksheetStatus.WAITASSIGN)
+            if (detail.status == WorksheetStatus.WAITASSIGN){
                 ll_wran.setVisibility(View.VISIBLE);
+            }else if(detail.status != WorksheetStatus.WAITASSIGN){
+                ll_wran.setVisibility(View.GONE);
+            }
             if (detail.status == WorksheetStatus.WAITAPPROVE)
                 bt_confirm.setVisibility(View.VISIBLE);
 
