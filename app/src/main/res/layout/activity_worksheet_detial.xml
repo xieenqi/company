@@ -142,7 +142,7 @@
                     android:id="@+id/tv_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="批量设置"
+                    android:text="批量分派"
                     android:textColor="@color/red1"
                     android:textSize="@dimen/text_sp12"
                     android:visibility="invisible"/>

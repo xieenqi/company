@@ -43,12 +43,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
-            android:padding="@dimen/dimen_4"
+            android:layout_marginLeft="@dimen/margin_other_view"
+            android:paddingTop="@dimen/dimen_10"
             android:maxLines="2"
             android:ellipsize="end"
             android:text=""
             android:textColor="@color/text33"
-            android:textSize="15sp"/>
+            android:textSize="@dimen/dimen_12"/>
 
     </LinearLayout>
 
