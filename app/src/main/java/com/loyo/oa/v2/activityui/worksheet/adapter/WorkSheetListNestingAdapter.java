@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.PreviewImagefromHttp;
+import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -99,14 +100,21 @@ public class WorkSheetListNestingAdapter extends BaseAdapter {
 
         holder.tv_image_name.setText(attachment.getOriginalName());
         holder.tv_image_size.setText("大小:"+Utils.FormetFileSize(Long.valueOf(attachment.getSize())));
+        final boolean isImage = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
 
         holder.iv_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBundle = new Bundle();
-                mBundle.putString(ExtraAndResult.EXTRA_OBJ,attachment.getUrl());
-                MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImagefromHttp.class,
-                        MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_DEAL_ATTACHMENT, mBundle);
+                if(isImage){
+                    mBundle = new Bundle();
+                    mBundle.putString(ExtraAndResult.EXTRA_OBJ,attachment.getUrl());
+                    MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImagefromHttp.class,
+                            MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_DEAL_ATTACHMENT, mBundle);
+                }else{
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("data", attachment.getUrl());
+                    MainApp.getMainApp().startActivity((Activity) mContext, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+                }
             }
         });
 
