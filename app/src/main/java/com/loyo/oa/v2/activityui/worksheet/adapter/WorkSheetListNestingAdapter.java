@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -74,46 +75,53 @@ public class WorkSheetListNestingAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        /*ImageView进度条设置*/
-        ImageLoader.getInstance().displayImage(attachment.getUrl(), holder.iv_image, MainApp.options_3, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
-                holder.pb_progress.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-                holder.pb_progress.setVisibility(View.INVISIBLE);
-                holder.iv_image.setImageResource(R.drawable.img_file_null);
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                holder.pb_progress.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        });
 
         holder.tv_image_name.setText(attachment.getOriginalName());
         holder.tv_image_size.setText("大小:"+Utils.FormetFileSize(Long.valueOf(attachment.getSize())));
         final boolean isImage = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
 
+        if(isImage){
+            /*ImageView进度条设置*/
+            ImageLoader.getInstance().displayImage(attachment.getUrl(), holder.iv_image, MainApp.options_3, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String s, View view) {
+                    holder.pb_progress.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {
+                    holder.pb_progress.setVisibility(View.INVISIBLE);
+                    holder.iv_image.setImageResource(R.drawable.img_file_null);
+                }
+
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    holder.pb_progress.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onLoadingCancelled(String s, View view) {
+
+                }
+            });
+
+            mBundle = new Bundle();
+            mBundle.putString(ExtraAndResult.EXTRA_OBJ, attachment.getUrl());
+        }else{
+            holder.iv_image.setImageResource(Global.getAttachmentIcon(attachment.getUrl()));
+            mBundle = new Bundle();
+            mBundle.putSerializable("data", attachment.getUrl());
+        }
+
         holder.iv_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isImage){
-                    mBundle = new Bundle();
-                    mBundle.putString(ExtraAndResult.EXTRA_OBJ,attachment.getUrl());
                     MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImagefromHttp.class,
                             MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_DEAL_ATTACHMENT, mBundle);
                 }else{
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("data", attachment.getUrl());
-                    MainApp.getMainApp().startActivity((Activity) mContext, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+                    MainApp.getMainApp().startActivity((Activity) mContext, PreviewOfficeActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 }
             }
         });
