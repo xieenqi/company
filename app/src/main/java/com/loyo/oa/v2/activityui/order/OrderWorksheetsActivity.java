@@ -180,6 +180,7 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
         while (iterator.hasNext()) {
             groupsData.addItem(iterator.next());
         }
+        groupsData.sort();
         adapter.notifyDataSetChanged();
         expand();
     }
