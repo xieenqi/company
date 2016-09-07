@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
@@ -14,12 +15,15 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.common.EventHandleInfoList;
+import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventAction;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetPermisssion;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
@@ -30,8 +34,10 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -48,6 +54,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     private Bundle mBundle;
     private String eventId, worksheetId;
     private EventDetail mData;
+    private WorksheetDetail worksheetDetail;
     private WorksheetEventsSupporter worksheetEventsSupporter;
     private ArrayList<WorksheetEventAction> actions;
 
@@ -110,8 +117,9 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         Intent intent = getIntent();
         worksheetEventsSupporter = (WorksheetEventsSupporter) intent.getSerializableExtra(ExtraAndResult.EXTRA_OBJ);
         worksheetId = intent.getStringExtra(ExtraAndResult.EXTRA_ID2);
-        actions = (ArrayList<WorksheetEventAction>) intent.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        worksheetDetail = (WorksheetDetail) intent.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         eventId = worksheetEventsSupporter.id;
+        actions = new ArrayList<WorksheetEventAction>();
         if (TextUtils.isEmpty(worksheetId) && TextUtils.isEmpty(eventId)) {
             Toast("参数不全");
             onBackPressed();
@@ -166,6 +174,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                     public void success(BaseBeanT<EventDetail> o, Response response) {
                         HttpErrorCheck.checkResponse("事件详细：", response);
                         mData = o.data;
+                        actions = actionsForRole(mData, getRoleForEvent(mData));
                         bindData();
                     }
 
@@ -196,6 +205,29 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     private void setStatus() {
         tv_status.setText(mData.status.getName());
         tv_status.setBackgroundResource(mData.status.getStatusBackground());
+    }
+
+    public WSRole getRoleForEvent(EventDetail event) {
+
+        /* 同一人可能同时有多个角色，也就有多个操作 */
+        WSRole role = new WSRole();
+        if (MainApp.user.id.equals(worksheetDetail.dispatcher.getId())) {
+            role.addRole(WSRole.Dispatcher);
+        }
+        if (MainApp.user.id.equals(worksheetDetail.creator.getId())) {
+            role.addRole(WSRole.Creator);
+        }
+        if (MainApp.user.id.equals(event.responsorId)) {
+            role.addRole(WSRole.Responsor);
+        }
+        return role;
+    }
+
+    public ArrayList<WorksheetEventAction> actionsForRole(EventDetail event, WSRole role) {
+        WorksheetStatus status = worksheetDetail.status;
+        WorksheetEventStatus eventStatus = event.status;
+        boolean hasResponsor = (event.responsorId != null);
+        return WorksheetPermisssion.actionsFor(status, role, eventStatus, hasResponsor);
     }
 
 
@@ -234,7 +266,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     /**
      * 设置事件负责人
      */
-    private void setEventPersonal(String userId) {
+    private void setEventPersonal(final String userId) {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("responsorId", userId);
@@ -244,14 +276,18 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("设置事件负责人：", response);
                         for(int i =0 ; i <actions.size(); i++) {
-                            if (actions.get(i) == WorksheetEventAction.Transfer || actions.get(i) ==  WorksheetEventAction.Dispatch) {
+                            if (actions.get(i) ==  WorksheetEventAction.Dispatch) {
                                 actions.remove(i);
-                                i--;
+                                actions.add(i, WorksheetEventAction.Transfer);
                             }
                         }
 
+                        mData.responsorId = userId;
+                        actions = actionsForRole(mData, getRoleForEvent(mData));
+
                         setRoleinit();
                         getData();
+                        AppBus.getInstance().post(new WorksheetEventChangeEvent());
                     }
 
                     @Override
@@ -273,7 +309,6 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
             case SelectDetUserActivity2.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 setEventPersonal(u.getId());
-                AppBus.getInstance().post(new WorksheetEventChangeEvent());
                 break;
         }
     }

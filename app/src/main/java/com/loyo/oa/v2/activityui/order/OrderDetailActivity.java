@@ -357,10 +357,17 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 public void onClick(int which) {
                     final GeneralPopView wran = showGeneralDialog(true, false, "此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
                             "意外终止后不可恢复，你确定要终止吗？");
-                    wran.setNoCancelOnclick(new View.OnClickListener() {
+                    wran.setSureOnclick(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             terminationOrder();
+                            wran.dismisDialog();
+                        }
+                    });
+
+                    wran.setNoCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                             wran.dismisDialog();
                         }
                     });
@@ -371,10 +378,16 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 @Override
                 public void onClick(int which) {
                     final GeneralPopView wran = showGeneralDialog(true, false, "删除不可恢复\n确定删除？");
-                    wran.setNoCancelOnclick(new View.OnClickListener() {
+                    wran.setSureOnclick(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             deleteOrder();
+                            wran.dismisDialog();
+                        }
+                    });
+                    wran.setNoCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                             wran.dismisDialog();
                         }
                     });
