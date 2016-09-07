@@ -67,7 +67,7 @@ public class CheckUpdateService extends Service {
         }
 
         int param = intent.getIntExtra("data", 0);
-        if (param == PARAM_START_DOWNLOAD) {
+        if (param == PARAM_START_DOWNLOAD && mUpdateInfo != null) {
             downloadApp();
             return START_REDELIVER_INTENT;
         } else if (param == PARAM_STOP_SELF) {
@@ -129,6 +129,10 @@ public class CheckUpdateService extends Service {
             @Override
             public void success(UpdateInfo updateInfo, Response response) {
 //                HttpErrorCheck.checkResponse(response);
+                if (null == updateInfo) {
+                    LogUtil.d(" 版本信息为空 ");
+                    return;
+                }
                 mUpdateInfo = updateInfo;
                 LogUtil.dll("版本更新信息:" + MainApp.gson.toJson(updateInfo));
                 try {
