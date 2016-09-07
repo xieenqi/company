@@ -157,7 +157,7 @@ public class AdapterHomeItem extends BaseAdapter {
 //                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
 //            }
                     else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
-                        extra = num.bizNum + "个外勤";
+//                        extra = num.bizNum + "个外勤";
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                     } else if (item.title.equals("公告通知") && num.bizType == 19) { //通知公告红点
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
