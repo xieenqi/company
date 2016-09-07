@@ -191,14 +191,15 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private void loadData() {
         tv_setting.setVisibility(View.INVISIBLE);
         img_title_right.setVisibility(View.INVISIBLE);
+        bt_confirm.setVisibility(View.INVISIBLE);
         if (MainApp.user.id.equals(detail.dispatcher.getId())) {
             isAssignment = true;
             if (detail.status != WorksheetStatus.TEMINATED) {
                 img_title_right.setVisibility(View.VISIBLE);
             }
-            if (detail.status == WorksheetStatus.WAITASSIGN){
+            if (detail.status == WorksheetStatus.WAITASSIGN) {
                 ll_wran.setVisibility(View.VISIBLE);
-            }else if(detail.status != WorksheetStatus.WAITASSIGN){
+            } else if (detail.status != WorksheetStatus.WAITASSIGN) {
                 ll_wran.setVisibility(View.GONE);
             }
             if (detail.status == WorksheetStatus.WAITAPPROVE)
