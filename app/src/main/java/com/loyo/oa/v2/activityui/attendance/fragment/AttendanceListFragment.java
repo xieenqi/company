@@ -419,19 +419,19 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         }
         /*工作日*/
         if (validateInfo.isWorkDay()) {
-            /*加班*/
-            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) {
+
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) { /*加班*/
                 popOutToast();
-                /*不加班*/
-            } else {
+
+            } else { /*非加班*/
                 dealInOutWork();
             }
-            /*非工作日，下班状态*/
-        } else if (!validateInfo.isWorkDay() && outEnable) {
+
+        } else if (!validateInfo.isWorkDay() && outEnable) { /*非工作日，下班状态*/
             outKind = 2;
             startAttanceLocation();
-            /*非工作日，上班状态*/
-        } else if (!validateInfo.isWorkDay() && inEnable) {
+
+        } else if (!validateInfo.isWorkDay() && inEnable) { /*非工作日，上班状态*/
             outKind = 0;
             startAttanceLocation();
         }
@@ -446,7 +446,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(final ValidateInfo _validateInfo, final Response response) {
-                HttpErrorCheck.checkResponse("考勤信息:", response);
+                HttpErrorCheck.checkResponse("考勤信息1:", response);
                 if (null == _validateInfo) {
                     Toast("获取考勤信息失败");
                     return;
@@ -616,7 +616,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 LogUtil.d("check回调成功");
                 attendanceRecords = attendanceRecord;
-                HttpErrorCheck.checkResponse("考勤信息：", response);
+                HttpErrorCheck.checkResponse("考勤信息2：", response);
                 attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
