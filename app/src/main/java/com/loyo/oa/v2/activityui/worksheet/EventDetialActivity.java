@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
@@ -19,7 +20,6 @@ import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
@@ -30,8 +30,10 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -244,14 +246,15 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("设置事件负责人：", response);
                         for(int i =0 ; i <actions.size(); i++) {
-                            if (actions.get(i) == WorksheetEventAction.Transfer || actions.get(i) ==  WorksheetEventAction.Dispatch) {
+                            if (actions.get(i) ==  WorksheetEventAction.Dispatch) {
                                 actions.remove(i);
-                                i--;
+                                actions.add(i, WorksheetEventAction.Transfer);
                             }
                         }
 
                         setRoleinit();
                         getData();
+                        AppBus.getInstance().post(new WorksheetEventChangeEvent());
                     }
 
                     @Override
@@ -273,7 +276,6 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
             case SelectDetUserActivity2.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 setEventPersonal(u.getId());
-                AppBus.getInstance().post(new WorksheetEventChangeEvent());
                 break;
         }
     }
