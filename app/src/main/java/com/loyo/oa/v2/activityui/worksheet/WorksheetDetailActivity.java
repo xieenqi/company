@@ -274,10 +274,16 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             public void onClick(int which) {
                 final GeneralPopView warn = showGeneralDialog(true, true, "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
                         "您确定要终止吗？");
-                warn.setNoCancelOnclick(new View.OnClickListener() {
+                warn.setSureOnclick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         stopWorksheet(5);
+                        warn.dismisDialog();
+                    }
+                });
+                warn.setNoCancelOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         warn.dismisDialog();
                     }
                 });
