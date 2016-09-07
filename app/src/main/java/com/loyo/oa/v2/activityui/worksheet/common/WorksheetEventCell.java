@@ -114,7 +114,7 @@ public class WorksheetEventCell extends LinearLayout {
         }
 
         tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime));
-        if (data.endTime != 0) {
+        if (data.endTime != 0 && wse.status != WorksheetEventStatus.FINISHED) {
             if ( data.endTime < (new Date()).getTime()/1000) {
                 tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止" +"(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));
