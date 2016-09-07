@@ -112,10 +112,10 @@ public class TasksInfoScoreActivity extends BaseActivity {
                 comment = edt_content.getText().toString().trim();
                 sorce = ratingBar_Task.getProgress() * 20;
                 if (status == 0) {
-//                    if(comment.isEmpty()){
-//                        Toast("点评内容不能为空!");
-//                        return;
-//                    }
+                    if (comment.isEmpty()) {
+                        Toast("点评内容不能为空!");
+                        return;
+                    }
                     verfyTask(sorce, status, comment);
                 } else {
                     if (!(score > 0)) {
