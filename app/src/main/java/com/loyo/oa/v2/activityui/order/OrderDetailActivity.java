@@ -225,12 +225,18 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
             case R.id.ll_worksheet://工单
+
+                boolean canAddWorksheet = false;
+                if (mData.status == 3 || mData.status == 4) {
+                    canAddWorksheet = true;
+                }
+
                 mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_OBJ, mData);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_BOOLEAN,canAddWorksheet);
                 app.startActivityForResult(this, OrderWorksheetsActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
         }
-
     }
 
     private void getData() {
