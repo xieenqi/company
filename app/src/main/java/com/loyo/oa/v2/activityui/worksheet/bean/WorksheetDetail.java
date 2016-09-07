@@ -4,13 +4,14 @@ import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.beans.NewUser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * 工单详情 数据bean
  * Created by xeq on 16/8/30.
  */
-public class WorksheetDetail {
+public class WorksheetDetail implements Serializable{
 
     public String id;
     public String title;
