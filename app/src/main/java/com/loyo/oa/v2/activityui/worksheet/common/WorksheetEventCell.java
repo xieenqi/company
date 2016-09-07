@@ -16,7 +16,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -114,7 +113,7 @@ public class WorksheetEventCell extends LinearLayout {
         }
 
         tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime));
-        if (data.endTime != 0) {
+        if (data.endTime != 0 && data.status != WorksheetEventStatus.FINISHED) {
             if ( data.endTime < (new Date()).getTime()/1000) {
                 tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止" +"(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));

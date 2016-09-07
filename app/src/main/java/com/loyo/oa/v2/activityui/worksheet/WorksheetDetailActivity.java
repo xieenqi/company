@@ -271,7 +271,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                final GeneralPopView warn = showGeneralDialog(true, false, "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
+                final GeneralPopView warn = showGeneralDialog(true, true, "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
                         "您确定要终止吗？");
                 warn.setNoCancelOnclick(new View.OnClickListener() {
                     @Override

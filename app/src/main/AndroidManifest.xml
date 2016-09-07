@@ -679,7 +679,7 @@
             android:name=".activityui.worksheet.WorksheetSubmitActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"
             />
 
         <!--其它-->

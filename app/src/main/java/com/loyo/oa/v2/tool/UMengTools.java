@@ -69,19 +69,23 @@ public class UMengTools {
     }
 
     public static void sendLocationInfo(final String address, final double longitude, final double latitude) {
-        final String date = MainApp.getMainApp().df4.format(new Date(System.currentTimeMillis()));
-        LogUtil.d("检查时间: " + date);
-        String oldInfo = SharedUtil.get(MainApp.getMainApp(), "sendLocation");
-        TrackRule trackrule = DBManager.Instance().getTrackRule();
-        if(null == trackrule){
-            LogUtil.d("trackrule为null，就不继续执行");
-            return;
-        }
-        if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {
-            LogUtil.d("此时不需要穿轨迹" + address.equals(oldInfo));
-            return;
-        }
+        try {
+            final String date = MainApp.getMainApp().df4.format(new Date(System.currentTimeMillis()));
+            LogUtil.d("检查时间: " + date);
+            String oldInfo = SharedUtil.get(MainApp.getMainApp(), "sendLocation");
+            TrackRule trackrule = DBManager.Instance().getTrackRule();
+            if (null == trackrule) {
+                LogUtil.d("trackrule为null，就不继续执行");
+                return;
+            }
+            if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {
+                LogUtil.d("此时不需要穿轨迹" + address.equals(oldInfo));
+                return;
+            }
             newUpLocation(address, longitude, latitude, date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void upLocation(final String address, final double longitude, final double latitude, final String date) {

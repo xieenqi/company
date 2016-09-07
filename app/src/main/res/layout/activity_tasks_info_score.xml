@@ -133,7 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:layout_weight="1"
-            android:background="@drawable/btn_rectangle_agree"
+            android:background="@drawable/retange_blue"
             android:text="提 交"
             android:textColor="@color/white"/>
 
