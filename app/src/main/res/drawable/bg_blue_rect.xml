@@ -5,9 +5,9 @@
         android:color="@color/title_bg1"
         android:width="0.5dp"/>
     <solid android:color="@color/title_bg1" />
-    <corners android:topLeftRadius="5dp"
-        android:topRightRadius="5dp"
-        android:bottomRightRadius="5dp"
-        android:bottomLeftRadius="5dp"/>
+    <corners android:topLeftRadius="4dp"
+        android:topRightRadius="4dp"
+        android:bottomRightRadius="4dp"
+        android:bottomLeftRadius="4dp"/>
 
 </shape>

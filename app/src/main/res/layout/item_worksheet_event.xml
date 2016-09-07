@@ -43,12 +43,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
-            android:padding="@dimen/dimen_4"
+            android:layout_marginLeft="@dimen/margin_other_view"
+            android:paddingTop="@dimen/dimen_10"
             android:maxLines="2"
             android:ellipsize="end"
             android:text=""
             android:textColor="@color/text33"
-            android:textSize="15sp"/>
+            android:textSize="@dimen/dimen_12"/>
 
     </LinearLayout>
 
@@ -71,7 +72,7 @@
                 android:maxLines="5"
                 android:text=""
                 android:ellipsize="end"
-                android:singleLine="true"
+                android:singleLine="false"
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp12"/>
 
@@ -82,7 +83,7 @@
                 android:layout_marginLeft="@dimen/dimen_5"
                 android:layout_marginRight="@dimen/dimen_8"
                 android:gravity="center_vertical|left"
-                android:text="2015-5-1"
+                android:text=" "
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp12"/>
 
@@ -102,7 +103,7 @@
                 android:layout_marginLeft="@dimen/dimen_8"
                 android:layout_marginRight="@dimen/dimen_8"
                 android:gravity="center_vertical|left"
-                android:text="08-23 | 09-08截至"
+                android:text=" "
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp12"/>
 

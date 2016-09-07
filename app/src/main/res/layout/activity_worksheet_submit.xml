@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:fitsSystemWindows="true">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:fitsSystemWindows="true">
 
     <LinearLayout
         android:id="@+id/ll_top"
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true">
 
-        <include layout="@layout/include_common_title1" />
+        <include layout="@layout/include_common_title1"/>
     </LinearLayout>
 
     <ScrollView
@@ -36,9 +36,10 @@
                 android:gravity="left|top"
                 android:hint="请填写跟进内容"
                 android:minHeight="100dp"
+                android:textColorHint="@color/text99"
                 android:paddingLeft="@dimen/margin_other_view"
                 android:paddingRight="@dimen/margin_other_view"
-                android:paddingTop="@dimen/dimen_10" />
+                android:paddingTop="@dimen/dimen_10"/>
 
             <LinearLayout
                 android:id="@+id/layout_photo"
@@ -60,7 +61,7 @@
                     android:horizontalSpacing="@dimen/activity_horizontal_margin"
                     android:listSelector="@android:color/transparent"
                     android:numColumns="3"
-                    android:verticalSpacing="@dimen/activity_horizontal_margin" />
+                    android:verticalSpacing="@dimen/activity_horizontal_margin"/>
 
             </LinearLayout>
 
@@ -81,7 +82,7 @@
                 <ImageView
                     android:layout_width="@dimen/dimen_50"
                     android:layout_height="@dimen/dimen_50"
-                    android:background="@drawable/icon_edit_location" />
+                    android:background="@drawable/icon_edit_location"/>
 
                 <LinearLayout
                     android:id="@+id/layout_address_info"
@@ -97,7 +98,7 @@
                         android:layout_marginLeft="@dimen/dimen_10"
                         android:text="当前位置"
                         android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp12"/>
 
                     <TextView
                         android:id="@+id/tv_address"
@@ -110,7 +111,7 @@
                         android:singleLine="true"
                         android:text="四川省成都市金牛区"
                         android:textColor="@color/text66"
-                        android:textSize="@dimen/text_sp11" />
+                        android:textSize="@dimen/text_sp11"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -123,7 +124,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/icon_worksheet_delete" />
+                        android:background="@drawable/icon_worksheet_delete"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -132,19 +133,19 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dimen_36"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#D1D1D1" />
+            android:layout_height="0.5dp"
+            android:background="#D1D1D1"/>
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_45"
+            android:layout_height="match_parent"
             android:background="#F3F3F3"
             android:gravity="center"
             android:orientation="horizontal">
@@ -154,26 +155,26 @@
                 android:id="@+id/layout_image"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.6"
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="@dimen/dimen_23"
-                    android:layout_height="@dimen/dimen_23"
-                    android:background="@drawable/icon_selectimage_view" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_selectimage_view"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_location"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.6"
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="@dimen/dimen_23"
-                    android:layout_height="@dimen/dimen_23"
-                    android:background="@drawable/icon_add_location" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_add_location"/>
             </LinearLayout>
 
             <LinearLayout
@@ -186,7 +187,7 @@
                 <ImageView
                     android:layout_width="@dimen/dimen_23"
                     android:layout_height="@dimen/dimen_23"
-                    android:background="@drawable/icon_position_modify" />
+                    android:background="@drawable/icon_position_modify"/>
             </LinearLayout>
 
             <LinearLayout
@@ -199,7 +200,7 @@
                 <ImageView
                     android:layout_width="@dimen/dimen_23"
                     android:layout_height="@dimen/dimen_23"
-                    android:background="@drawable/icon_position_modify" />
+                    android:background="@drawable/icon_position_modify"/>
             </LinearLayout>
 
             <LinearLayout
@@ -212,7 +213,7 @@
                 <ImageView
                     android:layout_width="@dimen/dimen_25"
                     android:layout_height="@dimen/dimen_25"
-                    android:background="@drawable/icon_position_modify" />
+                    android:background="@drawable/icon_position_modify"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
