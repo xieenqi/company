@@ -34,7 +34,9 @@ import retrofit.client.Response;
 
 public class WorksheetInfoActivity extends BaseActivity implements View.OnClickListener {
 
-    /** UI */
+    /**
+     * UI
+     */
     private ListView lv_listview;
     private LinearLayout img_title_left,
             ll_assignment_time,
@@ -56,10 +58,14 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
             tv_termination_time; /*终止时间*/
 
 
-    /** Data*/
+    /**
+     * Data
+     */
     private String id;
 
-    /** Other*/
+    /**
+     * Other
+     */
     private WorkSheetListNestingAdapter mAdapter;
     private BaseBeanT<WorksheetInfo> mWorksheetInfo;
     private Intent mIntent;
@@ -79,23 +85,23 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
-        tv_title_1          = (TextView) findViewById(R.id.tv_title_1);
-        tv_Assignment_name  = (TextView) findViewById(R.id.tv_Assignment_name);
-        tv_boom             = (TextView) findViewById(R.id.tv_boom);
-        tv_related_order    = (TextView) findViewById(R.id.tv_related_order);
+        tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
+        tv_Assignment_name = (TextView) findViewById(R.id.tv_Assignment_name);
+        tv_boom = (TextView) findViewById(R.id.tv_boom);
+        tv_related_order = (TextView) findViewById(R.id.tv_related_order);
         tv_responsible_name = (TextView) findViewById(R.id.tv_responsible_name);
-        tv_assignment_time  = (TextView) findViewById(R.id.tv_assignment_time);
-        tv_finish_time      = (TextView) findViewById(R.id.tv_finish_time);
+        tv_assignment_time = (TextView) findViewById(R.id.tv_assignment_time);
+        tv_finish_time = (TextView) findViewById(R.id.tv_finish_time);
         tv_termination_time = (TextView) findViewById(R.id.tv_termination_time);
-        tv_commit_info      = (TextView) findViewById(R.id.tv_commit_info);
-        tv_track_content    = (TextView) findViewById(R.id.tv_track_content);
-        tv_title            = (TextView) findViewById(R.id.tv_title);
-        tv_status           = (TextView) findViewById(R.id.tv_status);
+        tv_commit_info = (TextView) findViewById(R.id.tv_commit_info);
+        tv_track_content = (TextView) findViewById(R.id.tv_track_content);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_status = (TextView) findViewById(R.id.tv_status);
 
-        ll_assignment_time  = (LinearLayout) findViewById(R.id.ll_assignment_time);
-        ll_finish_time      = (LinearLayout) findViewById(R.id.ll_finish_time);
+        ll_assignment_time = (LinearLayout) findViewById(R.id.ll_assignment_time);
+        ll_finish_time = (LinearLayout) findViewById(R.id.ll_finish_time);
         ll_termination_time = (LinearLayout) findViewById(R.id.ll_termination_time);
-        ll_times_container  = (LinearLayout) findViewById(R.id.ll_times_container);
+        ll_times_container = (LinearLayout) findViewById(R.id.ll_times_container);
 
         img_title_left.setOnClickListener(this);
         tv_related_order.setOnClickListener(this);
@@ -103,24 +109,24 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         requestData();
     }
 
-    private void bindData(){
+    private void bindData() {
 
         tv_title.setText(mWorksheetInfo.data.title);
         tv_Assignment_name.setText(mWorksheetInfo.data.dispatcherName);
-        if(mWorksheetInfo.data.triggerMode == 1){
+        if (mWorksheetInfo.data.triggerMode == 1) {
             tv_boom.setText("自动流转");
-        }else{
+        } else {
             tv_boom.setText("定时触发");
         }
-        tv_commit_info.setText(mWorksheetInfo.data.creatorName+" "+ DateTool.timet(mWorksheetInfo.data.createdAt+"",DateTool.DATE_FORMATE_AT_MINUTES)+" 提交");
+        tv_commit_info.setText(mWorksheetInfo.data.creatorName + " " + DateTool.getDiffTime(mWorksheetInfo.data.createdAt) + " 提交");
         tv_track_content.setText(mWorksheetInfo.data.content);
         tv_related_order.setText(mWorksheetInfo.data.orderName);
         tv_responsible_name.setText(mWorksheetInfo.data.responsorNames);
 
-        if(mWorksheetInfo.data.confirmedAt != 0){
+        if (mWorksheetInfo.data.confirmedAt != 0) {
             ll_assignment_time.setVisibility(View.VISIBLE);
             tv_assignment_time.setText(DateTool.getDiffTime(mWorksheetInfo.data.confirmedAt));
-        }else{
+        } else {
             tv_assignment_time.setText("--");
             ll_assignment_time.setVisibility(View.GONE);
         }
@@ -148,16 +154,16 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         }
 
         WorksheetCommon.setStatus(tv_status, mWorksheetInfo.data.status);
-        if(null != mWorksheetInfo.data.attachment && mWorksheetInfo.data.attachment.size() > 0){
-            mAdapter = new WorkSheetListNestingAdapter(mWorksheetInfo.data.attachment,this);
+        if (null != mWorksheetInfo.data.attachment && mWorksheetInfo.data.attachment.size() > 0) {
+            mAdapter = new WorkSheetListNestingAdapter(mWorksheetInfo.data.attachment, this);
             lv_listview.setAdapter(mAdapter);
         }
     }
 
     /**
      * 获取工单信息
-     * */
-    private void requestData(){
+     */
+    private void requestData() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IWorksheet.class).
                 getWorksheetInfo(id, new Callback<BaseBeanT<WorksheetInfo>>() {
                     @Override
@@ -182,8 +188,8 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
             //跳转订单
             case R.id.tv_related_order:
                 mBundle = new Bundle();
-                mBundle.putSerializable(ExtraAndResult.EXTRA_ID,mWorksheetInfo.data.orderId);
-                app.startActivity(this, OrderDetailActivity.class, MainApp.ENTER_TYPE_RIGHT,false,mBundle);
+                mBundle.putSerializable(ExtraAndResult.EXTRA_ID, mWorksheetInfo.data.orderId);
+                app.startActivity(this, OrderDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 break;
 
             //返回

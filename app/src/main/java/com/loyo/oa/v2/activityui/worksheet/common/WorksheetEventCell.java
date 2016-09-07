@@ -61,7 +61,9 @@ public class WorksheetEventCell extends LinearLayout {
         this.data = data;
 
 
-        /* 多个操作，优选负责人角色操作 */
+        /* 多个操作，
+        *
+        * */
         WorksheetEventAction action = null;
         if (actions.size() == 0) {
             action = WorksheetEventAction.None;

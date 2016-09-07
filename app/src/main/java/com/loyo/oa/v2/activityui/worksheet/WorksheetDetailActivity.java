@@ -71,7 +71,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     WSRole role = getRoleforEvent((WorksheetEventsSupporter) msg.obj);
                     ArrayList<WorksheetEventAction> actions = actionsForRole((WorksheetEventsSupporter) msg.obj, role);
                     bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, (WorksheetEventsSupporter) msg.obj);
-                    bundle.putSerializable(ExtraAndResult.EXTRA_DATA, actions);
+                    bundle.putSerializable(ExtraAndResult.EXTRA_DATA, (WorksheetDetail) detail);
                     bundle.putString(ExtraAndResult.EXTRA_ID2, detail.id);
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
                     break;
@@ -191,14 +191,15 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private void loadData() {
         tv_setting.setVisibility(View.INVISIBLE);
         img_title_right.setVisibility(View.INVISIBLE);
+        bt_confirm.setVisibility(View.INVISIBLE);
         if (MainApp.user.id.equals(detail.dispatcher.getId())) {
             isAssignment = true;
             if (detail.status != WorksheetStatus.TEMINATED) {
                 img_title_right.setVisibility(View.VISIBLE);
             }
-            if (detail.status == WorksheetStatus.WAITASSIGN){
+            if (detail.status == WorksheetStatus.WAITASSIGN) {
                 ll_wran.setVisibility(View.VISIBLE);
-            }else if(detail.status != WorksheetStatus.WAITASSIGN){
+            } else if (detail.status != WorksheetStatus.WAITASSIGN) {
                 ll_wran.setVisibility(View.GONE);
             }
             if (detail.status == WorksheetStatus.WAITAPPROVE)

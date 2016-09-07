@@ -8,6 +8,7 @@ import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
@@ -76,6 +77,9 @@ public class UMengTools {
             TrackRule trackrule = DBManager.Instance().getTrackRule();
             if (null == trackrule) {
                 LogUtil.d("trackrule为null，就不继续执行");
+                if (!Config_project.isRelease) {
+                    Global.Toast("检查数据异常");
+                }
                 return;
             }
             if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {
@@ -85,6 +89,9 @@ public class UMengTools {
             newUpLocation(address, longitude, latitude, date);
         } catch (Exception e) {
             e.printStackTrace();
+            if (!Config_project.isRelease) {
+                Global.Toast("数据异常！");
+            }
         }
     }
 
