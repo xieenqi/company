@@ -266,7 +266,7 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     /**
      * 设置事件负责人
      */
-    private void setEventPersonal(String userId) {
+    private void setEventPersonal(final String userId) {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("responsorId", userId);
@@ -281,6 +281,9 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                                 actions.add(i, WorksheetEventAction.Transfer);
                             }
                         }
+
+                        mData.responsorId = userId;
+                        actions = actionsForRole(mData, getRoleForEvent(mData));
 
                         setRoleinit();
                         getData();
