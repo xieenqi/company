@@ -71,7 +71,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     WSRole role = getRoleforEvent((WorksheetEventsSupporter) msg.obj);
                     ArrayList<WorksheetEventAction> actions = actionsForRole((WorksheetEventsSupporter) msg.obj, role);
                     bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, (WorksheetEventsSupporter) msg.obj);
-                    bundle.putSerializable(ExtraAndResult.EXTRA_DATA, actions);
+                    bundle.putSerializable(ExtraAndResult.EXTRA_DATA, (WorksheetDetail) detail);
                     bundle.putString(ExtraAndResult.EXTRA_ID2, detail.id);
                     app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
                     break;
