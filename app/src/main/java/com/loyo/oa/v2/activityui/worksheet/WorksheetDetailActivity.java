@@ -34,6 +34,7 @@ import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
 
@@ -202,9 +203,9 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             } else if (detail.status != WorksheetStatus.WAITASSIGN) {
                 ll_wran.setVisibility(View.GONE);
             }
-            if (detail.status == WorksheetStatus.WAITAPPROVE)
+            if (detail.status == WorksheetStatus.WAITAPPROVE){
                 bt_confirm.setVisibility(View.VISIBLE);
-
+            }
             if (detail.status == WorksheetStatus.WAITASSIGN) {
                 tv_setting.setVisibility(View.VISIBLE);
             }
@@ -238,6 +239,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             cell.loadData(event, role, actionsForRole(event, role), detail.status);
 
             ll_events.addView(cell);
+            LogUtil.dee("执行");
         }
     }
 
