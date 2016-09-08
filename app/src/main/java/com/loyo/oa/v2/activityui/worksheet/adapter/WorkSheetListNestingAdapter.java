@@ -36,7 +36,6 @@ public class WorkSheetListNestingAdapter extends BaseAdapter {
     private ArrayList<Attachment> attachments;
     private Context mContext;
     private LayoutInflater inflater;
-    private Bundle mBundle;
 
     public WorkSheetListNestingAdapter(ArrayList<Attachment> attachments, Context mContext) {
         this.mContext = mContext;
@@ -78,9 +77,7 @@ public class WorkSheetListNestingAdapter extends BaseAdapter {
 
         holder.tv_image_name.setText(attachment.getOriginalName());
         holder.tv_image_size.setText("大小:"+Utils.FormetFileSize(Long.valueOf(attachment.getSize())));
-        final boolean isImage = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
 
-        if(isImage){
             /*ImageView进度条设置*/
             ImageLoader.getInstance().displayImage(attachment.getUrl(), holder.iv_image, MainApp.options_3, new ImageLoadingListener() {
                 @Override
@@ -105,24 +102,13 @@ public class WorkSheetListNestingAdapter extends BaseAdapter {
                 }
             });
 
-            mBundle = new Bundle();
-            mBundle.putString(ExtraAndResult.EXTRA_OBJ, attachment.getUrl());
-        }else{
-            holder.iv_image.setImageResource(Global.getAttachmentIcon(attachment.getUrl()));
-            mBundle = new Bundle();
-            mBundle.putSerializable("data", attachment.getUrl());
-        }
-
         holder.iv_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isImage){
+                    Bundle mBundle = new Bundle();
+                    mBundle.putString(ExtraAndResult.EXTRA_OBJ, attachment.getUrl());
                     MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImagefromHttp.class,
                             MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_DEAL_ATTACHMENT, mBundle);
-                }else{
-                    MainApp.getMainApp().startActivity((Activity) mContext, PreviewOfficeActivity.class,
-                            MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-                }
             }
         });
 
