@@ -234,7 +234,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                         wersi();
                     } else {
                         isOk = false;
-//                        saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                        saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
                         getData();
                     }
                 }
