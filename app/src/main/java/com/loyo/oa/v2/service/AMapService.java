@@ -522,9 +522,9 @@ public class AMapService extends APSService {
      * 计时器 记录用户在线
      */
     private void userOnlineTime() {
-        if (null == timer)
+        if (null == timer) {
             timer = new Timer();
-
+        }
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -532,13 +532,15 @@ public class AMapService extends APSService {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("用户在线：", response);
+                        userOnlineTime();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        userOnlineTime();
                     }
                 });
-                userOnlineTime();
             }
         }, 5 * 60 * 1000);
     }
