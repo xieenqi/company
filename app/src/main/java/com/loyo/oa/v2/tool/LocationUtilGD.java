@@ -9,6 +9,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.common.Global;
 
 import java.util.Date;
 
@@ -55,7 +56,7 @@ public class LocationUtilGD {
             locationClient.startLocation();
             locationClient.startAssistantLocation();
         } else {
-//          Global.Toast("你没有配置定位权限");
+            Global.Toast("你没有配置定位权限");
             DialogHelp.cancelLoading();
         }
     }
@@ -95,7 +96,7 @@ public class LocationUtilGD {
         }
 
         app.address = location.getAddress();
-        app.message = location.getStreet()+location.getStreetNum();
+        app.message = location.getStreet() + location.getStreetNum();
         app.longitude = location.getLongitude();
         app.latitude = location.getLatitude();
         app.cityCode = location.getCityCode();
@@ -111,6 +112,7 @@ public class LocationUtilGD {
 
     public interface AfterLocation {
         void OnLocationGDSucessed(String address, double longitude, double latitude, String radius);
+
         void OnLocationGDFailed();
     }
 

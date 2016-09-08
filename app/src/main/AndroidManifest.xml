@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.loyo.oa.v2"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:installLocation="internalOnly">
+<manifest
+    package="com.loyo.oa.v2"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="internalOnly">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -76,12 +77,24 @@
             </intent-filter>
         </activity>
 
-        <!-- 启动欢迎页面 -->
+        <!-- login启动欢迎页面 -->
         <activity
             android:name=".activityui.login.WelcomeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+        <activity
+            android:name=".activityui.login.LoginActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".activityui.login.LoginBQQActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <!--设置相关-->
         <activity
             android:name=".activityui.setting.ResetPasswordActivity_"
             android:label="@string/app_name"
@@ -94,22 +107,32 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".customview.multi_image_selector.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".customview.multi_image_selector.CropImageActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <!--工作报告-->
         <activity
             android:name=".activityui.work.WorkReportReviewActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".activityui.work.WorkReportsManageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.work.WorkReportsInfoActivity_"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".activityui.work.WorkReportAddActivity_"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".activityui.work.WorkReportsSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible"/>
+
         <activity
             android:name=".activityui.customer.CommonTagSelectActivity_"
             android:launchMode="standard"
@@ -178,17 +201,7 @@
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".activityui.login.LoginActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".activityui.login.LoginBQQActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
         <activity
             android:name=".activityui.signin.SignInActivity"
             android:launchMode="singleTop"
@@ -296,20 +309,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".activityui.work.WorkReportsManageActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.work.WorkReportsInfoActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity
-            android:name=".activityui.work.WorkReportAddActivity_"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
         <activity
             android:name=".activityui.wfinstance.WfInstanceManageActivity"
             android:launchMode="singleTop"
@@ -372,6 +372,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
+            android:name=".activityui.customer.CustomerDynamicAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
             android:name=".activityui.other.DepartmentUserSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -382,11 +387,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>
-        <activity
-            android:name=".activityui.work.WorkReportsSearchActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible"/>
+
         <activity
             android:name=".activityui.wfinstance.WfinstanceSearchActivity"
             android:launchMode="singleTop"
@@ -416,11 +417,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name=".activityui.work.WorkReportModelSelectManageActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <!--<activity-->
+        <!--android:name=".activityui.work.WorkReportModelSelectManageActivity_"-->
+        <!--android:launchMode="singleTop"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:windowSoftInputMode="stateAlwaysHidden"/>-->
         <activity
             android:name=".activityui.tasks.TaskModelSelectManageActivity_"
             android:launchMode="singleTop"
@@ -578,30 +579,15 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
+            android:name=".activityui.order.OrderWorksheetsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
             android:name=".activityui.order.OrderAddPlanActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".activityui.other.PreviewImageAddActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.commonview.MapModifyView"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.commonview.MapModifySerachView"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.commonview.MapSingleView"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.order.OrderAttachmentActivity"
             android:launchMode="singleTop"
@@ -637,17 +623,103 @@
             android:name=".activityui.clue.ClueSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".activityui.customer.CustomerDynamicAddActivity"
+            android:name=".activityui.clue.ClueDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.clue.ClueDynamicAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             />
+        <activity
+            android:name=".activityui.clue.ClueDynamicManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <!-- 工单 -->
+        <activity
+            android:name=".activityui.worksheet.WorksheetManageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activityui.worksheet.WorksheetDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.worksheet.EventDetialActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.worksheet.WorksheetInfoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.worksheet.WorksheetSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.worksheet.WSOrderSelectActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.worksheet.WorksheetAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.worksheet.WorksheetSubmitActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"
+            />
+
+        <!--其它-->
+        <activity
+            android:name=".activityui.other.PreviewImageAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.commonview.MapModifyView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.commonview.MapModifySerachView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.commonview.MapSingleView"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activityui.other.PreviewImagefromHttp"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             />
+        <activity
+            android:name=".customview.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".customview.multi_image_selector.CropImageActivity_"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+
 
         <service
             android:name=".service.InitDataService_"
@@ -797,17 +869,8 @@
             android:value="56f0a2a367e58e2176002ad6"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="ukuaiqi"/>
+            android:value="应用宝"/>
 
-        <activity
-            android:name=".activityui.clue.ClueDetailActivity"
-            android:label="@string/title_activity_clue_detail"/>
-        <activity
-            android:name=".activityui.clue.ClueDynamicManagerActivity"
-            android:label="@string/title_activity_clue_followup"/>
-        <activity
-            android:name=".activityui.clue.ClueDynamicAddActivity"
-            android:label="@string/title_activity_clue_followup_create"></activity>
     </application>
 
 </manifest>

@@ -20,16 +20,19 @@ import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 
@@ -48,6 +51,14 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
             tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name,
             tv_creator_time, tv_wfname, tv_order_number, tv_memo;
+
+
+    /**
+     * 新增工单 2016-09-01
+     */
+    private LinearLayout ll_worksheet; /* 工单cell */
+    private TextView tv_worksheet;     /* 工单数  */
+
     private OrderDetail mData;
     private String orderId;
     private Bundle mBundle;
@@ -90,6 +101,13 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_order_detail);
         getIntentData();
         initView();
+    }
+
+    @Subscribe
+    public void
+    onWorksheetCreated(Worksheet data) {
+        // 刷新数目
+        getData();
     }
 
     private void getIntentData() {
@@ -138,6 +156,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         ll_plan = (LinearLayout) findViewById(R.id.ll_plan);
         ll_plan.setOnClickListener(this);
         ll_wflayout = (LinearLayout) findViewById(R.id.ll_wflayout);
+        ll_worksheet = (LinearLayout) findViewById(R.id.ll_worksheet);
+        ll_worksheet.setOnClickListener(this);
+        tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
 
     }
 
@@ -203,8 +224,19 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, isAdd);
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
-        }
+            case R.id.ll_worksheet://工单
 
+                boolean canAddWorksheet = false;
+                if (mData.status == 3 || mData.status == 4) {
+                    canAddWorksheet = true;
+                }
+
+                mBundle = new Bundle();
+                mBundle.putSerializable(ExtraAndResult.EXTRA_OBJ, mData);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_BOOLEAN,canAddWorksheet);
+                app.startActivityForResult(this, OrderWorksheetsActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
+                break;
+        }
     }
 
     private void getData() {
@@ -283,6 +315,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_plan.setText("回款计划（" + mData.planNum + "）");
         tv_record.setText("回款记录（" + mData.recordNum + "）");
         tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
+        tv_worksheet.setText("工单" + "(" + mData.worksheetNum + ")");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
         tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_plan_value.setText(mData.planMoney + "");
@@ -322,14 +355,30 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    terminationOrder();
+                    final GeneralPopView wran = showGeneralDialog(true, false, "此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
+                            "意外终止后不可恢复，你确定要终止吗？");
+                    wran.setNoCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            terminationOrder();
+                            wran.dismisDialog();
+                        }
+                    });
                 }
             });
         if (isDelete)
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    deleteOrder();
+                    final GeneralPopView wran = showGeneralDialog(true, false, "删除不可恢复\n确定删除？");
+                    wran.setNoCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteOrder();
+                            wran.dismisDialog();
+                        }
+                    });
+
                 }
             });
         dialog.show();

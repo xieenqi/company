@@ -174,6 +174,43 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_clean"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_h_title"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_40"
+                android:src="@drawable/icon_sidebar_clean"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_20"
+                android:gravity="center_vertical"
+                android:text="清除缓存"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sp16"
+                />
+
+            <TextView
+                android:id="@+id/tv_file"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_15"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sp12"
+                />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/ll_version"
             android:layout_width="match_parent"
             android:layout_height="@dimen/view_h_title"

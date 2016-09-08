@@ -509,18 +509,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             @Override
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-//                    Toast("请检查您的网络连接");
-//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-//                    if (error.getResponse().getStatus() == 500) {
-//                        Toast("网络异常500，请稍候再试");
-//                        try {
-//                            LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
             }
         });
     }

@@ -77,7 +77,7 @@ public class MyOrderAdapter extends BaseAdapter {
         holder.tv_money.setText(Utils.setValueDouble(mData.dealMoney));
         holder.tv_customer.setText(mData.customerName);
         holder.tv_product.setText(mData.proName);
-        holder.tv_time.setText(DateTool.getDiffTime(Long.valueOf(mData.createdAt + "") * 1000));
+        holder.tv_time.setText(DateTool.getDiffTime(Long.valueOf(mData.createdAt + "")));
         return convertView;
     }
 

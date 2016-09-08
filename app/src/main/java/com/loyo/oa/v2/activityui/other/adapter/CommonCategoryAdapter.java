@@ -67,12 +67,20 @@ public class CommonCategoryAdapter extends BaseAdapter {
         } else if (position == 1) {
             if (lstData.get(1).contains("团队")) {
                 iv.setBackgroundResource(R.drawable.icon_team);
+            } else if (lstData.get(1).contains("分派")) {
+                iv.setBackgroundResource(R.drawable.icon_assignment);
             } else {
                 iv.setBackgroundResource(R.drawable.icon_public);
             }
 
         } else if (position == 2) {
             iv.setBackgroundResource(R.drawable.icon_public);
+        } else if (position == 3) {
+            if (lstData.get(3).contains("团队")) {
+                iv.setBackgroundResource(R.drawable.icon_team);
+            } else {
+                iv.setBackgroundResource(R.drawable.icon_public);
+            }
         }
         return convertView;
     }

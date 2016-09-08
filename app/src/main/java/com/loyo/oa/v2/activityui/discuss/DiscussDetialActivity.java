@@ -612,9 +612,8 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             tvMineTime = (TextView) itemView.findViewById(R.id.tv_mine_time);
             tvMine = (TextView) itemView.findViewById(R.id.tv_mine);
             tvContent = (TextView) itemView.findViewById(R.id.tv_mine_content);
-
             tvContent.setMaxWidth(screenWidth / 2);
-
+//            tvContent.setAutoLinkMask(Linkify.WEB_URLS);
             ivMineAvatar = (RoundImageView) itemView.findViewById(R.id.iv_mine_avatar);
         }
     }
@@ -630,9 +629,8 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             mTvOtherTime = (TextView) itemView.findViewById(R.id.tv_other_time);
             mTvOtherName = (TextView) itemView.findViewById(R.id.tv_other_name);
             mTvOtherContent = (TextView) itemView.findViewById(R.id.tv_other_content);
-
             mTvOtherContent.setMaxWidth((int) (screenWidth / 1.6f));
-
+//            mTvOtherContent.setAutoLinkMask(Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
             mIvOtherAvatar = (RoundImageView) itemView.findViewById(R.id.iv_other_avatar);
         }
     }
@@ -683,16 +681,16 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-            View view = null;
+            View mView = null;
             RecyclerView.ViewHolder holder = null;
             switch (viewType) {
                 case DiscussSendMode.mine:
-                    view = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_mine, null);
-                    holder = new DiscussDetMineViewHolder(view);
+                    mView = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_mine, null);
+                    holder = new DiscussDetMineViewHolder(mView);
                     return holder;
                 case DiscussSendMode.other:
-                    view = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_other, null);
-                    holder = new DiscussDetOtherViewHolder(view);
+                    mView = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_other, null);
+                    holder = new DiscussDetOtherViewHolder(mView);
                     return holder;
             }
             return null;
@@ -706,18 +704,27 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             if (holder.getClass() == DiscussDetMineViewHolder.class) {
                 DiscussDetMineViewHolder mineHolder = (DiscussDetMineViewHolder) holder;
                 mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
-                mineHolder.tvContent.setText(info.content);
+//                mineHolder.tvContent.setAutoLinkMask(0x01);
+                try {
+                    mineHolder.tvContent.setText(info.content);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+//                mineHolder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+//                Linkify.addLinks(mineHolder.tvMineTime, Linkify.PHONE_NUMBERS | Linkify.WEB_URLS);
 
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
                 mineHolder.ivMineAvatar.setTag(selectUser);
 
-//                mineHolder.ivMineAvatar.setOnLongClickListener(onAvaterLongClicklistener);
-//                ImageLoader.getInstance().displayImage(Config_project.);
                 ImageLoader.getInstance().displayImage(info.creator.avatar, mineHolder.ivMineAvatar);
             } else if (holder.getClass() == DiscussDetOtherViewHolder.class) {
                 DiscussDetOtherViewHolder otherHolder = (DiscussDetOtherViewHolder) holder;
                 otherHolder.mTvOtherName.setText(info.creator.name);
-                otherHolder.mTvOtherContent.setText(info.content);
+                try {
+                    otherHolder.mTvOtherContent.setText(info.content);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
                 otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
                 ImageLoader.getInstance().displayImage(info.creator.avatar, otherHolder.mIvOtherAvatar);
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
@@ -782,22 +789,22 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
      */
     private void refreshRedDot() {
         setResult(Activity.RESULT_OK);
-            HashMap<String, Object> body = new HashMap<>();
-            body.put("summaryId", summaryId);
-            LogUtil.d("@刷新红点:" + app.gson.toJson(body));
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
-                    .updateReadDot(body, new RCallback<Object>() {
-                        @Override
-                        public void success(final Object d, final Response response) {
-                            HttpErrorCheck.checkResponse(response);
-                            finishActivity();
-                        }
+        HashMap<String, Object> body = new HashMap<>();
+        body.put("summaryId", summaryId);
+        LogUtil.d("@刷新红点:" + app.gson.toJson(body));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
+                .updateReadDot(body, new RCallback<Object>() {
+                    @Override
+                    public void success(final Object d, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        finishActivity();
+                    }
 
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
-                            finishActivity();
-                        }
-                    });
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        finishActivity();
+                    }
+                });
     }
 }

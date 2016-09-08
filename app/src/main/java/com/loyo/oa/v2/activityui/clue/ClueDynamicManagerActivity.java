@@ -235,7 +235,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
             ImageView iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
             SaleActivity saleActivity = lstData_saleActivity_current.get(i);
 
-            tv_create_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt() * 1000));
+            tv_create_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt()));
             tv_content.setText(saleActivity.getContent());
             tv_contact_name.setText("联系人：" + saleActivity.contactName);
             tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);

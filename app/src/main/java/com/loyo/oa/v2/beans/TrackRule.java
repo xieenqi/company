@@ -192,20 +192,21 @@ public class TrackRule implements Serializable {
         if (unRuleable) {
             LogUtil.d("checkRule,轨迹规则【设置】错误，trackRule is null ? : " + (trackRule == null) +
                     " weekdays : " + (trackRule == null ? "NULL" : trackRule.getWeekdays().length()));
+            return false;
         }
 
         int day_of_week = DateTool.get_DAY_OF_WEEK(new Date());
         day_of_week = day_of_week == 1 ? 7 : day_of_week - 1;
 
-        boolean unInDay = true;
+        boolean notNeedCheck = true; /* 当天是否设置轨迹规则， 是否需要打卡 */
         if (!TextUtils.isEmpty(trackRule.getWeekdays()) && trackRule.getWeekdays().length() >= day_of_week) {
-            unInDay = '1' != (trackRule.getWeekdays().charAt(day_of_week - 1));
+            notNeedCheck = '1' != (trackRule.getWeekdays().charAt(day_of_week - 1));
         }
-        if (unInDay) {
+        if (notNeedCheck) {
             LogUtil.d("checkRule,当日未【设置】上报轨迹,weekdays : " + trackRule.getWeekdays() + " dayofweek : " + day_of_week);
         }
 
-        boolean isInTime = false;
+        boolean isInTime = false; /* 是否在开始和结束时间之间，打卡时间范围内 */
         SimpleDateFormat sdf = MainApp.getMainApp().df6;
         String currentDate = sdf.format(new Date());
         try {
@@ -224,7 +225,7 @@ public class TrackRule implements Serializable {
             LogUtil.d("checkRule,该时间段内未【设置】上报轨迹");
         }
 
-        if (!unRuleable && !unInDay && isInTime) {
+        if (!notNeedCheck && isInTime) {
             return true;
         }
         return false;

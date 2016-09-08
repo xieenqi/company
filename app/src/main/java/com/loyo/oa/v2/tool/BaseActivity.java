@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
@@ -80,7 +81,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
-
+        AppBus.getInstance().register(this);
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
@@ -95,6 +96,26 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         tintManager.setNavigationBarTintEnabled(true);
         // 设置一个颜色给系统栏
         tintManager.setTintColor(getResources().getColor(R.color.title_bg1));
+    }
+
+    @Override
+    protected void onDestroy() {
+        AppBus.getInstance().unregister(this);
+        unRegisterBaseReceiver();
+        //关闭键盘
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+
+        ExitActivity.getInstance().removeActivity(this);
+        if (customProgressDialog != null && customProgressDialog.isShowing()) {
+            customProgressDialog.dismiss();
+            app.logUtil.d("onDestroy");
+        }
+        customProgressDialog = null;
+        super.onDestroy();
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -195,24 +216,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         ((TextView) findViewById(id)).setText(title);
     }
 
-    @Override
-    protected void onDestroy() {
-        unRegisterBaseReceiver();
-        //关闭键盘
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        if (imm.isActive()) {
-            imm.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-
-        ExitActivity.getInstance().removeActivity(this);
-        if (customProgressDialog != null && customProgressDialog.isShowing()) {
-            customProgressDialog.dismiss();
-            app.logUtil.d("onDestroy");
-        }
-        customProgressDialog = null;
-        super.onDestroy();
-    }
 
     @Override
     public void onBackPressed() {
@@ -363,6 +366,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public void hideInputKeyboard(EditText et) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
+
+    /**
+     * 手动 显示软键盘
+     */
+    public void showInputKeyboard(EditText view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
 
     /**

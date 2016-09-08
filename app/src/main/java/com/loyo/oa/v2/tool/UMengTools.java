@@ -8,6 +8,7 @@ import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
@@ -69,16 +70,29 @@ public class UMengTools {
     }
 
     public static void sendLocationInfo(final String address, final double longitude, final double latitude) {
-        final String date = MainApp.getMainApp().df4.format(new Date(System.currentTimeMillis()));
-        LogUtil.d("检查时间: " + date);
-        String oldInfo = SharedUtil.get(MainApp.getMainApp(), "sendLocation");
-        TrackRule trackrule = DBManager.Instance().getTrackRule();
-        if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {
-            LogUtil.d("此时不需要穿轨迹。。。》" + address.equals(oldInfo));
-            return;
+        try {
+            final String date = MainApp.getMainApp().df4.format(new Date(System.currentTimeMillis()));
+            LogUtil.d("检查时间: " + date);
+            String oldInfo = SharedUtil.get(MainApp.getMainApp(), "sendLocation");
+            TrackRule trackrule = DBManager.Instance().getTrackRule();
+            if (null == trackrule) {
+                LogUtil.d("trackrule为null，就不继续执行");
+                if (!Config_project.isRelease) {
+                    Global.Toast("检查数据异常");
+                }
+                return;
+            }
+            if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {
+                LogUtil.d("此时不需要穿轨迹" + address.equals(oldInfo));
+                return;
+            }
+            newUpLocation(address, longitude, latitude, date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (!Config_project.isRelease) {
+                Global.Toast("数据异常！");
+            }
         }
-//        upLocation(address, longitude, latitude, date);
-        newUpLocation(address, longitude, latitude, date);
     }
 
     private static void upLocation(final String address, final double longitude, final double latitude, final String date) {
@@ -91,7 +105,6 @@ public class UMengTools {
             public void success(Object o, Response response) {
                 HttpErrorCheck.checkResponse(" 手动上传轨迹: ", response);
                 SharedUtil.remove(MainApp.getMainApp(), "sendLocation");
-
                 SharedUtil.put(MainApp.getMainApp(), "sendLocation", date + address);
             }
 
@@ -103,6 +116,7 @@ public class UMengTools {
     }
 
     private static void newUpLocation(final String address, final double longitude, final double latitude, final String date) {
+        LogUtil.d("newUpLocation");
         ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(longitude
                 + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> map = new HashMap<>();

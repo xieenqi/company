@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.service.CheckUpdateService;
@@ -279,6 +280,13 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 case 16://订单详情
                     intent.setClass(MainHomeActivity.this, OrderDetailActivity.class);
 //              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 18://工单 事件相关都跳转到 工单详情
+                case 19:
+                    intent.setClass(MainHomeActivity.this, WorksheetDetailActivity.class);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;

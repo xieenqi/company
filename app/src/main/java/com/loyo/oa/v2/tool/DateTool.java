@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.tool;
 
 import android.app.DatePickerDialog;
+import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -17,6 +18,10 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateTool {
+
+
+
+
     /**
      * 1s==1000ms
      */
@@ -58,8 +63,14 @@ public class DateTool {
     public static final String DATE_FORMATE_HOUR_MINUTE = "HH:mm";
 
     public static final String DATE_FORMATE_SPLITE_BY_POINT = "yyyy.MM.dd HH:mm";
-
+    //MM-dd HH:mm
+    public static final String DATE_FORMATE_HOUR_YEAR = "MM-dd HH:mm";
     public static Calendar calendar;
+
+
+    static SimpleDateFormat FORMATE_HOUR_MINUTE = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
+    static SimpleDateFormat FORMATE_HOUR_YEAR = new SimpleDateFormat(DATE_FORMATE_HOUR_YEAR, Locale.getDefault());
+    static SimpleDateFormat FORMATE_AT_MINUTES = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES, Locale.getDefault());
 
     protected DateTool() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -186,29 +197,74 @@ public class DateTool {
     /**
      * 获取当前时间距离指定日期时差的大致表达形式
      *
-     * @param date 日期
+     * @param seconds 日期
      * @return 时差的大致表达形式
      */
-    public static String getDiffTime(long date) {
-        SimpleDateFormat format = null;
-        String strTime = "";
+    public static String getDiffTime(long seconds) {
+        String result = "--";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
-        long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date);
+        long millis = Long.valueOf(""+seconds) * 1000;
+
+        long morning = getCurrentMoringMillis() + DAY_MILLIS;
+        long diffTime = morning - millis;
         // 一天内
-        if (time <= DAY_MILLIS) {
-            format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
-            strTime = "今天".concat(format.format(new Date(date)));
+        if (diffTime < 0) {
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
         }
-        // 昨天
-        else if (time <= 2 * DAY_MILLIS) {
-            format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
-            strTime = "昨天  ".concat(format.format(new Date(date)));
+        else if (diffTime <= DAY_MILLIS) {
+            result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+        } else if (diffTime <= 2 * DAY_MILLIS) {// 昨天
+            result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+        } else if (diffTime <= 365 * DAY_MILLIS) {// 一年内
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
         } else {
-            format = new SimpleDateFormat(DATE_FORMATE_SPLITE_BY_POINT, Locale.getDefault());
-            strTime = format.format(new Date(date));
+            result = FORMATE_AT_MINUTES.format(new Date(millis));
         }
 
-        return strTime;
+        return result;
+    }
+
+
+    public static String getPrettyTimeStringFromMillis(long millis) {
+
+        String result = "--"; // empty return
+
+        long diffTime = getCurrentMoringMillis() + DAY_MILLIS - millis;
+
+        if (diffTime < 0) {
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
+        }
+        else if (diffTime <= DAY_MILLIS) {              /** 一天内 */
+            result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 2 * DAY_MILLIS) {   /** 昨天 */
+            result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
+
+        } else if (diffTime <= 365 * DAY_MILLIS) { /** 一年内 */
+            result = FORMATE_HOUR_YEAR.format(new Date(millis));
+
+        } else {                                   /** 大于一年，显示年份 */
+            result = FORMATE_AT_MINUTES.format(new Date(millis));
+        }
+
+        return result;
+    }
+
+    public static String getPrettyTimeStringFromSeconds(long seconds) {
+
+        return getPrettyTimeStringFromMillis(seconds * 1000);
+
+    }
+
+    public static String getPrettyTimeStringFromTimestamp(long timeStamp) {
+
+        String timeStampString = String.valueOf(timeStamp);
+        if (timeStampString.length() >= 13) {
+            return getPrettyTimeStringFromMillis(timeStamp);
+        }
+        else  {
+            return getPrettyTimeStringFromSeconds(timeStamp);
+        }
     }
 
     /**
@@ -223,7 +279,7 @@ public class DateTool {
         String strTime = "";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
         long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date);
-        LogUtil.d("检查过了多少时间>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ：" + getDiffTime(date));
+        LogUtil.d("检查过了多少时间>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ：" + getDiffTime(date));
         return time < dateNUmber * DAY_MILLIS ? false : true;
     }
 

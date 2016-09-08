@@ -56,7 +56,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="@dimen/dimen_8"
-                android:autoLink="all"
                 android:background="@drawable/bg_mine"
                 android:gravity="center_vertical|left"
                 android:maxWidth="@dimen/dimen_200"
@@ -65,7 +64,7 @@
                 android:paddingLeft="@dimen/dimen_16"
                 android:paddingRight="@dimen/dimen_24"
                 android:paddingTop="@dimen/dimen_16"
-                android:text="布多啥办法把收到回"
+                android:text=""
                 android:textColor="#fff"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/text_sp14"/>

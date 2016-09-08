@@ -54,8 +54,8 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
     private int deptPosition = 0;
 
     public ScreenDeptPopupView(final Activity context, List<SaleTeamScreen> data, Handler handler) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        contentView = inflater.inflate(R.layout.saleteam_screentag1, null);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        contentView = inflater.inflate(R.layout.saleteam_screentag1, null, false);
         this.depementData = data;
         this.mContext = context;
         this.mHandler = handler;
@@ -64,7 +64,7 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         this.setContentView(contentView);
         this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        this.setBackgroundDrawable(new ColorDrawable(0000000000));
+        this.setBackgroundDrawable(new ColorDrawable(0000000000));//AndroidRuntime
         this.setFocusable(true);
         this.setOutsideTouchable(true);
         this.update();

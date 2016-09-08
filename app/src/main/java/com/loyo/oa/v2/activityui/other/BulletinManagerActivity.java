@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -234,9 +235,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             final Bulletin bulletin = mBulletins.get(position);
             holder.tv_time.setText(app.df3.format(new Date(bulletin.createdAt * 1000)));
             holder.tv_title.setText(bulletin.title);
-//            CharSequence builder = Utils.checkAutoLink(bulletin.content, BulletinManagerActivity.this);
             holder.tv_content.setText(bulletin.content);
-//            holder.tv_content.setMovementMethod(LinkMovementMethod.getInstance());
 
             holder.tv_name.setText(bulletin.getUserName() + " " + (
                     creatorIsEmpty(bulletin.creator) ? bulletin.creator.depts.get(0).getShortDept().getName() : "")

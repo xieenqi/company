@@ -7,6 +7,7 @@ package com.loyo.oa.v2.common;
 public class ExtraAndResult {
 
     public static final String EXTRA_ID = "extra_id";
+    public static final String EXTRA_ID2 = "extra_id2";
     public static final String EXTRA_NAME = "extra_name";
     public static final String EXTRA_DATA = "extra_data";
     public static final String EXTRA_ADD = "extra_add";
@@ -33,6 +34,7 @@ public class ExtraAndResult {
     public static final String STR_SUPER_ID = "super_id";
     public static final String WELCOM_KEY = "welcom_key";
     public static final String SOURCES_DATA = "sources_data";
+    public static final String WORKSHEET_TYPES = "worksheet_types";
 
     public static final String HOME_ITEM = "home_item";
 
@@ -83,6 +85,22 @@ public class ExtraAndResult {
      * 操作状态
      */
     public static final int REQUSET_STATUS = 302;
+
+    /**
+     * 工单变更事件
+     */
+    public static final int WORKSHEET_CHANGE = 303;
+
+    /**
+     * 工单事件变更事件
+     */
+    public static final int WORKSHEET_EVENT_CHANGE = 304;
+
+    public static final int WORKSHEET_EVENT_TRANSFER = 305;
+    public static final int WORKSHEET_EVENT_DISPATCH = 306;
+    public static final int WORKSHEET_EVENT_REDO     = 307;
+    public static final int WORKSHEET_EVENT_FINISH = 308;
+    public static final int WORKSHEET_EVENT_DETAIL = 309;
 
     protected ExtraAndResult() {
         throw new UnsupportedOperationException(); // 防止子类调用
