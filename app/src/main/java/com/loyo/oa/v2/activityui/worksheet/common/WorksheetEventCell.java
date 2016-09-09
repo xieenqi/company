@@ -120,7 +120,7 @@ public class WorksheetEventCell extends LinearLayout {
         LogUtil.dee("status:" + data.status);
 
         if (data.endTime != 0 && data.status != WorksheetEventStatus.UNACTIVATED) {
-            if (data.endTime < (new Date()).getTime()/1000) {
+            if (data.endTime < (new Date()).getTime()/1000 && data.status != WorksheetEventStatus.FINISHED) {
                 tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止" +"(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));
             } else {
