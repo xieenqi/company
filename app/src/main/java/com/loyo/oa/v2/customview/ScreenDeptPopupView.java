@@ -74,7 +74,7 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         listView1.setAdapter(adapter1);
         adapter2 = new AdapterSaleTeamScreen2(context, userData, 2);
         listView2.setAdapter(adapter2);
-        adapter2.refshData(0);
+//        adapter2.refshData(0);
     }
 
     public void initView() {
