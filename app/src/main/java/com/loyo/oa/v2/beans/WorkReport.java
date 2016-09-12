@@ -75,12 +75,17 @@ public class WorkReport extends BaseBeans {
      */
     public boolean isRelevant() {
         String myId = MainApp.user.id;
-
+        String xpath = MainApp.user.depts.get(0).getShortDept().xpath;
         if (null != reviewer.user && myId.equals(reviewer.user.getId())) {
             return true;
         }
         for (NewUser menber : members.users) {
             if (null != menber && myId.equals(menber.getId())) {
+                return true;
+            }
+        }
+        for (NewUser menber : members.depts) {
+            if (null != menber && menber.getXpath().contains(xpath)) {
                 return true;
             }
         }
