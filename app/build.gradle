@@ -43,8 +43,8 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016082901
-        versionName '1.3.8t'
+        versionCode 2016090701
+        versionName '1.3.9t'
     }
 
     buildTypes {
@@ -76,13 +76,13 @@ android {
     }
 
     //jenkins 构建文件输出
-//    android.applicationVariants.all { variant ->
-//        variant.outputs.each { output ->
-//            def today = new Date().format('yyyyMMdd-HH');
-//            def file = output.outputFile
-//            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
-//        }
-//    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def today = new Date().format('yyyyMMdd-HH');
+            def file = output.outputFile
+            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
+        }
+    }
 
 //  productFlavors {
 //        ukuaiqi {}

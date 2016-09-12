@@ -9,7 +9,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;

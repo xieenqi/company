@@ -34,6 +34,7 @@ import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.squareup.otto.Subscribe;
 
@@ -202,9 +203,9 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             } else if (detail.status != WorksheetStatus.WAITASSIGN) {
                 ll_wran.setVisibility(View.GONE);
             }
-            if (detail.status == WorksheetStatus.WAITAPPROVE)
+            if (detail.status == WorksheetStatus.WAITAPPROVE){
                 bt_confirm.setVisibility(View.VISIBLE);
-
+            }
             if (detail.status == WorksheetStatus.WAITASSIGN) {
                 tv_setting.setVisibility(View.VISIBLE);
             }
@@ -238,6 +239,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             cell.loadData(event, role, actionsForRole(event, role), detail.status);
 
             ll_events.addView(cell);
+            LogUtil.dee("执行");
         }
     }
 
@@ -274,10 +276,16 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             public void onClick(int which) {
                 final GeneralPopView warn = showGeneralDialog(true, true, "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
                         "您确定要终止吗？");
-                warn.setNoCancelOnclick(new View.OnClickListener() {
+                warn.setSureOnclick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         stopWorksheet(5);
+                        warn.dismisDialog();
+                    }
+                });
+                warn.setNoCancelOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         warn.dismisDialog();
                     }
                 });

@@ -16,6 +16,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -115,17 +116,18 @@ public class WorksheetEventCell extends LinearLayout {
         }
 
         tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime));
-        if (data.endTime != 0 && data.status != WorksheetEventStatus.FINISHED) {
-            if ( data.endTime < (new Date()).getTime()/1000) {
+        LogUtil.dee("endTime:" + data.endTime);
+        LogUtil.dee("status:" + data.status);
+
+        if (data.endTime != 0 && data.status != WorksheetEventStatus.UNACTIVATED) {
+            if (data.endTime < (new Date()).getTime()/1000 && data.status != WorksheetEventStatus.FINISHED) {
                 tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止" +"(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));
-            }
-            else {
+            } else {
                 tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止");
                 tv_time2.setTextColor(getResources().getColor(R.color.text99));
             }
-        }
-        else {
+        } else if(data.endTime == 0 || data.status == WorksheetEventStatus.UNACTIVATED){
             tv_time2.setText("--");
             tv_time2.setTextColor(getResources().getColor(R.color.text99));
         }

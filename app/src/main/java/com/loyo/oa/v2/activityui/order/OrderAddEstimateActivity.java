@@ -35,8 +35,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
-import org.w3c.dom.Text;
-
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -244,12 +242,12 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 showLoading("");
                 map = new HashMap<>();
-                if(null == uuid || TextUtils.isEmpty(uuid)){
+                if (null == uuid || TextUtils.isEmpty(uuid)) {
                     map.put("attachmentUUId", StringUtil.getUUID());
-                }else{
+                } else {
                     map.put("attachmentUUId", uuid);
                 }
-                map.put("attachmentCount",attamentSize);
+                map.put("attachmentCount", attamentSize);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
                 map.put("orderId", orderId);
                 map.put("attachmentsName", "");
@@ -259,7 +257,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 map.put("remark", mEstimateAdd.remark);
                 map.put("payMethodString", tv_kind.getText().toString());
                 map.put("payeeUser", mEstimateAdd.payeeUser);
-                LogUtil.dee("新建回款 数据:"+MainApp.gson.toJson(map));
+                LogUtil.dee("新建回款 数据:" + MainApp.gson.toJson(map));
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                         .addPayEstimate(map, new Callback<EstimateAdd>() {
                             @Override
@@ -282,7 +280,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 showLoading("");
                 map = new HashMap<>();
                 map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
-                map.put("attachmentCount",attamentSize);
+                map.put("attachmentCount", attamentSize);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
                 map.put("orderId", orderId);
                 map.put("attachmentsName", "");
@@ -381,9 +379,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 }
                 mEstimateAdd.id = id;
                 mEstimateAdd.attachmentCount = attamentSize;
-                if(null == uuid || TextUtils.isEmpty(uuid)){
+                if (null == uuid || TextUtils.isEmpty(uuid)) {
                     mEstimateAdd.attachmentUUId = StringUtil.getUUID();
-                }else{
+                } else {
                     mEstimateAdd.attachmentUUId = uuid;
                 }
                 mEstimateAdd.payeeUser.id = newUser.getId();
@@ -410,7 +408,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //附件
             case R.id.ll_attachment:
                 mBundle = new Bundle();
-                mBundle.putInt("bizType",26);
+                mBundle.putInt("bizType", 26);
                 mBundle.putString("uuid", uuid);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
@@ -442,14 +440,14 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
      * 截至日期选择框
      */
     void setDeadLine() {
-        DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
+        DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null, true);
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
                 String str = year + "." + String.format("%02d", (month + 1)) + "." +
-                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+                        String.format("%02d", day);
                 tv_time.setText(str);
-                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd HH:mm"));
+                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
             }
 
             @Override
