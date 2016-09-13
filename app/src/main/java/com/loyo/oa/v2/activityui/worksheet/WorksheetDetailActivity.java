@@ -158,6 +158,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
                     @Override
                     public void failure(RetrofitError error) {
+                        onBackPressed();
                         HttpErrorCheck.checkError(error);
                     }
                 });
@@ -203,7 +204,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             } else if (detail.status != WorksheetStatus.WAITASSIGN) {
                 ll_wran.setVisibility(View.GONE);
             }
-            if (detail.status == WorksheetStatus.WAITAPPROVE){
+            if (detail.status == WorksheetStatus.WAITAPPROVE) {
                 bt_confirm.setVisibility(View.VISIBLE);
             }
             if (detail.status == WorksheetStatus.WAITASSIGN) {

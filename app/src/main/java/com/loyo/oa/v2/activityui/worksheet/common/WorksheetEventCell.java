@@ -97,10 +97,10 @@ public class WorksheetEventCell extends LinearLayout {
 
                 @Override
                 public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                    if(null != bitmap){
-                        if(data.status == WorksheetEventStatus.UNACTIVATED){
+                    if (null != bitmap) {
+                        if (data.status == WorksheetEventStatus.UNACTIVATED) {
                             iv_avatar.setImageBitmap(Utils.toGrayscale(bitmap));
-                        }else{
+                        } else {
                             iv_avatar.setImageBitmap(bitmap);
                         }
                     }
@@ -118,16 +118,17 @@ public class WorksheetEventCell extends LinearLayout {
         tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime));
         LogUtil.dee("endTime:" + data.endTime);
         LogUtil.dee("status:" + data.status);
-
+//TODO 现在事件截至时间所有端重新调整 待调整完成  删除
         if (data.endTime != 0 && data.status != WorksheetEventStatus.UNACTIVATED) {
-            if (data.endTime < (new Date()).getTime()/1000 && data.status != WorksheetEventStatus.FINISHED) {
-                tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止" +"(超时)");
+            //事件 已处理 待处理 标红
+            if (data.endTime < (new Date()).getTime() / 1000 && (data.status == WorksheetEventStatus.FINISHED || data.status == WorksheetEventStatus.WAITPROCESS)) {
+                tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止" + "(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));
             } else {
                 tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止");
                 tv_time2.setTextColor(getResources().getColor(R.color.text99));
             }
-        } else if(data.endTime == 0 || data.status == WorksheetEventStatus.UNACTIVATED){
+        } else if (data.endTime == 0 || data.status == WorksheetEventStatus.UNACTIVATED) {
             tv_time2.setText("--");
             tv_time2.setTextColor(getResources().getColor(R.color.text99));
         }
