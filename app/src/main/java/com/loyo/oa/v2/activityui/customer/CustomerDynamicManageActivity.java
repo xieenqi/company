@@ -100,17 +100,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
                 case 0x02:/*播放暂停*/
                     if (isOnPlay) {
-                        isOnPlay = false;
-                        layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
-                        if (player != null) {
-                            player.play();
-                        }
+                        audioStart();
                     } else {
-                        isOnPlay = true;
-                        layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
-                        if (player != null) {
-                            player.pause();
-                        }
+                        audioPause();
                     }
                     break;
 
@@ -337,6 +329,22 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         }
     }
 
+    void audioStart(){
+        isOnPlay = false;
+        layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
+        if (player != null) {
+            player.play();
+        }
+    }
+
+    void audioPause(){
+        isOnPlay = true;
+        layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
+        if (player != null) {
+            player.pause();
+        }
+    }
+
     void stopPlayer() {
         if (player != null) {
             player.stop();
@@ -467,7 +475,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             layout_audio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    isOnPlay = true;
                     startAnim(iv_calls, position);
 
                     if (layout_audioplayer.getVisibility() != View.VISIBLE) {
@@ -476,12 +483,12 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                     if (null == player) {
                         player = new Player(musicProgress);
                     }
+                    audioStart();
 
                     ss = 0;
                     endTime = DateTool.timet(saleActivity.audioLength + "", "mm:ss");
                     endTimerInt = Integer.parseInt(saleActivity.audioLength + "");
                     tv_audio_endtime.setText(endTime);
-                    mHandler.sendEmptyMessage(0x02);
 
                     new Thread(new Runnable() {
                         @Override
