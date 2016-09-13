@@ -615,6 +615,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 LogUtil.d("check回调成功");
+                if (null == attendanceRecord) {
+                    Toast("没有获取到考勤信息");
+                    return;
+                }
                 attendanceRecords = attendanceRecord;
                 HttpErrorCheck.checkResponse("考勤信息2：", response);
                 attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);

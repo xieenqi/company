@@ -94,7 +94,7 @@ public class InitDataService extends IntentService {
      */
     void setRootMap(User user) {
         HashMap<String, Object> map = new HashMap<>();
-        if (null != user.newpermission) {
+        if (user != null && null != user.newpermission) {
             for (Permission permission : user.newpermission) {
                 map.put(permission.getCode(), permission);
             }
