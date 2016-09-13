@@ -1,18 +1,21 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
-import android.graphics.Rect;
-import android.os.Build;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -27,42 +30,108 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Player;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
  * 【跟进动态】 客户管理
  */
-public class CustomerDynamicManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class CustomerDynamicManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2, MediaPlayer.OnCompletionListener {
 
     public static final int ACTIVITIES_ADD = 101;
 
-
-    private ViewGroup img_title_left, layout_add;
-    private PullToRefreshListView lv_saleActivity;
+    private ImageView layout_audio_close;
+    private ProgressBar layout_progressbar;
+    private ImageView layout_audio_pauseorplay;
     private SaleActivitiesAdapter listAdapter;
-    private DynamicListnestingAdapter  nestionListAdapter;
-    private ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
-    private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
+    private PullToRefreshListView lv_saleActivity;
+    private TextView tv_audio_starttime, tv_audio_endtime;
+    private ViewGroup layout_audioplayer, layout_audio_contral;
+    private ViewGroup img_title_left, layout_add, layout_view_bottom;
+
     private Customer customer;
     private SaleActivity mSaleActivity;
+    private AnimationDrawable animationDrawable;
+    private DynamicListnestingAdapter nestionListAdapter;
+    private ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
+    private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
 
+    private Player player;
+    private SeekBar musicProgress;
+
+    private boolean isStart = false;
     private boolean isChanged = false;
     private boolean isTopAdd = true;
     private boolean isMyUser;
+    private boolean isOnPlay;
+    private int ss = 0;
+    private int endTimerInt;
+    private String endTime;
 
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what) {
+
+                case 0x01:/*打开关闭播放器*/
+                    if (layout_audioplayer.getVisibility() == View.VISIBLE) {
+                        layout_audioplayer.setVisibility(View.GONE);
+                        if (isMyUser)
+                            layout_add.setVisibility(View.VISIBLE);
+                    } else if (layout_audioplayer.getVisibility() == View.GONE) {
+                        layout_audioplayer.setVisibility(View.VISIBLE);
+                        layout_add.setVisibility(View.GONE);
+                        tv_audio_endtime.setText(endTime);
+                    }
+                    break;
+
+
+                case 0x02:/*播放暂停*/
+                    if (isOnPlay) {
+                        isOnPlay = false;
+                        layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
+                        if (player != null) {
+                            player.play();
+                        }
+                    } else {
+                        isOnPlay = true;
+                        layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
+                        if (player != null) {
+                            player.pause();
+                        }
+                    }
+                    break;
+
+                case 0x03:/*计时*/
+                    if (ss == 0 || ss == -1) {
+                        tv_audio_starttime.setText("00:00");
+                    } else {
+                        tv_audio_starttime.setText(DateTool.timet(ss + "", "mm:ss"));
+                    }
+                    LogUtil.dee("录音时间:" + ss);
+                    break;
+
+                case 0x04:/*播放停止*/
+                    ss = 0;
+                    musicProgress.setProgress(0);
+                    layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
+                    isOnPlay = true;
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -112,21 +181,101 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     }
 
     private void initUI() {
+        tv_audio_starttime = (TextView) findViewById(R.id.tv_audio_starttime);
+        tv_audio_endtime = (TextView) findViewById(R.id.tv_audio_endtime);
+        layout_progressbar = (ProgressBar) findViewById(R.id.layout_progressbar);
+        layout_audio_close = (ImageView) findViewById(R.id.layout_audio_close);
+        layout_audio_pauseorplay = (ImageView) findViewById(R.id.layout_audio_pauseorplay);
+        musicProgress = (SeekBar) findViewById(R.id.music_progress);
+        layout_audioplayer = (ViewGroup) findViewById(R.id.layout_audioplayer);
+        layout_audio_contral = (ViewGroup) findViewById(R.id.layout_audio_contral);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
+        //layout_view_bottom = (ViewGroup) findViewById(R.id.layout_view_bottom);
+        layout_add = (ViewGroup) findViewById(R.id.layout_add);
+        lv_saleActivity = (PullToRefreshListView) findViewById(R.id.lv_saleActivity);
+
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
-        layout_add = (ViewGroup) findViewById(R.id.layout_add);
         if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
         layout_add.setOnTouchListener(Global.GetTouch());
         layout_add.setOnClickListener(this);
-        lv_saleActivity = (PullToRefreshListView) findViewById(R.id.lv_saleActivity);
+        layout_audio_close.setOnClickListener(this);
+        layout_audio_pauseorplay.setOnClickListener(this);
+
+
+        player = new Player(musicProgress);
+        musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
+        //layout_audioplayer.getBackground().setAlpha(50);
+        //layout_view_bottom.getBackground().setAlpha(50);
+
+        player.mediaPlayer.setOnCompletionListener(this);
+    }
+
+    /**
+     * Player启动与停止回调
+     * */
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        if(!isStart){
+            isStart = true;
+        }else if(isStart){
+            isStart = false;
+            mHandler.sendEmptyMessage(0x04);
+        }
+    }
+
+    class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {
+        int progress;
+        int endProgress = 0;
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress,
+                                      boolean fromUser) {
+            this.progress = progress * player.mediaPlayer.getDuration()
+                    / seekBar.getMax();
+
+            if (progress > endProgress) {
+                ss++;
+            } else if (progress < endProgress) {
+                ss--;
+            }
+            endProgress = progress;
+            mHandler.sendEmptyMessage(0x03);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            player.mediaPlayer.seekTo(progress);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopPlayer();
     }
 
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
+
+            /*播放暂停*/
+            case R.id.layout_audio_pauseorplay:
+                mHandler.sendEmptyMessage(0x02);
+                break;
+
+            /*关闭播放器*/
+            case R.id.layout_audio_close:
+                stopPlayer();
+                mHandler.sendEmptyMessage(0x01);
+                break;
 
             /*返回*/
             case R.id.img_title_left:
@@ -188,6 +337,13 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         }
     }
 
+    void stopPlayer() {
+        if (player != null) {
+            player.stop();
+            player = null;
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (isChanged) {
@@ -199,8 +355,35 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     }
 
 
-
     private class SaleActivitiesAdapter extends BaseAdapter {
+
+        ArrayList<ImageView> callsImage = new ArrayList<>();
+
+
+        /**
+         * 启动动画
+         * */
+        void startAnim(ImageView imageView,int position){
+            imageView.setImageResource(R.drawable.animation_calls);
+            animationDrawable = (AnimationDrawable) imageView.getDrawable();
+            animationDrawable.start();
+            for(int i = 0;i<callsImage.size();i++){
+                if(position != i){
+                    stopAnim(callsImage.get(i));
+                }
+            }
+        }
+
+        /**
+         * 停止动画
+         * */
+        void stopAnim(ImageView imageView){
+            imageView.setImageResource(R.drawable.animation_calls);
+            animationDrawable = (AnimationDrawable) imageView.getDrawable();
+            if(animationDrawable.isRunning()){
+                animationDrawable.stop();
+            }
+        }
 
         @Override
         public int getCount() {
@@ -218,42 +401,55 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         }
 
         @Override
-        public View getView(final int i, View convertView, final ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }
 
-            LinearLayout ll_layout_time = ViewHolder.get(convertView,R.id.ll_layout_time);
-            ListView lv_listview    = ViewHolder.get(convertView,R.id.lv_listview);
+            LinearLayout ll_layout_time = ViewHolder.get(convertView, R.id.ll_layout_time);
+            LinearLayout layout_audio = ViewHolder.get(convertView, R.id.layout_audio);
+            ListView lv_listview = ViewHolder.get(convertView, R.id.lv_listview);
             TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
             TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
             TextView tv_follow_name = ViewHolder.get(convertView, R.id.tv_follow_name);
             TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
+            TextView tv_audio_length = ViewHolder.get(convertView, R.id.tv_audio_length);
             ImageView iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
-            SaleActivity saleActivity = lstData_saleActivity_current.get(i);
+            final ImageView iv_calls = ViewHolder.get(convertView, R.id.iv_calls);
+            final SaleActivity saleActivity = lstData_saleActivity_current.get(position);
+            callsImage.add(iv_calls);
 
             tv_create_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt()));
             tv_content.setText(saleActivity.getContent());
+
+            /*判断是否有录音*/
+            if (null != saleActivity.audioUrl && !TextUtils.isEmpty(saleActivity.audioUrl)) {
+                layout_audio.setVisibility(View.VISIBLE);
+                tv_audio_length.setText(DateTool.timet(saleActivity.audioLength + "", "mm:ss"));
+            } else {
+                layout_audio.setVisibility(View.GONE);
+            }
+
             tv_contact_name.setText("联系人：" + saleActivity.contactName);
             tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
 
-            if(null != saleActivity.getAttachments() && saleActivity.getAttachments().size() != 0){
+            if (null != saleActivity.getAttachments() && saleActivity.getAttachments().size() != 0) {
                 lv_listview.setVisibility(View.VISIBLE);
-                nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(),mContext);
+                nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(), mContext);
                 lv_listview.setAdapter(nestionListAdapter);
-            }else{
+            } else {
                 lv_listview.setVisibility(View.GONE);
             }
 
             if (saleActivity.getRemindAt() != 0) {
                 ll_layout_time.setVisibility(View.VISIBLE);
                 tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
-            }else{
+            } else {
                 ll_layout_time.setVisibility(View.GONE);
             }
 
-            //提醒时间没有过当前时间变红色
+            /*提醒时间没有过当前时间变红色*/
             if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
                 tv_time.setTextColor(getResources().getColor(R.color.red1));
                 iv_imgTime.setImageResource(R.drawable.icon_tx2);
@@ -261,11 +457,41 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                 tv_time.setTextColor(getResources().getColor(R.color.text99));
                 iv_imgTime.setImageResource(R.drawable.icon_tx1);
             }
-            if (i == lstData_saleActivity_current.size() - 1) {
+            if (position == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);
             } else {
                 convertView.setBackgroundColor(getResources().getColor(R.color.white));
             }
+
+            /*播放录音*/
+            layout_audio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    isOnPlay = true;
+                    startAnim(iv_calls, position);
+
+                    if (layout_audioplayer.getVisibility() != View.VISIBLE) {
+                        mHandler.sendEmptyMessage(0x01);
+                    }
+                    if (null == player) {
+                        player = new Player(musicProgress);
+                    }
+
+                    ss = 0;
+                    endTime = DateTool.timet(saleActivity.audioLength + "", "mm:ss");
+                    endTimerInt = Integer.parseInt(saleActivity.audioLength + "");
+                    tv_audio_endtime.setText(endTime);
+                    mHandler.sendEmptyMessage(0x02);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            player.playUrl(saleActivity.audioUrl);
+                        }
+                    }).start();
+                }
+            });
+
             return convertView;
         }
     }

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CustomerPhoneActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.bean.User;
@@ -128,6 +131,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
+    private Button   layout_btn_test;
 
     private String birthStr;
     private int age;
@@ -179,6 +183,15 @@ public class ContactInfoEditActivity extends BaseActivity {
         layout_set_avartar.setOnTouchListener(Global.GetTouch());
         layout_mobile.setOnTouchListener(Global.GetTouch());
         //et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
+
+        /*拨打电话测试*/
+        layout_btn_test = (Button)findViewById(R.id.layout_btn_test);
+        layout_btn_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.startActivity(ContactInfoEditActivity.this, CustomerPhoneActivity.class,MainApp.ENTER_TYPE_RIGHT,false,new Bundle());
+            }
+        });
         initData();
     }
 
@@ -242,6 +255,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 break;
         }
     }
+
 
     /**
      * 判断数据是否被编辑过

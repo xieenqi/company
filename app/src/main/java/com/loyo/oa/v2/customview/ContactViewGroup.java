@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class ContactViewGroup extends LinearLayout {
     public interface OnContactProcessCallback {
         void onDel(Contact contact);
         void onSetDefault(Contact contact);
+        void onCallBack(String callNum,String id,String name);
     }
 
     private Context context;
@@ -55,6 +57,30 @@ public class ContactViewGroup extends LinearLayout {
         mCustomer = customer;
         mContact = contact;
         this.leftExtrases = leftExtrases;
+    }
+
+    public void paymentSet() {
+        String[] data = {"商务电话", "普通电话","取消"};
+        final PaymentPopView popView = new PaymentPopView(context, data, mContact.getName());
+        popView.show();
+        popView.setCanceledOnTouchOutside(true);
+        popView.setCallback(new PaymentPopView.VaiueCallback() {
+            @Override
+            public void setValue(String value, int index) {
+                switch (index){
+                    case 1:
+                        contactProcessCallback.onCallBack(mContact.getTel(),mContact.getId(),mContact.getName());
+                        break;
+
+                    case 2:
+                        Utils.call(context, mContact.getTel());
+                        break;
+
+                    case 3:
+                        break;
+                }
+            }
+        });
     }
 
     /**
@@ -100,26 +126,6 @@ public class ContactViewGroup extends LinearLayout {
             ViewGroup callwire = (ViewGroup) findViewById(R.id.layout_call_wiretel);
             ViewGroup sendsms = (ViewGroup) findViewById(R.id.layout_send_sms);
 
-            call.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.call(context, mContact.getTel());
-                }
-            });
-            callwire.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.call(context, mContact.getWiretel());
-                }
-            });
-
-            sendsms.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.sendSms(context, mContact.getTel());
-                }
-            });
-
             TextView tv_name = (TextView) findViewById(R.id.tv_name);
             TextView tv_tel = (TextView) findViewById(R.id.tv_phone);
             TextView tv_wiletel = (TextView) findViewById(R.id.tv_wiletel);
@@ -144,6 +150,29 @@ public class ContactViewGroup extends LinearLayout {
                 default_.setImageResource(R.drawable.icon_contact_default_selected);
                 del.setVisibility(INVISIBLE);
             }
+
+            /*拨打手机*/
+            call.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    paymentSet();
+                }
+            });
+
+            /*拨打座机*/
+            callwire.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.call(context, mContact.getWiretel());
+                }
+            });
+
+            sendsms.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.sendSms(context, mContact.getTel());
+                }
+            });
 
             //编辑联系人
             edit.setOnClickListener(new OnClickListener() {
@@ -179,6 +208,8 @@ public class ContactViewGroup extends LinearLayout {
                 }
             });
         }
+
+
 
         //添加动态字段
         addView(new ContactListExtra(context, mContact.getExtDatas(),leftExtrases, false, R.color.text99, 14));

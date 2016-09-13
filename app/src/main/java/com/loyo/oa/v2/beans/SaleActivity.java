@@ -26,6 +26,10 @@ public class SaleActivity extends BaseBeans implements Serializable {
     public String typeName;
     public long remindAt;
     public String contactName;
+    public String audioUrl;
+    public long audioLength;
+
+    public boolean isAnim = false;
 
 
     @Override
