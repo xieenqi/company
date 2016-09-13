@@ -73,11 +73,14 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
         setContentView(R.layout.activity_worksheet_add);
         init();
         WorksheetConfig.getWorksheetTypes(true/* 没有数据就从网络获取 */);
-        Bundle bundle =  getIntent().getExtras();
+        Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
             selectedOrder = (WorksheetOrder) bundle.getSerializable(ExtraAndResult.EXTRA_OBJ);
         }
+        // TODO: 建立单独的获取配置Service
+        /* 获取配置数据 */
+        WorksheetConfig.fetchWorksheetTypes();
     }
 
     private void init() {
@@ -128,8 +131,7 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
                             R.anim.enter_righttoleft, R.anim.exit_righttoleft,
                             R.anim.enter_righttoleft, R.anim.exit_lefttoright
                     );
-                }
-                else {
+                } else {
                     fragmentTransaction.setCustomAnimations(
                             R.anim.enter_lefttoright, R.anim.exit_lefttoright,
                             R.anim.enter_righttoleft, R.anim.exit_lefttoright
