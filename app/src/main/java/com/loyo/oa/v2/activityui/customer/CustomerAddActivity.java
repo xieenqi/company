@@ -98,11 +98,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<NewTag> tags;
-    private Intent mIntent;
     private Bundle mBundle;
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
-    private ArrayList<ContactLeftExtras> mCusList;
 
     private String uuid = StringUtil.getUUID();
     private String tagItemIds;
@@ -365,7 +363,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
                 HttpErrorCheck.checkResponse("获取新建客户权限", response);
-                mCusList = cuslist;
                 for (ContactLeftExtras customerJur : cuslist) {
                     if (customerJur.label.contains("联系人") && customerJur.required) {
                         cusGuys = true;
