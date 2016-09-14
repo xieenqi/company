@@ -163,18 +163,18 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                     if (mContact == null) {
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                                 addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
-                            @Override
-                            public void success(final Contact contact, final Response response) {
-                                HttpErrorCheck.checkResponse("添加联系人：", response);
-                                mContact = contact;
-                                sendBack();
-                            }
+                                    @Override
+                                    public void success(final Contact contact, final Response response) {
+                                        HttpErrorCheck.checkResponse("添加联系人：", response);
+                                        mContact = contact;
+                                        sendBack();
+                                    }
 
-                            @Override
-                            public void failure(final RetrofitError error) {
-                                HttpErrorCheck.checkError(error);
-                            }
-                        });
+                                    @Override
+                                    public void failure(final RetrofitError error) {
+                                        HttpErrorCheck.checkError(error);
+                                    }
+                                });
                     } else {
                         //*修改联系人*//
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
