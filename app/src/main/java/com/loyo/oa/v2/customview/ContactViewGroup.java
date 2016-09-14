@@ -32,15 +32,17 @@ public class ContactViewGroup extends LinearLayout {
 
     public interface OnContactProcessCallback {
         void onDel(Contact contact);
+
         void onSetDefault(Contact contact);
-        void onCallBack(String callNum,String id,String name);
+
+        void onCallBack(String callNum, String id, String name);
     }
 
     private Context context;
     private Contact mContact;
     private MainApp app = MainApp.getMainApp();
     private Customer mCustomer;
-    private ArrayList<ContactLeftExtras>  leftExtrases;//左侧lable数据
+    private ArrayList<ContactLeftExtras> leftExtrases;//左侧lable数据
     private OnContactProcessCallback contactProcessCallback;
 
     private ContactViewGroup(Context c) {
@@ -48,7 +50,7 @@ public class ContactViewGroup extends LinearLayout {
         context = c;
     }
 
-    public ContactViewGroup(Context _context, Customer customer,ArrayList<ContactLeftExtras> leftExtrases, Contact contact, OnContactProcessCallback callback) {
+    public ContactViewGroup(Context _context, Customer customer, ArrayList<ContactLeftExtras> leftExtrases, Contact contact, OnContactProcessCallback callback) {
         this(_context);
         setBackgroundColor(getResources().getColor(R.color.white));
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
@@ -60,16 +62,16 @@ public class ContactViewGroup extends LinearLayout {
     }
 
     public void paymentSet() {
-        String[] data = {"商务电话", "普通电话","取消"};
+        String[] data = {"商务电话", "普通电话", "取消"};
         final PaymentPopView popView = new PaymentPopView(context, data, mContact.getName());
         popView.show();
         popView.setCanceledOnTouchOutside(true);
         popView.setCallback(new PaymentPopView.VaiueCallback() {
             @Override
             public void setValue(String value, int index) {
-                switch (index){
+                switch (index) {
                     case 1:
-                        contactProcessCallback.onCallBack(mContact.getTel(),mContact.getId(),mContact.getName());
+                        contactProcessCallback.onCallBack(mContact.getTel(), mContact.getId(), mContact.getName());
                         break;
 
                     case 2:
@@ -89,7 +91,7 @@ public class ContactViewGroup extends LinearLayout {
      * @param id     视图id
      * @param parent 视图父容器
      */
-    public void bindView(final int id, final ViewGroup parent, boolean isMyUser, boolean isMber,boolean isRoot,boolean isLock) {
+    public void bindView(final int id, final ViewGroup parent, boolean isMyUser, boolean isMber, boolean isRoot, boolean isLock) {
         setId(id);
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -109,13 +111,13 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
             /*是否为公海客户*/
-            if(!isLock){
+            if (!isLock) {
                 edit.setVisibility(View.GONE);
                 del.setVisibility(View.GONE);
                 default_.setVisibility(View.GONE);
                 /*判断是否有操作权限*/
-            }else if(!isMyUser || isMber){
-                if(!isRoot){
+            } else if (!isMyUser || isMber) {
+                if (!isRoot) {
                     edit.setVisibility(View.GONE);
                     del.setVisibility(View.GONE);
                     default_.setVisibility(View.GONE);
@@ -210,9 +212,8 @@ public class ContactViewGroup extends LinearLayout {
         }
 
 
-
         //添加动态字段
-        addView(new ContactListExtra(context, mContact.getExtDatas(),leftExtrases, false, R.color.text99, 14));
+        addView(new ContactListExtra(context, mContact.getExtDatas(), leftExtrases, false, R.color.text99, 14));
 
         //加载子条目
         parent.addView(this);

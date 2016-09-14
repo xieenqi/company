@@ -1,8 +1,10 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,16 +58,24 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_customer_contact_manage)
 public class CustomerContactManageActivity extends BaseActivity implements ContactViewGroup.OnContactProcessCallback {
 
-    @ViewById ViewGroup layout_back;
-    @ViewById TextView tv_title;
-    @ViewById LinearLayout layout_container;
-    @ViewById ViewGroup layout_add;
+    @ViewById
+    ViewGroup layout_back;
+    @ViewById
+    TextView tv_title;
+    @ViewById
+    LinearLayout layout_container;
+    @ViewById
+    ViewGroup layout_add;
     @Extra(ExtraAndResult.EXTRA_ID)
     String customerId;
-    @Extra("isMyUser") boolean isMyUser;
-    @Extra("isRoot")   boolean isRoot;
-    @Extra("isLock")   boolean isLock;
-    @Extra(ExtraAndResult.EXTRA_STATUS) boolean isMenber;
+    @Extra("isMyUser")
+    boolean isMyUser;
+    @Extra("isRoot")
+    boolean isRoot;
+    @Extra("isLock")
+    boolean isLock;
+    @Extra(ExtraAndResult.EXTRA_STATUS)
+    boolean isMenber;
 
     private Customer customerContact;
     private ArrayList<ContactLeftExtras> leftExtrases;
@@ -77,10 +87,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     @AfterViews
     void initViews() {
-        if(!isLock){
+        if (!isLock) {
             layout_add.setVisibility(View.GONE);
-        }else if(!isMyUser || isMenber){
-            if(!isRoot){
+        } else if (!isMyUser || isMenber) {
+            if (!isRoot) {
                 layout_add.setVisibility(View.GONE);
             }
         }
@@ -147,8 +157,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         ArrayList<Contact> contacts = customerContact.contacts;
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
-            ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact,leftExtrases, contact, this);
-            contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber,isRoot,isLock);
+            ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, leftExtrases, contact, this);
+            contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber, isRoot, isLock);
         }
         cancelLoading();
     }
@@ -202,8 +212,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     /**
      * 获取Client信息
-     * */
-    void requestClientInfo(){
+     */
+    void requestClientInfo() {
         SharedUtil.clearInfo(mContext);
         SharedUtil.put(mContext, "time", DateTool.getNowTime("yyyyMMddHHmmss"));
         String stamp = SharedUtil.get(mContext, "time");
@@ -214,8 +224,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         String sigParameter = accountSid + token + stamp;       /*账号ID+授权令牌+当前时间戳*/
         String sigParameterMD5 = Utils.md5(sigParameter);
 
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("appId",appId);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("appId", appId);
         map.put("mobile", myCall);
 
         RestAdapterPhoneFactory.getInstance(mContext).build("https://api.ucpaas.com/2014-06-30/").create(ICustomer.class).getClientInfo(accountSid, sigParameterMD5.toUpperCase(), map,
@@ -223,11 +233,11 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     @Override
                     public void success(final CallClientInfo callClientInfo, final Response response) {
                         HttpErrorCheck.checkResponse("查询Client", response);
-                        if(null != callClientInfo){
+                        if (null != callClientInfo) {
                             String code = callClientInfo.resp.respCode;
-                            if(code.equals("100007")){
+                            if (code.equals("100007")) {
                                 requestClient();
-                            }else if(code.equals("000000")){
+                            } else if (code.equals("000000")) {
                                 requestCallBack(callClientInfo.resp.client.clientNumber);
                             }
                         }
@@ -243,25 +253,25 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     /**
      * 通知服务端回拨成功
-     * */
-    void toastServer(String callId){
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("callId",callId);
-        map.put("customerId",customerContact.getId());
-        map.put("contactId",contactId);
-        map.put("contactName",contactName);
+     */
+    void toastServer(String callId) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("callId", callId);
+        map.put("customerId", customerContact.getId());
+        map.put("contactId", contactId);
+        map.put("contactName", contactName);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).toastOurServer(map,
                 new RCallback<CallBackCallid>() {
                     @Override
                     public void success(final CallBackCallid callBackCallid, final Response response) {
                         HttpErrorCheck.checkResponse("通知服务端", response);
-                        if(null != callBackCallid){
+                        if (null != callBackCallid) {
                             int code = callBackCallid.errcode;
-                            if(code == 0){
-                               Toast("电话回拨成功，请稍等..");
-                            }else{
-                                Toast("错误:"+code);
+                            if (code == 0) {
+                                Toast("电话回拨成功，请稍等..");
+                            } else {
+                                Toast("错误:" + code);
                             }
                         }
                     }
@@ -277,8 +287,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     /**
      * 绑定Client账号
-     * */
-    void requestClient(){
+     */
+    void requestClient() {
         SharedUtil.clearInfo(mContext);
         SharedUtil.put(mContext, "time", DateTool.getNowTime("yyyyMMddHHmmss"));
         String stamp = SharedUtil.get(mContext, "time");
@@ -296,21 +306,21 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         ccb.mobile = myCall;
         ccb.clientType = "0";
 
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("client",ccb);
-        LogUtil.d("请求Client绑定 发送数据:"+MainApp.gson.toJson(ccb));
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("client", ccb);
+        LogUtil.d("请求Client绑定 发送数据:" + MainApp.gson.toJson(ccb));
 
         RestAdapterPhoneFactory.getInstance(mContext).build("https://api.ucpaas.com/2014-06-30/").create(ICustomer.class).getClient(accountSid, sigParameterMD5.toUpperCase(), map,
                 new RCallback<CallUserResp>() {
                     @Override
                     public void success(final CallUserResp callUserResp, final Response response) {
                         HttpErrorCheck.checkResponse("申请Client", response);
-                        if(null != callUserResp){
+                        if (null != callUserResp) {
                             String code = callUserResp.resp.respCode;
-                            if(code.equals("000000") || code.equals("103114")){
+                            if (code.equals("000000") || code.equals("103114")) {
                                 requestCallBack(callUserResp.resp.client.clientNumber);
-                            }else{
-                                Toast("错误:"+callUserResp.resp.respCode);
+                            } else {
+                                Toast("错误:" + callUserResp.resp.respCode);
                             }
                         }
                     }
@@ -323,10 +333,16 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 });
     }
 
+    private String getPhoneNumber() {
+        TelephonyManager mTelephonyMgr;
+        mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        return mTelephonyMgr.getLine1Number();
+    }
+
     /**
      * 请求电话回拨
-     * */
-    void requestCallBack(String client){
+     */
+    void requestCallBack(String client) {
         SharedUtil.clearInfo(mContext);
         SharedUtil.put(mContext, "time", DateTool.getNowTime("yyyyMMddHHmmss"));
         String stamp = SharedUtil.get(mContext, "time");
@@ -342,25 +358,25 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         callBack.fromClient = client;                        /*主叫号码*/
         callBack.to = callNum;                               /*被叫号码*/
         callBack.fromSerNum = "999";                         /*主叫号码显号*/
-        callBack.toSerNum = "777";                           /*被叫号码显号*/
+        callBack.toSerNum = MainApp.user.mobile;                           /*被叫号码显号*/
         callBack.maxallowtime = "60";                        /*允许呼叫时长*/
         callBack.ringtoneID = "";                            /*彩铃Id*/
         callBack.userData = "";                              /*自定义透传数据*/
 
-        HashMap<String,Object> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("callback", callBack);
-        LogUtil.d("电话回拨 发送数据:"+MainApp.gson.toJson(callBack));
+        LogUtil.d("电话回拨 发送数据:" + MainApp.gson.toJson(map));
 
         RestAdapterPhoneFactory.getInstance(mContext).build("https://api.ucpaas.com/2014-06-30/").create(ICustomer.class).getCallBack(accountSid, sigParameterMD5.toUpperCase(), map,
                 new RCallback<CallBackResp>() {
                     @Override
                     public void success(final CallBackResp callBackResp, final Response response) {
                         HttpErrorCheck.checkResponse("请求回拨", response);
-                        if(null != callBackResp){
-                            if(callBackResp.resp.respCode.equals("000000")){
+                        if (null != callBackResp) {
+                            if (callBackResp.resp.respCode.equals("000000")) {
                                 toastServer(callBackResp.resp.callback.callId);
-                            }else{
-                                Toast("错误:"+callBackResp.resp.respCode);
+                            } else {
+                                Toast("错误:" + callBackResp.resp.respCode);
                             }
                         }
                     }
@@ -375,18 +391,19 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     /**
      * 拨打商务电话回调
-     * */
+     */
     @Override
-    public void onCallBack(String callNum,String contactId,String contactName) {
+    public void onCallBack(String callNum, String contactId, String contactName) {
         this.callNum = callNum;
         this.contactId = contactId;
         this.contactName = contactName;
         myCall = MainApp.user.mobile;
-        LogUtil.dee("我的号码:"+myCall);
+        LogUtil.dee("我的号码:" + myCall);
         LogUtil.dee("被叫号码:" + callNum);
         LogUtil.dee("contactId:" + contactId);
         LogUtil.dee("contactName:" + contactName);
         requestClientInfo();
+        app.startActivity(CustomerContactManageActivity.this, CustomerPhoneActivity.class, MainApp.ENTER_TYPE_RIGHT, false, new Bundle());
     }
 
     /**
