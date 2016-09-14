@@ -125,6 +125,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private boolean cusGuys = false;  //联系人权限
     private boolean cusPhone = false; //手机权限
     private boolean cusMobile = false;//座机权限
+    private boolean cusLocation = false;//定位权限
+    private boolean cusDetialAdress = false;//客户的详细地址
 
     private PositionResultItem positionResultItem;
 
@@ -253,8 +255,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             case R.id.img_refresh_address:
 
                 mBundle = new Bundle();
-                mBundle.putInt("page",MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(this,MapModifyView.class,MainApp.ENTER_TYPE_RIGHT,MapModifyView.SERACH_MAP,mBundle);
+                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
 
                 break;
 
@@ -286,19 +288,19 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 if (customer_name.isEmpty()) {
                     Toast("请输入客户名称!");
                     return;
-                } else if (customerAddress.isEmpty()) {
+                } else if (customerAddress.isEmpty() && cusLocation) {
                     Toast("请输入的客户地址!");
                     return;
-                } else if (cusotmerDetalisAddress.isEmpty()) {
+                } else if (cusotmerDetalisAddress.isEmpty() && cusDetialAdress) {
                     Toast("请输入的客户详细地址!");
                     return;
-                } else if(TextUtils.isEmpty(customerContractTel) && cusPhone){
+                } else if (TextUtils.isEmpty(customerContractTel) && cusPhone) {
                     Toast("请输入客户手机号码!");
                     return;
-                } else if(TextUtils.isEmpty(customerWrietele)    && cusMobile){
+                } else if (TextUtils.isEmpty(customerWrietele) && cusMobile) {
                     Toast("请输入客户座机号码!");
                     return;
-                } else if(TextUtils.isEmpty(customerContract)    && cusGuys){
+                } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
                     Toast("请输入联系人姓名!");
                     return;
                 }
@@ -354,26 +356,31 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 获取新建客户权限
-     * */
-    public void requestJurisdiction(){
+     */
+    public void requestJurisdiction() {
         showLoading("");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("bizType",100);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback< ArrayList<ContactLeftExtras>>() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bizType", 100);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
             @Override
             public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse("获取新建客户权限", response);
                 mCusList = cuslist;
-                for(ContactLeftExtras customerJur : cuslist){
-                    if(customerJur.label.contains("联系人") && customerJur.required){
+                for (ContactLeftExtras customerJur : cuslist) {
+                    if (customerJur.label.contains("联系人") && customerJur.required) {
                         cusGuys = true;
                         edt_contract.setHint("请输入联系人姓名(必填)");
-                    }else if(customerJur.label.contains("手机") && customerJur.required){
+                    } else if (customerJur.label.contains("手机") && customerJur.required) {
                         cusPhone = true;
                         edt_contract_tel.setHint("请输入联系人手机号(必填)");
-                    }else if(customerJur.label.contains("座机") && customerJur.required){
+                    } else if (customerJur.label.contains("座机") && customerJur.required) {
                         cusMobile = true;
                         edt_contract_telnum.setHint("请输入联系人座机(必填)");
+                    } else if (customerJur.label.contains("定位") && customerJur.required) {
+                        cusLocation = true;//定位必填
+                    } else if (customerJur.label.contains("客户地址") && customerJur.required) {
+                        cusDetialAdress = true;//详细地址必填
+                        edit_address_details.setHint("请输入客户详细地址(必填)");
                     }
                 }
             }
@@ -389,7 +396,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 新建客户请求
-     * */
+     */
     public void requestCommitTask() {
         HttpAddCustomer positionData = new HttpAddCustomer();
         positionData.loc.addr = customerAddress;
@@ -492,9 +499,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
 
         switch (requestCode) {
-            case  MapModifyView.SERACH_MAP:
+            case MapModifyView.SERACH_MAP:
                 positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-                if(null != positionResultItem){
+                if (null != positionResultItem) {
                     laPosition = positionResultItem.laPosition;
                     loPosition = positionResultItem.loPosition;
                     et_address.setText(positionResultItem.address);
