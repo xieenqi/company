@@ -91,6 +91,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                         contactRequestParam = new ContactRequestParam();
                         contactRequestParam.setVal(contactLeftExtras.val);
                         contactRequestParam.properties = contactLeftExtras;
+                        contactRequestParam.required = contactLeftExtras.required;
                         requestContactParam.add(contactRequestParam);
                     } else {
                         if (contactLeftExtras.fieldName.equals("name")) {
@@ -100,16 +101,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                                 return;
                             }
                             maps.put("name", contactLeftExtras.val);
-
-                        } else if (contactLeftExtras.fieldName.equals("wiretel")) {
-//
-//                            if (!contactLeftExtras.val.isEmpty()) {
-//                                if (!RegularCheck.isPhone(contactLeftExtras.val)) {
-//                                    Toast("座机号码格式不正确");
-//                                    return;
-//                                }
-//                            }
-                            maps.put("wiretel", contactLeftExtras.val);
 
                         } else if (contactLeftExtras.fieldName.equals("tel")) {
 
@@ -125,7 +116,20 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 //                            }
                             maps.put("tel", contactLeftExtras.val);
 
+                        } else if (contactLeftExtras.fieldName.equals("wiretel")) {
+                            if (contactLeftExtras.required && TextUtils.isEmpty(contactLeftExtras.val)) {
+                                Toast("座机号码不能为空");
+                                return;
+//                                if (!RegularCheck.isPhone(contactLeftExtras.val)) {//验证座机号码
+//                                }
+                            }
+                            maps.put("wiretel", contactLeftExtras.val);
+
                         } else if (contactLeftExtras.fieldName.equals("birth")) {
+                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
+                                Toast("生日必选");
+                                return;
+                            }
                             if (TextUtils.isEmpty(contactLeftExtras.val)) {
                                 try {
                                     maps.put("birth", mContact.getBirthStr());
@@ -135,27 +139,51 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             } else {
                                 maps.put("birth", contactLeftExtras.val);
                             }
-                        } else if (contactLeftExtras.fieldName.equals("wx")) {
-                            maps.put("wx", contactLeftExtras.val);
+                        } else if (contactLeftExtras.fieldName.equals("dept_name")) {
+                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
+                                Toast("部门职务不能为空");
+                                return;
+                            }
+                            maps.put("deptName", contactLeftExtras.val);
                         } else if (contactLeftExtras.fieldName.equals("qq")) {
+                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
+                                Toast("QQ不能为空");
+                                return;
+                            }
                             maps.put("qq", contactLeftExtras.val);
+                        } else if (contactLeftExtras.fieldName.equals("wx")) {
+                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
+                                Toast("微信不能为空");
+                                return;
+                            }
+                            maps.put("wx", contactLeftExtras.val);
                         } else if (contactLeftExtras.fieldName.equals("email")) {
                             if (!TextUtils.isEmpty(contactLeftExtras.val)) {
                                 if (!RegularCheck.checkEmail(contactLeftExtras.val)) {
                                     Toast("Email格式不正确");
                                     return;
                                 }
+                            } else if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
+                                Toast("Email不能为空");
+                                return;
                             }
                             maps.put("email", contactLeftExtras.val);
 
                         } else if (contactLeftExtras.fieldName.equals("memo")) {
+                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
+                                Toast("备注不能为空");
+                                return;
+                            }
                             maps.put("memo", contactLeftExtras.val);
-                        } else if (contactLeftExtras.fieldName.equals("dept_name")) {
-                            maps.put("deptName", contactLeftExtras.val);
                         }
                     }
                 }
-
+                for (ContactRequestParam ele : requestContactParam) {
+                    if (ele.required && TextUtils.isEmpty(ele.properties.val)) {
+                        Toast(ele.properties.label + "不能为空");
+                        return;
+                    }
+                }
                 maps.put("extDatas", requestContactParam);
                 LogUtil.d("添加联系人发送map：" + MainApp.gson.toJson(maps));
 
