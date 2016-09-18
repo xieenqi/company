@@ -26,6 +26,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerPhoneActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -189,7 +190,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         layout_btn_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.startActivity(ContactInfoEditActivity.this, CustomerPhoneActivity.class,MainApp.ENTER_TYPE_RIGHT,false,new Bundle());
+                app.startActivity(ContactInfoEditActivity.this, CallPhoneBackActivity.class,MainApp.ENTER_TYPE_RIGHT,false,new Bundle());
             }
         });
         initData();

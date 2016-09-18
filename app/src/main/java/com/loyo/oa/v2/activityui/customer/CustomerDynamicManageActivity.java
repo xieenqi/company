@@ -97,7 +97,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                     }
                     break;
 
-
                 case 0x02:/*播放暂停*/
                     if (isOnPlay) {
                         audioStart();
@@ -195,7 +194,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         layout_add.setOnClickListener(this);
         layout_audio_close.setOnClickListener(this);
         layout_audio_pauseorplay.setOnClickListener(this);
-
+        layout_audio_close.setOnTouchListener(Global.GetTouch());
 
         player = new Player(musicProgress);
         musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());

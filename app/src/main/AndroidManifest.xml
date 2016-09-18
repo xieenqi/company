@@ -723,7 +723,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-
+        <activity
+            android:name=".activityui.customer.CallPhoneBackActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            />
 
         <service
             android:name=".service.InitDataService_"
