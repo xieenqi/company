@@ -86,7 +86,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             case R.id.img_title_right:
                 HashMap<String, Object> maps = new HashMap<>();
                 for (ContactLeftExtras contactLeftExtras : mContactLeftExtras) {
-                    if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
+                    if (contactLeftExtras.required && TextUtils.isEmpty(contactLeftExtras.val)) {
                         Toast(contactLeftExtras.label + "不能为空");
                         return;
                     }

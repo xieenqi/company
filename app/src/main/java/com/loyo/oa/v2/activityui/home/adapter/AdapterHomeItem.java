@@ -167,13 +167,12 @@ public class AdapterHomeItem extends BaseAdapter {
                         view_number.setVisibility(View.GONE);
                     }
 //                    tv_extra.setText(!TextUtils.isEmpty(extra)?extra:"");
+                    LogUtil.d(position + "加载》》》》》》》》》》》》》》》》》》》》》》》》》》》》" + extra);
                     if (!TextUtils.isEmpty(extra)) {
                         tv_extra.setText(extra);
+                    } else {
+                        tv_extra.setText("");
                     }
-//                    else {
-//                        tv_extra.setText("");
-//                    }
-                    LogUtil.d(position + "加载》》》》》》》》》》》》》》》》》》》》》》》》》》》》" + extra);
                 }
             }
 
