@@ -25,11 +25,14 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 新版选人搜索
@@ -43,8 +46,8 @@ public class SelectDetUserSerach extends BaseActivity {
     private RelativeLayout img_title_left;
     private ListView lv_selectuser_serach;
 
-    private ArrayList<User> userAllList;
-    private ArrayList<User> resultData = new ArrayList<>();
+    private List<DBUser> userAllList;
+    private ArrayList<DBUser> resultData = new ArrayList<>();
     private String key;
     private int selectType;
     private MainApp app = MainApp.getMainApp();
@@ -63,7 +66,7 @@ public class SelectDetUserSerach extends BaseActivity {
     /*初始化*/
     public void initView() {
 
-        userAllList = MainApp.selectAllUsers;
+        userAllList = OrganizationManager.shareManager().allUsers();
         selectType = getIntent().getExtras().getInt(ExtraAndResult.STR_SELECT_TYPE);
         tv_selectuser_search = (TextView) findViewById(R.id.tv_selectuser_search);
         edt_selectuser_search = (EditText) findViewById(R.id.edt_selectuser_search);
@@ -103,7 +106,7 @@ public class SelectDetUserSerach extends BaseActivity {
                     /*参与人*/
                     case ExtraAndResult.TYPE_SELECT_MULTUI:
 
-                        mBundle.putString("userId", resultData.get(position).getId());
+                        mBundle.putString("userId", resultData.get(position).id);
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
                         mIntent.putExtras(mBundle);
                         app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, mIntent);
@@ -113,7 +116,8 @@ public class SelectDetUserSerach extends BaseActivity {
                     /*负责人*/
                     case ExtraAndResult.TYPE_SELECT_SINGLE:
 
-                        mBundle.putSerializable(User.class.getName(), resultData.get(position));
+                        // TODO:
+                        mBundle.putSerializable(DBUser.class.getName(), resultData.get(position));
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
                         mIntent.putExtras(mBundle);
                         app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, mIntent);
@@ -122,7 +126,7 @@ public class SelectDetUserSerach extends BaseActivity {
                     /*编辑参与人*/
                     case ExtraAndResult.TYPE_SELECT_EDT:
 
-                        mBundle.putString("userId", resultData.get(position).getId());
+                        mBundle.putString("userId", resultData.get(position).id);
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
                         mIntent.putExtras(mBundle);
                         app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, mIntent);
@@ -172,16 +176,16 @@ public class SelectDetUserSerach extends BaseActivity {
             return;
         }
 
-        for (User u : userAllList) {
+        for (DBUser u : userAllList) {
             if (u == null) {
                 continue;
-            } else if (u.getRealname() != null && u.getRealname().contains(key)) {
+            } else if (u.name != null && u.name.contains(key)) {
                 resultData.add(u);
                 continue;
-            } else if (u.fullPinyin != null && u.fullPinyin.contains(key)) {
+            } else if (u.fullPinyin != null && u.fullPinyin.startsWith(key)) {
                 resultData.add(u);
                 continue;
-            } else if (u.simplePinyin != null && u.simplePinyin.contains(key)) {
+            } else if (u.simplePinyin != null && u.simplePinyin.startsWith(key)) {
                 resultData.add(u);
                 continue;
             }
@@ -220,29 +224,14 @@ public class SelectDetUserSerach extends BaseActivity {
             if (null == convertView) {
                 convertView = LayoutInflater.from(SelectDetUserSerach.this).inflate(R.layout.item_contacts_child, null, false);
             }
-            User user = resultData.get(position);
+            DBUser user = resultData.get(position);
             ImageView img = ViewHolder.get(convertView, R.id.img);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_name);
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
-            tv_content.setText(user.getRealname());
-            String deptName, workName;
+            tv_content.setText(user.name);
 
-            try {
-                deptName = user.depts.get(0).getShortDept().getName();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                deptName = "无";
-            }
-
-            try {
-                workName = user.role.name;
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                workName = "无";
-            }
-
-            tv_position.setText(deptName + "  " + workName);
+            tv_position.setText(user.shortDeptNames);
 
             if (!TextUtils.isEmpty(user.avatar)) {
                 ImageLoader.getInstance().displayImage(user.avatar, img);

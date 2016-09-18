@@ -1,13 +1,21 @@
 package com.loyo.oa.v2.activityui.contact;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
@@ -17,10 +25,17 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsDepartmentFragment;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsInMyDeptFragment;
+import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 import java.util.ArrayList;
+
+import java.util.List;
 
 /**
  * 通讯录 联系人 页面
@@ -33,27 +48,50 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
+    private ViewGroup loading_view;// dialog_view
+    private ImageView loading_indicator;
+    private TextView loading_tip;
     private ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
     private ContactsInMyDeptFragment userFragment;         //本部门  人员frag
     private PagerSlidingTabStrip tabs;
     private ViewPager pager;
     private MyPagerAdapter adapter;
     private MainApp app = MainApp.getMainApp();
-    private ArrayList<ContactsGroup> lstUserGroupData;
 
     private String departmentsSize;
     private int myDepartmentContactsSize;
 
     private String myDeptId;
 
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            //Bundle b = intent.getExtras();
+            if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
+                getUserAndDepartmentSize();
+                adapter = new MyPagerAdapter(getSupportFragmentManager());
+                adapter.setTitles(new String[]{"本部门(" + myDepartmentContactsSize + ")", "全公司(" + departmentsSize + ")"});
+
+                pager.setAdapter(adapter);
+                int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+                pager.setPageMargin(pageMargin);
+                tabs.setViewPager(pager);
+                tabs.setVisibility(View.VISIBLE);
+                loading_view.setVisibility(View.GONE);
+                loading_indicator.clearAnimation();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        registerBroadcastReceiver();
         setContentView(R.layout.activity_department_contacts);
 
         departmentFragment = new ContactsDepartmentFragment();
         userFragment = new ContactsInMyDeptFragment();
-        lstUserGroupData = Common.getContactsGroups(null);
         initUI();
     }
 
@@ -65,7 +103,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         }
 
         setTouchView(-1);
-        getUserAndDepartmentSize();
+        //getUserAndDepartmentSize();
 
         ((TextView) findViewById(R.id.tv_title_1)).setText("通讯录");
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
@@ -78,17 +116,50 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         img_title_right.setOnClickListener(this);
         img_title_right.setOnTouchListener(touch);
 
+        loading_view = (ViewGroup) findViewById(R.id.dialog_view);
+
+        loading_indicator = (ImageView) loading_view.findViewById(R.id.img);
+        loading_tip = (TextView) loading_view.findViewById(R.id.tipTextView);// 提示文字
+
+
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setTextSize(app.spTopx(14));
 
         pager = (ViewPager) findViewById(R.id.pager);
-        adapter = new MyPagerAdapter(getSupportFragmentManager());
-        adapter.setTitles(new String[]{"本部门(" + myDepartmentContactsSize + ")", "全公司(" + departmentsSize + ")"});
 
-        pager.setAdapter(adapter);
-        int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-        pager.setPageMargin(pageMargin);
-        tabs.setViewPager(pager);
+        if (OrganizationManager.isOrganizationCached() == false
+                && OrganizationService.isFetchingOrganziationData()) {
+            // DialogHelp.showLoading(this, "加载通讯录中...", true);
+            // start animation
+            tabs.setVisibility(View.GONE);
+            // 加载动画
+            Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(
+                    this, R.anim.load_animayion);
+            // 使用ImageView显示动画
+            loading_indicator.startAnimation(hyperspaceJumpAnimation);
+            loading_tip.setText("获取通讯录中...");
+
+        }
+        else {
+
+            loading_view.setVisibility(View.GONE);
+
+            getUserAndDepartmentSize();
+            adapter = new MyPagerAdapter(getSupportFragmentManager());
+            adapter.setTitles(new String[]{"本部门(" + myDepartmentContactsSize + ")", "全公司(" + departmentsSize + ")"});
+
+            pager.setAdapter(adapter);
+            int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+            pager.setPageMargin(pageMargin);
+            tabs.setViewPager(pager);
+            DialogHelp.cancelLoading();
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        unregisterBroadcastReceiver();
     }
 
     /**
@@ -96,8 +167,9 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
      */
     void getUserAndDepartmentSize() {
         try{
-            myDepartmentContactsSize = Common.getMyUserDept().size();
-            departmentsSize          = MainApp.lstDepartment.get(0).userNum;
+            myDepartmentContactsSize = OrganizationManager.shareManager().getCurrentUserSameDeptsUsers().size();
+            DBDepartment company = OrganizationManager.shareManager().getsComany();
+            departmentsSize          = String.valueOf((company!= null?company.userNum : 0));
         }catch (Exception e){
             Toast("数据拉取中，请等待");
             finish();
@@ -119,6 +191,16 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
             default:
                 break;
         }
+    }
+
+    public void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+        registerReceiver(mReceiver, filter);
+    }
+
+    public void unregisterBroadcastReceiver() {
+        unregisterReceiver(mReceiver);
     }
 
 

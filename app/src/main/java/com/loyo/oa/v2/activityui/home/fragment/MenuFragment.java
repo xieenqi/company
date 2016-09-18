@@ -34,9 +34,11 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.FileTool;
@@ -315,7 +317,8 @@ public class MenuFragment extends BaseFragment {
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
                 Bundle b = new Bundle();
-                b.putSerializable("user", MainApp.user);
+                String userId = MainApp.user.id;
+                b.putSerializable("userId", userId != null ? userId : "");
                 app.startActivity(getActivity(), ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
 
@@ -331,7 +334,10 @@ public class MenuFragment extends BaseFragment {
      * 更新 组织架构
      */
     void initService() {
+        /* 更新登录用户信息 */
         InitDataService_.intent(getActivity()).start();
+        /* 拉取组织架构 */
+        OrganizationService.startActionFetchAll(MainApp.getMainApp());
     }
 
     /**
@@ -410,6 +416,8 @@ public class MenuFragment extends BaseFragment {
         MainApp.user = null;
         ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
         SharedUtil.clearInfo(getActivity());//清楚本地登录状态 即缓存信息
+        /* 清空组织架构 */
+        OrganizationManager.clearOrganizationData();
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(getActivity(), LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }

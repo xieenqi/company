@@ -33,6 +33,8 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IMobile;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.InitDataService_;
@@ -112,7 +114,9 @@ public class ContactInfoEditActivity extends BaseActivity {
     @ViewById
     TextView name_title_user;
     @Extra
-    User user;
+    String  userId;
+
+    private DBUser user;
 
 
     private int mobile_phone = 1;
@@ -309,25 +313,28 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+
+        user = OrganizationManager.shareManager().getUser(userId);
+
         if (null == user) {
             return;
         }
 
         int defaultAvatao;
 
-        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
-            if (MainApp.user.gender == 2) {
+        if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
+            if (user.gender == 2) {
                 defaultAvatao = R.drawable.icon_contact_avatar;
             } else {
                 defaultAvatao = R.drawable.img_default_user;
             }
             img_title_user.setImageResource(defaultAvatao);
         } else {
-            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
+            ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
         }
 
 
-        path = user.getAvatar();
+        path = user.avatar;
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
         Utils.setContent(name_title_user, MainApp.user.getRealname());
@@ -347,27 +354,27 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
 
         /*获取职位与部门名字*/
-        if (null != user.depts && !user.depts.isEmpty()) {
-            StringBuilder departments = new StringBuilder();
-            StringBuilder posiName = new StringBuilder();
-            for (int i = 0; i < user.depts.size(); i++) {
-                UserInfo info = user.depts.get(i);
-                if (null != info.getShortDept() && !TextUtils.isEmpty(info.getShortDept().getName())) {
-                    if (!TextUtils.isEmpty(departments)) {
-                        departments.append("|");
-                    }
-                    departments.append(info.getShortDept().getName());
-                }
-                if (null != info.getTitle() && !TextUtils.isEmpty(info.getTitle())) {
-                    if (!TextUtils.isEmpty(posiName)) {
-                        posiName.append("|");
-                    }
-                    posiName.append(info.getTitle());
-                }
-            }
-            tv_departments.setText(departments);
-            tv_positions.setText(posiName);
-        }
+//        if (null != user.depts && !user.depts.isEmpty()) {
+//            StringBuilder departments = new StringBuilder();
+//            StringBuilder posiName = new StringBuilder();
+//            for (int i = 0; i < user.depts.size(); i++) {
+//                UserInfo info = user.depts.get(i);
+//                if (null != info.getShortDept() && !TextUtils.isEmpty(info.getShortDept().getName())) {
+//                    if (!TextUtils.isEmpty(departments)) {
+//                        departments.append("|");
+//                    }
+//                    departments.append(info.getShortDept().getName());
+//                }
+//                if (null != info.getTitle() && !TextUtils.isEmpty(info.getTitle())) {
+//                    if (!TextUtils.isEmpty(posiName)) {
+//                        posiName.append("|");
+//                    }
+//                    posiName.append(info.getTitle());
+//                }
+//            }
+//            tv_departments.setText(departments);
+//            tv_positions.setText(posiName);
+//        }
     }
 
 
@@ -396,13 +403,23 @@ public class ContactInfoEditActivity extends BaseActivity {
         map.put("weixinId", weixinId);
         map.put("avatar", path);
 
-        RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
+        RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.id, map, new RCallback<User>() {
             @Override
-            public void success(final User user, final Response response) {
+            public void success(final User responseUser, final Response response) {
+
+                if (user.id != null){
+                    OrganizationManager.updateDBUserWithUser(user, responseUser);
+                    OrganizationManager.shareManager().updateUser(user);
+
+                    Intent it = new Intent("com.loyo.oa.v2.USER_EDITED");
+                    it.putExtra("userId", user.id);
+                    sendBroadcast(it);
+                }
+
                 HttpErrorCheck.checkResponse("修改个人信息", response);
                 Toast("修改个人信息成功");
                 Intent mIntent = new Intent();
-                InitDataService_.intent(ContactInfoEditActivity.this).start(); //更新组织架构
+                // InitDataService_.intent(ContactInfoEditActivity.this).start(); //更新组织架构
                 mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
                 app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
             }

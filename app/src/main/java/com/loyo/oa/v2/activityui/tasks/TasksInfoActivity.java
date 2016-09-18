@@ -40,6 +40,8 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -153,7 +155,7 @@ public class TasksInfoActivity extends BaseActivity {
     public ArrayList<User> aboutDepts = new ArrayList<>();
     public ArrayList<User> childTaskUsers2 = new ArrayList<>();
 
-    public ArrayList<Department> deptSource = Common.getLstDepartment();
+//    public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
     public LinearLayout item_tasks_sorece;
@@ -311,20 +313,23 @@ public class TasksInfoActivity extends BaseActivity {
                 }
                 tv_toUsers.setText("参与人: " + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
+
+                // 获取部门（包括子部门）的用户
+                List<DBUser> deptsUsers = new ArrayList<DBUser>();
                 if (null != mTask.members.depts) {
-                    for (NewUser newUser : mTask.members.depts) {
-                        Common.getAllUsersByDeptId(newUser.getId(), childTaskUsers2);
+                    for (NewUser dept : mTask.members.depts) {
+                        deptsUsers.addAll(OrganizationManager.shareManager().entireUsersOfDepartment(dept.getId()));
                     }
                 }
 
-                for (User user : childTaskUsers2) {
+                for (DBUser user : deptsUsers) {
                     childTastUsers.add(user.toShortUser());
                 }
-
-                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
-                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
-
-                getAboutUser();
+//
+//                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
+//                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
+//
+//                getAboutUser();
 
             } else {
                 tv_toUsers.setText("没有参与人");
@@ -994,29 +999,29 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
 
-    /**
-     * 参与人当中的部门，拆分成员工
-     */
-    void getAboutUser() {
-
-        requestDepts.addAll(mTask.members.depts);
-
-        for (Department department : deptSource) {
-            for (NewUser newUser : requestDepts) {
-                try {
-                    if (department.getId().equals(newUser.getId())) {
-                        aboutDepts.addAll(department.getUsers());
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        for (User user : aboutDepts) {
-            childTastUsers.add(user.toShortUser());
-        }
-    }
+//    /**
+//     * 参与人当中的部门，拆分成员工
+//     */
+//    void getAboutUser() {
+//
+//        requestDepts.addAll(mTask.members.depts);
+//
+//        for (Department department : deptSource) {
+//            for (NewUser newUser : requestDepts) {
+//                try {
+//                    if (department.getId().equals(newUser.getId())) {
+//                        aboutDepts.addAll(department.getUsers());
+//                    }
+//                } catch (NullPointerException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//
+//        for (User user : aboutDepts) {
+//            childTastUsers.add(user.toShortUser());
+//        }
+//    }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {

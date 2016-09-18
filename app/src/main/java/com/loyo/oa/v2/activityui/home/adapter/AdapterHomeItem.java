@@ -148,7 +148,6 @@ public class AdapterHomeItem extends BaseAdapter {
                         }
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                     }
-
 //            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
 //                extra = num.bizNum + "个将掉公海";
 //                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);

@@ -208,12 +208,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activityui.other.DepartmentUserActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/FragmentActivityTheme"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
             android:name=".activityui.signin.SignInfoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -354,10 +348,6 @@
             android:name=".activityui.other.SelectEditDeleteActivity"
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom"/>
-        <activity
-            android:name=".activityui.other.DepartmentActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
             android:name=".activityui.signin.SignInManagerFromCustomer"
             android:screenOrientation="portrait"
@@ -724,6 +714,11 @@
         <service
             android:name=".service.InitDataService_"
             android:enabled="true"/>
+
+        <service
+            android:name=".service.OrganizationService"
+            android:enabled="true" />
+
         <service
             android:name=".service.CheckUpdateService"
             android:enabled="true"/>
