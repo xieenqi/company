@@ -129,11 +129,13 @@ public class AdapterHomeItem extends BaseAdapter {
                             extra = num.bizNum + "个待点评(含抄送)";
                         }
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                        tv_extra.setText(extra);
                     } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
                         if (num.bizNum > 0) {
                             extra = num.bizNum + "个未完成";
                         }
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                        tv_extra.setText(extra);
                     } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
                         if (num.bizNum > 0) {
                             extra = num.bizNum + "个待我审批";
@@ -142,11 +144,13 @@ public class AdapterHomeItem extends BaseAdapter {
                         }
                         wfinstanceCount = num.bizNum;
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                        tv_extra.setText(extra);
                     } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
                         if (num.bizNum > 0) {
                             extra = num.bizNum + "个进行中";
                         }
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                        tv_extra.setText(extra);
                     }
 
 //            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
@@ -159,20 +163,18 @@ public class AdapterHomeItem extends BaseAdapter {
                     else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
 //                        extra = num.bizNum + "个外勤";
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                        tv_extra.setText(extra);
                     } else if (item.title.equals("公告通知") && num.bizType == 19) { //通知公告红点
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                        tv_extra.setText(extra);
                     } else if (item.title.equals("我的讨论") && num.bizType == 14) { //我的讨论红点
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                        tv_extra.setText(extra);
                     } else {
                         view_number.setVisibility(View.GONE);
                     }
 //                    tv_extra.setText(!TextUtils.isEmpty(extra)?extra:"");
                     LogUtil.d(position + "加载》》》》》》》》》》》》》》》》》》》》》》》》》》》》" + extra);
-                    if (!TextUtils.isEmpty(extra)) {
-                        tv_extra.setText(extra);
-                    } else {
-                        tv_extra.setText("");
-                    }
                 }
             }
 
