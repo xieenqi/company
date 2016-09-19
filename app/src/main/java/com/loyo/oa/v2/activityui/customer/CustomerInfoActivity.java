@@ -194,6 +194,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         finish();
                     }
                 });
+        requestJurisdiction();
     }
 
     /**
