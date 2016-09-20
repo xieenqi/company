@@ -16,6 +16,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -82,6 +83,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -119,12 +121,38 @@ public class Utils {
         return windowManager;
     }
 
+    /**
+     * 根据当前选择的秒数还原时间点
+     *
+     */
+
+    private static String getCheckTimeBySeconds(float progress,float totalSeconds2, String startTimeStr) {
+
+        String return_h = "", return_m = "", return_s = "";
+        float ms = (progress * totalSeconds2) / 100;
+        String[] st = startTimeStr.split(":");
+        int st_h = Integer.valueOf(st[0]);
+        int st_m = Integer.valueOf(st[1]);
+        int st_s = Integer.valueOf(st[2]);
+        int total = st_h * 3600 + st_m * 60 + st_s;
+        float mtotal = ms + total;
+        int h = (int) (mtotal / 3600);
+        int m = (int) ((mtotal % 3600) / 60);
+
+        int s = (int) (mtotal % 60);
+        return_h = h + "";
+        return_m = m + "";
+        return_s = s + "";
+
+        return return_h + ":" + return_m + ":" + return_s;
+    }
+
 
     /**
      * 计算连个时间之间的秒数
      */
 
-    private static int totalSeconds(String startTime, String endTime) {
+    public static int totalSeconds(String startTime, String endTime) {
 
         String[] st = startTime.split(":");
         String[] et = endTime.split(":");
@@ -1525,6 +1553,28 @@ public class Utils {
             e.printStackTrace();
             return "No Number";
         }
+    }
+
+    public static String getRingDuring(String mUri){
+        String duration=null;
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+
+        try {
+            if (mUri != null) {
+                HashMap<String, String> headers=null;
+                if (headers == null) {
+                    headers = new HashMap<String, String>();
+                    headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                }
+                mmr.setDataSource(mUri, headers);
+            }
+
+            duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+        } catch (Exception ex) {
+        } finally {
+            mmr.release();
+        }
+        return duration;
     }
 
     /**

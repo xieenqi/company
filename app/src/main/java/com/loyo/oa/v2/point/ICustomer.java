@@ -291,5 +291,18 @@ public interface ICustomer {
     @POST("/ipvoice/")
     void toastOurServer(@Body HashMap<String,Object> map,Callback<CallBackCallid>callback);
 
+    /**
+     * 通知服务器请求回拨
+     * */
+    @POST("/ipvoice/request")
+    void requestCallBack(@Body HashMap<String,Object> map,Callback<CallBackCallid>callback);
+
+    /**
+     * 通知服务器取消回拨
+     * */
+    @GET("/ipvoice/callCancel/{callLogId}")
+    void cancelCallBack(@Path("callLogId")String id,Callback<CallBackCallid>callback);
+
+
 }
 

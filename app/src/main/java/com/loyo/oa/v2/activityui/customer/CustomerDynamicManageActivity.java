@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.customer;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,6 +34,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Player;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -69,13 +71,13 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     private Player player;
     private SeekBar musicProgress;
 
-    private boolean isStart = false;
     private boolean isChanged = false;
     private boolean isTopAdd = true;
     private boolean isMyUser;
     private boolean isOnPlay;
-    private int ss = 0;
     private int endTimerInt;
+    private int supply;
+    private String playTime;
     private String endTime;
 
     private Handler mHandler = new Handler() {
@@ -85,7 +87,8 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
             switch (msg.what) {
 
-                case 0x01:/*打开关闭播放器*/
+                /*打开关闭播放器*/
+                case 0x01:
                     if (layout_audioplayer.getVisibility() == View.VISIBLE) {
                         layout_audioplayer.setVisibility(View.GONE);
                         if (isMyUser)
@@ -93,11 +96,11 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                     } else if (layout_audioplayer.getVisibility() == View.GONE) {
                         layout_audioplayer.setVisibility(View.VISIBLE);
                         layout_add.setVisibility(View.GONE);
-                        tv_audio_endtime.setText(endTime);
                     }
                     break;
 
-                case 0x02:/*播放暂停*/
+                /*播放暂停*/
+                case 0x02:
                     if (isOnPlay) {
                         audioStart();
                     } else {
@@ -105,17 +108,14 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                     }
                     break;
 
-                case 0x03:/*计时*/
-                    if (ss == 0 || ss == -1) {
-                        tv_audio_starttime.setText("00:00");
-                    } else {
-                        tv_audio_starttime.setText(DateTool.timet(ss + "", "mm:ss"));
-                    }
-                    LogUtil.dee("录音时间:" + ss);
+                /*播放时间*/
+                case 0x03:
+                    tv_audio_starttime.setText(playTime);
                     break;
 
-                case 0x04:/*播放停止*/
-                    ss = 0;
+                /*播放停止*/
+                case 0x04:
+                    playTime = "00:00";
                     musicProgress.setProgress(0);
                     layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
                     isOnPlay = true;
@@ -181,7 +181,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         layout_audioplayer = (ViewGroup) findViewById(R.id.layout_audioplayer);
         layout_audio_contral = (ViewGroup) findViewById(R.id.layout_audio_contral);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
-        //layout_view_bottom = (ViewGroup) findViewById(R.id.layout_view_bottom);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         lv_saleActivity = (PullToRefreshListView) findViewById(R.id.lv_saleActivity);
 
@@ -194,7 +193,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         layout_add.setOnClickListener(this);
         layout_audio_close.setOnClickListener(this);
         layout_audio_pauseorplay.setOnClickListener(this);
-        layout_audio_close.setOnTouchListener(Global.GetTouch());
+
 
         player = new Player(musicProgress);
         musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
@@ -209,30 +208,23 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
      * */
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if(!isStart){
-            isStart = true;
-        }else if(isStart){
-            isStart = false;
+        if(mp.getDuration() != 0){
             mHandler.sendEmptyMessage(0x04);
         }
     }
 
+    /**
+     * 拖动条监听
+     * */
     class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {
         int progress;
-        int endProgress = 0;
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress,
                                       boolean fromUser) {
             this.progress = progress * player.mediaPlayer.getDuration()
                     / seekBar.getMax();
-
-            if (progress > endProgress) {
-                ss++;
-            } else if (progress < endProgress) {
-                ss--;
-            }
-            endProgress = progress;
+            playTime = DateTool.timeMills(this.progress+"","mm:ss");
             mHandler.sendEmptyMessage(0x03);
         }
 
@@ -243,7 +235,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
+            playTime = DateTool.timeMills(progress+"","mm:ss");
             player.mediaPlayer.seekTo(progress);
+            mHandler.sendEmptyMessage(0x03);
         }
     }
 
@@ -365,30 +359,28 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     private class SaleActivitiesAdapter extends BaseAdapter {
 
         ArrayList<ImageView> callsImage = new ArrayList<>();
-
+        int lastPosition = -1;
 
         /**
          * 启动动画
          * */
         void startAnim(ImageView imageView,int position){
-            imageView.setImageResource(R.drawable.animation_calls);
             animationDrawable = (AnimationDrawable) imageView.getDrawable();
             animationDrawable.start();
-            for(int i = 0;i<callsImage.size();i++){
-                if(position != i){
-                    stopAnim(callsImage.get(i));
-                }
+            if(lastPosition != -1 && lastPosition != position){
+                stopAnim(callsImage.get(lastPosition));
             }
+               lastPosition = position;
         }
 
         /**
          * 停止动画
          * */
         void stopAnim(ImageView imageView){
-            imageView.setImageResource(R.drawable.animation_calls);
             animationDrawable = (AnimationDrawable) imageView.getDrawable();
             if(animationDrawable.isRunning()){
                 animationDrawable.stop();
+                imageView.setBackgroundResource(R.drawable.icon_dynamic_phone01);
             }
         }
 
@@ -474,8 +466,18 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             layout_audio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startAnim(iv_calls, position);
 
+                    MediaPlayer mp = MediaPlayer.create(CustomerDynamicManageActivity.this, Uri.parse(saleActivity.audioUrl));
+                    try {
+                        supply = mp.getDuration();
+                        tv_audio_endtime.setText(DateTool.timeMills(supply + "","mm:ss"));
+                    }catch (NullPointerException e){
+                        Toast("录音文件不存在！");
+                        e.printStackTrace();
+                        return;
+                    }
+
+                    startAnim(iv_calls, position);
                     if (layout_audioplayer.getVisibility() != View.VISIBLE) {
                         mHandler.sendEmptyMessage(0x01);
                     }
@@ -483,11 +485,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                         player = new Player(musicProgress);
                     }
                     audioStart();
-
-                    ss = 0;
+                    playTime = "00:00";
                     endTime = DateTool.timet(saleActivity.audioLength + "", "mm:ss");
                     endTimerInt = Integer.parseInt(saleActivity.audioLength + "");
-                    tv_audio_endtime.setText(endTime);
 
                     new Thread(new Runnable() {
                         @Override

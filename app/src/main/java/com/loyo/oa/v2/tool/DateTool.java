@@ -639,7 +639,22 @@ public class DateTool {
 
 
     /**
-     * 时间戳转时间
+     * 时间戳转时间(毫秒)
+     *
+     * @param time
+     * @return
+     */
+    public static String timeMills(String time, String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs);
+        @SuppressWarnings("unused")
+        long lcc = Long.valueOf(time);
+        int i = Integer.parseInt(time);
+        String times = sdr.format(new Date(i));
+        return times;
+    }
+
+    /**
+     * 时间戳转时间(秒)
      *
      * @param time
      * @return

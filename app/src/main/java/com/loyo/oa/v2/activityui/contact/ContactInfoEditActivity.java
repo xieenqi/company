@@ -132,7 +132,6 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
-    private Button   layout_btn_test;
 
     private String birthStr;
     private int age;
@@ -184,15 +183,6 @@ public class ContactInfoEditActivity extends BaseActivity {
         layout_set_avartar.setOnTouchListener(Global.GetTouch());
         layout_mobile.setOnTouchListener(Global.GetTouch());
         //et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
-
-        /*拨打电话测试*/
-        layout_btn_test = (Button)findViewById(R.id.layout_btn_test);
-        layout_btn_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                app.startActivity(ContactInfoEditActivity.this, CallPhoneBackActivity.class,MainApp.ENTER_TYPE_RIGHT,false,new Bundle());
-            }
-        });
         initData();
     }
 

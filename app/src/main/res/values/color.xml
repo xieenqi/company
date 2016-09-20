@@ -65,6 +65,8 @@
     <color name="divider">#f1f1f1</color>
     <color name="wfinstance_notprocess">#939292</color>
     <color name="wfinstance_agree">#34D434</color>
+    <color name="callback_blue">#2693FB</color>
+    <color name="callback_white">#F9F9F9</color>
 
 
     <!--<color name="province_line_border">#C7C7C7</color>-->

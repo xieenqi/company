@@ -10,5 +10,9 @@ public class CallBackCallid implements Serializable{
 
     public int errcode;
     public String errmsg;
+    public Data data;
 
+    public class Data{
+       public String callLogId;
+    }
 }

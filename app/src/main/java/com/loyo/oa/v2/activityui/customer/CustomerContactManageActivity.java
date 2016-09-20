@@ -210,174 +210,25 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     }
 
 
-    /**
-     * 获取Client信息
-     */
     void requestClientInfo() {
-        SharedUtil.clearInfo(mContext);
-        SharedUtil.put(mContext, "time", DateTool.getNowTime("yyyyMMddHHmmss"));
-        String stamp = SharedUtil.get(mContext, "time");
-
-        String appId = "8b2cf8e33d48420f9fd99440bfebb0c9";      /*应用ID*/
-        String token = "ab32202908271224d6ef12f73c3b701c";      /*token*/
-        String accountSid = "e1d5b6a43b0bd8c47d13ec15af6671c4"; /*账户ID*/
-        String sigParameter = accountSid + token + stamp;       /*账号ID+授权令牌+当前时间戳*/
-        String sigParameterMD5 = Utils.md5(sigParameter);
-
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("appId", appId);
-        map.put("mobile", myCall);
-
-        RestAdapterPhoneFactory.getInstance(mContext).build("https://api.ucpaas.com/2014-06-30/").create(ICustomer.class).getClientInfo(accountSid, sigParameterMD5.toUpperCase(), map,
-                new RCallback<CallClientInfo>() {
-                    @Override
-                    public void success(final CallClientInfo callClientInfo, final Response response) {
-                        HttpErrorCheck.checkResponse("查询Client", response);
-                        if (null != callClientInfo) {
-                            String code = callClientInfo.resp.respCode;
-                            if (code.equals("100007")) {
-                                requestClient();
-                            } else if (code.equals("000000")) {
-                                requestCallBack(callClientInfo.resp.client.clientNumber);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
-    /**
-     * 通知服务端回拨成功
-     */
-    void toastServer(String callId) {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("callId", callId);
         map.put("customerId", customerContact.getId());
         map.put("contactId", contactId);
-        map.put("contactName", contactName);
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).toastOurServer(map,
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).requestCallBack(map,
                 new RCallback<CallBackCallid>() {
                     @Override
                     public void success(final CallBackCallid callBackCallid, final Response response) {
-                        HttpErrorCheck.checkResponse("通知服务端", response);
-                        if (null != callBackCallid) {
-                            int code = callBackCallid.errcode;
-                            if (code == 0) {
-                                Toast("电话回拨成功，请稍等..");
-                            } else {
-                                Toast("错误:" + code);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
-
-    /**
-     * 绑定Client账号
-     */
-    void requestClient() {
-        SharedUtil.clearInfo(mContext);
-        SharedUtil.put(mContext, "time", DateTool.getNowTime("yyyyMMddHHmmss"));
-        String stamp = SharedUtil.get(mContext, "time");
-
-        String appId = "8b2cf8e33d48420f9fd99440bfebb0c9";      /*应用ID*/
-        String token = "ab32202908271224d6ef12f73c3b701c";      /*token*/
-        String accountSid = "e1d5b6a43b0bd8c47d13ec15af6671c4"; /*账户ID*/
-        String sigParameter = accountSid + token + stamp;       /*账号ID+授权令牌+当前时间戳*/
-        String sigParameterMD5 = Utils.md5(sigParameter);
-
-        CustomerClientBean ccb = new CustomerClientBean();
-        ccb.friendlyName = "";
-        ccb.appId = appId;
-        ccb.charge = "10";
-        ccb.mobile = myCall;
-        ccb.clientType = "0";
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("client", ccb);
-        LogUtil.d("请求Client绑定 发送数据:" + MainApp.gson.toJson(ccb));
-
-        RestAdapterPhoneFactory.getInstance(mContext).build("https://api.ucpaas.com/2014-06-30/").create(ICustomer.class).getClient(accountSid, sigParameterMD5.toUpperCase(), map,
-                new RCallback<CallUserResp>() {
-                    @Override
-                    public void success(final CallUserResp callUserResp, final Response response) {
-                        HttpErrorCheck.checkResponse("申请Client", response);
-                        if (null != callUserResp) {
-                            String code = callUserResp.resp.respCode;
-                            if (code.equals("000000") || code.equals("103114")) {
-                                requestCallBack(callUserResp.resp.client.clientNumber);
-                            } else {
-                                Toast("错误:" + callUserResp.resp.respCode);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
-    private String getPhoneNumber() {
-        TelephonyManager mTelephonyMgr;
-        mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        return mTelephonyMgr.getLine1Number();
-    }
-
-    /**
-     * 请求电话回拨
-     */
-    void requestCallBack(String client) {
-        SharedUtil.clearInfo(mContext);
-        SharedUtil.put(mContext, "time", DateTool.getNowTime("yyyyMMddHHmmss"));
-        String stamp = SharedUtil.get(mContext, "time");
-
-        String appId = "8b2cf8e33d48420f9fd99440bfebb0c9";      /*应用ID*/
-        String token = "ab32202908271224d6ef12f73c3b701c";      /*token*/
-        String accountSid = "e1d5b6a43b0bd8c47d13ec15af6671c4"; /*账户ID*/
-        String sigParameter = accountSid + token + stamp;       /*账号ID+授权令牌+当前时间戳*/
-        String sigParameterMD5 = Utils.md5(sigParameter);
-
-        PhoneCallBack callBack = new PhoneCallBack();
-        callBack.appId = appId;                              /*应用ID*/
-        callBack.fromClient = client;                        /*主叫号码*/
-        callBack.to = callNum;                               /*被叫号码*/
-        callBack.fromSerNum = "999";                         /*主叫号码显号*/
-        callBack.toSerNum = MainApp.user.mobile;                           /*被叫号码显号*/
-        callBack.maxallowtime = "60";                        /*允许呼叫时长*/
-        callBack.ringtoneID = "";                            /*彩铃Id*/
-        callBack.userData = "";                              /*自定义透传数据*/
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("callback", callBack);
-        LogUtil.d("电话回拨 发送数据:" + MainApp.gson.toJson(map));
-
-        RestAdapterPhoneFactory.getInstance(mContext).build("https://api.ucpaas.com/2014-06-30/").create(ICustomer.class).getCallBack(accountSid, sigParameterMD5.toUpperCase(), map,
-                new RCallback<CallBackResp>() {
-                    @Override
-                    public void success(final CallBackResp callBackResp, final Response response) {
                         HttpErrorCheck.checkResponse("请求回拨", response);
-                        if (null != callBackResp) {
-                            if (callBackResp.resp.respCode.equals("000000")) {
-                                toastServer(callBackResp.resp.callback.callId);
-                            } else {
-                                Toast("错误:" + callBackResp.resp.respCode);
-                            }
+                        if(callBackCallid.errcode == 0){
+                            Bundle mBundle = new Bundle();
+                            mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
+                            mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
+                            app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                        }else{
+                            cancelLoading();
+                            Toast(callBackCallid.errmsg);
                         }
                     }
 
@@ -387,7 +238,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                         HttpErrorCheck.checkError(error);
                     }
                 });
-    }
+            }
 
     /**
      * 拨打商务电话回调
@@ -403,7 +254,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         LogUtil.dee("contactId:" + contactId);
         LogUtil.dee("contactName:" + contactName);
         requestClientInfo();
-        app.startActivity(CustomerContactManageActivity.this, CustomerPhoneActivity.class, MainApp.ENTER_TYPE_RIGHT, false, new Bundle());
     }
 
     /**

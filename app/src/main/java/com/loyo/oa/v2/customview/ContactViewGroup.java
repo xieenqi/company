@@ -62,7 +62,31 @@ public class ContactViewGroup extends LinearLayout {
     }
 
     public void paymentSet() {
-        String[] data = {"商务电话", "普通电话", "取消"};
+        final CallPhonePopView callPhonePopView = new CallPhonePopView(context,mContact.getName());
+        callPhonePopView.show();
+        callPhonePopView.setCanceledOnTouchOutside(true);
+        callPhonePopView.businessPhone(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                contactProcessCallback.onCallBack(mContact.getTel(), mContact.getId(), mContact.getName());
+                callPhonePopView.dismiss();
+            }
+        });
+        callPhonePopView.commonlyPhone(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.call(context, mContact.getTel());
+                callPhonePopView.dismiss();
+            }
+        });
+        callPhonePopView.cancelPhone(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPhonePopView.dismiss();
+            }
+        });
+
+/*        String[] data = {"商务电话", "普通电话", "取消"};
         final PaymentPopView popView = new PaymentPopView(context, data, mContact.getName());
         popView.show();
         popView.setCanceledOnTouchOutside(true);
@@ -82,7 +106,7 @@ public class ContactViewGroup extends LinearLayout {
                         break;
                 }
             }
-        });
+        });*/
     }
 
     /**
