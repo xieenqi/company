@@ -719,7 +719,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-
+        <activity
+            android:name=".activityui.attachment.SweetAlertDialogActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <service
             android:name=".service.InitDataService_"
