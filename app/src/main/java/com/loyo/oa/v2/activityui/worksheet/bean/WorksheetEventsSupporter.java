@@ -19,6 +19,7 @@ public class WorksheetEventsSupporter implements Serializable {
     public WorksheetEventStatus status;//1 待处理 2 未触发 3 已处理
     public NewUser responsor;
     public String responsorId;
+    public boolean isOvertime;//事件截至时间是否超时  true 表示超时
 
     public int triggerMode;
 

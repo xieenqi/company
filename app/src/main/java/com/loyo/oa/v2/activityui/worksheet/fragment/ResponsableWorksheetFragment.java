@@ -191,7 +191,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
         mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
         mExpandableListView.setOnRefreshListener(this);
-        //mExpandableListView.setEmptyView(emptyView);
+        mExpandableListView.setEmptyView(emptyView);
 
         setupExpandableListView(
                 new ExpandableListView.OnGroupClickListener() {

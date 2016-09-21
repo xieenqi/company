@@ -28,6 +28,7 @@ public class WorksheetEvent implements Groupable<WorksheetEvent>  {
     public String responsor;
     public long startTime;
     public long endTime;
+    public boolean isOvertime;//事件截至时间是否超时  true 表示超时
     public long updatedAt;
     public int daysDeadline;
     public int daysLater;

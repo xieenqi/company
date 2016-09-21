@@ -121,7 +121,7 @@ public class WorksheetEventCell extends LinearLayout {
 //TODO 现在事件截至时间所有端重新调整 待调整完成  删除
         if (data.endTime != 0 && data.status != WorksheetEventStatus.UNACTIVATED) {
             //事件 已处理 待处理 标红
-            if (data.endTime < (new Date()).getTime() / 1000 && (data.status == WorksheetEventStatus.FINISHED || data.status == WorksheetEventStatus.WAITPROCESS)) {
+            if (data.isOvertime) {
                 tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止" + "(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));
             } else {

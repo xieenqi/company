@@ -68,6 +68,7 @@ public class MapModifyView extends BaseActivity
      */
     public static final int CUSTOMER_DETAILS_PAGE = 78;
 
+    private int SEARCH_BAND = 300;//周边搜索的范围
 
     private String reGeoAddress;       //反GEO地址
     private int currentPage = 0;       //当前页面，从0开始计数
@@ -297,7 +298,8 @@ public class MapModifyView extends BaseActivity
         }
     }
 
-    /**之前详细地址搜索现在该问地区搜索
+    /**
+     * 之前详细地址 改为区域 加搜索范围
      * 开始进行poi搜
      */
     protected void doSearchQuery(String address, double lat, double lon) {
@@ -310,7 +312,7 @@ public class MapModifyView extends BaseActivity
         poiSearch = new PoiSearch(this, query);
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
-        poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(lat, lon), 300, true));
+        poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(lat, lon), SEARCH_BAND, true));
     }
 
 
