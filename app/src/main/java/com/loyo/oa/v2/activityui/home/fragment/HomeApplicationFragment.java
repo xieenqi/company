@@ -212,8 +212,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         } catch (Exception e) {
             e.printStackTrace();
         }
-        initData();
-
         // TODO: 建立单独的获取配置Service
         /* 获取配置数据 */
         WorksheetConfig.fetchWorksheetTypes();

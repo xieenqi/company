@@ -59,7 +59,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private RelativeLayout img_title_right;
     private String worksheetId, eventId;
     private WorksheetDetail detail;
-    private boolean isAssignment, isCreated;//分派人 ，创建人
 
     //处理事件
     private Handler handler = new Handler() {
@@ -158,6 +157,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
                     @Override
                     public void failure(RetrofitError error) {
+                        onBackPressed();
                         HttpErrorCheck.checkError(error);
                     }
                 });
@@ -194,7 +194,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         img_title_right.setVisibility(View.INVISIBLE);
         bt_confirm.setVisibility(View.INVISIBLE);
         if (MainApp.user.id.equals(detail.dispatcher.getId())) {
-            isAssignment = true;
             if (detail.status != WorksheetStatus.TEMINATED) {
                 img_title_right.setVisibility(View.VISIBLE);
             }
@@ -203,15 +202,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             } else if (detail.status != WorksheetStatus.WAITASSIGN) {
                 ll_wran.setVisibility(View.GONE);
             }
-            if (detail.status == WorksheetStatus.WAITAPPROVE){
+            if (detail.status == WorksheetStatus.WAITAPPROVE) {
                 bt_confirm.setVisibility(View.VISIBLE);
             }
             if (detail.status == WorksheetStatus.WAITASSIGN) {
                 tv_setting.setVisibility(View.VISIBLE);
             }
         }
-
-        isCreated = MainApp.user.id.equals(detail.creator.getId());
 
         if (ll_events.getChildCount() > 0) {
             ll_events.removeAllViews();

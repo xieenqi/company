@@ -21,6 +21,7 @@ public class EventDetail implements Serializable {
     public String responsorName;
     public long startTime;
     public long endTime;
+    public boolean isOvertime;//事件截至时间是否超时  true 表示超时
     public int daysDeadline;//多少天内完成
     public int daysLater;//多少天后触发
     public WorksheetEventStatus status;

@@ -17,6 +17,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
@@ -141,6 +142,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     private double laPosition;//当前位置的经纬度
     private double loPosition;
+    private boolean cusGuys = false;  //联系人权限
+    private boolean cusPhone = false; //手机权限
+    private boolean cusMobile = false;//座机权限
+    private boolean cusLocation = false;//定位权限
+    private boolean cusDetialAdress = false;//客户的详细地址
+    private boolean cusBrief = false;//客户简介
 
     @AfterViews
     void initUI() {
@@ -183,6 +190,40 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         finish();
                     }
                 });
+        requestJurisdiction();
+    }
+
+    /**
+     * 获取新建客户权限
+     */
+    public void requestJurisdiction() {
+        showLoading("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bizType", 100);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
+            @Override
+            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
+                HttpErrorCheck.checkResponse("编辑客户那些字段必填权限", response);
+                for (ContactLeftExtras customerJur : cuslist) {
+                    if (customerJur.label.contains("简介") && customerJur.required) {
+                        cusBrief = true;
+                        edt_customer_memo.setHint("请输入客户简介(必填)");
+                    } else if (customerJur.label.contains("定位") && customerJur.required) {
+                        tv_address.setHint("客户地址(必填)");
+                        cusLocation = true;//定位必填
+                    } else if (customerJur.label.contains("客户地址") && customerJur.required) {
+                        cusDetialAdress = true;//详细地址必填
+                        edt_address_details.setHint("请输入客户详细地址(必填)");
+                    }
+                }
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 
     /**
@@ -452,7 +493,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 mBundle.putInt("page", MapModifyView.CUSTOMER_DETAILS_PAGE);
                 if (null != mCustomer.position && mCustomer.position.loc.length > 0) {
                     mBundle.putDoubleArray("loc", mCustomer.position.loc);
-                    mBundle.putString("address",mCustomer.position.addr);
+                    mBundle.putString("address", mCustomer.position.addr);
                 }
                 app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
@@ -495,11 +536,19 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         String addressDetails = edt_address_details.getText().toString().trim();
 
         if (TextUtils.isEmpty(customerName)) {
-            Toast.makeText(this, "客户姓名不能为空", Toast.LENGTH_SHORT).show();
+            Toast("客户姓名不能为空");
             return;
         }
-        if (TextUtils.isEmpty(customerAddress)) {
-            Toast.makeText(this, "客户地址不能为空", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(customerAddress) && cusLocation) {
+            Toast("客户地址不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(addressDetails) && cusDetialAdress) {
+            Toast("客户详细地址不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(summary) && cusBrief) {
+            Toast("客户简介不能为空");
             return;
         }
         if (!TextUtils.isEmpty(addressDetails)) {

@@ -327,17 +327,19 @@ public class MainApp extends Application {
                 .showImageOnFail(R.drawable.default_image)// 加载失败时的默认图片
                 .cacheInMemory(true)// 是否缓存到内存
                 .cacheOnDisc(true)// 是否缓存到磁盘
-                .bitmapConfig(Bitmap.Config.RGB_565)// 图片格式比RGB888少消耗2倍内存
+                .bitmapConfig(Bitmap.Config.RGB_565)// 图片格式比RGB_888少消耗2倍内存RGB_565
                 .imageScaleType(ImageScaleType.EXACTLY)// 图片缩放方式
                 .build();
 
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context).
-                defaultDisplayImageOptions(defaultOptions).threadPriority(Thread.NORM_PRIORITY - 2).
-                denyCacheImageMultipleSizesInMemory().diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                defaultDisplayImageOptions(defaultOptions).
+                threadPriority(Thread.NORM_PRIORITY - 2).
+                denyCacheImageMultipleSizesInMemory().
+                diskCacheFileNameGenerator(new Md5FileNameGenerator())
                 .discCache(new UnlimitedDiscCache(cacheDir))//自定义缓存路径
-                        //.discCache(new UnlimitedDiscCache(new File("CRMcacheDir")))
-                        // .diskCacheSize(50 * 1024 * 1024) // 50 Mb
-                .memoryCacheExtraOptions(800, 800).tasksProcessingOrder(QueueProcessingType.LIFO);
+//                        .discCache(new UnlimitedDiscCache(new File("CRMcacheDir")))
+//                         .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+                .memoryCacheExtraOptions(1080, 1920).tasksProcessingOrder(QueueProcessingType.LIFO);
 
         if (Config_project.is_developer_mode) {
             builder.writeDebugLogs();

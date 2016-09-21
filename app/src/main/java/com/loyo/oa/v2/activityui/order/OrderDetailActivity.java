@@ -49,7 +49,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     private LinearLayout img_title_left, ll_extra, ll_product, ll_record, ll_enclosure, ll_plan, ll_wflayout;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
-            tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name,
+            tv_record, tv_record_value, tv_enclosure, tv_responsible_name, tv_creator_name,
             tv_creator_time, tv_wfname, tv_order_number, tv_memo;
 
 
@@ -137,7 +137,6 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_record = (TextView) findViewById(R.id.tv_record);
         tv_record_value = (TextView) findViewById(R.id.tv_record_value);
         tv_enclosure = (TextView) findViewById(R.id.tv_enclosure);
-        tv_enclosure_value = (TextView) findViewById(R.id.tv_enclosure_value);
         tv_responsible_name = (TextView) findViewById(R.id.tv_responsible_name);
         tv_creator_name = (TextView) findViewById(R.id.tv_creator_name);
         tv_creator_time = (TextView) findViewById(R.id.tv_creator_time);

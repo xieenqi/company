@@ -55,13 +55,16 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_customer_detail_info)
 public class CustomerDetailInfoActivity extends BaseActivity {
 
-    @ViewById ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
+    @ViewById
+    ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
             layout_call, layout_wiretel_call, layout_sale_activity, layout_visit, layout_task, layout_attachment,
             ll_sale, ll_order;
-    @ViewById TextView tv_title_1, tv_customer_name, tv_address, tv_tags, tv_contact_name,
+    @ViewById
+    TextView tv_title_1, tv_customer_name, tv_address, tv_tags, tv_contact_name,
             tv_contact_tel, customer_detail_wiretel, tv_sale_number, tv_visit_times, tv_task_count, tv_attachment_count,
             tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count;
-    @ViewById ImageView img_public;
+    @ViewById
+    ImageView img_public;
     /*之前由传过来的Customer获取客户ID，改为直接把客户ID传过来*/
     Customer mCustomer;
     @Extra("Id")
@@ -190,6 +193,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             img_title_right.setVisibility(View.INVISIBLE);
         }
 
+        if (customerType == 2) {//团队客户火力全开 相当于自己的客户
+            img_title_right.setVisibility(View.VISIBLE);
+        }
         img_title_left.setOnTouchListener(Global.GetTouch());
         layout_customer_info.setOnTouchListener(Global.GetTouch());
         img_public.setOnTouchListener(Global.GetTouch());

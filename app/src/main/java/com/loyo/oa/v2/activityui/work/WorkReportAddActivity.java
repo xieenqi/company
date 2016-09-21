@@ -313,7 +313,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 .defaultComment(new RCallback<HttpDefaultComment>() {
                     @Override
                     public void success(final HttpDefaultComment reviewer, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
+                        HttpErrorCheck.checkResponse("报告默认点评人：",response);
                         mReviewer = new Reviewer();
                         if (reviewer.reviewer != null) {
                             mReviewer.user = reviewer.reviewer.user;

@@ -118,7 +118,10 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
-
+                case ExtraAndResult.MSG_SEND: {
+                    saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                    break;
+                }
                 case SALETEAM_SCREEN_TAG1:
                     isPull = false;
                     saleTeamScreen = (SaleTeamScreen) msg.getData().getSerializable("data");
@@ -131,26 +134,27 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                         xPath = "";
                         userId = saleTeamScreen.getId();
                     }
-
+                    getData();
                     break;
 
                 case SALETEAM_SCREEN_TAG2:
                     isPull = false;
                     stageId = msg.getData().getString("data");
                     stageIndex = (int) msg.getData().get("index");
+                    getData();
                     break;
 
                 case SALETEAM_SCREEN_TAG3:
                     isPull = false;
                     sortType = msg.getData().getString("data");
                     sortIndex = (int) msg.getData().get("index");
+                    getData();
                     break;
 
                 default:
                     break;
 
             }
-            getData();
         }
     };
 
@@ -162,7 +166,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
             mView = inflater.inflate(R.layout.fragment_team_sale, null);
             initView(mView);
         }
-        getData();
         return mView;
     }
 
@@ -211,19 +214,9 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (isOk) {
-                    if (data.size() == 0) {
-                        wersi();
-                    } else {
-                        isOk = false;
-                        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler);
-                        getData();
-                    }
-                }
+                wersi();
             }
         }).start();
-
-
         /**
          * 列表监听
          * */
@@ -238,25 +231,34 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
+        getData();
     }
 
     public void wersi() {
-        //为超管或权限为全公司 展示全公司成员
-        if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-            setUser(mDeptSource);
-        }
-        //权限为部门 展示我的部门
-        else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
-            deptSort();
-        }
-        //权限为个人 展示自己
-        else if (MainApp.user.role.getDataRange() == Role.SELF) {
-            data.clear();
-            saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(MainApp.user.getId());
-            saleTeamScreen.setName(MainApp.user.name);
-            saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
-            data.add(saleTeamScreen);
+        try {
+            //为超管或权限为全公司 展示全公司成员
+            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
+                setUser(mDeptSource);
+            }
+            //权限为部门 展示我的部门
+            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
+                deptSort();
+            }
+            //权限为个人 展示自己
+            else if (MainApp.user.role.getDataRange() == Role.SELF) {
+                data.clear();
+                saleTeamScreen = new SaleTeamScreen();
+                saleTeamScreen.setId(MainApp.user.getId());
+                saleTeamScreen.setName(MainApp.user.name);
+                saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
+                data.add(saleTeamScreen);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } finally { /** 子线程读数据，主线程加载数据 */
+            Message msg = new Message();
+            msg.what = ExtraAndResult.MSG_SEND;
+            mHandler.sendMessage(msg);
         }
     }
 
@@ -435,16 +437,16 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
 
             //全公司筛选
             case R.id.saleteam_screen1:
-
-                saleScreenPopupView.showAsDropDown(screen1);
-                openPopWindow(tagImage1);
-                saleScreenPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(tagImage1);
-                    }
-                });
-
+                if (saleScreenPopupView != null) {
+                    saleScreenPopupView.showAsDropDown(screen1);
+                    openPopWindow(tagImage1);
+                    saleScreenPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            closePopupWindow(tagImage1);
+                        }
+                    });
+                }
                 break;
             //销售阶段
             case R.id.saleteam_screen2:

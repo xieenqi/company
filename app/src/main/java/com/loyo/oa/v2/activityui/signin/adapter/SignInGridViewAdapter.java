@@ -139,7 +139,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                                     mListData, R.drawable.default_image, mIsAdd));
                 } else {
                     //显示文件
-                    imageView.setImageResource(Global.getAttachmentIcon(attachment.getUrl()));
+                    imageView.setImageResource(Global.getAttachmentIcon(attachment.originalName));
                     textView.setText(attachment.getOriginalName());
 
                     imageView.setOnClickListener(new View.OnClickListener() {

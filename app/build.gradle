@@ -76,13 +76,13 @@ android {
     }
 
     //jenkins 构建文件输出
-//    android.applicationVariants.all { variant ->
-//        variant.outputs.each { output ->
-//            def today = new Date().format('yyyyMMdd-HH');
-//            def file = output.outputFile
-//            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
-//        }
-//    }
+/*    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def today = new Date().format('yyyyMMdd-HH');
+            def file = output.outputFile
+            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
+        }
+    }*/
 
 //  productFlavors {
 //        ukuaiqi {}

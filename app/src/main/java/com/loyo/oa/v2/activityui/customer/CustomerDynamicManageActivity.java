@@ -436,11 +436,12 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
      * 播放停止
      * */
     void stopPlayer() {
-        mViewModel.setIsAnim(false);
         if (player != null) {
             player.stop();
             player = null;
         }
+        if(null != mViewModel)
+        mViewModel.setIsAnim(false);
     }
 
     /**

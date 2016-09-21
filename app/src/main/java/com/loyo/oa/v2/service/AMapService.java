@@ -105,7 +105,6 @@ public class AMapService extends APSService {
         acquireWakeLock();
         app = (MainApp) getApplicationContext();
         ldbManager = new LDBManager();
-
         userOnlineTime();
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
@@ -522,10 +521,13 @@ public class AMapService extends APSService {
      * 计时器 记录用户在线
      */
     private void userOnlineTime() {
-        if (null == timer)
-            timer = new Timer();
-
-        timer.schedule(new TimerTask() {
+        long timerOk = 5 * 60 * 1000;
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 app.getRestAdapter().create(ITrackLog.class).getUserOneLine(new Callback<Object>() {
@@ -536,11 +538,11 @@ public class AMapService extends APSService {
 
                     @Override
                     public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
                     }
                 });
-                userOnlineTime();
             }
-        }, 5 * 60 * 1000);
+        }, timerOk, timerOk);
     }
 
     /**

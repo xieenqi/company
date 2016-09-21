@@ -10,9 +10,7 @@ public class Config_project {
 
     public static boolean isRelease = false;                                //是否是正式产品
 
-    public static final Boolean is_developer_mode = true;                  //生产模式
-
-//  public static final Boolean is_developer_mode = BuildConfig.DEBUG;     //dbug模式
+    public static final Boolean is_developer_mode = BuildConfig.DEBUG;     //dbug模式
 
 //  public static String IP = "http://192.168.31.131";                     //内部测试环境
 

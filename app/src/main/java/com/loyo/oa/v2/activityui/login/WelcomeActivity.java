@@ -31,14 +31,12 @@ public class WelcomeActivity extends Activity {
         final ViewPager viewPager = (ViewPager) findViewById(R.id.welcome_pager);
         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
         viewPager.setAdapter(new PagerAdapter() {
-
-            private static final int COUNT = 4;
-
             private final int[] IMAGE_RES = new int[]{
                     R.drawable.welcome_01,
                     R.drawable.welcome_02,
                     R.drawable.welcome_03,
-                    R.drawable.welcome_04
+                    R.drawable.welcome_04,
+                    R.drawable.welcome_05
             };
 
             @Override
@@ -64,8 +62,7 @@ public class WelcomeActivity extends Activity {
 //                imageView.setImageResource(IMAGE_RES[position]);
 
                 ImageView buttonOk = (ImageView) view.findViewById(R.id.welcomeOkButton);
-                ImageLoader.getInstance().displayImage("drawable://" + IMAGE_RES[position],
-                        imageView);
+                ImageLoader.getInstance().displayImage("drawable://" + IMAGE_RES[position],imageView);
                 if (position == getCount() - 1) {
                     buttonOk.setVisibility(View.VISIBLE);
                     buttonOk.setOnClickListener(new View.OnClickListener() {

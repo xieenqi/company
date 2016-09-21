@@ -86,37 +86,25 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             case R.id.img_title_right:
                 HashMap<String, Object> maps = new HashMap<>();
                 for (ContactLeftExtras contactLeftExtras : mContactLeftExtras) {
+                    if (contactLeftExtras.required && TextUtils.isEmpty(contactLeftExtras.val)) {
+                        Toast(contactLeftExtras.label + "不能为空");
+                        return;
+                    }
                     if (!contactLeftExtras.isSystem) {
                         LogUtil.dee(contactLeftExtras.label + ":" + contactLeftExtras.val);
                         contactRequestParam = new ContactRequestParam();
                         contactRequestParam.setVal(contactLeftExtras.val);
                         contactRequestParam.properties = contactLeftExtras;
+                        contactRequestParam.required = contactLeftExtras.required;
                         requestContactParam.add(contactRequestParam);
                     } else {
                         if (contactLeftExtras.fieldName.equals("name")) {
-
-                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
-                                Toast("姓名不能为空");
-                                return;
-                            }
                             maps.put("name", contactLeftExtras.val);
-
-                        } else if (contactLeftExtras.fieldName.equals("wiretel")) {
-//
-//                            if (!contactLeftExtras.val.isEmpty()) {
-//                                if (!RegularCheck.isPhone(contactLeftExtras.val)) {
-//                                    Toast("座机号码格式不正确");
-//                                    return;
-//                                }
-//                            }
-                            maps.put("wiretel", contactLeftExtras.val);
-
                         } else if (contactLeftExtras.fieldName.equals("tel")) {
-
-                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
-                                Toast("手机号不能为空");
-                                return;
-                            }
+//                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
+//                                Toast("手机号不能为空");
+//                                return;
+//                            }
 // else {
 //                                if (!RegularCheck.isMobilePhone(contactLeftExtras.val)) {
 //                                    Toast("手机号码格式不正确");
@@ -125,6 +113,14 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 //                            }
                             maps.put("tel", contactLeftExtras.val);
 
+                        } else if (contactLeftExtras.fieldName.equals("wiretel")) {
+//                            if (contactLeftExtras.required && TextUtils.isEmpty(contactLeftExtras.val)) {
+//                                Toast("座机号码不能为空");
+//                                return;
+////                                if (!RegularCheck.isPhone(contactLeftExtras.val)) {//验证座机号码
+////                                }
+//                            }
+                            maps.put("wiretel", contactLeftExtras.val);
                         } else if (contactLeftExtras.fieldName.equals("birth")) {
                             if (TextUtils.isEmpty(contactLeftExtras.val)) {
                                 try {
@@ -135,10 +131,12 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             } else {
                                 maps.put("birth", contactLeftExtras.val);
                             }
-                        } else if (contactLeftExtras.fieldName.equals("wx")) {
-                            maps.put("wx", contactLeftExtras.val);
+                        } else if (contactLeftExtras.fieldName.equals("dept_name")) {
+                            maps.put("deptName", contactLeftExtras.val);
                         } else if (contactLeftExtras.fieldName.equals("qq")) {
                             maps.put("qq", contactLeftExtras.val);
+                        } else if (contactLeftExtras.fieldName.equals("wx")) {
+                            maps.put("wx", contactLeftExtras.val);
                         } else if (contactLeftExtras.fieldName.equals("email")) {
                             if (!TextUtils.isEmpty(contactLeftExtras.val)) {
                                 if (!RegularCheck.checkEmail(contactLeftExtras.val)) {
@@ -147,15 +145,11 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                                 }
                             }
                             maps.put("email", contactLeftExtras.val);
-
                         } else if (contactLeftExtras.fieldName.equals("memo")) {
                             maps.put("memo", contactLeftExtras.val);
-                        } else if (contactLeftExtras.fieldName.equals("dept_name")) {
-                            maps.put("deptName", contactLeftExtras.val);
                         }
                     }
                 }
-
                 maps.put("extDatas", requestContactParam);
                 LogUtil.d("添加联系人发送map：" + MainApp.gson.toJson(maps));
 
@@ -163,18 +157,18 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                     if (mContact == null) {
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                                 addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
-                            @Override
-                            public void success(final Contact contact, final Response response) {
-                                HttpErrorCheck.checkResponse("添加联系人：", response);
-                                mContact = contact;
-                                sendBack();
-                            }
+                                    @Override
+                                    public void success(final Contact contact, final Response response) {
+                                        HttpErrorCheck.checkResponse("添加联系人：", response);
+                                        mContact = contact;
+                                        sendBack();
+                                    }
 
-                            @Override
-                            public void failure(final RetrofitError error) {
-                                HttpErrorCheck.checkError(error);
-                            }
-                        });
+                                    @Override
+                                    public void failure(final RetrofitError error) {
+                                        HttpErrorCheck.checkError(error);
+                                    }
+                                });
                     } else {
                         //*修改联系人*//
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).

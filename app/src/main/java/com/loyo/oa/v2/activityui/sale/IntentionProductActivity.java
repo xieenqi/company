@@ -20,8 +20,8 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -29,8 +29,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +87,7 @@ public class IntentionProductActivity extends BaseActivity {
     private void init() {
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_addpro = (TextView) findViewById(R.id.tv_addpro);
-        if(fromPage == ActionCode.ORDER_DETAIL){
+        if (fromPage == ActionCode.ORDER_DETAIL) {
             tv_addpro.setText("新增购买产品");
         }
         tv_title.setText(fromPage == ActionCode.ORDER_DETAIL ? "购买产品" : "意向产品");
@@ -134,7 +132,7 @@ public class IntentionProductActivity extends BaseActivity {
     private void getIntentData() {
         saleId = getIntent().getStringExtra("saleId");
         fromPage = getIntent().getIntExtra("data", 0);
-        isKine  = getIntent().getBooleanExtra("boolean",false);
+        isKine = getIntent().getBooleanExtra("boolean", false);
         ArrayList<SaleIntentionalProduct> intentData = (ArrayList<SaleIntentionalProduct>) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentData && intentData.size() > 0) {
             listData = intentData;
@@ -152,6 +150,7 @@ public class IntentionProductActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.putExtra(ExtraAndResult.STR_SELECT_TYPE, resultAction);
         intent.putExtra(ExtraAndResult.RESULT_DATA, listData);
+        intent.putExtra("salePrice", tv_saleToal.getText().toString());
         setResult(RESULT_OK, intent);
         super.onBackPressed();
     }

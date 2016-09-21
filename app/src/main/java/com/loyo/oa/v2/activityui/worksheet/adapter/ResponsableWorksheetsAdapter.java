@@ -62,9 +62,8 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
             });
             convertView.setTag(holder);
 
-        }
-        else {
-            holder = (ViewHolder)convertView.getTag();
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
         WorksheetEvent wse = (WorksheetEvent) getChild(groupPosition, childPosition);
@@ -92,33 +91,32 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
 
             tv_endtime_tag.setVisibility(View.GONE);
             tv_deadline.setTextColor(mContext.getResources().getColor(R.color.text99));
-            if(wse.endTime != 0){
+            if (wse.endTime != 0) {
                 /*是否超时判断*/
-                if(nowTime > wse.endTime && wse.status != WorksheetEventStatus.FINISHED){
+                if (wse.isOvertime) {
                     tv_deadline.setTextColor(mContext.getResources().getColor(R.color.red1));
                     tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
                     tv_endtime_tag.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     tv_deadline.setText(DateTool.getDiffTime(wse.endTime));
                 }
-            }else{
+            } else {
                 tv_deadline.setText("--");
             }
 
 
             //TODO 我负责的 未触发不显示触发时间
-            if(wse.status == WorksheetEventStatus.UNACTIVATED){
-                tv_time.setText(""+wse.daysLater+"天以后触发");
+            if (wse.status == WorksheetEventStatus.UNACTIVATED) {
+                tv_time.setText("" + wse.daysLater + "天以后触发");
                 tv_time.setVisibility(View.INVISIBLE);
-            }else{
+            } else {
                 tv_time.setText(DateTool.getDiffTime(wse.startTime));
                 tv_time.setVisibility(View.VISIBLE);
             }
 
             if (wse.status == WorksheetEventStatus.WAITPROCESS) {
                 iv_action.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 iv_action.setVisibility(View.GONE);
             }
         }

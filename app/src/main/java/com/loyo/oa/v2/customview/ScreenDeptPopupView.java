@@ -68,13 +68,14 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         this.setFocusable(true);
         this.setOutsideTouchable(true);
         this.update();
-        getFirstDept(0);
+        if (data.size() > 0)
+            getFirstDept(0);
 
         adapter1 = new AdapterSaleTeamScreen1(context, depementData, 1);
         listView1.setAdapter(adapter1);
         adapter2 = new AdapterSaleTeamScreen2(context, userData, 2);
         listView2.setAdapter(adapter2);
-        adapter2.refshData(0);
+//        adapter2.refshData(0);
     }
 
     public void initView() {
