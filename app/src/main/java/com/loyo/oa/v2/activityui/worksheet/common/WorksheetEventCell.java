@@ -118,7 +118,6 @@ public class WorksheetEventCell extends LinearLayout {
         tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime));
         LogUtil.dee("endTime:" + data.endTime);
         LogUtil.dee("status:" + data.status);
-//TODO 现在事件截至时间所有端重新调整 待调整完成  删除
         if (data.endTime != 0 && data.status != WorksheetEventStatus.UNACTIVATED) {
             //事件 已处理 待处理 标红
             if (data.isOvertime) {
