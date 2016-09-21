@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.other.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.CustomerFollowUpModel;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
@@ -165,7 +166,7 @@ public interface ICustomer {
 
 
     @GET("/saleactivity/{cusId}")
-    void getSaleactivity(@Path("cusId") String cusId, @QueryMap HashMap<String, Object> map, retrofit.Callback<PaginationX<SaleActivity>> cb);
+    void getSaleactivity(@Path("cusId") String cusId, @QueryMap HashMap<String, Object> map, retrofit.Callback<PaginationX<CustomerFollowUpModel>> cb);
 
     @GET("/saleactivitytype/")
     void getSaleactivitytypes(Callback<ArrayList<CommonTag>> cb);

@@ -141,6 +141,7 @@ public class CallPhoneBackActivity extends BaseActivity implements View.OnClickL
                         }else{
                             cancelLoading();
                             Toast(callBackCallid.errmsg);
+                            finish();
                         }
                     }
 

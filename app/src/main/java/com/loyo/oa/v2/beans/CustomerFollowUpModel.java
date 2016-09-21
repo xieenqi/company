@@ -5,16 +5,17 @@ import android.widget.ImageView;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
- * Created by Administrator on 2014/12/22 0022.
+ * 【客户跟进】model
+ * Created by yyy on 2014/12/22 0022.
  */
-public class SaleActivity extends BaseBeans implements Serializable {
+public class CustomerFollowUpModel extends BaseBeans implements Serializable {
+
     private ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
     private NewUser creator;//&{organization User}, optional): ,
     private String customerId;//int64, optional): ,
@@ -127,4 +128,6 @@ public class SaleActivity extends BaseBeans implements Serializable {
     public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+
 }

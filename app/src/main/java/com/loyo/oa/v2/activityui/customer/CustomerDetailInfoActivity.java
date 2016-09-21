@@ -482,7 +482,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_sale_activity:
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
-                _class = CustomerDynamicManageActivity.class;
+                _class =  CustomerDynamicManageActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;
             /*拜访签到*/

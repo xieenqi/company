@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -36,6 +37,8 @@ public class ContactViewGroup extends LinearLayout {
         void onSetDefault(Contact contact);
 
         void onCallBack(String callNum, String id, String name);
+
+        void onPhoneError();
     }
 
     private Context context;
@@ -61,10 +64,14 @@ public class ContactViewGroup extends LinearLayout {
         this.leftExtrases = leftExtrases;
     }
 
+    /**
+     * 手机拨打弹出框
+     * */
     public void paymentSet() {
         final CallPhonePopView callPhonePopView = new CallPhonePopView(context,mContact.getName());
         callPhonePopView.show();
         callPhonePopView.setCanceledOnTouchOutside(true);
+        /*商务电话*/
         callPhonePopView.businessPhone(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +79,7 @@ public class ContactViewGroup extends LinearLayout {
                 callPhonePopView.dismiss();
             }
         });
+        /*普通电话*/
         callPhonePopView.commonlyPhone(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,27 +94,6 @@ public class ContactViewGroup extends LinearLayout {
             }
         });
 
-/*        String[] data = {"商务电话", "普通电话", "取消"};
-        final PaymentPopView popView = new PaymentPopView(context, data, mContact.getName());
-        popView.show();
-        popView.setCanceledOnTouchOutside(true);
-        popView.setCallback(new PaymentPopView.VaiueCallback() {
-            @Override
-            public void setValue(String value, int index) {
-                switch (index) {
-                    case 1:
-                        contactProcessCallback.onCallBack(mContact.getTel(), mContact.getId(), mContact.getName());
-                        break;
-
-                    case 2:
-                        Utils.call(context, mContact.getTel());
-                        break;
-
-                    case 3:
-                        break;
-                }
-            }
-        });*/
     }
 
     /**
@@ -181,6 +168,14 @@ public class ContactViewGroup extends LinearLayout {
             call.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if(mContact.getTel().trim().isEmpty()){
+                        contactProcessCallback.onPhoneError();
+                        return;
+                    }
+                    if(!RegularCheck.isMobilePhone(mContact.getTel())){
+                        contactProcessCallback.onPhoneError();
+                        return;
+                    }
                     paymentSet();
                 }
             });

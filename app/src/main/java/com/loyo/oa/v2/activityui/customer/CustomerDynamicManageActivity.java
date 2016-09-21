@@ -20,7 +20,9 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.AudioViewModel;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.CustomerFollowUpModel;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -34,14 +36,15 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Player;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -60,13 +63,14 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     private TextView tv_audio_starttime, tv_audio_endtime;
     private ViewGroup layout_audioplayer, layout_audio_contral;
     private ViewGroup img_title_left, layout_add, layout_view_bottom;
+    private ViewGroup layout_last,layout_next;
 
     private Customer customer;
     private SaleActivity mSaleActivity;
-    private AnimationDrawable animationDrawable;
+
     private DynamicListnestingAdapter nestionListAdapter;
-    private ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
-    private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
+    private ArrayList<AudioViewModel> lstData_saleActivity_current = new ArrayList<>();
+    private PaginationX<CustomerFollowUpModel> paginationX = new PaginationX<>(20);
 
     private Player player;
     private SeekBar musicProgress;
@@ -79,6 +83,10 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     private int supply;
     private String playTime;
     private String endTime;
+
+    private AudioViewModel mViewModel;/*当前播放音频的model*/
+    private int mPosition;            /*当前播放音频的下标*/
+
 
     private Handler mHandler = new Handler() {
 
@@ -119,6 +127,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                     musicProgress.setProgress(0);
                     layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
                     isOnPlay = true;
+                    mViewModel.setIsAnim(false);
                     break;
             }
         }
@@ -146,26 +155,39 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", paginationX.getPageIndex());
             map.put("pageSize", isTopAdd ? lstData_saleActivity_current.size() >= 20 ? lstData_saleActivity_current.size() : 20 : 20);
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivity(customer.getId(), map, new RCallback<PaginationX<SaleActivity>>() {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivity(customer.getId(), map, new RCallback<PaginationX<CustomerFollowUpModel>>() {
                 @Override
-                public void success(final PaginationX<SaleActivity> paginationXes, final Response response) {
+                public void success(final PaginationX<CustomerFollowUpModel> paginationXes, final Response response) {
+                    LogUtil.dee("1");
                     HttpErrorCheck.checkResponse("跟进动态数据:", response);
                     lv_saleActivity.onRefreshComplete();
                     if (!PaginationX.isEmpty(paginationXes)) {
+                        LogUtil.dee("2");
                         paginationX = paginationXes;
                         if (isTopAdd) {
                             lstData_saleActivity_current.clear();
                         }
-                        lstData_saleActivity_current.addAll(paginationX.getRecords());
+
+                        List<CustomerFollowUpModel> list = paginationX.getRecords();
+                        for (int i = 0; list != null && i < list.size(); i++) {
+                            CustomerFollowUpModel model = list.get(i);
+                            lstData_saleActivity_current.add(new AudioViewModel(model));
+                        }
+
+
+
                         bindData();
+                    }else{
+                        LogUtil.dee("3");
                     }
                 }
 
                 @Override
                 public void failure(final RetrofitError error) {
+                    super.failure(error);
                     HttpErrorCheck.checkError(error);
                     lv_saleActivity.onRefreshComplete();
-                    super.failure(error);
+                    LogUtil.dee("4");
                 }
             });
         }
@@ -182,6 +204,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         layout_audio_contral = (ViewGroup) findViewById(R.id.layout_audio_contral);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
+        layout_last = (ViewGroup) findViewById(R.id.layout_last);
+        layout_next = (ViewGroup) findViewById(R.id.layout_next);
+
         lv_saleActivity = (PullToRefreshListView) findViewById(R.id.lv_saleActivity);
 
         img_title_left.setOnClickListener(this);
@@ -190,9 +215,14 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             layout_add.setVisibility(View.GONE);
         }
         layout_add.setOnTouchListener(Global.GetTouch());
+        layout_last.setOnTouchListener(Global.GetTouch());
+        layout_next.setOnTouchListener(Global.GetTouch());
+        layout_audio_close.setOnTouchListener(Global.GetTouch());
         layout_add.setOnClickListener(this);
         layout_audio_close.setOnClickListener(this);
         layout_audio_pauseorplay.setOnClickListener(this);
+        layout_last.setOnClickListener(this);
+        layout_next.setOnClickListener(this);
 
 
         player = new Player(musicProgress);
@@ -250,6 +280,64 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
+
+            /*上一首*/
+            case R.id.layout_last:
+
+/*                for(int i = 0;i<mPosition;i++){
+                    if(TextUtils.isEmpty(lstData_saleActivity_current.get(i).getAudioUrl())){
+                       continue;
+                    }else if(!TextUtils.isEmpty(lstData_saleActivity_current.get(i).getAudioUrl())){
+                        mPosition = i;
+                        audioPlayDeal(i,lstData_saleActivity_current.get(i));
+                        break;
+                    }else{
+                        Toast("最前了！");
+                    }
+                }*/
+
+                if(mPosition == 0){
+                    Toast("这是第一条");
+                }else{
+                    mPosition--;
+                    Toast(""+mPosition);
+                    if(!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())){
+                        mViewModel = lstData_saleActivity_current.get(mPosition);
+                        audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
+                    }else{
+                        Toast("没有录音。");
+                    }
+                }
+                break;
+
+            /*下一首*/
+            case R.id.layout_next:
+
+ /*               for(int i = mPosition;i<lstData_saleActivity_current.size();i++){
+                    if(TextUtils.isEmpty(lstData_saleActivity_current.get(i).getAudioUrl())){
+                        continue;
+                    }else if(!TextUtils.isEmpty(lstData_saleActivity_current.get(i).getAudioUrl())){
+                        mPosition = i;
+                        audioPlayDeal(i,lstData_saleActivity_current.get(i));
+                        break;
+                    }else{
+                        Toast("最后了！");
+                    }
+                }*/
+
+                if(mPosition == lstData_saleActivity_current.size()){
+                    Toast("这是最后一条");
+                }else{
+                    mPosition++;
+                    Toast("" + mPosition);
+                    if(!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())){
+                        mViewModel = lstData_saleActivity_current.get(mPosition);
+                        audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
+                    }else{
+                        Toast("没有录音。");
+                    }
+                }
+                break;
 
             /*播放暂停*/
             case R.id.layout_audio_pauseorplay:
@@ -322,6 +410,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         }
     }
 
+    /**
+     * 播放开始
+     * */
     void audioStart(){
         isOnPlay = false;
         layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
@@ -330,6 +421,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         }
     }
 
+    /**
+     * 播放暂停
+     * */
     void audioPause(){
         isOnPlay = true;
         layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
@@ -338,11 +432,57 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         }
     }
 
+    /**
+     * 播放停止
+     * */
     void stopPlayer() {
+        mViewModel.setIsAnim(false);
         if (player != null) {
             player.stop();
             player = null;
         }
+    }
+
+    /**
+     * 播放和动画处理
+     * */
+    void audioPlayDeal(int position, final AudioViewModel viewModel){
+
+        MediaPlayer mp = MediaPlayer.create(CustomerDynamicManageActivity.this, Uri.parse(viewModel.audioUrl));
+        try {
+            supply = mp.getDuration();
+            tv_audio_endtime.setText(DateTool.timeMills(supply + "","mm:ss"));
+        }catch (NullPointerException e){
+            Toast("录音文件不存在！");
+            e.printStackTrace();
+            return;
+        }
+
+        for(int i = 0;i<lstData_saleActivity_current.size();i++){
+            if(i != position){
+                lstData_saleActivity_current.get(i).setIsAnim(false);
+            }
+        }
+
+        viewModel.setIsAnim(true);
+
+        if (layout_audioplayer.getVisibility() != View.VISIBLE) {
+            mHandler.sendEmptyMessage(0x01);
+        }
+        if (null == player) {
+            player = new Player(musicProgress);
+        }
+        audioStart();
+        playTime = "00:00";
+        endTime = DateTool.timet(viewModel.audioLength + "", "mm:ss");
+        endTimerInt = Integer.parseInt(viewModel.audioLength + "");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                player.playUrl(viewModel.audioUrl);
+            }
+        }).start();
     }
 
     @Override
@@ -355,34 +495,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         super.onBackPressed();
     }
 
-
     private class SaleActivitiesAdapter extends BaseAdapter {
-
-        ArrayList<ImageView> callsImage = new ArrayList<>();
-        int lastPosition = -1;
-
-        /**
-         * 启动动画
-         * */
-        void startAnim(ImageView imageView,int position){
-            animationDrawable = (AnimationDrawable) imageView.getDrawable();
-            animationDrawable.start();
-            if(lastPosition != -1 && lastPosition != position){
-                stopAnim(callsImage.get(lastPosition));
-            }
-               lastPosition = position;
-        }
-
-        /**
-         * 停止动画
-         * */
-        void stopAnim(ImageView imageView){
-            animationDrawable = (AnimationDrawable) imageView.getDrawable();
-            if(animationDrawable.isRunning()){
-                animationDrawable.stop();
-                imageView.setBackgroundResource(R.drawable.icon_dynamic_phone01);
-            }
-        }
 
         @Override
         public int getCount() {
@@ -404,6 +517,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }
+            final AudioViewModel viewModel = lstData_saleActivity_current.get(position);
 
             LinearLayout ll_layout_time = ViewHolder.get(convertView, R.id.ll_layout_time);
             LinearLayout layout_audio = ViewHolder.get(convertView, R.id.layout_audio);
@@ -416,40 +530,46 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             TextView tv_audio_length = ViewHolder.get(convertView, R.id.tv_audio_length);
             ImageView iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
             final ImageView iv_calls = ViewHolder.get(convertView, R.id.iv_calls);
-            final SaleActivity saleActivity = lstData_saleActivity_current.get(position);
-            callsImage.add(iv_calls);
 
-            tv_create_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt()));
-            tv_content.setText(saleActivity.getContent());
+            if (viewModel.getIsAnim()) {
+                app.startAnim(iv_calls);
+            }
+            else {
+                app.stopAnim(iv_calls);
+            }
+            viewModel.imageViewWeakReference = new WeakReference<ImageView>(iv_calls);
+
+            tv_create_time.setText(DateTool.getDiffTime(viewModel.getCreateAt()));
+            tv_content.setText(viewModel.getContent());
 
             /*判断是否有录音*/
-            if (null != saleActivity.audioUrl && !TextUtils.isEmpty(saleActivity.audioUrl)) {
+            if (null != viewModel.audioUrl && !TextUtils.isEmpty(viewModel.audioUrl)) {
                 layout_audio.setVisibility(View.VISIBLE);
-                tv_audio_length.setText(DateTool.timet(saleActivity.audioLength + "", "mm:ss"));
+                tv_audio_length.setText(DateTool.timet(viewModel.audioLength + "", "mm:ss"));
             } else {
                 layout_audio.setVisibility(View.GONE);
             }
 
-            tv_contact_name.setText("联系人：" + saleActivity.contactName);
-            tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
+            tv_contact_name.setText("联系人：" + viewModel.contactName);
+            tv_follow_name.setText("跟进人：" + viewModel.creatorName + " #" + viewModel.typeName);
 
-            if (null != saleActivity.getAttachments() && saleActivity.getAttachments().size() != 0) {
+            if (null != viewModel.getAttachments() && viewModel.getAttachments().size() != 0) {
                 lv_listview.setVisibility(View.VISIBLE);
-                nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(), mContext);
+                nestionListAdapter = new DynamicListnestingAdapter(viewModel.getAttachments(), mContext);
                 lv_listview.setAdapter(nestionListAdapter);
             } else {
                 lv_listview.setVisibility(View.GONE);
             }
 
-            if (saleActivity.getRemindAt() != 0) {
+            if (viewModel.getRemindAt() != 0) {
                 ll_layout_time.setVisibility(View.VISIBLE);
-                tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
+                tv_time.setText(app.df3.format(new Date(viewModel.getRemindAt() * 1000)));
             } else {
                 ll_layout_time.setVisibility(View.GONE);
             }
 
             /*提醒时间没有过当前时间变红色*/
-            if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
+            if (viewModel.getRemindAt() > System.currentTimeMillis() / 1000) {
                 tv_time.setTextColor(getResources().getColor(R.color.red1));
                 iv_imgTime.setImageResource(R.drawable.icon_tx2);
             } else {
@@ -466,35 +586,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             layout_audio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    MediaPlayer mp = MediaPlayer.create(CustomerDynamicManageActivity.this, Uri.parse(saleActivity.audioUrl));
-                    try {
-                        supply = mp.getDuration();
-                        tv_audio_endtime.setText(DateTool.timeMills(supply + "","mm:ss"));
-                    }catch (NullPointerException e){
-                        Toast("录音文件不存在！");
-                        e.printStackTrace();
-                        return;
-                    }
-
-                    startAnim(iv_calls, position);
-                    if (layout_audioplayer.getVisibility() != View.VISIBLE) {
-                        mHandler.sendEmptyMessage(0x01);
-                    }
-                    if (null == player) {
-                        player = new Player(musicProgress);
-                    }
-                    audioStart();
-                    playTime = "00:00";
-                    endTime = DateTool.timet(saleActivity.audioLength + "", "mm:ss");
-                    endTimerInt = Integer.parseInt(saleActivity.audioLength + "");
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            player.playUrl(saleActivity.audioUrl);
-                        }
-                    }).start();
+                    mPosition = position;
+                    mViewModel = viewModel;
+                    audioPlayDeal(position, viewModel);
                 }
             });
 

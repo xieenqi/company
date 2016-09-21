@@ -46,7 +46,7 @@
                 android:id="@+id/iv_calls"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@anim/animation_calls"
+                android:src="@drawable/animation_calls"
                 />
             <LinearLayout
                 android:layout_marginLeft="@dimen/dimen_10"

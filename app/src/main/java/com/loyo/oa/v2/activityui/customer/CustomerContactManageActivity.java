@@ -256,6 +256,11 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         requestClientInfo();
     }
 
+    @Override
+    public void onPhoneError() {
+        Toast("手机号为空或格式不正确!");
+    }
+
     /**
      * 删除联系人的回调 xnq
      *

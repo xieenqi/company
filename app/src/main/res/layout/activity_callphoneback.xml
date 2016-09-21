@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:scaleType="center"
-            android:src="@drawable/ro1"
+            android:src="@drawable/ro2"
             android:visibility="invisible" />
 
         <ImageView
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:scaleType="center"
-            android:src="@drawable/ro1"
+            android:src="@drawable/ro2"
             android:visibility="invisible" />
 
         <ImageView
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:scaleType="center"
-            android:src="@drawable/ro1"
+            android:src="@drawable/ro2"
             android:visibility="invisible" />
 
         <ImageView
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:scaleType="center"
-            android:src="@drawable/ro1"
+            android:src="@drawable/ro2"
             android:visibility="invisible" />
 
     </RelativeLayout>
