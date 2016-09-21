@@ -211,7 +211,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
 
         mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
         mExpandableListView.setOnRefreshListener(this);
-        //mExpandableListView.setEmptyView(emptyView);
+        mExpandableListView.setEmptyView(emptyView);
 
         setupExpandableListView(
                 new ExpandableListView.OnGroupClickListener() {
@@ -335,8 +335,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
-                mExpandableListView.setEmptyView(emptyView);
-
                 HttpErrorCheck.checkResponse("团队工单列表：", response);
             }
 

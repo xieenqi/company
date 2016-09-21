@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -185,6 +186,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
+        lv_list.setEmptyView(emptyView);
 
         /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -369,16 +371,33 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
                 HttpErrorCheck.checkResponse("我的线索列表：", response);
-                try {
+                if (null == clueList.data || clueList.data.records == null) {
+                    if (isPullDown && listData.size() > 0) {
+                        listData.clear();
+                    } else {
+                        Toast("没有相关数据");
+                        return;
+                    }
+                } else {
                     if (isPullDown) {
                         listData.clear();
                     }
                     listData.addAll(clueList.data.records);
+                }
+                try {
+//                    if (isPullDown) {
+//                        listData.clear();
+//                    }
+//                    if (null == clueList.data.records) {
+//                        listData.clear();
+//                        Toast("没有相关数据");
+//                    } else {
+//                        listData.addAll(clueList.data.records);
+//                    }
                     adapter.setData(listData);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-                lv_list.setEmptyView(emptyView);
             }
 
             @Override
