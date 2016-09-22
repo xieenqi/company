@@ -27,11 +27,13 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.RestAdapterPhoneFactory;
+import com.loyo.oa.v2.tool.SweetAlertDialogView;
 
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -232,6 +234,7 @@ public class CallPhoneBackActivity extends BaseActivity implements View.OnClickL
         if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0) {
 
+/*
             final GeneralPopView generalPopView = showGeneralDialog(false,true,"电话正在回拨，是否取消?");
             generalPopView.setSureOnclick(new View.OnClickListener() {
                 @Override
@@ -240,6 +243,23 @@ public class CallPhoneBackActivity extends BaseActivity implements View.OnClickL
                     generalPopView.dismiss();
                 }
             });
+*/
+
+            final SweetAlertDialogView alertDialogView = new SweetAlertDialogView(mContext);
+            alertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    alertDialogView.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    requestCallBack2();
+                    alertDialogView.sweetAlertDialog.dismiss();
+                }
+            },"提醒","电话正在回拨，是否取消?");
+
+
             return true;
         }
         return super.onKeyDown(keyCode, event);

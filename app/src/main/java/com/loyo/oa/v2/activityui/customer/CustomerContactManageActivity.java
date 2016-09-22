@@ -215,7 +215,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         HashMap<String, Object> map = new HashMap<>();
         map.put("customerId", customerContact.getId());
         map.put("contactId", contactId);
-
+        LogUtil.dee("阿萨德："+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).requestCallBack(map,
                 new RCallback<CallBackCallid>() {
                     @Override
@@ -258,7 +258,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     @Override
     public void onPhoneError() {
-        Toast("手机号为空或格式不正确!");
+        Toast("电话号码为空或格式不正确!");
     }
 
     /**

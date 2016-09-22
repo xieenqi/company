@@ -48,6 +48,7 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SweetAlertDialogView;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -414,7 +415,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         }
 
         if (!Global.isConnected()) {
-            Toast("没有网络连接，不能打卡");
+            sweetAlert.alertIcon("警告", "请检查您的网络连接!");
             return;
         }
         /*工作日*/
@@ -448,7 +449,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             public void success(final ValidateInfo _validateInfo, final Response response) {
                 HttpErrorCheck.checkResponse("考勤信息1:", response);
                 if (null == _validateInfo) {
-                    Toast("获取考勤信息失败");
+                    sweetAlert.alertIcon("警告","获取考勤信息失败");
                     return;
                 }
                 validateInfo = _validateInfo;
@@ -465,7 +466,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 }
                 //已打卡完毕 跳转考勤列表
                 else {
-                    Toast("您今天已经打卡完毕");
+                    sweetAlert.alertMessage("提醒", "您今天已经打卡完毕");
                 }
             }
 
@@ -606,17 +607,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
-        LogUtil.d("位置回调成功");
         UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
-        LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);
         MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                LogUtil.d("check回调成功");
                 if (null == attendanceRecord) {
-                    Toast("没有获取到考勤信息");
+                    sweetAlert.alertIcon("警告","没有获取到考勤信息");
                     return;
                 }
                 attendanceRecords = attendanceRecord;
@@ -632,7 +630,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                LogUtil.d("check回调失败");
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -641,10 +638,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void OnLocationGDFailed() {
-        LogUtil.d("位置回调失败");
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();
+        sweetAlert.alertMessage("警告", "获取打卡位置失败");
     }
 
     /**

@@ -35,42 +35,34 @@
 
         <LinearLayout
             android:id="@+id/layout_audio"
-            android:layout_marginTop="@dimen/dimen_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dimen_4"
             android:gravity="center_vertical"
-            android:visibility="gone"
-            >
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_audio_phone"
+                />
+
             <ImageView
                 android:id="@+id/iv_calls"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/animation_calls"
-                />
-            <LinearLayout
-                android:layout_marginLeft="@dimen/dimen_10"
-                android:layout_width="match_parent"
+                android:src="@drawable/animation_calls" />
+
+            <TextView
+                android:id="@+id/tv_audio_length"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:text="00:00:00"
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp12" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="通话录音"
-                    android:textColor="@color/text99"
-                    />
-                <TextView
-                    android:id="@+id/tv_audio_length"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="时长3分21秒(测试)"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12"
-                    />
-
-            </LinearLayout>
         </LinearLayout>
 
         <com.loyo.oa.v2.customview.CustomerListView
@@ -120,8 +112,7 @@
                 android:layout_marginTop="@dimen/dimen_4"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/iv_imgTime"
@@ -141,5 +132,6 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
     <include layout="@layout/include_solid_line_left" />
 </LinearLayout>

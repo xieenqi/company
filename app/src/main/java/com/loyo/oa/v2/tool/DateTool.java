@@ -15,12 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.Locale;
 
 public class DateTool {
-
-
-
 
     /**
      * 1s==1000ms
@@ -635,6 +633,24 @@ public class DateTool {
             e.printStackTrace();
         }
         return times;
+    }
+
+    /**
+     * 把毫秒转换成：1:20:30这里形式
+     * @param timeMs 毫秒
+     * @return
+     */
+    public static String stringForTime(int timeMs) {
+
+         StringBuilder mFormatBuilder = new StringBuilder();
+         Formatter mFormatter = new Formatter();
+        int totalSeconds = timeMs / 1000;
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+
+        mFormatBuilder.setLength(0);
+        return mFormatter.format("%02d:%02d:%02d", hours, minutes, seconds).toString();
     }
 
 

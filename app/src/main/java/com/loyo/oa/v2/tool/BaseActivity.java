@@ -53,6 +53,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
     private GestureDetector mDetector;
+    private SweetAlertDialogView sweetAlert;
 
     /**
      * 搜索跳转分类
@@ -97,6 +98,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         tintManager.setNavigationBarTintEnabled(true);
         // 设置一个颜色给系统栏
         tintManager.setTintColor(getResources().getColor(R.color.title_bg1));
+        sweetAlert = new SweetAlertDialogView(this);
     }
 
     @Override
@@ -407,6 +409,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         generalPopView.setCanceledOnTouchOutside(isOut);
         return generalPopView;
     }
+
+
+
+
 
     /*重启当前Activity*/
     public void restartActivity() {

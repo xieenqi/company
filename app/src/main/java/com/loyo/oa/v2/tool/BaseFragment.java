@@ -20,6 +20,8 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     protected OnLoadSuccessCallback callback;
     protected int mId;
     public GeneralPopView generalPopView;
+    public SweetAlertDialogView sweetAlert;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         app = MainApp.getMainApp();
         mActivity = getActivity();
         AppBus.getInstance().register(this);
+        sweetAlert = new SweetAlertDialogView(getActivity());
     }
 
     public void onDestroy() {

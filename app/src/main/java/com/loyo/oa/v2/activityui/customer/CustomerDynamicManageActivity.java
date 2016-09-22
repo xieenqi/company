@@ -123,7 +123,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
                 /*播放停止*/
                 case 0x04:
-                    playTime = "00:00";
+                    playTime = "00:00:00";
                     musicProgress.setProgress(0);
                     layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
                     isOnPlay = true;
@@ -158,11 +158,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivity(customer.getId(), map, new RCallback<PaginationX<CustomerFollowUpModel>>() {
                 @Override
                 public void success(final PaginationX<CustomerFollowUpModel> paginationXes, final Response response) {
-                    LogUtil.dee("1");
                     HttpErrorCheck.checkResponse("跟进动态数据:", response);
                     lv_saleActivity.onRefreshComplete();
                     if (!PaginationX.isEmpty(paginationXes)) {
-                        LogUtil.dee("2");
                         paginationX = paginationXes;
                         if (isTopAdd) {
                             lstData_saleActivity_current.clear();
@@ -173,12 +171,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                             CustomerFollowUpModel model = list.get(i);
                             lstData_saleActivity_current.add(new AudioViewModel(model));
                         }
-
-
-
                         bindData();
-                    }else{
-                        LogUtil.dee("3");
                     }
                 }
 
@@ -187,7 +180,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                     super.failure(error);
                     HttpErrorCheck.checkError(error);
                     lv_saleActivity.onRefreshComplete();
-                    LogUtil.dee("4");
                 }
             });
         }
@@ -254,7 +246,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                                       boolean fromUser) {
             this.progress = progress * player.mediaPlayer.getDuration()
                     / seekBar.getMax();
-            playTime = DateTool.timeMills(this.progress+"","mm:ss");
+            playTime = DateTool.stringForTime(this.progress);
             mHandler.sendEmptyMessage(0x03);
         }
 
@@ -265,7 +257,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            playTime = DateTool.timeMills(progress+"","mm:ss");
+            playTime = DateTool.stringForTime(progress);
             player.mediaPlayer.seekTo(progress);
             mHandler.sendEmptyMessage(0x03);
         }
@@ -300,7 +292,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                     Toast("这是第一条");
                 }else{
                     mPosition--;
-                    Toast(""+mPosition);
+                    //Toast(""+mPosition);
                     if(!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())){
                         mViewModel = lstData_saleActivity_current.get(mPosition);
                         audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
@@ -325,11 +317,11 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                     }
                 }*/
 
-                if(mPosition == lstData_saleActivity_current.size()){
+                if(mPosition == lstData_saleActivity_current.size() - 1){
                     Toast("这是最后一条");
                 }else{
                     mPosition++;
-                    Toast("" + mPosition);
+                    //Toast("" + mPosition);
                     if(!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())){
                         mViewModel = lstData_saleActivity_current.get(mPosition);
                         audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
@@ -452,7 +444,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         MediaPlayer mp = MediaPlayer.create(CustomerDynamicManageActivity.this, Uri.parse(viewModel.audioUrl));
         try {
             supply = mp.getDuration();
-            tv_audio_endtime.setText(DateTool.timeMills(supply + "","mm:ss"));
+            tv_audio_endtime.setText(DateTool.stringForTime(supply));
         }catch (NullPointerException e){
             Toast("录音文件不存在！");
             e.printStackTrace();
@@ -474,8 +466,8 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             player = new Player(musicProgress);
         }
         audioStart();
-        playTime = "00:00";
-        endTime = DateTool.timet(viewModel.audioLength + "", "mm:ss");
+        playTime = "00:00:00";
+        endTime = DateTool.stringForTime(Integer.parseInt(viewModel.audioLength + ""));
         endTimerInt = Integer.parseInt(viewModel.audioLength + "");
 
         new Thread(new Runnable() {
@@ -546,7 +538,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             /*判断是否有录音*/
             if (null != viewModel.audioUrl && !TextUtils.isEmpty(viewModel.audioUrl)) {
                 layout_audio.setVisibility(View.VISIBLE);
-                tv_audio_length.setText(DateTool.timet(viewModel.audioLength + "", "mm:ss"));
+                tv_audio_length.setText(DateTool.stringForTime((int) viewModel.audioLength * 1000));
             } else {
                 layout_audio.setVisibility(View.GONE);
             }
