@@ -456,7 +456,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         User user = MainApp.user;
         for (Department department : mDeptSource) {
             for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
+                if (department != null && department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
                     newDeptSource.add(department);
                 }
             }

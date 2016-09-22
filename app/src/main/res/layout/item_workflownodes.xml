@@ -4,82 +4,78 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_viewgroup_wfinstance_nodes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/margin_side_edge"
         android:layout_marginRight="@dimen/margin_side_edge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_viewgroup_wfinstance_nodes"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginRight="@dimen/margin_side_edge">
 
             <TextView
                 android:id="@+id/tv_creator_title"
-                android:textSize="@dimen/text_sp12"
-                android:textColor="#9C9C9C"
-                android:text="销售部"
-                android:layout_marginBottom="@dimen/dimen_15"
-                android:layout_marginTop="@dimen/dimen_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_15"
+                android:layout_marginTop="@dimen/dimen_15"
+                android:ellipsize="end"
                 android:maxEms="12"
                 android:singleLine="true"
-                android:ellipsize="end"
-                />
+                android:text="销售部"
+                android:textColor="#9C9C9C"
+                android:textSize="@dimen/text_sp12" />
 
             <TextView
                 android:id="@+id/tv_name"
-                android:textColor="#9C9C9C"
-                android:layout_toRightOf="@+id/tv_creator_title"
-                android:layout_marginLeft="@dimen/dimen_5"
-                android:layout_marginBottom="@dimen/dimen_15"
-                android:layout_marginTop="@dimen/dimen_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="罗超"
-                android:textSize="@dimen/text_sp12"
+                android:layout_marginBottom="@dimen/dimen_15"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_marginTop="@dimen/dimen_15"
+                android:layout_toRightOf="@+id/tv_creator_title"
                 android:singleLine="true"
-                />
+                android:text="罗超"
+                android:textColor="#9C9C9C"
+                android:textSize="@dimen/text_sp12" />
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/tv_deal_time"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="@dimen/dimen_15"
-                android:layout_marginBottom="@dimen/dimen_15"
-                android:layout_marginLeft="16dp"
-                android:textSize="@dimen/text_sp12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#9c9c9c"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/dimen_15"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="@dimen/dimen_15"
                 android:text=""
-                />
+                android:textColor="#9c9c9c"
+                android:textSize="@dimen/text_sp12"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
         <View
             android:id="@+id/view_dashed_line"
-            android:layerType="software"
-            android:background="@drawable/view_dashed_line"
             android:layout_width="match_parent"
-            android:layout_height="3dp" />
+            android:layout_height="3dp"
+            android:background="@drawable/view_dashed_line"
+            android:layerType="software" />
 
         <LinearLayout
-            android:layout_marginTop="@dimen/dimen_15"
-            android:layout_marginBottom="@dimen/dimen_12"
             android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dimen_12"
             android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge">
+            android:layout_marginRight="@dimen/margin_side_edge"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:gravity="center_vertical">
 
-           <ImageView
+            <ImageView
                 android:id="@+id/img_left"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -87,51 +83,48 @@
 
             <TextView
                 android:id="@+id/tv_result"
-                android:textColor="#34D434"
-                android:textSize="@dimen/text_sp15"
-                android:layout_marginLeft="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="同意" />
+                android:layout_marginLeft="8dp"
+                android:text="同意"
+                android:textColor="#34D434"
+                android:textSize="@dimen/text_sp15" />
 
 
             <TextView
                 android:id="@+id/tv_startTime"
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text=""
-                android:textColor="@color/text66"
-                />
+                android:textColor="@color/text66" />
 
             <TextView
                 android:id="@+id/tv_redTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="@color/red1"
-                />
+                android:textColor="@color/red1" />
 
             <TextView
                 android:id="@+id/tv_endTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="@color/text66"
-                />
+                android:textColor="@color/text66" />
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_comment"
-            android:textSize="13sp"
-            android:textColor="#626262"
-            android:layout_marginLeft="44dp"
-            android:layout_marginRight="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_15"
-            android:text="意见:" />
+            android:layout_marginLeft="44dp"
+            android:layout_marginRight="16dp"
+            android:text="意见:"
+            android:textColor="#626262"
+            android:textSize="13sp" />
 
     </LinearLayout>
 </LinearLayout>

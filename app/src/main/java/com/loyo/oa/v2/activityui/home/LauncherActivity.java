@@ -123,13 +123,13 @@ public class LauncherActivity extends Activity {
     public void intentActivity() {
         isWelcom = SharedUtil.getBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY);
         Intent intent = new Intent();
-        if (!isWelcom) {
-            intent.setClass(LauncherActivity.this, WelcomeActivity.class);
-        } else {
-            //新版主页
-            intent.setClass(LauncherActivity.this,
-                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainHomeActivity.class);//MainHomeActivity  NewMainActivity
-        }
+        intent.setClass(LauncherActivity.this, WelcomeActivity.class);
+//        if (!isWelcom) {
+//        } else {
+//            //新版主页
+//            intent.setClass(LauncherActivity.this,
+//                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainHomeActivity.class);//MainHomeActivity  NewMainActivity
+//        }
         startActivity(intent);
         finish();
 //        overridePendingTransition(R.anim.exit_buttomtotop, R.anim.exit_toptobuttom);

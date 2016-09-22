@@ -22,7 +22,6 @@ public class WfInstance extends BaseBeans implements Serializable {
 
     public long created_at;
     public long createdAt;
-    public int serverTime;
     public int updatedAt;
     public int status;
     public String id;

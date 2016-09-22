@@ -23,18 +23,14 @@ import java.util.ArrayList;
  * Created by Administrator on 2014/12/11 0011.
  */
 public class WorkflowNodesListViewAdapter extends BaseAdapter {
-    private MainApp app;
     private LayoutInflater mInflater;
     private ArrayList<WfNodes> lstData;
     private int wfInstanceStatus;
-    private int serverTime;
 
-    public WorkflowNodesListViewAdapter(int _wfInstanceStatus, ArrayList<WfNodes> lstData, LayoutInflater _mInflater, int serverTime) {
+    public WorkflowNodesListViewAdapter(int _wfInstanceStatus, ArrayList<WfNodes> lstData, LayoutInflater _mInflater) {
         mInflater = _mInflater;
         wfInstanceStatus = _wfInstanceStatus;
-        app = MainApp.getMainApp();
         this.lstData = lstData;
-        this.serverTime = serverTime;
     }
 
     @Override
