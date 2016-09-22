@@ -8,24 +8,25 @@ import java.io.Serializable;
  * Created by Administrator on 2014/12/29 0029.
  */
 public class WfNodes implements Serializable {
-    public static final int ACTIVE_STATUS_WAIT=1;
-    public static final int ACTIVE_STATUS_PROCESSING=2;
-    public static final int ACTIVE_STATUS_PROCESSED=3;
+    public static final int ACTIVE_STATUS_WAIT = 1;
+    public static final int ACTIVE_STATUS_PROCESSING = 2;
+    public static final int ACTIVE_STATUS_PROCESSED = 3;
 
+    public String title;
     private int handAt;
-    private int  remindAt;
-    private int active ;//bool, optional): ,
-    private boolean approveFlag ;//bool, optional): ,
+    private int remindAt;
+    private int active;//bool, optional): ,
+    private boolean approveFlag;//bool, optional): ,
     private boolean isOverTime;
-    private String comment ;//string, optional): ,
-    private long createdAt ;//&{time Time}, optional): ,
-    private String executor ;//int, optional): ,
-    private User executorUser ;//&{organization User}, optional): ,
-    private String id ;//int64, optional): ,
-    private boolean needApprove ;//bool, optional): ,
-    private long sequence ;//int64, optional): ,
-    private long updateAt ;//&{time Time}, optional): ,
-    private String wfInstanceId ;//int64, optional):
+    private String comment;//string, optional): ,
+    private long createdAt;//&{time Time}, optional): ,
+    private String executor;//int, optional): ,
+    private User executorUser;//&{organization User}, optional): ,
+    private String id;//int64, optional): ,
+    private boolean needApprove;//bool, optional): ,
+    private long sequence;//int64, optional): ,
+    private long updateAt;//&{time Time}, optional): ,
+    private String wfInstanceId;//int64, optional):
     private boolean approveResult;
 
 
@@ -62,10 +63,10 @@ public class WfNodes implements Serializable {
     }
 
     public boolean isActive() {
-        return active==ACTIVE_STATUS_PROCESSED;
+        return active == ACTIVE_STATUS_PROCESSED;
     }
 
-    public int getActive(){
+    public int getActive() {
         return active;
     }
 
