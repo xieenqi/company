@@ -50,14 +50,13 @@
                     android:id="@+id/edt_content"
                     style="@style/edtText_normal"
                     android:layout_width="match_parent"
-                    android:layout_height="0px"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:gravity="left|top"
                     android:hint="请输入项目简介"
                     android:maxLength="500"
                     android:minHeight="180dp"
-                    android:padding="10dp" />
+                    android:padding="@dimen/margin_other_view" />
 
 
                 <TextView
