@@ -102,7 +102,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
             if (wfInstanceStatus == 4) {
                 item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
                 item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                item_info.tv_content.setText(actionName + (TextUtils.isEmpty(actionInfo) ? "同意" : actionInfo));
+                item_info.tv_content.setText(actionName + (TextUtils.isEmpty(actionInfo) ? ":同意" : actionInfo));
                 item_info.tv_time.setVisibility(View.VISIBLE);
                 item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
 //                item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_agree));
@@ -112,7 +112,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
             } else if (wfInstanceStatus == 5) {//办结
                 item_info.img_left.setImageResource(R.drawable.img_wfinstance_complete);
                 item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                item_info.tv_content.setText(actionName + (TextUtils.isEmpty(actionInfo) ? "已办结" : actionInfo));
+                item_info.tv_content.setText(actionName + (TextUtils.isEmpty(actionInfo) ? ":已办结" : actionInfo));
                 item_info.tv_time.setVisibility(View.VISIBLE);
                 item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             } else {
@@ -133,7 +133,8 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                 } else if (wfNodes.getActive() == 3) {
                     if (wfNodes.isApproveFlag()) {
                         item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
-                        item_info.tv_content.setText(actionName + (TextUtils.isEmpty(actionInfo) ? "同意" : actionInfo));
+                        item_info.tv_content.setTextColor(Color.parseColor("#333333"));
+                        item_info.tv_content.setText(actionName + (TextUtils.isEmpty(actionInfo) ? ":同意" : actionInfo));
                         item_info.tv_time.setVisibility(View.VISIBLE);
                         item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
 //                        item_info.tv_result.setText("同意");
