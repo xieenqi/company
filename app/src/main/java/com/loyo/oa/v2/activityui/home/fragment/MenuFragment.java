@@ -296,7 +296,6 @@ public class MenuFragment extends BaseFragment {
                         setDiskCacheInfo();
                     }
                 });
-
                 break;
         }
 

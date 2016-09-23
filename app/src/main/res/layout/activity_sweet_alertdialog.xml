@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <Button
+        android:id="@+id/button_test1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="test1" />
+
+
+    <Button
+        android:id="@+id/button_test2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="一般弹出框" />
+
+
+    <Button
+        android:id="@+id/button_test3"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="一般弹出框(带动画)1" />
+
+
+    <Button
+        android:id="@+id/button_test4"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="一般弹出框(带动画)2" />
+
+
+    <Button
+        android:id="@+id/button_test5"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="操作弹出框(单按钮)" />
+
+    <Button
+        android:id="@+id/button_test6"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="操作弹出框(双按钮)" />
+
+
+    <Button
+        android:id="@+id/button_test7"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="一般弹出框(自定义Icon)" />
+
+    <Button
+        android:id="@+id/button_test8"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="test8" />
+
+
+</LinearLayout>

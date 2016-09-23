@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.SweetAlertDialogActivity;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
@@ -254,6 +255,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*Intent mIntent = new Intent(getActivity(), SweetAlertDialogActivity.class);
+                startActivity(mIntent);*/
                 showMoreWindow(v);
             }
         });
