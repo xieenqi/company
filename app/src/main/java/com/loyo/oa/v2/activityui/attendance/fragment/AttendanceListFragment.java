@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
@@ -48,7 +47,6 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SweetAlertDialogView;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -415,7 +413,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         }
 
         if (!Global.isConnected()) {
-            sweetAlert.alertIcon("警告", "请检查您的网络连接!");
+            Toast("请检查您的网络连接");
             return;
         }
         /*工作日*/
@@ -449,7 +447,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             public void success(final ValidateInfo _validateInfo, final Response response) {
                 HttpErrorCheck.checkResponse("考勤信息1:", response);
                 if (null == _validateInfo) {
-                    sweetAlert.alertIcon("警告","获取考勤信息失败");
+                    Toast("获取考勤信息失败");
                     return;
                 }
                 validateInfo = _validateInfo;
@@ -466,7 +464,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 }
                 //已打卡完毕 跳转考勤列表
                 else {
-                    sweetAlert.alertMessage("提醒", "您今天已经打卡完毕");
+                    Toast("您今天已经打卡完毕");
                 }
             }
 
@@ -614,7 +612,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 if (null == attendanceRecord) {
-                    sweetAlert.alertIcon("警告","没有获取到考勤信息");
+                    Toast("没有获取到考勤信息");
                     return;
                 }
                 attendanceRecords = attendanceRecord;
@@ -640,7 +638,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        sweetAlert.alertMessage("警告", "获取打卡位置失败");
+        Toast("获取打卡位置失败");
     }
 
     /**

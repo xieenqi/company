@@ -20,7 +20,6 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     protected OnLoadSuccessCallback callback;
     protected int mId;
     public GeneralPopView generalPopView;
-    public SweetAlertDialogView sweetAlert;
 
 
     @Override
@@ -29,7 +28,6 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         app = MainApp.getMainApp();
         mActivity = getActivity();
         AppBus.getInstance().register(this);
-        sweetAlert = new SweetAlertDialogView(getActivity());
     }
 
     public void onDestroy() {
@@ -41,15 +39,6 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-        //        if (activity instanceof CityBaseActivity){
-        //            mActivity = (CityBaseActivity)activity;
-        //            app = mActivity.app;
-        ////            mActivity.app.logUtil;
-        //        } else {
-        //            //TODO:提示错误
-        //            Toast.makeText(this.getActivity(),"This is not CityBaseActivity!",Toast.LENGTH_SHORT).show();
-        //        }
     }
 
     @Override
@@ -99,7 +88,9 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         }
     }
 
-    //加载loading的方法
+    /**
+     * 加载loading的方法
+     * */
     public void showLoading(String msg) {
         DialogHelp.showLoading(getActivity(), msg, true);
     }
@@ -122,58 +113,5 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         generalPopView.setCanceledOnTouchOutside(isOut);
         return generalPopView;
     }
-
-    int mTouchViewGroupId;
-
-//    //当控件Id>0的时候，是指定ViewGroup的ID
-//    // = 0的时候是Activity使用手势。
-//    // = -1的时候是Activity不使用手势。
-//    protected void setTouchView(int _touchViewGroupId) {
-//        final GestureDetector mDetector = new GestureDetector(new GestureDetector.OnGestureListener() {
-//            @Override
-//            public boolean onDown(MotionEvent e) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onShowPress(MotionEvent e) {
-//
-//            }
-//
-//            @Override
-//            public boolean onSingleTapUp(MotionEvent e) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onLongPress(MotionEvent e) {
-//
-//            }
-//
-//            @Override
-//            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//                return false;
-//            }
-//        });
-//        if (_touchViewGroupId <= 0) {
-//            mTouchViewGroupId = _touchViewGroupId;
-//            return;F
-//        }
-//
-//        mTouchViewGroupId = _touchViewGroupId;
-//
-//        ViewGroup vg = (ViewGroup) getActivity().findViewById(mTouchViewGroupId);
-//        vg.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return mDetector.onTouchEvent(event);
-//            }
-//        });
-//    }
 
 }

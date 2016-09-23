@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.beans;
 
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
@@ -22,7 +23,7 @@ public class AudioViewModel extends CustomerFollowUpModel {
     public long audioLength;
 
     private boolean isAnim = false;
-    public WeakReference<ImageView> imageViewWeakReference;
+    public WeakReference<TextView> imageViewWeakReference;
 
     public AudioViewModel(CustomerFollowUpModel model) {
         this.id = model.id;
@@ -124,12 +125,12 @@ public class AudioViewModel extends CustomerFollowUpModel {
     public void setIsAnim(boolean isAnim){
         this.isAnim = isAnim;
         if (imageViewWeakReference != null && imageViewWeakReference.get() != null) {
-            ImageView imageView = imageViewWeakReference.get();
+            TextView textView = imageViewWeakReference.get();
             if (isAnim) {
-                MainApp.getMainApp().startAnim(imageView);
+                MainApp.getMainApp().startAnim(textView);
             }
             else {
-                MainApp.getMainApp().stopAnim(imageView);
+                MainApp.getMainApp().stopAnim(textView);
             }
         }
     }

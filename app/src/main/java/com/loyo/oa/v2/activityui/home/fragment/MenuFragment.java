@@ -287,7 +287,7 @@ public class MenuFragment extends BaseFragment {
                 break;
             //清除缓存
             case R.id.ll_clean:
-/*                final GeneralPopView dialog = showGeneralDialog(true, true, "确认清除缓存？");
+                final GeneralPopView dialog = showGeneralDialog(true, true, "确认清除缓存？");
                 dialog.setSureOnclick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -296,22 +296,7 @@ public class MenuFragment extends BaseFragment {
                         dialog.dismiss();
                         setDiskCacheInfo();
                     }
-                });*/
-
-                sweetAlert.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlert.sweetAlertDialog.dismiss();
-                    }
-                }, new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        showLoading("");
-                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-                        sweetAlert.sweetAlertDialog.dismiss();
-                        setDiskCacheInfo();
-                    }
-                },"提示","确认要清除缓存吗");
+                });
 
                 break;
         }

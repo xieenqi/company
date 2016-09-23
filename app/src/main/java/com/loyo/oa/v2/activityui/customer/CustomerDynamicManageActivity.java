@@ -79,10 +79,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     private boolean isTopAdd = true;
     private boolean isMyUser;
     private boolean isOnPlay;
-    private int endTimerInt;
-    private int supply;
     private String playTime;
-    private String endTime;
 
     private AudioViewModel mViewModel;/*当前播放音频的model*/
     private int mPosition;            /*当前播放音频的下标*/
@@ -276,18 +273,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             /*上一首*/
             case R.id.layout_last:
 
-/*                for(int i = 0;i<mPosition;i++){
-                    if(TextUtils.isEmpty(lstData_saleActivity_current.get(i).getAudioUrl())){
-                       continue;
-                    }else if(!TextUtils.isEmpty(lstData_saleActivity_current.get(i).getAudioUrl())){
-                        mPosition = i;
-                        audioPlayDeal(i,lstData_saleActivity_current.get(i));
-                        break;
-                    }else{
-                        Toast("最前了！");
-                    }
-                }*/
-
                 if(mPosition == 0){
                     Toast("这是第一条");
                 }else{
@@ -304,18 +289,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
             /*下一首*/
             case R.id.layout_next:
-
- /*               for(int i = mPosition;i<lstData_saleActivity_current.size();i++){
-                    if(TextUtils.isEmpty(lstData_saleActivity_current.get(i).getAudioUrl())){
-                        continue;
-                    }else if(!TextUtils.isEmpty(lstData_saleActivity_current.get(i).getAudioUrl())){
-                        mPosition = i;
-                        audioPlayDeal(i,lstData_saleActivity_current.get(i));
-                        break;
-                    }else{
-                        Toast("最后了！");
-                    }
-                }*/
 
                 if(mPosition == lstData_saleActivity_current.size() - 1){
                     Toast("这是最后一条");
@@ -441,10 +414,8 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
      * */
     void audioPlayDeal(int position, final AudioViewModel viewModel){
 
-        MediaPlayer mp = MediaPlayer.create(CustomerDynamicManageActivity.this, Uri.parse(viewModel.audioUrl));
         try {
-            supply = mp.getDuration();
-            tv_audio_endtime.setText(DateTool.stringForTime(supply));
+            tv_audio_endtime.setText(DateTool.stringForTime((int)viewModel.audioLength * 1000));
         }catch (NullPointerException e){
             Toast("录音文件不存在！");
             e.printStackTrace();
@@ -467,8 +438,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         }
         audioStart();
         playTime = "00:00:00";
-        endTime = DateTool.stringForTime(Integer.parseInt(viewModel.audioLength + ""));
-        endTimerInt = Integer.parseInt(viewModel.audioLength + "");
 
         new Thread(new Runnable() {
             @Override
@@ -522,15 +491,15 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
             TextView tv_audio_length = ViewHolder.get(convertView, R.id.tv_audio_length);
             ImageView iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
-            final ImageView iv_calls = ViewHolder.get(convertView, R.id.iv_calls);
+            final TextView tv_calls = ViewHolder.get(convertView, R.id.iv_calls);
 
             if (viewModel.getIsAnim()) {
-                app.startAnim(iv_calls);
+                app.startAnim(tv_calls);
             }
             else {
-                app.stopAnim(iv_calls);
+                app.stopAnim(tv_calls);
             }
-            viewModel.imageViewWeakReference = new WeakReference<ImageView>(iv_calls);
+            viewModel.imageViewWeakReference = new WeakReference<TextView>(tv_calls);
 
             tv_create_time.setText(DateTool.getDiffTime(viewModel.getCreateAt()));
             tv_content.setText(viewModel.getContent());

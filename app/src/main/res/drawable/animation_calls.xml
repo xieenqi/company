@@ -9,7 +9,8 @@
     android:oneshot="false"
     >
     <item android:drawable="@drawable/icon_audio_play3" android:duration="300"></item>
-    <item android:drawable="@drawable/icon_audio_play2" android:duration="300"></item>
     <item android:drawable="@drawable/icon_audio_play1" android:duration="300"></item>
+    <item android:drawable="@drawable/icon_audio_play2" android:duration="300"></item>
+    <item android:drawable="@drawable/icon_audio_play3" android:duration="300"></item>
 
 </animation-list>

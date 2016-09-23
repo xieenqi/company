@@ -40,7 +40,7 @@
             android:layout_marginTop="@dimen/dimen_4"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -48,11 +48,12 @@
                 android:background="@drawable/icon_audio_phone"
                 />
 
-            <ImageView
+            <TextView
                 android:id="@+id/iv_calls"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/animation_calls" />
+                android:layout_height="@dimen/dimen_33"
+                android:background="@drawable/animation_calls"
+                />
 
             <TextView
                 android:id="@+id/tv_audio_length"

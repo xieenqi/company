@@ -13,6 +13,7 @@ import android.support.multidex.MultiDex;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
@@ -177,16 +178,16 @@ public class MainApp extends Application {
     /**
      * 启动动画
      * */
-    public void startAnim(ImageView imageView){
-        animationDrawable = (AnimationDrawable) imageView.getDrawable();
+    public void startAnim(TextView textView){
+        animationDrawable = (AnimationDrawable) textView.getBackground();
         animationDrawable.start();
     }
 
     /**
      * 停止动画
      * */
-    public void stopAnim(ImageView imageView){
-        animationDrawable = (AnimationDrawable) imageView.getDrawable();
+    public void stopAnim(TextView textView){
+        animationDrawable = (AnimationDrawable) textView.getBackground();
         if(animationDrawable.isRunning()){
             animationDrawable.stop();
         }
