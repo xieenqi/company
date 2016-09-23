@@ -83,7 +83,7 @@ public class ContactViewGroup extends LinearLayout {
         callPhonePopView.commonlyPhone(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.call(context, mContact.getTel());
+                Utils.call(context, phone);
                 callPhonePopView.dismiss();
             }
         });
@@ -184,11 +184,12 @@ public class ContactViewGroup extends LinearLayout {
             callwire.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    LogUtil.dee("拨打的座机:"+mContact.getWiretel());
                     if(mContact.getWiretel().trim().isEmpty()){
                         contactProcessCallback.onPhoneError();
                         return;
                     }
-                    if(!RegularCheck.isPhone(mContact.getWiretel())){
+                    if(!RegularCheck.isPhoneNumberValid(mContact.getWiretel())){
                         contactProcessCallback.onPhoneError();
                         return;
                     }

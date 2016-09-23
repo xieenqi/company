@@ -40,7 +40,7 @@
             android:layout_marginTop="@dimen/dimen_4"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -53,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimen_33"
                 android:background="@drawable/animation_calls"
+                android:textColor="#3FD3AA"
                 />
 
             <TextView
