@@ -255,9 +255,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mIntent = new Intent(getActivity(), SweetAlertDialogActivity.class);
-                startActivity(mIntent);
-                //showMoreWindow(v);
+                /*Intent mIntent = new Intent(getActivity(), SweetAlertDialogActivity.class);
+                startActivity(mIntent);*/
+                showMoreWindow(v);
             }
         });
         items = DBManager.Instance().getHomeItem();
