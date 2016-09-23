@@ -303,11 +303,11 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
                         SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                 saleCommPopupView.showAsDropDown(screen3);
-                openPopWindow(screen3_iv3);
+                openPopWindow(screen2_iv2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        closePopupWindow(screen3_iv3);
+                        closePopupWindow(screen2_iv2);
                     }
                 });
             }
@@ -318,11 +318,11 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
                 saleCommPopupView.showAsDropDown(screen2);
-                openPopWindow(screen2_iv2);
+                openPopWindow(screen3_iv3);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        closePopupWindow(screen2_iv2);
+                        closePopupWindow(screen3_iv3);
                     }
                 });
             }
@@ -334,9 +334,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -344,9 +341,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 

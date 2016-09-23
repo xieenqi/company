@@ -213,11 +213,11 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                 SaleCommPopupView  saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
                         SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen2);
-                openPopWindow(salemy_screen1_iv2);
+                openPopWindow(salemy_screen1_iv1);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv2);
+                        closePopupWindow(salemy_screen1_iv1);
                     }
                 });
             }
@@ -229,11 +229,11 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
                 saleCommPopupView.showAsDropDown(salemy_screen1);
-                openPopWindow(salemy_screen1_iv1);
+                openPopWindow(salemy_screen1_iv2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv1);
+                        closePopupWindow(salemy_screen1_iv2);
                     }
                 });
             }
@@ -245,9 +245,6 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -255,9 +252,6 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 

@@ -57,7 +57,6 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     private String[] sort = {"按照创建时间", "按照最高金额"};
     private LinearLayout salemy_screen1, salemy_screen2;
     private ImageView salemy_screen1_iv1, salemy_screen1_iv2;
-    private WindowManager.LayoutParams windowParams;
     private int statusIndex, sortIndex;
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
@@ -66,7 +65,6 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
     private MyOrderAdapter adapter;
     private int page = 1;
     private boolean isPullDown = true;
-    private Intent mIntent;
     private Bundle mBundle;
 
     private List<OrderListItem> listData = new ArrayList<>();
@@ -193,9 +191,6 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -203,9 +198,6 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
