@@ -5,6 +5,7 @@ import com.loyo.oa.v2.activityui.other.bean.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -19,27 +20,28 @@ import retrofit.http.Path;
 public interface IUser {
 
     @GET("/")
-    ArrayList<Department> getOrganization();
+    ArrayList<Department> getOrganization(Callback<Objects> callback);
 
     @GET("/user/subordinates")
     ArrayList<User> getSubordinates();
 
     @PUT("/api/v2/user/{userId}/profile")
-    void updateProfile(@Path("userId") String id,@Body HashMap<String ,Object> map,Callback<User> callback);
+    void updateProfile(@Path("userId") String id, @Body HashMap<String, Object> map, Callback<User> callback);
 
     /**
      * 以id获取人多信息
+     *
      * @param id
      * @param callback
      */
     @GET("/user/{id}/profile")
-    void getUserById(@Path("id") String id,Callback<User> callback);
+    void getUserById(@Path("id") String id, Callback<User> callback);
 
     @GET("/user/profile")
     void getProfile(retrofit.Callback<User> cb);
 
     @PUT("/")
-    void updatePassword(@Body HashMap<String,Object> map,retrofit.Callback<Object> cb);
+    void updatePassword(@Body HashMap<String, Object> map, retrofit.Callback<Object> cb);
 
     @PUT("/")
     void rushHomeDate(retrofit.Callback<User> cb);
