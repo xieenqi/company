@@ -108,7 +108,9 @@ public class AMapService extends APSService {
         userOnlineTime();
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
-            startLocate();
+            if (locationClient == null && !locationClient.isStarted()) {
+                startLocate();//定位是否在运行 如果在运行就不重复启动定位
+            }
             //服务运行 通知栏显示
             Notification notification = new Notification();
             notification.flags = Notification.FLAG_ONGOING_EVENT;
@@ -133,10 +135,17 @@ public class AMapService extends APSService {
      * 开启定位
      */
     private void startLocate() {
-//        mLocationManagerProxy = LocationManagerProxy.getInstance(this.getApplicationContext());
-//        maMapLocationListener = new MAMapLocationListener();
-//        mLocationManagerProxy.setGpsEnable(true);
-//        mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, MIN_SCAN_SPAN_MILLS, MIN_SCAN_SPAN_DISTANCE, maMapLocationListener);
+//        if (null != maMapLocationListener)
+//            maMapLocationListener = null;
+//        if (null != locationClient)
+//            locationClient = null;
+//        if (null != locationOption)
+//            locationOption = null;
+        if (locationClient != null) {
+            locationClient.stopLocation();
+            locationClient.stopAssistantLocation();
+        }
+
         maMapLocationListener = new MAMapLocationListener();
         locationClient = new AMapLocationClient(app);
         locationOption = new AMapLocationClientOption();
