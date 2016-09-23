@@ -466,6 +466,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 //        setUser(newDeptSource);
 //    }
 
+
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

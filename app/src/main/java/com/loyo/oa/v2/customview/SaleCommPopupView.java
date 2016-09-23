@@ -71,7 +71,7 @@ public class SaleCommPopupView extends PopupWindow {
             params.height = mContext.getResources().getDimensionPixelSize(R.dimen.sale_pop_height);
             listView.setLayoutParams(params);
         }
-        adapter = new AdapterSaleTeamScreenComm(mContext, data,index);
+        adapter = new AdapterSaleTeamScreenComm(mContext, data, index);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

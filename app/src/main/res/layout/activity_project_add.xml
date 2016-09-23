@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
@@ -8,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/include_item_title"/>
+    <include layout="@layout/include_item_title" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,12 +24,9 @@
                 android:id="@+id/ll_managerGon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <EditText
                     android:id="@+id/edt_title"
@@ -43,49 +39,39 @@
                     android:maxLength="50"
                     android:minHeight="@dimen/dimen_50"
                     android:paddingLeft="@dimen/margin_other_view"
-                    android:singleLine="false"/>
+                    android:singleLine="false" />
 
                 <View
                     style="@style/view_split"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_other_view"/>
+                    android:layout_marginLeft="@dimen/margin_other_view" />
 
                 <EditText
                     android:id="@+id/edt_content"
                     style="@style/edtText_normal"
                     android:layout_width="match_parent"
-                    android:layout_height="0px"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:gravity="left|top"
                     android:hint="请输入项目简介"
                     android:maxLength="500"
                     android:minHeight="180dp"
-                    android:padding="10dp"
-                    />
+                    android:padding="@dimen/margin_other_view" />
 
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    >
 
-                    <TextView
-                        android:id="@+id/wordcount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginRight="20dp"
-                        android:text="0/500"
-                        android:textColor="@color/text99"
-                        android:textSize="12sp"
-                        />
-                </RelativeLayout>
-
-                <View
-                    style="@style/view_split"
+                <TextView
+                    android:id="@+id/wordcount"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_other_view"/>
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="right"
+                    android:text="0/500"
+                    android:textColor="@color/text99"
+                    android:textSize="12sp" />
+
+                <include layout="@layout/include_solid_line_left" />
 
                 <LinearLayout
                     android:id="@+id/layout_managers"
@@ -100,7 +86,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingLeft="@dimen/margin_other_view"
-                        android:text="项目负责人"/>
+                        android:text="项目负责人" />
 
                     <TextView
                         android:id="@+id/tv_managers"
@@ -110,20 +96,20 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:gravity="left|center_vertical"
-                        android:paddingLeft="@dimen/margin_other_view"/>
+                        android:paddingLeft="@dimen/margin_other_view" />
 
                     <ImageView
                         android:id="@+id/img_title_right_reviewer"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </LinearLayout>
 
                 <View
                     style="@style/view_split"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_other_view"/>
+                    android:layout_marginLeft="@dimen/margin_other_view" />
 
             </LinearLayout>
 
@@ -140,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:paddingLeft="@dimen/margin_other_view"
-                    android:text="参与人"/>
+                    android:text="参与人" />
 
                 <TextView
                     android:id="@+id/tv_members"
@@ -150,24 +136,23 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="left|center_vertical"
-                    android:paddingLeft="@dimen/margin_other_view"/>
+                    android:paddingLeft="@dimen/margin_other_view" />
 
                 <ImageView
                     android:id="@+id/img_title_right_members"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <ListView
                 android:id="@+id/lv_project_members"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@null"
-                />
+                android:divider="@null" />
 
         </LinearLayout>
     </ScrollView>

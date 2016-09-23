@@ -20,20 +20,16 @@ public class WfInstance extends BaseBeans implements Serializable {
     public static final int STATUS_APPROVED = 4;
     public static final int STATUS_FINISHED = 5;
 
-    public long created_at;
     public long createdAt;
-    public int serverTime;
     public int updatedAt;
     public int status;
     public String id;
     public String memo;
     public String title;
-    public String attachmentUUId;//string, optional): ,
-    public String wftemplateId;//int64, optional): ,
-    public String next_executor_name;
-    public ArrayList<HashMap<String, Object>> workflowValues;//WorkFlowValues, optional):
-    public ArrayList<WfNodes> workflowNodes;//array[WfNodes], optional): ,
-    public User nextExecutor;
+    public String attachmentUUId;
+    public String wftemplateId;
+    public ArrayList<HashMap<String, Object>> workflowValues;
+    public ArrayList<WfNodes> workflowNodes;//审批节点
     public User creator;//&{organization User}, optional): ,
     public ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
     public BizForm bizForm;//&{bizform BizForm}, optional): ,

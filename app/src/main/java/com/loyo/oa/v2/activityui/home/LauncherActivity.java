@@ -36,8 +36,10 @@ import org.androidannotations.annotations.ViewById;
  */
 @EActivity(R.layout.activity_launcher)
 public class LauncherActivity extends Activity {
-    @ViewById ImageView iv_launcher_adv, iv_launcher_fade, iv_white;//小微企业工作台、火箭
-    @ViewById ViewGroup ll_root, layout_launcher_fade;
+    @ViewById
+    ImageView iv_launcher_adv, iv_launcher_fade, iv_white;//小微企业工作台、火箭
+    @ViewById
+    ViewGroup ll_root, layout_launcher_fade;
     private boolean isWelcom = false;
 
     @AfterViews

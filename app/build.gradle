@@ -7,7 +7,7 @@ def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
 android {
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 23
-    buildToolsVersion '22.0.1'
+    buildToolsVersion '24.0.2'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
     }

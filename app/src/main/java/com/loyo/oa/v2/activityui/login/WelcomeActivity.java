@@ -59,10 +59,10 @@ public class WelcomeActivity extends Activity {
                 View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_welcome, container, false);
                 container.addView(view);
                 ImageView imageView = (ImageView) view.findViewById(R.id.welcomeImage);
-//                imageView.setImageResource(IMAGE_RES[position]);
-
+                imageView.setImageResource(IMAGE_RES[position]);
+//TODO 引导页面暂时没有压缩处理 后期发版如果有oom则压缩处理
                 ImageView buttonOk = (ImageView) view.findViewById(R.id.welcomeOkButton);
-                ImageLoader.getInstance().displayImage("drawable://" + IMAGE_RES[position],imageView);
+//                ImageLoader.getInstance().displayImage("drawable://" + IMAGE_RES[position],imageView);
                 if (position == getCount() - 1) {
                     buttonOk.setVisibility(View.VISIBLE);
                     buttonOk.setOnClickListener(new View.OnClickListener() {
