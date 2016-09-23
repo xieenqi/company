@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
@@ -38,8 +39,10 @@ import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenTagPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -47,7 +50,7 @@ import retrofit.client.Response;
  * 【公海客户】列表
  * Created by yyy on 16/6/1.
  */
-public class CommCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2{
+public class CommCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     private Intent mIntent;
     private View mView;
@@ -80,15 +83,15 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<Tag> mTags;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
 
-            switch(msg.what){
+            switch (msg.what) {
                 //时间筛选
                 case CustomerManagerActivity.CUSTOMER_TIME:
                     tagPostion = msg.getData().getInt("data");
-                    switch (tagPostion){
+                    switch (tagPostion) {
                         case 0:
                             filed = "lastActAt";
                             order = "desc";
@@ -155,7 +158,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         getData();
     }
 
-    public void initView(View view){
+    public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
         permission = (Permission) getArguments().getSerializable("permission");
 
@@ -191,7 +194,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
     private void bindData() {
 
         if (null == adapter) {
-            adapter = new CommCustomerAdapter(getActivity(),mCustomers,permission,mHandler);
+            adapter = new CommCustomerAdapter(getActivity(), mCustomers, permission, mHandler);
             listView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
@@ -265,15 +268,10 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
     }
 
 
-
-
     /**
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -281,52 +279,49 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
 
-   private View.OnClickListener click = new View.OnClickListener(){
-       @Override
-       public void onClick(View v) {
-           switch (v.getId()) {
+    private View.OnClickListener click = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
 
-               //时间
-               case R.id.cus_screen1:
-                   saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true,tagPostion);
-                   saleCommPopupView.showAsDropDown(screen1);
-                   openPopWindow(tagImage1);
-                   saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                       @Override
-                       public void onDismiss() {
-                           closePopupWindow(tagImage1);
-                       }
-                   });
-                   break;
+                //时间
+                case R.id.cus_screen1:
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
+                    saleCommPopupView.showAsDropDown(screen1);
+                    openPopWindow(tagImage1);
+                    saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            closePopupWindow(tagImage1);
+                        }
+                    });
+                    break;
 
-               //标签
-               case R.id.cus_screen2:
-                   screenTagPopupView = new ScreenTagPopupView(getActivity(),mTags,mHandler);
-                   screenTagPopupView.showAsDropDown(screen2);
-                   openPopWindow(tagImage2);
-                   screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                       @Override
-                       public void onDismiss() {
-                           closePopupWindow(tagImage2);
-                       }
-                   });
-                   break;
-           }
-       }
-   };
+                //标签
+                case R.id.cus_screen2:
+                    screenTagPopupView = new ScreenTagPopupView(getActivity(), mTags, mHandler);
+                    screenTagPopupView.showAsDropDown(screen2);
+                    openPopWindow(tagImage2);
+                    screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            closePopupWindow(tagImage2);
+                        }
+                    });
+                    break;
+            }
+        }
+    };
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
+        switch (resultCode) {
             //客户详情操作回调
             case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
                 getData();

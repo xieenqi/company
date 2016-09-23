@@ -21,7 +21,6 @@ import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
@@ -238,10 +237,10 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
     /**
      * 传附件到Oss
      */
-    public void uploadOssFile(OSS oss, String bucketName, String oKey, String filePath) {
+    public void uploadFileToOSS(String oKey, String filePath) {
 
         // 构造上传请求
-        PutObjectRequest put = new PutObjectRequest(bucketName, oKey, filePath);
+        PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
 
         //异步上传时可以设置进度回调
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
@@ -251,41 +250,37 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
             }
         });
 
-        OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                uploadSize++;
-                LogUtil.dee("UploadSuccess");
-                LogUtil.dee("ETag" + result.getETag());
-                LogUtil.dee("RequestId" + result.getRequestId());
-                if (uploadSize == uploadNum) {
-                    postAttaData();
-                    cancelLoading();
-                }
-            }
+        OSSAsyncTask task = AliOSSManager.getInstance().getOss()
+                .asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+                    @Override
+                    public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                        uploadSize++;
+                        LogUtil.dee("UploadSuccess");
+                        LogUtil.dee("ETag" + result.getETag());
+                        LogUtil.dee("RequestId" + result.getRequestId());
+                        if (uploadSize == uploadNum) {
+                            postAttaData();
+                            cancelLoading();
+                        }
+                    }
 
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                    @Override
+                    public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
 
-                // 本地异常如网络异常等
-                if (clientExcepion != null) {
-                    clientExcepion.printStackTrace();
-                    Toast("网络异常，请稍后重试！");
-                }
+                        // 本地异常如网络异常等
+                        if (clientExcepion != null) {
+                            clientExcepion.printStackTrace();
+                        }
 
-                // 服务异常
-                if (serviceException != null) {
-                    LogUtil.dee("ErrorCode" + serviceException.getErrorCode());
-                    LogUtil.dee("RequestId" + serviceException.getRequestId());
-                    LogUtil.dee("HostId" + serviceException.getHostId());
-                    LogUtil.dee("RawMessage" + serviceException.getRawMessage());
-
-                    Toast("" + serviceException.getRawMessage());
-                }
-
-
-            }
-        });
+                        // 服务异常
+                        if (serviceException != null) {
+                            LogUtil.dee("ErrorCode" + serviceException.getErrorCode());
+                            LogUtil.dee("RequestId" + serviceException.getRequestId());
+                            LogUtil.dee("HostId" + serviceException.getHostId());
+                            LogUtil.dee("RawMessage" + serviceException.getRawMessage());
+                        }
+                    }
+                });
     }
 
 
@@ -310,41 +305,13 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                         attachmentBatch.name = uuid + "/" + newFile.getName();
                         attachmentBatch.size = Integer.parseInt(newFile.length() + "");
                         attachment.add(attachmentBatch);
-                        getServerToken(uuid + "/" + newFile.getName(), newFile.getPath());
+                        uploadFileToOSS(uuid + "/" + newFile.getName(), newFile.getPath());
                     }
                 }
             }
         } catch (Exception ex) {
             Global.ProcException(ex);
         }
-    }
-
-    /**
-     * 获取上传Token
-     */
-    public void getServerToken(final String oKey, final String filePath) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .getServerToken(new Callback<OssToken>() {
-                    @Override
-                    public void success(OssToken ossToken, Response response) {
-
-                        HttpErrorCheck.checkResponse("获取OssToken", response);
-                        ak = ossToken.Credentials.AccessKeyId;
-                        sk = ossToken.Credentials.AccessKeySecret;
-                        token = ossToken.Credentials.SecurityToken;
-                        expiration = ossToken.Credentials.Expiration;
-
-                        AliOSSManager.getInstance().init(getActivity(), ak, sk, token, expiration);
-                        oss = AliOSSManager.getInstance().getOss();
-                        uploadOssFile(oss, Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
     }
 
     /**

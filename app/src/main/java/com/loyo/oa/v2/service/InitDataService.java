@@ -30,8 +30,9 @@ import org.androidannotations.annotations.EIntentService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Objects;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -109,6 +110,42 @@ public class InitDataService extends IntentService {
     }
 
     /**
+     * <<<<<<< HEAD
+     * =======
+     * 后台 更新 组织架构
+     */
+    void getOrganization() {
+        ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
+                .create(IUser.class).getOrganization(new Callback<Objects>() {
+                    @Override
+                    public void success(Objects objects, Response response) {
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        Global.Toast("数据更新失败,请重试");
+                    }
+                });
+
+        if (!ListUtil.IsEmpty(lstDepartment_current)) {
+            //写DB
+            DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
+            //设置缓存
+            Common.setLstDepartment(lstDepartment_current);
+            LogUtil.d("更新 组织《《《《《《《《《《《《《《《《》》》》》》》》》》》 架构 json：完成");
+            SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
+            SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.APP_START);
+            //清除之前缓存通讯录部门的数据
+            SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
+        } else {
+            LogUtil.d("更新 组织 架构  失败");
+        }
+    }
+
+    /**
+     * >>>>>>> develop-bug-fix2
      * 发送数据变化的广播
      *
      * @param user

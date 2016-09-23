@@ -96,7 +96,7 @@ public class MenuFragment extends BaseFragment {
                 }
                 if (isUpdataData) {
                     cancelLoading();
-                    //Toast("数据更新成功！");
+                    Toast("数据更新成功！");
                     isUpdataData = false;
                 }
                 setDiskCacheInfo();

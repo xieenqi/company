@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.tool;
 
 import android.content.Context;
+
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.OSSClient;
@@ -8,12 +9,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
 import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【阿里云oss】工具类
@@ -35,12 +31,29 @@ public class AliOSSManager {
         return instance;
     }
 
-    public void init(Context context, final String ak, final String sk, final String token, final String expiration){
+    public void initWithContext(Context context){
 
         OSSCredentialProvider credentialProvider = new OSSFederationCredentialProvider() {
             @Override
             public OSSFederationToken getFederationToken() {
-                return new OSSFederationToken(ak, sk, token, expiration);
+
+                OssToken ossToken = RestAdapterFactory.getInstance()
+                        .build(Config_project.API_URL_ATTACHMENT())
+                        .create(IAttachment.class)
+                        .syncGetServerToken();
+
+                if (ossToken != null && ossToken.Credentials != null) {
+                    String ak = ossToken.Credentials.AccessKeyId;
+                    String sk = ossToken.Credentials.AccessKeySecret;
+                    String token = ossToken.Credentials.SecurityToken;
+                    String expiration = ossToken.Credentials.Expiration;
+
+                    return new OSSFederationToken(ak, sk, token, expiration);
+
+                }
+                else {
+                    return null;
+                }
             }
         };
 
