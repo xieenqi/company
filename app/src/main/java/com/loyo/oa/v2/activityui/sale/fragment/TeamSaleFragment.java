@@ -78,8 +78,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private View mView;
     private Button btn_add;
     private Intent mIntent;
-    private Bundle mBundle;
-    private Context mContext;
     private SaleTeamScreen saleTeamScreen;
     private ViewStub emptyView;
     private LinearLayout screen1;
@@ -93,7 +91,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private AdapterSaleTeam adapterSaleTeam;
     private PullToRefreshListView listView;
     private SaleCommPopupView saleCommPopupView;
-    private WindowManager.LayoutParams params;
     private ScreenDeptPopupView saleScreenPopupView;
     private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
@@ -103,7 +100,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> stageData = new ArrayList<>();
     private String[] sort = {"按最近创建时间", "按照最近更新", "按照最高金额"};
-    private boolean isOk = true;
     private boolean isPull = false;
     private boolean isKind;
     private int requestPage = 1;
@@ -186,8 +182,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         }
 
         setStageData();
-        mContext = getActivity();
-        params = getActivity().getWindow().getAttributes();
         listView = (PullToRefreshListView) view.findViewById(R.id.saleteam_list);
         screen1 = (LinearLayout) view.findViewById(R.id.saleteam_screen1);
         screen2 = (LinearLayout) view.findViewById(R.id.saleteam_screen2);
@@ -354,9 +348,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        params = getActivity().getWindow().getAttributes();
-        params.alpha = 1f;
-        getActivity().getWindow().setAttributes(params);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -364,9 +355,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        params = getActivity().getWindow().getAttributes();
-        params.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(params);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
