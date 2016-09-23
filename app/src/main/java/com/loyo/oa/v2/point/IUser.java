@@ -20,7 +20,7 @@ import retrofit.http.Path;
 public interface IUser {
 
     @GET("/")
-    ArrayList<Department> getOrganization(Callback<Objects> callback);
+    ArrayList<Department> getOrganization();
 
     @GET("/user/subordinates")
     ArrayList<User> getSubordinates();
