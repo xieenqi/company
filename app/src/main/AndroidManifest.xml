@@ -206,26 +206,26 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
+        <!--<activity-->
 
-        <
-        <
-        <
-        <
-        <
-        <
-        < HEAD
-        =======
-        android:name=".activityui.other.DepartmentUserActivity"
-        android:launchMode="singleTop"
-        android:screenOrientation="portrait"
-        android:theme="@style/FragmentActivityTheme"
-        android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity>>>>>>> develop-bug-fix2
-        android:name=".activityui.signin.SignInfoActivity"
-        android:launchMode="singleTop"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <!--<-->
+        <!--<-->
+        <!--<-->
+        <!--<-->
+        <!--<-->
+        <!--<-->
+        <!--< HEAD-->
+        <!--=======-->
+        <!--android:name=".activityui.other.DepartmentUserActivity"-->
+        <!--android:launchMode="singleTop"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:theme="@style/FragmentActivityTheme"-->
+        <!--android:windowSoftInputMode="adjustUnspecified|stateHidden" />-->
+        <!--<activity>>>>>>> develop-bug-fix2-->
+        <!--android:name=".activityui.signin.SignInfoActivity"-->
+        <!--android:launchMode="singleTop"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:windowSoftInputMode="adjustUnspecified|stateHidden" />-->
         <activity
             android:name=".activityui.signin.SignInManagerActivity_"
             android:launchMode="singleTop"
@@ -361,23 +361,23 @@
             android:name=".activityui.other.SelectEditDeleteActivity"
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom" />
-        <activity
+        <!--<activity-->
 
-        <
-        <
-        <
-        <
-        <
-        <
-        < HEAD
-        =======
-        android:name=".activityui.other.DepartmentActivity"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity>>>>>>> develop-bug-fix2
-        android:name=".activityui.signin.SignInManagerFromCustomer"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="stateAlwaysHidden" />
+        <!--<-->
+        <!--<-->
+        <!--<-->
+        <!--<-->
+        <!--<-->
+        <!--<-->
+        <!--< HEAD-->
+        <!--=======-->
+        <!--android:name=".activityui.other.DepartmentActivity"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:windowSoftInputMode="adjustUnspecified|stateHidden" />-->
+        <!--<activity>>>>>>> develop-bug-fix2-->
+        <!--android:name=".activityui.signin.SignInManagerFromCustomer"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:windowSoftInputMode="stateAlwaysHidden" />-->
         <!-- 任务审核 -->
         <activity
             android:name=".activityui.tasks.TasksInfoScoreActivity_"
