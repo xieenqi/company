@@ -19,12 +19,11 @@ import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.SaleActivity;
@@ -152,10 +151,11 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
     /**
      * 传附件到Oss
      */
-    public void uploadOssFile(OSS oss, String bucketName, String oKey, String filePath) {
+
+    public void uploadFileToOSS(String oKey, String filePath) {
 
         // 构造上传请求
-        PutObjectRequest put = new PutObjectRequest(bucketName, oKey, filePath);
+        PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
 
         //异步上传时可以设置进度回调
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
@@ -165,7 +165,8 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
             }
         });
 
-        OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+        OSSAsyncTask task = AliOSSManager.getInstance().getOss()
+                .asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
                 uploadSize++;
@@ -175,6 +176,9 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
                 if (uploadSize == uploadNum) {
                     postAttaData();
                     cancelLoading();
+                }
+                else {
+                    Toast(""+uploadSize);
                 }
             }
 
@@ -219,41 +223,14 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
                         attachmentBatch.name = uuid + "/" + newFile.getName();
                         attachmentBatch.size = Integer.parseInt(newFile.length() + "");
                         attachment.add(attachmentBatch);
-                        getServerToken(uuid + "/" + newFile.getName(), newFile.getPath());
+                        // getServerToken(uuid + "/" + newFile.getName(), newFile.getPath());
+                        uploadFileToOSS(uuid + "/" + newFile.getName(), newFile.getPath());
                     }
                 }
             }
         } catch (Exception ex) {
             Global.ProcException(ex);
         }
-    }
-
-    /**
-     * 获取上传Token
-     */
-    public void getServerToken(final String oKey, final String filePath) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .getServerToken(new Callback<OssToken>() {
-                    @Override
-                    public void success(OssToken ossToken, Response response) {
-
-                        HttpErrorCheck.checkResponse("获取OssToken", response);
-                        ak = ossToken.Credentials.AccessKeyId;
-                        sk = ossToken.Credentials.AccessKeySecret;
-                        token = ossToken.Credentials.SecurityToken;
-                        expiration = ossToken.Credentials.Expiration;
-
-                        AliOSSManager.getInstance().init(mContext, ak, sk, token, expiration);
-                        oss = AliOSSManager.getInstance().getOss();
-                        uploadOssFile(oss, Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
     }
 
     /**

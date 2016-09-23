@@ -21,7 +21,6 @@ import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
-import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.bean.HttpLoc;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -31,10 +30,10 @@ import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
@@ -173,10 +172,11 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     /**
      * 传附件到Oss
      */
-    void uploadOssFile(OSS oss, String bucketName, String oKey, String filePath) {
+
+    public void uploadFileToOSS(String oKey, String filePath) {
 
         // 构造上传请求
-        PutObjectRequest put = new PutObjectRequest(bucketName, oKey, filePath);
+        PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
 
         //异步上传时可以设置进度回调
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
@@ -186,36 +186,37 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
             }
         });
 
-        OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                uploadSize++;
-                LogUtil.dee("UploadSuccess");
-                LogUtil.dee("ETag" + result.getETag());
-                LogUtil.dee("RequestId" + result.getRequestId());
-                if (uploadSize == uploadNum) {
-                    postAttaData();
-                    cancelLoading();
-                }
-            }
+        OSSAsyncTask task = AliOSSManager.getInstance().getOss()
+                .asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+                    @Override
+                    public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                        uploadSize++;
+                        LogUtil.dee("UploadSuccess");
+                        LogUtil.dee("ETag" + result.getETag());
+                        LogUtil.dee("RequestId" + result.getRequestId());
+                        if (uploadSize == uploadNum) {
+                            postAttaData();
+                            cancelLoading();
+                        }
+                    }
 
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                    @Override
+                    public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
 
-                // 本地异常如网络异常等
-                if (clientExcepion != null) {
-                    clientExcepion.printStackTrace();
-                }
+                        // 本地异常如网络异常等
+                        if (clientExcepion != null) {
+                            clientExcepion.printStackTrace();
+                        }
 
-                // 服务异常
-                if (serviceException != null) {
-                    LogUtil.dee("ErrorCode" + serviceException.getErrorCode());
-                    LogUtil.dee("RequestId" + serviceException.getRequestId());
-                    LogUtil.dee("HostId" + serviceException.getHostId());
-                    LogUtil.dee("RawMessage" + serviceException.getRawMessage());
-                }
-            }
-        });
+                        // 服务异常
+                        if (serviceException != null) {
+                            LogUtil.dee("ErrorCode" + serviceException.getErrorCode());
+                            LogUtil.dee("RequestId" + serviceException.getRequestId());
+                            LogUtil.dee("HostId" + serviceException.getHostId());
+                            LogUtil.dee("RawMessage" + serviceException.getRawMessage());
+                        }
+                    }
+                });
     }
 
 
@@ -240,35 +241,6 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     }
 
     /**
-     * 获取上传Token
-     */
-    public void getServerToken(final String oKey, final String filePath) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .getServerToken(new Callback<OssToken>() {
-                    @Override
-                    public void success(OssToken ossToken, Response response) {
-
-                        HttpErrorCheck.checkResponse("获取OssToken", response);
-                        ak = ossToken.Credentials.AccessKeyId;
-                        sk = ossToken.Credentials.AccessKeySecret;
-                        token = ossToken.Credentials.SecurityToken;
-                        expiration = ossToken.Credentials.Expiration;
-
-                        AliOSSManager.getInstance().init(mContext, ak, sk, token, expiration);
-                        oss = AliOSSManager.getInstance().getOss();
-                        uploadOssFile(oss, Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
-
-    /**
      * 组装附件数据
      */
     public void setAttachmentData() {
@@ -289,7 +261,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                         attachmentBatch.name = uuid + "/" + newFile.getName();
                         attachmentBatch.size = Integer.parseInt(newFile.length() + "");
                         attachment.add(attachmentBatch);
-                        getServerToken(uuid + "/" + newFile.getName(), newFile.getPath());
+                        uploadFileToOSS(uuid + "/" + newFile.getName(), newFile.getPath());
                     }
                 }
             }
