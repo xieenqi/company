@@ -1,12 +1,13 @@
 package com.loyo.oa.v2.activityui.attachment;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.BaseActivity;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 /**
  * Created by loyo_dev1 on 16/9/20.
