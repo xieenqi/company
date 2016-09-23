@@ -240,7 +240,7 @@
         <activity
             android:name=".activityui.customer.CustomerInfoActivity_"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activityui.customer.CustomerLabelActivity_"
             android:launchMode="singleTop"
@@ -667,8 +667,7 @@
         <activity
             android:name=".activityui.worksheet.WorksheetAddActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activityui.worksheet.WorksheetSubmitActivity"
             android:launchMode="singleTop"
