@@ -417,9 +417,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -427,9 +424,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
@@ -456,7 +450,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         User user = MainApp.user;
         for (Department department : mDeptSource) {
             for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
+                if (department != null && department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
                     newDeptSource.add(department);
                 }
             }

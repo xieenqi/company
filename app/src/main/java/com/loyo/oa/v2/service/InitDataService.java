@@ -25,7 +25,9 @@ import org.androidannotations.annotations.EIntentService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -107,7 +109,18 @@ public class InitDataService extends IntentService {
      */
     void getOrganization() {
         ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
-                .create(IUser.class).getOrganization();
+                .create(IUser.class).getOrganization(new Callback<Objects>() {
+                    @Override
+                    public void success(Objects objects, Response response) {
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        Global.Toast("数据更新失败,请重试");
+                    }
+                });
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
             //写DB

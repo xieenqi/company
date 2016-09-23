@@ -158,7 +158,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
             }
         });
 
-        Utils.btnHideForListView(listView.getRefreshableView(),btn_add);
+        Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
     }
 
 
@@ -253,9 +253,6 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -263,9 +260,6 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 

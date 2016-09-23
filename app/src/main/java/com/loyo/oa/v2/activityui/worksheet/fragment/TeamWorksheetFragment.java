@@ -86,7 +86,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     private LinearLayout salemy_screen0, salemy_screen1, salemy_screen2;
     private ImageView salemy_screen1_iv0, salemy_screen1_iv1, salemy_screen1_iv2;
     private TextView tv_tab0, tv_tab1, tv_tab2;
-    private WindowManager.LayoutParams windowParams;
     private Button btn_add;
     private ViewStub emptyView;
 
@@ -211,7 +210,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
 
         mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
         mExpandableListView.setOnRefreshListener(this);
-        //mExpandableListView.setEmptyView(emptyView);
+        mExpandableListView.setEmptyView(emptyView);
 
         setupExpandableListView(
                 new ExpandableListView.OnGroupClickListener() {
@@ -335,8 +334,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                     groupsData.clear();
                 }
                 loadData(listWrapper.data.records);
-                mExpandableListView.setEmptyView(emptyView);
-
                 HttpErrorCheck.checkResponse("团队工单列表：", response);
             }
 
@@ -484,9 +481,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -494,9 +488,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 

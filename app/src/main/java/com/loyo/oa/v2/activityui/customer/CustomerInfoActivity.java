@@ -6,13 +6,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
@@ -22,7 +19,6 @@ import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
-import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.customer.bean.Locate;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
@@ -129,7 +125,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     private boolean isMem = false;
     private String addres;
-    private Intent mIntent;
     private Bundle mBundle;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
     private Locate mLocate = new Locate();
@@ -137,8 +132,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     private ArrayList<Member> members = new ArrayList<>();
     private Members cusMembers = new Members();
     private CustomerRegional regional = new CustomerRegional();
-    private Industry industry = new Industry();
-    private Animation animation;
+    //    private Industry industry = new Industry();
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
     private ArrayList<CustomerExtraData> mCustomerExtraDatas;
@@ -146,9 +140,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     private double laPosition;//当前位置的经纬度
     private double loPosition;
-    private boolean cusGuys = false;  //联系人权限
-    private boolean cusPhone = false; //手机权限
-    private boolean cusMobile = false;//座机权限
     private boolean cusLocation = false;//定位权限
     private boolean cusDetialAdress = false;//客户的详细地址
     private boolean cusBrief = false;//客户简介
@@ -165,7 +156,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         layout_customer_join_users.setOnTouchListener(Global.GetTouch());
         img_del_join_users.setOnTouchListener(Global.GetTouch());
         layout_customer_district.setOnTouchListener(Global.GetTouch());
-        animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
         getCustomer();
     }
@@ -201,7 +191,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 获取新建客户权限
      */
     public void requestJurisdiction() {
-        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
@@ -226,6 +215,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
+                Utils.dialogDismiss();
             }
         });
     }
@@ -334,10 +324,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         if (null != mCustomer.regional) {
             regional = mCustomer.regional;
         }
-
-        if (null != mCustomer.industry) {
-            industry = mCustomer.industry;
-        }
+//
+//        if (null != mCustomer.industry) {
+//            industry = mCustomer.industry;
+//        }
 
         try {
             if (null != mCustomer.position && mCustomer.position.loc.length > 1) {

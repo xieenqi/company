@@ -59,7 +59,6 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
     private LinearLayout screen1, screen2, screen3;
     private ImageView screen1_iv1, screen2_iv2, screen3_iv3;
     private TextView saleteam_screen1_commy;
-    private WindowManager.LayoutParams windowParams;
     private int statusIndex, sortIndex;
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
@@ -287,9 +286,6 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -297,9 +293,6 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 

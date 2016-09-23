@@ -68,7 +68,6 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
     private LinearLayout salemy_screen1, salemy_screen2;
     private ImageView salemy_screen1_iv1, salemy_screen1_iv2;
     private TextView tv_tab1, tv_tab2;
-    private WindowManager.LayoutParams windowParams;
     private Button btn_add;
     private ViewStub emptyView;
 
@@ -356,9 +355,6 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -366,9 +362,6 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 

@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -183,6 +184,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
+        lv_list.setEmptyView(emptyView);
 
         /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -301,11 +303,11 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
                         SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                 saleCommPopupView.showAsDropDown(screen3);
-                openPopWindow(screen3_iv3);
+                openPopWindow(screen2_iv2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        closePopupWindow(screen3_iv3);
+                        closePopupWindow(screen2_iv2);
                     }
                 });
             }
@@ -316,11 +318,11 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
                         SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
                 saleCommPopupView.showAsDropDown(screen2);
-                openPopWindow(screen2_iv2);
+                openPopWindow(screen3_iv3);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        closePopupWindow(screen2_iv2);
+                        closePopupWindow(screen3_iv3);
                     }
                 });
             }
@@ -332,9 +334,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -342,9 +341,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
@@ -367,16 +363,33 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
                 HttpErrorCheck.checkResponse("我的线索列表：", response);
-                try {
+                if (null == clueList.data || clueList.data.records == null) {
+                    if (isPullDown && listData.size() > 0) {
+                        listData.clear();
+                    } else {
+                        Toast("没有相关数据");
+                        return;
+                    }
+                } else {
                     if (isPullDown) {
                         listData.clear();
                     }
                     listData.addAll(clueList.data.records);
+                }
+                try {
+//                    if (isPullDown) {
+//                        listData.clear();
+//                    }
+//                    if (null == clueList.data.records) {
+//                        listData.clear();
+//                        Toast("没有相关数据");
+//                    } else {
+//                        listData.addAll(clueList.data.records);
+//                    }
                     adapter.setData(listData);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-                lv_list.setEmptyView(emptyView);
             }
 
             @Override
