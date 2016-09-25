@@ -264,7 +264,7 @@ public final class Global {
             Global.Toast("内存卡不可用");
             return null;
         }
-        String timepath = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+        String timepath = new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date());
         String photoPath = Environment.getExternalStorageDirectory() + File.separator + "KuaiQi" + timepath;
 //        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
 //                "/KuaiQi" + timepath);
