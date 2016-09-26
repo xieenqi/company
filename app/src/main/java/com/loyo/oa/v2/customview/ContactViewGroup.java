@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerContactManageActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerContractAddActivity;
@@ -20,7 +19,6 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-
 import java.util.ArrayList;
 
 /**

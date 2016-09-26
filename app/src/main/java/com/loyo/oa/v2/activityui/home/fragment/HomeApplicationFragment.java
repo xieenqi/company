@@ -17,16 +17,14 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.attachment.SweetAlertDialogActivity;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
-import com.loyo.oa.v2.activityui.customer.bean.PhoneCallBack;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
@@ -56,9 +54,7 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IAttendance;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
@@ -66,29 +62,22 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.RestAdapterPhoneFactory;
-import com.loyo.oa.v2.tool.SharedPreferencesUtils;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -263,6 +252,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*Intent mIntent = new Intent(getActivity(), SweetAlertDialogActivity.class);
+                startActivity(mIntent);*/
                 showMoreWindow(v);
             }
         });

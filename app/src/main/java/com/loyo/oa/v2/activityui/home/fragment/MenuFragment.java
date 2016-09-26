@@ -33,6 +33,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
@@ -287,7 +288,7 @@ public class MenuFragment extends BaseFragment {
                 break;
             //清除缓存
             case R.id.ll_clean:
-                final GeneralPopView dialog = showGeneralDialog(true, true, "确认清除缓存？");
+/*                final GeneralPopView dialog = showGeneralDialog(true, true, "确认清除缓存？");
                 dialog.setSureOnclick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -296,7 +297,23 @@ public class MenuFragment extends BaseFragment {
                         dialog.dismiss();
                         setDiskCacheInfo();
                     }
-                });
+                });*/
+
+                sweetAlertDialogView = new SweetAlertDialogView(getActivity());
+                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialogView.sweetAlertDialog.dismiss();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        showLoading("");
+                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
+                        sweetAlertDialogView.sweetAlertDialog.dismiss();
+                        setDiskCacheInfo();
+                    }
+                },"提醒","确认清楚缓存?");
 
                 break;
         }
