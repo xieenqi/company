@@ -51,9 +51,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         Item_info item_info;
-        //convertView为null的时候初始化convertView。
         if (convertView == null) {
             item_info = new Item_info();
             convertView = mInflater.inflate(R.layout.item_workflownodes, null);
@@ -63,11 +61,6 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
             item_info.tv_creator_title = (TextView) convertView.findViewById(R.id.tv_creator_title);
             item_info.tv_content = (TextView) convertView.findViewById(R.id.tv_content);
             item_info.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-
-//            item_info.tv_result = (TextView) convertView.findViewById(R.id.tv_result);
-//            item_info.tv_comment = (TextView) convertView.findViewById(R.id.tv_comment);
-//            item_info.tv_endTime = (TextView) convertView.findViewById(R.id.tv_endTime);
-
             convertView.setTag(item_info);
         } else {
             item_info = (Item_info) convertView.getTag();
@@ -77,6 +70,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
         if (wfNodes != null) {
             String actionName = wfNodes.getExecutorUser().getRealname();//节点人的名字
             String actionInfo = wfNodes.getComment();//处理意见
+
             if (TextUtils.isEmpty(wfNodes.title)) {
                 if (wfNodes.getExecutorUser() != null) {
                     item_info.tv_creator_title.setText(actionName + (wfNodes.isNeedApprove() ? "审批意见" : "经办意见"));
@@ -142,9 +136,5 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
         public TextView tv_content;//处理意见
         public TextView tv_set_time;//限时
         public TextView tv_time;
-
-//        public TextView tv_result;
-//        public TextView tv_comment;
-//        public TextView tv_endTime;
     }
 }
