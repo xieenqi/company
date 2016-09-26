@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,6 +26,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
+import com.loyo.oa.v2.activityui.customer.CustomerPhoneActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.bean.User;
@@ -242,6 +246,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 break;
         }
     }
+
 
     /**
      * 判断数据是否被编辑过

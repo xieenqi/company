@@ -1,8 +1,10 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.bean.CallBackCallid;
+import com.loyo.oa.v2.activityui.customer.bean.CallBackResp;
+import com.loyo.oa.v2.activityui.customer.bean.CallClientInfo;
+import com.loyo.oa.v2.activityui.customer.bean.CallUserResp;
+import com.loyo.oa.v2.activityui.customer.bean.CustomerClientBean;
+import com.loyo.oa.v2.activityui.customer.bean.PhoneCallBack;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
@@ -20,10 +28,14 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.ContactViewGroup;
+import com.loyo.oa.v2.tool.RestAdapterPhoneFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -32,6 +44,7 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -45,26 +58,40 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_customer_contact_manage)
 public class CustomerContactManageActivity extends BaseActivity implements ContactViewGroup.OnContactProcessCallback {
 
-    @ViewById ViewGroup layout_back;
-    @ViewById TextView tv_title;
-    @ViewById LinearLayout layout_container;
-    @ViewById ViewGroup layout_add;
+    @ViewById
+    ViewGroup layout_back;
+    @ViewById
+    TextView tv_title;
+    @ViewById
+    LinearLayout layout_container;
+    @ViewById
+    ViewGroup layout_add;
     @Extra(ExtraAndResult.EXTRA_ID)
     String customerId;
-    @Extra("isMyUser") boolean isMyUser;
-    @Extra("isRoot")   boolean isRoot;
-    @Extra("isLock")   boolean isLock;
-    @Extra(ExtraAndResult.EXTRA_STATUS) boolean isMenber;
+    @Extra("isMyUser")
+    boolean isMyUser;
+    @Extra("isRoot")
+    boolean isRoot;
+    @Extra("isLock")
+    boolean isLock;
+    @Extra(ExtraAndResult.EXTRA_STATUS)
+    boolean isMenber;
 
     private Customer customerContact;
     private ArrayList<ContactLeftExtras> leftExtrases;
 
+    private String contactId;
+    private String contactName;
+    private String callNum;
+    private String myCall;
+    private int    callType;
+
     @AfterViews
     void initViews() {
-        if(!isLock){
+        if (!isLock) {
             layout_add.setVisibility(View.GONE);
-        }else if(!isMyUser || isMenber){
-            if(!isRoot){
+        } else if (!isMyUser || isMenber) {
+            if (!isRoot) {
                 layout_add.setVisibility(View.GONE);
             }
         }
@@ -131,8 +158,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         ArrayList<Contact> contacts = customerContact.contacts;
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
-            ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact,leftExtrases, contact, this);
-            contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber,isRoot,isLock);
+            ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, leftExtrases, contact, this);
+            contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber, isRoot, isLock);
         }
         cancelLoading();
     }
@@ -181,6 +208,60 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
                 break;
         }
+    }
+
+
+    void requestClientInfo() {
+        showLoading("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("customerId", customerContact.getId());
+        map.put("contactId", contactId);
+        map.put("type", callType);
+        LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).requestCallBack(map,
+                new RCallback<CallBackCallid>() {
+                    @Override
+                    public void success(final CallBackCallid callBackCallid, final Response response) {
+                        HttpErrorCheck.checkResponse("请求回拨", response);
+                        if(callBackCallid.errcode == 0){
+                            Bundle mBundle = new Bundle();
+                            mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
+                            mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
+                            app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                        }else{
+                            cancelLoading();
+                            Toast(callBackCallid.errmsg);
+                        }
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+            }
+
+    /**
+     * 拨打商务电话回调
+     */
+    @Override
+    public void onCallBack(String callNum, String contactId, String contactName,int callType) {
+        this.callNum = callNum;
+        this.contactId = contactId;
+        this.contactName = contactName;
+        this.callType = callType;
+        myCall = MainApp.user.mobile;
+        LogUtil.dee("我的号码:" + myCall);
+        LogUtil.dee("被叫号码:" + callNum);
+        LogUtil.dee("contactId:" + contactId);
+        LogUtil.dee("contactName:" + contactName);
+        requestClientInfo();
+    }
+
+    @Override
+    public void onPhoneError() {
+        Toast("电话号码为空或格式不正确!");
     }
 
     /**

@@ -408,6 +408,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         return generalPopView;
     }
 
+
+
+
+
     /*重启当前Activity*/
     public void restartActivity() {
         Intent intent = getIntent();

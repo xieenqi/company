@@ -17,6 +17,8 @@ import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.RegularCheck;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -31,14 +33,19 @@ public class ContactViewGroup extends LinearLayout {
 
     public interface OnContactProcessCallback {
         void onDel(Contact contact);
+
         void onSetDefault(Contact contact);
+
+        void onCallBack(String callNum, String id, String name,int callType);
+
+        void onPhoneError();
     }
 
     private Context context;
     private Contact mContact;
     private MainApp app = MainApp.getMainApp();
     private Customer mCustomer;
-    private ArrayList<ContactLeftExtras>  leftExtrases;//左侧lable数据
+    private ArrayList<ContactLeftExtras> leftExtrases;//左侧lable数据
     private OnContactProcessCallback contactProcessCallback;
 
     private ContactViewGroup(Context c) {
@@ -46,7 +53,7 @@ public class ContactViewGroup extends LinearLayout {
         context = c;
     }
 
-    public ContactViewGroup(Context _context, Customer customer,ArrayList<ContactLeftExtras> leftExtrases, Contact contact, OnContactProcessCallback callback) {
+    public ContactViewGroup(Context _context, Customer customer, ArrayList<ContactLeftExtras> leftExtrases, Contact contact, OnContactProcessCallback callback) {
         this(_context);
         setBackgroundColor(getResources().getColor(R.color.white));
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
@@ -58,12 +65,44 @@ public class ContactViewGroup extends LinearLayout {
     }
 
     /**
+     * 手机拨打弹出框
+     * */
+    public void paymentSet(final String phone,final int callType) {
+        final CallPhonePopView callPhonePopView = new CallPhonePopView(context,mContact.getName());
+        callPhonePopView.show();
+        callPhonePopView.setCanceledOnTouchOutside(true);
+        /*商务电话*/
+        callPhonePopView.businessPhone(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                contactProcessCallback.onCallBack(phone, mContact.getId(), mContact.getName(),callType);
+                callPhonePopView.dismiss();
+            }
+        });
+        /*普通电话*/
+        callPhonePopView.commonlyPhone(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.call(context, phone);
+                callPhonePopView.dismiss();
+            }
+        });
+        callPhonePopView.cancelPhone(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPhonePopView.dismiss();
+            }
+        });
+
+    }
+
+    /**
      * 绑定视图
      *
      * @param id     视图id
      * @param parent 视图父容器
      */
-    public void bindView(final int id, final ViewGroup parent, boolean isMyUser, boolean isMber,boolean isRoot,boolean isLock) {
+    public void bindView(final int id, final ViewGroup parent, boolean isMyUser, boolean isMber, boolean isRoot, boolean isLock) {
         setId(id);
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -83,13 +122,13 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
             /*是否为公海客户*/
-            if(!isLock){
+            if (!isLock) {
                 edit.setVisibility(View.GONE);
                 del.setVisibility(View.GONE);
                 default_.setVisibility(View.GONE);
                 /*判断是否有操作权限*/
-            }else if(!isMyUser || isMber){
-                if(!isRoot){
+            } else if (!isMyUser || isMber) {
+                if (!isRoot) {
                     edit.setVisibility(View.GONE);
                     del.setVisibility(View.GONE);
                     default_.setVisibility(View.GONE);
@@ -99,26 +138,6 @@ public class ContactViewGroup extends LinearLayout {
             ViewGroup call = (ViewGroup) findViewById(R.id.layout_call);
             ViewGroup callwire = (ViewGroup) findViewById(R.id.layout_call_wiretel);
             ViewGroup sendsms = (ViewGroup) findViewById(R.id.layout_send_sms);
-
-            call.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.call(context, mContact.getTel());
-                }
-            });
-            callwire.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.call(context, mContact.getWiretel());
-                }
-            });
-
-            sendsms.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.sendSms(context, mContact.getTel());
-                }
-            });
 
             TextView tv_name = (TextView) findViewById(R.id.tv_name);
             TextView tv_tel = (TextView) findViewById(R.id.tv_phone);
@@ -144,6 +163,48 @@ public class ContactViewGroup extends LinearLayout {
                 default_.setImageResource(R.drawable.icon_contact_default_selected);
                 del.setVisibility(INVISIBLE);
             }
+
+            /*拨打手机*/
+            call.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(null == mContact.getTel() || mContact.getTel().trim().isEmpty()){
+                        contactProcessCallback.onPhoneError();
+                        return;
+                    }
+                    if(!RegularCheck.isMobilePhone(mContact.getTel())){
+                        contactProcessCallback.onPhoneError();
+                        return;
+                    }
+                    paymentSet(mContact.getTel(),0);
+                }
+            });
+
+            /*拨打座机*/
+            callwire.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    LogUtil.dee("拨打的座机:"+mContact.getWiretel());
+                    if(null == mContact.getWiretel() || mContact.getWiretel().trim().isEmpty()){
+                        contactProcessCallback.onPhoneError();
+                        return;
+                    }
+                    /*暂时注销座机号验证
+                    if(!RegularCheck.isPhoneNumberValid(mContact.getWiretel())){
+                        contactProcessCallback.onPhoneError();
+                        return;
+                    }*/
+                    paymentSet(mContact.getWiretel(),1);
+
+                }
+            });
+
+            sendsms.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.sendSms(context, mContact.getTel());
+                }
+            });
 
             //编辑联系人
             edit.setOnClickListener(new OnClickListener() {
@@ -180,8 +241,9 @@ public class ContactViewGroup extends LinearLayout {
             });
         }
 
+
         //添加动态字段
-        addView(new ContactListExtra(context, mContact.getExtDatas(),leftExtrases, false, R.color.text99, 14));
+        addView(new ContactListExtra(context, mContact.getExtDatas(), leftExtrases, false, R.color.text99, 14));
 
         //加载子条目
         parent.addView(this);

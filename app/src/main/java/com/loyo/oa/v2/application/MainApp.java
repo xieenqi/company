@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
@@ -84,6 +87,7 @@ public class MainApp extends Application {
     public static int permissionPage;
 
     public DisplayImageOptions options_rounded;
+    private AnimationDrawable animationDrawable;
 
     public SimpleDateFormat df1;//设置日期格式
     public SimpleDateFormat df2;//设置日期格式
@@ -170,6 +174,27 @@ public class MainApp extends Application {
         JPushInterface.init(this);
 
     }
+
+    /**
+     * 启动动画
+     * */
+    public void startAnim(TextView textView){
+        animationDrawable = (AnimationDrawable) textView.getBackground();
+        animationDrawable.start();
+    }
+
+    /**
+     * 停止动画
+     * */
+    public void stopAnim(TextView textView){
+        animationDrawable = (AnimationDrawable) textView.getBackground();
+        if(animationDrawable.isRunning()){
+            animationDrawable.stop();
+        }
+        animationDrawable.selectDrawable(0);
+        //imageView.setImageResource(R.drawable.icon_dynamic_phone01);
+    }
+
 
     static RestAdapter restAdapter = null;
 

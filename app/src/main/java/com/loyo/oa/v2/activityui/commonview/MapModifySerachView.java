@@ -11,7 +11,6 @@ import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
@@ -22,8 +21,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.RecycleViewDivider;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
