@@ -398,7 +398,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
 
                 //时间
                 case R.id.cus_screen1:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true,tagPostion);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
                     saleCommPopupView.showAsDropDown(screen1);
                     openPopWindow(tagImage1);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -411,7 +411,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
 
                 //标签
                 case R.id.cus_screen2:
-                    screenTagPopupView = new ScreenTagPopupView(getActivity(), mTags, mHandler);
+                    screenTagPopupView = new ScreenTagPopupView(mActivity, mTags, mHandler);
                     screenTagPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

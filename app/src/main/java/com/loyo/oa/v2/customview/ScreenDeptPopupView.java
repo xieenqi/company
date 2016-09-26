@@ -106,6 +106,12 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
                 resultData(position);
             }
         });
+        contentView.findViewById(R.id.shade).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     /**
