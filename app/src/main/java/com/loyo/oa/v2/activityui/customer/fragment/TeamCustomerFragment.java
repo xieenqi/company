@@ -83,7 +83,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private SaleCommPopupView saleCommPopupView;
     private ScreenTagPopupView screenTagPopupView;
     private ScreenDeptPopupView saleScreenPopupView;
-    private WindowManager.LayoutParams windowParams;
     private TeamCustomerAdapter adapter;
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mDoubleTags = new ArrayList<>();
