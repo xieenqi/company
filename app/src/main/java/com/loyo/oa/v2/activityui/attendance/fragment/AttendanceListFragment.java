@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
@@ -414,7 +413,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         }
 
         if (!Global.isConnected()) {
-            Toast("没有网络连接，不能打卡");
+            Toast("请检查您的网络连接");
             return;
         }
         /*工作日*/
@@ -606,15 +605,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
-        LogUtil.d("位置回调成功");
         UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
-        LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);
         MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                LogUtil.d("check回调成功");
                 if (null == attendanceRecord) {
                     Toast("没有获取到考勤信息");
                     return;
@@ -632,7 +628,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                LogUtil.d("check回调失败");
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -641,10 +636,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void OnLocationGDFailed() {
-        LogUtil.d("位置回调失败");
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();
+        Toast("获取打卡位置失败");
     }
 
     /**

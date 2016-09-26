@@ -33,6 +33,40 @@
             android:textColor="@color/text66"
             android:textSize="@dimen/text_sp15" />
 
+        <LinearLayout
+            android:id="@+id/layout_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_4"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_audio_phone"
+                />
+
+            <TextView
+                android:id="@+id/iv_calls"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_33"
+                android:background="@drawable/animation_calls"
+                android:textColor="#3FD3AA"
+                />
+
+            <TextView
+                android:id="@+id/tv_audio_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:text="00:00:00"
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp12" />
+
+        </LinearLayout>
+
         <com.loyo.oa.v2.customview.CustomerListView
             android:id="@+id/lv_listview"
             android:layout_width="match_parent"
@@ -100,5 +134,6 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
     <include layout="@layout/include_solid_line_left" />
 </LinearLayout>

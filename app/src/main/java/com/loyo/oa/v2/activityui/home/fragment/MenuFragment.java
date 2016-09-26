@@ -54,6 +54,7 @@ import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 

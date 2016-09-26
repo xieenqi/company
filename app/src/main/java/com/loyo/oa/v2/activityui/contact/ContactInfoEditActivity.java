@@ -243,6 +243,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
     }
 
+
     /**
      * 判断数据是否被编辑过
      *

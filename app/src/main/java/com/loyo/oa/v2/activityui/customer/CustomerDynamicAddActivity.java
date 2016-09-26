@@ -233,6 +233,8 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             map.put("contactId", contactId);
             map.put("contactName", contactName);
         }
+        LogUtil.dee("新建跟进:"+MainApp.gson.toJson(map));
+
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
             @Override
             public void success(final SaleActivity saleActivity, final Response response) {

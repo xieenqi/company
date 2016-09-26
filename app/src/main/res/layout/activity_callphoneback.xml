@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_callphone_writh"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/dimen_20"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_call_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/role_white"
+            android:gravity="center"
+            android:scaleType="center"
+            android:text="皮"
+            android:textColor="@color/ws_status_6"
+            android:textSize="@dimen/text_sp35" />
+
+        <ImageView
+            android:id="@+id/iv_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="center"
+            android:src="@drawable/ro2"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/iv_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="center"
+            android:src="@drawable/ro2"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/iv_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="center"
+            android:src="@drawable/ro2"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/iv_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="center"
+            android:src="@drawable/ro2"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_call_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_header"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_centerHorizontal="true"
+        android:text="皮特"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sp27" />
+
+    <RelativeLayout
+        android:layout_marginTop="@dimen/dimen_15"
+        android:layout_below="@+id/tv_call_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       >
+
+        <TextView
+            android:id="@+id/tv_call_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在接通"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sp15"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:id="@+id/tv_call_loading"
+            android:layout_toRightOf="@+id/tv_call_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="..."
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sp15" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_call_gua"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dimen_40"
+        android:background="@drawable/icon_callback_gua" />
+
+</RelativeLayout>

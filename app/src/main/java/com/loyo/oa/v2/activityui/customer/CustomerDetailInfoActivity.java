@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
@@ -489,7 +488,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_sale_activity:
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
-                _class = CustomerDynamicManageActivity.class;
+                _class =  CustomerDynamicManageActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;
             /*拜访签到*/
