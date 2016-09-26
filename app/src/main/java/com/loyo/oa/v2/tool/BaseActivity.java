@@ -54,7 +54,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
     private GestureDetector mDetector;
-    private SweetAlertDialogView sweetAlertDialogView;
+    public SweetAlertDialogView sweetAlertDialogView;
 
     /**
      * 搜索跳转分类

@@ -28,6 +28,7 @@ import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -40,11 +41,15 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -274,7 +279,8 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             case R.id.layout_last:
 
                 if(mPosition == 0){
-                    Toast("这是第一条");
+                    sweetAlertDialogView = new SweetAlertDialogView(mContext);
+                    sweetAlertDialogView.alertMessage("提示","已到第一条跟进!");
                 }else{
                     mPosition--;
                     //Toast(""+mPosition);
@@ -282,7 +288,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                         mViewModel = lstData_saleActivity_current.get(mPosition);
                         audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
                     }else{
-                        Toast("没有录音。");
+                        Toast("此跟进无电话录音。");
                     }
                 }
                 break;
@@ -291,7 +297,8 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             case R.id.layout_next:
 
                 if(mPosition == lstData_saleActivity_current.size() - 1){
-                    Toast("这是最后一条");
+                    sweetAlertDialogView = new SweetAlertDialogView(mContext);
+                    sweetAlertDialogView.alertMessage("提示","已到本页最后一条跟进,请下拉跟进列表获取更多跟进信息!");
                 }else{
                     mPosition++;
                     //Toast("" + mPosition);
@@ -299,7 +306,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                         mViewModel = lstData_saleActivity_current.get(mPosition);
                         audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
                     }else{
-                        Toast("没有录音。");
+                        Toast("此跟进无电话录音。");
                     }
                 }
                 break;
@@ -379,10 +386,10 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
      * 播放开始
      * */
     void audioStart(){
-        LogUtil.dee("audioStart");
         isOnPlay = false;
         layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
-        LogUtil.dee("setBackgroundResource");
+        if(null != mViewModel)
+            mViewModel.setIsAnim(true);
         if (player != null) {
             player.play();
         }
@@ -394,6 +401,8 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     void audioPause(){
         isOnPlay = true;
         layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
+        if(null != mViewModel)
+            mViewModel.setIsAnim(false);
         if (player != null) {
             player.pause();
         }
