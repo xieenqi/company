@@ -166,7 +166,8 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * 获取数据
      */
     private void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).
+                getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
                 LogUtil.dll(" 项目的附件获取数据： " + MainApp.gson.toJson(attachments));

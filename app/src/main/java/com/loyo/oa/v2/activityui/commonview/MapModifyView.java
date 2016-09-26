@@ -242,7 +242,7 @@ public class MapModifyView extends BaseActivity
         if (app.latitude != -1 || app.longitude != -1) {
             setHeaderItem(app.latitude, app.longitude, app.address, app.message);
             locationMapCenter(app.latitude, app.longitude);
-            doSearchQuery(app.address, app.latitude, app.longitude);
+            doSearchQuery(app.region, app.latitude, app.longitude);
         } else {
             startLocation();
         }
@@ -485,7 +485,7 @@ public class MapModifyView extends BaseActivity
                 isFrist = true;
                 setHeaderItem(latitude, longitude, address, radius);
                 locationMapCenter(latitude, longitude);
-                doSearchQuery(app.address, latitude, longitude);
+                doSearchQuery(app.region, latitude, longitude);
                 LocationUtilGD.sotpLocation();
             }
 

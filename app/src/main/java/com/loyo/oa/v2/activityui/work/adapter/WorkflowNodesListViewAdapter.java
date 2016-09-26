@@ -73,7 +73,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
 
             if (TextUtils.isEmpty(wfNodes.title)) {
                 if (wfNodes.getExecutorUser() != null) {
-                    item_info.tv_creator_title.setText(actionName + (wfNodes.isNeedApprove() ? "审批意见" : "经办意见"));
+                    item_info.tv_creator_title.setText(actionName + (wfNodes.isNeedApprove() ? "审批意见" : "办结意见"));
                 }
             } else {
                 item_info.tv_creator_title.setText(wfNodes.title);
@@ -112,7 +112,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                     if (wfNodes.isApproveFlag()) {
                         item_info.img_left.setImageResource(wfNodes.isNeedApprove() ? R.drawable.img_wfinstance_agree : R.drawable.img_wfinstance_complete);
                         item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                        item_info.tv_content.setText(actionName + ":" + (TextUtils.isEmpty(actionInfo) ? (wfNodes.isNeedApprove() ? "同意" : "经办") :
+                        item_info.tv_content.setText(actionName + ":" + (TextUtils.isEmpty(actionInfo) ? (wfNodes.isNeedApprove() ? "同意" : "办结") :
                                 actionInfo));
                         item_info.tv_time.setVisibility(View.VISIBLE);
                         item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
