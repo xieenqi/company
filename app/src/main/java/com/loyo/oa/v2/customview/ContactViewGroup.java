@@ -75,7 +75,7 @@ public class ContactViewGroup extends LinearLayout {
         callPhonePopView.businessPhone(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactProcessCallback.onCallBack(phone, mContact.getId(), mContact.getName(),callType);
+                contactProcessCallback.onCallBack(phone.replaceAll(" +",""), mContact.getId(), mContact.getName().trim().toString(),callType);
                 callPhonePopView.dismiss();
             }
         });
@@ -168,11 +168,11 @@ public class ContactViewGroup extends LinearLayout {
             call.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(null == mContact.getTel() || mContact.getTel().trim().isEmpty()){
+                    if(null == mContact.getTel() || mContact.getTel().isEmpty()){
                         contactProcessCallback.onPhoneError();
                         return;
                     }
-                    if(!RegularCheck.isMobilePhone(mContact.getTel())){
+                    if(!RegularCheck.isMobilePhone(mContact.getTel().replaceAll(" +",""))){
                         contactProcessCallback.onPhoneError();
                         return;
                     }
@@ -185,7 +185,7 @@ public class ContactViewGroup extends LinearLayout {
                 @Override
                 public void onClick(View view) {
                     LogUtil.dee("拨打的座机:"+mContact.getWiretel());
-                    if(null == mContact.getWiretel() || mContact.getWiretel().trim().isEmpty()){
+                    if(null == mContact.getWiretel() || mContact.getWiretel().isEmpty()){
                         contactProcessCallback.onPhoneError();
                         return;
                     }

@@ -223,14 +223,20 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     @Override
                     public void success(final CallBackCallid callBackCallid, final Response response) {
                         HttpErrorCheck.checkResponse("请求回拨", response);
-                        if(callBackCallid.errcode == 0){
-                            Bundle mBundle = new Bundle();
-                            mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
-                            mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
-                            app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-                        }else{
-                            cancelLoading();
-                            Toast(callBackCallid.errmsg);
+                        try{
+                            if(callBackCallid.errcode == 0){
+                                Bundle mBundle = new Bundle();
+                                mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
+                                mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
+                                app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                            }else{
+                                cancelLoading();
+                                Toast(callBackCallid.errmsg);
+                            }
+                        }catch (NullPointerException e){
+                            e.printStackTrace();
+                            Toast(e.getMessage());
+                            finish();
                         }
                     }
 
