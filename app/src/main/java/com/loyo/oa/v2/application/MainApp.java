@@ -116,6 +116,7 @@ public class MainApp extends Application {
     public String cityCode;
     public String address;
     public String message;
+    public String region;//地区
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
     public static HashMap<String, Object> rootMap;
@@ -177,18 +178,18 @@ public class MainApp extends Application {
 
     /**
      * 启动动画
-     * */
-    public void startAnim(TextView textView){
+     */
+    public void startAnim(TextView textView) {
         animationDrawable = (AnimationDrawable) textView.getBackground();
         animationDrawable.start();
     }
 
     /**
      * 停止动画
-     * */
-    public void stopAnim(TextView textView){
+     */
+    public void stopAnim(TextView textView) {
         animationDrawable = (AnimationDrawable) textView.getBackground();
-        if(animationDrawable.isRunning()){
+        if (animationDrawable.isRunning()) {
             animationDrawable.stop();
         }
         animationDrawable.selectDrawable(0);
@@ -409,11 +410,11 @@ public class MainApp extends Application {
 
     /**
      * 跳转相册，公用方法
-     * */
-    public void startSelectImage(Activity mActivity,ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots){
+     */
+    public void startSelectImage(Activity mActivity, ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
         Intent intent = new Intent(mActivity, MultiImageSelectorActivity.class);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-pickPhots.size()) /*最大可选择图片数量*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - pickPhots.size()) /*最大可选择图片数量*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
         mActivity.startActivityForResult(intent, PICTURE);
