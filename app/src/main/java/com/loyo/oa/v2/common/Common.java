@@ -458,18 +458,18 @@ public final class Common {
     public static ArrayList<User> getMyUserDept() {
 
         ArrayList<User> myUsers = new ArrayList<>();
-//        ArrayList<User> userAllList = new ArrayList<>();
+        ArrayList<User> userAllList = new ArrayList<>();
         int positions = 0;
-//        try {
-//        /*全部人员获取*/
-//            for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-//                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-//                    userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+        /*全部人员获取*/
+            for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
+                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
+                    userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         /*获取我的部门下标*/
         for (int i = 0; i < getLstDepartment().size(); i++) {
