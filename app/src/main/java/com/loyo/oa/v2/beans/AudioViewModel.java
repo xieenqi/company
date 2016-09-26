@@ -4,8 +4,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.application.MainApp;
+
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * Created by loyo_dev1 on 16/9/21.
@@ -21,6 +24,7 @@ public class AudioViewModel extends CustomerFollowUpModel {
     public String contactName;
     public String audioUrl;
     public long audioLength;
+    public ArrayList<Attachment> attachments;
 
     private boolean isAnim = false;
     public WeakReference<TextView> imageViewWeakReference;
@@ -35,6 +39,7 @@ public class AudioViewModel extends CustomerFollowUpModel {
         this.contactName = model.contactName;
         this.audioUrl = model.audioUrl;
         this.audioLength = model.audioLength;
+        this.attachments = model.getAttachments();
     }
 
 
@@ -118,18 +123,27 @@ public class AudioViewModel extends CustomerFollowUpModel {
         this.audioLength = audioLength;
     }
 
-    public boolean getIsAnim(){
+    public boolean getIsAnim() {
         return isAnim;
     }
 
-    public void setIsAnim(boolean isAnim){
+    @Override
+    public ArrayList<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    @Override
+    public void setAttachments(ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public void setIsAnim(boolean isAnim) {
         this.isAnim = isAnim;
         if (imageViewWeakReference != null && imageViewWeakReference.get() != null) {
             TextView textView = imageViewWeakReference.get();
             if (isAnim) {
                 MainApp.getMainApp().startAnim(textView);
-            }
-            else {
+            } else {
                 MainApp.getMainApp().stopAnim(textView);
             }
         }
