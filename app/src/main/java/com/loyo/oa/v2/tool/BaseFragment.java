@@ -26,7 +26,6 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = MainApp.getMainApp();
-        mActivity = getActivity();
         AppBus.getInstance().register(this);
     }
 
@@ -39,6 +38,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        mActivity = activity;
     }
 
     @Override
@@ -90,7 +90,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
 
     /**
      * 加载loading的方法
-     * */
+     */
     public void showLoading(String msg) {
         DialogHelp.showLoading(getActivity(), msg, true);
     }
