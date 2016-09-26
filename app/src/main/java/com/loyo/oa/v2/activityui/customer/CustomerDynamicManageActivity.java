@@ -510,30 +510,20 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             if (null != viewModel.audioUrl && !TextUtils.isEmpty(viewModel.audioUrl)) {
 
                 long audioLength = viewModel.audioLength;
-  /*              if(audioLength > 0 && audioLength < 60){
+                if(audioLength > 0 && audioLength <= 60){
+                    tv_calls.setText("000");
+                }else if(audioLength > 60    && audioLength <= 300){
                     tv_calls.setText("00000");
-                }else if(audioLength > 60 && audioLength < 300){
+                }else if(audioLength > 300  && audioLength <= 600){
                     tv_calls.setText("0000000");
-                }else if(audioLength > 300 && audioLength < 600){
+                }else if(audioLength > 600  && audioLength <= 1200){
                     tv_calls.setText("000000000");
-                }else if(audioLength > 600 && audioLength < 1200){
-                    tv_calls.setText("000000000000");
-                }else if(audioLength > 1200 && audioLength < 1800){
-                    tv_calls.setText("000000000000000");
-                }else if(audioLength > 1800){
-                    tv_calls.setText("000000000000000000");
-                }else{
-                    tv_calls.setText("");
-                }*/
-
-                if(audioLength > 0 && audioLength < 10){
-                    tv_calls.setText("00000");
-                }else if(audioLength > 10 && audioLength < 20){
-                    tv_calls.setText("0000000");
-                }else if(audioLength > 20 && audioLength < 30){
-                    tv_calls.setText("000000000");
-                }else if(audioLength > 30){
+                }else if(audioLength > 1200 && audioLength <= 1800){
                     tv_calls.setText("00000000000");
+                }else if(audioLength > 1800 && audioLength <= 3600){
+                    tv_calls.setText("00000000000000");
+                }else if(audioLength > 3600){
+                    tv_calls.setText("0000000000000000");
                 }else{
                     tv_calls.setText("");
                 }

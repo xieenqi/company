@@ -12,6 +12,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {
 
@@ -20,6 +21,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     protected OnLoadSuccessCallback callback;
     protected int mId;
     public GeneralPopView generalPopView;
+    public SweetAlertDialogView sweetAlertDialogView;
 
 
     @Override
@@ -28,6 +30,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         app = MainApp.getMainApp();
         mActivity = getActivity();
         AppBus.getInstance().register(this);
+        sweetAlertDialogView = new SweetAlertDialogView(getActivity());
     }
 
     public void onDestroy() {

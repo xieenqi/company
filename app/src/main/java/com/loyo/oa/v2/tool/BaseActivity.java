@@ -32,6 +32,7 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.GeneralPopView;
@@ -53,6 +54,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
     private GestureDetector mDetector;
+    private SweetAlertDialogView sweetAlertDialogView;
 
     /**
      * 搜索跳转分类
@@ -97,6 +99,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         tintManager.setNavigationBarTintEnabled(true);
         // 设置一个颜色给系统栏
         tintManager.setTintColor(getResources().getColor(R.color.title_bg1));
+        sweetAlertDialogView = new SweetAlertDialogView(this);
     }
 
     @Override
