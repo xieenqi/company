@@ -1,35 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:minHeight="45dp"
-        >
+        android:minHeight="45dp">
 
         <TextView
-            android:layout_marginLeft="@dimen/dimen_15"
-            android:layout_centerVertical="true"
             android:id="@+id/item_saleteam_common_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="asd"
-            />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimen_15"
+            android:text="asd" />
 
         <ImageView
             android:id="@+id/item_saleteam_common_img"
-            android:visibility="gone"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/dimen_15"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dimen_15"
             android:background="@drawable/img_check1"
-            />
+            android:visibility="gone" />
 
-        </RelativeLayout>
+    </RelativeLayout>
 </LinearLayout>
