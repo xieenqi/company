@@ -101,26 +101,30 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                         if (contactLeftExtras.fieldName.equals("name")) {
                             maps.put("name", contactLeftExtras.val);
                         } else if (contactLeftExtras.fieldName.equals("tel")) {
-//                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
-//                                Toast("手机号不能为空");
-//                                return;
-//                            }
-// else {
-//                                if (!RegularCheck.isMobilePhone(contactLeftExtras.val)) {
-//                                    Toast("手机号码格式不正确");
-//                                    return;
-//                                }
-//                            }
-                            maps.put("tel", contactLeftExtras.val);
+
+                           /* if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
+                                Toast("手机号不能为空");
+                                return;
+                            } else {
+                                if (!RegularCheck.isMobilePhone(contactLeftExtras.val)) {
+                                    Toast("手机号码格式不正确");
+                                    return;
+                                }
+                            }*/
+
+                            if(null != contactLeftExtras.val && !contactLeftExtras.val.isEmpty())
+                                maps.put("tel", contactLeftExtras.val.replaceAll(" +", ""));
 
                         } else if (contactLeftExtras.fieldName.equals("wiretel")) {
-//                            if (contactLeftExtras.required && TextUtils.isEmpty(contactLeftExtras.val)) {
-//                                Toast("座机号码不能为空");
-//                                return;
-////                                if (!RegularCheck.isPhone(contactLeftExtras.val)) {//验证座机号码
-////                                }
-//                            }
-                            maps.put("wiretel", contactLeftExtras.val);
+
+                            /*if (contactLeftExtras.required && TextUtils.isEmpty(contactLeftExtras.val)) {
+                                Toast("座机号码不能为空");
+                                return;
+                            }*/
+
+                            if(null != contactLeftExtras.val && !contactLeftExtras.val.isEmpty())
+                                maps.put("wiretel", contactLeftExtras.val.replaceAll(" +", ""));
+
                         } else if (contactLeftExtras.fieldName.equals("birth")) {
                             if (TextUtils.isEmpty(contactLeftExtras.val)) {
                                 try {
