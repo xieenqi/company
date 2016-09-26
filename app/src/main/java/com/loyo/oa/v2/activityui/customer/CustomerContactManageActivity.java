@@ -84,6 +84,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     private String contactName;
     private String callNum;
     private String myCall;
+    private int    callType;
 
     @AfterViews
     void initViews() {
@@ -215,7 +216,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         HashMap<String, Object> map = new HashMap<>();
         map.put("customerId", customerContact.getId());
         map.put("contactId", contactId);
-        LogUtil.dee("阿萨德："+MainApp.gson.toJson(map));
+        map.put("type", callType);
+        LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).requestCallBack(map,
                 new RCallback<CallBackCallid>() {
                     @Override
@@ -244,10 +246,11 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 拨打商务电话回调
      */
     @Override
-    public void onCallBack(String callNum, String contactId, String contactName) {
+    public void onCallBack(String callNum, String contactId, String contactName,int callType) {
         this.callNum = callNum;
         this.contactId = contactId;
         this.contactName = contactName;
+        this.callType = callType;
         myCall = MainApp.user.mobile;
         LogUtil.dee("我的号码:" + myCall);
         LogUtil.dee("被叫号码:" + callNum);

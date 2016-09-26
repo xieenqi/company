@@ -36,7 +36,7 @@ public class ContactViewGroup extends LinearLayout {
 
         void onSetDefault(Contact contact);
 
-        void onCallBack(String callNum, String id, String name);
+        void onCallBack(String callNum, String id, String name,int callType);
 
         void onPhoneError();
     }
@@ -67,7 +67,7 @@ public class ContactViewGroup extends LinearLayout {
     /**
      * 手机拨打弹出框
      * */
-    public void paymentSet(final String phone) {
+    public void paymentSet(final String phone,final int callType) {
         final CallPhonePopView callPhonePopView = new CallPhonePopView(context,mContact.getName());
         callPhonePopView.show();
         callPhonePopView.setCanceledOnTouchOutside(true);
@@ -75,7 +75,7 @@ public class ContactViewGroup extends LinearLayout {
         callPhonePopView.businessPhone(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactProcessCallback.onCallBack(phone, mContact.getId(), mContact.getName());
+                contactProcessCallback.onCallBack(phone, mContact.getId(), mContact.getName(),callType);
                 callPhonePopView.dismiss();
             }
         });
@@ -168,7 +168,7 @@ public class ContactViewGroup extends LinearLayout {
             call.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(mContact.getTel().trim().isEmpty()){
+                    if(null == mContact.getTel() || mContact.getTel().trim().isEmpty()){
                         contactProcessCallback.onPhoneError();
                         return;
                     }
@@ -176,7 +176,7 @@ public class ContactViewGroup extends LinearLayout {
                         contactProcessCallback.onPhoneError();
                         return;
                     }
-                    paymentSet(mContact.getTel());
+                    paymentSet(mContact.getTel(),0);
                 }
             });
 
@@ -185,15 +185,16 @@ public class ContactViewGroup extends LinearLayout {
                 @Override
                 public void onClick(View view) {
                     LogUtil.dee("拨打的座机:"+mContact.getWiretel());
-                    if(mContact.getWiretel().trim().isEmpty()){
+                    if(null == mContact.getWiretel() || mContact.getWiretel().trim().isEmpty()){
                         contactProcessCallback.onPhoneError();
                         return;
                     }
+                    /*暂时注销座机号验证
                     if(!RegularCheck.isPhoneNumberValid(mContact.getWiretel())){
                         contactProcessCallback.onPhoneError();
                         return;
-                    }
-                    paymentSet(mContact.getWiretel());
+                    }*/
+                    paymentSet(mContact.getWiretel(),1);
 
                 }
             });

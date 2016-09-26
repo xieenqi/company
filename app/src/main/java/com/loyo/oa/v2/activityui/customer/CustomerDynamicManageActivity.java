@@ -379,8 +379,10 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
      * 播放开始
      * */
     void audioStart(){
+        LogUtil.dee("audioStart");
         isOnPlay = false;
         layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
+        LogUtil.dee("setBackgroundResource");
         if (player != null) {
             player.play();
         }
