@@ -10,13 +10,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.location.LocationManager;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -59,7 +57,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
 
 import java.io.BufferedReader;
@@ -74,9 +72,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -94,6 +89,7 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -653,26 +649,20 @@ public class Utils {
             sendIntent.putExtra("sms_body", "");
             context.startActivity(sendIntent);
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(context, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用短信权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
-//                            new String[]{Manifest.permission.SEND_SMS},
-//                            RESULT_OK);
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     doSeting(context);
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });
+            },"提示","需要使用短信权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 
@@ -694,26 +684,19 @@ public class Utils {
             sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(sendIntent);
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(context, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
-//                            new String[]{Manifest.permission.CALL_PHONE},
-//                            RESULT_OK);
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     doSeting(context);
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });
+            },"提示","需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 

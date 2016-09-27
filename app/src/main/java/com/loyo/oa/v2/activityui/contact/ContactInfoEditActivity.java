@@ -63,6 +63,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -287,7 +288,20 @@ public class ContactInfoEditActivity extends BaseActivity {
      */
     private void showLeaveDialog() {
 
-        showGeneralDialog(false, true, getString(R.string.app_userinfoedt_message));
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                updateProfile();
+            }
+        },"提示",getString(R.string.app_userinfoedt_message));
+
+/*        showGeneralDialog(false, true, getString(R.string.app_userinfoedt_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -303,7 +317,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 generalPopView.dismiss();
                 app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
             }
-        });
+        });*/
     }
 
     /**

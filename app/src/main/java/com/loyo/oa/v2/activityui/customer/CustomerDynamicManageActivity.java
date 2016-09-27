@@ -1,9 +1,7 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,7 +31,6 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Player;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -41,15 +38,11 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 

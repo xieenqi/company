@@ -18,12 +18,14 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 【附件上传】自定义popwindow
@@ -187,25 +189,22 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 Global.Toast("相机不可用");
             }
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(this, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     Utils.doSeting(SelectPicPopupWindow.this);
                     finish();
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                    finish();
-                }
-            });
+            },"提示","需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 
@@ -226,23 +225,21 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 Global.ProcException(e);
             }
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(this, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     Utils.doSeting(SelectPicPopupWindow.this);
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });
+            },"提示","需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 

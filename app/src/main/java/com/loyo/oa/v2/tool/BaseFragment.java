@@ -11,7 +11,6 @@ import com.loyo.oa.v2.activityui.project.ProjectInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {
@@ -20,7 +19,6 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     protected Activity mActivity;
     protected OnLoadSuccessCallback callback;
     protected int mId;
-    public GeneralPopView generalPopView;
     public SweetAlertDialogView sweetAlertDialogView;
 
 
@@ -93,6 +91,13 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     }
 
     /**
+     * 关闭SweetAlertDialog
+     * */
+    public void cancelDialog(){
+        sweetAlertDialogView.sweetAlertDialog.dismiss();
+    }
+
+    /**
      * 加载loading的方法
      */
     public void showLoading(String msg) {
@@ -105,17 +110,6 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
 
     public static void cancelLoading() {
         DialogHelp.cancelLoading();
-    }
-
-    /**
-     * 通用提示弹出框init
-     */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(getActivity(), isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
     }
 
 }

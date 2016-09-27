@@ -21,7 +21,6 @@ import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.point.IClue;
@@ -35,6 +34,7 @@ import com.loyo.oa.v2.tool.Utils;
 import java.util.Date;
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -345,7 +345,21 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    final GeneralPopView dailog = showGeneralDialog(true, true, "线索删除过后不可恢复，\n你确定要删除？");
+
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                            deleteClue();
+                        }
+                    },"提示","线索删除过后不可恢复，\n你确定要删除？");
+
+/*                    final GeneralPopView dailog = showGeneralDialog(true, true, "线索删除过后不可恢复，\n你确定要删除？");
                     dailog.setSureOnclick(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -358,7 +372,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         public void onClick(View v) {
                             dailog.dismisDialog();
                         }
-                    });
+                    });*/
 
                 }
             });
@@ -530,7 +544,21 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         switch (requestCode) {
             case SelectDetUserActivity2.REQUEST_ONLY:
                 final NewUser u = (NewUser) data.getSerializableExtra("data");
-                final GeneralPopView dailog = showGeneralDialog(true, true, "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
+
+                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dismissSweetAlert();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dismissSweetAlert();
+                        transferClue(u.getId());
+                    }
+                },"提示","转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
+
+/*                final GeneralPopView dailog = showGeneralDialog(true, true, "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
                 dailog.setSureOnclick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -543,7 +571,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     public void onClick(View v) {
                         dailog.dismisDialog();
                     }
-                });
+                });*/
                 break;
 
             /*转移客户*/
