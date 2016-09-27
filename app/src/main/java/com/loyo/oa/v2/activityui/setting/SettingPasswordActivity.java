@@ -24,6 +24,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -106,12 +107,20 @@ public class SettingPasswordActivity extends BaseActivity {
      * 密码修改成功后强制退出到登录页面
      */
     private void showChangPwdSuccess() {
-        showGeneralDialog(false, false, "修改密码成功，你需要重新登录哦~").setNoCancelOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                MenuFragment.callback.onExit(SettingPasswordActivity.this);
+            }
+        },"提示","修改密码成功，你需要重新登录哦~");
+
+/*        showGeneralDialog(false, false, "修改密码成功，你需要重新登录哦~").setNoCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MenuFragment.callback.onExit(SettingPasswordActivity.this);
             }
-        }).setCancelable(false);
+        }).setCancelable(false);*/
     }
 
 }

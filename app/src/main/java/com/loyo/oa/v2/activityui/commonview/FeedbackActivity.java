@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -154,14 +155,15 @@ public class FeedbackActivity extends BaseActivity {
         hideInputKeyboard(et_content);
 
         String message = "感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快!!!";
-        showGeneralDialog(false, false, message);
-        generalPopView.setNoCancelOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
                 onBackPressed();
                 isClick = true;
             }
-        });
+        },"提示",message);
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {

@@ -21,7 +21,7 @@ import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -220,7 +221,44 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             holder.layout_action_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    final GeneralPopView generalPopView = new GeneralPopView(mContext, true);
+
+                    final SweetAlertDialogView sweetAlertDialog = new SweetAlertDialogView(mContext);
+                    sweetAlertDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            Utils.dialogShow(mContext, "请稍候");
+                            HashMap<String, Object> map = new HashMap<String, Object>();
+                            map.put("bizType", bizType);
+                            map.put("uuid", uuid);
+                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), map, new RCallback<Attachment>() {
+                                @Override
+                                public void success(final Attachment att, final Response response) {
+                                    HttpErrorCheck.checkResponse(response);
+                                    if (mAction != null) {
+                                        mAction.afterDelete(attachment);
+                                    }
+                                    Utils.dialogDismiss();
+                                }
+
+                                @Override
+                                public void failure(final RetrofitError error) {
+                                    super.failure(error);
+                                    HttpErrorCheck.checkError(error);
+                                    Utils.dialogDismiss();
+                                }
+                            });
+
+                            sweetAlertDialog.dismiss();
+
+                        }
+                    },"提示","是否删除附件?");
+
+/*                    final GeneralPopView generalPopView = new GeneralPopView(mContext, true);
                     generalPopView.show();
                     generalPopView.setMessage("是否删除附件?");
                     generalPopView.setCanceledOnTouchOutside(true);
@@ -259,7 +297,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                         public void onClick(final View view) {
                             generalPopView.dismiss();
                         }
-                    });
+                    });*/
                 }
             });
         }

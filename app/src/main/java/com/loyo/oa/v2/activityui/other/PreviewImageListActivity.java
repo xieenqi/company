@@ -27,6 +27,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import uk.co.senab.photoview.PhotoView;
 
 /**
@@ -136,7 +137,23 @@ public class PreviewImageListActivity extends BaseActivity {
      * 删除提示框
      */
     public void dialogToast() {
-        showGeneralDialog(true, true, "是否删除附件?");
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                Intent intent = new Intent();
+                intent.putExtra("delAtm", mNewAttachments.get(mPosition));
+                MainApp.getMainApp().finishActivity(PreviewImageListActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+            }
+        },"提示","是否删除附件?");
+
+/*        showGeneralDialog(true, true, "是否删除附件?");
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -154,7 +171,7 @@ public class PreviewImageListActivity extends BaseActivity {
             public void onClick(final View view) {
                 generalPopView.dismiss();
             }
-        });
+        });*/
     }
 
     class SamplePagerAdapter extends PagerAdapter {

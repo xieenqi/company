@@ -31,9 +31,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
@@ -265,7 +263,21 @@ public class MenuFragment extends BaseFragment {
                     mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
                     getActivity().startService(mIntentCheckUpdate);
                 } else {
-                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            cancelDialog();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            cancelDialog();
+                            Utils.doSeting(getActivity());
+                        }
+                    },"提示","需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+
+/*                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
                     generalPopView.setSureOnclick(new View.OnClickListener() {
                         @Override
                         public void onClick(final View view) {
@@ -278,7 +290,7 @@ public class MenuFragment extends BaseFragment {
                         public void onClick(final View view) {
                             generalPopView.dismiss();
                         }
-                    });
+                    });*/
                 }
                 break;
             //退出登录
@@ -288,29 +300,18 @@ public class MenuFragment extends BaseFragment {
                 break;
             //清除缓存
             case R.id.ll_clean:
-/*                final GeneralPopView dialog = showGeneralDialog(true, true, "确认清除缓存？");
-                dialog.setSureOnclick(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showLoading("");
-                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-                        dialog.dismiss();
-                        setDiskCacheInfo();
-                    }
-                });*/
 
-                sweetAlertDialogView = new SweetAlertDialogView(getActivity());
                 sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialogView.sweetAlertDialog.dismiss();
+                        cancelDialog();
                     }
                 }, new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                         showLoading("");
                         ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-                        sweetAlertDialogView.sweetAlertDialog.dismiss();
+                        cancelDialog();
                         setDiskCacheInfo();
                     }
                 },"提醒","确认清楚缓存?");

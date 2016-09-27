@@ -35,7 +35,6 @@ import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.util.Locale;
 
@@ -50,7 +49,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     protected Context mContext;
     protected static final int NO_SCROLL = -1;
     public CustomProgressDialog customProgressDialog;
-    public GeneralPopView generalPopView;
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
     private GestureDetector mDetector;
@@ -399,23 +397,16 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         DialogHelp.cancelLoading();
     }
 
-
     /**
-     * 通用提示弹出框init
-     */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(this, isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
+     * SweetAlertDialog关闭
+     * */
+    public void dismissSweetAlert(){
+        sweetAlertDialogView.sweetAlertDialog.dismiss();
     }
 
-
-
-
-
-    /*重启当前Activity*/
+    /**
+     * 重启当前Activity
+     * */
     public void restartActivity() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);

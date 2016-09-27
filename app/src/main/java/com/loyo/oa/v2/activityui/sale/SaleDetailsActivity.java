@@ -324,15 +324,6 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 break;
             //弹出菜单
             case R.id.img_title_right:
-//                Intent intent = new Intent(mContext, SaleEditViewActivity.class);
-//                if (mSaleDetails.prob != 100) {
-//                    intent.putExtra("isDelete", isDelete);
-//                    intent.putExtra("isEdit", isEdit);
-//                } else {
-//                    intent.putExtra("isExra", "生成订单");
-//                }
-//                startActivityForResult(intent, EDIT_POP_WINDOW);
-
                 functionBuuton();
                 break;
             //意向产品
