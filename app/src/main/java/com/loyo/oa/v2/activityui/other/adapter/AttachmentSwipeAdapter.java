@@ -36,6 +36,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
@@ -256,7 +258,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                             sweetAlertDialog.dismiss();
 
                         }
-                    },"提示","是否删除附件?");
+                    }, "提示", "是否删除附件?");
 
 /*                    final GeneralPopView generalPopView = new GeneralPopView(mContext, true);
                     generalPopView.show();
@@ -311,6 +313,20 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
 
     public interface AttachmentAction {
         void afterDelete(Attachment attachment);
+    }
+
+    public void refreshData() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }, 60);
     }
 
     class ViewHolder {

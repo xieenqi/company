@@ -27,6 +27,8 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 【跟进动态列表item】中的图片适配器
@@ -130,6 +132,19 @@ public class DynamicListnestingAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void refreshData() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }, 50);
+    }
 
     class ViewHolder {
 
