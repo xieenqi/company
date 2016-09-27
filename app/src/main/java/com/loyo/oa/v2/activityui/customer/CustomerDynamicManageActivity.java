@@ -26,11 +26,11 @@ import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Player;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -118,6 +120,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
                 /*播放停止*/
                 case 0x04:
+                    LogUtil.dee("播放停止");
                     playTime = "00:00:00";
                     musicProgress.setProgress(0);
                     layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
@@ -261,7 +264,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopPlayer();
+        killPlayer();
     }
 
     @Override
@@ -272,16 +275,18 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             case R.id.layout_last:
 
                 if(mPosition == 0){
-                    sweetAlertDialogView = new SweetAlertDialogView(mContext);
                     sweetAlertDialogView.alertMessage("提示","已到第一条跟进!");
+                    mHandler.sendEmptyMessage(0x04);
+                    audioPause();
                 }else{
                     mPosition--;
-                    //Toast(""+mPosition);
                     if(!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())){
                         mViewModel = lstData_saleActivity_current.get(mPosition);
                         audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
                     }else{
                         Toast("此跟进无电话录音。");
+                        mHandler.sendEmptyMessage(0x04);
+                        audioPause();
                     }
                 }
                 break;
@@ -290,16 +295,18 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             case R.id.layout_next:
 
                 if(mPosition == lstData_saleActivity_current.size() - 1){
-                    sweetAlertDialogView = new SweetAlertDialogView(mContext);
-                    sweetAlertDialogView.alertMessage("提示","已到本页最后一条跟进,请下拉跟进列表获取更多跟进信息!");
+                    sweetAlertDialogView.alertMessage("提示","已到本页最后一条跟进,\n请下拉跟进列表获取更多跟进信息!");
+                    mHandler.sendEmptyMessage(0x04);
+                    audioPause();
                 }else{
                     mPosition++;
-                    //Toast("" + mPosition);
                     if(!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())){
                         mViewModel = lstData_saleActivity_current.get(mPosition);
                         audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
                     }else{
                         Toast("此跟进无电话录音。");
+                        mHandler.sendEmptyMessage(0x04);
+                        audioPause();
                     }
                 }
                 break;
@@ -311,7 +318,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
             /*关闭播放器*/
             case R.id.layout_audio_close:
-                stopPlayer();
+                killPlayer();
                 mHandler.sendEmptyMessage(0x01);
                 break;
 
@@ -402,15 +409,28 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     }
 
     /**
-     * 播放停止
+     * 杀死Player
      * */
-    void stopPlayer() {
+    void killPlayer() {
         if (player != null) {
             player.stop();
             player = null;
         }
         if(null != mViewModel)
         mViewModel.setIsAnim(false);
+    }
+
+    /**
+     * 线程池播放Player
+     * */
+    void threadPool(final String url){
+        ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+            cachedThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    player.playUrl(url);
+                }
+            });
     }
 
     /**
@@ -443,12 +463,13 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         audioStart();
         playTime = "00:00:00";
 
-        new Thread(new Runnable() {
+        threadPool(viewModel.audioUrl);
+/*        new Thread(new Runnable() {
             @Override
             public void run() {
                 player.playUrl(viewModel.audioUrl);
             }
-        }).start();
+        }).start();*/
     }
 
     @Override

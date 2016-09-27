@@ -25,6 +25,7 @@ import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -178,8 +179,10 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             @Override
             public void onClick(final View view) {
 
-                if (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE) {
+                LogUtil.dee("点击的:"+position);
+                LogUtil.dee("点击的Size:"+mAttachments.size());
 
+                if (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("data", mAttachments);
                     bundle.putSerializable("position", position);

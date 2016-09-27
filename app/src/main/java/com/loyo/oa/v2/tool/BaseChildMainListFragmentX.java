@@ -195,7 +195,9 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
-                mExpandableListView.onRefreshComplete();
+                if(null != mExpandableListView){
+                    mExpandableListView.onRefreshComplete();
+                }
             }
         });
     }

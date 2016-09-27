@@ -87,19 +87,16 @@ public class PreviewImageListActivity extends BaseActivity {
         if (getIntent().hasExtra("data")) {
             ArrayList<Attachment> attachments = (ArrayList<Attachment>) getIntent().getSerializableExtra("data");
             int position = getIntent().getIntExtra("position", 0);
-
             for (Attachment attachment : attachments) {
-                if ((attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE)) {
+                //if ((attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE)) {
                     if (mNewAttachments == null) {
                         mNewAttachments = new ArrayList<>();
                     }
-
                     mNewAttachments.add(attachment);
-
                     if (attachment.equals(attachments.get(position))) {
                         mNewPosition = position;
                     }
-                }
+                //}
             }
 
             if (mNewAttachments == null || mNewAttachments.size() == 0) {
@@ -152,26 +149,6 @@ public class PreviewImageListActivity extends BaseActivity {
                 MainApp.getMainApp().finishActivity(PreviewImageListActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
             }
         },"提示","是否删除附件?");
-
-/*        showGeneralDialog(true, true, "是否删除附件?");
-        //确认
-        generalPopView.setSureOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-                Intent intent = new Intent();
-                intent.putExtra("delAtm", mNewAttachments.get(mPosition));
-                MainApp.getMainApp().finishActivity(PreviewImageListActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
-            }
-        });
-
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });*/
     }
 
     class SamplePagerAdapter extends PagerAdapter {
@@ -188,9 +165,6 @@ public class PreviewImageListActivity extends BaseActivity {
             final ProgressBar pro = (ProgressBar) view.findViewById(R.id.pb_progress);
             Attachment attachment = mNewAttachments.get(position);
 
-//            PhotoView photoView = new PhotoView(container.getContext());
-//            File imgFile = attachment.getFile();
-            LogUtil.d("myPager预览图片的url：" + attachment.getUrl());
             ImageLoader.getInstance().displayImage(attachment.getUrl(), img, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String s, View view) {
@@ -199,11 +173,6 @@ public class PreviewImageListActivity extends BaseActivity {
 
                 @Override
                 public void onLoadingFailed(String s, View view, FailReason failReason) {
-//                    IO_ERROR,
-//                            DECODING_ERROR,
-//                            NETWORK_DENIED,
-//                            OUT_OF_MEMORY,
-//                            UNKNOWN;
 
                     pro.setVisibility(View.INVISIBLE);
                     LogUtil.d("加载大图片失败原因 " + failReason.getType().toString());

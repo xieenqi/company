@@ -208,7 +208,7 @@ public class Attachment implements Serializable {
         fileExt = fileExt.toLowerCase();
         if (fileExt.endsWith("jpg") || fileExt.endsWith("bmp") ||
                 fileExt.endsWith("gif") || fileExt.endsWith("png") ||
-                fileExt.endsWith("jpeg")) {
+                fileExt.endsWith("jpeg") || fileExt.endsWith("PNG")) {
             return AttachmentType.IMAGE;
         }
 
