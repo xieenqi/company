@@ -327,9 +327,9 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
-            //onBackPressed();
-        }
+//        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
+//            //onBackPressed();
+//        }
 
         return false;
     }

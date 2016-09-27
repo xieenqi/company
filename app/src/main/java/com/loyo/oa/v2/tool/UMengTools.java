@@ -77,9 +77,6 @@ public class UMengTools {
             TrackRule trackrule = DBManager.Instance().getTrackRule();
             if (null == trackrule) {
                 LogUtil.d("trackrule为null，就不继续执行");
-                if (!Config_project.isRelease) {
-                    Global.Toast("检查数据异常");
-                }
                 return;
             }
             if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {

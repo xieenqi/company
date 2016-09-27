@@ -313,7 +313,7 @@ public class MenuFragment extends BaseFragment {
                         sweetAlertDialogView.sweetAlertDialog.dismiss();
                         setDiskCacheInfo();
                     }
-                },"提醒","确认清楚缓存?");
+                }, "提醒", "确认清楚缓存?");
 
                 break;
         }
@@ -416,7 +416,7 @@ public class MenuFragment extends BaseFragment {
 
     void exit() {
         Set<String> complanTag = new HashSet<>();
-        JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), "", complanTag, new TagAliasCallback() {
+        JPushInterface.setAliasAndTags(app, "", complanTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
                 LogUtil.d("激光推送已经成功停止（注销）状态" + i);
@@ -427,9 +427,9 @@ public class MenuFragment extends BaseFragment {
         InitDataService_.intent(app).stop();//避免后台多次调用接口 没有token 导致accst_token无效 的问题
         MainApp.user = null;
         ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-        SharedUtil.clearInfo(getActivity());//清楚本地登录状态 即缓存信息
+        SharedUtil.clearInfo(app);//清楚本地登录状态 即缓存信息
         ExitActivity.getInstance().finishAllActivity();
-        app.startActivity(getActivity(), LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
+        app.startActivity(mActivity, LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }
 
     /**

@@ -480,7 +480,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
                 //时间
                 case R.id.custeam_screen2:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
+                    saleCommPopupView = new SaleCommPopupView(mActivity, mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
                     saleCommPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -493,7 +493,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
                 //标签
                 case R.id.custeam_screen3:
-                    screenTagPopupView = new ScreenTagPopupView(getActivity(), mDoubleTags, mHandler);
+                    screenTagPopupView = new ScreenTagPopupView(mActivity, mDoubleTags, mHandler);
                     screenTagPopupView.showAsDropDown(screen3);
                     openPopWindow(tagImage3);
                     screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

@@ -30,6 +30,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         app = MainApp.getMainApp();
         AppBus.getInstance().register(this);
         sweetAlertDialogView = new SweetAlertDialogView(getActivity());
+        getActivity();
     }
 
     public void onDestroy() {
