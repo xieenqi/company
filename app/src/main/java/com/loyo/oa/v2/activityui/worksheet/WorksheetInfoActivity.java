@@ -23,6 +23,9 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -157,6 +160,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         if (null != mWorksheetInfo.data.attachment && mWorksheetInfo.data.attachment.size() > 0) {
             mAdapter = new WorkSheetListNestingAdapter(mWorksheetInfo.data.attachment, this);
             lv_listview.setAdapter(mAdapter);
+            mAdapter.refreshData();
         }
     }
 

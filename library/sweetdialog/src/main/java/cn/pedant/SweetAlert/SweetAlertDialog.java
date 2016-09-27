@@ -241,6 +241,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     public SweetAlertDialog setTitleText (String text) {
         mTitleText = text;
         if (mTitleTextView != null && mTitleText != null) {
+            mTitleTextView.setVisibility(View.VISIBLE);
             mTitleTextView.setText(mTitleText);
         }
         return this;

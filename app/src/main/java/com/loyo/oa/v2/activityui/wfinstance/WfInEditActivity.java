@@ -387,7 +387,7 @@ public class WfInEditActivity extends BaseActivity {
             }
         }
 
-        for (int i = 0; i < postValue.size(); i++) {
+        for (int i = 0; i < isRequiredList.size(); i++) {
             if (null != postValue.get(i) && TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i) == true) {
                 Toast("请填写\"必填项\"");
                 return;
@@ -399,6 +399,8 @@ public class WfInEditActivity extends BaseActivity {
          * */
         String startTimeDate = "";
         String endTimeDate = "";
+
+
 
         long startTimelong;
         long endTimelong;

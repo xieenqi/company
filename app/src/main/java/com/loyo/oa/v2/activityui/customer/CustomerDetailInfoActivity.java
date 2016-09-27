@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
@@ -43,6 +44,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.Date;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -153,7 +155,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         }
 
         /*超级管理员,我的客户,Web权限控制判断*/
-        if (MainApp.user.isSuperUser() && customerType == 3) {
+        if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 3) {
             img_public.setVisibility(View.VISIBLE);
         } else {
             if (customerType == 3) {
@@ -345,7 +347,24 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      */
     private void setPopView(final boolean isKind, final String message) {
 
-        showGeneralDialog(true, true, message);
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                if (isKind) {
+                    delete();
+                } else {
+                    toPublic();
+                }
+            }
+        },"提示",message);
+
+/*        showGeneralDialog(true, true, message);
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -363,7 +382,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             public void onClick(final View view) {
                 generalPopView.dismiss();
             }
-        });
+        });*/
     }
 
 
@@ -488,7 +507,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_sale_activity:
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
-                _class =  CustomerDynamicManageActivity.class;
+                _class = CustomerDynamicManageActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;
             /*拜访签到*/

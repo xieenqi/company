@@ -17,7 +17,7 @@ import com.loyo.oa.v2.activityui.customer.bean.CallBackCallid;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.service.BroadcastReceiverMgr;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -29,6 +29,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -229,15 +230,28 @@ public class CallPhoneBackActivity extends BaseActivity implements View.OnClickL
         if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0) {
 
+            sweetAlertDialogView = new SweetAlertDialogView(mContext);
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    requestCallBack2();
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                }
+            },"提示","电话正在回拨，是否取消?");
 
-            final GeneralPopView generalPopView = showGeneralDialog(false,true,"电话正在回拨，是否取消?");
+/*            final GeneralPopView generalPopView = showGeneralDialog(false,true,"电话正在回拨，是否取消?");
             generalPopView.setSureOnclick(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     requestCallBack2();
                     generalPopView.dismiss();
                 }
-            });
+            });*/
 
             return true;
         }

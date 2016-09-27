@@ -2,6 +2,8 @@ package com.loyo.oa.v2.customview;
 
 import android.content.Context;
 
+import com.loyo.oa.v2.R;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -18,17 +20,42 @@ public class SweetAlertDialogView {
     }
 
     /**
-     * 警告,错误带icon弹出框
+     * 带Icon 可操作
+     * */
+    public void alertIconClick(SweetAlertDialog.OnSweetClickListener clickListener,String title, String message){
+        sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.CUSTOM_IMAGE_TYPE);
+        sweetAlertDialog.setCustomImage(R.drawable.icon_waring);
+        sweetAlertDialog.setTitleText(title);
+        sweetAlertDialog.setContentText(message);
+        sweetAlertDialog.setConfirmClickListener(clickListener);
+        sweetAlertDialog.show();
+    }
+
+
+    /**
+     * 带Icon 无操作
      * */
     public void alertIcon(String title,String message){
-        sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.CUSTOM_IMAGE_TYPE);
+        sweetAlertDialog.setCustomImage(R.drawable.icon_waring);
         sweetAlertDialog.setTitleText(title);
         sweetAlertDialog.setContentText(message);
         sweetAlertDialog.show();
     }
 
     /**
-     * 只有文字 弹出框
+     * 只有文字 可操作
+     * */
+    public void alertMessageClick(SweetAlertDialog.OnSweetClickListener clickListener,String title,String message){
+        sweetAlertDialog = new SweetAlertDialog(mContext);
+        sweetAlertDialog.setTitleText(title);
+        sweetAlertDialog.setContentText(message);
+        sweetAlertDialog.setConfirmClickListener(clickListener);
+        sweetAlertDialog.show();
+    }
+
+    /**
+     * 只有文字 无操作
      * */
     public void alertMessage(String title,String message){
         sweetAlertDialog = new SweetAlertDialog(mContext);
@@ -38,7 +65,7 @@ public class SweetAlertDialogView {
     }
 
     /**
-     * 确定取消操作 弹出框
+     * 确定取消操作
      * */
     public void alertHandle(SweetAlertDialog.OnSweetClickListener cancelClick,
                             SweetAlertDialog.OnSweetClickListener confirmClick,

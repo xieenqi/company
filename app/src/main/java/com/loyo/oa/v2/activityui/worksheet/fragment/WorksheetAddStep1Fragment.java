@@ -2,32 +2,22 @@ package com.loyo.oa.v2.activityui.worksheet.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.worksheet.WSOrderSelectActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
-import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
-import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.ArrayList;
 
@@ -132,14 +122,7 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
 
         final ArrayList<WorksheetTemplate> types = WorksheetConfig.getWorksheetTypes(true);
         if (types == null || types.size() == 0) {
-            final GeneralPopView pop = showGeneralDialog(true, false, "无可选工单类型！");
-            pop.setNoCancelOnclick( new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    pop.dismiss();
-                }
-            });
-
+            sweetAlertDialogView.alertIcon("无可选工单类型",null);
             return;
         }
 
@@ -157,14 +140,7 @@ public class WorksheetAddStep1Fragment extends BaseFragment implements View.OnCl
 
                 WorksheetTemplate template = types.get(index-1);
                 if (template.hasItems == false) {
-
-                    final GeneralPopView pop = showGeneralDialog(true, false, "该工单类型未配置模版，\n请选择其他类型！");
-                    pop.setNoCancelOnclick( new View.OnClickListener(){
-                        @Override
-                        public void onClick(View v) {
-                            pop.dismiss();
-                        }
-                    });
+                    sweetAlertDialogView.alertIcon(null,"该工单类型未配置模版,请选择其他类型!");
                     return;
                 }
 

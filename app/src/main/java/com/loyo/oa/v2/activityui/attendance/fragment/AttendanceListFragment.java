@@ -38,7 +38,6 @@ import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.CustomRecyclerView;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -58,6 +57,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -87,7 +87,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private ArrayList<DayofAttendance> attendances = new ArrayList<DayofAttendance>();
     private ValidateInfo validateInfo = new ValidateInfo();
     private AttendanceListAdapter adapter;
-    private GeneralPopView generalPopView;
     private LinearLayoutManager layoutManager;
     private CustomerDataManager customerDataManager;
     private DataSelectAdapter dataSelectAdapter;
@@ -292,37 +291,25 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     }
 
-    /**
-     * 通用提示弹出框init
-     */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(getActivity(), isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
-    }
 
     /**
      * 早退提示
      */
     public void attanceWorry() {
-        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
-        //确认
-        generalPopView.setSureOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
                 intentValue();
             }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });
+        },"提示",getString(R.string.app_attanceworry_message));
+
     }
 
     /**
@@ -372,7 +359,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 加班提示框
      */
     public void popOutToast() {
-        final AttenDancePopView popView = new AttenDancePopView(getActivity());
+        final AttenDancePopView popView = new AttenDancePopView(mActivity);
         popView.show();
         popView.setCanceledOnTouchOutside(true);
 

@@ -32,11 +32,12 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
-import com.loyo.oa.v2.customview.GeneralPopView;
+
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -58,7 +59,6 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     private boolean wiftPsn = true;
     private Permission permission;
     private FrameLayout indicatorGroup;
-    private GeneralPopView generalPopView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -220,15 +220,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
 
 
     public void showPop() {
-        generalPopView = new GeneralPopView(getActivity(), false);
-        generalPopView.show();
-        generalPopView.setMessage("此功能权限已关闭，请联系管理员开启后再试！");
-        generalPopView.setNoCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                generalPopView.dismiss();
-            }
-        });
+        sweetAlertDialogView.alertIcon(null,"此功能权限已关闭\n请联系管理员开启后再试!");
     }
 
     /**
