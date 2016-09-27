@@ -552,7 +552,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         WfNodes node = null;
         for (int i = 0; i < nodes.size(); i++) {
-            if (null != nodes.get(i).getExecutorUser() && userId.equals(nodes.get(i).getExecutorUser().getId())) {
+            if (null != nodes.get(i) && null != nodes.get(i).getExecutorUser() && !(TextUtils.isEmpty(userId))
+                    && userId.equals(nodes.get(i).getExecutorUser().getId())) {
                 node = nodes.get(i);
                 if (node.getActive() == 2) {
                     break;
