@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
@@ -21,7 +22,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import uk.co.senab.photoview.PhotoView;
 
@@ -41,12 +41,12 @@ public class PreviewImageAddActivity extends BaseActivity {
     private int mNewPosition = 0;
     private boolean isEdit;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
-            if(msg.what == 0x01){
-                showPosition = mPosition+1;
-                show_tv.setText(showPosition+"/"+mNewAttachments.size());
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x01) {
+                showPosition = mPosition + 1;
+                show_tv.setText(showPosition + "/" + mNewAttachments.size());
             }
         }
     };
@@ -56,7 +56,7 @@ public class PreviewImageAddActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
         back_image = (ImageView) findViewById(R.id.back_image);
-        show_tv    = (TextView) findViewById(R.id.show_tv);
+        show_tv = (TextView) findViewById(R.id.show_tv);
         isEdit = getIntent() == null || !getIntent().hasExtra("isEdit") ? false : getIntent().getBooleanExtra("isEdit", false);
         if (isEdit) {
             delete = (ImageView) findViewById(R.id.delete_image);
@@ -82,15 +82,15 @@ public class PreviewImageAddActivity extends BaseActivity {
             int position = getIntent().getIntExtra("position", 0);
 
             for (SelectPicPopupWindow.ImageInfo imageInfo : attachments) {
-                    if (mNewAttachments == null) {
-                        mNewAttachments = new ArrayList<>();
-                    }
+                if (mNewAttachments == null) {
+                    mNewAttachments = new ArrayList<>();
+                }
 
-                    mNewAttachments.add(imageInfo);
+                mNewAttachments.add(imageInfo);
 
-                    if (imageInfo.equals(attachments.get(position))) {
-                        mNewPosition = position;
-                    }
+                if (imageInfo.equals(attachments.get(position))) {
+                    mNewPosition = position;
+                }
             }
 
             if (mNewAttachments == null || mNewAttachments.size() == 0) {
@@ -150,7 +150,7 @@ public class PreviewImageAddActivity extends BaseActivity {
             public void onClick(final View view) {
                 generalPopView.dismiss();
                 Intent intent = new Intent();
-                intent.putExtra("position",mPosition);
+                intent.putExtra("position", mPosition);
                 MainApp.getMainApp().finishActivity(PreviewImageAddActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
             }
         });
@@ -181,6 +181,9 @@ public class PreviewImageAddActivity extends BaseActivity {
                 imgFile = Global.scal(mContext, uri);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+                Global.Toast("图片过大");
             }
             if (imgFile != null) {
                 photoView.setImageURI(Uri.fromFile(imgFile));
