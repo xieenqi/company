@@ -5,6 +5,8 @@
     <string name="dialog_cancel">取消</string>
     <string name="app_succeed">成功！</string>
     <string name="app_exit_message">确定退出应用?</string>
+    <string name="app_phone_check">限数字,如13912345678</string>
+    <string name="app_tell_check">限数字,如02812345678</string>
     <string name="app_bulletin_message">通知发送后不能修改和删除,是否确认发布?</string>
     <string name="app_userinfoedt_message">您有数据未提交,是否提交?</string>
     <string name="app_userdetalis_message">负责人更改后，此客户所有数据和管理权限将归属新的负责人，您确定要更改负责人？</string>
