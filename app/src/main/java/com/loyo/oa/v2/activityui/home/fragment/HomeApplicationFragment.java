@@ -526,23 +526,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 }
             },"提示",getString(R.string.app_homeqq_message));
 
-
-/*            showGeneralDialog(false, true, getString(R.string.app_homeqq_message));
-            //确认
-            generalPopView.setSureOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                    MainApp.getMainApp().startActivity(getActivity(), EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-                }
-            });
-            //取消
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });*/
         }
         MainApp.getMainApp().isQQLogin = false;
     }
