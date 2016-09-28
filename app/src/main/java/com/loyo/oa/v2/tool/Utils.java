@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -58,7 +57,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
 
 import java.io.BufferedReader;
@@ -71,23 +70,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -113,6 +115,159 @@ public class Utils {
     public static WindowManager getWindowHW(Context mContext) {
         windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         return windowManager;
+    }
+
+    /**
+     * 根据当前选择的秒数还原时间点
+     *
+     */
+
+    private static String getCheckTimeBySeconds(float progress,float totalSeconds2, String startTimeStr) {
+
+        String return_h = "", return_m = "", return_s = "";
+        float ms = (progress * totalSeconds2) / 100;
+        String[] st = startTimeStr.split(":");
+        int st_h = Integer.valueOf(st[0]);
+        int st_m = Integer.valueOf(st[1]);
+        int st_s = Integer.valueOf(st[2]);
+        int total = st_h * 3600 + st_m * 60 + st_s;
+        float mtotal = ms + total;
+        int h = (int) (mtotal / 3600);
+        int m = (int) ((mtotal % 3600) / 60);
+
+        int s = (int) (mtotal % 60);
+        return_h = h + "";
+        return_m = m + "";
+        return_s = s + "";
+
+        return return_h + ":" + return_m + ":" + return_s;
+    }
+
+
+    /**
+     * 计算连个时间之间的秒数
+     */
+
+    public static int totalSeconds(String startTime, String endTime) {
+
+        String[] st = startTime.split(":");
+        String[] et = endTime.split(":");
+
+        int st_h = Integer.valueOf(st[0]);
+        int st_m = Integer.valueOf(st[1]);
+        int st_s = Integer.valueOf(st[2]);
+
+        int et_h = Integer.valueOf(et[0]);
+        int et_m = Integer.valueOf(et[1]);
+        int et_s = Integer.valueOf(et[2]);
+
+        int totalSeconds = (et_h - st_h) * 3600 + (et_m - st_m) * 60
+                + (et_s - st_s);
+
+        return totalSeconds;
+
+    }
+
+    /**
+     * 根据当前选择的秒数还原时间点
+     *
+     * @param args
+     */
+
+    public static String getCheckTimeBySeconds(int progress, String startTime) {
+
+        String return_h = "", return_m = "", return_s = "";
+
+        String[] st = startTime.split(":");
+
+        int st_h = Integer.valueOf(st[0]);
+        int st_m = Integer.valueOf(st[1]);
+        int st_s = Integer.valueOf(st[2]);
+
+        int h = progress / 3600;
+
+        int m = (progress % 3600) / 60;
+
+        int s = progress % 60;
+
+        if ((s + st_s) >= 60) {
+
+            int tmpSecond = (s + st_s) % 60;
+
+            m = m + 1;
+
+            if (tmpSecond >= 10) {
+                return_s = tmpSecond + "";
+            } else {
+                return_s = "0" + (tmpSecond);
+            }
+
+        } else {
+            if ((s + st_s) >= 10) {
+                return_s = s + st_s + "";
+            } else {
+                return_s = "0" + (s + st_s);
+            }
+
+        }
+
+        if ((m + st_m) >= 60) {
+
+            int tmpMin = (m + st_m) % 60;
+
+            h = h + 1;
+
+            if (tmpMin >= 10) {
+                return_m = tmpMin + "";
+            } else {
+                return_m = "0" + (tmpMin);
+            }
+
+        } else {
+            if ((m + st_m) >= 10) {
+                return_m = (m + st_m) + "";
+            } else {
+                return_m = "0" + (m + st_m);
+            }
+
+        }
+
+        if ((st_h + h) < 10) {
+            return_h = "0" + (st_h + h);
+        } else {
+            return_h = st_h + h + "";
+        }
+
+        return return_h + ":" + return_m + ":" + return_s;
+    }
+
+    public static String getStringTime(int cnt,String timeData) {
+        int hour = cnt/3600;
+        int min = cnt % 3600 / 60;
+        int second = cnt % 60;
+        return String.format(Locale.CHINA,timeData,hour,min,second);
+    }
+
+
+    /**
+     * MD5加密
+     * */
+    public static String md5(String string) {
+        byte[] hash;
+        try {
+            hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Huh, MD5 should be supported?", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Huh, UTF-8 should be supported?", e);
+        }
+
+        StringBuilder hex = new StringBuilder(hash.length * 2);
+        for (byte b : hash) {
+            if ((b & 0xFF) < 0x10) hex.append("0");
+            hex.append(Integer.toHexString(b & 0xFF));
+        }
+        return hex.toString();
     }
 
 
@@ -494,26 +649,20 @@ public class Utils {
             sendIntent.putExtra("sms_body", "");
             context.startActivity(sendIntent);
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(context, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用短信权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
-//                            new String[]{Manifest.permission.SEND_SMS},
-//                            RESULT_OK);
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     doSeting(context);
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });
+            },"提示","需要使用短信权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 
@@ -535,26 +684,19 @@ public class Utils {
             sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(sendIntent);
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(context, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
-//                            new String[]{Manifest.permission.CALL_PHONE},
-//                            RESULT_OK);
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     doSeting(context);
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });
+            },"提示","需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 
@@ -1394,6 +1536,28 @@ public class Utils {
             e.printStackTrace();
             return "No Number";
         }
+    }
+
+    public static String getRingDuring(String mUri){
+        String duration=null;
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+
+        try {
+            if (mUri != null) {
+                HashMap<String, String> headers=null;
+                if (headers == null) {
+                    headers = new HashMap<String, String>();
+                    headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                }
+                mmr.setDataSource(mUri, headers);
+            }
+
+            duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+        } catch (Exception ex) {
+        } finally {
+            mmr.release();
+        }
+        return duration;
     }
 
     /**

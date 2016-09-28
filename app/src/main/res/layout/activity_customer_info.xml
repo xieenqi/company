@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
-
-    <include layout="@layout/include_common_title1"/>
+    <include layout="@layout/include_common_title1" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:scrollbars="none">
 
@@ -32,18 +31,17 @@
                     android:id="@+id/tv_customer_name"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
-                    android:layout_weight="1"
                     android:background="@null"
                     android:gravity="left|center"
-                    android:hint="客户名称"
+                    android:hint="客户名称(必填)"
                     android:maxLength="50"
                     android:paddingLeft="@dimen/margin_other_view"
                     android:paddingRight="@dimen/margin_other_view"
                     android:textColor="@color/text33"
                     android:textColorHint="@color/text99"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -68,8 +66,7 @@
                         android:singleLine="false"
                         android:textColor="@color/text33"
                         android:textColorHint="@color/text99"
-                        android:textSize="15sp"
-                        />
+                        android:textSize="15sp" />
 
                     <LinearLayout
                         android:id="@+id/layout_rushpackger"
@@ -84,27 +81,26 @@
                             android:layout_height="@dimen/dimen_25"
                             android:layout_marginLeft="@dimen/dimen_8"
                             android:layout_marginRight="@dimen/dimen_8"
-                            android:src="@drawable/icon_position_modify"/>
+                            android:src="@drawable/icon_position_modify" />
 
                         <View
                             android:layout_width="0.5dp"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="@dimen/dimen_15"
                             android:layout_marginTop="@dimen/dimen_15"
-                            android:background="@color/lineCC"
-                            />
+                            android:background="@color/lineCC" />
 
                         <ImageView
                             android:id="@+id/img_go_where"
                             android:layout_width="@dimen/dimen_25"
                             android:layout_height="@dimen/dimen_25"
                             android:layout_marginLeft="@dimen/dimen_8"
-                            android:src="@drawable/icon_go_where"/>
+                            android:src="@drawable/icon_go_where" />
 
                     </LinearLayout>
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <EditText
                     android:id="@+id/edt_address_details"
@@ -114,15 +110,15 @@
                     android:layout_marginRight="@dimen/margin_other_view"
                     android:background="@null"
                     android:hint="客户详细地址"
+                    android:maxLength="100"
                     android:minHeight="@dimen/dimen_48"
                     android:paddingBottom="@dimen/dimen_8"
                     android:paddingTop="@dimen/dimen_8"
                     android:textColor="@color/text33"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"
-                    />
+                    android:textSize="15sp" />
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <EditText
                     android:id="@+id/edt_customer_memo"
@@ -131,6 +127,7 @@
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginRight="@dimen/margin_other_view"
                     android:background="@null"
+                    android:focusable="true"
                     android:hint="客户简介"
                     android:maxLength="500"
                     android:minHeight="@dimen/dimen_48"
@@ -138,12 +135,11 @@
                     android:paddingTop="@dimen/dimen_8"
                     android:textColor="@color/text33"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"
-                    />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/layout_customer_extra_info"
@@ -151,9 +147,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:visibility="gone"
-                >
-            </LinearLayout>
+                android:visibility="gone"></LinearLayout>
 
 
             <LinearLayout
@@ -171,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:minWidth="@dimen/dimen_80"
-                    android:text="地        区"/>
+                    android:text="地        区" />
 
                 <TextView
                     android:id="@+id/tv_district"
@@ -180,17 +174,16 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
-                    android:textColor="@color/title_bg1"
-                    />
+                    android:textColor="@color/title_bg1" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/layout_customer_label"
@@ -207,7 +200,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:minWidth="@dimen/dimen_80"
-                    android:text="标        签"/>
+                    android:text="标        签" />
 
                 <TextView
                     android:id="@+id/tv_labels"
@@ -216,18 +209,17 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
-                    android:textColor="@color/title_bg1"
-                    />
+                    android:textColor="@color/title_bg1" />
 
                 <ImageView
                     android:id="@+id/img_title_right_toUser"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line15"/>
+            <include layout="@layout/include_solid_line15" />
 
             <LinearLayout
                 android:id="@+id/layout_Extra"
@@ -250,7 +242,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:minWidth="@dimen/dimen_80"
-                        android:text="负  责  人"/>
+                        android:text="负  责  人" />
 
                     <TextView
                         android:id="@+id/tv_customer_responser"
@@ -260,17 +252,16 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1"
-                        />
+                        android:textColor="@color/title_bg1" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <LinearLayout
                     android:id="@+id/layout_customer_join_users"
@@ -286,7 +277,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:minWidth="@dimen/dimen_60"
-                        android:text="参  与  人"/>
+                        android:text="参  与  人" />
 
                     <TextView
                         android:id="@+id/tv_customer_join_users"
@@ -296,8 +287,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1"
-                        />
+                        android:textColor="@color/title_bg1" />
 
                     <ImageView
                         android:id="@+id/img_del_join_users"
@@ -305,11 +295,11 @@
                         android:layout_height="match_parent"
                         android:scaleType="center"
                         android:src="@drawable/img_delete"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
                 </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line15"/>
+            <include layout="@layout/include_solid_line15" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -331,7 +321,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:minWidth="@dimen/dimen_80"
-                        android:text="创  建  人"/>
+                        android:text="创  建  人" />
 
                     <TextView
                         android:id="@+id/tv_customer_creator"
@@ -340,11 +330,11 @@
                         android:layout_height="match_parent"
                         android:gravity="right|center"
                         android:text=""
-                        android:textColor="@color/text99"/>
+                        android:textColor="@color/text99" />
 
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -360,7 +350,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:minWidth="@dimen/dimen_80"
-                        android:text="创建时间"/>
+                        android:text="创建时间" />
 
                     <TextView
                         android:id="@+id/tv_customer_create_at"
@@ -369,7 +359,7 @@
                         android:layout_height="match_parent"
                         android:gravity="right|center"
                         android:text=""
-                        android:textColor="@color/text99"/>
+                        android:textColor="@color/text99" />
 
                 </LinearLayout>
             </LinearLayout>

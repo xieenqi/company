@@ -130,7 +130,11 @@ public class TrackRule implements Serializable {
 
     private static int count = 0;
 
-
+    /**
+     * 此处更新组织架构  在推送调用
+     *
+     * @param context
+     */
     public static void initUserData(Context context) {
 //        Intent intent = new Intent(context, InitDataService.class);
 //        context.startService(intent);

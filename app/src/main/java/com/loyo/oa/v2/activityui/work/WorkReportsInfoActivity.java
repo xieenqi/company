@@ -237,6 +237,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (!mWorkReport.isRelevant()) {//和本报告无关的人
             layout_attachment.setVisibility(View.GONE);
         }
+        if (null == mWorkReport.creator) {//没有创建人的时候
+            Toast("没有创建人");
+            onBackPressed();
+        }
         StringBuilder title = new StringBuilder(mWorkReport.creator.name + "提交 ");
         String reportDate = "";
         String date = app.df3.format(new Date(mWorkReport.createdAt * 1000));

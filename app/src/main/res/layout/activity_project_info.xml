@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#fafafa"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafafa"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_common_title_edit"/>
+    <include layout="@layout/include_common_title_edit" />
 
     <LinearLayout
         android:id="@+id/layout_project_des"
@@ -36,8 +35,7 @@
                 android:singleLine="true"
                 android:text=""
                 android:textColor="#383838"
-                android:textSize="15sp"
-                />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tv_project_extra"
@@ -48,7 +46,7 @@
                 android:singleLine="true"
                 android:text=""
                 android:textColor="#999999"
-                android:textSize="13sp"/>
+                android:textSize="13sp" />
 
         </LinearLayout>
 
@@ -65,8 +63,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/icon_project_processing"/>
+                android:scaleType="fitCenter" />
 
             <ImageView
                 android:id="@+id/iv_arrow"
@@ -76,7 +73,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="@dimen/dimen_8"
                 android:scaleType="fitCenter"
-                android:src="@drawable/right_arrow"/>
+                android:src="@drawable/right_arrow" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -97,13 +94,13 @@
             app:pstsIndicatorHeight="1.5dp"
             app:pstsShouldExpand="true"
             app:pstsTabPaddingLeftRight="1dp"
-            app:pstsUnderlineHeight="0.5dp"/>
+            app:pstsUnderlineHeight="0.5dp" />
 
         <com.loyo.oa.v2.customview.NoScrollViewpager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tabs"/>
+            android:layout_below="@+id/tabs" />
 
     </LinearLayout>
 </LinearLayout>

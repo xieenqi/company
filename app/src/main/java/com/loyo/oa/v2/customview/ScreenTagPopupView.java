@@ -140,6 +140,13 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
                 adater2.notifyDataSetChanged();
             }
         });
+
+        contentView.findViewById(R.id.shade).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     /**

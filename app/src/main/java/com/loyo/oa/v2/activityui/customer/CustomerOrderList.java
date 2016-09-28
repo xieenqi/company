@@ -122,13 +122,17 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
             case R.id.layout_add:
 
                 if (null != permission && !permission.isEnable()) {
+
+                    sweetAlertDialogView.alertIcon(null,"此功能权限已关闭\n请联系管理员开启后再试!");
+/*
                     showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
                             .setNoCancelOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     generalPopView.dismiss();
                                 }
-                            });
+                            });*/
+
                 } else {
                     if (customerId == null) {
                         break;

@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.multidex.MultiDex;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
@@ -84,6 +87,7 @@ public class MainApp extends Application {
     public static int permissionPage;
 
     public DisplayImageOptions options_rounded;
+    private AnimationDrawable animationDrawable;
 
     public SimpleDateFormat df1;//设置日期格式
     public SimpleDateFormat df2;//设置日期格式
@@ -112,6 +116,7 @@ public class MainApp extends Application {
     public String cityCode;
     public String address;
     public String message;
+    public String region;//地区
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
     public static HashMap<String, Object> rootMap;
@@ -170,6 +175,27 @@ public class MainApp extends Application {
         JPushInterface.init(this);
 
     }
+
+    /**
+     * 启动动画
+     */
+    public void startAnim(TextView textView) {
+        animationDrawable = (AnimationDrawable) textView.getBackground();
+        animationDrawable.start();
+    }
+
+    /**
+     * 停止动画
+     */
+    public void stopAnim(TextView textView) {
+        animationDrawable = (AnimationDrawable) textView.getBackground();
+        if (animationDrawable.isRunning()) {
+            animationDrawable.stop();
+        }
+        animationDrawable.selectDrawable(0);
+        //imageView.setImageResource(R.drawable.icon_dynamic_phone01);
+    }
+
 
     static RestAdapter restAdapter = null;
 
@@ -384,11 +410,11 @@ public class MainApp extends Application {
 
     /**
      * 跳转相册，公用方法
-     * */
-    public void startSelectImage(Activity mActivity,ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots){
+     */
+    public void startSelectImage(Activity mActivity, ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
         Intent intent = new Intent(mActivity, MultiImageSelectorActivity.class);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-pickPhots.size()) /*最大可选择图片数量*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - pickPhots.size()) /*最大可选择图片数量*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
         mActivity.startActivityForResult(intent, PICTURE);

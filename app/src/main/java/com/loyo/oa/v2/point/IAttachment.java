@@ -7,6 +7,7 @@ import com.loyo.oa.v2.beans.AttachmentForNew;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -61,6 +62,9 @@ public interface IAttachment {
      * */
     @POST("/attachment/sign")
     void getServerToken(Callback<OssToken> callback);
+
+    @POST("/attachment/sign")
+    OssToken syncGetServerToken();
 
     /**
      * 上传附件信息

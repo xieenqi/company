@@ -30,7 +30,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -42,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -59,7 +59,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     private RelativeLayout img_title_right;
     private String worksheetId, eventId;
     private WorksheetDetail detail;
-    private boolean isAssignment, isCreated;//分派人 ，创建人
 
     //处理事件
     private Handler handler = new Handler() {
@@ -158,6 +157,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
 
                     @Override
                     public void failure(RetrofitError error) {
+                        onBackPressed();
                         HttpErrorCheck.checkError(error);
                     }
                 });
@@ -194,7 +194,6 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         img_title_right.setVisibility(View.INVISIBLE);
         bt_confirm.setVisibility(View.INVISIBLE);
         if (MainApp.user.id.equals(detail.dispatcher.getId())) {
-            isAssignment = true;
             if (detail.status != WorksheetStatus.TEMINATED) {
                 img_title_right.setVisibility(View.VISIBLE);
             }
@@ -203,15 +202,13 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             } else if (detail.status != WorksheetStatus.WAITASSIGN) {
                 ll_wran.setVisibility(View.GONE);
             }
-            if (detail.status == WorksheetStatus.WAITAPPROVE){
+            if (detail.status == WorksheetStatus.WAITAPPROVE) {
                 bt_confirm.setVisibility(View.VISIBLE);
             }
             if (detail.status == WorksheetStatus.WAITASSIGN) {
                 tv_setting.setVisibility(View.VISIBLE);
             }
         }
-
-        isCreated = MainApp.user.id.equals(detail.creator.getId());
 
         if (ll_events.getChildCount() > 0) {
             ll_events.removeAllViews();
@@ -274,7 +271,22 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                final GeneralPopView warn = showGeneralDialog(true, true, "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
+
+                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dismissSweetAlert();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        stopWorksheet(5);
+                        dismissSweetAlert();
+                    }
+                },"提示","意外终止后不可恢复，此工单将无法进行任何操作。\n" +
+                        "您确定要终止吗？");
+
+/*                final GeneralPopView warn = showGeneralDialog(true, true, "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
                         "您确定要终止吗？");
                 warn.setSureOnclick(new View.OnClickListener() {
                     @Override
@@ -288,7 +300,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     public void onClick(View v) {
                         warn.dismisDialog();
                     }
-                });
+                });*/
             }
         });
         dialog.show();

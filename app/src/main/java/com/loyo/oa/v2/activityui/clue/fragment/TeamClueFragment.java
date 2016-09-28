@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -58,12 +59,11 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 
     private int statusIndex, sortIndex;
     private int page = 1;
-    private boolean isOk = true;
     private boolean isPullDown = true, isKind;
     private String xPath = "";
     private String userId = "";
-    private String field  = "";
-    private String order  = "";
+    private String field = "";
+    private String order = "";
     private String[] status = {"全部状态", "未处理", "已联系", "关闭"};
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
     private ArrayList<ClueListItem> listData = new ArrayList<>();
@@ -88,13 +88,17 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-
+                case ExtraAndResult.MSG_SEND: {
+                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                    break;
+                }
                 /*状态选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                     isPullDown = true;
                     statusIndex = (int) msg.getData().get("index");
                     page = 1;
-                    LogUtil.dee("statusIndex:"+statusIndex);
+                    LogUtil.dee("statusIndex:" + statusIndex);
+                    getData();
                     break;
 
                 /*排序选择回调*/
@@ -103,7 +107,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                     sortIndex = (int) msg.getData().get("index");
                     page = 1;
 
-                    switch (sortIndex){
+                    switch (sortIndex) {
 
                         /*跟进时间 倒序*/
                         case 0:
@@ -130,13 +134,11 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                             break;
 
                     }
-
-
+                    getData();
                     break;
 
                 /*部门选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG1:
-                    isPullDown = true;
                     SaleTeamScreen saleTeamScreen = (SaleTeamScreen) msg.getData().getSerializable("data");
                     saleteam_screen1_commy.setText(saleTeamScreen.getName());
                     isKind = msg.getData().getBoolean("kind");
@@ -148,10 +150,10 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                         userId = saleTeamScreen.getId();
                     }
                     page = 1;
-                    LogUtil.dee("isKind:"+isKind);
+                    isPullDown = true;
+                    getData();
                     break;
             }
-            getData();
         }
     };
 
@@ -159,7 +161,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(null == mView){
+        if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_team_clue, null);
             initView(mView);
         }
@@ -182,6 +184,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
+        lv_list.setEmptyView(emptyView);
 
         /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -216,35 +219,37 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (isOk) {
-                    if (data.size() == 0) {
-                        wersi();
-                    } else {
-                        isOk = false;
-                        deptPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler);
-                    }
-                }
+                wersi();
             }
         }).start();
     }
 
     public void wersi() {
-        //为超管或权限为全公司 展示全公司成员
-        if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-            setUser(mDeptSource);
-        }
-        //权限为部门 展示我的部门
-        else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
-            deptSort();
-        }
-        //权限为个人 展示自己
-        else if (MainApp.user.role.getDataRange() == Role.SELF) {
-            data.clear();
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(MainApp.user.getId());
-            saleTeamScreen.setName(MainApp.user.name);
-            saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
-            data.add(saleTeamScreen);
+        try {
+            //为超管或权限为全公司 展示全公司成员
+            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
+                setUser(mDeptSource);
+            }
+            //权限为部门 展示我的部门
+            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
+                deptSort();
+            }
+            //权限为个人 展示自己
+            else if (MainApp.user.role.getDataRange() == Role.SELF) {
+                data.clear();
+                SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
+                saleTeamScreen.setId(MainApp.user.getId());
+                saleTeamScreen.setName(MainApp.user.name);
+                saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
+                data.add(saleTeamScreen);
+            }
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } finally { /** 子线程读数据，主线程加载数据 */
+            Message msg = new Message();
+            msg.what = ExtraAndResult.MSG_SEND;
+            mHandler.sendMessage(msg);
         }
     }
 
@@ -282,35 +287,22 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.screen1://人员筛选
-                deptPopupView.showAsDropDown(screen1);
-                openPopWindow(screen1_iv1);
-                deptPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(screen1_iv1);
-                    }
-                });
+                if (deptPopupView != null) {
+                    deptPopupView.showAsDropDown(screen1);
+                    openPopWindow(screen1_iv1);
+                    deptPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            closePopupWindow(screen1_iv1);
+                        }
+                    });
+                }
                 break;
             case R.id.screen2://状态筛选
             {
                 SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
                         SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
                 saleCommPopupView.showAsDropDown(screen3);
-                openPopWindow(screen3_iv3);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(screen3_iv3);
-                    }
-                });
-            }
-
-                break;
-            case R.id.screen3://排序
-            {
-                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
-                        SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
-                saleCommPopupView.showAsDropDown(screen2);
                 openPopWindow(screen2_iv2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
@@ -319,7 +311,22 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                     }
                 });
             }
-                break;
+
+            break;
+            case R.id.screen3://排序
+            {
+                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
+                        SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
+                saleCommPopupView.showAsDropDown(screen2);
+                openPopWindow(screen3_iv3);
+                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        closePopupWindow(screen3_iv3);
+                    }
+                });
+            }
+            break;
         }
     }
 
@@ -327,9 +334,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -337,9 +341,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
@@ -350,25 +351,41 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("status",statusIndex);
-        map.put("field",field);
-        map.put("order",order);
-        map.put("xpath",xPath);
-        map.put("userId",userId);
+        map.put("status", statusIndex);
+        map.put("field", field);
+        map.put("order", order);
+        map.put("xpath", xPath);
+        map.put("userId", userId);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IClue.class).getTeamCluelist(map, new Callback<ClueList>() {
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
-                lv_list.setEmptyView(emptyView);
                 HttpErrorCheck.checkResponse("我的线索列表：", response);
-                try {
-                    if (!isPullDown) {
-                        listData.addAll(clueList.data.records);
+                if (null == clueList.data || clueList.data.records == null) {
+                    if (isPullDown && listData.size() > 0) {
+                        listData.clear();
                     } else {
-                        listData = clueList.data.records;
+                        Toast("没有相关数据");
+                        return;
                     }
+                } else {
+                    if (isPullDown) {
+                        listData.clear();
+                    }
+                    listData.addAll(clueList.data.records);
+                }
+                try {
+//                    if (isPullDown) {
+//                        listData.clear();
+//                    }
+//                    if (null == clueList.data.records) {
+//                        listData.clear();
+//                        Toast("没有相关数据");
+//                    } else {
+//                        listData.addAll(clueList.data.records);
+//                    }
                     adapter.setData(listData);
                 } catch (NullPointerException e) {
                     e.printStackTrace();

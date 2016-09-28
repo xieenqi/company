@@ -26,7 +26,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -36,6 +35,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -49,7 +49,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     private LinearLayout img_title_left, ll_extra, ll_product, ll_record, ll_enclosure, ll_plan, ll_wflayout;
     private RelativeLayout img_title_right;
     private TextView tv_title_1, tv_title, tv_status, tv_customer, tv_money, tv_product, tv_plan, tv_plan_value,
-            tv_record, tv_record_value, tv_enclosure, tv_enclosure_value, tv_responsible_name, tv_creator_name,
+            tv_record, tv_record_value, tv_enclosure, tv_responsible_name, tv_creator_name,
             tv_creator_time, tv_wfname, tv_order_number, tv_memo;
 
 
@@ -137,7 +137,6 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_record = (TextView) findViewById(R.id.tv_record);
         tv_record_value = (TextView) findViewById(R.id.tv_record_value);
         tv_enclosure = (TextView) findViewById(R.id.tv_enclosure);
-        tv_enclosure_value = (TextView) findViewById(R.id.tv_enclosure_value);
         tv_responsible_name = (TextView) findViewById(R.id.tv_responsible_name);
         tv_creator_name = (TextView) findViewById(R.id.tv_creator_name);
         tv_creator_time = (TextView) findViewById(R.id.tv_creator_time);
@@ -355,7 +354,21 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             dialog.addSheetItem("意外终止", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    final GeneralPopView wran = showGeneralDialog(true, false, "此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
+
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                            terminationOrder();
+                        }
+                    },"提示","此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
+                            "意外终止后不可恢复，你确定要终止吗？");
+   /*                 final GeneralPopView wran = showGeneralDialog(true, false, "此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
                             "意外终止后不可恢复，你确定要终止吗？");
                     wran.setNoCancelOnclick(new View.OnClickListener() {
                         @Override
@@ -363,21 +376,35 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                             terminationOrder();
                             wran.dismisDialog();
                         }
-                    });
+                    });*/
                 }
             });
         if (isDelete)
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    final GeneralPopView wran = showGeneralDialog(true, false, "删除不可恢复\n确定删除？");
+
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                            deleteOrder();
+                        }
+                    },"提示","删除不可恢复\n确定删除？");
+
+/*                    final GeneralPopView wran = showGeneralDialog(true, false, "删除不可恢复\n确定删除？");
                     wran.setNoCancelOnclick(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             deleteOrder();
                             wran.dismisDialog();
                         }
-                    });
+                    });*/
 
                 }
             });

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_common_title_edit"/>
+    <include layout="@layout/include_common_title_edit" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -42,7 +41,7 @@
                         android:layout_marginRight="@dimen/dimen_10"
                         android:layout_weight="1"
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp16"/>
+                        android:textSize="@dimen/text_sp16" />
 
                     <TextView
                         android:id="@+id/tv_status"
@@ -52,8 +51,7 @@
                         android:paddingLeft="@dimen/dimen_2"
                         android:paddingRight="@dimen/dimen_2"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_sp11"
-                        />
+                        android:textSize="@dimen/text_sp11" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -67,14 +65,14 @@
                         android:layout_height="wrap_content"
                         android:text="对应客户: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12"/>
+                        android:textSize="@dimen/text_sp12" />
 
                     <TextView
                         android:id="@+id/tv_customer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/title_bg1"
-                        android:textSize="@dimen/text_sp12"/>
+                        android:textSize="@dimen/text_sp12" />
 
                 </LinearLayout>
 
@@ -89,19 +87,19 @@
                         android:layout_height="wrap_content"
                         android:text="成交金额: ¥"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12"/>
+                        android:textSize="@dimen/text_sp12" />
 
                     <TextView
                         android:id="@+id/tv_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12"/>
+                        android:textSize="@dimen/text_sp12" />
 
                 </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line15"/>
+            <include layout="@layout/include_solid_line15" />
 
 
             <LinearLayout
@@ -119,7 +117,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
                     android:text="回款计划"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_plan_value"
@@ -131,18 +129,18 @@
                     android:hint=""
                     android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_record"
@@ -159,7 +157,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
                     android:text="回款记录"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_record_value"
@@ -171,18 +169,18 @@
                     android:hint=""
                     android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_worksheet"
@@ -199,7 +197,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
                     android:text="工单"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_worksheet_value"
@@ -211,18 +209,18 @@
                     android:hint=""
                     android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_product"
@@ -238,7 +236,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
                     android:text="购买产品"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
 
                 <TextView
@@ -251,18 +249,18 @@
                     android:hint=""
                     android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_enclosure"
@@ -279,30 +277,23 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
                     android:text="附件"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/tv_enclosure_value"
-                    style="@style/text_item1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:hint=""
-                    android:textColor="@color/text66"
-                    android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line15"/>
+            <include layout="@layout/include_solid_line15" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -328,14 +319,14 @@
                         android:layout_height="wrap_content"
                         android:text="关联审批: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_wfname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/title_bg1"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
 
@@ -350,14 +341,14 @@
                         android:layout_height="wrap_content"
                         android:text="订单编号："
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_order_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
 
@@ -365,19 +356,18 @@
                     android:id="@+id/ll_extra"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    />
+                    android:orientation="vertical" />
 
                 <TextView
                     android:id="@+id/tv_memo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp14"/>
+                    android:textSize="@dimen/text_sp14" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line15"/>
+            <include layout="@layout/include_solid_line15" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -397,14 +387,14 @@
                         android:layout_height="wrap_content"
                         android:text="负责人: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_responsible_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
 
@@ -413,22 +403,21 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_4"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="创建人: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_creator_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
 
@@ -443,14 +432,14 @@
                         android:layout_height="wrap_content"
                         android:text="创建时间: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_creator_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
             </LinearLayout>

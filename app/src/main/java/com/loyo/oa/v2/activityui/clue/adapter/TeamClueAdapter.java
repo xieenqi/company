@@ -30,6 +30,9 @@ public class TeamClueAdapter extends BaseAdapter {
     }
 
     public void setData(ArrayList<ClueListItem> mData) {
+        if (mData == null) {
+            return;
+        }
         this.mData = mData;
         notifyDataSetChanged();
     }
@@ -81,7 +84,7 @@ public class TeamClueAdapter extends BaseAdapter {
             if (clueListItem.lastActAt != 0) {
                 tv_time.setText(MainApp.getMainApp().df3.format(new Date(Long.valueOf(clueListItem.lastActAt + "") * 1000)));
 //            app.df3.format(new Date(Long.valueOf(sales.updateAt + "") * 1000))
-            }else {
+            } else {
                 tv_time.setText("--");
             }
 

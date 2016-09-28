@@ -143,6 +143,7 @@ public class AttachmentActivity extends BaseActivity {
         if (uploadNum == uploadSize) {
             DialogHelp.cancelLoading();
         }
+        adapter.refreshData();
     }
 
 

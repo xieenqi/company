@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.customer;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.ServiceException;
@@ -20,7 +20,6 @@ import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
@@ -56,8 +55,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -172,10 +169,10 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     /**
      * 传附件到Oss
      */
-    public void uploadOssFile(OSS oss, String bucketName, String oKey, String filePath) {
+    public void uploadFileToOSS(String oKey, String filePath) {
 
         // 构造上传请求
-        PutObjectRequest put = new PutObjectRequest(bucketName, oKey, filePath);
+        PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
 
         //异步上传时可以设置进度回调
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
@@ -185,36 +182,37 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             }
         });
 
-        OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                uploadSize++;
-                LogUtil.dee("UploadSuccess");
-                LogUtil.dee("ETag" + result.getETag());
-                LogUtil.dee("RequestId" + result.getRequestId());
-                if (uploadSize == uploadNum) {
-                    postAttaData();
-                    cancelLoading();
-                }
-            }
+        OSSAsyncTask task = AliOSSManager.getInstance().getOss()
+                .asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+                    @Override
+                    public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                        uploadSize++;
+                        LogUtil.dee("UploadSuccess");
+                        LogUtil.dee("ETag" + result.getETag());
+                        LogUtil.dee("RequestId" + result.getRequestId());
+                        if (uploadSize == uploadNum) {
+                            postAttaData();
+                            cancelLoading();
+                        }
+                    }
 
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                    @Override
+                    public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
 
-                // 本地异常如网络异常等
-                if (clientExcepion != null) {
-                    clientExcepion.printStackTrace();
-                }
+                        // 本地异常如网络异常等
+                        if (clientExcepion != null) {
+                            clientExcepion.printStackTrace();
+                        }
 
-                // 服务异常
-                if (serviceException != null) {
-                    LogUtil.dee("ErrorCode" + serviceException.getErrorCode());
-                    LogUtil.dee("RequestId" + serviceException.getRequestId());
-                    LogUtil.dee("HostId" + serviceException.getHostId());
-                    LogUtil.dee("RawMessage" + serviceException.getRawMessage());
-                }
-            }
-        });
+                        // 服务异常
+                        if (serviceException != null) {
+                            LogUtil.dee("ErrorCode" + serviceException.getErrorCode());
+                            LogUtil.dee("RequestId" + serviceException.getRequestId());
+                            LogUtil.dee("HostId" + serviceException.getHostId());
+                            LogUtil.dee("RawMessage" + serviceException.getRawMessage());
+                        }
+                    }
+                });
     }
 
     /**
@@ -235,6 +233,8 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             map.put("contactId", contactId);
             map.put("contactName", contactName);
         }
+        LogUtil.dee("新建跟进:"+MainApp.gson.toJson(map));
+
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
             @Override
             public void success(final SaleActivity saleActivity, final Response response) {
@@ -272,41 +272,13 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                         attachmentBatch.name = uuid + "/" + newFile.getName();
                         attachmentBatch.size = Integer.parseInt(newFile.length() + "");
                         attachment.add(attachmentBatch);
-                        getServerToken(uuid + "/" + newFile.getName(), newFile.getPath());
+                        uploadFileToOSS(uuid + "/" + newFile.getName(), newFile.getPath());
                     }
                 }
             }
         } catch (Exception ex) {
             Global.ProcException(ex);
         }
-    }
-
-    /**
-     * 获取上传Token
-     */
-    public void getServerToken(final String oKey, final String filePath) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
-                .getServerToken(new Callback<OssToken>() {
-                    @Override
-                    public void success(OssToken ossToken, Response response) {
-
-                        HttpErrorCheck.checkResponse("获取OssToken", response);
-                        ak = ossToken.Credentials.AccessKeyId;
-                        sk = ossToken.Credentials.AccessKeySecret;
-                        token = ossToken.Credentials.SecurityToken;
-                        expiration = ossToken.Credentials.Expiration;
-
-                        AliOSSManager.getInstance().init(mContext, ak, sk, token, expiration);
-                        oss = AliOSSManager.getInstance().getOss();
-                        uploadOssFile(oss, Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
     }
 
     /**

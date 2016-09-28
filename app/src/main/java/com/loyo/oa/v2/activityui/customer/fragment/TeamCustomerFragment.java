@@ -83,7 +83,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private SaleCommPopupView saleCommPopupView;
     private ScreenTagPopupView screenTagPopupView;
     private ScreenDeptPopupView saleScreenPopupView;
-    private WindowManager.LayoutParams windowParams;
     private TeamCustomerAdapter adapter;
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mDoubleTags = new ArrayList<>();
@@ -104,13 +103,19 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private int tagPostion;
     private boolean isPullUp = false;
     private boolean isKind;
-    private boolean isOk = true;
+    final private static int DEPARTMENT_USER_DATA_LOADED = 210;
 
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
+
+                case DEPARTMENT_USER_DATA_LOADED: {
+                    saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                    break;
+                }
+
                 //部门筛选
                 case CustomerManagerActivity.CUSTOMER_DEPT_CREEN:
                     saleTeamScreen = (SaleTeamScreen) msg.getData().getSerializable("data");
@@ -123,7 +128,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                         departmentId = "";
                         userId = saleTeamScreen.getId();
                     }
-                    getData();
+                    getRefershData();
                     break;
 
                 //时间筛选
@@ -147,19 +152,19 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                             order = "asc";
                             break;
                     }
-                    getData();
+                    getRefershData();
                     break;
 
                 //标签筛选
                 case CustomerManagerActivity.CUSTOMER_TAG:
                     tagItemIds = msg.getData().getString("tagid");
-                    getData();
+                    getRefershData();
                     break;
 
                 //标签取消
                 case CustomerManagerActivity.CUSTOMER_CANCEL:
                     tagItemIds = msg.getData().getString("tagid");
-                    getData();
+                    getRefershData();
                     break;
             }
         }
@@ -226,20 +231,19 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
         showLoading("");
         mDeptSource = Common.getLstDepartment();
+
+        /**
+         * bugfix : Updated by ethan 2016/09/11
+         * 子线程读数据，主线程加载数据
+         *
+         */
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (isOk) {
-                    if (data.size() == 0) {
-                        wersi();
-                    } else {
-                        isOk = false;
-                        saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
-                        getData();
-                    }
-                }
+                wersi();
             }
         }).start();
+        getData();
     }
 
     public void wersi() {
@@ -263,6 +267,10 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
+        } finally { /** 子线程读数据，主线程加载数据 */
+            Message msg = new Message();
+            msg.what = DEPARTMENT_USER_DATA_LOADED;
+            mHandler.sendMessage(msg);
         }
     }
 
@@ -319,6 +327,11 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         });
     }
 
+    private void getRefershData() {
+        page = 1;
+        isPullUp = false;
+        getData();
+    }
 
     /**
      * 获取数据,默认设置倒序
@@ -403,9 +416,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -413,9 +423,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
@@ -442,7 +449,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         User user = MainApp.user;
         for (Department department : mDeptSource) {
             for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
+                if (department != null && department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
                     newDeptSource.add(department);
                 }
             }
@@ -457,20 +464,23 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                 //公司
                 case R.id.custeam_screen1:
 
-                    saleScreenPopupView.showAsDropDown(screen1);
-                    openPopWindow(tagImage1);
-                    saleScreenPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            closePopupWindow(tagImage1);
-                        }
-                    });
+                    /* bugfix : Updated by ethan 2016/09/11 */
+                    if (saleScreenPopupView != null) { /* 数据加载完成，才新建，可能为空 */
+                        saleScreenPopupView.showAsDropDown(screen1);
+                        openPopWindow(tagImage1);
+                        saleScreenPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                            @Override
+                            public void onDismiss() {
+                                closePopupWindow(tagImage1);
+                            }
+                        });
+                    }
 
                     break;
 
                 //时间
                 case R.id.custeam_screen2:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
+                    saleCommPopupView = new SaleCommPopupView(mActivity, mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
                     saleCommPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -483,7 +493,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
                 //标签
                 case R.id.custeam_screen3:
-                    screenTagPopupView = new ScreenTagPopupView(getActivity(), mDoubleTags, mHandler);
+                    screenTagPopupView = new ScreenTagPopupView(mActivity, mDoubleTags, mHandler);
                     screenTagPopupView.showAsDropDown(screen3);
                     openPopWindow(tagImage3);
                     screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

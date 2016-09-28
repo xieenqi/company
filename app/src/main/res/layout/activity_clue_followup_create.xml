@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
 
     <include
         android:id="@+id/include_title"
@@ -12,10 +11,10 @@
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_below="@+id/include_title"
-        android:layout_above="@+id/layout_status"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_status"
+        android:layout_below="@+id/include_title">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,10 +33,10 @@
                     android:id="@+id/edt"
                     style="@style/edtText_normal"
                     android:layout_width="match_parent"
-                    android:layout_height="0px"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:gravity="left|top"
                     android:hint="请填写跟进内容"
+                    android:maxLength="500"
                     android:minHeight="100dp"
                     android:paddingBottom="@dimen/dimen_10"
                     android:paddingLeft="0dp"
@@ -153,6 +152,7 @@
                         android:src="@drawable/right_arrow" />
                 </RelativeLayout>
             </LinearLayout>
+
             <include layout="@layout/include_solid_line_left" />
         </LinearLayout>
     </ScrollView>
@@ -162,14 +162,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#D1D1D1"
-            />
+            android:background="#D1D1D1" />
 
         <LinearLayout
             android:layout_width="match_parent"

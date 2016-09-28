@@ -33,6 +33,7 @@ import com.loyo.oa.v2.common.RecycleViewDivider;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -67,6 +68,7 @@ public class MapModifyView extends BaseActivity
      */
     public static final int CUSTOMER_DETAILS_PAGE = 78;
 
+    private int SEARCH_BAND = 300;//周边搜索的范围
 
     private String reGeoAddress;       //反GEO地址
     private int currentPage = 0;       //当前页面，从0开始计数
@@ -102,7 +104,7 @@ public class MapModifyView extends BaseActivity
     private ArrayList<PositionResultItem> resultItems = new ArrayList<>();
     private PositionResultItem headerItem;
     private double[] locCustomer;
-    private String   defaultAddress;
+    private String defaultAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +178,7 @@ public class MapModifyView extends BaseActivity
         }
         aMap.setOnCameraChangeListener(this);
 
-        switch (fromPage){
+        switch (fromPage) {
 
             //来自客户拜访
             case SIGNIN_PAGE:
@@ -194,11 +196,11 @@ public class MapModifyView extends BaseActivity
 
             //来自客户详情
             case CUSTOMER_DETAILS_PAGE:
-                if(null != locCustomer && locCustomer.length != 0){
-                    setHeaderItem(locCustomer[1],locCustomer[0],defaultAddress,defaultAddress);
+                if (null != locCustomer && locCustomer.length != 0) {
+                    setHeaderItem(locCustomer[1], locCustomer[0], defaultAddress, defaultAddress);
                     locationMapCenter(locCustomer[1], locCustomer[0]);
-                    doSearchQuery(defaultAddress);
-                }else{
+                    doSearchQuery(defaultAddress, locCustomer[1], locCustomer[0]);
+                } else {
                     startLocation();
                 }
                 break;
@@ -236,11 +238,11 @@ public class MapModifyView extends BaseActivity
     }
 
     /*如果缓存没有定位到信息，该页面再定位一次*/
-    public void locationInit(){
+    public void locationInit() {
         if (app.latitude != -1 || app.longitude != -1) {
-            setHeaderItem(app.latitude,app.longitude,app.address,app.message);
+            setHeaderItem(app.latitude, app.longitude, app.address, app.message);
             locationMapCenter(app.latitude, app.longitude);
-            doSearchQuery(app.address);
+            doSearchQuery(app.region, app.latitude, app.longitude);
         } else {
             startLocation();
         }
@@ -249,7 +251,7 @@ public class MapModifyView extends BaseActivity
     /**
      * 组装头部数据
      */
-    public void setHeaderItem(double la,double lo,String adr,String msg) {
+    public void setHeaderItem(double la, double lo, String adr, String msg) {
         headerItem = new PositionResultItem();
         headerItem.laPosition = la;
         headerItem.loPosition = lo;
@@ -297,18 +299,20 @@ public class MapModifyView extends BaseActivity
     }
 
     /**
+     * 之前详细地址 改为区域 加搜索范围
      * 开始进行poi搜
      */
-    protected void doSearchQuery(String address) {
+    protected void doSearchQuery(String address, double lat, double lon) {
         currentPage = 0;
         query = new PoiSearch.Query(address, "", app.cityCode);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
-        query.setPageSize(15);// 设置每页最多返回多少条poiitem
+        query.setPageSize(150);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页
         query.setCityLimit(true);
 
         poiSearch = new PoiSearch(this, query);
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
+        poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(lat, lon), SEARCH_BAND, true));
     }
 
 
@@ -403,8 +407,10 @@ public class MapModifyView extends BaseActivity
         if (rCode == 1000) {
             if (result != null && result.getRegeocodeAddress() != null
                     && result.getRegeocodeAddress().getFormatAddress() != null) {
-                reGeoAddress = result.getRegeocodeAddress().getFormatAddress();
-                doSearchQuery(reGeoAddress);
+                reGeoAddress = result.getRegeocodeAddress().getDistrict();
+                LatLonPoint latLonPoint = result.getRegeocodeQuery().getPoint();
+                doSearchQuery(reGeoAddress, latLonPoint.getLatitude(), latLonPoint.getLongitude());
+                LogUtil.d("微调地图中心地址:" + reGeoAddress);
             } else {
                 cancelLoading();
                 Toast("没有数据！");
@@ -441,7 +447,7 @@ public class MapModifyView extends BaseActivity
                 if (selectPosition == -1) {
                     Toast("请选择地点");
                 } else {
-                    if(resultItems.size() != 0){
+                    if (resultItems.size() != 0) {
                         app.latitude = resultItems.get(selectPosition).laPosition;
                         app.longitude = resultItems.get(selectPosition).loPosition;
                         app.address = resultItems.get(selectPosition).address;
@@ -452,7 +458,7 @@ public class MapModifyView extends BaseActivity
                         mBundle.putSerializable("data", resultItems.get(selectPosition));
                         mIntent.putExtras(mBundle);
                         app.finishActivity(this, MainApp.ENTER_TYPE_RIGHT, -1, mIntent);
-                    }else{
+                    } else {
                         Toast("无处理结果,请稍后");
                     }
                 }
@@ -477,9 +483,9 @@ public class MapModifyView extends BaseActivity
                 UMengTools.sendLocationInfo(address, longitude, latitude);
                 isTouch = true;
                 isFrist = true;
-                setHeaderItem(latitude,longitude,address,radius);
+                setHeaderItem(latitude, longitude, address, radius);
                 locationMapCenter(latitude, longitude);
-                doSearchQuery(app.address);
+                doSearchQuery(app.region, latitude, longitude);
                 LocationUtilGD.sotpLocation();
             }
 

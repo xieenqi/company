@@ -74,31 +74,54 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_wfinstance_info)
 public class WfinstanceInfoActivity extends BaseActivity {
 
-    @ViewById ScrollView scrollView;
-    @ViewById ListView_inScrollView listView_workflowNodes;
-    @ViewById TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title;
-    @ViewById TextView tv_memo;
-    @ViewById TextView tv_projectName;
-    @ViewById TextView tv_time_creator;
-    @ViewById TextView tv_title_role;
-    @ViewById TextView tv_title_creator;
-    @ViewById ViewGroup img_title_left;
-    @ViewById ViewGroup img_title_right;
-    @ViewById ViewGroup layout_nopass;
-    @ViewById ViewGroup layout_pass;
-    @ViewById ViewGroup layout_AttachFile;
-    @ViewById LinearLayout ll_project;
-    @ViewById ViewGroup layout_lastwork;
-    @ViewById ViewGroup layout_memo;
-    @ViewById ViewGroup layout_bottom, layout_wfinstance_content;
-    @ViewById ImageView img_wfinstance_status;
-    @ViewById LinearLayout ll_sale;
-    @ViewById TextView tv_sale;
+    @ViewById
+    ScrollView scrollView;
+    @ViewById
+    ListView_inScrollView listView_workflowNodes;
+    @ViewById
+    TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title;
+    @ViewById
+    TextView tv_memo;
+    @ViewById
+    TextView tv_projectName;
+    @ViewById
+    TextView tv_time_creator;
+    @ViewById
+    TextView tv_title_role;
+    @ViewById
+    TextView tv_title_creator;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    ViewGroup img_title_right;
+    @ViewById
+    ViewGroup layout_nopass;
+    @ViewById
+    ViewGroup layout_pass;
+    @ViewById
+    ViewGroup layout_AttachFile;
+    @ViewById
+    LinearLayout ll_project;
+    @ViewById
+    ViewGroup layout_lastwork;
+    @ViewById
+    ViewGroup layout_memo;
+    @ViewById
+    ViewGroup layout_bottom, layout_wfinstance_content;
+    @ViewById
+    ImageView img_wfinstance_status;
+    @ViewById
+    LinearLayout ll_sale;
+    @ViewById
+    TextView tv_sale;
     //订单审批
-    @ViewById LinearLayout ll_order_layout, ll_order_content, ll_product;
-    @ViewById TextView tv_product, tv_plan_value;
+    @ViewById
+    LinearLayout ll_order_layout, ll_order_content, ll_product;
+    @ViewById
+    TextView tv_product, tv_plan_value;
     //回款审批
-    @ViewById LinearLayout ll_payment_layout, ll_payment_content;
+    @ViewById
+    LinearLayout ll_payment_layout, ll_payment_content;
 
     public final int MSG_DELETE_WFINSTANCE = 100;
     public final int MSG_ATTACHMENT = 200;
@@ -454,7 +477,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
      * 审批内容数据设置
      */
     void initUI_listView_wfinstance() {
-//        layout_wfinstance_content.removeAllViews();
+        if (layout_wfinstance_content.getChildCount() > 0) {
+            layout_wfinstance_content.removeAllViews();
+        }
         ArrayList<BizFormFields> fields = new ArrayList<>();
         if (mWfInstance != null && mWfInstance.bizForm != null && mWfInstance.bizForm.getFields() != null) {
             fields = mWfInstance.bizForm.getFields();
@@ -500,7 +525,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
      * 审批流程展示初始化相关
      */
     void initUI_listView_workflowNodes() {
-        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(mWfInstance.status, lstData_WfNodes, LayoutInflater.from(this), mWfInstance.serverTime);
+        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(mWfInstance.status, lstData_WfNodes, LayoutInflater.from(this));
         listView_workflowNodes.setAdapter(workflowNodesListViewAdapter);
         Global.setListViewHeightBasedOnChildren(listView_workflowNodes);
     }
@@ -527,7 +552,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         WfNodes node = null;
         for (int i = 0; i < nodes.size(); i++) {
-            if (null != nodes.get(i).getExecutorUser() && userId.equals(nodes.get(i).getExecutorUser().getId())) {
+            if (null != nodes.get(i) && null != nodes.get(i).getExecutorUser() && !(TextUtils.isEmpty(userId))
+                    && userId.equals(nodes.get(i).getExecutorUser().getId())) {
                 node = nodes.get(i);
                 if (node.getActive() == 2) {
                     break;

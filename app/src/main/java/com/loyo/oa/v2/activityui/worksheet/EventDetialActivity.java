@@ -33,6 +33,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -48,9 +49,9 @@ import retrofit.client.Response;
  */
 public class EventDetialActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout ll_back, ll_handleInfoList,layout_bottom_btn;
-    private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status, tv_time, tv_day;
-    private Button btn_complete1,btn_complete2;
+    private LinearLayout ll_back, ll_handleInfoList, layout_bottom_btn;
+    private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status, tv_startTime, tv_endTime, tv_day;
+    private Button btn_complete1, btn_complete2;
     private Bundle mBundle;
     private String eventId, worksheetId;
     private EventDetail mData;
@@ -77,8 +78,8 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                         break;
                     case Redo:
                     case Finish:
-                        int code2 = aciton1 == WorksheetEventAction.Redo?0X01:0X02;
-                        mBundle.putInt(ExtraAndResult.EXTRA_DATA,code2/*提交完成:0x01,打回重做0x02*/);
+                        int code2 = aciton1 == WorksheetEventAction.Redo ? 0X01 : 0X02;
+                        mBundle.putInt(ExtraAndResult.EXTRA_DATA, code2/*提交完成:0x01,打回重做0x02*/);
                         app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                         break;
                 }
@@ -96,8 +97,8 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                         break;
                     case Redo:
                     case Finish:
-                        int code2 = aciton2 == WorksheetEventAction.Redo?0X01:0X02;
-                        mBundle.putInt(ExtraAndResult.EXTRA_DATA,code2/*提交完成:0x01,打回重做0x02*/);
+                        int code2 = aciton2 == WorksheetEventAction.Redo ? 0X01 : 0X02;
+                        mBundle.putInt(ExtraAndResult.EXTRA_DATA, code2/*提交完成:0x01,打回重做0x02*/);
                         app.startActivity(this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                         break;
                 }
@@ -142,22 +143,23 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_type = (TextView) findViewById(R.id.tv_type);
         tv_worksheet = (TextView) findViewById(R.id.tv_worksheet);
         tv_status = (TextView) findViewById(R.id.tv_status);
-        tv_time = (TextView) findViewById(R.id.tv_time);
+        tv_startTime = (TextView) findViewById(R.id.tv_startTime);
+        tv_endTime = (TextView) findViewById(R.id.tv_endTime);
         tv_day = (TextView) findViewById(R.id.tv_day);
         ll_handleInfoList = (LinearLayout) findViewById(R.id.ll_handleInfoList);
         showLoading("");
         getData();
     }
 
-    private void setRoleinit(){
+    private void setRoleinit() {
         btn_complete1.setVisibility(View.GONE);
         btn_complete2.setVisibility(View.GONE);
 
-        for(int i = 0;i<actions.size();i++){
-            if(i == 0){
+        for (int i = 0; i < actions.size(); i++) {
+            if (i == 0) {
                 btn_complete1.setVisibility(actions.get(i).visible() ? View.VISIBLE : View.GONE);
                 btn_complete1.setText(actions.get(i).getBtnTitle());
-            }else if(i == 1){
+            } else if (i == 1) {
                 btn_complete2.setVisibility(actions.get(i).visible() ? View.VISIBLE : View.GONE);
                 btn_complete2.setText(actions.get(i).getBtnTitle());
             }
@@ -192,8 +194,14 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
         tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "自动流转" : "定时触发"));
         tv_worksheet.setText("所属工单：" + mData.title);
         tv_day.setText("限时：" + (mData.daysDeadline == 0 ? "不限时" : mData.daysDeadline + "天"));
-        tv_time.setText((mData.startTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.startTime + ""))) + " | " +
-                (mData.endTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.endTime + "")) + "截止"));
+        String endTimeText = (mData.endTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.endTime + "")) + "截止");
+        tv_startTime.setText((mData.startTime == 0 ? "--" : DateTool.getDiffTime(Long.valueOf(mData.startTime + ""))) + " | ");
+        if (mData.isOvertime) {
+            tv_endTime.setTextColor(getResources().getColor(R.color.red1));
+            tv_endTime.setText(endTimeText + "(超时)");
+        } else {
+            tv_endTime.setText(endTimeText);
+        }
         setStatus();
         ll_handleInfoList.removeAllViews();
         for (int i = 0; i < mData.handleInfoList.size(); i++) {
@@ -233,10 +241,10 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 重做回调
-     * */
+     */
     @Subscribe
     public void onWorkSheetDetailsRedo(WorksheetInfo event) {
-        for(int i =0 ; i <actions.size(); i++) {
+        for (int i = 0; i < actions.size(); i++) {
             if (actions.get(i) == WorksheetEventAction.Redo) {
                 actions.remove(i);
                 i--;
@@ -249,10 +257,10 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 提交完成 回调
-     * */
+     */
     @Subscribe
     public void onWorkSheetDetailsFinish(WorksheetDetail event) {
-        for(int i =0 ; i <actions.size(); i++) {
+        for (int i = 0; i < actions.size(); i++) {
             if (actions.get(i) == WorksheetEventAction.Finish) {
                 actions.remove(i);
                 i--;
@@ -275,8 +283,8 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("设置事件负责人：", response);
-                        for(int i =0 ; i <actions.size(); i++) {
-                            if (actions.get(i) ==  WorksheetEventAction.Dispatch) {
+                        for (int i = 0; i < actions.size(); i++) {
+                            if (actions.get(i) == WorksheetEventAction.Dispatch) {
                                 actions.remove(i);
                                 actions.add(i, WorksheetEventAction.Transfer);
                             }

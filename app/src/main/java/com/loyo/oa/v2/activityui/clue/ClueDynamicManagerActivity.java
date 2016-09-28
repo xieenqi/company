@@ -46,7 +46,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
     private ViewGroup img_title_left, layout_add;
     private PullToRefreshListView lv_saleActivity;
     private SaleActivitiesAdapter listAdapter;
-    private DynamicListnestingAdapter  nestionListAdapter;
+    private DynamicListnestingAdapter nestionListAdapter;
     private ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
     private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
     private String clueId;
@@ -226,7 +226,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }
 
-            ListView lv_listview    = ViewHolder.get(convertView,R.id.lv_listview);
+            ListView lv_listview = ViewHolder.get(convertView, R.id.lv_listview);
             TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
             TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
@@ -240,11 +240,12 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
             tv_contact_name.setText("联系人：" + saleActivity.contactName);
             tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
 
-            if(null != saleActivity.getAttachments() && saleActivity.getAttachments().size() != 0){
+            if (null != saleActivity.getAttachments() && saleActivity.getAttachments().size() != 0) {
                 lv_listview.setVisibility(View.VISIBLE);
-                nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(),mContext);
+                nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(), mContext);
                 lv_listview.setAdapter(nestionListAdapter);
-            }else{
+                nestionListAdapter.refreshData();
+            } else {
                 lv_listview.setVisibility(View.GONE);
             }
 

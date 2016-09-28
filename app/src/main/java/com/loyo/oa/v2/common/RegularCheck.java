@@ -56,6 +56,32 @@ public class RegularCheck {
         return flag;
     }
 
+    /**
+     * 云之讯,回拨座机号验证
+     * */
+    public static boolean isYunTell(String str){
+        Pattern p = null;
+        Matcher m = null;
+        boolean b = false;
+        p = Pattern.compile("^1\\d{0,11}$"); // 验证手机号
+        m = p.matcher(str);
+        b = m.matches();
+        return b;
+    }
+
+
+    /**
+     * 云之讯,回拨手机号验证
+     * */
+    public static boolean isYunPhone(String str){
+        Pattern p = null;
+        Matcher m = null;
+        boolean b = false;
+        p = Pattern.compile("^1\\d{1,10}$"); // 验证手机号
+        m = p.matcher(str);
+        b = m.matches();
+        return b;
+    }
 
     /**
      * 手机号验证
@@ -93,6 +119,28 @@ public class RegularCheck {
             b = m.matches();
         }
         return b;
+    }
+
+    /*
+	 * 验证号码 手机号 固话均可
+	 *
+	 */
+    public static boolean isPhoneNumberValid(String phoneNumber) {
+        boolean isValid = false;
+
+        String expression = "((^(13|15|18)[0-9]{9}$)|(^0[1,2]{1}\\d{1}-?\\d{8}$)|(^0[3-9] {1}\\d{2}-?\\d{7,8}$)|(^0[1,2]{1}\\d{1}-?\\d{8}-(\\d{1,4})$)|(^0[3-9]{1}\\d{2}-? \\d{7,8}-(\\d{1,4})$))";
+        CharSequence inputStr = phoneNumber;
+
+        Pattern pattern = Pattern.compile(expression);
+
+        Matcher matcher = pattern.matcher(inputStr);
+
+        if (matcher.matches() ) {
+            isValid = true;
+        }
+
+        return isValid;
+
     }
 
 }

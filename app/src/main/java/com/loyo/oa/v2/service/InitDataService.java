@@ -25,7 +25,9 @@ import org.androidannotations.annotations.EIntentService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -94,7 +96,7 @@ public class InitDataService extends IntentService {
      */
     void setRootMap(User user) {
         HashMap<String, Object> map = new HashMap<>();
-        if (null != user.newpermission) {
+        if (user != null && null != user.newpermission) {
             for (Permission permission : user.newpermission) {
                 map.put(permission.getCode(), permission);
             }
@@ -121,6 +123,7 @@ public class InitDataService extends IntentService {
             SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
         } else {
             LogUtil.d("更新 组织 架构  失败");
+            Global.Toast("数据更新失败,稍后重试");
         }
     }
 

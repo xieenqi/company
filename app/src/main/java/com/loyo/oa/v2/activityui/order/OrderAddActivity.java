@@ -309,9 +309,9 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         map.put("customerId", customerId);
         map.put("customerName", customerName);
         map.put("title", et_name.getText().toString());
-        if(null == uuid || TextUtils.isEmpty(uuid)){
+        if (null == uuid || TextUtils.isEmpty(uuid)) {
             map.put("attachmentUUId", StringUtil.getUUID());
-        }else{
+        } else {
             map.put("attachmentUUId", uuid);
         }
         map.put("dealMoney", Float.parseFloat(et_money.getText().toString()));
@@ -410,7 +410,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 if (null != estimateData) {
                     mBundle.putSerializable("data", estimateData);
                 }
-                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD,true);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_ADD, true);
                 mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_ADD);
                 app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
@@ -418,7 +418,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             //附件
             case R.id.ll_source:
                 mBundle = new Bundle();
-                mBundle.putInt("bizType",25);
+                mBundle.putInt("bizType", 25);
                 mBundle.putString("uuid", uuid);
                 app.startActivityForResult(this, OrderAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
                 break;
@@ -436,6 +436,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         if (null != productData) {
             for (SaleIntentionalProduct ele : productData) {
                 productName += ele.name + "、";
+
             }
         } else {
             return "";
@@ -481,6 +482,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
                 productData = (ArrayList<SaleIntentionalProduct>) data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
                 tv_stage.setText(getIntentionProductName());
+                if (TextUtils.isEmpty(et_money.getText().toString())) {//成交金额  返显产品的销售总价
+                    String priceInfo = data.getStringExtra("salePrice");
+                    String price = priceInfo.substring(1, priceInfo.length());
+                    et_money.setText("0".equals(price) ? "" : price);
+                }
                 break;
 
             //选择回款

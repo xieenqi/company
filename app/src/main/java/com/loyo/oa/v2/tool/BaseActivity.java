@@ -32,9 +32,9 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.util.Locale;
 
@@ -49,10 +49,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     protected Context mContext;
     protected static final int NO_SCROLL = -1;
     public CustomProgressDialog customProgressDialog;
-    public GeneralPopView generalPopView;
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
     private GestureDetector mDetector;
+    public SweetAlertDialogView sweetAlertDialogView;
 
     /**
      * 搜索跳转分类
@@ -96,6 +96,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         tintManager.setNavigationBarTintEnabled(true);
         // 设置一个颜色给系统栏
         tintManager.setTintColor(getResources().getColor(R.color.title_bg1));
+        sweetAlertDialogView = new SweetAlertDialogView(this);
     }
 
     @Override
@@ -323,9 +324,9 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
-            //onBackPressed();
-        }
+//        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
+//            //onBackPressed();
+//        }
 
         return false;
     }
@@ -395,19 +396,16 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         DialogHelp.cancelLoading();
     }
 
-
     /**
-     * 通用提示弹出框init
-     */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(this, isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
+     * SweetAlertDialog关闭
+     * */
+    public void dismissSweetAlert(){
+        sweetAlertDialogView.sweetAlertDialog.dismiss();
     }
 
-    /*重启当前Activity*/
+    /**
+     * 重启当前Activity
+     * */
     public void restartActivity() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);

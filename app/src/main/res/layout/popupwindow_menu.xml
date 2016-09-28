@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ListView
         android:id="@+id/lv_menu"
@@ -10,14 +10,12 @@
         android:layout_height="wrap_content"
         android:background="#ffffff"
         android:divider="@null"
-        android:scrollbarStyle="outsideOverlay">
-    </ListView>
+        android:scrollbarStyle="outsideOverlay"></ListView>
 
     <RelativeLayout
         android:id="@+id/rl_menu_shadow"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/lv_menu"
-        android:background="#70000000">
-    </RelativeLayout>
+        android:background="@color/dialog_bj"></RelativeLayout>
 </RelativeLayout>

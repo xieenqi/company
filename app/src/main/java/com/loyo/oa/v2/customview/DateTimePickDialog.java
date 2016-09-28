@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
@@ -37,6 +38,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
          * @param min   分钟
          */
         void onDateTimeChanged(int year, int month, int day, int hour, int min);
+
         void onCancel();
     }
 
@@ -48,6 +50,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     private String initDateTime;
     private Context mContext;
     private String defaultFromat = "yyyy年MM月dd日 HH:mm";
+    boolean isVisibilityHour;
 
     /**
      * 设置默认日期格式
@@ -63,11 +66,21 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
      *
      * @param context      ：上下文
      * @param initDateTime 初始日期时间值，作为弹出窗口的标题和日期时间初始值
-     *
      */
     public DateTimePickDialog(Context context, String initDateTime) {
         mContext = context;
         this.initDateTime = initDateTime;
+    }
+
+    /**
+     * @param context
+     * @param initDateTime
+     * @param isVisibilityHour 【是否隐藏 小时选择】 默认显示
+     */
+    public DateTimePickDialog(Context context, String initDateTime, boolean isVisibilityHour) {
+        mContext = context;
+        this.initDateTime = initDateTime;
+        this.isVisibilityHour = isVisibilityHour;
     }
 
     public void init(DatePicker datePicker, TimePicker timePicker) {
@@ -94,10 +107,10 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
      * 弹出日期时间选择框方法
      *
      * @param :为需要设置的日期时间文本编辑框
-     * @param isOver: 是否判断 过去时间
+     * @param isOver:          是否判断 过去时间
      * @return
      */
-    public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener, final boolean isOver,String nebName) {
+    public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener, final boolean isOver, String nebName) {
 
         LinearLayout dateTimeLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.date_pick_layout, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.datepicker);
@@ -105,7 +118,8 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
         init(datePicker, timePicker);
         timePicker.setIs24HourView(true);
         timePicker.setOnTimeChangedListener(this);
-
+        if (isVisibilityHour)
+            timePicker.setVisibility(View.GONE);
         ad = new AlertDialog.Builder(mContext)
                 .setTitle(initDateTime)
                 .setView(dateTimeLayout)
