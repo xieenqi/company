@@ -15,12 +15,14 @@ import com.loyo.oa.v2.common.Global;
  */
 public class CallPhonePopView extends Dialog {
 
-    private TextView tv_title,tv_business,tv_commonly,tv_cancel;
+    private TextView tv_title,tv_business,tv_commonly,tv_cancel,tv_error;
     private String   title;
+    private boolean  checkTag;
 
-    public CallPhonePopView(Context context,String title) {
+    public CallPhonePopView(Context context,String title,boolean checkTag) {
         super(context);
         this.title = title;
+        this.checkTag = checkTag;
     }
 
     @Override
@@ -32,12 +34,20 @@ public class CallPhonePopView extends Dialog {
         tv_title    = (TextView) findViewById(R.id.tv_title);
         tv_business = (TextView) findViewById(R.id.tv_business);
         tv_commonly = (TextView) findViewById(R.id.tv_commonly);
+        tv_error    = (TextView) findViewById(R.id.tv_error);
 
         tv_commonly.setOnTouchListener(Global.GetTouch());
         tv_business.setOnTouchListener(Global.GetTouch());
         tv_cancel.setOnTouchListener(Global.GetTouch());
 
         setTitle();
+
+        if(checkTag){
+            tv_error.setVisibility(View.GONE);
+        }else{
+            tv_business.setVisibility(View.GONE);
+        }
+
     }
 
     public void setTitle(){

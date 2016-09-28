@@ -224,14 +224,21 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     public void success(final CallBackCallid callBackCallid, final Response response) {
                         HttpErrorCheck.checkResponse("请求回拨", response);
                         try{
-                            if(callBackCallid.errcode == 0){
-                                Bundle mBundle = new Bundle();
-                                mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
-                                mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
-                                app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-                            }else{
-                                cancelLoading();
-                                Toast(callBackCallid.errmsg);
+                            switch (callBackCallid.errcode){
+                                case 0:
+                                    Bundle mBundle = new Bundle();
+                                    mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
+                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
+                                    app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                                    break;
+
+                                case 50001:
+                                    Toast("余额不足!");
+                                    break;
+
+                                default:
+                                    Toast("网络连接失败:"+callBackCallid.errcode);
+                                    break;
                             }
                         }catch (NullPointerException e){
                             e.printStackTrace();
@@ -267,7 +274,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     @Override
     public void onPhoneError() {
-        Toast("电话号码为空或格式不正确!");
+        Toast("电话号码格式不正确或为空!");
     }
 
     /**

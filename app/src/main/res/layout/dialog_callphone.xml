@@ -40,6 +40,20 @@
             />
 
         <TextView
+            android:id="@+id/tv_error"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_48"
+            android:layout_marginLeft="@dimen/dimen_25"
+            android:layout_marginRight="@dimen/dimen_25"
+            android:layout_marginTop="@dimen/dimen_20"
+            android:background="@drawable/callback_shape3"
+            android:gravity="center"
+            android:text="商务电话(号码格式错误)"
+            android:textSize="@dimen/text_sp16"
+            android:textColor="@color/white"
+            />
+
+        <TextView
             android:id="@+id/tv_commonly"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_48"
