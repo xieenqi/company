@@ -173,7 +173,7 @@ public class AMapService extends APSService {
         public void onLocationChanged(AMapLocation aMapLocation) {
             LogUtil.d("=====onLocation轨迹Changed=====aMapLocation");
 
-            acquireWakeLock();//释放cpu
+            releaseWakeLock();//释放cpu
             if (!TrackRule.checkRule(trackRule)) {
                 SharedUtil.remove(app, "lat");
                 SharedUtil.remove(app, "lng");
