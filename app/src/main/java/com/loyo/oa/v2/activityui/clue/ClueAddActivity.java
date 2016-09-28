@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.clue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -88,6 +89,10 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
         ll_area.setOnClickListener(this);
         ll_source = (LinearLayout) findViewById(R.id.ll_source);
         ll_source.setOnClickListener(this);
+
+        et_phone.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+        et_tel.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+        
         editClue();
     }
 
