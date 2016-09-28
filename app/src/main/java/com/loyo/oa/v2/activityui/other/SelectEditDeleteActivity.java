@@ -13,9 +13,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.customview.GeneralPopView;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 【业务弹窗】
@@ -103,7 +105,26 @@ public class SelectEditDeleteActivity extends Activity implements OnClickListene
 
             //删除
             case R.id.btn_delete:
-                final GeneralPopView generalPopView = new GeneralPopView(this, true);
+
+                final SweetAlertDialogView sdialog = new SweetAlertDialogView(this);
+                sdialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sdialog.sweetAlertDialog.dismiss();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sdialog.sweetAlertDialog.dismiss();
+                        mIntent = new Intent();
+                        mIntent.putExtra("delete", true);
+                        setResult(RESULT_OK, mIntent);
+                        finish();
+                    }
+                },"提示","确认删除?");
+
+
+/*                final GeneralPopView generalPopView = new GeneralPopView(this, true);
                 generalPopView.show();
                 generalPopView.setMessage("确认删除?");
                 generalPopView.setCanceledOnTouchOutside(true);
@@ -124,7 +145,7 @@ public class SelectEditDeleteActivity extends Activity implements OnClickListene
                     public void onClick(final View view) {
                         generalPopView.dismiss();
                     }
-                });
+                });*/
                 break;
 
             //复制

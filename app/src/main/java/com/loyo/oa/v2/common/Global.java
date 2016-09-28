@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.view.Gravity;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -264,7 +265,7 @@ public final class Global {
             Global.Toast("内存卡不可用");
             return null;
         }
-        String timepath = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+        String timepath = new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date());
         String photoPath = Environment.getExternalStorageDirectory() + File.separator + "KuaiQi" + timepath;
 //        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
 //                "/KuaiQi" + timepath);
@@ -286,7 +287,7 @@ public final class Global {
     }
 
     //压缩图片,并旋转图片
-    public static File scal(Context context, Uri fileUri) throws IOException {
+    public static File scal(Context context, Uri fileUri) throws IOException, OutOfMemoryError {
         String path = getPath(context, fileUri);
         int degree = readPictureDegree(path);
 
@@ -337,7 +338,7 @@ public final class Global {
 
     }
 
-    public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+    public static Bitmap rotaingImageView(int angle, Bitmap bitmap) throws OutOfMemoryError {
         //旋转图片 动作
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);

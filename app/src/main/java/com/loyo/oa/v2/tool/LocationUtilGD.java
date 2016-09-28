@@ -95,7 +95,7 @@ public class LocationUtilGD {
             return;
         }
 
-        app.address = location.getCountry();
+        app.region = location.getCountry();
         app.message = location.getStreet() + location.getStreetNum();
         app.longitude = location.getLongitude();
         app.latitude = location.getLatitude();

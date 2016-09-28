@@ -42,6 +42,7 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.Date;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -284,7 +285,21 @@ public class PreviewAttendanceActivity extends BaseActivity {
      * 弹出外勤(加班)确认对话框
      */
     private void showConfirmOutAttendanceDialog(final String str) {
-        showGeneralDialog(false, true, str);
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                confirmOutAttendance();
+            }
+        },"提示",str);
+
+/*        showGeneralDialog(false, true, str);
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -300,7 +315,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
             public void onClick(final View view) {
                 generalPopView.dismiss();
             }
-        });
+        });*/
     }
 
     /**

@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
@@ -49,7 +48,6 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.AttenDancePopView;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
@@ -70,7 +68,6 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -79,9 +76,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -92,7 +89,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
 
     private View mView;
     private String changeEvent = "All";
-    private GeneralPopView generalPopView;
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private HashMap<String, Object> map = new HashMap<>();
@@ -254,6 +250,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*Intent mIntent = new Intent(getActivity(), SweetAlertDialogActivity.class);
+                startActivity(mIntent);*/
                 showMoreWindow(v);
             }
         });
@@ -476,7 +474,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 加班提示框
      */
     public void popOutToast() {
-        final AttenDancePopView popView = new AttenDancePopView(getActivity());
+        final AttenDancePopView popView = new AttenDancePopView(mActivity);
         popView.show();
         popView.setCanceledOnTouchOutside(true);
 
@@ -514,7 +512,22 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     public void isQQLogin() {
         if (MainApp.getMainApp().isQQLogin && TextUtils.isEmpty(MainApp.user.mobile)) {
-            showGeneralDialog(false, true, getString(R.string.app_homeqq_message));
+
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    cancelDialog();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    cancelDialog();
+                    MainApp.getMainApp().startActivity(getActivity(), EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                }
+            },"提示",getString(R.string.app_homeqq_message));
+
+
+/*            showGeneralDialog(false, true, getString(R.string.app_homeqq_message));
             //确认
             generalPopView.setSureOnclick(new View.OnClickListener() {
                 @Override
@@ -529,7 +542,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 public void onClick(final View view) {
                     generalPopView.dismiss();
                 }
-            });
+            });*/
         }
         MainApp.getMainApp().isQQLogin = false;
     }
@@ -633,18 +646,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         initView();
     }
 
-
-    /**
-     * 通用提示弹出框init
-     */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(getActivity(), isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
-    }
-
     /**
      * 显示弹出菜单
      */
@@ -729,7 +730,21 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 早退提示
      */
     public void attanceWorry() {
-        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
+                intentValue();
+            }
+        },"提示",getString(R.string.app_attanceworry_message));
+
+/*        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -744,7 +759,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             public void onClick(final View view) {
                 generalPopView.dismiss();
             }
-        });
+        });*/
     }
 
     /**

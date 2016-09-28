@@ -279,6 +279,11 @@
                     android:text="附件"
                     android:textSize="15sp" />
 
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

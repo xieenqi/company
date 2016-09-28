@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
@@ -39,19 +38,18 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -324,10 +322,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         if (null != mCustomer.regional) {
             regional = mCustomer.regional;
         }
-//
-//        if (null != mCustomer.industry) {
-//            industry = mCustomer.industry;
-//        }
 
         try {
             if (null != mCustomer.position && mCustomer.position.loc.length > 1) {
@@ -418,7 +412,21 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 显示修改负责任 对话框
      */
     private void showLeaveDialog() {
-        showGeneralDialog(true, true, getString(R.string.app_userdetalis_message));
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                SelectDetUserActivity2.startThisForOnly(CustomerInfoActivity.this, null);
+            }
+        },"提示",getString(R.string.app_userdetalis_message));
+
+/*        showGeneralDialog(true, true, getString(R.string.app_userdetalis_message));
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -434,7 +442,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             public void onClick(final View view) {
                 generalPopView.dismiss();
             }
-        });
+        });*/
     }
 
     /**
