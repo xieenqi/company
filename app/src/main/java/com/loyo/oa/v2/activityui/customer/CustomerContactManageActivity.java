@@ -232,8 +232,16 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                                     app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                                     break;
 
+                                case 50000:
+                                    Toast("主叫与被叫号码不能相同!");
+                                    break;
+
                                 case 50001:
                                     Toast("余额不足!");
+                                    break;
+
+                                case 50002:
+                                    Toast("号码格式错误!");
                                     break;
 
                                 default:
