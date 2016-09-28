@@ -68,7 +68,7 @@ public class SaleCommPopupView extends PopupWindow {
         //如果为销售阶段pop,则动态设置高度
         if (dynamIc) {
             params = listView.getLayoutParams();
-            params.height = mContext.getResources().getDimensionPixelSize(R.dimen.sale_pop_height);
+//            params.height = mContext.getResources().getDimensionPixelSize(R.dimen.sale_pop_height);
             listView.setLayoutParams(params);
         }
         adapter = new AdapterSaleTeamScreenComm(mContext, data, index);
