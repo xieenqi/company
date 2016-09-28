@@ -56,6 +56,32 @@ public class RegularCheck {
         return flag;
     }
 
+    /**
+     * 云之讯,回拨座机号验证
+     * */
+    public static boolean isYunTell(String str){
+        Pattern p = null;
+        Matcher m = null;
+        boolean b = false;
+        p = Pattern.compile("^1\\d{0,11}$"); // 验证手机号
+        m = p.matcher(str);
+        b = m.matches();
+        return b;
+    }
+
+
+    /**
+     * 云之讯,回拨手机号验证
+     * */
+    public static boolean isYunPhone(String str){
+        Pattern p = null;
+        Matcher m = null;
+        boolean b = false;
+        p = Pattern.compile("^1\\d{1,10}$"); // 验证手机号
+        m = p.matcher(str);
+        b = m.matches();
+        return b;
+    }
 
     /**
      * 手机号验证

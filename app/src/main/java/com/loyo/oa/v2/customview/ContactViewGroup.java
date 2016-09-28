@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerContactManageActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerContractAddActivity;
@@ -66,7 +68,15 @@ public class ContactViewGroup extends LinearLayout {
      * 手机拨打弹出框
      * */
     public void paymentSet(final String phone,final int callType) {
-        final CallPhonePopView callPhonePopView = new CallPhonePopView(context,mContact.getName());
+
+        boolean checkTag = false;
+        if(callType == 0){
+            checkTag = RegularCheck.isYunPhone(phone);
+        }else{
+            checkTag = RegularCheck.isYunTell(phone);
+        }
+
+        final CallPhonePopView callPhonePopView = new CallPhonePopView(context,mContact.getName(),checkTag);
         callPhonePopView.show();
         callPhonePopView.setCanceledOnTouchOutside(true);
         /*商务电话*/
@@ -81,7 +91,17 @@ public class ContactViewGroup extends LinearLayout {
         callPhonePopView.commonlyPhone(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.call(context, phone);
+
+                if(callType == 0){
+                    if(RegularCheck.isMobilePhone(phone)){
+                        Utils.call(context, phone);
+                    }else{
+                        contactProcessCallback.onPhoneError();
+                    }
+                }else{
+                    Utils.call(context, phone);
+                }
+
                 callPhonePopView.dismiss();
             }
         });
@@ -170,11 +190,15 @@ public class ContactViewGroup extends LinearLayout {
                         contactProcessCallback.onPhoneError();
                         return;
                     }
-                    if(!RegularCheck.isMobilePhone(mContact.getTel().replaceAll(" +",""))){
+                    /*if(!RegularCheck.isMobilePhone(mContact.getTel().replaceAll(" +",""))){
                         contactProcessCallback.onPhoneError();
                         return;
-                    }
-                    paymentSet(mContact.getTel(),0);
+                    }*/
+
+                    /*商务电话暂时屏蔽
+                    paymentSet(mContact.getTel(),0);*/
+
+                    Utils.call(context, mContact.getTel());
                 }
             });
 
@@ -182,7 +206,6 @@ public class ContactViewGroup extends LinearLayout {
             callwire.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LogUtil.dee("拨打的座机:"+mContact.getWiretel());
                     if(null == mContact.getWiretel() || mContact.getWiretel().isEmpty()){
                         contactProcessCallback.onPhoneError();
                         return;
@@ -192,7 +215,11 @@ public class ContactViewGroup extends LinearLayout {
                         contactProcessCallback.onPhoneError();
                         return;
                     }*/
-                    paymentSet(mContact.getWiretel(),1);
+
+                    /*上午电话暂时屏蔽
+                    paymentSet(mContact.getWiretel(),1);*/
+
+                    Utils.call(context, mContact.getWiretel());
 
                 }
             });
