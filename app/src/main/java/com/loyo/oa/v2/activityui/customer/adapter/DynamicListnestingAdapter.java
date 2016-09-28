@@ -143,7 +143,7 @@ public class DynamicListnestingAdapter extends BaseAdapter {
                     }
                 });
             }
-        }, 50);
+        }, 200);
     }
 
     class ViewHolder {
