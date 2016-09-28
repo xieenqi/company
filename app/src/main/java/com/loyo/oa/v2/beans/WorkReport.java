@@ -89,7 +89,7 @@ public class WorkReport extends BaseBeans {
         for (UserInfo ele : depts) {//多部门的情况
             for (NewUser menber : members.depts) {
                 if (null != menber && ele != null && ele.getShortDept() != null && !TextUtils.isEmpty(menber.getXpath())
-                        && menber.getXpath().contains(ele.getShortDept().getXpath())) {
+                        && ele.getShortDept().getXpath().startsWith(menber.getXpath())) {
                     return true;
                 }
             }
