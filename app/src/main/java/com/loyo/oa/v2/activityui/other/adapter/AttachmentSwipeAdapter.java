@@ -329,7 +329,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     }
                 });
             }
-        }, 60);
+        }, 200);
     }
 
     class ViewHolder {
