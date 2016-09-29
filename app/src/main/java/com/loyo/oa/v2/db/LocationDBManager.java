@@ -34,6 +34,15 @@ public class LocationDBManager {
         mDBHealper = new LocationDBHelper();
     }
 
+    public synchronized void initWithUser(String userId) {
+        if (userId != null) {
+            mDBHealper = new LocationDBHelper(userId);
+        }
+        else {
+            mDBHealper = new LocationDBHelper();
+        }
+    }
+
 
     public void addLocation(LocationEntity entity) {
         SQLiteDatabase database = mDBHealper.getWritableDatabase();
@@ -217,6 +226,10 @@ public class LocationDBManager {
 
         public LocationDBHelper() {
             super(MainApp.getMainApp(), BASE_DB_NAME, null, BASE_DB_VERSION);
+        }
+
+        public LocationDBHelper(String name) {
+            super(MainApp.getMainApp(), BASE_DB_NAME +"_"+name , null, BASE_DB_VERSION);
         }
 
         public LocationDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {

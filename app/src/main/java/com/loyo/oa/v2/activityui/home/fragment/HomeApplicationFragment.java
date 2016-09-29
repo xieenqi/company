@@ -54,6 +54,7 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.LocationDBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.service.CheckUpdateService;
@@ -268,7 +269,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         updateUser();
 
         // startTrack();
-
+        LocationDBManager.getInstance().initWithUser(MainApp.user.id);
         TrackLocationManager.getInstance().startLocationTrackingIfNeeded();
         return mView;
     }
