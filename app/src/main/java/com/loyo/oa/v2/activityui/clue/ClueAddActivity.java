@@ -92,7 +92,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
 
         et_phone.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
         et_tel.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
-        
+
         editClue();
     }
 
