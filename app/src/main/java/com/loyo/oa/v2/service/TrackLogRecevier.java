@@ -33,7 +33,7 @@ public class TrackLogRecevier extends BroadcastReceiver {
      * @param trackRule
      */
     void startAMapService(TrackRule trackRule) {
-        Intent serIntent = new Intent(mContext, AMapService.class);
+        Intent serIntent = new Intent(mContext, TrackLocationService.class);
         serIntent.putExtra("track", trackRule);
         mContext.startService(serIntent);
     }

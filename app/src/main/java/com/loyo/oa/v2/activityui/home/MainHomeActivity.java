@@ -36,6 +36,7 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.AliOSSManager;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.TrackLocationManager;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -83,6 +84,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
         /* 初始化AliOSSManager */
         AliOSSManager.getInstance().initWithContext(getApplicationContext());
+        TrackLocationManager.getInstance().initWithContext(getApplicationContext());
     }
 
     @Override

@@ -6,11 +6,9 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.DateTool;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,7 +38,6 @@ public class LocationDBManager {
     public void addLocation(LocationEntity entity) {
         SQLiteDatabase database = mDBHealper.getWritableDatabase();
 
-        //
         try {
             ContentValues values = new ContentValues();
             values.put(LocationEntity.COLUMN_TIMESTAMP, entity.timestamp);
@@ -50,93 +47,12 @@ public class LocationDBManager {
             values.put(LocationEntity.COLUMN_LONGITUDE, entity.longitude);
             values.put(LocationEntity.COLUMN_ADDRESS,   entity.address);
             values.put(LocationEntity.COLUMN_UPLOAD_ID, entity.uploadID);
-            long rowId = database.insert(LocationEntity.TABLE_NAME, null, values);
+            database.insert(LocationEntity.TABLE_NAME, null, values);
         } catch (Exception e) {
             Global.ProcException(e);
         }
 
         database.close();
-    }
-
-    public synchronized List<LocationEntity> getLocations() {
-        List<LocationEntity> locateDatas = new ArrayList<>();
-        try {
-            String orderby = LocationEntity.COLUMN_TIMESTAMP + " asc ";
-            Cursor cursor = mDBHealper.getReadableDatabase()
-                    .query(LocationEntity.TABLE_NAME, null, null, null, null, null, orderby);
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    long t = cursor.getLong(cursor.getColumnIndex(LocationEntity.COLUMN_TIMESTAMP));
-                    double a = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN__ACCURACY));
-                    String p = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_PROVIDER));
-                    double la = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN_LATITUDE));
-                    double lo = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN_LONGITUDE));
-                    String add = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_ADDRESS));
-                    String id = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_UPLOAD_ID));
-
-                    Log.v("debug", DateTool.getDiffTime(t) + "`         " + t
-                            + "  " +a
-                            + "  " +p
-                            + "  " +la
-                            + "  " +lo
-                            + "  " +add
-                            + "id=  " +id);
-
-                    LocationEntity entity = new LocationEntity(t, la, lo, a, p, add);
-                    locateDatas.add(entity);
-                }
-                cursor.close();
-            }
-        } catch (Exception e) {
-            Global.ProcException(e);
-        }
-        return locateDatas;
-    }
-    public synchronized List<LocationEntity> getFiveOldestLocations() {
-        List<LocationEntity> locateDatas = new ArrayList<>();
-        try {
-            String orderby = " ORDER BY " + LocationEntity.COLUMN_TIMESTAMP + " asc ";
-            String limit = "LIMIT 5";
-
-            String query = "select * from "
-                    +LocationEntity.TABLE_NAME
-                    + " where "
-                    + LocationEntity.COLUMN_UPLOAD_ID
-                    +"=? "
-                    + orderby
-                    + limit;
-
-            Cursor cursor = mDBHealper.getReadableDatabase()
-                    .rawQuery(query, new String[]{""});
-
-            Log.v("debug", "--------------------------------------");
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    long t = cursor.getLong(cursor.getColumnIndex(LocationEntity.COLUMN_TIMESTAMP));
-                    double a = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN__ACCURACY));
-                    String p = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_PROVIDER));
-                    double la = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN_LATITUDE));
-                    double lo = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN_LONGITUDE));
-                    String add = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_ADDRESS));
-                    String id = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_UPLOAD_ID));
-
-                    Log.v("debug", t
-                            + "  " +a
-                            + "  " +p
-                            + "  " +la
-                            + "  " +lo
-                            + "  " +add
-                            + " id = " +id);
-
-                    LocationEntity entity = new LocationEntity(t, la, lo, a, p, add);
-                    locateDatas.add(entity);
-                }
-                cursor.close();
-            }
-        } catch (Exception e) {
-            Global.ProcException(e);
-        }
-        return locateDatas;
     }
 
     public synchronized List<LocationEntity> getOldestLocationsByLimit(int limitCount) {
@@ -156,7 +72,6 @@ public class LocationDBManager {
             Cursor cursor = mDBHealper.getReadableDatabase()
                     .rawQuery(query, new String[]{""});
 
-            Log.v("debug", "--------------------------------------");
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     long t = cursor.getLong(cursor.getColumnIndex(LocationEntity.COLUMN_TIMESTAMP));
@@ -165,15 +80,7 @@ public class LocationDBManager {
                     double la = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN_LATITUDE));
                     double lo = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN_LONGITUDE));
                     String add = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_ADDRESS));
-                    String id = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_UPLOAD_ID));
-
-                    Log.v("debug", t
-                            + "  " +a
-                            + "  " +p
-                            + "  " +la
-                            + "  " +lo
-                            + "  " +add
-                            + " id = " +id);
+                    // String id = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_UPLOAD_ID));
 
                     LocationEntity entity = new LocationEntity(t, la, lo, a, p, add);
                     locateDatas.add(entity);
@@ -196,9 +103,9 @@ public class LocationDBManager {
                 LocationEntity entity = list.get(i);
                 ContentValues values = new ContentValues();
                 values.put(LocationEntity.COLUMN_UPLOAD_ID, identifier);
-                int row= db.update(LocationEntity.TABLE_NAME, values, LocationEntity.COLUMN_TIMESTAMP+ "=?", new String[]{String.valueOf(entity.timestamp)});
-
-                Log.v("debug", "--- "+ row);
+                db.update(LocationEntity.TABLE_NAME, values,
+                        LocationEntity.COLUMN_TIMESTAMP+ "=?",
+                        new String[]{String.valueOf(entity.timestamp)});
             }
 
             db.setTransactionSuccessful();
@@ -210,60 +117,6 @@ public class LocationDBManager {
 
         return true;
 
-    }
-
-    public synchronized List<LocationEntity> getUploadingLocationsByID(String identifier) {
-        List<LocationEntity> locateDatas = new ArrayList<>();
-        try {
-            String orderby = " ORDER BY " + LocationEntity.COLUMN_TIMESTAMP + " asc ";
-            String limit = "LIMIT 5";
-
-            String query = "select * from "
-                    +LocationEntity.TABLE_NAME
-                    + " where "
-                    + LocationEntity.COLUMN_UPLOAD_ID
-                    +"=? "
-                    + orderby;
-
-            Cursor cursor = mDBHealper.getReadableDatabase()
-                    .rawQuery(query, new String[]{identifier});
-
-            Log.v("debug", "--------------------------------------");
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    long t = cursor.getLong(cursor.getColumnIndex(LocationEntity.COLUMN_TIMESTAMP));
-                    double a = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN__ACCURACY));
-                    String p = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_PROVIDER));
-                    double la = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN_LATITUDE));
-                    double lo = cursor.getDouble(cursor.getColumnIndex(LocationEntity.COLUMN_LONGITUDE));
-                    String add = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_ADDRESS));
-                    String id = cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_UPLOAD_ID));
-
-                    Log.v("debug", t
-                            + "  " +a
-                            + "  " +p
-                            + "  " +la
-                            + "  " +lo
-                            + "  " +add
-                            + " id = " +id);
-
-                    LocationEntity entity = new LocationEntity(t, la, lo, a, p, add);
-                    locateDatas.add(entity);
-                }
-                cursor.close();
-            }
-        } catch (Exception e) {
-            Global.ProcException(e);
-        }
-        return locateDatas;
-    }
-
-    public synchronized void count() {
-        SQLiteDatabase db = mDBHealper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select count(*)from "+LocationEntity.TABLE_NAME,null);
-        cursor.moveToFirst();
-        Long count = cursor.getLong(0);
-        Log.v("debug", "count = " + count);
     }
 
     public synchronized boolean clearAllUploadingFlag() {
@@ -274,9 +127,7 @@ public class LocationDBManager {
 
             ContentValues values = new ContentValues();
             values.put(LocationEntity.COLUMN_UPLOAD_ID, "");
-            int row= db.update(LocationEntity.TABLE_NAME, values, LocationEntity.COLUMN_UPLOAD_ID+ "!=?", new String[]{""});
-
-            Log.v("debug", "clear --- "+ row);
+            db.update(LocationEntity.TABLE_NAME, values, LocationEntity.COLUMN_UPLOAD_ID+ "!=?", new String[]{""});
 
             db.setTransactionSuccessful();
             db.endTransaction();
@@ -288,15 +139,13 @@ public class LocationDBManager {
         return true;
     }
 
-    public synchronized boolean deleteUploadingLocationsWithID(String identifer) {
+    public synchronized boolean deleteUploadingLocationsWithID(String identifier) {
 
         try {
             SQLiteDatabase db = mDBHealper.getWritableDatabase();
             db.beginTransaction();
 
-            int row= db.delete(LocationEntity.TABLE_NAME, LocationEntity.COLUMN_UPLOAD_ID+ "=?", new String[]{identifer});
-
-            Log.v("debug", "clear --- "+ row);
+            db.delete(LocationEntity.TABLE_NAME, LocationEntity.COLUMN_UPLOAD_ID+ "=?", new String[]{identifier});
 
             db.setTransactionSuccessful();
             db.endTransaction();
@@ -341,6 +190,22 @@ public class LocationDBManager {
             this.provider = provider;
             this.address = address;
             this.uploadID = "";
+        }
+    }
+
+    public static class LocationUploadModel implements Serializable {
+
+        private long createdAt;
+        private String gps; /* 格式:'lng, lat' */
+
+        private LocationUploadModel() {
+
+        }
+        public static LocationUploadModel instanceFrom(LocationEntity entity) {
+            LocationUploadModel model = new LocationUploadModel();
+            model.createdAt = entity.timestamp;
+            model.gps = entity.longitude + "," + entity.latitude;
+            return model;
         }
     }
 

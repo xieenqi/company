@@ -13,10 +13,11 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 
 import com.google.gson.Gson;
+import com.instacart.library.truetime.TrueTime;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
+import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -168,6 +169,20 @@ public class MainApp extends Application {
         loadIndustryCodeTable();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+
+        /*  */
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    TrueTime.build().withNtpHost("1.cn.pool.ntp.org").initialize();
+                }
+                catch (Exception e) {
+
+                }
+            }
+        }.start();
 
     }
 
