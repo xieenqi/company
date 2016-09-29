@@ -151,6 +151,7 @@ repositories {
 dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile project(path: ':library:sweetDialog')
+    compile project(path: ':LibraryModule')
 }
 
 apt {

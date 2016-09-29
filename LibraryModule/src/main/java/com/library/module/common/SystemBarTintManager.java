@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.loyo.oa.v2.common;
+package com.library.module.common;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
