@@ -1,14 +1,16 @@
 package com.loyo.oa.v2.tool;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 
 import com.instacart.library.truetime.TrueTime;
 import com.loyo.oa.v2.beans.TrackLocationRule;
-import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
+import com.loyo.oa.v2.service.TrackLocationScheduleReceiver;
 import com.loyo.oa.v2.service.TrackLocationService;
 
 import java.util.Date;
@@ -42,6 +44,7 @@ public class TrackLocationManager {
     /** 开启轨迹定位 */
     public void startLocationTrackingIfNeeded() {
 
+        scheduleAlarm();
         if (Global.isConnected()) {
             RestAdapterFactory.getInstance()
                     .build(Config_project.API_URL())
@@ -58,12 +61,6 @@ public class TrackLocationManager {
 
                 }
             });
-
-        } else {
-
-            // TODO:
-            TrackRule trackRule = DBManager.Instance().getTrackRule();
-            _startTrackingIfNeeded();
         }
     }
 
@@ -97,5 +94,17 @@ public class TrackLocationManager {
             return false;
         }
         return mRule.enable && mRule.weekdayEnable(date) && mRule.timeEnable(date);
+    }
+
+    private synchronized void scheduleAlarm() {
+
+        Intent intent = new Intent(mContext, TrackLocationScheduleReceiver.class);
+        intent.setAction("TrackLocationManager");
+
+        PendingIntent sender = PendingIntent.getBroadcast(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(sender);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 10*60*1000, sender);
     }
 }

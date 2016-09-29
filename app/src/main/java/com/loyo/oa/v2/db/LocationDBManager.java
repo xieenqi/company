@@ -44,7 +44,7 @@ public class LocationDBManager {
     }
 
 
-    public void addLocation(LocationEntity entity) {
+    public synchronized void addLocation(LocationEntity entity) {
         SQLiteDatabase database = mDBHealper.getWritableDatabase();
 
         try {

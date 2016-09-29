@@ -734,6 +734,7 @@
             android:enabled="true"/>
 
         <receiver android:name=".service.TrackLogRecevier"/>
+        <receiver android:name=".service.TrackLocationScheduleReceiver"/>
         <receiver android:name=".service.TrackRuleReceiver">
             <intent-filter>
                 <action android:name="com.tencent.android.tpush.action.SDK"/>
