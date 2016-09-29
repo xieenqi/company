@@ -37,6 +37,7 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.service.TrackLocationService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.FileTool;
@@ -406,6 +407,7 @@ public class MenuFragment extends BaseFragment {
         });
         MainApp.setToken(null);//清楚token与用户资料
         InitDataService_.intent(app).stop();//避免后台多次调用接口 没有token 导致accst_token无效 的问题
+        TrackLocationService.stopTrackLocation();
         MainApp.user = null;
         ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
         SharedUtil.clearInfo(getActivity());//清楚本地登录状态 即缓存信息
