@@ -15,11 +15,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public class WfinEditViewGroup extends LinearLayout {
         context = c;
     }
 
-    public WfinEditViewGroup(Context _context, ArrayList<BizFormFields> lstData, ArrayList<HashMap<String, Object>> data,ArrayList<HashMap<String, Object>> value,int position) {
+    public WfinEditViewGroup(Context _context, ArrayList<BizFormFields> lstData, ArrayList<HashMap<String, Object>> data, ArrayList<HashMap<String, Object>> value, int position) {
         this(_context);
         setBackgroundColor(getResources().getColor(R.color.white));
         this.lstData = lstData;
@@ -150,10 +152,10 @@ public class WfinEditViewGroup extends LinearLayout {
             }
             if (!bizFormFields.isRequired()) {
                 value.setHint("");
-                value.setText((String) map_Values.get(bizFormFields.getId()));
+                value.setText("" + map_Values.get(bizFormFields.getId()));
             }
 
-            HashMap<String,Object> map = wfInstanceValuesDatas.get(position);
+            HashMap<String, Object> map = wfInstanceValuesDatas.get(position);
             value.setText(map.get(bizFormFields.getId()).toString());
 
             if (bizFormFields.isEnable()) {
@@ -165,6 +167,7 @@ public class WfinEditViewGroup extends LinearLayout {
 
     /**
      * 外部获取 内部所输入的数据
+     *
      * @return
      */
     public HashMap<String, Object> getInfoData() {
