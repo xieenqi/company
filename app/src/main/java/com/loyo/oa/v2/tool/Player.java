@@ -109,5 +109,4 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
 	public void onBufferingUpdate(MediaPlayer mp, int percent) {
 		seekBar.setSecondaryProgress(percent);
 	}
-
 }
