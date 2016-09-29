@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.SystemClock;
 
 import com.instacart.library.truetime.TrueTime;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackLocationRule;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ITrackLog;
@@ -45,7 +46,7 @@ public class TrackLocationManager {
     public void startLocationTrackingIfNeeded() {
 
         scheduleAlarm();
-        if (Global.isConnected()) {
+        if (Global.isConnected() && MainApp.getToken() != null) {
             RestAdapterFactory.getInstance()
                     .build(Config_project.API_URL())
                     .create(ITrackLog.class).getTrackLocationRule(new Callback<TrackLocationRule>() {
