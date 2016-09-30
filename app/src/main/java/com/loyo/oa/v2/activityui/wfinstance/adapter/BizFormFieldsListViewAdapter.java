@@ -128,7 +128,7 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
 //            if(map_Values.isEmpty())
 //                map_Values.put((int)bizFormFields.getId(),"");
 
-            item_info.value.setText((String) map_Values.get(bizFormFields.getId()));
+            item_info.value.setText("" + map_Values.get(bizFormFields.getId()));
 
             item_info.tv_label.setText(bizFormFields.getName() + "：");
         }
@@ -245,7 +245,7 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
                     public void onCancel() {
 
                     }
-                },false,"取消");
+                }, false, "取消");
 
 //                DatePickerDialog datePickerDialog = new DatePickerDialog(
 //                        textView.getContext(), dateListener,

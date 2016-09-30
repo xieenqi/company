@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 /**
  * 【审批内容】 动态赋值
- *
+ * <p>
  * create by xnq on 2016/02/12
  */
 public class WfinAddViewGroup extends LinearLayout {
@@ -153,7 +153,7 @@ public class WfinAddViewGroup extends LinearLayout {
             }
             if (!bizFormFields.isRequired()) {
                 value.setHint("");
-                value.setText((String) map_Values.get(bizFormFields.getId()));
+                value.setText("" + map_Values.get(bizFormFields.getId()));
             }
             if (bizFormFields.isEnable()) {
                 addView(convertView);
