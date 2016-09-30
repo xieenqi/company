@@ -94,7 +94,7 @@ public class TrackLocationManager {
         if (mRule == null) {
             return false;
         }
-        return mRule.enable && mRule.weekdayEnable(date) && mRule.timeEnable(date);
+        return mRule.enable && mRule.weekdayEnable(date);// && mRule.timeEnable(date);
     }
 
     private synchronized void scheduleAlarm() {

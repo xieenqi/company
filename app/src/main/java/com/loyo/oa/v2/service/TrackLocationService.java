@@ -1,8 +1,11 @@
 package com.loyo.oa.v2.service;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
@@ -36,7 +39,13 @@ public class TrackLocationService extends APSService {
 
     public final static int TRACK_PERIOD_SECONDS = 30;
     public final static int UPLOAD_LOCATIONS_COUNT = 20;
+    private final String TAG = getClass().getSimpleName();
+    /**【定位精度】*/
+    private static final float MIN_SCAN_SPAN_DISTANCE = 255f;
+
     private boolean isUploading;
+    private PowerManager.WakeLock wakeLock;
+    private PowerManager manager;
 
     private TrackLocationService.LocalBinder mBinder = new TrackLocationService.LocalBinder();
     private LocationUpdateListener locationUpdateListener;
@@ -80,7 +89,7 @@ public class TrackLocationService extends APSService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        acquireWakeLock();
+        acquireWakeLock();
 //        app = (MainApp) getApplicationContext();
 //        ldbManager = new LDBManager();
 //        userOnlineTime();
@@ -136,12 +145,42 @@ public class TrackLocationService extends APSService {
     @Override
     public void onDestroy() {
         Log.v("debug", "onDestroy");
-//        releaseWakeLock();
+        releaseWakeLock();
 //        stopLocate();
 //        TrackRule.StartTrackRule(10 * 1000);
 //        recycleTimer();
         stopLocate();
         super.onDestroy();
+    }
+
+    private void acquireWakeLock() {
+        if (null == manager) {
+            manager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        }
+        boolean isInteractive = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            isInteractive = manager.isInteractive();
+        } else {
+            isInteractive = manager.isScreenOn();
+        }
+        if (!isInteractive) {
+            if (null == wakeLock) {
+                wakeLock = manager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+            }
+            if (!wakeLock.isHeld()) {
+                wakeLock.acquire();
+            }
+        }
+    }
+
+    /**
+     * 释放被唤醒的cpu
+     */
+    private void releaseWakeLock() {
+        if (null != wakeLock && wakeLock.isHeld()) {
+            wakeLock.release();
+        }
+        wakeLock = null;
     }
 
     /**
@@ -152,6 +191,10 @@ public class TrackLocationService extends APSService {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
 
+            if (aMapLocation == null) {
+                return;
+            }
+
             /* 获取校准时间 */
             Date date = new Date();
             try {
@@ -161,6 +204,25 @@ public class TrackLocationService extends APSService {
             }
 
             if (! TrackLocationManager.getInstance().needTracking(date)) {
+                return;
+            }
+
+            if (aMapLocation.getErrorCode() == 0) {
+                //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                Log.e("AmapError","location Error, ErrCode:"
+                        + aMapLocation.getErrorCode() + ", errInfo:"
+                        + aMapLocation.getErrorInfo());
+
+                // TODO: 加MTA日志
+
+                return;
+            }
+
+            // TODO: 排除不符合要求的点, 加MTA日志
+
+            if ((aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
+                    || aMapLocation.getAccuracy() <= 0
+                    /*|| aMapLocation.getAccuracy() > MIN_SCAN_SPAN_DISTANCE*/) {
                 return;
             }
 
