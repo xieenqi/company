@@ -16,27 +16,25 @@ import java.util.TimerTask;
 public class Player implements OnBufferingUpdateListener, OnCompletionListener,
 		OnPreparedListener {
 
-	public MediaPlayer mediaPlayer; // ý�岥����
-	private SeekBar seekBar; // �϶���
-	private Timer mTimer = new Timer(); // ��ʱ��
+	public MediaPlayer mediaPlayer;
+	private SeekBar seekBar;
+	private Timer mTimer = new Timer();
 
-	// ��ʼ��������
+
 	public Player(SeekBar seekBar) {
 		super();
 		this.seekBar = seekBar;
 		try {
 			mediaPlayer = new MediaPlayer();
-			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);// ����ý��������
+			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			mediaPlayer.setOnBufferingUpdateListener(this);
 			mediaPlayer.setOnPreparedListener(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// ÿһ�봥��һ��
 		mTimer.schedule(timerTask, 0, 1000);
 	}
 
-	// ��ʱ��
 	TimerTask timerTask = new TimerTask() {
 
 		@Override
@@ -44,7 +42,7 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
 			if (mediaPlayer == null)
 				return;
 			if (mediaPlayer.isPlaying() && seekBar.isPressed() == false) {
-				handler.sendEmptyMessage(0); // ������Ϣ
+				handler.sendEmptyMessage(0);
 			}
 		}
 	};
@@ -54,7 +52,6 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
 			int position = mediaPlayer.getCurrentPosition();
 			int duration = mediaPlayer.getDuration();
 			if (duration > 0) {
-				// ������ȣ���ȡ���������̶�*��ǰ���ֲ���λ�� / ��ǰ����ʱ����
 				long pos = seekBar.getMax() * position / duration;
 				seekBar.setProgress((int) pos);
 			}
@@ -65,16 +62,12 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
 		mediaPlayer.start();
 	}
 
-	/**
-	 * 
-	 * @param url
-	 *            url��ַ
-	 */
+
 	public void playUrl(String url) {
 		try {
 			mediaPlayer.reset();
-			mediaPlayer.setDataSource(url); // ��������Դ
-			mediaPlayer.prepare(); // prepare�Զ�����
+			mediaPlayer.setDataSource(url);
+			mediaPlayer.prepare();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (SecurityException e) {
@@ -86,17 +79,18 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
 		}
 	}
 
-	// ��ͣ
+
 	public void pause() {
 		mediaPlayer.pause();
 	}
 
-	// ֹͣ
+
 	public void stop() {
 		if (mediaPlayer != null) {
 			mediaPlayer.stop();
 			mediaPlayer.release();
 			mediaPlayer = null;
+			mTimer.cancel();
 		}
 	}
 
@@ -111,15 +105,8 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
 		Log.e("mediaPlayer", "onCompletion");
 	}
 
-	/**
-	 * �������
-	 */
 	@Override
 	public void onBufferingUpdate(MediaPlayer mp, int percent) {
 		seekBar.setSecondaryProgress(percent);
-/*		int currentProgress = seekBar.getMax()
-				* mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration();
-		Log.e(currentProgress + "% play", percent + " buffer");*/
 	}
-
 }

@@ -464,12 +464,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         playTime = "00:00:00";
 
         threadPool(viewModel.audioUrl);
-/*        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                player.playUrl(viewModel.audioUrl);
-            }
-        }).start();*/
     }
 
     @Override
@@ -530,7 +524,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             tv_content.setText(viewModel.getContent());
 
             /*判断是否有录音*/
-/*            录音播放暂时屏蔽
             if (null != viewModel.audioUrl && !TextUtils.isEmpty(viewModel.audioUrl)) {
 
                 long audioLength = viewModel.audioLength;
@@ -556,7 +549,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                 tv_audio_length.setText(DateTool.stringForTime((int) viewModel.audioLength * 1000));
             } else {
                 layout_audio.setVisibility(View.GONE);
-            }*/
+            }
 
             tv_contact_name.setText("联系人：" + viewModel.contactName);
             tv_follow_name.setText("跟进人：" + viewModel.creatorName + " #" + viewModel.typeName);
