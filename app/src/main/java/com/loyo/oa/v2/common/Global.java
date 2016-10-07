@@ -349,7 +349,7 @@ public final class Global {
             resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
                     bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         } catch (OutOfMemoryError e) {
-            Global.Toast("图片过大旋转失败");
+            Global.Toast("图片过大旋转失败,请清理内存重试");
             return bitmap;
         }
         if (!bitmap.isRecycled()) {
