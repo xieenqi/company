@@ -316,7 +316,7 @@ public class MenuFragment extends BaseFragment {
                         cancelDialog();
                         setDiskCacheInfo();
                     }
-                }, "提醒", "确认清楚缓存?");
+                }, "提醒", "确认清除缓存?");
 
                 break;
         }
