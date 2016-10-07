@@ -78,7 +78,7 @@ public class ContactAddforExtraData extends LinearLayout {
         if (null == extras || extras.isEmpty()) {
             return;
         }
-        LogUtil.dee("ContactLeftExtras:"+MainApp.gson.toJson(extras));
+        LogUtil.dee("ContactLeftExtras:" + MainApp.gson.toJson(extras));
         for (int i = 0; i < extras.size(); i++) {
             ContactLeftExtras customerExtra = extras.get(i);
             if (null == customerExtra) {
@@ -165,7 +165,7 @@ public class ContactAddforExtraData extends LinearLayout {
                     }
                 });
                 if (customerExtra.required) {
-                        tv_content.setHint("必填");
+                    tv_content.setHint("必填");
                 }
                 if (null == mContact) {
                     tv_content.setText(customerExtra.val);
@@ -221,24 +221,24 @@ public class ContactAddforExtraData extends LinearLayout {
                 tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
-                if(customerExtra.fieldName.equals("wiretel") || customerExtra.fieldName.equals("tel")){
+                if (customerExtra.fieldName.equals("wiretel") || customerExtra.fieldName.equals("tel")) {
                     tv_content.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
-                    if(customerExtra.required){
-                        if(customerExtra.val.equals("座机")){
-                            tv_content.setHint(mContext.getString(R.string.app_tell_check)+"(必填)");
-                        }else if(customerExtra.val.equals("手机")){
-                            tv_content.setHint(mContext.getString(R.string.app_phone_check)+"(必填)");
-                        }else{
+                    if (customerExtra.required) {
+                        if (customerExtra.val != null && customerExtra.val.equals("座机")) {
+                            tv_content.setHint(mContext.getString(R.string.app_tell_check) + "(必填)");
+                        } else if (customerExtra.val != null && customerExtra.val.equals("手机")) {
+                            tv_content.setHint(mContext.getString(R.string.app_phone_check) + "(必填)");
+                        } else {
                             tv_content.setHint("必填");
                         }
-                    }else{
-                        if(customerExtra.fieldName.equals("wiretel")){
+                    } else {
+                        if (customerExtra.fieldName != null && customerExtra.fieldName.equals("wiretel")) {
                             tv_content.setHint(mContext.getString(R.string.app_tell_check));
-                        }else if(customerExtra.fieldName.equals("tel")){
+                        } else if (customerExtra.fieldName != null && customerExtra.fieldName.equals("tel")) {
                             tv_content.setHint(mContext.getString(R.string.app_phone_check));
                         }
                     }
-                }else{
+                } else {
                     tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
                     if (customerExtra.required) {
                         tv_content.setHint("必填");
@@ -326,6 +326,7 @@ public class ContactAddforExtraData extends LinearLayout {
     private class BizFiedTextWatcher implements TextWatcher {
 
         private ContactLeftExtras extra;
+
         private BizFiedTextWatcher(ContactLeftExtras extra) {
             this.extra = extra;
         }
