@@ -100,7 +100,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 获取数据
      */
     private void getData() {
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
@@ -362,7 +361,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     toPublic();
                 }
             }
-        },"提示",message);
+        }, "提示", message);
 
 /*        showGeneralDialog(true, true, message);
         //确定
