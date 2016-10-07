@@ -77,7 +77,7 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
             if (dataSelect.bottom.substring(0, 1).equals("0")) {
                 holder.name.setText(dataSelect.bottom.substring(1, 2) + "月");
             } else {
-                holder.name.setText(dataSelect.bottom + "月");
+                holder.name.setText(dataSelect.bottom + "");
             }
         }
 
