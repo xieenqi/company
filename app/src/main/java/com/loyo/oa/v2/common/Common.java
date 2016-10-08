@@ -11,6 +11,7 @@ import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
+import com.loyo.oa.v2.activityui.login.bean.Token;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
 import com.loyo.oa.v2.activityui.project.HttpProject;
@@ -538,9 +539,9 @@ public final class Common {
         if (!TextUtils.isEmpty(startTimeText)) {
             long startTime = Long.parseLong(startTimeText);
             if (DateTool.getDate(startTime, 10)) {
-                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<LoginActivity.Token>() {
+                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<Token>() {
                     @Override
-                    public void success(LoginActivity.Token token, Response response) {
+                    public void success(Token token, Response response) {
                         HttpErrorCheck.checkResponse("刷新token", response);
                         MainApp.setToken(token.access_token);
                         //LogUtil.dee("刷新的Token:" + token.access_token);
@@ -554,6 +555,5 @@ public final class Common {
                 });
             }
         }
-
     }
 }
