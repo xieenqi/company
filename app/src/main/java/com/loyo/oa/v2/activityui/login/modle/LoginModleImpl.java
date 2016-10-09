@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
-import com.loyo.oa.v2.activityui.login.presenter.OnResponListener;
+import com.loyo.oa.v2.activityui.login.view.OnResponListener;
 import com.loyo.oa.v2.activityui.login.bean.Token;
 import com.loyo.oa.v2.activityui.login.view.LoginView;
 import com.loyo.oa.v2.application.MainApp;
@@ -116,11 +116,17 @@ public class LoginModleImpl implements LoginModle{
         });
     }
 
+    /**
+     * 改变按钮状态
+     * */
     @Override
     public void changeColorEmbel(int bgColor, int waveColor) {
         changeColor(bgColor,waveColor);
     }
 
+    /**
+     * 账号密码验证
+     * */
     @Override
     public void requestStandByEmbel(String username, String password, LoginView mLoginView) {
         if (StringUtil.isEmpty(username)) {
@@ -133,6 +139,7 @@ public class LoginModleImpl implements LoginModle{
         }
         mLoginView.verifyPass();
     }
+
 
     /**
      * 改变波纹颜色和按钮颜色

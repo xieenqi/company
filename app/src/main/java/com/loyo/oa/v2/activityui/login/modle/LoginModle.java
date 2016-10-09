@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.activityui.login.modle;
 
 import android.app.Activity;
-import com.loyo.oa.v2.activityui.login.presenter.OnResponListener;
+import com.loyo.oa.v2.activityui.login.view.OnResponListener;
 import com.loyo.oa.v2.activityui.login.bean.Token;
 import com.loyo.oa.v2.activityui.login.view.LoginView;
 

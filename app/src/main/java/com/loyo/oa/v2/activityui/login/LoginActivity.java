@@ -173,23 +173,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    @Override
+    @Override   /*WaveView赋值*/
     public void onWaveComplete(final int color) {
         layout_login.setBackGroundColor(color);
     }
 
 
-    @Override
+    @Override   /*账号验证失败*/
     public void accountError() {
         Toast("帐号不能为空!");
     }
 
-    @Override
+    @Override   /*密码验证失败*/
     public void pwdError() {
         Toast("密码不能为空!");
     }
 
-    @Override
+    @Override   /*登录验证通过*/
     public void verifyPass() {
         layout_login.setText("登录中...");
         loginPresenter.changeColor(-1, R.color.lightgreen);
