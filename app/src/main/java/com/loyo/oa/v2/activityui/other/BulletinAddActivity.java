@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.other;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -11,22 +10,18 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
+import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
+import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenterImpl;
+import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.customview.CusGridView;
@@ -37,23 +32,16 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 /**
  * 【通知公告】发布页面
  */
 
 @EActivity(R.layout.activity_bulletin_add)
-public class BulletinAddActivity extends BaseActivity {
+public class BulletinAddActivity extends BaseActivity implements BulletinAddView {
 
     @ViewById
     EditText edt_title;
@@ -65,10 +53,6 @@ public class BulletinAddActivity extends BaseActivity {
     ViewGroup layout_recevier;
     @ViewById
     TextView tv_recevier;
-
-    private int bizType = 0;
-    private int uploadSize;
-    private int uploadNum;
 
     private Context mContext;
     private String uuid = StringUtil.getUUID();
@@ -83,11 +67,14 @@ public class BulletinAddActivity extends BaseActivity {
     private String title;
     private String content;
 
+    private BulletinAddPresenter mBulletinAddPresenter;
+
     @AfterViews
     void init() {
         super.setTitle("发布通知");
         mContext = this;
         init_gridView_photo();
+        mBulletinAddPresenter = new BulletinAddPresenterImpl(this, mContext);
     }
 
     /**
@@ -111,119 +98,14 @@ public class BulletinAddActivity extends BaseActivity {
         onBackPressed();
     }
 
+
     @Click(R.id.img_title_right)
     void submit() {
         title = edt_title.getText().toString().trim();
         content = edt_content.getText().toString().trim();
-        if (TextUtils.isEmpty(title)) {
-            Global.ToastLong("标题不能为空");
-            return;
-        } else if (TextUtils.isEmpty(content)) {
-            Global.ToastLong("内容不能为空");
-            return;
-        } else if (member.users.size() == 0 && member.depts.size() == 0) {
-            Global.ToastLong("通知人员不能为空");
-            return;
-        }
-
-        //没有附件
-        if (pickPhots.size() == 0) {
-            requestCommitTask();
-            //有附件
-        } else {
-            newUploadAttachement();
-        }
+        mBulletinAddPresenter.verifyText(title, content, member);
     }
 
-    /**
-     * 批量上传附件
-     */
-    private void newUploadAttachement() {
-
-        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                dismissSweetAlert();
-            }
-        }, new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                dismissSweetAlert();
-                showLoading("正在提交");
-                try {
-                    uploadSize = 0;
-                    uploadNum = pickPhots.size();
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(mContext, uri);
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                TypedFile typedFile = new TypedFile("image/*", newFile);
-                                TypedString typedUuid = new TypedString(uuid);
-                                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                                        new RCallback<Attachment>() {
-                                            @Override
-                                            public void success(final Attachment attachments, final Response response) {
-                                                if (attachments != null) {
-                                                    mAttachment.add(attachments);
-                                                }
-                                                uploadSize++;
-                                                if (uploadSize == uploadNum) {
-                                                    requestCommitTask();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void failure(final RetrofitError error) {
-                                                super.failure(error);
-                                                HttpErrorCheck.checkError(error);
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
-                }
-            }
-        },"提示",getString(R.string.app_bulletin_message));
-    }
-
-
-    public void requestCommitTask() {
-        if (pickPhots.size() == 0) {
-            showLoading("正在提交");
-        }
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("title", title);
-        map.put("content", content);
-        map.put("attachmentUUId", uuid);
-        map.put("members", member);
-        map.put("attachments", newData());
-        LogUtil.d(" 通知 传递数据： " + MainApp.gson.toJson(map));
-        app.getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
-            @Override
-            public void success(final Bulletin bulletin, final Response response) {
-                HttpErrorCheck.checkResponse("add通知", response);
-                if (bulletin != null) {
-                    /*if (mAttachment != null) {
-                        bulletin.attachmentUUId = uuid;
-                        bulletin.attachments = mAttachment;
-                    }*/
-                    Intent intent = new Intent();
-                    intent.putExtra("data", bulletin);
-                    setResult(RESULT_OK, intent);
-                }
-                finish();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
-    }
 
     /**
      * 相册选择 回调
@@ -300,5 +182,65 @@ public class BulletinAddActivity extends BaseActivity {
             newAttachment.add(obj);
         }
         return newAttachment;
+    }
+
+
+    @Override   /*格式验证*/
+    public void verifyError(int code) {
+        switch (code) {
+            case 1:
+                Toast("标题不能为空");
+                break;
+
+            case 2:
+                Toast("内容不能为空");
+                break;
+
+            case 3:
+                Toast("通知人员不能为空");
+                break;
+        }
+    }
+
+    @Override   /*格式验证通过*/
+    public void verifyPass() {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("title", title);
+        map.put("content", content);
+        map.put("attachmentUUId", uuid);
+        map.put("members", member);
+        map.put("attachments", newData());
+        LogUtil.dee("uuid1:"+uuid);
+        if (pickPhots.size() == 0) {
+            mBulletinAddPresenter.requestBulletinAdd(map);
+        } else {
+            mBulletinAddPresenter.uploadAttachement(sweetAlertDialogView, pickPhots, map, uuid);
+        }
+
+    }
+
+    @Override   /*提交成功*/
+    public void onSuccess(Bulletin mBulletin) {
+        Toast("提交成功");
+        Intent intent = new Intent();
+        intent.putExtra("data", mBulletin);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override   /*提交失败*/
+    public void onError() {
+        Toast("提交失败");
+    }
+
+    @Override   /*关闭弹出框*/
+    public void dissweetAlert() {
+        dismissSweetAlert();
+    }
+
+    @Override   /*打开Loading*/
+    public void showLoading() {
+        showLoading("正在提交");
     }
 }

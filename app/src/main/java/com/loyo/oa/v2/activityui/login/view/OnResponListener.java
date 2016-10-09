@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.login.presenter;
+package com.loyo.oa.v2.activityui.login.view;
 
 import android.app.Activity;
 import com.loyo.oa.v2.activityui.login.bean.Token;
