@@ -12,7 +12,7 @@ public interface BulletinAddView {
     void verifyError(int code);
 
     /*验证通过*/
-    void verifyPass();
+    void verifySuccess(String title,String content);
 
     /*请求成功*/
     void onSuccess(Bulletin bulletin);
@@ -25,4 +25,7 @@ public interface BulletinAddView {
 
     /*打开Loading*/
     void showLoading();
+
+    /*设置人员名字*/
+    void setReceiver(String name);
 }

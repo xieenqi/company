@@ -16,7 +16,7 @@ import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen1;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen2;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;

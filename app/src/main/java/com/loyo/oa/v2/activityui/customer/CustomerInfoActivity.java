@@ -21,7 +21,7 @@ import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.Locate;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;

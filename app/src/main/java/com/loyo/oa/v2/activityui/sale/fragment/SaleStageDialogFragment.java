@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.adapter.SalestagesRadioListViewAdapter;
-import com.loyo.oa.v2.activityui.other.bean.SaleStage;
+import com.loyo.oa.v2.activityui.other.model.SaleStage;
 
 import java.util.ArrayList;
 

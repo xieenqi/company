@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.common;
 
-import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 
 import java.util.Comparator;
 

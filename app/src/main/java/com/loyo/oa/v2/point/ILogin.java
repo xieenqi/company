@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.login.bean.Token;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import java.util.HashMap;
 import retrofit.http.Body;
 import retrofit.http.GET;

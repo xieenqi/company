@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.activityui.project;
 
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.UserInfo;
 
 import java.io.Serializable;

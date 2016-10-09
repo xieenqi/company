@@ -10,15 +10,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.login.bean.Token;
 import com.loyo.oa.v2.activityui.login.presenter.LoginPresenter;
 import com.loyo.oa.v2.activityui.login.presenter.LoginPresenterImpl;
-import com.loyo.oa.v2.activityui.login.view.LoginView;
+import com.loyo.oa.v2.activityui.login.viewcontrol.LoginView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.activityui.setting.VerifyAccountActivity_;
 import com.loyo.oa.v2.customview.WaveView;
@@ -134,18 +134,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         @Override
         public void afterTextChanged(final Editable editable) {
             if (!TextUtils.equals(layout_login.getText(), "登录")) {
-                resetLogin();
+                layout_login.setText("登录");
+                layout_login.setBackGroundColor(getResources().getColor(R.color.title_bg1));
+                layout_login.setMode(WaveView.WAVE_MODE_SHRINK);
+                layout_login.setChangeColor(false);
+                layout_login.startDraw();
             }
         }
     };
-
-    private void resetLogin() {
-        layout_login.setText("登录");
-        layout_login.setBackGroundColor(getResources().getColor(R.color.title_bg1));
-        layout_login.setMode(WaveView.WAVE_MODE_SHRINK);
-        layout_login.setChangeColor(false);
-        layout_login.startDraw();
-    }
 
     @Override
     public void onClick(final View v) {
@@ -178,25 +174,38 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         layout_login.setBackGroundColor(color);
     }
 
+    @Override   /*验证失败*/
+    public void verifyError(int code) {
+        switch (code){
+            case 1:
+                Toast("帐号不能为空!");
+                break;
 
-    @Override   /*账号验证失败*/
-    public void accountError() {
-        Toast("帐号不能为空!");
+            case 2:
+                Toast("密码不能为空!");
+                break;
+
+        }
     }
 
-    @Override   /*密码验证失败*/
-    public void pwdError() {
-        Toast("密码不能为空!");
+    @Override   /*登录成功*/
+    public void onSuccess(Token token) {
+        loginPresenter.onSuccessEmbl(token,LoginActivity.this);
+    }
+
+    @Override   /*登录失败*/
+    public void onError() {
+        loginPresenter.onErrorEmbl();
     }
 
     @Override   /*登录验证通过*/
-    public void verifyPass() {
+    public void verifySuccess() {
         layout_login.setText("登录中...");
         loginPresenter.changeColor(-1, R.color.lightgreen);
         HashMap<String, Object> body = new HashMap<String, Object>();
         body.put("username", username);
         body.put("password", password);
-        loginPresenter.requestLogin(body,LoginActivity.this);
+        loginPresenter.requestLogin(body);
     }
 
     @Override
