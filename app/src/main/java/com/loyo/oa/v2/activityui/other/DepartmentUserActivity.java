@@ -19,7 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.activityui.contact.fragment.DepartmentFragment;
 import com.loyo.oa.v2.activityui.contact.fragment.UserFragment;

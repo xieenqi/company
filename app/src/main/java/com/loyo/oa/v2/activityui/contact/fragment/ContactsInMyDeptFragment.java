@@ -14,7 +14,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.work.adapter.ContactsInMyDeptAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.CharacterParser;
 import com.loyo.oa.v2.common.Common;

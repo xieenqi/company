@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.bean.SelectDepData;
-import com.loyo.oa.v2.activityui.other.bean.SelectUserData;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.SelectDepData;
+import com.loyo.oa.v2.activityui.other.model.SelectUserData;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;

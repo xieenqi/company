@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.other.presenter;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -10,6 +11,7 @@ import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
@@ -32,29 +34,70 @@ import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 /**
- * Created by yyy on 16/10/9.
+ * Created by yyy on 16/10/9
  */
 
-public class BulletinAddPresenterImpl implements BulletinAddPresenter{
-
-    private Context mContext;
-    private BulletinAddView mBulletinAddView;
+public class BulletinAddPresenterImpl implements BulletinAddPresenter {
 
     private int bizType = 0;
     private int uploadSize;
     private int uploadNum;
+    private StringBuffer joinUserId, joinName;
 
+    private Context mContext;
+    private Members member = new Members();
+    private BulletinAddView mBulletinAddView;
     private ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
 
-    public BulletinAddPresenterImpl(BulletinAddView mBulletinAddView,Context mContext){
+    public BulletinAddPresenterImpl(BulletinAddView mBulletinAddView, Context mContext) {
         this.mBulletinAddView = mBulletinAddView;
         this.mContext = mContext;
     }
 
+    @Override
+    public void dealDepartmentResult(Members member) {
+        this.member = member;
+        joinName = new StringBuffer();
+        joinUserId = new StringBuffer();
+        if (member.users.size() == 0 && member.depts.size() == 0) {
+            mBulletinAddView.setReceiver("没有选择人员");
+            joinUserId.reverse();
+        } else {
+            if (null != member.depts) {
+                for (NewUser newUser : member.depts) {
+                    joinName.append(newUser.getName() + ",");
+                    joinUserId.append(newUser.getId() + ",");
+                }
+            }
+            if (null != member.users) {
+                for (NewUser newUser : member.users) {
+                    joinName.append(newUser.getName() + ",");
+                    joinUserId.append(newUser.getId() + ",");
+                }
+            }
+            if (!TextUtils.isEmpty(joinName)) {
+                joinName.deleteCharAt(joinName.length() - 1);
+            }
+            mBulletinAddView.setReceiver(joinName.toString());
+        }
+    }
+
+    @Override  /*组装附件*/
+    public ArrayList<Attachment> assembleAttachment() {
+        ArrayList<Attachment> newAttachment = new ArrayList<Attachment>();
+        for (Attachment element : mAttachment) {
+            Attachment obj = new Attachment();
+            obj.setMime(element.getMime());
+            obj.setOriginalName(element.getOriginalName());
+            obj.setName(element.getName());
+            newAttachment.add(obj);
+        }
+        return newAttachment;
+    }
 
     @Override   /*格式验证*/
-    public void verifyText(String title, String content,Members member) {
-                if (TextUtils.isEmpty(title)) {
+    public void verifyText(String title, String content) {
+        if (TextUtils.isEmpty(title)) {
             mBulletinAddView.verifyError(1);
             return;
         } else if (TextUtils.isEmpty(content)) {
@@ -64,19 +107,27 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter{
             mBulletinAddView.verifyError(3);
             return;
         }
-        mBulletinAddView.verifyPass();
+        mBulletinAddView.verifySuccess(title, content);
     }
 
 
     @Override   /*提交通知*/
-    public void requestBulletinAdd(HashMap<String,Object> map) {
+    public void requestBulletinAdd(String title, String content, String uuid) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("title", title);
+        map.put("content", content);
+        map.put("attachmentUUId", uuid);
+        map.put("members", member);
+        map.put("attachments", assembleAttachment());
+
         MainApp.getMainApp().getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
             @Override
             public void success(final Bulletin mBulletin, final Response response) {
                 HttpErrorCheck.checkResponse("通知", response);
                 if (mBulletin != null) {
                     mBulletinAddView.onSuccess(mBulletin);
-                }else{
+                } else {
                     mBulletinAddView.onError();
                 }
             }
@@ -90,8 +141,11 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter{
         });
     }
 
+
     @Override   /*上传附件*/
-    public void uploadAttachement(SweetAlertDialogView sweetAlertDialogView, final ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots, final HashMap<String,Object> map, final String uuid) {
+    public void uploadAttachement(SweetAlertDialogView sweetAlertDialogView,
+                                  final ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots, final String title,
+                                  final String content, final String uuid) {
 
         sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
             @Override
@@ -106,7 +160,7 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter{
                 try {
                     uploadSize = 0;
                     uploadNum = pickPhots.size();
-                    LogUtil.dee("pickPhots:"+MainApp.gson.toJson(pickPhots));
+                    LogUtil.dee("pickPhots:" + MainApp.gson.toJson(pickPhots));
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(mContext, uri);
@@ -118,13 +172,13 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter{
                                         new RCallback<Attachment>() {
                                             @Override
                                             public void success(final Attachment attachments, final Response response) {
-                                                HttpErrorCheck.checkResponse("通知公告附件",response);
+                                                HttpErrorCheck.checkResponse("通知公告附件", response);
                                                 if (attachments != null) {
                                                     mAttachment.add(attachments);
                                                 }
                                                 uploadSize++;
                                                 if (uploadSize == uploadNum) {
-                                                    requestBulletinAdd(map);
+                                                    requestBulletinAdd(title, content, uuid);
                                                 }
                                             }
 
@@ -142,6 +196,7 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter{
                     Global.ProcException(ex);
                 }
             }
-        },"提示",mContext.getString(R.string.app_bulletin_message));
+        }, "提示", mContext.getString(R.string.app_bulletin_message));
     }
 }
+

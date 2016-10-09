@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.other.bean;
+package com.loyo.oa.v2.activityui.other.model;
 
 /**
  * Created by lxf on 2015/1/7.

@@ -2,10 +2,8 @@ package com.loyo.oa.v2.tool;
 
 import android.os.Build;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.common.Global;
 
 import java.lang.ref.SoftReference;

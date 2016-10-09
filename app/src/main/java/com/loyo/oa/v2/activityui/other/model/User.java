@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.other.bean;
+package com.loyo.oa.v2.activityui.other.model;
 
 import android.text.TextUtils;
 

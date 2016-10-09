@@ -2,11 +2,10 @@ package com.loyo.oa.v2.beans;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * com.loyo.oa.v2.beans

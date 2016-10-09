@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -21,23 +20,20 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.customview.CusGridView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
- * 【通知公告】发布页面
+ * 【发布通知】MVP重构
+ * Restructure by yyy on 2016/10/9
  */
 
 @EActivity(R.layout.activity_bulletin_add)
@@ -59,14 +55,10 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     private ImageGridViewAdapter mGridViewAdapter;
     private ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
-    private Members member = new Members();
     private StringBuffer joinUserId, joinName;
 
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
-    private String title;
-    private String content;
-
     private BulletinAddPresenter mBulletinAddPresenter;
 
     @AfterViews
@@ -93,19 +85,22 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         SelectDetUserActivity2.startThisForAllSelect(BulletinAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
     }
 
+    /**
+     * 返回
+     * */
     @Click(R.id.img_title_left)
     void close() {
         onBackPressed();
     }
 
-
+    /**
+     * 提交
+     * */
     @Click(R.id.img_title_right)
     void submit() {
-        title = edt_title.getText().toString().trim();
-        content = edt_content.getText().toString().trim();
-        mBulletinAddPresenter.verifyText(title, content, member);
+        mBulletinAddPresenter.verifyText(edt_title.getText().toString().trim(),
+                                         edt_content.getText().toString().trim());
     }
-
 
     /**
      * 相册选择 回调
@@ -136,54 +131,16 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         }
     }
 
+    /**
+     * 人员选择 回调
+     * */
     @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
     void onDepartmentUserResult(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
-
-        member = (Members) data.getSerializableExtra("data");
-        joinName = new StringBuffer();
-        joinUserId = new StringBuffer();
-        if (member.users.size() == 0 && member.depts.size() == 0) {
-            tv_recevier.setText("没有选择人员");
-            joinUserId.reverse();
-        } else {
-            if (null != member.depts) {
-                for (NewUser newUser : member.depts) {
-                    joinName.append(newUser.getName() + ",");
-                    joinUserId.append(newUser.getId() + ",");
-                }
-            }
-            if (null != member.users) {
-                for (NewUser newUser : member.users) {
-                    joinName.append(newUser.getName() + ",");
-                    joinUserId.append(newUser.getId() + ",");
-                }
-            }
-            if (!TextUtils.isEmpty(joinName)) {
-                joinName.deleteCharAt(joinName.length() - 1);
-            }
-            tv_recevier.setText(joinName.toString());
-        }
+        mBulletinAddPresenter.dealDepartmentResult((Members) data.getSerializableExtra("data"));
     }
-
-
-    /**
-     * 过滤 图片数据、
-     */
-    private ArrayList<Attachment> newData() {
-        ArrayList<Attachment> newAttachment = new ArrayList<Attachment>();
-        for (Attachment element : mAttachment) {
-            Attachment obj = new Attachment();
-            obj.setMime(element.getMime());
-            obj.setOriginalName(element.getOriginalName());
-            obj.setName(element.getName());
-            newAttachment.add(obj);
-        }
-        return newAttachment;
-    }
-
 
     @Override   /*格式验证*/
     public void verifyError(int code) {
@@ -203,21 +160,12 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     }
 
     @Override   /*格式验证通过*/
-    public void verifyPass() {
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("title", title);
-        map.put("content", content);
-        map.put("attachmentUUId", uuid);
-        map.put("members", member);
-        map.put("attachments", newData());
-        LogUtil.dee("uuid1:"+uuid);
+    public void verifySuccess(String title,String content) {
         if (pickPhots.size() == 0) {
-            mBulletinAddPresenter.requestBulletinAdd(map);
+            mBulletinAddPresenter.requestBulletinAdd(title,content,uuid);
         } else {
-            mBulletinAddPresenter.uploadAttachement(sweetAlertDialogView, pickPhots, map, uuid);
+            mBulletinAddPresenter.uploadAttachement(sweetAlertDialogView, pickPhots,title,content,uuid);
         }
-
     }
 
     @Override   /*提交成功*/
@@ -229,9 +177,20 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         finish();
     }
 
+
     @Override   /*提交失败*/
     public void onError() {
         Toast("提交失败");
+    }
+
+    @Override   /*打开Loading*/
+    public void showLoading() {
+        showLoading("正在提交");
+    }
+
+    @Override   /*设置人员名字*/
+    public void setReceiver(String name) {
+        tv_recevier.setText(name);
     }
 
     @Override   /*关闭弹出框*/
@@ -239,8 +198,4 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         dismissSweetAlert();
     }
 
-    @Override   /*打开Loading*/
-    public void showLoading() {
-        showLoading("正在提交");
-    }
 }
