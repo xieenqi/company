@@ -1,7 +1,7 @@
-package com.loyo.oa.v2.activityui.attendance;
+package com.loyo.oa.v2.activityui.attendance.model;
 
 import com.loyo.oa.v2.beans.ValidateItem;
-import com.loyo.oa.v2.activityui.attendance.bean.TimeSetting;
+import com.loyo.oa.v2.activityui.attendance.model.TimeSetting;
 
 import java.io.Serializable;
 import java.util.ArrayList;

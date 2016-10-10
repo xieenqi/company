@@ -2,49 +2,27 @@ package com.loyo.oa.v2.activityui.other;
 
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinManagerPresenter;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinManagerView;
-import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.CusGridView;
-import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
-import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.Utils;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  *【通知公告】列表页 MVP重构
@@ -136,27 +114,42 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         }
     }
 
-    @Override   /*权限认证成功*/
+    /**
+     * 权限认证成功
+     * */
+    @Override
     public void permissionSuccess() {
         btn_notice_add.setVisibility(View.INVISIBLE);
     }
 
-    @Override   /*权限错误*/
+    /**
+     * 权限错误
+     * */
+    @Override
     public void permissionError() {
         Toast("发布公告权限,code错误:0402");
     }
 
-    @Override   /*展示Loading*/
+    /**
+     * 展示Loading
+     * */
+    @Override
     public void showLoading() {
         showLoading("");
     }
 
-    @Override   /*绑定数据*/
+    /**
+     * 绑定数据
+     * */
+    @Override
     public void bindListData() {
         managerPresenter.bindListData(lv_notice);
     }
 
-    @Override   /*刷新完成*/
+    /**
+     * 刷新完成
+     * */
+    @Override
     public void refreshCmpl() {
         lv_notice.onRefreshComplete();
     }

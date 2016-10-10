@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
-import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
+import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.SignInfoActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInListAdapter;

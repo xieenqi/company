@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.attendance.bean;
+package com.loyo.oa.v2.activityui.attendance.model;
 
 import com.loyo.oa.v2.activityui.other.model.User;
 

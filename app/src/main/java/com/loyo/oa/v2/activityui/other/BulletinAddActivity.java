@@ -157,7 +157,10 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         }
     }
 
-    @Override   /*格式验证通过*/
+    /**
+     * 格式验证通过
+     * */
+    @Override
     public void verifySuccess(String title,String content) {
         if (pickPhots.size() == 0) {
             mBulletinAddPresenterImpl.requestBulletinAdd(title,content,uuid);
@@ -166,7 +169,10 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         }
     }
 
-    @Override   /*提交成功*/
+    /**
+     * 提交成功
+     * */
+    @Override
     public void onSuccess(Bulletin mBulletin) {
         Toast("提交成功");
         Intent intent = new Intent();
@@ -175,23 +181,34 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         finish();
     }
 
-
-    @Override   /*提交失败*/
+    /**
+     * 提交失败
+     * */
+    @Override
     public void onError() {
         Toast("提交失败");
     }
 
-    @Override   /*打开Loading*/
+    /**
+     * 打开Loading
+     * */
+    @Override
     public void showLoading() {
         showLoading("正在提交");
     }
 
-    @Override   /*设置人员名字*/
+    /**
+     * 设置人员名字
+     * */
+    @Override
     public void setReceiver(String name) {
         tv_recevier.setText(name);
     }
 
-    @Override   /*关闭弹出框*/
+    /**
+     * 关闭弹出框
+     * */
+    @Override
     public void dissweetAlert() {
         dismissSweetAlert();
     }

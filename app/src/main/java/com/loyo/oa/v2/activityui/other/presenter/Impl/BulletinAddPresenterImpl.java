@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 public interface BulletinAddPresenterImpl {
 
+    /*通知人员回调处理*/
     void dealDepartmentResult(Members member);
 
     /*组装附件*/

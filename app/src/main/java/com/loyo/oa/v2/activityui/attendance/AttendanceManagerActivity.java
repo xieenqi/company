@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -21,12 +20,10 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.activityui.attendance.fragment.AttendanceListFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +35,7 @@ import java.util.List;
  * 时间 : 15/9/14.
  */
 @EActivity(R.layout.activity_attendance)
-public class AttendanceActivity extends BaseFragmentActivity {
+public class AttendanceManagerActivity extends BaseFragmentActivity {
 
     @ViewById
     ViewGroup img_title_left;

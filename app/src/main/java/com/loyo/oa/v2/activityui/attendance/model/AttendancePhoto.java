@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.attendance.bean;
+package com.loyo.oa.v2.activityui.attendance.model;
 
 /**
  * Created by yyy on 16/1/14.

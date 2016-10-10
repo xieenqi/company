@@ -18,10 +18,10 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
+import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
-import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
+import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
@@ -317,7 +317,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_", "0202", 2),
                 new HomeItem(R.drawable.newmain_report, "工作报告", "com.loyo.oa.v2.activityui.work.WorkReportsManageActivity", "0203", 2),
                 new HomeItem(R.drawable.newmain_wfin, "审批流程", "com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity", "0204", 2),
-                new HomeItem(R.drawable.newmain_attent, "考勤管理", "com.loyo.oa.v2.activityui.attendance.AttendanceActivity_", "0211", 2)));
+                new HomeItem(R.drawable.newmain_attent, "考勤管理", "com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_", "0211", 2)));
 
 
         caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务", "0202", R.drawable.newmain_post_task),
@@ -406,7 +406,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 //已打卡完毕 跳转考勤列表
                 else {
                     Toast.makeText(getActivity(), "您今天已经打卡完毕", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getActivity(), AttendanceActivity_.class);
+                    Intent intent = new Intent(getActivity(), AttendanceManagerActivity_.class);
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }

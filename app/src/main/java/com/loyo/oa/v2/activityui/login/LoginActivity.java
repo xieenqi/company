@@ -169,12 +169,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    @Override   /*WaveView赋值*/
+    /**
+     * WaveView赋值
+     * */
+    @Override
     public void onWaveComplete(final int color) {
         layout_login.setBackGroundColor(color);
     }
 
-    @Override   /*验证失败*/
+    /**
+     * 验证失败
+     * */
+    @Override
     public void verifyError(int code) {
         switch (code){
             case 1:
@@ -188,17 +194,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    @Override   /*登录成功*/
+    /**
+     * 登录成功
+     * */
+    @Override
     public void onSuccess(Token token) {
         loginPresenterImpl.onSuccessEmbl(token,LoginActivity.this);
     }
 
-    @Override   /*登录失败*/
+    /**
+     * 登录失败
+     * */
+    @Override
     public void onError() {
         loginPresenterImpl.onErrorEmbl();
     }
 
-    @Override   /*登录验证通过*/
+    /**
+     * 登录验证通过
+     * */
+    @Override
     public void verifySuccess() {
         layout_login.setText("登录中...");
         loginPresenterImpl.changeColor(-1, R.color.lightgreen);
