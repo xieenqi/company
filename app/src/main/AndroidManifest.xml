@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.loyo.oa.v2"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="internalOnly">
 
     <uses-sdk
@@ -52,10 +52,11 @@
         android:name=".application.MainApp"
         android:allowBackup="true"
         android:configChanges="orientation|keyboardHidden"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/app_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppStartLoadTranslucent"
-        android:windowSoftInputMode="adjustUnspecified|stateHidden">
+        android:windowSoftInputMode="adjustUnspecified|stateHidden"
+        tools:replace="android:icon, android:theme">
 
         <!-- android:theme="@style/AppStartLoadTranslucent" -->
         <activity
@@ -552,11 +553,7 @@
             android:name=".activityui.sale.SaleDetailsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.sale.SaleEditViewActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/dialog_edit_delete_StyleBottom"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <!-- 订单管理 -->
         <activity
             android:name=".activityui.order.OrderManagementActivity"
@@ -718,13 +715,22 @@
             android:name=".customview.multi_image_selector.CropImageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activityui.customer.CallPhoneBackActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activityui.attachment.SweetAlertDialogActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activityui.setting.ResePhoneActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <service
             android:name=".service.InitDataService_"
             android:enabled="true"/>
@@ -873,8 +879,7 @@
             android:value="56f0a2a367e58e2176002ad6"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="应用宝"/>
-
+            android:value="ukuaiqi" />
     </application>
 
 </manifest>

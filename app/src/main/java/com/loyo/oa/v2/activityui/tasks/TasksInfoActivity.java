@@ -27,7 +27,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;

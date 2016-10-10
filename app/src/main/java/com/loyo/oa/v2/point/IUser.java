@@ -1,11 +1,10 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -20,7 +19,7 @@ import retrofit.http.Path;
 public interface IUser {
 
     @GET("/")
-    ArrayList<Department> getOrganization(Callback<Objects> callback);
+    ArrayList<Department> getOrganization();
 
     @GET("/user/subordinates")
     ArrayList<User> getSubordinates();

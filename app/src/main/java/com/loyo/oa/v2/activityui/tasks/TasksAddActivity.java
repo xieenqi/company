@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
@@ -29,7 +30,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -52,15 +53,18 @@ import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -237,15 +241,15 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(projectTitle)) {
             tv_Project.setText(projectTitle);
         }
-         getBundle();
+        getBundle();
 
     }
 
     /**
      * 图片列表绑定
-     * */
+     */
     void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
         ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
@@ -254,7 +258,7 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
-        if(pickPhots.size() == 0){
+        if (pickPhots.size() == 0) {
             showLoading("正在提交");
         }
         bizExtData = new PostBizExtData();
@@ -364,10 +368,10 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
                 //没有附件
-                if(pickPhots.size() == 0){
+                if (pickPhots.size() == 0) {
                     requestCommitTask();
                     //有附件
-                }else{
+                } else {
                     img_title_right.setEnabled(false);
                     newUploadAttachement();
                 }
@@ -575,26 +579,26 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(){
+     */
+    private void newUploadAttachement() {
         showLoading("正在提交");
         try {
             uploadSize = 0;
-            uploadNum  = pickPhots.size();
+            uploadNum = pickPhots.size();
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
-                        LogUtil.dee("typeFile:"+typedFile);
+                        LogUtil.dee("typeFile:" + typedFile);
                         TypedString typedUuid = new TypedString(uuid);
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
                                 new RCallback<Attachment>() {
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
-                                        if(uploadSize == uploadNum){
+                                        if (uploadSize == uploadNum) {
                                             requestCommitTask();
                                         }
                                     }
@@ -606,11 +610,12 @@ public class TasksAddActivity extends BaseActivity {
                                         img_title_right.setEnabled(true);
                                     }
                                 });
-                            }
-                        }
                     }
+                }
+            }
         } catch (Exception ex) {
             Global.ProcException(ex);
+            Toast("图片过大");
         }
     }
 

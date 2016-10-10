@@ -2,7 +2,7 @@ package com.loyo.oa.v2.common;
 
 import android.text.TextUtils;
 
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 
 import java.util.Comparator;
 

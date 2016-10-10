@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
@@ -39,7 +38,6 @@ import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.CustomRecyclerView;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -59,6 +57,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -88,7 +87,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private ArrayList<DayofAttendance> attendances = new ArrayList<DayofAttendance>();
     private ValidateInfo validateInfo = new ValidateInfo();
     private AttendanceListAdapter adapter;
-    private GeneralPopView generalPopView;
     private LinearLayoutManager layoutManager;
     private CustomerDataManager customerDataManager;
     private DataSelectAdapter dataSelectAdapter;
@@ -293,37 +291,25 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     }
 
-    /**
-     * 通用提示弹出框init
-     */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(getActivity(), isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
-    }
 
     /**
      * 早退提示
      */
     public void attanceWorry() {
-        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
-        //确认
-        generalPopView.setSureOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
                 intentValue();
             }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });
+        },"提示",getString(R.string.app_attanceworry_message));
+
     }
 
     /**
@@ -373,7 +359,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 加班提示框
      */
     public void popOutToast() {
-        final AttenDancePopView popView = new AttenDancePopView(getActivity());
+        final AttenDancePopView popView = new AttenDancePopView(mActivity);
         popView.show();
         popView.setCanceledOnTouchOutside(true);
 
@@ -414,7 +400,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         }
 
         if (!Global.isConnected()) {
-            Toast("没有网络连接，不能打卡");
+            Toast("请检查您的网络连接");
             return;
         }
         /*工作日*/
@@ -606,15 +592,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
-        LogUtil.d("位置回调成功");
         UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
-        LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);
         MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                LogUtil.d("check回调成功");
                 if (null == attendanceRecord) {
                     Toast("没有获取到考勤信息");
                     return;
@@ -632,7 +615,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                LogUtil.d("check回调失败");
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -641,10 +623,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void OnLocationGDFailed() {
-        LogUtil.d("位置回调失败");
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();
+        Toast("获取打卡位置失败");
     }
 
     /**

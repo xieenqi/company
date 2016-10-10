@@ -16,9 +16,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.pnikosis.materialishprogress.ProgressWheel;
-
 import java.util.List;
 
 public class SweetAlertDialog extends Dialog implements View.OnClickListener {
@@ -243,6 +241,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     public SweetAlertDialog setTitleText (String text) {
         mTitleText = text;
         if (mTitleTextView != null && mTitleText != null) {
+            mTitleTextView.setVisibility(View.VISIBLE);
             mTitleTextView.setText(mTitleText);
         }
         return this;

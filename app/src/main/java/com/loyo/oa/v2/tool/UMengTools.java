@@ -4,7 +4,7 @@ import android.content.Context;
 import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
@@ -77,9 +77,6 @@ public class UMengTools {
             TrackRule trackrule = DBManager.Instance().getTrackRule();
             if (null == trackrule) {
                 LogUtil.d("trackrule为null，就不继续执行");
-                if (!Config_project.isRelease) {
-                    Global.Toast("检查数据异常");
-                }
                 return;
             }
             if (!TrackRule.checkRule(trackrule) || (date + address).equals(oldInfo)) {

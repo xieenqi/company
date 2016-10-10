@@ -80,6 +80,12 @@ public class SaleCommPopupView extends PopupWindow {
                 dataReque(position);
             }
         });
+        contentView.findViewById(R.id.shade).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     /**

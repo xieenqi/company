@@ -1,36 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_marginTop="@dimen/dimen_3"
-        android:layout_marginBottom="@dimen/dimen_3"
         android:id="@+id/item_select_div"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/dimen_3"
+        android:layout_marginTop="@dimen/dimen_3"
         android:gravity="center"
-        >
+        android:orientation="vertical">
 
         <TextView
-            android:gravity="center"
             android:id="@+id/item_select_num"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:text="9"
-            android:textSize="@dimen/text_sp18"
-            />
+            android:gravity="center"
+            android:text=""
+            android:textSize="@dimen/text_sp18" />
 
         <TextView
-            android:layout_marginTop="@dimen/dimen_5"
             android:id="@+id/item_select_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="9月"
+            android:layout_marginTop="@dimen/dimen_5"
+            android:text=""
             android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp10"
-            />
+            android:textSize="@dimen/text_sp10" />
 
-        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

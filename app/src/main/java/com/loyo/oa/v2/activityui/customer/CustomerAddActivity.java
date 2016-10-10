@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.text.method.DigitsKeyListener;
+import android.text.method.NumberKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,6 +155,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             laPosition = app.latitude;
             loPosition = app.longitude;
         }
+        edt_contract_tel.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+        edt_contract_telnum.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
     }
 
     LocationUtilGD locationGd;
@@ -369,10 +373,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         edt_contract.setHint("请输入联系人姓名(必填)");
                     } else if (customerJur.label.contains("手机") && customerJur.required) {
                         cusPhone = true;
-                        edt_contract_tel.setHint("请输入联系人手机号(必填)");
+                        edt_contract_tel.setHint("限数字,如13912345678(必填)");
                     } else if (customerJur.label.contains("座机") && customerJur.required) {
                         cusMobile = true;
-                        edt_contract_telnum.setHint("请输入联系人座机(必填)");
+                        edt_contract_telnum.setHint("限数字,如02812345678(必填)");
                     } else if (customerJur.label.contains("定位") && customerJur.required) {
                         cusLocation = true;//定位必填
                     } else if (customerJur.label.contains("客户地址") && customerJur.required) {

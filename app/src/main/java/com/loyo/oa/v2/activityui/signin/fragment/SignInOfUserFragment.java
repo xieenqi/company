@@ -22,8 +22,7 @@ import com.loyo.oa.v2.activityui.signin.adapter.SignInListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.activityui.other.bean.User;
-import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
@@ -41,11 +40,8 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -139,7 +135,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2,defaultPosition);
+        dataSelectAdapter = new DataSelectAdapter(mActivity,dataSelects,windowW,2,defaultPosition);
         recyclerView.setAdapter(dataSelectAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {

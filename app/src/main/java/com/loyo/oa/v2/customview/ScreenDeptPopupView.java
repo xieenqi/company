@@ -16,7 +16,7 @@ import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen1;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen2;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
@@ -104,6 +104,12 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
                 adapter2.selectPosition(position);
                 adapter2.notifyDataSetChanged();
                 resultData(position);
+            }
+        });
+        contentView.findViewById(R.id.shade).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
     }

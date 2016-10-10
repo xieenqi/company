@@ -10,9 +10,9 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.login.LoginActivity;
-import com.loyo.oa.v2.activityui.other.bean.User;
-import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.activityui.login.model.Token;
+import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.UserInfo;
@@ -458,18 +458,18 @@ public final class Common {
     public static ArrayList<User> getMyUserDept() {
 
         ArrayList<User> myUsers = new ArrayList<>();
-//        ArrayList<User> userAllList = new ArrayList<>();
+        ArrayList<User> userAllList = new ArrayList<>();
         int positions = 0;
-//        try {
-//        /*全部人员获取*/
-//            for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-//                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-//                    userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+        /*全部人员获取*/
+            for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
+                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
+                    userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         /*获取我的部门下标*/
         for (int i = 0; i < getLstDepartment().size(); i++) {
@@ -538,9 +538,9 @@ public final class Common {
         if (!TextUtils.isEmpty(startTimeText)) {
             long startTime = Long.parseLong(startTimeText);
             if (DateTool.getDate(startTime, 10)) {
-                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<LoginActivity.Token>() {
+                RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<Token>() {
                     @Override
-                    public void success(LoginActivity.Token token, Response response) {
+                    public void success(Token token, Response response) {
                         HttpErrorCheck.checkResponse("刷新token", response);
                         MainApp.setToken(token.access_token);
                         //LogUtil.dee("刷新的Token:" + token.access_token);
@@ -554,6 +554,5 @@ public final class Common {
                 });
             }
         }
-
     }
 }

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
 import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.signin.LegworksListActivity_;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.bean.PaginationLegWork;

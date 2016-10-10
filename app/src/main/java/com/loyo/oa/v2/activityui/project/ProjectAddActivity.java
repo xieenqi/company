@@ -15,7 +15,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -340,10 +340,10 @@ public class ProjectAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mMemberIds) && null != mAdapter) {
             projectTransObj.members = mAdapter.GetProjectMembers();
             for (ManagersMembers managersMembers : projectTransObj.members) {
-                if (null == managersMembers.dept.id) {
+                if (managersMembers.dept != null && null == managersMembers.dept.id) {
                     managersMembers.dept = null;
                 }
-                if (null == managersMembers.user.id) {
+                if (managersMembers.user != null && null == managersMembers.user.id) {
                     managersMembers.user = null;
                 }
             }

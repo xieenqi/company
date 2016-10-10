@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -420,14 +421,21 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 显示打卡超时对话框
      */
     private void showTimeOutDialog() {
-        showGeneralDialog(false, false, getString(R.string.app_attendance_outtime_message));
+
+        sweetAlertDialogView.alertIconClick(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                finish();
+            }
+        },getString(R.string.app_attendance_outtime_message), null);
+
+/*        showGeneralDialog(false, false, getString(R.string.app_attendance_outtime_message));
         generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-//                onBackPressed();
                 finish();
             }
-        });
+        });*/
 
     }
 
@@ -435,7 +443,21 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 弹出外勤确认对话框
      */
     private void showOutAttendanceDialog() {
-        showGeneralDialog(true, true, getString(R.string.app_attendance_out_message));
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                commitAttendance();
+            }
+        },"提示",getString(R.string.app_attendance_out_message));
+
+/*        showGeneralDialog(true, true, getString(R.string.app_attendance_out_message));
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -449,7 +471,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             public void onClick(final View view) {
                 generalPopView.dismiss();
             }
-        });
+        });*/
     }
 
     /**

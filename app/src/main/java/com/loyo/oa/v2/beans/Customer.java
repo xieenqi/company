@@ -8,7 +8,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.customer.bean.Locate;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 
 import java.util.ArrayList;
 

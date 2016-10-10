@@ -18,7 +18,7 @@ import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
@@ -240,11 +240,11 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
             mListViewAttachment.setAdapter(adapter);
         } else {
             adapter.setData(mListAttachment);
-            adapter.notifyDataSetChanged();
         }
         if (uploadNum == uploadSize) {
             DialogHelp.cancelLoading();
         }
+        adapter.refreshData();
     }
 
     /**
@@ -296,7 +296,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9/*最大可选择图片数量*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI /*选择模式*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                startActivityForResult(intent,MainApp.PICTURE);
+                startActivityForResult(intent, MainApp.PICTURE);
 
                 break;
 

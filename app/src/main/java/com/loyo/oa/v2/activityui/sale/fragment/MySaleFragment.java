@@ -25,7 +25,7 @@ import com.loyo.oa.v2.activityui.sale.adapter.AdapterMySaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.activityui.other.bean.SaleStage;
+import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

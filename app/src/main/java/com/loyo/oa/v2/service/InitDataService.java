@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Common;
@@ -25,9 +25,7 @@ import org.androidannotations.annotations.EIntentService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -109,18 +107,7 @@ public class InitDataService extends IntentService {
      */
     void getOrganization() {
         ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
-                .create(IUser.class).getOrganization(new Callback<Objects>() {
-                    @Override
-                    public void success(Objects objects, Response response) {
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        Global.Toast("数据更新失败,请重试");
-                    }
-                });
+                .create(IUser.class).getOrganization();
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
             //写DB
@@ -134,6 +121,7 @@ public class InitDataService extends IntentService {
             SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
         } else {
             LogUtil.d("更新 组织 架构  失败");
+            Global.Toast("数据更新失败,稍后重试");
         }
     }
 

@@ -118,12 +118,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="请输入"
+                    android:hint="@string/app_phone_check"
                     android:inputType="phone"
                     android:maxLength="20"
                     android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"
+                    android:maxLines="24"
                     />
 
             </LinearLayout>
@@ -155,12 +156,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="请输入"
+                    android:hint="@string/app_tell_check"
                     android:inputType="phone"
                     android:maxLength="20"
                     android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"
+                    android:maxLines="24"
                     />
 
             </LinearLayout>

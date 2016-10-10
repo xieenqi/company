@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -27,7 +26,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.NearCount;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.customer.bean.Tag;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -83,7 +82,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private SaleCommPopupView saleCommPopupView;
     private ScreenTagPopupView screenTagPopupView;
     private ScreenDeptPopupView saleScreenPopupView;
-    private WindowManager.LayoutParams windowParams;
     private TeamCustomerAdapter adapter;
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mDoubleTags = new ArrayList<>();
@@ -481,7 +479,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
                 //时间
                 case R.id.custeam_screen2:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
+                    saleCommPopupView = new SaleCommPopupView(mActivity, mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
                     saleCommPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -494,7 +492,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
                 //标签
                 case R.id.custeam_screen3:
-                    screenTagPopupView = new ScreenTagPopupView(getActivity(), mDoubleTags, mHandler);
+                    screenTagPopupView = new ScreenTagPopupView(mActivity, mDoubleTags, mHandler);
                     screenTagPopupView.showAsDropDown(screen3);
                     openPopWindow(tagImage3);
                     screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

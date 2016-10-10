@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.beans;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 

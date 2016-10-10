@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,9 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.other.presenter.BulletinManagerPresenter;
+import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinManagerView;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
@@ -46,43 +47,28 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 描述 :通知公告页
- * com.loyo.oa.v2.activity
- * 作者 : ykb
- * 时间 : 15/8/28.
+ *【通知公告】列表页 MVP重构
+ * Restructure by yyy on 16/10/10
  */
 @EActivity(R.layout.activity_notice)
-public class BulletinManagerActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2 {
+public class BulletinManagerActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2,BulletinManagerView {
 
     @ViewById ViewGroup img_title_left;
     @ViewById TextView tv_title_1;
     @ViewById PullToRefreshRecycleView lv_notice;
     @ViewById Button btn_notice_add;
-    private ArrayList<Bulletin> bulletins = new ArrayList<>();
     protected PaginationX<Bulletin> mPagination = new PaginationX(20);
-    private int mIndex = 1;
     private boolean isTopAdd = true;
-    private NoticeAdapter adapter;
-    public final int REQUEST_NEW = 1;
+    private final int REQUEST_NEW = 1;
     private LinearLayoutManager layoutManager;
-    private Permission permission;
+    private BulletinManagerPresenter managerPresenter;
+
 
     @AfterViews
     void initViews() {
         setTouchView(-1);
-
-        //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0402");
-                if (!permission.isEnable()) {
-                    btn_notice_add.setVisibility(View.INVISIBLE);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("发布公告权限,code错误:0402");
-            }
-        }
+        managerPresenter = new BulletinManagerPresenter(this,mContext,BulletinManagerActivity.this);
+        managerPresenter.isPermission();
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         btn_notice_add.setOnTouchListener(Global.GetTouch());
@@ -95,62 +81,19 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         lv_notice.getRefreshableView().setLayoutManager(layoutManager);
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
         getData();
-
         Utils.btnHideForRecy(lv_notice.getRefreshableView(), btn_notice_add);
-
     }
 
     /**
      * 获取通知列表
      */
     void getData() {
-        showLoading("");
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? mPagination.getPageSize() >= 20 ? mPagination.getPageSize() : 20 : 20);
-        app.getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
-            @Override
-            public void success(final PaginationX<Bulletin> pagination, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                if (!PaginationX.isEmpty(pagination)) {
-                    ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
-                    mPagination = pagination;
-
-                    if (isTopAdd) {
-                        bulletins.clear();
-                    }
-                    bulletins.addAll(lstData_bulletin_current);
-
-                    bindData();
-                } else {
-                    Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
-                }
-                lv_notice.onRefreshComplete();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-                lv_notice.onRefreshComplete();
-            }
-        });
+        managerPresenter.requestListData(mPagination.getPageIndex(),isTopAdd ? mPagination.getPageSize() >= 20 ? mPagination.getPageSize() : 20 : 20);
     }
 
     /**
-     * 绑定数据
-     */
-    private void bindData() {
-        if (null == adapter) {
-            adapter = new NoticeAdapter(bulletins);
-            lv_notice.getRefreshableView().setAdapter(adapter);
-
-        } else {
-            adapter.setmDatas(bulletins);
-        }
-    }
-
-
+     * 返回
+     * */
     @Click(R.id.img_title_left)
     void onClick(final View v) {
         onBackPressed();
@@ -193,83 +136,28 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         }
     }
 
-    private class BulletinViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv_time;
-        private TextView tv_title;
-        private TextView tv_content;
-        private TextView tv_name;
-        private RoundImageView iv_avatar;
-        private CusGridView gridView;
-
-        public BulletinViewHolder(final View itemView) {
-            super(itemView);
-            tv_time = (TextView) itemView.findViewById(R.id.tv_notice_time);
-            tv_title = (TextView) itemView.findViewById(R.id.tv_notice_title);
-            tv_content = (TextView) itemView.findViewById(R.id.tv_notice_content);
-            tv_name = (TextView) itemView.findViewById(R.id.tv_notice_publisher);
-            iv_avatar = (RoundImageView) itemView.findViewById(R.id.iv_notice_publisher_avatar);
-            gridView = (CusGridView) itemView.findViewById(R.id.gv_notice_attachemnts);
-        }
+    @Override   /*权限认证成功*/
+    public void permissionSuccess() {
+        btn_notice_add.setVisibility(View.INVISIBLE);
     }
 
-    private class NoticeAdapter extends RecyclerView.Adapter<BulletinViewHolder> {
-        private ArrayList<Bulletin> mBulletins;
+    @Override   /*权限错误*/
+    public void permissionError() {
+        Toast("发布公告权限,code错误:0402");
+    }
 
-        public NoticeAdapter(final ArrayList<Bulletin> bulletins) {
-            mBulletins = bulletins;
-        }
+    @Override   /*展示Loading*/
+    public void showLoading() {
+        showLoading("");
+    }
 
-        private void setmDatas(final ArrayList<Bulletin> bulletins) {
-            mBulletins = bulletins;
-            notifyDataSetChanged();
-        }
+    @Override   /*绑定数据*/
+    public void bindListData() {
+        managerPresenter.bindListData(lv_notice);
+    }
 
-        @Override
-        public BulletinViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-            View view = LayoutInflater.from(BulletinManagerActivity.this).inflate(R.layout.item_notice_layout, parent, false);
-            return new BulletinViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final BulletinViewHolder holder, final int position) {
-            final Bulletin bulletin = mBulletins.get(position);
-            holder.tv_time.setText(app.df3.format(new Date(bulletin.createdAt * 1000)));
-            holder.tv_title.setText(bulletin.title);
-            holder.tv_content.setText(bulletin.content);
-
-            holder.tv_name.setText(bulletin.getUserName() + " " + (
-                    creatorIsEmpty(bulletin.creator) ? bulletin.creator.depts.get(0).getShortDept().getName() : "")
-                    + " " + (creatorIsEmpty(bulletin.creator) ? bulletin.creator.depts.get(0).getShortDept().title : ""));
-
-            ImageLoader.getInstance().displayImage(bulletin.creator.avatar, holder.iv_avatar);
-            ArrayList<Attachment> attachments = bulletin.attachments;
-            if (null != attachments && !attachments.isEmpty()) {
-                holder.gridView.setVisibility(View.VISIBLE);
-                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true, true, 0);
-                SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
-            } else {
-                holder.gridView.setVisibility(View.GONE);
-            }
-        }
-
-        /*
-        判断创建人部门是数据是否有空
-         */
-        private boolean creatorIsEmpty(User creator) {
-            if (null == creator.depts) {
-                return false;
-            } else if (0 == creator.depts.size()) {
-                return false;
-            } else if (TextUtils.isEmpty(creator.depts.get(0).getShortDept().title) ||
-                    TextUtils.isEmpty(creator.depts.get(0).getShortDept().getName())) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public int getItemCount() {
-            return mBulletins.size();
-        }
+    @Override   /*刷新完成*/
+    public void refreshCmpl() {
+        lv_notice.onRefreshComplete();
     }
 }
