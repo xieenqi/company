@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class WeeksDialog {
 
@@ -59,7 +60,8 @@ public class WeeksDialog {
     private void setDataSource(int num) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(curDate);
-        LogUtil.d("当前日期:" + curDate.getDate());
+        cal.setTimeZone(TimeZone.getDefault());
+        LogUtil.d("当前日期:" + cal.get(Calendar.DAY_OF_WEEK));
         long monday, sunday;
 
         for (int i = 0; i < num; i++) {
