@@ -108,7 +108,7 @@ public class AMapService extends APSService {
         userOnlineTime();
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
-            if (locationClient == null && !locationClient.isStarted()) {
+            if (locationClient == null || !locationClient.isStarted()) {
                 startLocate();//定位是否在运行 如果在运行就不重复启动定位
             }
             //服务运行 通知栏显示
