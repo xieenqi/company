@@ -34,7 +34,7 @@ public class WeeksDialog {
     private String sourseArray[];
     private String sourseToWeek[];
     private String dateR;
-    private Date curDate = new Date();
+    private Date curDate = new Date(System.currentTimeMillis());
     private Handler mHandler;
 
     public TextView getResultTview() {
@@ -55,11 +55,11 @@ public class WeeksDialog {
 
     /**
      * 填充最近(num-1)个星期的范围
-     * */
+     */
     private void setDataSource(int num) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(curDate);
-
+        LogUtil.d("当前日期:" + curDate.getDate());
         long monday, sunday;
 
         for (int i = 0; i < num; i++) {
@@ -68,18 +68,19 @@ public class WeeksDialog {
             cal.add(Calendar.DATE, 6);
             sunday = cal.getTime().getTime();
 
-            HashMap<String, Long> item = new HashMap<String, Long>();
+            HashMap<String, Long> item = new HashMap<>();
             item.put("begin", monday);
             item.put("end", sunday);
 
+            cal.clear();
             cal.setTimeInMillis(monday);
-            cal.add(Calendar.DATE, -2);
+            cal.add(Calendar.DATE, -7);
 
             sourseList.put(i, item);
         }
     }
 
-    public WeeksDialog(TextView view,Handler handler) {
+    public WeeksDialog(TextView view, Handler handler) {
         this.mContext = view.getContext();
         this.resultTview = view;
         this.mHandler = handler;
@@ -132,11 +133,10 @@ public class WeeksDialog {
     private DialogInterface.OnClickListener btnListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int which) {// 按下项所在的索引
-            String date=sourseArray[singleIndex].replace(" (本周)", "").split("-")[1];
-            dateR=sourseArray[singleIndex].replace(" (本周)", "");
-            if (DateTool.getDateToTimestamp(date,MainApp.getMainApp().df7)<DateTool.getBeginAt_ofWeek())
-            {
-                dateR+="(补签)";
+            String date = sourseArray[singleIndex].replace(" (本周)", "").split("-")[1];
+            dateR = sourseArray[singleIndex].replace(" (本周)", "");
+            if (DateTool.getDateToTimestamp(date, MainApp.getMainApp().df7) < DateTool.getBeginAt_ofWeek()) {
+                dateR += "(补签)";
             }
             resultTview.setText(dateR);
             mHandler.sendEmptyMessage(WorkReportAddActivity.WEEK_RESULT);
@@ -153,13 +153,13 @@ public class WeeksDialog {
     };
 
     public String GetDefautlText() {
-        return sourseToWeek[0].replace(" (本周)", "");
+        return sourseToWeek[0];
     }
 
     /**
      * 获取当前星期开始 结束时间
-     * */
-    public Long[] getNowBeginandEndAt(){
+     */
+    public Long[] getNowBeginandEndAt() {
         Calendar calendar = Calendar.getInstance();
         Long[] begAndendAt = new Long[2];
         String biber = sourseToWeek[0].replace("(本周)", "").trim();
@@ -167,24 +167,24 @@ public class WeeksDialog {
         String[] begAt = gdragon[0].trim().split("\\.");
         String[] endAt = gdragon[1].trim().split("\\.");
 
-        begAndendAt[0] = DateTool.getSomeWeekBeginAt(calendar.get(calendar.YEAR),(Integer.valueOf(begAt[0])-1),Integer.valueOf(begAt[1]));
-        begAndendAt[1] = DateTool.getSomeWeekEndAt(calendar.get(calendar.YEAR),(Integer.valueOf(endAt[0])-1),Integer.valueOf(endAt[1]));
+        begAndendAt[0] = DateTool.getSomeWeekBeginAt(calendar.get(calendar.YEAR), (Integer.valueOf(begAt[0]) - 1), Integer.valueOf(begAt[1]));
+        begAndendAt[1] = DateTool.getSomeWeekEndAt(calendar.get(calendar.YEAR), (Integer.valueOf(endAt[0]) - 1), Integer.valueOf(endAt[1]));
         return begAndendAt;
     }
 
     /**
      * 获取选中星期的开始 结束时间
-     * */
-    public Long[] GetBeginandEndAt(){
+     */
+    public Long[] GetBeginandEndAt() {
         Calendar calendar = Calendar.getInstance();
         Long[] begAndendAt = new Long[2];
-        String biber = dateR.replace("(补签)","").trim();
+        String biber = dateR.replace("(补签)", "").trim();
         String[] gdragon = biber.split("-");
         String[] begAt = gdragon[0].trim().split("\\.");
         String[] endAt = gdragon[1].trim().split("\\.");
 
-        begAndendAt[0] = DateTool.getSomeWeekBeginAt(calendar.get(calendar.YEAR),(Integer.valueOf(begAt[0])-1),Integer.valueOf(begAt[1]));
-        begAndendAt[1] = DateTool.getSomeWeekEndAt(calendar.get(calendar.YEAR),(Integer.valueOf(endAt[0])-1),Integer.valueOf(endAt[1]));
+        begAndendAt[0] = DateTool.getSomeWeekBeginAt(calendar.get(calendar.YEAR), (Integer.valueOf(begAt[0]) - 1), Integer.valueOf(begAt[1]));
+        begAndendAt[1] = DateTool.getSomeWeekEndAt(calendar.get(calendar.YEAR), (Integer.valueOf(endAt[0]) - 1), Integer.valueOf(endAt[1]));
         return begAndendAt;
     }
 }
