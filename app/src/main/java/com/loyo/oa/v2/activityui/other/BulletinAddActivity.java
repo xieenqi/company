@@ -2,21 +2,19 @@ package com.loyo.oa.v2.activityui.other;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
+import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
-import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -59,14 +57,14 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
-    private BulletinAddPresenter mBulletinAddPresenter;
+    private BulletinAddPresenterImpl mBulletinAddPresenterImpl;
 
     @AfterViews
     void init() {
         super.setTitle("发布通知");
         mContext = this;
         init_gridView_photo();
-        mBulletinAddPresenter = new BulletinAddPresenterImpl(this, mContext);
+        mBulletinAddPresenterImpl = new BulletinAddPresenter(this, mContext);
     }
 
     /**
@@ -98,7 +96,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      * */
     @Click(R.id.img_title_right)
     void submit() {
-        mBulletinAddPresenter.verifyText(edt_title.getText().toString().trim(),
+        mBulletinAddPresenterImpl.verifyText(edt_title.getText().toString().trim(),
                                          edt_content.getText().toString().trim());
     }
 
@@ -139,7 +137,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
-        mBulletinAddPresenter.dealDepartmentResult((Members) data.getSerializableExtra("data"));
+        mBulletinAddPresenterImpl.dealDepartmentResult((Members) data.getSerializableExtra("data"));
     }
 
     @Override   /*格式验证*/
@@ -162,9 +160,9 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     @Override   /*格式验证通过*/
     public void verifySuccess(String title,String content) {
         if (pickPhots.size() == 0) {
-            mBulletinAddPresenter.requestBulletinAdd(title,content,uuid);
+            mBulletinAddPresenterImpl.requestBulletinAdd(title,content,uuid);
         } else {
-            mBulletinAddPresenter.uploadAttachement(sweetAlertDialogView, pickPhots,title,content,uuid);
+            mBulletinAddPresenterImpl.uploadAttachement(sweetAlertDialogView, pickPhots,title,content,uuid);
         }
     }
 

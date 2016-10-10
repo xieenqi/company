@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.login.bean.Token;
+import com.loyo.oa.v2.activityui.login.model.Token;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.activityui.project.HttpProject;
