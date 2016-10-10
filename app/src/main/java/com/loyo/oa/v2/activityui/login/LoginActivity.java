@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.login.bean.Token;
-import com.loyo.oa.v2.activityui.login.presenter.LoginPresenter;
+import com.loyo.oa.v2.activityui.login.model.Token;
 import com.loyo.oa.v2.activityui.login.presenter.LoginPresenterImpl;
+import com.loyo.oa.v2.activityui.login.presenter.LoginPresenter;
 import com.loyo.oa.v2.activityui.login.viewcontrol.LoginView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
@@ -36,7 +36,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private LinearLayout serverTest, serverFormal, layout_check_debug;
     private ImageView serverTestImg, serverFormalImg;
     private TextView serverTestTv, serverFormalTv;
-    private LoginPresenter loginPresenter;
+    private LoginPresenterImpl loginPresenterImpl;
 
     private String username;
     private String password;
@@ -117,7 +117,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 LogUtil.d("isRelease:" + Config_project.isRelease);
             }
         });
-        loginPresenter = new LoginPresenterImpl(this,layout_login,mContext);
+        loginPresenterImpl = new LoginPresenter(this,layout_login,mContext);
     }
 
     TextWatcher nameWatcher = new TextWatcher() {
@@ -151,7 +151,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case R.id.layout_login:
                 username = edt_username.getText().toString().trim();
                 password = edt_password.getText().toString().trim();
-                loginPresenter.requestStandBy(username,password);
+                loginPresenterImpl.requestStandBy(username,password);
                 break;
 
             /**企业qq登陆*/
@@ -190,22 +190,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override   /*登录成功*/
     public void onSuccess(Token token) {
-        loginPresenter.onSuccessEmbl(token,LoginActivity.this);
+        loginPresenterImpl.onSuccessEmbl(token,LoginActivity.this);
     }
 
     @Override   /*登录失败*/
     public void onError() {
-        loginPresenter.onErrorEmbl();
+        loginPresenterImpl.onErrorEmbl();
     }
 
     @Override   /*登录验证通过*/
     public void verifySuccess() {
         layout_login.setText("登录中...");
-        loginPresenter.changeColor(-1, R.color.lightgreen);
+        loginPresenterImpl.changeColor(-1, R.color.lightgreen);
         HashMap<String, Object> body = new HashMap<String, Object>();
         body.put("username", username);
         body.put("password", password);
-        loginPresenter.requestLogin(body);
+        loginPresenterImpl.requestLogin(body);
     }
 
     @Override

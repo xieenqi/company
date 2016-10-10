@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.activityui.login.viewcontrol;
 
 
-import com.loyo.oa.v2.activityui.login.bean.Token;
+import com.loyo.oa.v2.activityui.login.model.Token;
 
 /**
  * Created by yyy on 16/10/8.
