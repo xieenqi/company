@@ -15,21 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.model.SelectDepData;
+import com.loyo.oa.v2.activityui.other.model.SelectUserData;
 import com.loyo.oa.v2.activityui.sale.adapter.SelectUserDepartmentAdapter;
 import com.loyo.oa.v2.activityui.sale.adapter.SelectUsersAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.activityui.other.model.SelectDepData;
-import com.loyo.oa.v2.activityui.other.model.SelectUserData;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.customview.HorizontalScrollListView;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.customview.HorizontalScrollListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -285,8 +281,8 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 //        mDeptSource = Common.getLstDepartment();
         deptSort(); //重新排序
         SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
-        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
-        thread.start();
+//        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
+//        thread.start();
 //        } else {
 //            updata();
 //        }

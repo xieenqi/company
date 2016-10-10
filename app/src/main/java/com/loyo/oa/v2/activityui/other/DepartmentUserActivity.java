@@ -21,7 +21,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.activityui.contact.fragment.DepartmentFragment;
+// import com.loyo.oa.v2.activityui.contact.fragment.DepartmentFragment;
 import com.loyo.oa.v2.activityui.contact.fragment.UserFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -49,7 +49,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     public static final String CC_USER_NAME = "chaosong_User_name";
     private ViewGroup img_title_left;
     private Button btn_title_right;
-    private DepartmentFragment departmentFragment; //部门fragment
+    // private DepartmentFragment departmentFragment; //部门fragment
     private UserFragment userFragment;             //员工fragment
     public int show_type;                          //页面类型（0=部门+人员,1=仅人员）
     public int select_type;                        //选择类型 (0=多选，1=单选)
@@ -101,7 +101,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
             }
         }
 
-        departmentFragment = new DepartmentFragment(superDeptId, select_type, show_type);
+//        departmentFragment = new DepartmentFragment(superDeptId, select_type, show_type);
         userFragment = new UserFragment(superDeptId);
 
         LocalBroadcastManager.getInstance(this).
@@ -267,7 +267,8 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
 
         @Override
         public Fragment getItem(final int position) {
-            return (position == 0) ? departmentFragment : userFragment;
+            return userFragment;
+            // return (position == 0) ? departmentFragment : userFragment;
         }
 
     }

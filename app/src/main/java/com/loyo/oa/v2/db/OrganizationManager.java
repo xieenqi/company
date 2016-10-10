@@ -6,25 +6,12 @@ package com.loyo.oa.v2.db;
 import android.content.Context;
 import android.util.Log;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import com.j256.ormlite.dao.CloseableIterator;
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.misc.TransactionManager;
-import com.j256.ormlite.stmt.*;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.concurrent.Callable;
-
 import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.bean.Role;
+import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBPosition;
@@ -36,16 +23,17 @@ import com.loyo.oa.v2.db.dao.PositionDao;
 import com.loyo.oa.v2.db.dao.RoleDao;
 import com.loyo.oa.v2.db.dao.UserDao;
 import com.loyo.oa.v2.db.dao.UserNodeDao;
-
-import com.loyo.oa.v2.beans.Position;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.bean.User;
-
-
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.SharedUtil;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 public class OrganizationManager {
 
