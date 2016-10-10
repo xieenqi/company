@@ -39,7 +39,7 @@ import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.AliOSSManager;
+import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;

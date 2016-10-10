@@ -35,7 +35,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWorksheet;
-import com.loyo.oa.v2.tool.AliOSSManager;
+import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;

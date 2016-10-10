@@ -29,7 +29,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.tool.AliOSSManager;
+import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;

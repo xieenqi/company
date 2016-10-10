@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.loyo.oa.upload.view.SquareImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+        <View
+            android:id="@+id/image_mask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#99000000"></View>
+
+        <com.loyo.cpb.CircularProgressButton
+            android:id="@+id/circularButton2"
+            android:focusable="false"
+            android:layout_width="45dp"
+            android:layout_height="25dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="0px"
+            android:paddingBottom="0px"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/cpb_white"
+            android:textSize="9sp"
+            app:cpb_cornerRadius="23dp"
+            app:cpb_iconComplete="@drawable/ic_action_accept"
+            app:cpb_iconError="@drawable/ic_action_cancel"
+            app:cpb_textIdle="@string/Upload"
+            android:layout_gravity="center_horizontal|bottom"/>
+    </FrameLayout>
+
+</LinearLayout>
