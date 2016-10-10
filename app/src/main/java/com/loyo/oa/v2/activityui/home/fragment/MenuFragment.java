@@ -275,7 +275,7 @@ public class MenuFragment extends BaseFragment {
                             cancelDialog();
                             Utils.doSeting(getActivity());
                         }
-                    },"提示","需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    }, "提示", "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
 
 /*                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
                     generalPopView.setSureOnclick(new View.OnClickListener() {
@@ -354,7 +354,7 @@ public class MenuFragment extends BaseFragment {
     }
 
     /**
-     * 刷新token 防止token过期
+     * 更新(当首页红点数据异常)
      */
     void rushHomeData() {
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {

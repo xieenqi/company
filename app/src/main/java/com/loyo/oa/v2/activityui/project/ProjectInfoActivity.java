@@ -303,7 +303,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             public void success(final Project o, final Response response) {
                 HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
                 project.status = (project.status == 1 ? 0 : 1);
-                restartActivity();//重启Activity
+//                restartActivity();//重启Activity  会重置isUpdate的状态
+                getProject();
                 isUpdate = true;
             }
 
