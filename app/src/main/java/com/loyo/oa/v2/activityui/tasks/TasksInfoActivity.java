@@ -140,6 +140,8 @@ public class TasksInfoActivity extends BaseActivity {
             String mTaskId;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     String keyType;
+    @Extra(ExtraAndResult.IS_UPDATE)
+    boolean isUpdate;//是否需要刷新列表
 
     private boolean isOver = false;
     private int statusSize;
@@ -812,7 +814,7 @@ public class TasksInfoActivity extends BaseActivity {
                                 task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("review", task);
-                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
                             }
                         }
 
@@ -887,7 +889,7 @@ public class TasksInfoActivity extends BaseActivity {
             mTask.setViewed(true);
             intent.putExtra("data", mTask);
         }
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isUpdate ? 0x09 : RESULT_OK, intent);
     }
 
     /**

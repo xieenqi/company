@@ -270,8 +270,12 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     }
 
     public void openItem(int groupPosition, int childPosition) {
+        WflnstanceListItem item = (WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition);
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition)).id);
+        intent.putExtra(ExtraAndResult.EXTRA_ID, item.id);
+        if (!item.viewed) {//有红点需要刷新
+            intent.putExtra(ExtraAndResult.IS_UPDATE, true);
+        }
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -298,6 +302,11 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         if (resultCode == -1) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE:
+                    isTopAdd = true;
+                    page = 1;
+                    getData();
+                    break;
+                case 0x09:
                     isTopAdd = true;
                     page = 1;
                     getData();

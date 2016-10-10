@@ -120,6 +120,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
     String workReportId;//推送的id
     @Extra(ExtraAndResult.EXTRA_TYPE)
     String keyType;//推送的id
+    @Extra(ExtraAndResult.IS_UPDATE)
+    boolean isUpdate;//是否需要刷新列表
 
     public WorkReport mWorkReport;
     public PaginationX<Discussion> mPageDiscussion;
@@ -359,7 +361,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             mWorkReport.setViewed(true);
             intent.putExtra("review", mWorkReport);
         }
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isUpdate ? 0x09 : RESULT_OK, intent);
     }
 
     /**
@@ -488,6 +490,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
             case MSG_REVIEW:
                 getDataWorkReport();
+                isUpdate = true;
                 break;
 
             case MSG_DELETE_WORKREPORT:

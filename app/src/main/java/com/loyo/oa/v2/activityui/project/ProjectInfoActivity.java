@@ -55,19 +55,31 @@ import retrofit.client.Response;
 public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadSuccessCallback {
     private String[] TITLES = {"任务", "报告", "审批", "文件", "讨论"};
 
-    @ViewById ViewGroup img_title_left;
-    @ViewById ViewGroup img_title_right;
-    @ViewById TextView tv_title_1;
-    @ViewById PagerSlidingTabStrip tabs;
-    @ViewById ViewPager pager;
-    @ViewById ViewGroup layout_project_des;
-    @ViewById TextView tv_project_title;
-    @ViewById TextView tv_project_extra;
-    @ViewById ImageView img_project_status;
-    @Extra("projectId") String projectId;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    ViewGroup img_title_right;
+    @ViewById
+    TextView tv_title_1;
+    @ViewById
+    PagerSlidingTabStrip tabs;
+    @ViewById
+    ViewPager pager;
+    @ViewById
+    ViewGroup layout_project_des;
+    @ViewById
+    TextView tv_project_title;
+    @ViewById
+    TextView tv_project_extra;
+    @ViewById
+    ImageView img_project_status;
+    @Extra("projectId")
+    String projectId;
     HttpProject project;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     String keyType;
+    @Extra(ExtraAndResult.IS_UPDATE)
+    boolean isUpdate;//是否需要刷新列表
 
     MyPagerAdapter adapter;
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
@@ -152,7 +164,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             project.viewed = true;
             intent.putExtra("review", project);
         }
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isUpdate ? 0x09 : RESULT_OK, intent);
     }
 
     /**
@@ -292,6 +304,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
                 project.status = (project.status == 1 ? 0 : 1);
                 restartActivity();//重启Activity
+                isUpdate = true;
             }
 
             @Override
