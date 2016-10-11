@@ -10,12 +10,14 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.other.model.SelectDepData;
 import com.loyo.oa.v2.activityui.other.model.SelectUserData;
 import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -343,12 +345,12 @@ public class SelectUserHelper {
         public static final int OK = 0x00001;
         public static final int FAILURE = 0x00000;
 
-        private final List<Department> mDepartmentDatas;
+        private final List<DBDepartment> mDepartmentDatas;
         private final List<SelectDepData> mDepSource = new ArrayList<>();
         private final List<SelectUserData> mUserSource = new ArrayList<>();
         private final Handler mHandler;
 
-        public SelectThread(List<Department> datas, Handler handler) {
+        public SelectThread(List<DBDepartment> datas, Handler handler) {
             this.mDepartmentDatas = datas;
             this.mHandler = handler;
         }
@@ -358,7 +360,6 @@ public class SelectUserHelper {
             mSelectDatas.clear();
             mDepSource.clear();
             mUserSource.clear();
-            useAlllist.clear();
             try {
                 if (mDepartmentDatas != null) {
                     bindAllUser(mDepartmentDatas.get(0));
@@ -370,8 +371,6 @@ public class SelectUserHelper {
                         bindUserInfos(mDepSource.get(i));
                     }
                     mSelectDatas.addAll(mDepSource);
-
-                    getAllUsers();
                 }
                 mHandler.sendEmptyMessage(OK);
             } catch (Exception e) {
@@ -380,47 +379,17 @@ public class SelectUserHelper {
             }
         }
 
-        private void getAllUsers() {
-            /*全部人员获取*/
-            List<User> localCacheUserList = new ArrayList<>();
-            for (int i = 0; i < mDepartmentDatas.size(); i++) {
-                try {
-                    for (int k = 0; k < mDepartmentDatas.get(i).getUsers().size(); k++) {
-                        localCacheUserList.add(mDepartmentDatas.get(i).getUsers().get(k));
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-            useAlllist.addAll(RemoveSame(localCacheUserList));
-        }
-
-        /**
-         * 去掉人员重复数据
-         */
-        private List RemoveSame(final List<User> list) {
-            for (int i = 0; i < list.size() - 1; i++) {
-                for (int j = i + 1; j < list.size(); j++) {
-                    if (list.get(i).getId().equals(list.get(j).getId())) {
-                        list.remove(j);
-                        j--;
-                    }
-                }
-            }
-            return list;
-        }
-
         /**
          * 获取所有用户信息, 默认取第一个部门
          *
          * @param department
          */
-        private void bindAllUser(Department department) {
+        private void bindAllUser(DBDepartment department) {
             SelectDepData userData = new SelectDepData();
-            userData.setId(department.getId());
-            userData.setName(department.getName());
-            userData.setAvatar(department.getAvater());
-            userData.setXpath(department.getXpath());
+            userData.setId(department.id);
+            userData.setName(department.name);
+            userData.setAvatar("NULL_AVATAR");
+            userData.setXpath(department.xpath);
 
             mUserSource.addAll(newDepSourceAll());
 
@@ -437,25 +406,15 @@ public class SelectUserHelper {
         private List<SelectUserData> newDepSourceAll() {
             List<SelectUserData> userDatas = new ArrayList<>();
             for (int i = 0; i < mDepartmentDatas.size(); i++) {
-                Department dep = mDepartmentDatas.get(i);
-                for (int j = 0; j < dep.getUsers().size(); j++) {
-                    User user = dep.getUsers().get(j);
+                DBDepartment dep = mDepartmentDatas.get(i);
+                List<DBUser> users = OrganizationManager.shareManager().directUsersOfDepartment(dep.id);
+                for (int j = 0; j < users.size(); j++) {
+                    DBUser user = users.get(j);
                     SelectUserData data = new SelectUserData();
-                    data.setAvatar(user.getAvatar());
-                    data.setName(user.getRealname());
-                    data.setId(user.getId());
-                    try {
-                        data.setDeptName(user.depts.get(0).getShortDept().getName());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        data.setDeptName("暂无");
-                    }//此处设置部门的名字
-//                    try {
-//                        data.setDeptName(user.depts.get(0).getTitle());
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        data.setDeptName("暂无");
-//                    }
+                    data.setAvatar(user.avatar);
+                    data.setName(user.name);
+                    data.setId(user.id);
+                    data.setDeptName(user.shortDeptNames!=null?user.shortDeptNames:"暂无");
                     userDatas.add(data);
                 }
             }
@@ -469,36 +428,26 @@ public class SelectUserHelper {
          * @param department
          * @return
          */
-        private SelectDepData newDepSource(Department department) {
+        private SelectDepData newDepSource(DBDepartment department) {
             SelectDepData userData = new SelectDepData();
-            userData.setId(department.getId());
-            userData.setName(department.getName());
-            userData.setAvatar(department.getAvater());
-            userData.setXpath(department.getXpath());
+            userData.setId(department.id);
+            userData.setName(department.name);
+            userData.setAvatar("NULL_AVATAR");
+            userData.setXpath(department.xpath);
 
             List<SelectUserData> userDatas = new ArrayList<>();
-            for (int i = 0; i < department.getUsers().size(); i++) {
-                User user = department.getUsers().get(i);
+            List<DBUser> users = OrganizationManager.shareManager().directUsersOfDepartment(department);
+            for (int i = 0; i < users.size(); i++) {
+                DBUser user = users.get(i);
                 int index = -1;
                 if ((index = getUserIndex(user)) > -1 && index < mUserSource.size()) {
                     userDatas.add(mUserSource.get(index));
                 } else {
                     SelectUserData data = new SelectUserData();
-                    data.setAvatar(user.getAvatar());
-                    data.setName(user.getRealname());
-                    data.setId(user.getId());
-                    try {
-                        data.setDeptName(user.depts.get(0).getShortDept().getName());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        data.setDeptName("暂无");
-                    }//此处设置部门的名字
-//                    try {
-//                        data.setDeptName(user.depts.get(0).getTitle());
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        data.setDeptName("暂无");
-//                    }
+                    data.setAvatar(user.avatar);
+                    data.setName(user.name);
+                    data.setId(user.id);
+                    data.setDeptName(user.shortDeptNames!=null?user.shortDeptNames:"暂无");
                     userDatas.add(data);
                 }
             }
@@ -506,8 +455,8 @@ public class SelectUserHelper {
             return userData;
         }
 
-        private int getUserIndex(User user) {
-            String id = user.getId();
+        private int getUserIndex(DBUser user) {
+            String id = user.id;
             if (TextUtils.isEmpty(id)) {
                 return -1;
             }

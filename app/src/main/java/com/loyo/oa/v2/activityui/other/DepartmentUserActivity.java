@@ -17,19 +17,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.common.Common;
-// import com.loyo.oa.v2.activityui.contact.fragment.DepartmentFragment;
 import com.loyo.oa.v2.activityui.contact.fragment.UserFragment;
+import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+// import com.loyo.oa.v2.activityui.contact.fragment.DepartmentFragment;
 
 /**
  * 参与人 负责人 点评人 抄送人 选择界面
