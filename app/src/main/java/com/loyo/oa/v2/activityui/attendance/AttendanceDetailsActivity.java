@@ -9,7 +9,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceDetial;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceDetailsPresenter;
@@ -22,30 +21,20 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【考勤详情】
