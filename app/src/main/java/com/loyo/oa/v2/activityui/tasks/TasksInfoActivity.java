@@ -1082,7 +1082,8 @@ public class TasksInfoActivity extends BaseActivity {
                     } else {
                         SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
                     }
-                                /*删除回调*/
+                    isUpdate = true;
+                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
@@ -1092,17 +1093,17 @@ public class TasksInfoActivity extends BaseActivity {
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
                         }
                     });
-                                /*复制回调*/
+                 /*复制回调*/
                 } else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable("data", mTask);
                     intent.putExtras(mBundle);
                     startActivity(intent);
-                                /*修改参与人回调*/
+                 /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
                     SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
-
+                    isUpdate = true;
                 }
                 break;
 

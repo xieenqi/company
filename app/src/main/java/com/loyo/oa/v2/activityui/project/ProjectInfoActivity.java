@@ -355,6 +355,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, project);
                     app.startActivityForResult(this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
                             TasksInfoActivity.REQUEST_EDIT, bundle);
+                    isUpdate = true;
                 }
                 //删除回调
                 else if (data.getBooleanExtra("delete", false)) {

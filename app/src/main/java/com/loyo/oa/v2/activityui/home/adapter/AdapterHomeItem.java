@@ -170,8 +170,6 @@ public class AdapterHomeItem extends BaseAdapter {
                     } else if (item.title.equals("我的讨论") && num.bizType == 14) { //我的讨论红点
                         view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                         tv_extra.setText(extra);
-                    } else {
-                        view_number.setVisibility(View.GONE);
                     }
 //                    tv_extra.setText(!TextUtils.isEmpty(extra)?extra:"");
                     LogUtil.d(position + "加载》》》》》》》》》》》》》》》》》》》》》》》》》》》》" + extra);

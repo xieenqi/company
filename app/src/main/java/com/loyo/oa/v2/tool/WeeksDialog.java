@@ -61,11 +61,17 @@ public class WeeksDialog {
         Calendar cal = Calendar.getInstance();
         cal.setTime(curDate);
         cal.setTimeZone(TimeZone.getDefault());
-        LogUtil.d("当前日期:" + cal.get(Calendar.DAY_OF_WEEK));
+        boolean isChange = true;
         long monday, sunday;
+        int weekDay = cal.get(Calendar.DAY_OF_WEEK);
+        LogUtil.d("当前日期:" + cal.get(Calendar.DAY_OF_WEEK) + (Calendar.SUNDAY == cal.get(Calendar.DAY_OF_WEEK)));
 
         for (int i = 0; i < num; i++) {
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            if (Calendar.SUNDAY == weekDay && isChange) {
+                cal.add(Calendar.DATE, -7);
+                isChange = false;
+            }
             monday = cal.getTime().getTime();
             cal.add(Calendar.DATE, 6);
             sunday = cal.getTime().getTime();
@@ -155,7 +161,7 @@ public class WeeksDialog {
     };
 
     public String GetDefautlText() {
-        return sourseToWeek[0];
+        return sourseToWeek[0].replace("(本周)", "");
     }
 
     /**

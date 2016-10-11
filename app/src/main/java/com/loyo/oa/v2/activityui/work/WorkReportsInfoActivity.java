@@ -500,6 +500,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
+                    isUpdate = true;
                     /*复制回调*/
                 } else if ((data.getBooleanExtra("extra", false))) {
                     Bundle bundle = new Bundle();

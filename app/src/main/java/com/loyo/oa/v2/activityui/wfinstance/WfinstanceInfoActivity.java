@@ -848,6 +848,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     mBundle = new Bundle();
                     mBundle.putSerializable("data", mWfInstance);
                     app.startActivityForResult(WfinstanceInfoActivity.this, WfInEditActivity.class, MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
+                    isUpdate = true;
                 }
                 //选择删除回调
                 else if (data.getBooleanExtra("delete", false)) {
