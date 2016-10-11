@@ -141,6 +141,11 @@ public class HaitMyActivity extends BaseActivity {
                 });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_OK);
+    }
 
     private class HaitAdapter extends RecyclerView.Adapter<HaitViewHolder> {
         private List<HttpMyDiscussItem> datas = new ArrayList<>();

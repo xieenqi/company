@@ -56,8 +56,6 @@ public class AdapterHomeItem extends BaseAdapter {
         crmTi = false;
         oaTi = false;
         this.items = items;
-        LogUtil.d("加载item数据------------");
-//        notifyDataSetChanged();
     }
 
     /**
@@ -69,7 +67,6 @@ public class AdapterHomeItem extends BaseAdapter {
         this.mItemNumbers = mItemNumbers;
         crmTi = false;
         oaTi = false;
-        LogUtil.d("-----加载red数据------------");
         if (items != null && null != mItemNumbers) {
             for (HomeItem item : items) {
                 for (HttpMainRedDot num : mItemNumbers) {
@@ -97,7 +94,6 @@ public class AdapterHomeItem extends BaseAdapter {
                         }
                         item.viewed = num.viewed;
                     }
-
 //            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
 //                extra = num.bizNum + "个将掉公海";
 //                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
@@ -153,7 +149,7 @@ public class AdapterHomeItem extends BaseAdapter {
         }
 
         final HomeItem item = items.get(position);
-        holder.setContentView(item, position, mItemNumbers);
+        holder.setContentView(item, position);
         return convertView;
     }
 
@@ -166,7 +162,7 @@ public class AdapterHomeItem extends BaseAdapter {
         ImageView view_number;
         TextView tv_title;
 
-        public void setContentView(HomeItem item, final int position, ArrayList<HttpMainRedDot> mItemNumbers) {
+        public void setContentView(HomeItem item, final int position) {
 
             tv_extra.setText(item.extra);
             view_number.setVisibility(item.viewed ? View.GONE : View.VISIBLE);
