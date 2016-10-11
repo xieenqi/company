@@ -56,6 +56,7 @@ public class AdapterHomeItem extends BaseAdapter {
         crmTi = false;
         oaTi = false;
         this.items = items;
+        LogUtil.d("加载item数据------------");
 //        notifyDataSetChanged();
     }
 
@@ -68,7 +69,53 @@ public class AdapterHomeItem extends BaseAdapter {
         this.mItemNumbers = mItemNumbers;
         crmTi = false;
         oaTi = false;
-//        notifyDataSetChanged();
+        LogUtil.d("-----加载red数据------------");
+        if (items != null && null != mItemNumbers) {
+            for (HomeItem item : items) {
+                for (HttpMainRedDot num : mItemNumbers) {
+                    if ((item.title.equals("工作报告") && num.bizType == 1)) {
+                        if (num.bizNum > 0) {
+                            item.extra = num.bizNum + "个待点评(含抄送)";
+                        }
+                        item.viewed = num.viewed;
+                    } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
+                        if (num.bizNum > 0) {
+                            item.extra = num.bizNum + "个未完成";
+                        }
+                        item.viewed = num.viewed;
+                    } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
+                        if (num.bizNum > 0) {
+                            item.extra = num.bizNum + "个待我审批";
+                        } else {
+                            item.extra = " ";
+                        }
+                        wfinstanceCount = num.bizNum;
+                        item.viewed = num.viewed;
+                    } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
+                        if (num.bizNum > 0) {
+                            item.extra = num.bizNum + "个进行中";
+                        }
+                        item.viewed = num.viewed;
+                    }
+
+//            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
+//                extra = num.bizNum + "个将掉公海";
+//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+//            } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
+//                extra = num.bizNum + "个需拜访";
+//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+//            }
+                    else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
+//                        item.extra = num.bizNum + "个外勤";
+                        item.viewed = num.viewed;
+                    } else if (item.title.equals("公告通知") && num.bizType == 19) { //通知公告红点
+                        item.viewed = num.viewed;
+                    } else if (item.title.equals("我的讨论") && num.bizType == 14) { //我的讨论红点
+                        item.viewed = num.viewed;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -121,61 +168,8 @@ public class AdapterHomeItem extends BaseAdapter {
 
         public void setContentView(HomeItem item, final int position, ArrayList<HttpMainRedDot> mItemNumbers) {
 
-            if (null != mItemNumbers) {//首页红点 有数据才加载
-                for (HttpMainRedDot num : mItemNumbers) {
-                    String extra = "";
-                    if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                        if (num.bizNum > 0) {
-                            extra = num.bizNum + "个待点评(含抄送)";
-                        }
-                        view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                        tv_extra.setText(extra);
-                    } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                        if (num.bizNum > 0) {
-                            extra = num.bizNum + "个未完成";
-                        }
-                        view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                        tv_extra.setText(extra);
-                    } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                        if (num.bizNum > 0) {
-                            extra = num.bizNum + "个待我审批";
-                        } else {
-                            extra = " ";
-                        }
-                        wfinstanceCount = num.bizNum;
-                        view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                        tv_extra.setText(extra);
-                    } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
-                        if (num.bizNum > 0) {
-                            extra = num.bizNum + "个进行中";
-                        }
-                        view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                        tv_extra.setText(extra);
-                    }
-
-//            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
-//                extra = num.bizNum + "个将掉公海";
-//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-//            } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
-//                extra = num.bizNum + "个需拜访";
-//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-//            }
-                    else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
-//                        extra = num.bizNum + "个外勤";
-                        view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                        tv_extra.setText(extra);
-                    } else if (item.title.equals("公告通知") && num.bizType == 19) { //通知公告红点
-                        view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                        tv_extra.setText(extra);
-                    } else if (item.title.equals("我的讨论") && num.bizType == 14) { //我的讨论红点
-                        view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                        tv_extra.setText(extra);
-                    }
-//                    tv_extra.setText(!TextUtils.isEmpty(extra)?extra:"");
-                    LogUtil.d(position + "加载》》》》》》》》》》》》》》》》》》》》》》》》》》》》" + extra);
-                }
-            }
-
+            tv_extra.setText(item.extra);
+            view_number.setVisibility(item.viewed ? View.GONE : View.VISIBLE);
             //列表分组
             if (item.tag == 1) {
                 item_newmain_topview.setVisibility(crmTi ? View.GONE : View.VISIBLE);

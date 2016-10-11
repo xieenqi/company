@@ -275,10 +275,10 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
 //        //此处缓存首页数据
         DBManager.Instance().putHomeItem(MainApp.gson.toJson(items));
         adapter.setItemData(items);
-        adapter.setRedNumbreData(mItemNumbers);
         if (null != MainApp.user && null != MainApp.user.avatar && null != heading) {
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }
+        adapter.setRedNumbreData(mItemNumbers);
         adapter.notifyDataSetChanged();
     }
 
