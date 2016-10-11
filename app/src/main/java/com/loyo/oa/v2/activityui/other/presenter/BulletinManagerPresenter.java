@@ -23,6 +23,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
+ * 【通知公告】Presenter
  * Created by yyy on 16/10/10.
  */
 

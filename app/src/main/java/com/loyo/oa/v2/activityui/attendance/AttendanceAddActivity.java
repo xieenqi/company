@@ -54,10 +54,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.client.Response;
 
 /**
- * com.loyo.oa.v2.activity
- * 描述 :新增考勤界面
- * 作者 : ykb
- * 时间 : 15/9/14.
+ * 【新增考勤】
+ *  Restruture by yyy on 16/10/11
+ *
  */
 @EActivity(R.layout.activity_attendance_add)
 public class AttendanceAddActivity extends BaseActivity implements LocationUtilGD.AfterLocation,AttendanceAddView {

@@ -25,7 +25,7 @@ import com.loyo.oa.v2.customview.WaveView;
 import java.util.HashMap;
 
 /**
- * 【登录界面】MVP重构
+ * 【登录界面】
  * Restructure by yyy on 2016/10/8
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener, WaveView.OnWaveCompleteListener,LoginView {

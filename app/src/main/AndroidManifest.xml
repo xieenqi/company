@@ -178,7 +178,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activityui.attendance.PreviewAttendanceActivity_"
+            android:name=".activityui.attendance.AttendanceDetailsActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>

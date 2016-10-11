@@ -27,6 +27,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
+ * 【登录界面】Presenter
  * Created by yyy on 16/10/8.
  */
 

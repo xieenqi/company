@@ -31,6 +31,7 @@ import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 /**
+ * 【发布通知】Presenter
  * Created by yyy on 16/10/9
  */
 

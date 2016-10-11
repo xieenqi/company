@@ -25,7 +25,7 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
 /**
- *【通知公告】列表页 MVP重构
+ *【通知公告】列表页
  * Restructure by yyy on 16/10/10
  */
 @EActivity(R.layout.activity_notice)

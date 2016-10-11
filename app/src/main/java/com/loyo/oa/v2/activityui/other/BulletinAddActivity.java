@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 【发布通知】MVP重构
+ * 【发布通知】
  * Restructure by yyy on 2016/10/9
  */
 

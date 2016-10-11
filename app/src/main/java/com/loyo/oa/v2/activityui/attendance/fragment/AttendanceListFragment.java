@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceList;
-import com.loyo.oa.v2.activityui.attendance.PreviewAttendanceActivity_;
+import com.loyo.oa.v2.activityui.attendance.AttendanceDetailsActivity_;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.attendance.adapter.CustomerDataManager;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
@@ -570,7 +570,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if (type == 1) {
             attendance.setUser(MainApp.user);
         }
-        Intent intent = new Intent(mActivity, PreviewAttendanceActivity_.class);
+        Intent intent = new Intent(mActivity, AttendanceDetailsActivity_.class);
         intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut == 1 ? attendance.getIn().getId() : attendance.getOut().getId());
         intent.putExtra("inOrOut", inOrOut);
         intent.putExtra("overTime", overTime);
