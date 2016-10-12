@@ -46,7 +46,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 2016101201
-        versionName '1.4.1'
+        versionName '1.4.1t'
     }
 
     buildTypes {
