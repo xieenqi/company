@@ -24,7 +24,7 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
 
     public Player(final SeekBar seekBar) {
         super();
-//        this.seekBar = seekBar;
+        this.seekBar = seekBar;
         try {
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -33,9 +33,7 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mTimer.schedule(timerTask, 0, 1000);
         timerTask = new TimerTask() {
-
             @Override
             public void run() {
                 if (mediaPlayer != null && mediaPlayer.isPlaying() && seekBar.isPressed() == false) {
@@ -43,6 +41,7 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
                 }
             }
         };
+        mTimer.schedule(timerTask, 0, 1000);
     }
 
 

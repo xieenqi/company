@@ -130,21 +130,21 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                         xPath = "";
                         userId = saleTeamScreen.getId();
                     }
-                    getData();
+                    getRefershData();
                     break;
 
                 case SALETEAM_SCREEN_TAG2:
                     isPull = false;
                     stageId = msg.getData().getString("data");
                     stageIndex = (int) msg.getData().get("index");
-                    getData();
+                    getRefershData();
                     break;
 
                 case SALETEAM_SCREEN_TAG3:
                     isPull = false;
                     sortType = msg.getData().getString("data");
                     sortIndex = (int) msg.getData().get("index");
-                    getData();
+                    getRefershData();
                     break;
 
                 default:
@@ -256,6 +256,11 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    private void getRefershData() {
+        requestPage = 1;
+        isPull = false;
+        getData();
+    }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
