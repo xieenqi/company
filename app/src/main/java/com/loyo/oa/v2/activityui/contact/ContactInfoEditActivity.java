@@ -22,22 +22,24 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.beans.UserInfo;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
+import com.loyo.oa.v2.db.EntityConvertHelper;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IMobile;
 import com.loyo.oa.v2.point.IUser;
-import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -46,9 +48,8 @@ import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
@@ -56,6 +57,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -423,7 +425,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             public void success(final User responseUser, final Response response) {
 
                 if (user.id != null){
-                    OrganizationManager.updateDBUserWithUser(user, responseUser);
+                    EntityConvertHelper.updateDBUserWithUser(user, responseUser);
                     OrganizationManager.shareManager().updateUser(user);
 
                     Intent it = new Intent("com.loyo.oa.v2.USER_EDITED");

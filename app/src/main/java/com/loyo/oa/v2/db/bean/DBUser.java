@@ -6,9 +6,11 @@ package com.loyo.oa.v2.db.bean;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.loyo.oa.v2.activityui.other.model.SelectUserData;
 import com.loyo.oa.v2.beans.NewUser;
 
 import java.io.Serializable;
+import java.util.HashSet;
 
 @DatabaseTable(tableName = "users")
 public class DBUser implements Serializable {
@@ -63,6 +65,10 @@ public class DBUser implements Serializable {
 
     public boolean isCurrentUser;
 
+    public HashSet<DBDepartment> depts = new HashSet<>();
+
+    public SelectUserData selectUserData;
+
     public String getSortLetter() {
 
         String pinyin = this.simplePinyin != null && this.simplePinyin.length()>0 ? this.simplePinyin:this.fullPinyin;
@@ -87,6 +93,10 @@ public class DBUser implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != DBUser.class) {
+            return false;
+        }
+
         DBUser d =( DBUser)obj;
         return id.equals(d.id);
     }

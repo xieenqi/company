@@ -144,7 +144,7 @@ public class LauncherActivity extends Activity {
         }
         else if (OrganizationManager.isOrganizationCached()){
             // 读取缓存
-            OrganizationManager.shareManager().loadOrganizitionDataToCache();
+            OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
         }
 
         finish();

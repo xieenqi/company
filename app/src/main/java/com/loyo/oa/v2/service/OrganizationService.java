@@ -1,20 +1,17 @@
 package com.loyo.oa.v2.service;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.ArrayList;
 
@@ -74,17 +71,26 @@ public class OrganizationService extends IntentService {
      * 后台 更新 组织架构
      */
     void getOrganization() {
-
         _isFetchingOrganziationData = true;
 
         ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
                 .create(IUser.class).getOrganization();
+        OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
 
+
+
             OrganizationManager.clearOrganizationData();
             OrganizationManager.shareManager().saveOrganizitionToDB(lstDepartment_current);
-            OrganizationManager.shareManager().loadOrganizitionDataToCache();
+
+
+            long start1 = System.currentTimeMillis();
+            OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
+
+            long end1 = System.currentTimeMillis();
+
+            Log.v("timetrack", "getOrganization = " + (end1-start1) + " ms");
 
             Intent it = new Intent("com.loyo.oa.v2.ORGANIZATION_UPDATED");
             sendBroadcast(it);

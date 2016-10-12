@@ -6,7 +6,14 @@ package com.loyo.oa.v2.db.bean;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.loyo.oa.v2.db.sort.UserPinyinComparator;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 @DatabaseTable(tableName = "departments")
 public class DBDepartment implements Serializable {
@@ -37,6 +44,29 @@ public class DBDepartment implements Serializable {
     @DatabaseField(defaultValue = "1")
     public int depth;
 
+    public HashSet<DBUser> directUsers = new HashSet<>();
+    public HashSet<DBDepartment> childDepts = new HashSet<>();
+    public DBDepartment parentDept;
+
+
+    public List<DBUser> allUsers() {
+
+        HashSet<DBUser> result = new HashSet<>();
+        result.addAll(directUsers);
+
+        Iterator<DBDepartment> iterator = childDepts.iterator();
+        while (iterator.hasNext()) {
+            result.addAll(iterator.next().allUsers());
+        }
+
+        return new ArrayList<DBUser>(result);
+    }
+
+    public List<DBUser> allUsersSortedByPinyin() {
+        List<DBUser> result = allUsers();
+        Collections.sort(result, new UserPinyinComparator());
+        return result;
+    }
 
     public String getSortLetter() {
 
@@ -62,6 +92,10 @@ public class DBDepartment implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != DBDepartment.class) {
+            return false;
+        }
+
         DBDepartment d =( DBDepartment)obj;
         return id.equals(d.id);
     }

@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.commonview;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,12 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.db.sort.UserPinyinComparator;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -361,23 +364,117 @@ public class SelectUserHelper {
             mDepSource.clear();
             mUserSource.clear();
             try {
+
+                long start = System.currentTimeMillis();
+
+                Log.v("timetrack", start + "");
+
                 if (mDepartmentDatas != null) {
-                    bindAllUser(mDepartmentDatas.get(0));
-                    for (int i = 1; i < mDepartmentDatas.size(); i++) {
-                        SelectDepData data = newDepSource(mDepartmentDatas.get(i));
-                        mDepSource.add(data);
-                    }
-                    for (int i = 1; i < mDepSource.size(); i++) {
-                        bindUserInfos(mDepSource.get(i));
-                    }
+
+                    // 公司及公司所用用户
+                    // bindAllUser(mDepartmentDatas.get(0));
+                    company(mDepartmentDatas.get(0));
+
+
+
+                    // 子部门及所有用户
+//                    for (int i = 1; i < mDepartmentDatas.size(); i++) {
+//                        SelectDepData data = newDepSource(mDepartmentDatas.get(i));
+//                        mDepSource.add(data);
+//                    }
+//                    for (int i = 1; i < mDepSource.size(); i++) {
+//                        bindUserInfos(mDepSource.get(i));
+//                    }
+                    subDepartment();
+
+                    //
                     mSelectDatas.addAll(mDepSource);
                 }
                 mHandler.sendEmptyMessage(OK);
+
+                long end = System.currentTimeMillis();
+
+                Log.v("timetrack", end + "");
+
+                Log.v("timetrack", end - start + "");
+
             } catch (Exception e) {
                 e.printStackTrace();
                 mHandler.sendEmptyMessage(FAILURE);
             }
         }
+
+
+        private void company(DBDepartment department) {
+
+            long start = System.currentTimeMillis();
+            SelectDepData deptData = new SelectDepData();
+            deptData.setId(department.id);
+            deptData.setName(department.name);
+            deptData.setAvatar("NULL_AVATAR");
+            deptData.setXpath(department.xpath);
+
+            List<SelectUserData> userDatas = new ArrayList<>();
+            List<DBUser> users = OrganizationManager.shareManager().allUsers();
+            Collections.sort(users, new UserPinyinComparator());
+            for (int j = 0; j < users.size(); j++) {
+                DBUser user = users.get(j);
+                SelectUserData data = new SelectUserData();
+                data.setAvatar(user.avatar);
+                data.setName(user.name);
+                data.setId(user.id);
+                data.setDeptName(user.shortDeptNames!=null?user.shortDeptNames:"暂无");
+                userDatas.add(data);
+                user.selectUserData = data;
+            }
+
+            mUserSource.addAll(userDatas);
+            deptData.setUsers(mUserSource);
+            deptData.startCallback(); //为部门中的所有用户添加回调
+            mDepSource.add(0, deptData);
+
+            long end = System.currentTimeMillis();
+
+            Log.v("timetrack" , "company  =   " + (end - start ) +"  ms");
+        }
+
+        private void subDepartment() {
+
+            long start = System.currentTimeMillis();
+            for (int j = 1; j < mDepartmentDatas.size(); j++) {
+
+                long start1 = System.currentTimeMillis();
+                DBDepartment department = mDepartmentDatas.get(j);
+
+                SelectDepData deptData = new SelectDepData();
+                deptData.setId(department.id);
+                deptData.setName(department.name);
+                deptData.setAvatar("NULL_AVATAR");
+                deptData.setXpath(department.xpath);
+
+                List<SelectUserData> userDatas = new ArrayList<>();
+                List<DBUser> users = department.allUsersSortedByPinyin();
+                for (int i = 0; i < users.size(); i++) {
+                    DBUser user = users.get(i);
+                    if (user.selectUserData != null) {
+                        userDatas.add(user.selectUserData);
+                    }
+                }
+                deptData.setUsers(userDatas);
+                deptData.startCallback();
+                mDepSource.add(deptData);
+
+                long end1 = System.currentTimeMillis();
+
+                Log.v("timetrack" , "department " + department.id + "  =   "+ (end1 - start1 ) +"  ms");
+            }
+
+            long end = System.currentTimeMillis();
+
+            Log.v("timetrack" , "subDepartment  =   " + (end - start ) +"  ms");
+
+        }
+
 
         /**
          * 获取所有用户信息, 默认取第一个部门
@@ -385,6 +482,8 @@ public class SelectUserHelper {
          * @param department
          */
         private void bindAllUser(DBDepartment department) {
+
+            long start = System.currentTimeMillis();
             SelectDepData userData = new SelectDepData();
             userData.setId(department.id);
             userData.setName(department.name);
@@ -396,6 +495,10 @@ public class SelectUserHelper {
             userData.setUsers(mUserSource);
             userData.startCallback(); //为部门中的所有用户添加回调
             mDepSource.add(0, userData);
+
+            long end = System.currentTimeMillis();
+
+            Log.v("timetrack" , "bindAllUser  =   " + (end - start ) +"  ms");
         }
 
         /**
@@ -439,15 +542,30 @@ public class SelectUserHelper {
             List<DBUser> users = OrganizationManager.shareManager().directUsersOfDepartment(department);
             for (int i = 0; i < users.size(); i++) {
                 DBUser user = users.get(i);
-                int index = -1;
-                if ((index = getUserIndex(user)) > -1 && index < mUserSource.size()) {
-                    userDatas.add(mUserSource.get(index));
-                } else {
-                    SelectUserData data = new SelectUserData();
-                    data.setAvatar(user.avatar);
-                    data.setName(user.name);
-                    data.setId(user.id);
-                    data.setDeptName(user.shortDeptNames!=null?user.shortDeptNames:"暂无");
+//                int index = -1;
+//                if ((index = getUserIndex(user)) > -1 && index < mUserSource.size()) {
+//                    userDatas.add(mUserSource.get(index));
+//                } else {
+//                    SelectUserData data = new SelectUserData();
+//                    data.setAvatar(user.avatar);
+//                    data.setName(user.name);
+//                    data.setId(user.id);
+//                    data.setDeptName(user.shortDeptNames!=null?user.shortDeptNames:"暂无");
+//                    userDatas.add(data);
+//                }
+
+                SelectUserData data = new SelectUserData();
+                data.setAvatar(user.avatar);
+                data.setName(user.name);
+                data.setId(user.id);
+                data.setDeptName(user.shortDeptNames!=null?user.shortDeptNames:"暂无");
+
+
+                int index = mDepSource.indexOf(data);
+                if (index!= -1) {
+                    userDatas.add(mDepSource.get(index));
+                }
+                else {
                     userDatas.add(data);
                 }
             }
