@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_title"/>
+    <include layout="@layout/include_title" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        >
+        android:scrollbars="vertical">
 
         <LinearLayout
             android:id="@+id/layout_body"
@@ -35,7 +34,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="对应客户"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_customer"
@@ -47,24 +46,23 @@
                     android:hint="必填,请选择"
                     android:textColor="@color/title_bg1"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/text_item1"
@@ -73,7 +71,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="机会名称"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <EditText
                     android:id="@+id/et_name"
@@ -87,10 +85,10 @@
                     android:minHeight="@dimen/dimen_48"
                     android:paddingBottom="@dimen/dimen_5"
                     android:paddingTop="@dimen/dimen_5"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_stage"
@@ -105,7 +103,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="销售阶段"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_stage"
@@ -117,18 +115,18 @@
                     android:hint="必填,请选择"
                     android:textColor="@color/title_bg1"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_transport"
@@ -149,7 +147,7 @@
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:minWidth="@dimen/dimen_60"
                         android:text="输单原因"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/tv_transport"
@@ -161,26 +159,25 @@
                         android:hint="必填,请选择"
                         android:textColor="@color/title_bg1"
                         android:textColorHint="@color/text99"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginRight="4dp"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
 
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/text_item1"
@@ -189,7 +186,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="预计销售金额"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <EditText
                     android:id="@+id/et_money"
@@ -204,10 +201,10 @@
                     android:minHeight="@dimen/dimen_48"
                     android:paddingBottom="@dimen/dimen_5"
                     android:paddingTop="@dimen/dimen_5"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_estimate"
@@ -222,7 +219,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="预估成交时间"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_estimate"
@@ -234,18 +231,18 @@
                     android:hint="请选择"
                     android:textColor="@color/title_bg1"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_poduct"
@@ -260,7 +257,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="意向产品"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_product"
@@ -272,18 +269,18 @@
                     android:hint="请选择"
                     android:textColor="@color/title_bg1"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_type"
@@ -298,7 +295,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="机会类型"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_type"
@@ -310,18 +307,18 @@
                     android:hint="请选择"
                     android:textColor="@color/title_bg1"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_source"
@@ -336,7 +333,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="机会来源"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_source"
@@ -348,24 +345,25 @@
                     android:hint="请选择"
                     android:textColor="@color/title_bg1"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/tv_custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:animateLayoutChanges="true"
+                android:orientation="vertical" />
 
 
             <EditText
@@ -380,7 +378,7 @@
                 android:minHeight="@dimen/dimen_100"
                 android:paddingBottom="@dimen/dimen_5"
                 android:paddingTop="@dimen/dimen_5"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

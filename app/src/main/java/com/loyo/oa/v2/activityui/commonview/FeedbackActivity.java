@@ -55,11 +55,16 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_feedback)
 public class FeedbackActivity extends BaseActivity {
 
-    @ViewById EditText et_content;
-    @ViewById GridView gridView_photo;
-    @ViewById ViewGroup layout_back;
-    @ViewById ImageView iv_submit;
-    @ViewById TextView tv_title;
+    @ViewById
+    EditText et_content;
+    @ViewById
+    GridView gridView_photo;
+    @ViewById
+    ViewGroup layout_back;
+    @ViewById
+    ImageView iv_submit;
+    @ViewById
+    TextView tv_title;
 
     private String uuid = StringUtil.getUUID();
     private ArrayList<Attachment> attachments = new ArrayList<>();
@@ -163,7 +168,7 @@ public class FeedbackActivity extends BaseActivity {
                 onBackPressed();
                 isClick = true;
             }
-        },"提示",message);
+        }, "提示", message);
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {

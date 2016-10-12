@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -24,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.setting.ResePhoneActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.bean.User;
@@ -130,6 +132,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_mobile;
     private TextView tv_mobile_error;
 
+    private String resultPhone;
     private String birthStr;
     private int age;
 
@@ -164,6 +167,10 @@ public class ContactInfoEditActivity extends BaseActivity {
             if (msg.what == 0x01) {
                 Utils.setContent(tv_birthday, birthStr);
                 Utils.setContent(tv_age, age + "");
+            }
+
+            if(msg.what == 0x02){
+                tv_mobile.setText(resultPhone);
             }
         }
     }
@@ -218,7 +225,8 @@ public class ContactInfoEditActivity extends BaseActivity {
                 updateProfile();
                 break;
             case R.id.layout_mobile:
-                showUpdateMobileDialog();
+                app.startActivityForResult(this, ResePhoneActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.MSG_SEND,new Bundle());
+                //showUpdateMobileDialog();
                 break;
             default:
                 break;
@@ -239,7 +247,6 @@ public class ContactInfoEditActivity extends BaseActivity {
                 }
                 break;
             default:
-
                 break;
         }
     }
@@ -301,23 +308,6 @@ public class ContactInfoEditActivity extends BaseActivity {
             }
         },"提示",getString(R.string.app_userinfoedt_message));
 
-/*        showGeneralDialog(false, true, getString(R.string.app_userinfoedt_message));
-        //确认
-        generalPopView.setSureOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-                updateProfile();
-            }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-                app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
-            }
-        });*/
     }
 
     /**
@@ -777,6 +767,9 @@ public class ContactInfoEditActivity extends BaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else if(requestCode == ExtraAndResult.MSG_SEND){
+            resultPhone = data.getStringExtra("phone");
+            mHandler.sendEmptyMessage(0x02);
         }
     }
 

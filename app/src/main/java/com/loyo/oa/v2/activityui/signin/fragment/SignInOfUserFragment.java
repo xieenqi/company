@@ -139,7 +139,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2,defaultPosition);
+        dataSelectAdapter = new DataSelectAdapter(mActivity,dataSelects,windowW,2,defaultPosition);
         recyclerView.setAdapter(dataSelectAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {

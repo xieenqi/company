@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.library.module.common.SystemBarTintManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -31,7 +32,6 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
@@ -398,14 +398,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     /**
      * SweetAlertDialog关闭
-     * */
-    public void dismissSweetAlert(){
+     */
+    public void dismissSweetAlert() {
         sweetAlertDialogView.sweetAlertDialog.dismiss();
     }
 
     /**
      * 重启当前Activity
-     * */
+     */
     public void restartActivity() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);

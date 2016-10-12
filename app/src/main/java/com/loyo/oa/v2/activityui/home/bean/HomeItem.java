@@ -21,4 +21,7 @@ public class HomeItem implements Serializable {
     public int tag;
 
     public String cls;
+    //红点的数据
+    public String extra = "";
+    public boolean viewed = true;
 }

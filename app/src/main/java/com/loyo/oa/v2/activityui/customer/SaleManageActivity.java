@@ -100,6 +100,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
+        isTopAdd = true;
         page = 1;
         getData();
     }
@@ -118,7 +119,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                     public void success(PaginationX<SaleRecord> resultData, Response response) {
                         HttpErrorCheck.checkResponse(" 客户销售机会列表：", response);
                         listView_demands.onRefreshComplete();
-                        if (null != resultData && resultData.getRecords().size() > 0) {
+                        if (null != resultData && !(resultData.getRecords().size() < 0)) {
                             if (isTopAdd) {
                                 listData.clear();
                             }
@@ -159,7 +160,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
 
                 if (null != permission && !permission.isEnable()) {
 
-                    sweetAlertDialogView.alertIcon(null,"此功能权限已关闭\n请联系管理员开启后再试!");
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
 
  /*                   showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
                             .setNoCancelOnclick(new View.OnClickListener() {

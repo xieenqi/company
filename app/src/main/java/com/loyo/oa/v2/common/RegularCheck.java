@@ -58,12 +58,13 @@ public class RegularCheck {
 
     /**
      * 云之讯,回拨座机号验证
+     * 座机号：纯数字、0开头、长度10到12位
      * */
     public static boolean isYunTell(String str){
         Pattern p = null;
         Matcher m = null;
         boolean b = false;
-        p = Pattern.compile("^1\\d{0,11}$"); // 验证手机号
+        p = Pattern.compile("^0[0-9]{9,11}$"); // 验证手机号
         m = p.matcher(str);
         b = m.matches();
         return b;
@@ -72,12 +73,13 @@ public class RegularCheck {
 
     /**
      * 云之讯,回拨手机号验证
+     * 手机号：纯数字、1开头、长度11位
      * */
     public static boolean isYunPhone(String str){
         Pattern p = null;
         Matcher m = null;
         boolean b = false;
-        p = Pattern.compile("^1\\d{1,10}$"); // 验证手机号
+        p = Pattern.compile("^1[0-9]{10}$"); // 验证手机号
         m = p.matcher(str);
         b = m.matches();
         return b;

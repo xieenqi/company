@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -38,6 +39,7 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -63,7 +66,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
     private TextView tv_audio_starttime, tv_audio_endtime;
     private ViewGroup layout_audioplayer, layout_audio_contral;
     private ViewGroup img_title_left, layout_add, layout_view_bottom;
-    private ViewGroup layout_last,layout_next;
+    private ViewGroup layout_last, layout_next;
 
     private Customer customer;
     private SaleActivity mSaleActivity;
@@ -149,6 +152,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
      * 获取数据
      */
     private void getData() {
+        showLoading("");
         if (customer != null) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", paginationX.getPageIndex());
@@ -225,17 +229,17 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
     /**
      * Player启动与停止回调
-     * */
+     */
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if(mp.getDuration() != 0){
+        if (mp.getDuration() != 0) {
             mHandler.sendEmptyMessage(0x04);
         }
     }
 
     /**
      * 拖动条监听
-     * */
+     */
     class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {
         int progress;
 
@@ -274,16 +278,16 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             /*上一首*/
             case R.id.layout_last:
 
-                if(mPosition == 0){
-                    sweetAlertDialogView.alertMessage("提示","已到第一条跟进!");
+                if (mPosition == 0) {
+                    sweetAlertDialogView.alertMessage("提示", "已到第一条跟进!");
                     mHandler.sendEmptyMessage(0x04);
                     audioPause();
-                }else{
+                } else {
                     mPosition--;
-                    if(!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())){
+                    if (!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())) {
                         mViewModel = lstData_saleActivity_current.get(mPosition);
                         audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
-                    }else{
+                    } else {
                         Toast("此跟进无电话录音。");
                         mHandler.sendEmptyMessage(0x04);
                         audioPause();
@@ -294,16 +298,16 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             /*下一首*/
             case R.id.layout_next:
 
-                if(mPosition == lstData_saleActivity_current.size() - 1){
-                    sweetAlertDialogView.alertMessage("提示","已到本页最后一条跟进,\n请下拉跟进列表获取更多跟进信息!");
+                if (mPosition == lstData_saleActivity_current.size() - 1) {
+                    sweetAlertDialogView.alertMessage("提示", "已到本页最后一条跟进,\n请下拉跟进列表获取更多跟进信息!");
                     mHandler.sendEmptyMessage(0x04);
                     audioPause();
-                }else{
+                } else {
                     mPosition++;
-                    if(!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())){
+                    if (!TextUtils.isEmpty(lstData_saleActivity_current.get(mPosition).getAudioUrl())) {
                         mViewModel = lstData_saleActivity_current.get(mPosition);
                         audioPlayDeal(mPosition, lstData_saleActivity_current.get(mPosition));
-                    }else{
+                    } else {
                         Toast("此跟进无电话录音。");
                         mHandler.sendEmptyMessage(0x04);
                         audioPause();
@@ -384,11 +388,11 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
     /**
      * 播放开始
-     * */
-    void audioStart(){
+     */
+    void audioStart() {
         isOnPlay = false;
         layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
-        if(null != mViewModel)
+        if (null != mViewModel)
             mViewModel.setIsAnim(true);
         if (player != null) {
             player.play();
@@ -397,11 +401,11 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
     /**
      * 播放暂停
-     * */
-    void audioPause(){
+     */
+    void audioPause() {
         isOnPlay = true;
         layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_play);
-        if(null != mViewModel)
+        if (null != mViewModel)
             mViewModel.setIsAnim(false);
         if (player != null) {
             player.pause();
@@ -410,44 +414,44 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
     /**
      * 杀死Player
-     * */
+     */
     void killPlayer() {
         if (player != null) {
             player.stop();
             player = null;
         }
-        if(null != mViewModel)
-        mViewModel.setIsAnim(false);
+        if (null != mViewModel)
+            mViewModel.setIsAnim(false);
     }
 
     /**
      * 线程池播放Player
-     * */
-    void threadPool(final String url){
+     */
+    void threadPool(final String url) {
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
-            cachedThreadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    player.playUrl(url);
-                }
-            });
+        cachedThreadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                player.playUrl(url);
+            }
+        });
     }
 
     /**
      * 播放和动画处理
-     * */
-    void audioPlayDeal(int position, final AudioViewModel viewModel){
+     */
+    void audioPlayDeal(int position, final AudioViewModel viewModel) {
 
         try {
-            tv_audio_endtime.setText(DateTool.stringForTime((int)viewModel.audioLength * 1000));
-        }catch (NullPointerException e){
+            tv_audio_endtime.setText(DateTool.stringForTime((int) viewModel.audioLength * 1000));
+        } catch (NullPointerException e) {
             Toast("录音文件不存在！");
             e.printStackTrace();
             return;
         }
 
-        for(int i = 0;i<lstData_saleActivity_current.size();i++){
-            if(i != position){
+        for (int i = 0; i < lstData_saleActivity_current.size(); i++) {
+            if (i != position) {
                 lstData_saleActivity_current.get(i).setIsAnim(false);
             }
         }
@@ -464,12 +468,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         playTime = "00:00:00";
 
         threadPool(viewModel.audioUrl);
-/*        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                player.playUrl(viewModel.audioUrl);
-            }
-        }).start();*/
     }
 
     @Override
@@ -520,8 +518,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
             if (viewModel.getIsAnim()) {
                 app.startAnim(tv_calls);
-            }
-            else {
+            } else {
                 app.stopAnim(tv_calls);
             }
             viewModel.imageViewWeakReference = new WeakReference<TextView>(tv_calls);
@@ -530,25 +527,24 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             tv_content.setText(viewModel.getContent());
 
             /*判断是否有录音*/
-/*            录音播放暂时屏蔽
             if (null != viewModel.audioUrl && !TextUtils.isEmpty(viewModel.audioUrl)) {
 
                 long audioLength = viewModel.audioLength;
-                if(audioLength > 0 && audioLength <= 60){
+                if (audioLength > 0 && audioLength <= 60) {
                     tv_calls.setText("000");
-                }else if(audioLength > 60    && audioLength <= 300){
+                } else if (audioLength > 60 && audioLength <= 300) {
                     tv_calls.setText("00000");
-                }else if(audioLength > 300  && audioLength <= 600){
+                } else if (audioLength > 300 && audioLength <= 600) {
                     tv_calls.setText("0000000");
-                }else if(audioLength > 600  && audioLength <= 1200){
+                } else if (audioLength > 600 && audioLength <= 1200) {
                     tv_calls.setText("000000000");
-                }else if(audioLength > 1200 && audioLength <= 1800){
+                } else if (audioLength > 1200 && audioLength <= 1800) {
                     tv_calls.setText("00000000000");
-                }else if(audioLength > 1800 && audioLength <= 3600){
+                } else if (audioLength > 1800 && audioLength <= 3600) {
                     tv_calls.setText("00000000000000");
-                }else if(audioLength > 3600){
+                } else if (audioLength > 3600) {
                     tv_calls.setText("0000000000000000");
-                }else{
+                } else {
                     tv_calls.setText("");
                 }
 
@@ -556,7 +552,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                 tv_audio_length.setText(DateTool.stringForTime((int) viewModel.audioLength * 1000));
             } else {
                 layout_audio.setVisibility(View.GONE);
-            }*/
+            }
 
             tv_contact_name.setText("联系人：" + viewModel.contactName);
             tv_follow_name.setText("跟进人：" + viewModel.creatorName + " #" + viewModel.typeName);

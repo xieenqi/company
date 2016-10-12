@@ -1,7 +1,9 @@
 package com.loyo.oa.v2.customview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +18,15 @@ import com.loyo.oa.v2.activityui.customer.CustomerContractAddActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * com.loyo.oa.v2.customview
@@ -111,8 +116,31 @@ public class ContactViewGroup extends LinearLayout {
                 callPhonePopView.dismiss();
             }
         });
-
     }
+
+    /**
+     * 判断本账号是否有电话
+     * */
+    public void isMobile(String phone,int callType){
+        if (null == MainApp.user.mobile || TextUtils.isEmpty(MainApp.user.mobile)) {
+            final SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(context);
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                    MainApp.getMainApp().startActivity((Activity) context, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                }
+            },"提示",context.getString(R.string.app_homeqq_message));
+        }else{
+            paymentSet(phone,callType);
+        }
+    }
+
 
     /**
      * 绑定视图
@@ -194,11 +222,7 @@ public class ContactViewGroup extends LinearLayout {
                         contactProcessCallback.onPhoneError();
                         return;
                     }*/
-
-                    /*商务电话暂时屏蔽
-                    paymentSet(mContact.getTel(),0);*/
-
-                    Utils.call(context, mContact.getTel());
+                    isMobile(mContact.getTel(),0);
                 }
             });
 
@@ -215,12 +239,7 @@ public class ContactViewGroup extends LinearLayout {
                         contactProcessCallback.onPhoneError();
                         return;
                     }*/
-
-                    /*上午电话暂时屏蔽
-                    paymentSet(mContact.getWiretel(),1);*/
-
-                    Utils.call(context, mContact.getWiretel());
-
+                    isMobile(mContact.getWiretel(),1);
                 }
             });
 

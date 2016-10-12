@@ -122,7 +122,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     //回款审批
     @ViewById
     LinearLayout ll_payment_layout, ll_payment_content;
-
+    @Extra(ExtraAndResult.IS_UPDATE)
+    boolean isUpdate;//是否需要刷新列表
     public final int MSG_DELETE_WFINSTANCE = 100;
     public final int MSG_ATTACHMENT = 200;
 
@@ -620,7 +621,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             mWfInstance.workflowValues.clear();
             Intent intent = new Intent();
             intent.putExtra("review", mWfInstance);
-            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isUpdate ? 0x09 : RESULT_OK, intent);
         } else {
             super.onBackPressed();
         }
@@ -847,6 +848,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     mBundle = new Bundle();
                     mBundle.putSerializable("data", mWfInstance);
                     app.startActivityForResult(WfinstanceInfoActivity.this, WfInEditActivity.class, MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
+                    isUpdate = true;
                 }
                 //选择删除回调
                 else if (data.getBooleanExtra("delete", false)) {

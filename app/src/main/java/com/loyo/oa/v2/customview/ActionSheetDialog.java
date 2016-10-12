@@ -50,7 +50,7 @@ public class ActionSheetDialog {
         // 设置Dialog最小宽度为屏幕宽度
         view.setMinimumWidth(display.getWidth());
 
-        // 获取自定义Dialog布局中的控件
+        // 获取自定义Dialog布局中的控件F
         sLayout_content = (ScrollView) view.findViewById(R.id.sLayout_content);
         lLayout_content = (LinearLayout) view.findViewById(R.id.lLayout_content);
         layout_content = (RelativeLayout) view.findViewById(R.id.layout_content);
