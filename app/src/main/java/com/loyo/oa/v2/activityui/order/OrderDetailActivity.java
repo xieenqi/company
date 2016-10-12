@@ -104,8 +104,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Subscribe
-    public void
-    onWorksheetCreated(Worksheet data) {
+    public void onWorksheetCreated(Worksheet data) {
         // 刷新数目
         getData();
     }

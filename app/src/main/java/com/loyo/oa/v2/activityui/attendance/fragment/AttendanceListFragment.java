@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.attendance.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,24 +25,21 @@ import com.loyo.oa.v2.activityui.attendance.model.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
 import com.loyo.oa.v2.activityui.attendance.model.DayofAttendance;
-import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceListPresenter;
+import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceListPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.CustomRecyclerView;
-import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import java.util.ArrayList;
@@ -53,8 +49,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【考勤列表】我的和团队
@@ -84,7 +78,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private CustomerDataManager customerDataManager;
     private DataSelectAdapter dataSelectAdapter;
     private ArrayList<DataSelect> dataSelects;
-    private AttendanceListPresenter mPresenter;
+    private AttendanceListPresenterImpl mPresenter;
 
     private int scorllW;
     private int windowW;
@@ -101,8 +95,15 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     public void onResume() {
         super.onResume();
         if (isAttAdd) {
+            LogUtil.dee("onResume");
             getData(page);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AppBus.getInstance().unregister(getActivity());
     }
 
     @Nullable
@@ -122,7 +123,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     }
 
     private void initUI() {
-        mPresenter = new AttendanceListPresenter(mActivity, this);
+        AppBus.getInstance().register(getActivity());
+        mPresenter = new AttendanceListPresenterImpl(mActivity, this);
         recyclerView = (CustomRecyclerView) mView.findViewById(R.id.recy_data_select);
         tv_count_title = (TextView) mView.findViewById(R.id.tv_count_title);
         tv_later = (TextView) mView.findViewById(R.id.tv_later);
@@ -287,7 +289,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
-        startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
+        startActivity(intent);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
     }
@@ -447,8 +449,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     /**
      * 绑定数据
      */
-    private void bindData() {
-
+    private void bindData(HttpAttendanceList result) {
+        attendances.clear();
+        attendances.addAll(result.records.getAttendances());
         if (null == adapter) {
             adapter = new AttendanceListAdapter(attendances,this,getActivity(),mActivity,type);
             lv.setAdapter(adapter);
@@ -471,19 +474,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         isAttAdd = false;
         showLoading("请稍后");
         mPresenter.getListData(type, qtime, page);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-
-        if (requestCode == FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE) {
-            page = 1;
-            getData(page);
-        }
     }
 
     /**
@@ -516,16 +506,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         } else {
             mPresenter.getTeamData(qtime);
         }
-
-        if (isPullDowne || page == 1) {
-            attendances = result.records.getAttendances();
-        } else {
-            attendances.addAll(result.records.getAttendances());
-        }
-        bindData();
-        if (page != 1) {
-            adapter.notifyDataSetChanged();
-        }
+        bindData(result);
     }
 
     /**
@@ -580,11 +561,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if (type == 1) {
             attendance.setUser(MainApp.user);
         }
+        isAttAdd = true;
         Intent intent = new Intent(mActivity, AttendanceDetailsActivity_.class);
         intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut == 1 ? attendance.getIn().getId() : attendance.getOut().getId());
         intent.putExtra("inOrOut", inOrOut);
         intent.putExtra("overTime", overTime);
-        startActivityForResult(intent, FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE);
+        startActivity(intent);
     }
 
     /**

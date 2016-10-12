@@ -11,8 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.login.model.Token;
-import com.loyo.oa.v2.activityui.login.presenter.LoginPresenterImpl;
 import com.loyo.oa.v2.activityui.login.presenter.LoginPresenter;
+import com.loyo.oa.v2.activityui.login.presenter.impl.LoginPresenterImpl;
 import com.loyo.oa.v2.activityui.login.viewcontrol.LoginView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
@@ -36,7 +36,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private LinearLayout serverTest, serverFormal, layout_check_debug;
     private ImageView serverTestImg, serverFormalImg;
     private TextView serverTestTv, serverFormalTv;
-    private LoginPresenterImpl loginPresenterImpl;
+    private LoginPresenter loginPresenter;
 
     private String username;
     private String password;
@@ -117,7 +117,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 LogUtil.d("isRelease:" + Config_project.isRelease);
             }
         });
-        loginPresenterImpl = new LoginPresenter(this,layout_login,mContext);
+        loginPresenter = new LoginPresenterImpl(this,layout_login,mContext);
     }
 
     TextWatcher nameWatcher = new TextWatcher() {
@@ -151,7 +151,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case R.id.layout_login:
                 username = edt_username.getText().toString().trim();
                 password = edt_password.getText().toString().trim();
-                loginPresenterImpl.requestStandBy(username,password);
+                loginPresenter.requestStandBy(username,password);
                 break;
 
             /**企业qq登陆*/
@@ -199,7 +199,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * */
     @Override
     public void onSuccess(Token token) {
-        loginPresenterImpl.onSuccessEmbl(token,LoginActivity.this);
+        loginPresenter.onSuccessEmbl(token,LoginActivity.this);
     }
 
     /**
@@ -207,7 +207,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * */
     @Override
     public void onError() {
-        loginPresenterImpl.onErrorEmbl();
+        loginPresenter.onErrorEmbl();
     }
 
     /**
@@ -216,11 +216,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void verifySuccess() {
         layout_login.setText("登录中...");
-        loginPresenterImpl.changeColor(-1, R.color.lightgreen);
+        loginPresenter.changeColor(-1, R.color.lightgreen);
         HashMap<String, Object> body = new HashMap<String, Object>();
         body.put("username", username);
         body.put("password", password);
-        loginPresenterImpl.requestLogin(body);
+        loginPresenter.requestLogin(body);
     }
 
     @Override

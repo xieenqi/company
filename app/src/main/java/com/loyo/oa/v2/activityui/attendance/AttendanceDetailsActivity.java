@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.attendance;
 
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceDetial;
-import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceDetailsPresenter;
+import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceDetailsPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceDetailsView;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -21,6 +20,7 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -90,7 +90,7 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
     private String strMessage;
     private int type;
 
-    private AttendanceDetailsPresenter mPresenter;
+    private AttendanceDetailsPresenterImpl mPresenter;
 
     @AfterViews
     void initViews() {
@@ -98,7 +98,7 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
         layout_back.setOnTouchListener(Global.GetTouch());
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("考勤详情");
-        mPresenter = new AttendanceDetailsPresenter(this,AttendanceDetailsActivity.this);
+        mPresenter = new AttendanceDetailsPresenterImpl(this,AttendanceDetailsActivity.this);
         initGridView(attachments);
         mPresenter.getData(attendanceId);
     }
@@ -165,8 +165,7 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
         btn_confirm.setVisibility(View.GONE);
         iv_type.setImageResource(R.drawable.icon_field_work_confirm);
         iv_type.setVisibility(View.VISIBLE);
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
+        AppBus.getInstance().post(new AttendanceRecord());
         finish();
     }
 
@@ -259,5 +258,4 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
             }
         }
     }
-
 }

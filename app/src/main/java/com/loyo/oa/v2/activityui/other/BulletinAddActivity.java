@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
-import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
+import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -57,14 +57,14 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
-    private BulletinAddPresenterImpl mBulletinAddPresenterImpl;
+    private BulletinAddPresenter mBulletinAddPresenter;
 
     @AfterViews
     void init() {
         super.setTitle("发布通知");
         mContext = this;
         init_gridView_photo();
-        mBulletinAddPresenterImpl = new BulletinAddPresenter(this, mContext);
+        mBulletinAddPresenter = new BulletinAddPresenterImpl(this, mContext);
     }
 
     /**
@@ -96,7 +96,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      * */
     @Click(R.id.img_title_right)
     void submit() {
-        mBulletinAddPresenterImpl.verifyText(edt_title.getText().toString().trim(),
+        mBulletinAddPresenter.verifyText(edt_title.getText().toString().trim(),
                                          edt_content.getText().toString().trim());
     }
 
@@ -137,7 +137,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
-        mBulletinAddPresenterImpl.dealDepartmentResult((Members) data.getSerializableExtra("data"));
+        mBulletinAddPresenter.dealDepartmentResult((Members) data.getSerializableExtra("data"));
     }
 
     @Override   /*格式验证*/
@@ -163,9 +163,9 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     @Override
     public void verifySuccess(String title,String content) {
         if (pickPhots.size() == 0) {
-            mBulletinAddPresenterImpl.requestBulletinAdd(title,content,uuid);
+            mBulletinAddPresenter.requestBulletinAdd(title,content,uuid);
         } else {
-            mBulletinAddPresenterImpl.uploadAttachement(sweetAlertDialogView, pickPhots,title,content,uuid);
+            mBulletinAddPresenter.uploadAttachement(sweetAlertDialogView, pickPhots,title,content,uuid);
         }
     }
 

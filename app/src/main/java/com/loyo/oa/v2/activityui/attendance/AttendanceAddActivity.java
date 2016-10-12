@@ -2,9 +2,6 @@ package com.loyo.oa.v2.activityui.attendance;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Handler;
-import android.os.Message;
 import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
+import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceAddPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -26,11 +23,10 @@ import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.point.IAttendance;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtilGD;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
@@ -43,15 +39,10 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.client.Response;
 
 /**
  * 【新增考勤】
@@ -98,7 +89,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     @Extra("extraWorkStartTime")
     long extraWorkStartTime;//加班开始时间
 
-    private AttendanceAddPresenter mPresenter;
+    private AttendanceAddPresenterImpl mPresenter;
     private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
@@ -149,8 +140,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                 tvTimeName = "加班时间:";
                 tv_title_1.setText("加班打卡");
                 break;
-            default:
 
+            default:
                 break;
         }
 
@@ -158,7 +149,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         img_title_right.setOnTouchListener(Global.GetTouch());
         iv_refresh_address.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
-        mPresenter = new AttendanceAddPresenter(mAttendanceRecord,mContext,this,AttendanceAddActivity.this);
+        mPresenter = new AttendanceAddPresenterImpl(mAttendanceRecord,mContext,this,AttendanceAddActivity.this);
         mPresenter.mHndler(tv_count_time,tv_count_time2,tvTimeName);
         initLogicData();
     }
@@ -327,7 +318,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 弹窗提示
      * */
     @Override
-    public void toastMessage(String message) {
+    public void showMessage(String message) {
         Toast(message);
     }
 
@@ -336,14 +327,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * */
     @Override
     public void attendanceSuccess() {
-        try {
-            Toast("打卡成功!");
-            Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
-            onBackPressed();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Toast("打卡成功!");
+        onBackPressed();
     }
 
     /**
@@ -383,4 +368,5 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         super.onDestroy();
         mPresenter.recycle();
     }
+
 }

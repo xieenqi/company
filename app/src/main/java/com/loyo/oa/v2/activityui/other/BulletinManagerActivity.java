@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.presenter.BulletinManagerPresenter;
+import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinManagerPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinManagerView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
@@ -39,13 +39,13 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     private boolean isTopAdd = true;
     private final int REQUEST_NEW = 1;
     private LinearLayoutManager layoutManager;
-    private BulletinManagerPresenter managerPresenter;
+    private BulletinManagerPresenterImpl managerPresenter;
 
 
     @AfterViews
     void initViews() {
         setTouchView(-1);
-        managerPresenter = new BulletinManagerPresenter(this,mContext,BulletinManagerActivity.this);
+        managerPresenter = new BulletinManagerPresenterImpl(this,mContext,BulletinManagerActivity.this);
         managerPresenter.isPermission();
 
         img_title_left.setOnTouchListener(Global.GetTouch());

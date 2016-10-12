@@ -287,7 +287,6 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
                 HttpErrorCheck.checkResponse("提交事情处理信息", response);
                 if (type == 1) {
                     AppBus.getInstance().post(new WorksheetDetail());
-
                     WorksheetEventChangeEvent event = new WorksheetEventChangeEvent();
                     event.bundle = new Bundle();
                     event.bundle.putString(ExtraAndResult.EXTRA_ID, id);
