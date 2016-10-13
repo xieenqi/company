@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.discuss.persenter.MyDisscussPControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -61,12 +62,16 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         }
     };
 
+    MyDisscussPControl PControl;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mydiscuss);
+        PControl = new MyDisscussPControl(this);
         initView();
         initListener();
+        PControl.getPageData();
         getData();
     }
 
@@ -178,7 +183,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private class DiscussAdapter extends BaseAdapter {
+    public class DiscussAdapter extends BaseAdapter {
         private List<HttpDiscussItem> datas = new ArrayList<>();
         private LayoutInflater inflater;
 
