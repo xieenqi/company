@@ -47,9 +47,6 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout layout_back;
     private TextView tv_title;
     private TextView tv_edit;
-    private ImageView iv_submit;
-    private LinearLayoutManager linearLayoutManager;
-    protected PaginationX<HttpDiscussItem> mDiscuss = new PaginationX(20);
     private ArrayList<HttpDiscussItem> listData = new ArrayList<>();
 
     private DiscussAdapter adapter;
@@ -60,9 +57,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
-
             adapter.updataList(listData);
-//            adapter.notifyDataSetChanged();
         }
     };
 
@@ -83,9 +78,6 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         tv_edit.setText("@我的");
         tv_title.setVisibility(View.VISIBLE);
         tv_edit.setVisibility(View.VISIBLE);
-//        linearLayoutManager = new LinearLayoutManager(this);
-//        lv_discuss.getRefreshableView().setLayoutManager(linearLayoutManager);
-//        lv_discuss.setMode(PullToRefreshBase.Mode.BOTH);
         lv_discuss.setMode(PullToRefreshBase.Mode.BOTH);
         lv_discuss.setOnRefreshListener(this);
         adapter = new DiscussAdapter();
@@ -97,15 +89,12 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_edit = (TextView) findViewById(R.id.tv_edit);
-        iv_submit = (ImageView) findViewById(R.id.iv_submit);
     }
 
     private void initListener() {
         layout_back.setOnClickListener(this);
         tv_edit.setOnClickListener(this);
         lv_discuss.setOnRefreshListener(this);
-
-
     }
 
     private void getData() {
@@ -154,15 +143,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
                 onBackPressed();
                 break;
             case R.id.tv_edit:
-//                Intent intent = new Intent(this, HaitMyActivity.class);
-////                intent.putExtra(ExtraAndResult.EXTRA_TYPE, "");
-////                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 app.startActivity(this, HaitMyActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-                break;
-            default:
-
                 break;
         }
     }
@@ -182,12 +163,6 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         getData();
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        lv_discuss.getRefreshableView().setAdapter(adapter);
-//    }
-
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -199,52 +174,9 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
                     getData();
                     LogUtil.d("数组刷新了红点数据");
                     break;
-                default:
-
-                    break;
             }
         }
     }
-
-//    private class DiscussAdapter extends RecyclerView.Adapter<DiscussViewHolder> {
-//
-//        private List<HttpDiscussItem> datas = new ArrayList<>();
-//
-//        public void updataList(List<HttpDiscussItem> data) {
-//            if (data == null) {
-//                data = new ArrayList<>();
-//            }
-//            datas.clear();
-//            datas.addAll(data);
-//           notifyDataSetChanged();
-//        }
-//
-//        public void cleanData() {
-//            datas.clear();
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return datas.size();
-//        }
-//
-//        @Override
-//        public DiscussViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-//            View view = View.inflate(MyDiscussActivity.this, R.layout.item_mydiscuss_layout, null);
-//            return new DiscussViewHolder(view);
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(final DiscussViewHolder holder, final int position) {
-//            HttpDiscussItem info = datas.get(position);
-//            holder.tv_title.setText(info.title);
-//            holder.tv_time.setText(info.newUpdatedAt != 0 ? DateTool.getDiffTime(info.newUpdatedAt * 1000) : info.updatedAt.substring(11, 19));
-//            holder.tv_content.setText(info.creator.name + ":" + info.content);
-//            holder.openItem(datas.get(position));
-//        }
-//
-//
-//    }
 
     private class DiscussAdapter extends BaseAdapter {
         private List<HttpDiscussItem> datas = new ArrayList<>();
