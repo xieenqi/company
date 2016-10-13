@@ -6,6 +6,7 @@ package com.loyo.oa.v2.db.bean;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.loyo.oa.v2.db.sort.DepartmentPinyinComparator;
 import com.loyo.oa.v2.db.sort.UserPinyinComparator;
 
 import java.io.Serializable;
@@ -60,6 +61,21 @@ public class DBDepartment implements Serializable {
         }
 
         return new ArrayList<DBUser>(result);
+    }
+
+    public List<DBDepartment> flatDepartments() {
+        List<DBDepartment> result = new ArrayList<>();
+
+        /** 深度遍历 */
+        result.add(this);
+        List<DBDepartment> children = new ArrayList<>(childDepts);
+        Collections.sort(children, new DepartmentPinyinComparator());
+        Iterator<DBDepartment> iterator = children.iterator();
+        while (iterator.hasNext()) {
+            result.addAll(iterator.next().flatDepartments());
+        }
+
+        return result;
     }
 
     public List<DBUser> allUsersSortedByPinyin() {
