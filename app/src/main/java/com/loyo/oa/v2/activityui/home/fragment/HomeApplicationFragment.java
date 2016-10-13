@@ -726,23 +726,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 intentValue();
             }
         },"提示",getString(R.string.app_attanceworry_message));
-
-/*        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
-        //确认
-        generalPopView.setSureOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-                intentValue();
-            }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });*/
     }
 
     /**
@@ -756,6 +739,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
+        intent.putExtra("lateMin",attendanceRecords.getLateMin());
+        intent.putExtra("earlyMin",attendanceRecords.getEarlyMin());
+
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
 

@@ -58,6 +58,24 @@ public class AttendanceRecord implements Serializable {
     private long extraWorkStartTime;
     private int confirmExtraTime;
     private int leaveDays;
+    private int lateMin;
+    private int earlyMin;
+
+    public int getEarlyMin() {
+        return earlyMin;
+    }
+
+    public void setEarlyMin(int earlyMin) {
+        this.earlyMin = earlyMin;
+    }
+
+    public int getLateMin() {
+        return lateMin;
+    }
+
+    public void setLateMin(int lateMin) {
+        this.lateMin = lateMin;
+    }
 
     public int getLeaveDays() {
         return leaveDays;

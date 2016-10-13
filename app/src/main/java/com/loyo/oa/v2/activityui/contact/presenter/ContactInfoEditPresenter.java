@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+
+import java.util.List;
 
 /**
  * Created by yyy on 16/10/12.
@@ -29,5 +31,8 @@ public interface ContactInfoEditPresenter {
 
     /*设置头像跳转*/
     void setHeadImage(Activity mActivity, Intent mIntent, int REQUEST_IMAGE);
+
+    /*上传头像*/
+    void upload(List<String> mSelectPath, String uuid, RoundImageView imageView);
 
 }

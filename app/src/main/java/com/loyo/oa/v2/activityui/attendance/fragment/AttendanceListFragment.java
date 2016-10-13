@@ -289,6 +289,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
+        intent.putExtra("lateMin",attendanceRecords.getLateMin());
+        intent.putExtra("earlyMin",attendanceRecords.getEarlyMin());
+
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 

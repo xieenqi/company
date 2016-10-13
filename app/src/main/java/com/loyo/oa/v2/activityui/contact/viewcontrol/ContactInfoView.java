@@ -19,4 +19,7 @@ public interface ContactInfoView extends BaseView{
     /*弹出框响应*/
     void leaveDialogEmbl();
 
+    /*设置头像*/
+    void setHeadImage(String path);
+
 }

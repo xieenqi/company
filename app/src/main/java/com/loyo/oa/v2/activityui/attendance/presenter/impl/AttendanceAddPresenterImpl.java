@@ -206,7 +206,7 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
      * 提交考勤信息
      * */
     @Override
-    public void commitAttendance(ArrayList<Attachment> mAttachment,boolean isPopup, int outKind,int state,String uuid,String address,String reason,long extraWorkStartTime,long serverTime) {
+    public void commitAttendance(ArrayList<Attachment> mAttachment,boolean isPopup, int outKind,int state,String uuid,String address,String reason,long extraWorkStartTime,long serverTime,int lateMin,int earlyMin) {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("inorout", mAttendanceRecord.getInorout());
@@ -228,6 +228,10 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         map.put("leaveDays", mAttendanceRecord.getLeaveDays());
         map.put("remainTime", mAttendanceRecord.getRemainTime());
         map.put("tagstate", mAttendanceRecord.getTagstate());
+
+        map.put("lateMin", lateMin);
+        map.put("earlyMin", earlyMin);
+
 
 
         if (isPopup) {

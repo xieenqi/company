@@ -28,11 +28,16 @@ import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.RoundImageView;
@@ -50,6 +55,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 /**
  * 【编辑个人信息】
@@ -134,7 +143,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     @AfterViews
     void initViews() {
         setTouchView(-1);
-        mPresenter = new ContactInfoEditPresenterImpl(this,mContext);
+        mPresenter = new ContactInfoEditPresenterImpl(this,mContext,ContactInfoEditActivity.this);
 
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("编辑个人资料");
@@ -322,6 +331,14 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         updateProfile();
     }
 
+    /**
+     * 设置头像
+     * */
+    @Override
+    public void setHeadImage(String path) {
+        this.path = path;
+    }
+
     @Override
     public void showMessage(String message) {
 
@@ -350,62 +367,11 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             return;
         }
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
-
             List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-            StringBuilder sb = new StringBuilder();
-            for (String p : mSelectPath) {
-                sb.append(p);
-            }
-            LogUtil.dee("sb.toString:" + sb.toString());
-
-            ImageLoader.getInstance().displayImage("file://" + sb.toString(), img_title_user);
-            User.setImageUrl("file://" + sb.toString());
-            try {
-                Uri uri = Uri.parse("file://" + sb.toString());
-                File newFile = Global.scal(this, uri);
-
-                if (newFile != null && newFile.length() > 0) {
-                    RequestParams params = new RequestParams();
-                    if (uuid == null) {
-                        uuid = StringUtil.getUUID();
-                    }
-                    params.put("uuid", uuid);
-
-                    if (newFile.exists()) {
-                        params.put("attachments", newFile, "image/*");
-                    }
-
-                    ArrayList<ServerAPI.ParamInfo> lstParamInfo = new ArrayList<ServerAPI.ParamInfo>();
-                    ServerAPI.ParamInfo paramInfo = new ServerAPI.ParamInfo("bitmap", newFile);
-                    lstParamInfo.add(paramInfo);
-                    ServerAPI.request(this, ServerAPI.POST, FinalVariables.attachments, null, params, AsyncHandler_Upload_New_Attachments.class, lstParamInfo);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            mPresenter.upload(mSelectPath,uuid,img_title_user);
         }else if(requestCode == ExtraAndResult.MSG_SEND){
             resultPhone = data.getStringExtra("phone");
             mHandler.sendEmptyMessage(0x02);
-        }
-    }
-
-    public class AsyncHandler_Upload_New_Attachments extends BaseActivityAsyncHttpResponseHandler {
-        File file;
-
-        public void setBitmap(final File imageFile) {
-            file = imageFile;
-        }
-
-        @Override
-        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
-            try {
-                Attachment attachment = MainApp.gson.fromJson(getStr(arg2), Attachment.class);
-                path = attachment.getUrl();
-
-            } catch (Exception e) {
-                Global.ProcException(e);
-            }
         }
     }
 }

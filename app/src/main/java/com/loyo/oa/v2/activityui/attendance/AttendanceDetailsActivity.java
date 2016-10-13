@@ -85,6 +85,7 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
     @Extra(ExtraAndResult.EXTRA_ID)
     String attendanceId;
 
+    private TextView tv_tag;
     private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String strMessage;
@@ -98,6 +99,7 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
         layout_back.setOnTouchListener(Global.GetTouch());
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("考勤详情");
+        tv_tag = (TextView) findViewById(R.id.tv_tag);
         mPresenter = new AttendanceDetailsPresenterImpl(this,AttendanceDetailsActivity.this);
         initGridView(attachments);
         mPresenter.getData(attendanceId);
@@ -215,21 +217,37 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
         if (mAttendanceDetails.state == 5 && inOrOut == 3) {
             String time = (DateTool.timet(mAttendanceDetails.extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
                     + "-" + DateTool.timet(mAttendanceDetails.extraWorkEndTime + "", DateTool.DATE_FORMATE_TRANSACTION));
-            tv_info.setText("时间：" + time + " 共" + overTime);
-            tv_explain.setText("加班说明");
-        } else { /*上班下班处理*/
+            //tv_info.setText("时间：" + time + " 共" + overTime);
+            tv_info.setText("加班时间: " + time);
+            tv_tag.setText("加班时长: "+overTime);
+            tv_explain.setText("加班原因");
+        }
+        /*上班下班处理*/
+        else {
+            String tag  = "";
             String info = "";
+
+            if(inOrOut == 1/*上班*/){
+                info = "上班时间: ";
+                tag  = "上班时间正常";
+
+            }else if(inOrOut == 2/*下班*/){
+                info = "下班时间: ";
+                tag  = "下班时间正常";
+            }
+
             if (mAttendanceDetails.state == AttendanceRecord.STATE_BE_LATE) {
-                info = "上班迟到, ";
+                tag  = "上班迟到: " + mAttendanceDetails.lateMin / 60 + "小时" + mAttendanceDetails.lateMin % 60 + "分";
+                tv_tag.setText(Utils.modifyTextColor(tag, getResources().getColor(R.color.red1), 0, tag.length()));
             } else if (mAttendanceDetails.state == AttendanceRecord.STATE_LEAVE_EARLY) {
-                info = "下班早退, ";
+                tag  = "下班早退: " + mAttendanceDetails.earlyMin / 60 + "小时" + mAttendanceDetails.earlyMin % 60 + "分";
+                tv_tag.setText(Utils.modifyTextColor(tag, getResources().getColor(R.color.red1), 0, tag.length()));
+            } else if(mAttendanceDetails.state == AttendanceRecord.STATE_NORMAL){
+                tv_tag.setText(tag);
             }
-            String content = info + "打卡时间: " + app.df3.format(new Date(mAttendanceDetails.createtime * 1000));//
-            if (!TextUtils.isEmpty(info)) {
-                tv_info.setText(Utils.modifyTextColor(content, getResources().getColor(R.color.red1), 2, 4));
-            } else {
-                tv_info.setText(content);
-            }
+
+            String content = info + app.df2.format(new Date(mAttendanceDetails.createtime * 1000));
+            tv_info.setText(content);
         }
 
         tv_address_info.setText(mAttendanceDetails.address);

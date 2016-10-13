@@ -5,31 +5,57 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity;
 import com.loyo.oa.v2.activityui.contact.presenter.ContactInfoEditPresenter;
 import com.loyo.oa.v2.activityui.contact.viewcontrol.ContactInfoView;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.apache.http.Header;
+
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static android.R.attr.path;
+import static com.loyo.oa.v2.R.id.img_title_user;
 import static com.loyo.oa.v2.common.Global.Toast;
 
 /**
+ * 【编辑个人资料】Presenter
  * Created by yyy on 16/10/12.
  */
 
@@ -37,10 +63,12 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
 
     private ContactInfoView crolView;
     private Context mContext;
+    private Activity mActivity;
 
-    public ContactInfoEditPresenterImpl(ContactInfoView crolView,Context mContext){
+    public ContactInfoEditPresenterImpl(ContactInfoView crolView,Context mContext,Activity mActivity){
         this.crolView = crolView;
         this.mContext = mContext;
+        this.mActivity = mActivity;
     }
 
 
@@ -165,7 +193,9 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
         return true;
     }
 
-
+    /**
+     * 设置头像跳转
+     * */
     @Override
     public void setHeadImage(Activity mActivity,Intent mIntent,int REQUEST_IMAGE) {
         // 是否显示拍摄图片
@@ -182,4 +212,70 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
         mActivity.startActivityForResult(mIntent, REQUEST_IMAGE);
         mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
+
+    /**
+     * 上传头像
+     * */
+    @Override
+    public void upload(List<String> mSelectPath, String uuid, RoundImageView imageView) {
+        StringBuilder sb = new StringBuilder();
+        for (String p : mSelectPath) {
+            sb.append(p);
+        }
+        LogUtil.dee("sb.toString:" + sb.toString());
+
+        ImageLoader.getInstance().displayImage("file://" + sb.toString(), imageView);
+        User.setImageUrl("file://" + sb.toString());
+        try {
+            Uri uri = Uri.parse("file://" + sb.toString());
+            File newFile = Global.scal(mContext, uri);
+
+            if (newFile != null && newFile.length() > 0) {
+                RequestParams params = new RequestParams();
+                if (uuid == null) {
+                    uuid = StringUtil.getUUID();
+                }
+                params.put("uuid", uuid);
+
+                if (newFile.exists()) {
+                    params.put("attachments", newFile, "image/*");
+                }
+
+                ArrayList<ServerAPI.ParamInfo> lstParamInfo = new ArrayList<ServerAPI.ParamInfo>();
+                ServerAPI.ParamInfo paramInfo = new ServerAPI.ParamInfo("bitmap", newFile);
+                lstParamInfo.add(paramInfo);
+                ServerAPI.request(this, ServerAPI.POST, FinalVariables.attachments, null, params, AsyncHandler_Upload_New_Attachments.class, lstParamInfo);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 上传头像操作
+     * */
+    public class AsyncHandler_Upload_New_Attachments extends BaseAsyncHttpResponseHandler {
+        File file;
+        public void setBitmap(final File imageFile) {
+            file = imageFile;
+        }
+
+        @Override
+        public Activity getActivity() {
+            return mActivity;
+        }
+
+        @Override
+        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
+            try {
+                Attachment attachment = MainApp.gson.fromJson(getStr(arg2), Attachment.class);
+                crolView.setHeadImage(attachment.getUrl());
+            } catch (Exception e) {
+                Global.ProcException(e);
+            }
+        }
+    }
+
 }

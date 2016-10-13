@@ -88,6 +88,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     long serverTime;//当前时间
     @Extra("extraWorkStartTime")
     long extraWorkStartTime;//加班开始时间
+    @Extra("lateMin")
+    int lateMin;
+    @Extra("earlyMin")
+    int earlyMin;
+
 
     private AttendanceAddPresenterImpl mPresenter;
     private SignInGridViewAdapter adapter;
@@ -271,7 +276,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     private void commitAttendance() {
         mPresenter.commitAttendance(attachments,isPopup,
                                     outKind,state,uuid,tv_address.getText().toString(),
-                                    et_reason.getText().toString(),extraWorkStartTime,serverTime);
+                                    et_reason.getText().toString(),extraWorkStartTime,
+                                    serverTime,lateMin,earlyMin);
     }
 
     /**

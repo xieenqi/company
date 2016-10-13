@@ -21,7 +21,7 @@ public interface AttendanceAddPresenter {
     void uploadAttachments(String uuid,ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots);
 
     /*提交考勤*/
-    void commitAttendance(ArrayList<Attachment> mAttachment,boolean isPopup, int outKind,int state,String uuid,String address,String reason,long extraWorkStartTime,long serverTime);
+    void commitAttendance(ArrayList<Attachment> mAttachment,boolean isPopup, int outKind,int state,String uuid,String address,String reason,long extraWorkStartTime,long serverTime,int lateMin,int earlyMin);
 
     /*删除附件*/
     void deleteAttachments(String uuid, Attachment delAttachment);
