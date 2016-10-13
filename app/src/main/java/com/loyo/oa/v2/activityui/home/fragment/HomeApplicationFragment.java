@@ -223,6 +223,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
         //只有登录进来才加载loading
+        LogUtil.d("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))+"代开值 ----" + SharedUtil.get(app, ExtraAndResult.APP_START));
         if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
             showLoading("");
         }
@@ -611,8 +612,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     mappedPermission.put(permission.code, permission);
                 }
             }
-
-            for (int i = 0; i < items.size(); i++) {
+            int itemsLength = items.size();
+            for (int i = 0; i < itemsLength; i++) {
                 String code = items.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {
@@ -620,8 +621,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     i--;
                 }
             }
-
-            for (int i = 0; i < caseItems.size(); i++) {
+            int caseItemsLength = caseItems.size();
+            for (int i = 0; i < caseItemsLength; i++) {
                 String code = caseItems.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {
@@ -667,7 +668,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     private ValidateItem availableValidateItem() {
         ValidateItem validateItem = null;
-        for (int i = 0; i < validateInfo.getValids().size(); i++) {
+        int validsLength = validateInfo.getValids().size();
+        for (int i = 0; i < validsLength; i++) {
             validateItem = validateInfo.getValids().get(i);
             if (validateItem.isEnable() && !validateItem.ischecked()) {
                 break;

@@ -87,7 +87,6 @@ public class MenuFragment extends BaseFragment {
                 if (null != user) {
                     if (null != user.avatar && null != riv_head) {
                         ImageLoader.getInstance().displayImage(MainApp.user.avatar, riv_head);
-//                        riv_head.setGrayImg();
                     }
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
@@ -131,7 +130,6 @@ public class MenuFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        onInit();
     }
 
     private HomeApplicationFragment mHomeApplicationFragment;
