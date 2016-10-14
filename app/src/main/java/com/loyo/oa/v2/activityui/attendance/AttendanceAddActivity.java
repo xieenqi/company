@@ -324,7 +324,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 弹窗提示
      * */
     @Override
-    public void showMessage(String message) {
+    public void showMsg(String message) {
         Toast(message);
     }
 
@@ -373,6 +373,16 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.recycle();
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
     }
 
 }

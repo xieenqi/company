@@ -122,20 +122,26 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         btn_notice_add.setVisibility(View.INVISIBLE);
     }
 
-    /**
-     * 权限错误
-     * */
+
     @Override
-    public void permissionError() {
-        Toast("发布公告权限,code错误:0402");
+    public void showMsg(String message) {
+        Toast(message);
     }
 
     /**
      * 展示Loading
      * */
     @Override
-    public void showLoading() {
+    public void showProgress() {
         showLoading("");
+    }
+
+    /**
+     * 隐藏Loading
+     * */
+    @Override
+    public void hideProgress() {
+
     }
 
     /**

@@ -191,7 +191,7 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
                             @Override
                             public void onError(final Throwable e) {
                                 super.onError(e);
-                                crolView.showMessage("网络异常");
+                                crolView.showMsg("网络异常");
                             }
                         });
                     }
@@ -296,20 +296,20 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         if (TextUtils.isEmpty(reason)) {
             if (state == AttendanceRecord.STATE_OVERWORK) {
                 if (outKind == 2) {
-                    crolView.showMessage("加班原因不能为空");
+                    crolView.showMsg("加班原因不能为空");
                     return false;
                 }
             } else if (state == AttendanceRecord.STATE_LEAVE_EARLY) {
-                crolView.showMessage("早退原因不能为空");
+                crolView.showMsg("早退原因不能为空");
                 return false;
             } else if (state == AttendanceRecord.STATE_BE_LATE) {
-                crolView.showMessage("迟到原因不能为空");
+                crolView.showMsg("迟到原因不能为空");
                 return false;
             }
         }
 
         if (TextUtils.isEmpty(address)) {
-            crolView.showMessage("地址不能为空");
+            crolView.showMsg("地址不能为空");
             return false;
         }
         return true;

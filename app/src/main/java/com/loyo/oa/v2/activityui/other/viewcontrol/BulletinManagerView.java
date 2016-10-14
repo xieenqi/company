@@ -1,19 +1,15 @@
 package com.loyo.oa.v2.activityui.other.viewcontrol;
 
+import com.loyo.oa.v2.common.BaseView;
+
 /**
  * Created by yyy on 16/10/10.
  */
 
-public interface BulletinManagerView {
+public interface BulletinManagerView extends BaseView{
 
     /*新建权限通过*/
     void permissionSuccess();
-
-    /*权限错误*/
-    void permissionError();
-
-    /*打开Loading*/
-    void showLoading();
 
     /*绑定数据*/
     void bindListData();

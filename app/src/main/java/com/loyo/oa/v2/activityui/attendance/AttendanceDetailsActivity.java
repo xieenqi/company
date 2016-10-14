@@ -215,9 +215,8 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
 
          /*加班处理*/
         if (mAttendanceDetails.state == 5 && inOrOut == 3) {
-            String time = (DateTool.timet(mAttendanceDetails.extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
-                    + "-" + DateTool.timet(mAttendanceDetails.extraWorkEndTime + "", DateTool.DATE_FORMATE_TRANSACTION));
-            //tv_info.setText("时间：" + time + " 共" + overTime);
+            String time = (DateTool.timet(mAttendanceDetails.extraWorkStartTime + "", DateTool.DATE_FORMATE_HOUR_YEAR)
+                    + "至" + DateTool.timet(mAttendanceDetails.extraWorkEndTime + "", DateTool.DATE_FORMATE_HOUR_YEAR));
             tv_info.setText("加班时间: " + time);
             tv_tag.setText("加班时长: "+overTime);
             tv_explain.setText("加班原因");
@@ -239,9 +238,11 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
             if (mAttendanceDetails.state == AttendanceRecord.STATE_BE_LATE) {
                 tag  = "上班迟到: " + mAttendanceDetails.lateMin / 60 + "小时" + mAttendanceDetails.lateMin % 60 + "分";
                 tv_tag.setText(Utils.modifyTextColor(tag, getResources().getColor(R.color.red1), 0, tag.length()));
+                tv_explain.setText("迟到原因");
             } else if (mAttendanceDetails.state == AttendanceRecord.STATE_LEAVE_EARLY) {
                 tag  = "下班早退: " + mAttendanceDetails.earlyMin / 60 + "小时" + mAttendanceDetails.earlyMin % 60 + "分";
                 tv_tag.setText(Utils.modifyTextColor(tag, getResources().getColor(R.color.red1), 0, tag.length()));
+                tv_explain.setText("早退原因");
             } else if(mAttendanceDetails.state == AttendanceRecord.STATE_NORMAL){
                 tv_tag.setText(tag);
             }
@@ -258,21 +259,30 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
 
         mPresenter.getAttachments(mAttendanceDetails.attachementuuid);
 
+
+
+
         if (null != mAttendanceDetails.confirmuser) {
+
+            String names = mAttendanceDetails.confirmuser.name;
+            String deptNames = mAttendanceDetails.confirmuser.depts.get(0).getShortDept().getName();
+            String roleNames = mAttendanceDetails.confirmuser.depts.get(0).getTitle();
+            String comfirmTime = app.df2.format(new Date(mAttendanceDetails.confirmtime * 1000));
+
         /*已确认的外勤*/
             if (mAttendanceDetails.state != 4 && mAttendanceDetails.state != 5 &&
                     mAttendanceDetails.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                 ll_confirm.setVisibility(View.VISIBLE);
-                tv_confirmDept.setText(mAttendanceDetails.confirmuser.depts.get(0).getShortDept().getName());
-                tv_confirmName.setText(mAttendanceDetails.confirmuser.name);
-                tv_confirmTime.setText(app.df3.format(new Date(mAttendanceDetails.confirmtime * 1000)));
+                tv_confirmDept.setText(deptNames+" "+roleNames);
+                tv_confirmName.setText(names);
+                tv_confirmTime.setText(comfirmTime);
             } else if (mAttendanceDetails.state == 5 &&
                     mAttendanceDetails.extraState == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_OVERTIME) { /*已确认的加班*/
                 ll_confirm.setVisibility(View.VISIBLE);
                 tv_message.setText("确认加班");
-                tv_confirmDept.setText(mAttendanceDetails.confirmuser.depts.get(0).getShortDept().getName());
-                tv_confirmName.setText(mAttendanceDetails.confirmuser.name);
-                tv_confirmTime.setText(app.df3.format(new Date(mAttendanceDetails.confirmtime * 1000)));
+                tv_confirmDept.setText(deptNames+" "+roleNames);
+                tv_confirmName.setText(names);
+                tv_confirmTime.setText(comfirmTime);
             }
         }
     }
