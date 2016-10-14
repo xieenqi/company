@@ -31,6 +31,8 @@ public class HttpAttendanceDetial implements Serializable {
     public int earlyMin;
 
     public long confirmtime;
+    public long confirmExtraTime;
     public User confirmuser;
+    public User extraConfirmUser;
 
 }

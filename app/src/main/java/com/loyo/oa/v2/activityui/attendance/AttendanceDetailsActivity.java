@@ -193,25 +193,24 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
                 ? "-" : user.depts.get(0).getShortDept().title));
 
         /*确认加班*/
-        if (mAttendanceDetails.state == 5 && mAttendanceDetails.extraState == AttendanceRecord.OUT_STATE_FIELD_OVERTIME) {
+        if (mAttendanceDetails.extraState == 2) {
             btn_confirm.setVisibility(View.VISIBLE);
             btn_confirm.setText("确认加班");
             type = 1;
             strMessage = "是否确定该员工的加班?\n" + "确认后将无法取消！";
-            /*确认外勤*/
-        } else if (mAttendanceDetails.state != 5) {
-            if (mAttendanceDetails.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
+        }
+        /*确认外勤*/
+        else if (mAttendanceDetails.extraState == 0 && mAttendanceDetails.outstate == 2) {
                 iv_type.setImageResource(R.drawable.icon_field_work_confirm);
                 iv_type.setVisibility(View.VISIBLE);
                 btn_confirm.setVisibility(View.VISIBLE);
                 btn_confirm.setText("确认外勤");
                 type = 2;
                 strMessage = "是否确定该员工的外勤?\n" + "确认后将无法取消！";
-            } else if (mAttendanceDetails.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
+            } else if (mAttendanceDetails.outstate == 1) {
                 iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
                 iv_type.setVisibility(View.VISIBLE);
             }
-        }
 
          /*加班处理*/
         if (mAttendanceDetails.state == 5 && inOrOut == 3) {
@@ -259,31 +258,46 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
 
         mPresenter.getAttachments(mAttendanceDetails.attachementuuid);
 
+        String names = "";
+        String deptNames = "";
+        String roleNames = "";
+        String comfirmTime = "";
 
+        /*确认考勤的信息:confirmuser,确认加班的信息:extraConfirmUser*/
+        if(null != mAttendanceDetails.confirmuser){
+            names = mAttendanceDetails.confirmuser.name;
+            deptNames = mAttendanceDetails.confirmuser.depts.get(0).getShortDept().getName();
+            roleNames = mAttendanceDetails.confirmuser.depts.get(0).getTitle();
+            comfirmTime = app.df2.format(new Date(mAttendanceDetails.confirmtime * 1000));
+        }else if(null != mAttendanceDetails.extraConfirmUser){
+            names = mAttendanceDetails.extraConfirmUser.name;
+            deptNames = mAttendanceDetails.extraConfirmUser.depts.get(0).getShortDept().getName();
+            roleNames = mAttendanceDetails.extraConfirmUser.depts.get(0).getTitle();
+            comfirmTime = app.df2.format(new Date(mAttendanceDetails.confirmExtraTime * 1000));
+        }
 
-
-        if (null != mAttendanceDetails.confirmuser) {
-
-            String names = mAttendanceDetails.confirmuser.name;
-            String deptNames = mAttendanceDetails.confirmuser.depts.get(0).getShortDept().getName();
-            String roleNames = mAttendanceDetails.confirmuser.depts.get(0).getTitle();
-            String comfirmTime = app.df2.format(new Date(mAttendanceDetails.confirmtime * 1000));
-
-        /*已确认的外勤*/
-            if (mAttendanceDetails.state != 4 && mAttendanceDetails.state != 5 &&
-                    mAttendanceDetails.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
-                ll_confirm.setVisibility(View.VISIBLE);
-                tv_confirmDept.setText(deptNames+" "+roleNames);
-                tv_confirmName.setText(names);
-                tv_confirmTime.setText(comfirmTime);
-            } else if (mAttendanceDetails.state == 5 &&
-                    mAttendanceDetails.extraState == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_OVERTIME) { /*已确认的加班*/
-                ll_confirm.setVisibility(View.VISIBLE);
-                tv_message.setText("确认加班");
-                tv_confirmDept.setText(deptNames+" "+roleNames);
-                tv_confirmName.setText(names);
-                tv_confirmTime.setText(comfirmTime);
-            }
+        /*确认考勤*/
+        if(mAttendanceDetails.outstate == 1 && mAttendanceDetails.extraState != 1){
+            ll_confirm.setVisibility(View.VISIBLE);
+            tv_confirmDept.setText(deptNames+" "+roleNames);
+            tv_confirmName.setText(names);
+            tv_confirmTime.setText(comfirmTime);
+        }
+        /*确认加班*/
+        else if(mAttendanceDetails.extraState == 1 && mAttendanceDetails.outstate != 1){
+            ll_confirm.setVisibility(View.VISIBLE);
+            tv_message.setText("确认加班");
+            tv_confirmDept.setText(deptNames+" "+roleNames);
+            tv_confirmName.setText(names);
+            tv_confirmTime.setText(comfirmTime);
+        }
+        /*既是加班又是考勤,优先显示确认加班*/
+        else if(mAttendanceDetails.extraState == 1 && mAttendanceDetails.outstate == 1){
+            ll_confirm.setVisibility(View.VISIBLE);
+            tv_message.setText("确认加班");
+            tv_confirmDept.setText(deptNames+" "+roleNames);
+            tv_confirmName.setText(names);
+            tv_confirmTime.setText(comfirmTime);
         }
     }
 }

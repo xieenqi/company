@@ -61,7 +61,7 @@ public class AttendanceListPresenterImpl implements AttendanceListPresenter {
     }
 
     /**
-     * 获取团队信息
+     * 获取团队统计信息(迟到,早退...)
      * */
     @Override
     public void getTeamData(int qtime) {

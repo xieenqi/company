@@ -10,7 +10,6 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
@@ -33,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 

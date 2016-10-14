@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceAddPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
@@ -23,7 +23,6 @@ import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtilGD;
@@ -31,17 +30,14 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -59,7 +55,9 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     @ViewById
     TextView tv_title_1;
     @ViewById
-    TextView tv_time;
+    TextView tv_time_kind;//打卡时间 加班时间 种类
+    @ViewById
+    TextView tv_time; //打卡时间 加班时间 时间
     @ViewById
     TextView tv_count_time;
     @ViewById
@@ -94,7 +92,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     int earlyMin;
 
 
-    private AttendanceAddPresenterImpl mPresenter;
+    private AttendanceAddPresenter mPresenter;
     private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
@@ -143,9 +141,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             case 2:
                 state = CLOCKIN_STATE_OVERTIME;
                 tvTimeName = "加班时间:";
-                tv_title_1.setText("加班打卡");
+                tv_title_1.setText("完成加班");
                 break;
-
             default:
                 break;
         }
@@ -177,9 +174,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             String time = (DateTool.timet(extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
                     + "-" + DateTool.timet(serverTime + "", DateTool.DATE_FORMATE_TRANSACTION));
             SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
-            tv_time.setText(tvTimeName + builder);
+            tv_time_kind.setText(tvTimeName);
+            tv_time.setText(builder);
             tv_time.setTextColor(getResources().getColor(R.color.green51));
-        } else {/*正常上下班*/
+        }
+        /*正常上下班*/
+        else {
             String time = tvTimeName.concat(app.df6.format(new Date(mAttendanceRecord.getCreatetime() * 1000)));
             SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time.setText(builder);

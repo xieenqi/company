@@ -326,11 +326,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
                 new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
-                new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
                 new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign),
+                new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
                 new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
-
-
     }
 
     /**
