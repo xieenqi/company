@@ -106,7 +106,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
                 onBackPressed();
                 break;
             case R.id.tv_edit:
-                app.startActivity(this, HaitMyActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                app.startActivityForResult(this, HaitMyActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, null);
                 break;
         }
     }

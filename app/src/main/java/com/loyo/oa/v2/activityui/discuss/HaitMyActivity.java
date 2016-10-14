@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -53,6 +54,7 @@ public class HaitMyActivity extends BaseActivity {
     private HaitAdapter adapter;
     private boolean isTopAdd = true;
     private int pageIndex = 1;
+    private boolean isUpdate = false;
 
 
     @Override
@@ -66,11 +68,8 @@ public class HaitMyActivity extends BaseActivity {
 
     private void initView() {
         assignViews();
-        // tv_back.setText("我的讨论");
         tv_title1.setText("@我的");
-
         lv_myDiscuss.setMode(PullToRefreshBase.Mode.BOTH);
-
         linearLayoutManager = new LinearLayoutManager(this);
         lv_myDiscuss.getRefreshableView().setLayoutManager(linearLayoutManager);
         adapter = new HaitAdapter();
@@ -141,6 +140,16 @@ public class HaitMyActivity extends BaseActivity {
                 });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isUpdate) {
+            Intent intent = new Intent();
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
 
     private class HaitAdapter extends RecyclerView.Adapter<HaitViewHolder> {
         private List<HttpMyDiscussItem> datas = new ArrayList<>();
@@ -227,6 +236,7 @@ public class HaitMyActivity extends BaseActivity {
                     intent.putExtra(ExtraAndResult.EXTRA_ID, " ");//@我界面不刷新红点
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);
                     startActivity(intent);
+                    isUpdate = true;//此时需要刷新讨论列表
                 }
             });
             itemView.setOnTouchListener(Global.GetTouch());

@@ -44,7 +44,7 @@ public class ExtraAndResult {
     public static final String APP_START = "app_start";
     public static final String ACTION_USER_VERSION = "update_user_version_info";
     public static final String TOKEN_START = "token_start";
-    public static final String TOKEN_UPDATE = "token_update";
+    public static final String IS_UPDATE = "is_update";
 
     public static final int TYPE_SELECT_SINGLE = 1;
     public static final int TYPE_SELECT_MULTUI = 0;

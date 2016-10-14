@@ -14,99 +14,114 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Player implements OnBufferingUpdateListener, OnCompletionListener,
-		OnPreparedListener {
+        OnPreparedListener {
 
-	public MediaPlayer mediaPlayer;
-	private SeekBar seekBar;
-	private Timer mTimer = new Timer();
-
-
-	public Player(SeekBar seekBar) {
-		super();
-		this.seekBar = seekBar;
-		try {
-			mediaPlayer = new MediaPlayer();
-			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mediaPlayer.setOnBufferingUpdateListener(this);
-			mediaPlayer.setOnPreparedListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		mTimer.schedule(timerTask, 0, 1000);
-	}
-
-	TimerTask timerTask = new TimerTask() {
-
-		@Override
-		public void run() {
-			if (mediaPlayer == null)
-				return;
-			if (mediaPlayer.isPlaying() && seekBar.isPressed() == false) {
-				handler.sendEmptyMessage(0);
-			}
-		}
-	};
-
-	Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			int position = mediaPlayer.getCurrentPosition();
-			int duration = mediaPlayer.getDuration();
-			if (duration > 0) {
-				long pos = seekBar.getMax() * position / duration;
-				seekBar.setProgress((int) pos);
-			}
-		};
-	};
-
-	public void play() {
-		mediaPlayer.start();
-	}
+    public MediaPlayer mediaPlayer;
+    private SeekBar seekBar;
+    private Timer mTimer = new Timer();
+    TimerTask timerTask;
 
 
-	public void playUrl(String url) {
-		try {
-			mediaPlayer.reset();
-			mediaPlayer.setDataSource(url);
-			mediaPlayer.prepare();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public Player(final SeekBar seekBar) {
+        super();
+        this.seekBar = seekBar;
+        try {
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setOnBufferingUpdateListener(this);
+            mediaPlayer.setOnPreparedListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (mediaPlayer != null && mediaPlayer.isPlaying() && seekBar.isPressed() == false) {
+                    handler.sendEmptyMessage(0);
+                }
+            }
+        };
+        mTimer.schedule(timerTask, 0, 1000);
+    }
 
 
-	public void pause() {
-		mediaPlayer.pause();
-	}
+    Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            int position = mediaPlayer.getCurrentPosition();
+            int duration = mediaPlayer.getDuration();
+            if (duration > 0) {
+                long pos = seekBar.getMax() * position / duration;
+                seekBar.setProgress((int) pos);
+            }
+        }
+
+        ;
+    };
+
+    public void play() {
+        mediaPlayer.start();
+    }
 
 
-	public void stop() {
-		if (mediaPlayer != null) {
-			mediaPlayer.stop();
-			mediaPlayer.release();
-			mediaPlayer = null;
-			mTimer.cancel();
-		}
-	}
+    public void playUrl(String url) {
+        try {
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(url);
+            mediaPlayer.prepare();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void onPrepared(MediaPlayer mp) {
-		mp.start();
-		Log.e("mediaPlayer", "onPrepared");
-	}
 
-	@Override
-	public void onCompletion(MediaPlayer mp) {
-		Log.e("mediaPlayer", "onCompletion");
-	}
+    public void pause() {
+        mediaPlayer.pause();
+    }
 
-	@Override
-	public void onBufferingUpdate(MediaPlayer mp, int percent) {
-		seekBar.setSecondaryProgress(percent);
-	}
+
+    public void stop() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        recycleTimer();
+    }
+
+    /**
+     * 回收计时器
+     */
+    private void recycleTimer() {
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer.purge();
+            mTimer = null;
+        }
+        if (timerTask != null) {
+            timerTask.cancel();
+            timerTask = null;
+        }
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.start();
+        Log.e("mediaPlayer", "onPrepared");
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        Log.e("mediaPlayer", "onCompletion");
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        seekBar.setSecondaryProgress(percent);
+    }
 }

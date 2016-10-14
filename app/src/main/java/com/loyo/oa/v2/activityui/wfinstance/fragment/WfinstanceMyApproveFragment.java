@@ -257,7 +257,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
                 return false;
             }
         });
-        Utils.btnHideForListView(ListView,btn_add);
+        Utils.btnHideForListView(ListView, btn_add);
     }
 
     public void initAdapter() {
@@ -279,8 +279,12 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     }
 
     public void openItem(int groupPosition, int childPosition) {
+        WflnstanceListItem item = (WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition);
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition)).id);
+        intent.putExtra(ExtraAndResult.EXTRA_ID, item.id);
+        if (!item.viewed) {//有红点需要刷新
+            intent.putExtra(ExtraAndResult.IS_UPDATE, true);
+        }
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -307,6 +311,11 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         if (resultCode == -1) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE:
+                    isTopAdd = true;
+                    page = 1;
+                    getData();
+                    break;
+                case 0x09:
                     isTopAdd = true;
                     page = 1;
                     getData();

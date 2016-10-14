@@ -180,7 +180,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         });
 
 
-        Utils.btnHideForListView(expandableListView,btn_add);
+        Utils.btnHideForListView(expandableListView, btn_add);
 
     }
 
