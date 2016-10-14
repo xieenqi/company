@@ -24,6 +24,7 @@ android {
         debug {
 //          storeFile file('/Users/EthanGong/Desktop/loyo_share.keystore')
 //          storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
+//          storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
             storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
@@ -32,8 +33,9 @@ android {
         SignConfig {
 //          storeFile file('/Users/EthanGong/Desktop/loyo_share.keystore')
 //          keyPassword 'Loyo2012'
+//          storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
             storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
-            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
+//          storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
@@ -45,8 +47,8 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016100701
-        versionName '1.4.0t'
+        versionCode 2016101201
+        versionName '1.4.1t'
     }
 
     buildTypes {
@@ -66,8 +68,8 @@ android {
 //            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
 //            // "6085830b754c86f0d9886b545f5b38f8"
 //            resValue "string", "app_name", "快启"
-
-            minifyEnabled false
+            minifyEnabled false//混淆打包
+//            shrinkResources true//去掉不用资源
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.SignConfig
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"

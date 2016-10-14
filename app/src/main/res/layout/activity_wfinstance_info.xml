@@ -156,6 +156,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_marginRight="@dimen/margin_side_edge"
+                        android:animateLayoutChanges="true"
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/dimen_10" />
                     <!-- 订单审批-->
@@ -179,6 +180,7 @@
                             android:id="@+id/ll_order_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
                             android:orientation="vertical"
                             android:paddingBottom="@dimen/margin_other_view"
                             android:paddingLeft="@dimen/margin_other_view"
@@ -286,6 +288,7 @@
                             android:id="@+id/ll_payment_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
                             android:orientation="vertical"
                             android:paddingBottom="@dimen/margin_other_view"
                             android:paddingLeft="@dimen/margin_other_view"
