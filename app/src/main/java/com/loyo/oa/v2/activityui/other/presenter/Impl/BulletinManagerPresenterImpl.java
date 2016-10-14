@@ -50,7 +50,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
      * */
     @Override
     public void requestListData(int pageIndex,int pageSize) {
-        crolView.showLoading();
+        crolView.showProgress();
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
@@ -110,9 +110,8 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                crolView.permissionError();
+                crolView.showMsg("发布公告权限,code错误:0402");
             }
         }
     }
-
 }

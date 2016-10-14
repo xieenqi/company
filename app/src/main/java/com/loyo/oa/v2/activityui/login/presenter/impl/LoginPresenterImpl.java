@@ -5,7 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.widget.EditText;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.model.Token;
@@ -34,12 +38,12 @@ import retrofit.client.Response;
 
 public class LoginPresenterImpl implements LoginPresenter {
 
-    public LoginView mLoginView;
+    public LoginView crolView;
     public WaveView mWaveView;
     public Context mContext;
 
     public LoginPresenterImpl(LoginView loginView, WaveView mWaveView, Context mContext){
-        this.mLoginView = loginView;
+        this.crolView = loginView;
         this.mWaveView = mWaveView;
         this.mContext  = mContext;
     }
@@ -68,10 +72,10 @@ public class LoginPresenterImpl implements LoginPresenter {
             public void success(final Token token, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 if (null == token || TextUtils.isEmpty(token.access_token)) {
-                    mLoginView.onError();
+                    crolView.onError();
                     return;
                 } else {
-                    mLoginView.onSuccess(token);
+                    crolView.onSuccess(token);
                 }
             }
 
@@ -79,7 +83,7 @@ public class LoginPresenterImpl implements LoginPresenter {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                mLoginView.onError();
+                crolView.onError();
             }
         });
     }
@@ -120,6 +124,15 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     /**
+     * 输入框监听
+     * */
+    @Override
+    public void editTextListner(EditText edt_username, EditText edt_password) {
+        edt_username.addTextChangedListener(nameWatcher);
+        edt_password.addTextChangedListener(nameWatcher);
+    }
+
+    /**
      * 按钮颜色改变
      * */
     @Override
@@ -139,13 +152,34 @@ public class LoginPresenterImpl implements LoginPresenter {
     @Override
     public void requestStandBy(String username,String password) {
         if (StringUtil.isEmpty(username)) {
-            mLoginView.verifyError(1);
+            crolView.verifyError(1);
             return;
         }
         if (StringUtil.isEmpty(password)) {
-            mLoginView.verifyError(2);
+            crolView.verifyError(2);
             return;
         }
-        mLoginView.verifySuccess();
+        crolView.verifySuccess();
     }
+
+
+    public TextWatcher nameWatcher = new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(final Editable editable) {
+            crolView.editTextListener();
+        }
+    };
 }
+
+

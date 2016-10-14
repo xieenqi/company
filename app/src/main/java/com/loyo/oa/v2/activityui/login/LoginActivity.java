@@ -71,8 +71,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         serverFormalImg = (ImageView) findViewById(R.id.iv_server_formal);
         serverTestTv = (TextView) findViewById(R.id.tv_server_test);
         serverFormalTv = (TextView) findViewById(R.id.tv_server_formal);
-        edt_username.addTextChangedListener(nameWatcher);
-        edt_password.addTextChangedListener(nameWatcher);
         layout_login.setOnClickListener(this);
 
         /*Debug模式下*/
@@ -120,46 +118,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         loginPresenter = new LoginPresenterImpl(this,layout_login,mContext);
     }
 
-    TextWatcher nameWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(final Editable editable) {
-            if (!TextUtils.equals(layout_login.getText(), "登录")) {
-                layout_login.setText("登录");
-                layout_login.setBackGroundColor(getResources().getColor(R.color.title_bg1));
-                layout_login.setMode(WaveView.WAVE_MODE_SHRINK);
-                layout_login.setChangeColor(false);
-                layout_login.startDraw();
-            }
-        }
-    };
-
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
 
-            /**登录*/
+            /*登录*/
             case R.id.layout_login:
                 username = edt_username.getText().toString().trim();
                 password = edt_password.getText().toString().trim();
                 loginPresenter.requestStandBy(username,password);
                 break;
 
-            /**企业qq登陆*/
+            /*企业qq登陆*/
             case R.id.tv_qqLogin:
                 app.startActivity(this, LoginBQQActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
                 break;
 
-            /**忘记密码*/
+            /*忘记密码*/
             case R.id.tv_resetPassword:
                 app.startActivity(this, VerifyAccountActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
@@ -208,6 +183,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onError() {
         loginPresenter.onErrorEmbl();
+    }
+
+    /**
+     * 输入框监听
+     * */
+    @Override
+    public void editTextListener() {
+        if (!TextUtils.equals(layout_login.getText(), "登录")) {
+            layout_login.setText("登录");
+            layout_login.setBackGroundColor(getResources().getColor(R.color.title_bg1));
+            layout_login.setMode(WaveView.WAVE_MODE_SHRINK);
+            layout_login.setChangeColor(false);
+            layout_login.startDraw();
+        }
     }
 
     /**

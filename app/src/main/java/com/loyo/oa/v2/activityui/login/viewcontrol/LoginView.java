@@ -21,4 +21,7 @@ public interface LoginView {
     /*请求失败*/
     void onError();
 
+    /*输入框监听*/
+    void editTextListener();
+
 }

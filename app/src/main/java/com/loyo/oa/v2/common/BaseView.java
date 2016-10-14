@@ -6,6 +6,21 @@ package com.loyo.oa.v2.common;
 
 public interface BaseView {
 
-    void showMessage(String message);
+    /**
+     * 显示加载状态
+     */
+    void showProgress();
+
+    /**
+     * 隐藏加载状态
+     */
+    void hideProgress();
+
+    /**
+     * 提示消息
+     *
+     * @param message
+     */
+    void showMsg(String message);
 
 }

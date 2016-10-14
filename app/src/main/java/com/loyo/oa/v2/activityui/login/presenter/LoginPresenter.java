@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.login.presenter;
 
 import android.app.Activity;
+import android.widget.EditText;
 
 import com.loyo.oa.v2.activityui.login.model.Token;
 
@@ -26,4 +27,7 @@ public interface LoginPresenter {
 
     /*登录请求失败操作*/
     void onErrorEmbl();
+
+    /*输入框监听*/
+    void editTextListner(EditText edt_username, EditText edt_password);
 }
