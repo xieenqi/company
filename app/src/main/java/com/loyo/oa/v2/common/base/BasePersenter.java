@@ -12,25 +12,13 @@ public interface BasePersenter {
     void getPageData(Object... pag);
 
     /**
-     * 显示加载状态
-     */
-    void showProgress();
-
-    /**
-     * 隐藏加载状态
-     */
-    void hideProgress();
-
-    /**
-     * 提示消息
-     *
-     * @param message
-     */
-    void showMsg(String message);
-
-    /**
      * 绑定页面(详情、列表)数据
      */
     void bindPageData(Object obj);
+
+    /**
+     * 发送提交页面数据
+     */
+    void sendPageData(Object obj);
 
 }
