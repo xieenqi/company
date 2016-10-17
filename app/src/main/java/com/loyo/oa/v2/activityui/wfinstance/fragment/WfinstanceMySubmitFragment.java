@@ -21,6 +21,9 @@ import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfinstanceUitls;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
+import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMySubmitPresenter;
+import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinMySubmitPresenterImpl;
+import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMySubmitView;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -46,25 +49,25 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static com.loyo.oa.v2.R.id.expandableListView;
+import static com.loyo.oa.v2.common.Global.Toast;
+
 /**
- * Created by xeq on 16/7/21.
- * 审批【我提交的】
+ * 【我提交的】
+ * Restruture by yyy on 16/10/17
  */
-public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2,WfinMySubmitView{
 
-
+    private WfinMySubmitPresenter mPresenter;
+    private WflnstanceMySubmitAdapter mAdapter;
     private PullToRefreshExpandableListView expandableListView;
     private Button btn_add;
     private DropDownMenu mMenu;
     private ViewStub emptyView;
-    private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
-    private ArrayList<BizForm> mBizForms = new ArrayList<>();
-    private String bizFormId = "";
-    private WflnstanceMySubmitAdapter mAdapter;
-    private int page = 1, status = 0;
-    ArrayList<WflnstanceItemData> datas = new ArrayList<>();
-    protected ArrayList<WflnstanceListItem> lstData = new ArrayList<>();
+
+    private int page = 1;
     private boolean isTopAdd = false;
+    private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
 
     @Override
     public void onAttach(Activity activity) {
@@ -90,186 +93,104 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         expandableListView.setEmptyView(emptyView);
         page = 1;
         isTopAdd = true;
-        initDropMenu();
+        mPresenter = new WfinMySubmitPresenterImpl(getActivity(),this,mMenu);
+        mPresenter.initDropMenu(FILTER_STATUS);
         initList();
         initAdapter();
-        getData();
-    }
-
-    /**
-     * 初始化下拉菜单
-     */
-    private void initDropMenu() {
-        String[] defaultTitle = new String[]{"全部状态", "全部类别"};
-        mMenu.setVisibility(View.VISIBLE);
-        mMenu.setmMenuCount(defaultTitle.length);//Menu的个数
-        mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
-        mMenu.setShowCheck(true);//是否显示展开list的选中项
-        mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
-        mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
-        mMenu.setmMenuListTextSize(14);//Menu展开list的文字大小
-        mMenu.setmMenuListTextColor(Color.BLACK);//Menu展开list的文字颜色
-        mMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
-        mMenu.setmMenuPressedBackColor(getResources().getColor(R.color.white));//Menu按下的背景颜色
-        mMenu.setmCheckIcon(R.drawable.img_check1);//Menu展开list的勾选图片
-        mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
-        mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
-        mMenu.setDefaultMenuTitle(defaultTitle);//默认未选择任何过滤的Menu title
-
-        final List<String[]> items = new ArrayList<>();
-        items.add(FILTER_STATUS);
-
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", 1);
-        params.put("pageSize", 500);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
-            @Override
-            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
-                HttpErrorCheck.checkResponse("审批自定义字段", response);
-                if (null != bizFormPaginationX) {
-                    mBizForms = bizFormPaginationX.getRecords();
-                    if (null != mBizForms && !mBizForms.isEmpty()) {
-                        String[] FILTER_TYPE = new String[mBizForms.size() + 1];
-                        FILTER_TYPE[0] = "全部类别";
-                        for (int i = 0; i < mBizForms.size(); i++) {
-                            FILTER_TYPE[i + 1] = mBizForms.get(i).getName();
-                        }
-                        items.add(FILTER_TYPE);
-                        mMenu.setmMenuItems(items);
-                    }
-                }
-            }
-        });
-        /**
-         * 顶部删选Menu
-         * */
-        mMenu.setMenuSelectedListener(new OnMenuSelectedListener() {
-            @Override
-            //Menu展开的list点击事件  RowIndex：list的索引  ColumnIndex：menu的索引
-            public void onSelected(View listview, int RowIndex, int ColumnIndex) {
-                LogUtil.d(" 行 : " + RowIndex + " 列 : " + ColumnIndex);
-                switch (ColumnIndex) {
-                    case 0:
-                        status = RowIndex;
-                        break;
-                    case 1:
-                        if (RowIndex == 0) {
-                            bizFormId = "";
-                        } else {
-                            bizFormId = mBizForms.get(RowIndex - 1).getId();
-                        }
-                        break;
-                }
-                onPullDownToRefresh(expandableListView);
-            }
-        });
+        mPresenter.getApproveWfInstancesList(page,isTopAdd);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            /*新建审批*/
             case R.id.btn_add:
                 ((WfInstanceManageActivity) getActivity()).addNewItem();
                 break;
+
+            default:
+                break;
+
         }
-    }
-
-    private void getData() {
-        showLoading("");
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", page);
-        map.put("pageSize", 20);
-        map.put("status", status);
-        map.put("bizformId", bizFormId); //自定义筛选字段
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
-                FinalVariables.wfinstance).create(IWfInstance.class).
-                getSubmitWfInstancesList(map, new Callback<MySubmitWflnstance>() {
-                    @Override
-                    public void success(MySubmitWflnstance mySubmitWflnstance, Response response) {
-                        HttpErrorCheck.checkResponse("【我提的交】列表数据：", response);
-                        expandableListView.onRefreshComplete();
-                        if (null == mySubmitWflnstance) {
-                            return;
-                        }
-                        ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
-                        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
-                            Toast("没有更多数据了");
-                            return;
-                        }
-                        //下拉获取最新时，清空
-//                        if (isTopAdd) {
-//                            lstData.clear();
-//                        }
-//                        lstData.addAll(lstDataTemp);
-
-                        if (!isTopAdd) {
-                            lstData.addAll(lstDataTemp);
-                        } else {
-                            lstData = lstDataTemp;
-                        }
-                        datas = WfinstanceUitls.convertGroupSubmitData(lstData);
-                        changeAdapter();
-                        expand();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        expandableListView.onRefreshComplete();
-                    }
-                });
     }
 
     /**
      * 初始化
      */
     private void initList() {
-
-        ExpandableListView ListView = expandableListView.getRefreshableView();
+        ExpandableListView mListView = expandableListView.getRefreshableView();
         initAdapter();
-        expand();
-        ListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return false;
-            }
-        });
-
-        ListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                try {
-                    openItem(groupPosition, childPosition);
-                } catch (Exception e) {
-                    Global.ProcException(e);
-                }
-
-                return false;
-            }
-        });
-        Utils.btnHideForListView(ListView, btn_add);
+        mPresenter.initListView(mListView,btn_add);
     }
 
+    /**
+     * 初始化Adapter
+     * */
     public void initAdapter() {
         mAdapter = new WflnstanceMySubmitAdapter(mActivity);
         expandableListView.getRefreshableView().setAdapter(mAdapter);
     }
 
-    public void changeAdapter() {
-        mAdapter.setData(datas);
-    }
-
     /**
      * 展开listview
      */
-    protected void expand() {
+    protected void expand(ArrayList<WflnstanceItemData> datas) {
         for (int i = 0; i < datas.size(); i++) {
             expandableListView.getRefreshableView().expandGroup(i, false);//true 自动滑到底部
         }
     }
 
-    public void openItem(int groupPosition, int childPosition) {
+    /**
+     * 上拉加载回调
+     * */
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        isTopAdd = true;
+        page = 1;
+        mPresenter.getApproveWfInstancesList(page,isTopAdd);
+    }
+
+    /**
+     * 下拉刷新回调
+     * */
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        isTopAdd = false;
+        page++;
+        mPresenter.getApproveWfInstancesList(page,isTopAdd);
+    }
+
+    /**
+     * 刷新下拉数据
+     * */
+    @Override
+    public void setPullDownToRefresh() {
+        onPullDownToRefresh(expandableListView);
+    }
+
+    /**
+     * 停止下拉数据
+     * */
+    @Override
+    public void setListRefreshComplete() {
+        expandableListView.onRefreshComplete();
+    }
+
+    /**
+     * 数据绑定
+     * */
+    @Override
+    public void bindListData(ArrayList<WflnstanceItemData> datas) {
+        mAdapter.setData(datas);
+        expand(datas);
+    }
+
+    /**
+     * 跳转Item操作
+     * */
+    @Override
+    public void openItemEmbl(int groupPosition, int childPosition) {
         WflnstanceListItem item = (WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition);
         Intent intent = new Intent();
         intent.putExtra(ExtraAndResult.EXTRA_ID, item.id);
@@ -279,21 +200,21 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-
     }
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        page = 1;
-        getData();
+    public void showProgress() {
+        showLoading("");
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        page++;
-        getData();
+    public void hideProgress() {
+        cancelLoading();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        Toast(message);
     }
 
     @Override
@@ -304,12 +225,12 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
                 case ExtraAndResult.REQUEST_CODE:
                     isTopAdd = true;
                     page = 1;
-                    getData();
+                    mPresenter.getApproveWfInstancesList(page,isTopAdd);
                     break;
                 case 0x09:
                     isTopAdd = true;
                     page = 1;
-                    getData();
+                    mPresenter.getApproveWfInstancesList(page,isTopAdd);
                     break;
             }
         }
