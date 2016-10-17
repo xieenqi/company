@@ -316,6 +316,10 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
+                if (null == data || null == data.data || data.data.sales == null) {
+                    Toast("数据不全不能转为客户");
+                    return;
+                }
                 Bundle mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
                 app.startActivityForResult(ClueDetailActivity.this, ClueTransferActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
@@ -357,7 +361,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                             dismissSweetAlert();
                             deleteClue();
                         }
-                    },"提示","线索删除过后不可恢复，\n你确定要删除？");
+                    }, "提示", "线索删除过后不可恢复，\n你确定要删除？");
 
 /*                    final GeneralPopView dailog = showGeneralDialog(true, true, "线索删除过后不可恢复，\n你确定要删除？");
                     dailog.setSureOnclick(new View.OnClickListener() {
@@ -556,7 +560,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         dismissSweetAlert();
                         transferClue(u.getId());
                     }
-                },"提示","转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
+                }, "提示", "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
 
 /*                final GeneralPopView dailog = showGeneralDialog(true, true, "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
                 dailog.setSureOnclick(new View.OnClickListener() {
