@@ -246,6 +246,11 @@ public class PickedContacts {
         return result;
     }
 
+    public void clearSelection(){
+        pickedUsers.clear();
+        pickedDepartments.clear();
+    }
+
     public int getCount() {
         return mCount;
     }

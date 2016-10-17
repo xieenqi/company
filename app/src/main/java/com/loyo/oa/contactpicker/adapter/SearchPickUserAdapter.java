@@ -90,15 +90,14 @@ public class SearchPickUserAdapter extends BaseAdapter<PickUserModel,PickUserCel
     @Override
     public void onUserItemClicked(PickUserCell object, int index) {
         PickUserModel model = getItem(index);
-        model.setSelected(! model.isSelected());
         if (callback == null) {
             return;
         }
         if (model.isSelected()) {
-            callback.onAddUser(getItem(index));
+            callback.onDeleteUser(getItem(index));
         }
         else {
-            callback.onDeleteUser(getItem(index));
+            callback.onAddUser(getItem(index));
         }
     }
 }

@@ -56,6 +56,9 @@ import static com.loyo.oa.v2.R.id.btn_fetch;
 
 public class ContactPickerActivity extends BaseActivity implements View.OnClickListener, OnDepartmentSelected<PickDepartmentCell>, OnPickUserEvent {
 
+    /* 常量 */
+    public static final String SINGLE_SELECTION_KEY = "com.loyo.oa.v2.SINGLE_SELECTION";
+
     /* UI */
     private LinearLayout ll_back;
     private LinearLayout selectAllContainer;
@@ -85,6 +88,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     private int selectedDepartmentIndex = 0;
     private PickedContacts pickedContacts;
     private List<PickUserModel> searchBase = new ArrayList<>();
+    private boolean singleSelection = false;
 
     /* Broadcasr */
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -108,6 +112,9 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_picker);
+        /** 是否单选，默认多选 */
+        singleSelection = getIntent().getBooleanExtra(SINGLE_SELECTION_KEY,false);
+
         registerBroadcastReceiver();
         initView();
         loadData();
@@ -133,6 +140,9 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
         selectAllCheckBox = (CheckBox) findViewById(R.id.select_all_checkbox);
         selectAllContainer.setOnClickListener(this);
+        if (singleSelection) {
+            selectAllContainer.setVisibility(View.GONE);
+        }
 
         departmentView = (RecyclerView) findViewById(R.id.department_view);
         departmentView.setLayoutManager(new LinearLayoutManager(this));
@@ -361,6 +371,11 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         unregisterReceiver(mReceiver);
     }
 
+    /** 选择结束 */
+    private void onResult() {
+
+    }
+
     @Override
     public void onDepartmentSelected(PickDepartmentCell object, int index) {
         if (index == selectedDepartmentIndex) {
@@ -373,18 +388,36 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onAddUser(PickUserModel model) {
+
+        if (singleSelection) {
+            List<PickedModel> list = pickedContacts.getPickedContacts();
+            for (PickedModel picked:list) {
+                if (picked.isDepartment == false) {
+                    ((PickUserModel)picked).setSelected(false);
+                }
+            }
+            pickedContacts.clearSelection();
+        }
+
         pickedContacts.addUser(model);
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
         pickedAdapter.loadData(pickedContacts.getPickedContacts());
+        userAdapter.notifyDataSetChanged();
         searchAdapter.notifyDataSetChanged();
         confirmView.setText("确定" + ("(" + pickedContacts.getCount() + ")"));
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
+
+        /** 选中一个用户，结束选择 */
+        if (singleSelection) {
+            onResult();
+        }
     }
 
     @Override
     public void onDeleteUser(PickUserModel model) {
         pickedContacts.deleteUser(model);
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
+        userAdapter.notifyDataSetChanged();
         pickedAdapter.loadData(pickedContacts.getPickedContacts());
         searchAdapter.notifyDataSetChanged();
         confirmView.setText("确定" + ("(" + pickedContacts.getCount() + ")"));
