@@ -151,8 +151,6 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
                 }
             }
         });
-
-
     }
 
     private void loadData() {

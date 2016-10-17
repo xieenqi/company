@@ -3,6 +3,7 @@ package com.loyo.oa.contactpicker.model;
 import android.support.annotation.NonNull;
 
 import com.loyo.oa.indexablelist.widget.Indexable;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
 
 import java.lang.ref.WeakReference;
@@ -66,6 +67,19 @@ public class PickUserModel extends PickedModel implements Indexable {
 
     public String getAvatar() {
         return user.avatar;
+    }
+
+    public boolean isContainedBySelectedDept() {
+
+        for (DBDepartment dept: user.depts) {
+            PickDepartmentModel pickedDepartmentModel = PickDepartmentModel.getPickModel(dept);
+            if (pickedDepartmentModel.isSelected()) {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     @Override

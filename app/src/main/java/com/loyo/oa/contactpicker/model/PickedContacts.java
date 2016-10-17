@@ -27,6 +27,7 @@ public class PickedContacts {
         model.setSelected(true);
         HashSet<DBDepartment> depts = model.user.depts;
         boolean hasSelectAll = false;
+        DBDepartment topSelected = null;
         for (DBDepartment dept: depts) {
             DBDepartment parent = dept;
             do {
@@ -34,6 +35,7 @@ public class PickedContacts {
                 if (pickDepartmentModel.isAllChildDeptSelected() && pickDepartmentModel.isAllDerectUsersSelected()) {
                     hasSelectAll = true;
                     pickDepartmentModel.setSelected(true);
+                    topSelected = pickDepartmentModel.department;
                 }
                 else {
                     pickDepartmentModel.setSelected(false);
@@ -48,6 +50,19 @@ public class PickedContacts {
         }
         else {
             resetPickedDepartments();
+            if (topSelected != null) {
+                List<PickUserModel> needDelete = new ArrayList<PickUserModel>();
+                for (PickUserModel userModel:pickedUsers) {
+                    DBUser user = userModel.user;
+                    for (DBDepartment dept:user.depts) {
+                        if (dept.xpath.contains(topSelected.xpath)) {
+                            needDelete.add(userModel);
+                            break;
+                        }
+                    }
+                }
+                pickedUsers.removeAll(needDelete);
+            }
         }
 
     }
@@ -56,6 +71,7 @@ public class PickedContacts {
 
         model.setSelected(false);
         HashSet<DBDepartment> depts = model.user.depts;
+        DBDepartment topSelected = null;
         boolean hasSelectAll = false;
         for (DBDepartment dept: depts) {
             DBDepartment parent = dept;
@@ -63,6 +79,7 @@ public class PickedContacts {
                 PickDepartmentModel pickDepartmentModel = PickDepartmentModel.getPickModel(parent);
                 if (pickDepartmentModel.isSelected()) {
                     hasSelectAll = true;
+                    topSelected = pickDepartmentModel.department;
                 }
                 pickDepartmentModel.setSelected(false);
                 parent = parent.parentDept;
@@ -74,6 +91,17 @@ public class PickedContacts {
         }
         else {
             resetPickedDepartments();
+            if (topSelected != null) {
+                List<PickUserModel> needAdd = new ArrayList<PickUserModel>();
+                for (DBUser user :topSelected.allUsers()) {
+                    PickUserModel userModel = PickUserModel.getPickModel(user);
+                    if (userModel != null && userModel.isSelected()
+                            && !userModel.isContainedBySelectedDept()) {
+                        needAdd.add(userModel);
+                    }
+                }
+                pickedUsers.addAll(needAdd);
+            }
         }
     }
 
