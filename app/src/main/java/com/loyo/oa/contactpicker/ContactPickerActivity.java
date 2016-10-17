@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.loyo.oa.contactpicker.adapter.PickDepartmentAdapter;
 import com.loyo.oa.contactpicker.adapter.PickUserAdapter;
@@ -34,6 +35,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     /* UI */
     private LinearLayout ll_back;
     private LinearLayout selectAllContainer;
+    private RelativeLayout noDataContainer;
     private CheckBox selectAllCheckBox;
     private RecyclerView departmentView;
     private RecyclerView userView;
@@ -61,6 +63,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_back.setOnClickListener(this);
         selectAllContainer = (LinearLayout) findViewById(R.id.select_all_container);
+        noDataContainer = (RelativeLayout) findViewById(R.id.no_data_container);
         selectAllCheckBox = (CheckBox) findViewById(R.id.select_all_checkbox);
         selectAllContainer.setOnClickListener(this);
 
@@ -115,6 +118,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         userAdapter.setCallback(this);
 
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
+        noDataContainer.setVisibility((result.size() <= 0) ? View.VISIBLE : View.GONE);
     }
 
     @Override
