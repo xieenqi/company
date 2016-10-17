@@ -17,6 +17,7 @@ public class PickUserModel implements Indexable {
 
     private static HashMap<String, WeakReference<PickUserModel>> reuseCache = new HashMap<>();
     public final DBUser user;
+    private boolean mIsSelected;
 
     public static void clearResueCache() {
         reuseCache.clear();
@@ -31,7 +32,7 @@ public class PickUserModel implements Indexable {
     }
 
     public static PickUserModel getPickModel(DBUser user) {
-        if (user.id == null) {
+        if (user == null || user.id == null) {
             return null;
         }
 
@@ -51,6 +52,14 @@ public class PickUserModel implements Indexable {
         return result;
     }
 
+    public void setSelected(boolean selected) {
+        mIsSelected = selected;
+    }
+
+    public boolean isSelected(){
+        return mIsSelected;
+    }
+
     public String getName() {
         return user.name;
     }
@@ -62,5 +71,21 @@ public class PickUserModel implements Indexable {
     @Override
     public String getIndex() {
         return user.getSortLetter();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PickUserModel)) return false;
+
+        PickUserModel model = (PickUserModel) o;
+
+        return user.equals(model.user);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return user.hashCode();
     }
 }

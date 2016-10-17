@@ -71,7 +71,7 @@ public class DBUser implements Serializable {
 
     public String getSortLetter() {
 
-        String pinyin = this.simplePinyin != null && this.simplePinyin.length()>0 ? this.simplePinyin:this.fullPinyin;
+        String pinyin = pinyin();
         if (pinyin != null && pinyin.length() > 0) {
             String sortString = pinyin.substring(0, 1).toUpperCase();
             return sortString;

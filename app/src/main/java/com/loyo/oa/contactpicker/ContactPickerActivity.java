@@ -3,14 +3,18 @@ package com.loyo.oa.contactpicker;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.loyo.oa.contactpicker.adapter.PickDepartmentAdapter;
 import com.loyo.oa.contactpicker.adapter.PickUserAdapter;
 import com.loyo.oa.contactpicker.callback.OnDepartmentSelected;
+import com.loyo.oa.contactpicker.callback.OnPickUserEvent;
 import com.loyo.oa.contactpicker.model.PickDepartmentModel;
 import com.loyo.oa.contactpicker.model.PickUserModel;
+import com.loyo.oa.contactpicker.model.PickedContacts;
 import com.loyo.oa.contactpicker.viewholder.PickDepartmentCell;
 import com.loyo.oa.indexablelist.adapter.expand.StickyRecyclerHeadersDecoration;
 import com.loyo.oa.indexablelist.widget.DividerDecoration;
@@ -25,20 +29,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ContactPickerActivity extends BaseActivity implements View.OnClickListener, OnDepartmentSelected<PickDepartmentCell> {
+public class ContactPickerActivity extends BaseActivity implements View.OnClickListener, OnDepartmentSelected<PickDepartmentCell>, OnPickUserEvent {
 
+    /* UI */
     private LinearLayout ll_back;
-
+    private LinearLayout selectAllContainer;
+    private CheckBox selectAllCheckBox;
     private RecyclerView departmentView;
     private RecyclerView userView;
     private ZSideBar zSideBar;
 
+    /* Adapter */
     private PickDepartmentAdapter departmentAdapter;
     private PickUserAdapter userAdapter;
 
     /* Data*/
     private List<PickDepartmentModel> departments;
     private int selectedDepartmentIndex = 0;
+    private PickedContacts pickedContacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,9 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_back.setOnClickListener(this);
+        selectAllContainer = (LinearLayout) findViewById(R.id.select_all_container);
+        selectAllCheckBox = (CheckBox) findViewById(R.id.select_all_checkbox);
+        selectAllContainer.setOnClickListener(this);
 
         departmentView = (RecyclerView) findViewById(R.id.department_view);
         departmentView.setLayoutManager(new LinearLayoutManager(this));
@@ -75,6 +86,9 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     }
 
     private void loadData() {
+
+        pickedContacts = new PickedContacts();
+
         departments = departmentModelList();
         departmentAdapter.clearData();
         departmentAdapter.addData(departments);
@@ -96,8 +110,11 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         }
 
         userAdapter.loadData(result);
+        userAdapter.setDepartment(departments.get(index));
+        userAdapter.setDepartmentAllSelected(departments.get(selectedDepartmentIndex).isSelected());
+        userAdapter.setCallback(this);
 
-        long end = System.currentTimeMillis();
+        selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
     }
 
     @Override
@@ -105,6 +122,19 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.ll_back:
                 onBackPressed();
+                break;
+            case R.id.select_all_container:
+                // boolean selected = pickedContacts.isDepartmentAllSelected(departments.get(selectedDepartmentIndex));
+
+                PickDepartmentModel model = departments.get(selectedDepartmentIndex);
+                boolean selected = model.isSelected();
+                if (selected) {
+                    onDeleteAllUsers(model);
+                }
+                else {
+                    onAddAllUsers(model);
+                }
+                selectAllCheckBox.setSelected(!selected);
                 break;
             default:
 
@@ -122,7 +152,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         List<DBDepartment> flats = company.flatDepartments();
         Iterator<DBDepartment> iterator = flats.iterator();
         while (iterator.hasNext()) {
-            result.add(PickDepartmentModel.instance(iterator.next()));
+            result.add(PickDepartmentModel.getPickModel(iterator.next()));
         }
 
         return result;
@@ -136,5 +166,34 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
         selectedDepartmentIndex = index;
         _loadUsersAtIndex(selectedDepartmentIndex);
+    }
+
+    @Override
+    public void onAddUser(PickUserModel model) {
+        pickedContacts.addUser(model);
+        selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
+
+    }
+
+    @Override
+    public void onDeleteUser(PickUserModel model) {
+        pickedContacts.deleteUser(model);
+        selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
+    }
+
+    @Override
+    public void onAddAllUsers(PickDepartmentModel model) {
+        Log.v("pickevent", "onAddAllUsers");
+        model.setSelected(true);
+        pickedContacts.addAllUsersOfDepartment(model);
+        userAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDeleteAllUsers(PickDepartmentModel model) {
+        Log.v("pickevent", "onDeleteAllUsers");
+        model.setSelected(false);
+        pickedContacts.deleteAllUserOfDepartment(model);
+        userAdapter.notifyDataSetChanged();
     }
 }
