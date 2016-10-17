@@ -1,13 +1,20 @@
 package com.loyo.oa.contactpicker;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.loyo.oa.contactpicker.adapter.PickDepartmentAdapter;
 import com.loyo.oa.contactpicker.adapter.PickUserAdapter;
@@ -24,11 +31,16 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static android.view.View.GONE;
+import static com.loyo.oa.v2.R.id.btn_fetch;
 
 public class ContactPickerActivity extends BaseActivity implements View.OnClickListener, OnDepartmentSelected<PickDepartmentCell>, OnPickUserEvent {
 
@@ -36,6 +48,11 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     private LinearLayout ll_back;
     private LinearLayout selectAllContainer;
     private RelativeLayout noDataContainer;
+    private RelativeLayout noCacheContainer;
+    private ProgressWheel progressWheel;
+    private ImageView noDataPlaceholder;
+    private TextView tipView;
+    private Button fetchButton;
     private CheckBox selectAllCheckBox;
     private RecyclerView departmentView;
     private RecyclerView userView;
@@ -50,10 +67,29 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     private int selectedDepartmentIndex = 0;
     private PickedContacts pickedContacts;
 
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            //Bundle b = intent.getExtras();
+            if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
+                loadData();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        PickDepartmentModel.clearResueCache();
+        PickUserModel.clearResueCache();
+        unregisterBroadcastReceiver();
+        super.onDestroy();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_picker);
+        registerBroadcastReceiver();
         initView();
         loadData();
     }
@@ -64,6 +100,13 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         ll_back.setOnClickListener(this);
         selectAllContainer = (LinearLayout) findViewById(R.id.select_all_container);
         noDataContainer = (RelativeLayout) findViewById(R.id.no_data_container);
+        noCacheContainer = (RelativeLayout) findViewById(R.id.no_cache_container);
+        progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
+        noDataPlaceholder = (ImageView) findViewById(R.id.no_data_placeholder);
+        tipView = (TextView) findViewById(R.id.tip_view);
+        fetchButton = (Button) findViewById(btn_fetch);
+        fetchButton.setOnClickListener(this);
+
         selectAllCheckBox = (CheckBox) findViewById(R.id.select_all_checkbox);
         selectAllContainer.setOnClickListener(this);
 
@@ -90,14 +133,31 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
     private void loadData() {
 
-        pickedContacts = new PickedContacts();
+        if (/* 正在加载组织架构数据 */
+                OrganizationManager.isOrganizationCached() == false
+                        && OrganizationService.isFetchingOrganziationData()) {
+            progressWheel.setVisibility(View.VISIBLE);
+            noDataPlaceholder.setVisibility(View.GONE);
+            tipView.setText("组织架构数据获取中...");
+            fetchButton.setVisibility(View.INVISIBLE);
+            noCacheContainer.setVisibility(View.VISIBLE);
+            return;
+        }
 
+        pickedContacts = new PickedContacts();
         departments = departmentModelList();
         departmentAdapter.clearData();
         departmentAdapter.addData(departments);
 
         if (departments.size() > 0) {
             _loadUsersAtIndex(selectedDepartmentIndex);
+        }
+        else {
+            /** 无缓存组织架构数据 */
+            progressWheel.setVisibility(View.GONE);
+            noDataPlaceholder.setVisibility(View.VISIBLE);
+            tipView.setText("无组织架构数据");
+            noCacheContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -118,7 +178,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         userAdapter.setCallback(this);
 
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
-        noDataContainer.setVisibility((result.size() <= 0) ? View.VISIBLE : View.GONE);
+        noDataContainer.setVisibility((result.size() <= 0) ? View.VISIBLE : GONE);
     }
 
     @Override
@@ -128,8 +188,6 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
                 onBackPressed();
                 break;
             case R.id.select_all_container:
-                // boolean selected = pickedContacts.isDepartmentAllSelected(departments.get(selectedDepartmentIndex));
-
                 PickDepartmentModel model = departments.get(selectedDepartmentIndex);
                 boolean selected = model.isSelected();
                 if (selected) {
@@ -139,6 +197,16 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
                     onAddAllUsers(model);
                 }
                 selectAllCheckBox.setSelected(!selected);
+                break;
+            case R.id.btn_fetch:
+
+                progressWheel.setVisibility(View.VISIBLE);
+                noDataPlaceholder.setVisibility(View.GONE);
+                tipView.setText("组织架构数据获取中...");
+                fetchButton.setVisibility(View.INVISIBLE);
+                noCacheContainer.setVisibility(View.VISIBLE);
+
+                OrganizationService.startActionFetchAll(getApplicationContext());
                 break;
             default:
 
@@ -160,6 +228,16 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         }
 
         return result;
+    }
+
+    public void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+        registerReceiver(mReceiver, filter);
+    }
+
+    public void unregisterBroadcastReceiver() {
+        unregisterReceiver(mReceiver);
     }
 
     @Override

@@ -157,18 +157,56 @@
 
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/no_cache_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
+            android:background="@color/white"
+            android:gravity="center"
             android:visibility="gone">
-            <com.pnikosis.materialishprogress.ProgressWheel
-                android:id="@+id/progressWheel2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical|center_horizontal"
-                wheel:progressIndeterminate="true"/>
-        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.pnikosis.materialishprogress.ProgressWheel
+                    android:id="@+id/progress_wheel"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_marginBottom="22dp"
+                    wheel:progressIndeterminate="true"/>
+
+                <ImageView
+                    android:id="@+id/no_data_placeholder"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="22dp"
+                    android:src="@drawable/img_nodata"/>
+
+                <TextView
+                    android:id="@+id/tip_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="暂无数据"
+                    android:textColor="#878787"
+                    android:textSize="18sp"/>
+
+                <Button
+                    android:id="@+id/btn_fetch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:background="@drawable/bg_blue_rect"
+                    android:text="获取组织架构"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+        </RelativeLayout>
     </FrameLayout>
 
 </LinearLayout>
