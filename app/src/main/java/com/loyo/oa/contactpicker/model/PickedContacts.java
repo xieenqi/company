@@ -16,6 +16,8 @@ public class PickedContacts {
     List<PickUserModel> pickedUsers = new ArrayList<>();
     List<PickDepartmentModel> pickedDepartments = new ArrayList<>();
 
+    int mCount = 0;
+
     public PickedContacts() {
 
     }
@@ -24,6 +26,10 @@ public class PickedContacts {
     }
 
     public void addUser(PickUserModel model) {
+
+        if (model.isSelected() == false) {
+            mCount++;
+        }
         model.setSelected(true);
         HashSet<DBDepartment> depts = model.user.depts;
         boolean hasSelectAll = false;
@@ -69,6 +75,9 @@ public class PickedContacts {
 
     public void deleteUser(PickUserModel model) {
 
+        if (model.isSelected()) {
+            mCount--;
+        }
         model.setSelected(false);
         HashSet<DBDepartment> depts = model.user.depts;
         DBDepartment topSelected = null;
@@ -133,6 +142,10 @@ public class PickedContacts {
         HashSet<DBUser> needAddUsers = new HashSet<>();
         for (DBUser user: allUsers) {
             PickUserModel pickModel = PickUserModel.getPickModel(user);
+            if (pickModel.isSelected() == false) {
+                mCount++;
+            }
+
             if (pickModel != null) {
                 pickModel.setSelected(true);
             }
@@ -191,6 +204,9 @@ public class PickedContacts {
         for (DBUser user: allUsers) {
             PickUserModel pickModel = PickUserModel.getPickModel(user);
             if (pickModel != null) {
+                if (pickModel.isSelected()) {
+                    mCount--;
+                }
                 pickModel.setSelected(false);
             }
             if (user.depts.size() > 1) {
@@ -228,5 +244,9 @@ public class PickedContacts {
         result.addAll(pickedDepartments);
         result.addAll(pickedUsers);
         return result;
+    }
+
+    public int getCount() {
+        return mCount;
     }
 }

@@ -72,6 +72,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     private ZSideBar zSideBar;
     private HorizontalScrollListView pickedView;
     private EditText searchField;
+    private TextView titleView, confirmView;
 
     /* Adapter */
     private PickDepartmentAdapter departmentAdapter;
@@ -116,6 +117,11 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_back.setOnClickListener(this);
+        titleView = (TextView) findViewById(R.id.tv_title);
+        titleView.setText("成员选择");
+        confirmView = (TextView) findViewById(R.id.tv_add);
+        confirmView.setOnClickListener(this);
+
         selectAllContainer = (LinearLayout) findViewById(R.id.select_all_container);
         noDataContainer = (RelativeLayout) findViewById(R.id.no_data_container);
         noCacheContainer = (RelativeLayout) findViewById(R.id.no_cache_container);
@@ -371,7 +377,8 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
         pickedAdapter.loadData(pickedContacts.getPickedContacts());
         searchAdapter.notifyDataSetChanged();
-
+        confirmView.setText("确定" + ("(" + pickedContacts.getCount() + ")"));
+        selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
     }
 
     @Override
@@ -380,6 +387,8 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
         pickedAdapter.loadData(pickedContacts.getPickedContacts());
         searchAdapter.notifyDataSetChanged();
+        confirmView.setText("确定" + ("(" + pickedContacts.getCount() + ")"));
+        selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
     }
 
     @Override
@@ -390,6 +399,8 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
         pickedAdapter.loadData(pickedContacts.getPickedContacts());
         searchAdapter.notifyDataSetChanged();
+        confirmView.setText("确定" + ("(" + pickedContacts.getCount() + ")"));
+        selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
     }
 
     @Override
@@ -400,5 +411,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
         pickedAdapter.loadData(pickedContacts.getPickedContacts());
         searchAdapter.notifyDataSetChanged();
+        confirmView.setText("确定" + ("(" + pickedContacts.getCount() + ")"));
+        selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
     }
 }
