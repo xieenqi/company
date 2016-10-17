@@ -1,6 +1,7 @@
 package com.loyo.oa.contactpicker.model;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.loyo.oa.indexablelist.widget.Indexable;
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by EthanGong on 2016/10/14.
  */
 
-public class PickDepartmentModel implements Indexable {
+public class PickDepartmentModel extends PickedModel implements Indexable {
 
     public final DBDepartment department;
     public boolean isLevel1;
@@ -29,6 +30,7 @@ public class PickDepartmentModel implements Indexable {
     }
 
     private PickDepartmentModel(@NonNull DBDepartment department) {
+        this.isDepartment = true;
         this.department = department;
         isLevel1 = this.department.xpath.split("/").length <= 2;
     }
@@ -54,6 +56,27 @@ public class PickDepartmentModel implements Indexable {
         }
 
         return result;
+    }
+
+    @Override
+    public String getDisplayName() {
+        String result;
+        String name = getName();
+        if (TextUtils.isEmpty(name)) {
+            result = "暂无";
+        } else {
+            if (name.length() <= 2) {
+                result = name;
+            } else {
+                result = name.substring(0, 2);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public String getDisplayAvatar() {
+        return null;
     }
 
     public String getName() {
@@ -159,6 +182,9 @@ public class PickDepartmentModel implements Indexable {
 
         List<PickDepartmentModel> result = new ArrayList<>();
         if (isSelected()) {
+            if (department.childDepts.size() <= 0 && department.directUsers.size() <= 0) {
+                return result;
+            }
             result.add(this);
         }
         else {

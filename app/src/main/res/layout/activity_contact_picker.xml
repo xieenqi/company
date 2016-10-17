@@ -28,7 +28,7 @@
                     android:layout_weight="1">
 
                     <com.loyo.oa.v2.customview.HorizontalScrollListView
-                        android:id="@+id/lv_selectUser"
+                        android:id="@+id/picked_contact_view"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="@color/white"

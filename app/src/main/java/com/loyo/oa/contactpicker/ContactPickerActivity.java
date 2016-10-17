@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -18,16 +19,19 @@ import android.widget.TextView;
 
 import com.loyo.oa.contactpicker.adapter.PickDepartmentAdapter;
 import com.loyo.oa.contactpicker.adapter.PickUserAdapter;
+import com.loyo.oa.contactpicker.adapter.PickedContactsAdapter;
 import com.loyo.oa.contactpicker.callback.OnDepartmentSelected;
 import com.loyo.oa.contactpicker.callback.OnPickUserEvent;
 import com.loyo.oa.contactpicker.model.PickDepartmentModel;
 import com.loyo.oa.contactpicker.model.PickUserModel;
 import com.loyo.oa.contactpicker.model.PickedContacts;
+import com.loyo.oa.contactpicker.model.PickedModel;
 import com.loyo.oa.contactpicker.viewholder.PickDepartmentCell;
 import com.loyo.oa.indexablelist.adapter.expand.StickyRecyclerHeadersDecoration;
 import com.loyo.oa.indexablelist.widget.DividerDecoration;
 import com.loyo.oa.indexablelist.widget.ZSideBar;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.customview.HorizontalScrollListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
@@ -57,10 +61,12 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     private RecyclerView departmentView;
     private RecyclerView userView;
     private ZSideBar zSideBar;
+    private HorizontalScrollListView pickedView;
 
     /* Adapter */
     private PickDepartmentAdapter departmentAdapter;
     private PickUserAdapter userAdapter;
+    private PickedContactsAdapter pickedAdapter;
 
     /* Data*/
     private List<PickDepartmentModel> departments;
@@ -128,6 +134,24 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
         zSideBar = (ZSideBar) findViewById(R.id.contact_zsidebar);
         zSideBar.setupWithRecycler(userView);
+
+        pickedView = (HorizontalScrollListView) findViewById(R.id.picked_contact_view);
+        pickedAdapter = new PickedContactsAdapter(this);
+        pickedView.setAdapter(pickedAdapter);
+        pickedView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PickedModel model = (PickedModel)(parent.getAdapter().getItem(position));
+                if (model.isDepartment) {
+                    onDeleteAllUsers((PickDepartmentModel) model);
+                }
+                else {
+                    onDeleteUser((PickUserModel) model);
+                    userAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
 
     }
 
@@ -254,6 +278,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     public void onAddUser(PickUserModel model) {
         pickedContacts.addUser(model);
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
+        pickedAdapter.loadData(pickedContacts.getPickedContacts());
 
     }
 
@@ -261,6 +286,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     public void onDeleteUser(PickUserModel model) {
         pickedContacts.deleteUser(model);
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
+        pickedAdapter.loadData(pickedContacts.getPickedContacts());
     }
 
     @Override
@@ -269,6 +295,8 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         model.setSelected(true);
         pickedContacts.addAllUsersOfDepartment(model);
         userAdapter.notifyDataSetChanged();
+
+        pickedAdapter.loadData(pickedContacts.getPickedContacts());
     }
 
     @Override
@@ -277,5 +305,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         model.setSelected(false);
         pickedContacts.deleteAllUserOfDepartment(model);
         userAdapter.notifyDataSetChanged();
+
+        pickedAdapter.loadData(pickedContacts.getPickedContacts());
     }
 }

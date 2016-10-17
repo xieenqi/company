@@ -194,4 +194,11 @@ public class PickedContacts {
         DBDepartment company = OrganizationManager.shareManager().getsComany();
         pickedDepartments = PickDepartmentModel.getPickModel(company).topSelected();
     }
+
+    public List<PickedModel> getPickedContacts() {
+        List<PickedModel> result = new ArrayList<>();
+        result.addAll(pickedDepartments);
+        result.addAll(pickedUsers);
+        return result;
+    }
 }

@@ -12,8 +12,7 @@ import java.util.HashMap;
  * Created by EthanGong on 2016/10/14.
  */
 
-public class PickUserModel implements Indexable {
-
+public class PickUserModel extends PickedModel implements Indexable {
 
     private static HashMap<String, WeakReference<PickUserModel>> reuseCache = new HashMap<>();
     public final DBUser user;
@@ -24,6 +23,7 @@ public class PickUserModel implements Indexable {
     }
 
     private PickUserModel(@NonNull DBUser user) {
+        this.isDepartment = false;
         this.user = user;
     }
 
@@ -66,6 +66,16 @@ public class PickUserModel implements Indexable {
 
     public String getAvatar() {
         return user.avatar;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return getName();
+    }
+
+    @Override
+    public String getDisplayAvatar() {
+        return getAvatar();
     }
 
     @Override
