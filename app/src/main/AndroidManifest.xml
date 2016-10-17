@@ -736,7 +736,10 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name="com.loyo.oa.contactpicker.ContactPickerActivity"
-            android:label="@string/title_activity_contact_picker">
+            android:label="@string/title_activity_contact_picker"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
 
         <service
