@@ -140,6 +140,8 @@ public class TasksInfoActivity extends BaseActivity {
             String mTaskId;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     String keyType;
+    @Extra(ExtraAndResult.IS_UPDATE)
+    boolean isUpdate;//是否需要刷新列表
 
     private boolean isOver = false;
     private int statusSize;
@@ -812,7 +814,7 @@ public class TasksInfoActivity extends BaseActivity {
                                 task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("review", task);
-                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
                             }
                         }
 
@@ -887,7 +889,7 @@ public class TasksInfoActivity extends BaseActivity {
             mTask.setViewed(true);
             intent.putExtra("data", mTask);
         }
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isUpdate ? 0x09 : RESULT_OK, intent);
     }
 
     /**
@@ -1080,7 +1082,8 @@ public class TasksInfoActivity extends BaseActivity {
                     } else {
                         SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
                     }
-                                /*删除回调*/
+                    isUpdate = true;
+                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
@@ -1090,17 +1093,17 @@ public class TasksInfoActivity extends BaseActivity {
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
                         }
                     });
-                                /*复制回调*/
+                 /*复制回调*/
                 } else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable("data", mTask);
                     intent.putExtras(mBundle);
                     startActivity(intent);
-                                /*修改参与人回调*/
+                 /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
                     SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
-
+                    isUpdate = true;
                 }
                 break;
 

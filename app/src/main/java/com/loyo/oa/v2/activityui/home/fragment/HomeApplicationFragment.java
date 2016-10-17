@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
+import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
@@ -54,6 +56,7 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
@@ -68,6 +71,7 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -76,6 +80,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -218,6 +223,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
         //只有登录进来才加载loading
+        LogUtil.d("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))+"代开值 ----" + SharedUtil.get(app, ExtraAndResult.APP_START));
         if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
             showLoading("");
         }
@@ -270,10 +276,10 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
 //        //此处缓存首页数据
         DBManager.Instance().putHomeItem(MainApp.gson.toJson(items));
         adapter.setItemData(items);
-        adapter.setRedNumbreData(mItemNumbers);
         if (null != MainApp.user && null != MainApp.user.avatar && null != heading) {
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }
+        adapter.setRedNumbreData(mItemNumbers);
         adapter.notifyDataSetChanged();
     }
 
@@ -295,8 +301,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         } catch (Exception e) {
             e.printStackTrace();
         }
-        requestNumber();
-
+        rushHomeData();
     }
 
     /**
@@ -524,7 +529,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     cancelDialog();
                     MainApp.getMainApp().startActivity(getActivity(), EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 }
-            },"提示",getString(R.string.app_homeqq_message));
+            }, "提示", getString(R.string.app_homeqq_message));
 
         }
         MainApp.getMainApp().isQQLogin = false;
@@ -607,8 +612,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     mappedPermission.put(permission.code, permission);
                 }
             }
-
-            for (int i = 0; i < items.size(); i++) {
+            int itemsLength = items.size();
+            for (int i = 0; i < itemsLength; i++) {
                 String code = items.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {
@@ -616,8 +621,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     i--;
                 }
             }
-
-            for (int i = 0; i < caseItems.size(); i++) {
+            int caseItemsLength = caseItems.size();
+            for (int i = 0; i < caseItemsLength; i++) {
                 String code = caseItems.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {
@@ -663,7 +668,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     private ValidateItem availableValidateItem() {
         ValidateItem validateItem = null;
-        for (int i = 0; i < validateInfo.getValids().size(); i++) {
+        int validsLength = validateInfo.getValids().size();
+        for (int i = 0; i < validsLength; i++) {
             validateItem = validateInfo.getValids().get(i);
             if (validateItem.isEnable() && !validateItem.ischecked()) {
                 break;
@@ -725,7 +731,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 cancelDialog();
                 intentValue();
             }
-        },"提示",getString(R.string.app_attanceworry_message));
+        }, "提示", getString(R.string.app_attanceworry_message));
 
 /*        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
         //确认
@@ -820,5 +826,25 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 
     }
+
+    /**
+     * 更新(当首页红点数据异常)
+     */
+    void rushHomeData() {
+        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
+            @Override
+            public void success(final User user, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                requestNumber();
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
 
 }

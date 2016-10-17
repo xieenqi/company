@@ -87,7 +87,6 @@ public class MenuFragment extends BaseFragment {
                 if (null != user) {
                     if (null != user.avatar && null != riv_head) {
                         ImageLoader.getInstance().displayImage(MainApp.user.avatar, riv_head);
-//                        riv_head.setGrayImg();
                     }
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
@@ -131,7 +130,6 @@ public class MenuFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        onInit();
     }
 
     private HomeApplicationFragment mHomeApplicationFragment;
@@ -275,7 +273,7 @@ public class MenuFragment extends BaseFragment {
                             cancelDialog();
                             Utils.doSeting(getActivity());
                         }
-                    },"提示","需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    }, "提示", "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
 
 /*                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
                     generalPopView.setSureOnclick(new View.OnClickListener() {
@@ -354,7 +352,7 @@ public class MenuFragment extends BaseFragment {
     }
 
     /**
-     * 刷新token 防止token过期
+     * 更新(当首页红点数据异常)
      */
     void rushHomeData() {
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {

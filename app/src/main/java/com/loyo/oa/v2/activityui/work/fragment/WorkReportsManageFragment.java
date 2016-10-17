@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
@@ -19,6 +20,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,8 +92,12 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
     @Override
     public void openItem(int groupPosition, int childPosition) {
+        WorkReportRecord item = (WorkReportRecord) mAdapter.getChild(groupPosition, childPosition);
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WorkReportRecord) mAdapter.getChild(groupPosition, childPosition)).getId());
+        intent.putExtra(ExtraAndResult.EXTRA_ID, item.getId());
+        if (!item.viewed) {//有红点需要刷新
+            intent.putExtra(ExtraAndResult.IS_UPDATE, true);
+        }
         intent.setClass(mActivity, WorkReportsInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);

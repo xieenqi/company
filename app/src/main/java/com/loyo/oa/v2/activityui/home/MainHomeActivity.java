@@ -145,19 +145,16 @@ public class MainHomeActivity extends SlidingFragmentActivity {
     //打开侧滑
     public void togggle() {
         sm.toggle();
-        LogUtil.d("togggle");
     }
 
     //拦截侧滑
     public void gotoStop() {
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-        LogUtil.d("gotoStop");
     }
 
     //开始侧滑
     public void gotoStart() {
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        LogUtil.d("gotoStart");
     }
 
 //    public void changeFragment(int flag, int index) {
@@ -306,25 +303,21 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Override
     protected void onRestart() {
-        // TODO Auto-generated method stub
         super.onRestart();
     }
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        // TODO Auto-generated method stub
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
     }
 

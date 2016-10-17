@@ -159,7 +159,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
 ////                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
 //                startActivity(intent);
 //                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                app.startActivity(this, HaitMyActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                app.startActivityForResult(this, HaitMyActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, null);
                 break;
             default:
 
