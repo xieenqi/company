@@ -4,8 +4,8 @@ import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by yyy on 16/10/9.

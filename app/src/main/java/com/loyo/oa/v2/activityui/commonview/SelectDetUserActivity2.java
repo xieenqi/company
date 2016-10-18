@@ -15,18 +15,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.model.SelectDepData;
+import com.loyo.oa.v2.activityui.other.model.SelectUserData;
 import com.loyo.oa.v2.activityui.sale.adapter.SelectUserDepartmentAdapter;
 import com.loyo.oa.v2.activityui.sale.adapter.SelectUsersAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.activityui.other.model.SelectDepData;
-import com.loyo.oa.v2.activityui.other.model.SelectUserData;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.customview.HorizontalScrollListView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.tool.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +51,10 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 
     private LinearLayoutManager mDepartmentLayoutManager;
     private LinearLayoutManager mUserLayoutManager;
-    private List<Department> mDeptSource = new ArrayList<>(); // 部门和用户集合
-    private List<Department> newDeptSource = new ArrayList<>();//部门新的顺序
-    private List<Department> deptHead = new ArrayList<>();//一级部门
-    private List<Department> deptOther = new ArrayList<>();//其他部门
+    private List<DBDepartment> mDeptSource = new ArrayList<>(); // 部门和用户集合
+    private List<DBDepartment> newDeptSource = new ArrayList<>();//部门新的顺序
+    private List<DBDepartment> deptHead = new ArrayList<>();//一级部门
+    private List<DBDepartment> deptOther = new ArrayList<>();//其他部门
 
     private List<SelectUserHelper.SelectUserBase> mSelectUserOrDepartment = new ArrayList<>(); // 多选时的选中列表
 
@@ -69,7 +69,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SelectUserHelper.SelectThread.OK:
-                    MainApp.selectAllUsers = SelectUserHelper.useAlllist;
                     updata();
                     if (!TextUtils.isEmpty(mJoinUserId)) {
                         toJoinUserIds(mJoinUserId);
@@ -220,14 +219,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         initListener();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mSelectUserDepartmentAdapter != null && !(mSelectUserDepartmentAdapter.getItemCount() > 0)) {
-            loadingData();
-        }
-    }
-
     private void initData() {
         // 获取屏幕高度\宽度
         screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
@@ -259,7 +250,17 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         } else {
             tv_add.setVisibility(View.VISIBLE);
         }
-        loadingData();
+
+//        if (!isDataBinded()) {
+        showLoading("数据正在加载...");
+        mDeptSource = OrganizationManager.shareManager().allDepartments();
+        deptSort(); //重新排序
+        SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
+        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
+        thread.start();
+//        } else {
+//            updata();
+//        }
     }
 
     private void assignViews() {
@@ -272,22 +273,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         rvUsers = (RecyclerView) findViewById(R.id.rv_users);
         tv_title.setText("成员选择");
         tv_add.setText("确定");
-    }
-
-    /**
-     * 组装加载数据
-     */
-    private void loadingData() {
-//        if (!isDataBinded()) {
-        showLoading("数据正在加载...");
-        mDeptSource = Common.getLstDepartment();
-        deptSort(); //重新排序
-        SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
-        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
-        thread.start();
-//        } else {
-//            updata();
-//        }
     }
 
     private void initListener() {
@@ -325,10 +310,13 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
      */
     private void deptSort() {
         /*分别获取一级/其他级部门*/
-        for (Department department : mDeptSource) {
-            if (department.getXpath().split("/").length == 2) {
+        for (DBDepartment department : mDeptSource) {
+            if (department.xpath == null) {
+                continue;
+            }
+            if (department.xpath.split("/").length == 2) {
                 deptHead.add(department);
-            } else if (!department.getXpath().contains("/")) {
+            } else if (!department.xpath.contains("/")) {
                 deptHead.add(department);
             } else {
                 deptOther.add(department);
@@ -336,20 +324,20 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         }
 
         /*根据Xpath,把部门按照一级/二级顺序排序,排除掉公司数据*/
-        for (Department dept1 : deptHead) {
+        for (DBDepartment dept1 : deptHead) {
             newDeptSource.add(dept1);
-            for (Department dept2 : deptOther) {
-                if (dept2.getXpath().contains(dept1.getXpath()) && dept1.getXpath().indexOf("/") != -1) {
+            for (DBDepartment dept2 : deptOther) {
+                if (dept2.xpath.contains(dept1.xpath) && dept1.xpath.indexOf("/") != -1) {
                     newDeptSource.add(dept2);
                 }
             }
         }
 
-        Department companySource = null;
+        DBDepartment companySource = null;
 
         /*把公司数据，移动到首位*/
         for (int i = 0; i < newDeptSource.size(); i++) {
-            if (newDeptSource.get(i).getXpath().indexOf("/") == -1) {
+            if (newDeptSource.get(i).xpath.indexOf("/") == -1) {
                 companySource = newDeptSource.get(i);
                 newDeptSource.remove(i);
                 break;
@@ -520,7 +508,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
                     case ExtraAndResult.TYPE_SELECT_SINGLE:
                         Intent intent = new Intent();
                         Bundle bundle = new Bundle();
-                        User user = (User) data.getSerializableExtra(User.class.getName());
+                        DBUser user = (DBUser) data.getSerializableExtra(DBUser.class.getName());
                         bundle.putSerializable("data", user.toShortUser());
                         intent.putExtras(bundle);
                         app.finishActivity(SelectDetUserActivity2.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);

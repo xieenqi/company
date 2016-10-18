@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.loyo.oa.v2"
-    android:installLocation="internalOnly">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.loyo.oa.v2"
+          android:installLocation="internalOnly">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -128,12 +128,12 @@
             android:name=".activityui.work.WorkReportAddActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
         <activity
             android:name=".activityui.work.WorkReportsSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>
-
         <activity
             android:name=".activityui.customer.CommonTagSelectActivity_"
             android:launchMode="standard"
@@ -202,23 +202,32 @@
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-
         <activity
             android:name=".activityui.signin.SignInActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".activityui.other.DepartmentUserActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/FragmentActivityTheme"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".activityui.signin.SignInfoActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <!-- <activity -->
+
+
+        <!-- < -->
+        <!-- < -->
+        <!-- < -->
+        <!-- < -->
+        <!-- < -->
+        <!-- < -->
+        <!-- < HEAD -->
+        <!-- ======= -->
+        <!-- android:name=".activityui.other.DepartmentUserActivity" -->
+        <!-- android:launchMode="singleTop" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:theme="@style/FragmentActivityTheme" -->
+        <!-- android:windowSoftInputMode="adjustUnspecified|stateHidden" /> -->
+        <!-- <activity>>>>>>> develop-bug-fix2 -->
+        <!-- android:name=".activityui.signin.SignInfoActivity" -->
+        <!-- android:launchMode="singleTop" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:windowSoftInputMode="adjustUnspecified|stateHidden" /> -->
         <activity
             android:name=".activityui.signin.SignInManagerActivity_"
             android:launchMode="singleTop"
@@ -243,6 +252,7 @@
             android:name=".activityui.customer.CustomerInfoActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
         <activity
             android:name=".activityui.customer.CustomerLabelActivity_"
             android:launchMode="singleTop"
@@ -263,6 +273,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
         <activity
             android:name=".activityui.contact.ContactsActivity"
             android:launchMode="singleTop"
@@ -310,7 +321,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-
         <activity
             android:name=".activityui.wfinstance.WfInstanceManageActivity"
             android:launchMode="singleTop"
@@ -355,14 +365,24 @@
             android:name=".activityui.other.SelectEditDeleteActivity"
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom"/>
-        <activity
-            android:name=".activityui.other.DepartmentActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".activityui.signin.SignInManagerFromCustomer"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <!-- <activity -->
+
+
+        <!-- < -->
+        <!-- < -->
+        <!-- < -->
+        <!-- < -->
+        <!-- < -->
+        <!-- < -->
+        <!-- < HEAD -->
+        <!-- ======= -->
+        <!-- android:name=".activityui.other.DepartmentActivity" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:windowSoftInputMode="adjustUnspecified|stateHidden" /> -->
+        <!-- <activity>>>>>>> develop-bug-fix2 -->
+        <!-- android:name=".activityui.signin.SignInManagerFromCustomer" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:windowSoftInputMode="stateAlwaysHidden" /> -->
         <!-- 任务审核 -->
         <activity
             android:name=".activityui.tasks.TasksInfoScoreActivity_"
@@ -375,8 +395,7 @@
         <activity
             android:name=".activityui.customer.CustomerDynamicAddActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activityui.other.DepartmentUserSearchActivity"
             android:launchMode="singleTop"
@@ -388,7 +407,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>
-
         <activity
             android:name=".activityui.wfinstance.WfinstanceSearchActivity"
             android:launchMode="singleTop"
@@ -418,11 +436,13 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
+
         <!--<activity-->
         <!--android:name=".activityui.work.WorkReportModelSelectManageActivity_"-->
         <!--android:launchMode="singleTop"-->
         <!--android:screenOrientation="portrait"-->
         <!--android:windowSoftInputMode="stateAlwaysHidden"/>-->
+
         <activity
             android:name=".activityui.tasks.TaskModelSelectManageActivity_"
             android:launchMode="singleTop"
@@ -446,6 +466,7 @@
             android:name=".activityui.project.ProjectAddActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <activity
             android:name=".activityui.customer.TaskListActivity_"
             android:screenOrientation="portrait"
@@ -498,8 +519,8 @@
             android:name=".activityui.discuss.MyDiscussActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <activity
             android:name=".activityui.discuss.HaitMyActivity"
             android:launchMode="singleTop"
@@ -553,7 +574,7 @@
             android:name=".activityui.sale.SaleDetailsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <!-- 订单管理 -->
         <activity
             android:name=".activityui.order.OrderManagementActivity"
@@ -629,8 +650,7 @@
         <activity
             android:name=".activityui.clue.ClueDynamicAddActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activityui.clue.ClueDynamicManagerActivity"
             android:launchMode="singleTop"
@@ -640,8 +660,8 @@
         <activity
             android:name=".activityui.worksheet.WorksheetManageActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activityui.worksheet.WorksheetDetailActivity"
             android:launchMode="singleTop"
@@ -672,14 +692,14 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <activity
             android:name=".activityui.worksheet.WorksheetSubmitActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"
-            />
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
 
-        <!--其它-->
+        <!-- 其它 -->
         <activity
             android:name=".activityui.other.PreviewImageAddActivity"
             android:launchMode="singleTop"
@@ -703,8 +723,7 @@
         <activity
             android:name=".activityui.other.PreviewImagefromHttp"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".customview.multi_image_selector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize"
@@ -715,24 +734,30 @@
             android:name=".customview.multi_image_selector.CropImageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".activityui.customer.CallPhoneBackActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".activityui.attachment.SweetAlertDialogActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activityui.setting.ResePhoneActivity"
+            android:name="com.loyo.oa.contactpicker.ContactPickerActivity"
+            android:label="@string/title_activity_contact_picker"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+
         <service
             android:name=".service.InitDataService_"
+            android:enabled="true"/>
+        <service
+            android:name=".service.OrganizationService"
             android:enabled="true"/>
         <service
             android:name=".service.CheckUpdateService"
@@ -880,6 +905,7 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="ukuaiqi" />
+
     </application>
 
 </manifest>

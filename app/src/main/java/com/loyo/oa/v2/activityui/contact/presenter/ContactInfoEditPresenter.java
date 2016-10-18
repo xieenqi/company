@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.os.Handler;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.loyo.oa.v2.activityui.other.model.User;
+
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.db.bean.DBUser;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface ContactInfoEditPresenter {
     void showLeaveDialog(SweetAlertDialogView sweetAlertDialogView);
 
     /*判断数据是否被编辑过*/
-    boolean isDataChange(TextView tv_mobile, TextView tv_birthday, EditText et_weixin, User mUser, int sex);
+    boolean isDataChange(TextView tv_mobile, TextView tv_birthday, EditText et_weixin, DBUser mUser, int sex);
 
     /*设置头像跳转*/
     void setHeadImage(Activity mActivity, Intent mIntent, int REQUEST_IMAGE);

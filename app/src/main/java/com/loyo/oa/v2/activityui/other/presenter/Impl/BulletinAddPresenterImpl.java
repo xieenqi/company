@@ -210,4 +210,3 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
         }, "提示", mContext.getString(R.string.app_bulletin_message));
     }
 }
-

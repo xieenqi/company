@@ -1,31 +1,35 @@
 package com.loyo.oa.v2.activityui.login;
 
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.login.model.Token;
 import com.loyo.oa.v2.activityui.login.presenter.LoginPresenter;
 import com.loyo.oa.v2.activityui.login.presenter.impl.LoginPresenterImpl;
 import com.loyo.oa.v2.activityui.login.viewcontrol.LoginView;
+import com.loyo.oa.v2.activityui.setting.VerifyAccountActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.WaveView;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.activityui.setting.VerifyAccountActivity_;
-import com.loyo.oa.v2.customview.WaveView;
+
 import java.util.HashMap;
 
 /**
+<<<<<<< HEAD
  * 【登录界面】
+=======
+ * 【登录界面】MVP重构
+>>>>>>> organization-merge
  * Restructure by yyy on 2016/10/8
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener, WaveView.OnWaveCompleteListener,LoginView {
@@ -37,6 +41,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private ImageView serverTestImg, serverFormalImg;
     private TextView serverTestTv, serverFormalTv;
     private LoginPresenter loginPresenter;
+
 
     private String username;
     private String password;
@@ -130,11 +135,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 break;
 
             /*企业qq登陆*/
+
             case R.id.tv_qqLogin:
                 app.startActivity(this, LoginBQQActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
                 break;
-
             /*忘记密码*/
+
             case R.id.tv_resetPassword:
                 app.startActivity(this, VerifyAccountActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
@@ -148,6 +154,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * WaveView赋值
      * */
     @Override
+
     public void onWaveComplete(final int color) {
         layout_login.setBackGroundColor(color);
     }

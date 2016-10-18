@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity;
 import com.loyo.oa.v2.activityui.contact.presenter.ContactInfoEditPresenter;
 import com.loyo.oa.v2.activityui.contact.viewcontrol.ContactInfoView;
 import com.loyo.oa.v2.activityui.other.model.User;
@@ -27,8 +26,8 @@ import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IUser;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -50,8 +49,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static android.R.attr.path;
-import static com.loyo.oa.v2.R.id.img_title_user;
 import static com.loyo.oa.v2.common.Global.Toast;
 
 /**
@@ -161,7 +158,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
      * 判断数据是否被编辑过
      * */
     @Override
-    public boolean isDataChange(TextView tv_mobile, TextView tv_birthday, EditText et_weixin, User mUser, int sex) {
+    public boolean isDataChange(TextView tv_mobile, TextView tv_birthday, EditText et_weixin, DBUser mUser, int sex) {
 
         String tel = TextUtils.isEmpty(tv_mobile.getText().toString()) ? null : tv_mobile.getText().toString();
         String birthDay = TextUtils.isEmpty(tv_birthday.getText().toString()) ? null : tv_birthday.getText().toString();
