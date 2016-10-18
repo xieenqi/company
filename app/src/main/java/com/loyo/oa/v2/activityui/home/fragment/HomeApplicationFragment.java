@@ -204,9 +204,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // TODO: 建立单独的获取配置Service
-        /* 获取配置数据 */
-        WorksheetConfig.fetchWorksheetTypes();
     }
 
     @Override
@@ -223,7 +220,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
         //只有登录进来才加载loading
-        LogUtil.d("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))+"代开值 ----" + SharedUtil.get(app, ExtraAndResult.APP_START));
         if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
             showLoading("");
         }
@@ -566,6 +562,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                         super.failure(error);
                     }
                 });
+        // TODO: 建立单独的获取配置Service  目前初始化数据在首页加载完成在加载
+        /* 获取配置数据 */
+        WorksheetConfig.fetchWorksheetTypes();
     }
 
     //获取轨迹，并设置AlarmManager
@@ -834,7 +833,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
             @Override
             public void success(final User user, final Response response) {
-                HttpErrorCheck.checkResponse(response);
                 requestNumber();
             }
 

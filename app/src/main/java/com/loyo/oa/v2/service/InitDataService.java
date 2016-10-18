@@ -15,6 +15,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -54,7 +55,8 @@ public class InitDataService extends IntentService {
             @Override
             public void success(User user, Response response) {
                 try {
-                    HttpErrorCheck.checkResponse("获取user", response);
+                    if (Config_project.is_developer_mode)
+                        HttpErrorCheck.checkResponse("获取user", response);
                     String json = MainApp.gson.toJson(user);
                     MainApp.user = user;
                     setRootMap(user);
