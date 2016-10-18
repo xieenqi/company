@@ -31,7 +31,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 

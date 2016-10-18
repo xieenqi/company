@@ -9,13 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
@@ -40,7 +40,9 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;

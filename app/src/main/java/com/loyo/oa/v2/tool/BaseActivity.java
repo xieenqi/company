@@ -35,6 +35,8 @@ import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.Locale;
 
 /**
@@ -117,6 +119,11 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         }
         customProgressDialog = null;
         super.onDestroy();
+    }
+
+    @Subscribe
+    public void onEvent(Object object){
+
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {

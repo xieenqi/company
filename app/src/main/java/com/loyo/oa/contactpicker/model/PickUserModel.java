@@ -2,11 +2,11 @@ package com.loyo.oa.contactpicker.model;
 
 import android.support.annotation.NonNull;
 
+import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.indexablelist.widget.Indexable;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 /**
@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class PickUserModel extends PickedModel implements Indexable {
 
-    private static HashMap<String, WeakReference<PickUserModel>> reuseCache = new HashMap<>();
+    private static HashMap<String, PickUserModel> reuseCache = new HashMap<>();
     public final DBUser user;
     private boolean mIsSelected;
 
@@ -37,17 +37,11 @@ public class PickUserModel extends PickedModel implements Indexable {
             return null;
         }
 
+        PickUserModel result = reuseCache.get(user.id);
 
-
-        PickUserModel result = null;
-        WeakReference<PickUserModel> reference = reuseCache.get(user.id);
-
-        if (reference == null || reference.get() == null) {
+        if (result == null) {
             result = instance(user);
-            reuseCache.put(user.id, new WeakReference<PickUserModel>(result));
-        }
-        else {
-            result = reference.get();
+            reuseCache.put(user.id, result);
         }
 
         return result;
@@ -90,6 +84,15 @@ public class PickUserModel extends PickedModel implements Indexable {
     @Override
     public String getDisplayAvatar() {
         return getAvatar();
+    }
+
+    @Override
+    public StaffMember toStaffMember() {
+        StaffMember member = new StaffMember();
+        member.id = user.id;
+        member.name = user.name;
+        member.avatar = user.avatar;
+        return member;
     }
 
     @Override

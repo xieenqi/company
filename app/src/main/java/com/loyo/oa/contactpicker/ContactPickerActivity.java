@@ -32,12 +32,15 @@ import com.loyo.oa.contactpicker.model.PickDepartmentModel;
 import com.loyo.oa.contactpicker.model.PickUserModel;
 import com.loyo.oa.contactpicker.model.PickedContacts;
 import com.loyo.oa.contactpicker.model.PickedModel;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.contactpicker.viewholder.PickDepartmentCell;
 import com.loyo.oa.indexablelist.adapter.expand.StickyRecyclerHeadersDecoration;
 import com.loyo.oa.indexablelist.widget.DividerDecoration;
 import com.loyo.oa.indexablelist.widget.ZSideBar;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.HorizontalScrollListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
@@ -51,13 +54,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static android.view.View.GONE;
-import static com.loyo.oa.v2.R.id.btn_fetch;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class ContactPickerActivity extends BaseActivity implements View.OnClickListener, OnDepartmentSelected<PickDepartmentCell>, OnPickUserEvent {
 
     /* 常量 */
     public static final String SINGLE_SELECTION_KEY = "com.loyo.oa.v2.SINGLE_SELECTION";
+    public static final String STAFF_COLLECTION_KEY = "com.loyo.oa.v2.STAFF_COLLECTION";
 
     /* UI */
     private LinearLayout ll_back;
@@ -89,6 +96,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     private PickedContacts pickedContacts;
     private List<PickUserModel> searchBase = new ArrayList<>();
     private boolean singleSelection = false;
+    private StaffMemberCollection previousSelection;
 
     /* Broadcasr */
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -114,6 +122,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_contact_picker);
         /** 是否单选，默认多选 */
         singleSelection = getIntent().getBooleanExtra(SINGLE_SELECTION_KEY,false);
+        previousSelection = (StaffMemberCollection) getIntent().getSerializableExtra(STAFF_COLLECTION_KEY);
 
         registerBroadcastReceiver();
         initView();
@@ -135,7 +144,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
         noDataPlaceholder = (ImageView) findViewById(R.id.no_data_placeholder);
         tipView = (TextView) findViewById(R.id.tip_view);
-        fetchButton = (Button) findViewById(btn_fetch);
+        fetchButton = (Button) findViewById(R.id.btn_fetch);
         fetchButton.setOnClickListener(this);
 
         selectAllCheckBox = (CheckBox) findViewById(R.id.select_all_checkbox);
@@ -239,22 +248,76 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
             noCacheContainer.setVisibility(View.VISIBLE);
             return;
         }
+        else {
+            progressWheel.setVisibility(View.VISIBLE);
+            noDataPlaceholder.setVisibility(View.GONE);
+            tipView.setText("加载中...");
+            fetchButton.setVisibility(View.INVISIBLE);
+            noCacheContainer.setVisibility(View.VISIBLE);
+            selectAllContainer.setVisibility(View.INVISIBLE);
+        }
 
         pickedContacts = new PickedContacts();
-        departments = departmentModelList();
-        departmentAdapter.clearData();
-        departmentAdapter.addData(departments);
 
-        if (departments.size() > 0) {
-            _loadUsersAtIndex(selectedDepartmentIndex);
-        }
-        else {
-            /** 无缓存组织架构数据 */
-            progressWheel.setVisibility(View.GONE);
-            noDataPlaceholder.setVisibility(View.VISIBLE);
-            tipView.setText("无组织架构数据");
-            noCacheContainer.setVisibility(View.VISIBLE);
-        }
+        Observable.just("loadData").map(
+                new Func1<String, Boolean>() {
+                    @Override
+                    public Boolean call(String text) {
+                        departments = departmentModelList();
+                        if (previousSelection != null && (previousSelection.depts.size() > 0
+                                || previousSelection.users.size()>0)) {
+
+                            if (previousSelection.depts.size() > 0) {
+                                List<String> previous = previousSelection.departmentIds();
+                                for (String deptId:previous) {
+                                    DBDepartment dept = OrganizationManager.shareManager().getDepartment(deptId);
+                                    if (dept != null) {
+                                        PickDepartmentModel model = PickDepartmentModel.getPickModel(dept);
+                                        pickedContacts.addAllUsersOfDepartment(model);
+                                    }
+                                }
+                            }
+                            if (previousSelection.users.size()>0) {
+                                List<String> previous = previousSelection.userIds();
+                                for (String userId:previous) {
+                                    DBUser user = OrganizationManager.shareManager().getUser(userId);
+                                    if (user != null) {
+                                        PickUserModel model = PickUserModel.getPickModel(user);
+                                        pickedContacts.addUser(model);
+                                    }
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean suc) {
+                        noCacheContainer.setVisibility(View.INVISIBLE);
+                        selectAllContainer.setVisibility(View.VISIBLE);
+                        departmentAdapter.clearData();
+                        departmentAdapter.addData(departments);
+
+                        if (pickedContacts.getCount() > 0) {
+                            pickedAdapter.loadData(pickedContacts.getPickedContacts());
+                            confirmView.setText("确定" + ("(" + pickedContacts.getCount() + ")"));
+                        }
+
+                        if (departments.size() > 0) {
+                            _loadUsersAtIndex(selectedDepartmentIndex);
+                        }
+                        else {
+                            /** 无缓存组织架构数据 */
+                            progressWheel.setVisibility(View.GONE);
+                            noDataPlaceholder.setVisibility(View.VISIBLE);
+                            tipView.setText("无组织架构数据");
+                            noCacheContainer.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
     }
 
     private void _loadUsersAtIndex(int index){
@@ -278,7 +341,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         userAdapter.setCallback(this);
 
         selectAllCheckBox.setSelected(departments.get(selectedDepartmentIndex).isSelected());
-        noDataContainer.setVisibility((result.size() <= 0) ? View.VISIBLE : GONE);
+        noDataContainer.setVisibility((result.size() <= 0) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -308,6 +371,8 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
                 OrganizationService.startActionFetchAll(getApplicationContext());
                 break;
+            case R.id.tv_add:
+                doResultAction();
             default:
 
                 break;
@@ -372,8 +437,12 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     }
 
     /** 选择结束 */
-    private void onResult() {
-
+    private void doResultAction() {
+        if (pickedContacts.getCount() > 0) {
+            StaffMemberCollection collection = pickedContacts.getStaffMemberCollection();
+            AppBus.getInstance().post(new ContactPickedEvent(collection));
+        }
+        finish();
     }
 
     @Override
@@ -409,7 +478,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
         /** 选中一个用户，结束选择 */
         if (singleSelection) {
-            onResult();
+            doResultAction();
         }
     }
 

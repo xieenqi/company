@@ -4,11 +4,11 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.indexablelist.widget.Indexable;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +22,7 @@ public class PickDepartmentModel extends PickedModel implements Indexable {
 
     public final DBDepartment department;
     public boolean isLevel1;
-    private static HashMap<String, WeakReference<PickDepartmentModel>> reuseCache = new HashMap<>();
+    private static HashMap<String, PickDepartmentModel> reuseCache = new HashMap<>();
     private boolean mIsSelected;
 
     public static void clearResueCache() {
@@ -44,15 +44,11 @@ public class PickDepartmentModel extends PickedModel implements Indexable {
             return null;
         }
 
-        PickDepartmentModel result = null;
-        WeakReference<PickDepartmentModel> reference = reuseCache.get(dept.id);
+        PickDepartmentModel result = reuseCache.get(dept.id);
 
-        if (reference == null || reference.get() == null) {
+        if (result == null) {
             result = instance(dept);
-            reuseCache.put(dept.id, new WeakReference<PickDepartmentModel>(result));
-        }
-        else {
-            result = reference.get();
+            reuseCache.put(dept.id, result);
         }
 
         return result;
@@ -77,6 +73,15 @@ public class PickDepartmentModel extends PickedModel implements Indexable {
     @Override
     public String getDisplayAvatar() {
         return null;
+    }
+
+    @Override
+    public StaffMember toStaffMember() {
+        StaffMember member = new StaffMember();
+        member.id = department.id;
+        member.name = department.name;
+        member.xpath = department.xpath;
+        return member;
     }
 
     public String getName() {

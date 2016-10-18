@@ -1,5 +1,6 @@
 package com.loyo.oa.contactpicker.model;
 
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
@@ -244,6 +245,17 @@ public class PickedContacts {
         result.addAll(pickedDepartments);
         result.addAll(pickedUsers);
         return result;
+    }
+
+    public StaffMemberCollection getStaffMemberCollection() {
+        StaffMemberCollection collection = new StaffMemberCollection();
+        for (PickedModel dept:pickedDepartments) {
+            collection.depts.add(dept.toStaffMember());
+        }
+        for (PickedModel user:pickedUsers) {
+            collection.users.add(user.toStaffMember());
+        }
+        return collection;
     }
 
     public void clearSelection(){

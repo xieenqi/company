@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
@@ -54,6 +57,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
+import org.greenrobot.eventbus.Subscribe;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -168,6 +172,8 @@ public class TasksAddActivity extends BaseActivity {
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
 
+    private StaffMemberCollection selectedCollection;
+
 
     @AfterViews
     void initUI() {
@@ -195,6 +201,15 @@ public class TasksAddActivity extends BaseActivity {
             tv_mycustomer.setText(customerName);
             layout_mycustomer.setEnabled(false);
         }
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+        Log.v("debug", "onContactPicked");
+        selectedCollection = event.data;
     }
 
     /**
@@ -393,8 +408,13 @@ public class TasksAddActivity extends BaseActivity {
 //                SelectDetUserActivity2.startThisForOnly(TasksAddActivity.this, null);
 //                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                if (selectedCollection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, selectedCollection);
+                }
                 app.startActivityForResult(this, ContactPickerActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        FinalVariables.REQUEST_SELECT_PROJECT, null);
+                        FinalVariables.REQUEST_SELECT_PROJECT, bundle);
 
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
