@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.commonview.bean;
+package com.loyo.oa.upload.alioss;
 
 /**
  * 【阿里云附件】token
