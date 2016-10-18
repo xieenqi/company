@@ -259,8 +259,8 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
         pickedContacts = new PickedContacts();
 
-        Observable.just("loadData").map(
-                new Func1<String, Boolean>() {
+        Observable.just("loadData")
+                .map(new Func1<String, Boolean>() {
                     @Override
                     public Boolean call(String text) {
                         departments = departmentModelList();

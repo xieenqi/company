@@ -210,7 +210,9 @@
                     android:layout_height="80dp"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:layout_marginBottom="22dp"
-                    wheel:progressIndeterminate="true"/>
+                    wheel:progressIndeterminate="true"
+                    wheel:barColor="@color/md_grey_500"
+                    wheel:barWidth="@dimen/dimen_2"/>
 
                 <ImageView
                     android:id="@+id/no_data_placeholder"
