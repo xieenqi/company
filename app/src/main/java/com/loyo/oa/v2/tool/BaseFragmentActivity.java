@@ -18,14 +18,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.library.module.common.SystemBarTintManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.SystemBarTintManager;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 public class BaseFragmentActivity extends FragmentActivity {
 
@@ -33,9 +33,9 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected Context mContext;
     private Toast mCurrentToast;
     private int mTouchViewGroupId = -1;
-    public GeneralPopView generalPopView;
     final String Tag = "BaseFragmentActivity";
     public SystemBarTintManager tintManager;
+    public SweetAlertDialogView sweetAlertDialogView;
 
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -93,6 +93,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         tintManager.setNavigationBarTintEnabled(true);
         // 设置一个颜色给系统栏
         tintManager.setTintColor(Color.parseColor("#2c9dfc"));
+        sweetAlertDialogView = new SweetAlertDialogView(this);
     }
 
     /**
@@ -279,14 +280,12 @@ public class BaseFragmentActivity extends FragmentActivity {
         mCurrentToast.show();
     }
 
+
     /**
-     * 通用提示弹出框init
-     */
-    public void showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(this, isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
+     * SweetAlertDialog关闭
+     * */
+    public void dismissSweetAlert(){
+        sweetAlertDialogView.sweetAlertDialog.dismiss();
     }
 
     /*重启当前Activity*/

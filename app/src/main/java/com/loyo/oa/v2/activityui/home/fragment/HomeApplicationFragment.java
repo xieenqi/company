@@ -19,10 +19,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
-import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
+import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
@@ -32,6 +32,7 @@ import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
@@ -49,7 +50,6 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.AttenDancePopView;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
@@ -57,6 +57,7 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.LocationDBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.TrackLocationService;
@@ -84,6 +85,7 @@ import java.util.TimerTask;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -94,7 +96,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
 
     private View mView;
     private String changeEvent = "All";
-    private GeneralPopView generalPopView;
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private HashMap<String, Object> map = new HashMap<>();
@@ -224,6 +225,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
         //只有登录进来才加载loading
+        LogUtil.d("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START)) + "代开值 ----" + SharedUtil.get(app, ExtraAndResult.APP_START));
         if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
             showLoading("");
         }
@@ -269,7 +271,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         updateUser();
 
         // startTrack();
-        LocationDBManager.getInstance().initWithUser(MainApp.user.id);
+        LocationDBManager.getInstance().initWithUser(MainApp.user!=null?MainApp.user.id:null);
         TrackLocationManager.getInstance().startLocationTrackingIfNeeded();
         return mView;
     }
@@ -279,10 +281,10 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
 //        //此处缓存首页数据
         DBManager.Instance().putHomeItem(MainApp.gson.toJson(items));
         adapter.setItemData(items);
-        adapter.setRedNumbreData(mItemNumbers);
         if (null != MainApp.user && null != MainApp.user.avatar && null != heading) {
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }
+        adapter.setRedNumbreData(mItemNumbers);
         adapter.notifyDataSetChanged();
     }
 
@@ -304,8 +306,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         } catch (Exception e) {
             e.printStackTrace();
         }
-        requestNumber();
-
+        rushHomeData();
     }
 
     /**
@@ -326,7 +327,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_", "0202", 2),
                 new HomeItem(R.drawable.newmain_report, "工作报告", "com.loyo.oa.v2.activityui.work.WorkReportsManageActivity", "0203", 2),
                 new HomeItem(R.drawable.newmain_wfin, "审批流程", "com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity", "0204", 2),
-                new HomeItem(R.drawable.newmain_attent, "考勤管理", "com.loyo.oa.v2.activityui.attendance.AttendanceActivity_", "0211", 2)));
+                new HomeItem(R.drawable.newmain_attent, "考勤管理", "com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_", "0211", 2)));
 
 
         caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务", "0202", R.drawable.newmain_post_task),
@@ -335,11 +336,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
                 new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
-                new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
                 new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign),
+                new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
                 new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
-
-
     }
 
     /**
@@ -415,7 +414,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 //已打卡完毕 跳转考勤列表
                 else {
                     Toast.makeText(getActivity(), "您今天已经打卡完毕", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getActivity(), AttendanceActivity_.class);
+                    Intent intent = new Intent(getActivity(), AttendanceManagerActivity_.class);
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }
@@ -483,7 +482,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 加班提示框
      */
     public void popOutToast() {
-        final AttenDancePopView popView = new AttenDancePopView(getActivity());
+        final AttenDancePopView popView = new AttenDancePopView(mActivity);
         popView.show();
         popView.setCanceledOnTouchOutside(true);
 
@@ -521,22 +520,20 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     public void isQQLogin() {
         if (MainApp.getMainApp().isQQLogin && TextUtils.isEmpty(MainApp.user.mobile)) {
-            showGeneralDialog(false, true, getString(R.string.app_homeqq_message));
-            //确认
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    cancelDialog();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    cancelDialog();
                     MainApp.getMainApp().startActivity(getActivity(), EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 }
-            });
-            //取消
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });
+            }, "提示", getString(R.string.app_homeqq_message));
+
         }
         MainApp.getMainApp().isQQLogin = false;
     }
@@ -618,8 +615,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     mappedPermission.put(permission.code, permission);
                 }
             }
-
-            for (int i = 0; i < items.size(); i++) {
+            int itemsLength = items.size();
+            for (int i = 0; i < itemsLength; i++) {
                 String code = items.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {
@@ -627,8 +624,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     i--;
                 }
             }
-
-            for (int i = 0; i < caseItems.size(); i++) {
+            int caseItemsLength = caseItems.size();
+            for (int i = 0; i < caseItemsLength; i++) {
                 String code = caseItems.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {
@@ -638,18 +635,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             }
         }
         initView();
-    }
-
-
-    /**
-     * 通用提示弹出框init
-     */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(getActivity(), isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
     }
 
     /**
@@ -686,7 +671,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     private ValidateItem availableValidateItem() {
         ValidateItem validateItem = null;
-        for (int i = 0; i < validateInfo.getValids().size(); i++) {
+        int validsLength = validateInfo.getValids().size();
+        for (int i = 0; i < validsLength; i++) {
             validateItem = validateInfo.getValids().get(i);
             if (validateItem.isEnable() && !validateItem.ischecked()) {
                 break;
@@ -736,22 +722,19 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 早退提示
      */
     public void attanceWorry() {
-        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
-        //确认
-        generalPopView.setSureOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
                 intentValue();
             }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });
+        }, "提示", getString(R.string.app_attanceworry_message));
     }
 
     /**
@@ -765,6 +748,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
+        intent.putExtra("lateMin", attendanceRecords.getLateMin());
+        intent.putExtra("earlyMin", attendanceRecords.getEarlyMin());
+
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
 
@@ -829,5 +815,25 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 
     }
+
+    /**
+     * 更新(当首页红点数据异常)
+     */
+    void rushHomeData() {
+        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
+            @Override
+            public void success(final User user, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                requestNumber();
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
 
 }

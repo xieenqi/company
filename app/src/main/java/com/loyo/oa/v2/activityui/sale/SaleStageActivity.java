@@ -27,11 +27,11 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -205,10 +205,10 @@ public class SaleStageActivity extends BaseActivity {
                             Toast("赢单必须添加意向产品");
                             return;
                         }
-                        String tt = "赢单提交后不能修改,请确认赢单产品金额和数量是否正确！\n客户名称：" + saleName + "\n产品总金额：￥" + salePrice;
-                        final GeneralPopView dialog = showGeneralDialog(false, true,
-                                Utils.modifyTextColor(tt, getResources().getColor(R.color.red1), 0, 10).toString());
 
+                        String tt = "赢单提交后不能修改,请确认赢单产品金额和数量是否正确！\n客户名称：" + saleName + "\n产品总金额：￥" + salePrice;
+/*                        final GeneralPopView dialog = showGeneralDialog(false, true,
+                                Utils.modifyTextColor(tt, getResources().getColor(R.color.red1), 0, 10).toString());
                         dialog.setSureOnclick(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -223,7 +223,23 @@ public class SaleStageActivity extends BaseActivity {
                             public void onClick(View v) {
                                 dialog.dismisDialog();
                             }
-                        });
+                        });*/
+
+                        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                dismissSweetAlert();
+                            }
+                        }, new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                Intent intent = new Intent();
+                                intent.putExtra(ExtraAndResult.EXTRA_DATA, data.get(position));
+                                setResult(RESULT_OK, intent);
+                                dismissSweetAlert();
+                            }
+                        },"提示", Utils.modifyTextColor(tt, getResources().getColor(R.color.red1), 0, 10).toString());
+
                         return;
                     } else if (tv_name.getText().toString().contains("输单") && !TextUtils.isEmpty(saleName)) {
 

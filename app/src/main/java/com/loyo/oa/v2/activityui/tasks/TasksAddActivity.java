@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,26 +15,37 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
+import com.loyo.oa.v2.activityui.other.CommonAdapter;
+import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CountTextWatcher;
+import com.loyo.oa.v2.customview.CusGridView;
+import com.loyo.oa.v2.customview.DateTimePickDialog;
+import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
@@ -46,21 +58,19 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.activityui.other.CommonAdapter;
-import com.loyo.oa.v2.activityui.other.ViewHolder;
-import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.customview.CusGridView;
-import com.loyo.oa.v2.customview.DateTimePickDialog;
-import com.loyo.oa.v2.customview.RepeatTaskView;
+import org.greenrobot.eventbus.Subscribe;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -163,6 +173,8 @@ public class TasksAddActivity extends BaseActivity {
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
 
+    private StaffMemberCollection selectedCollection;
+
 
     @AfterViews
     void initUI() {
@@ -190,6 +202,15 @@ public class TasksAddActivity extends BaseActivity {
             tv_mycustomer.setText(customerName);
             layout_mycustomer.setEnabled(false);
         }
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+        Log.v("debug", "onContactPicked");
+        selectedCollection = event.data;
     }
 
     /**
@@ -237,15 +258,15 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(projectTitle)) {
             tv_Project.setText(projectTitle);
         }
-         getBundle();
+        getBundle();
 
     }
 
     /**
      * 图片列表绑定
-     * */
+     */
     void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
         ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
@@ -254,7 +275,7 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
-        if(pickPhots.size() == 0){
+        if (pickPhots.size() == 0) {
             showLoading("正在提交");
         }
         bizExtData = new PostBizExtData();
@@ -364,10 +385,10 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
                 //没有附件
-                if(pickPhots.size() == 0){
+                if (pickPhots.size() == 0) {
                     requestCommitTask();
                     //有附件
-                }else{
+                } else {
                     img_title_right.setEnabled(false);
                     newUploadAttachement();
                 }
@@ -385,8 +406,19 @@ public class TasksAddActivity extends BaseActivity {
 
             //负责人选项
             case R.id.layout_responsiblePerson:
-                SelectDetUserActivity2.startThisForOnly(TasksAddActivity.this, null);
+//                SelectDetUserActivity2.startThisForOnly(TasksAddActivity.this, null);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                if (selectedCollection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, selectedCollection);
+                }
+                app.startActivityForResult(this, ContactPickerActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                        FinalVariables.REQUEST_SELECT_PROJECT, bundle);
+
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
                 break;
 
             //参与人选项
@@ -575,26 +607,26 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(){
+     */
+    private void newUploadAttachement() {
         showLoading("正在提交");
         try {
             uploadSize = 0;
-            uploadNum  = pickPhots.size();
+            uploadNum = pickPhots.size();
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
-                        LogUtil.dee("typeFile:"+typedFile);
+                        LogUtil.dee("typeFile:" + typedFile);
                         TypedString typedUuid = new TypedString(uuid);
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
                                 new RCallback<Attachment>() {
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
-                                        if(uploadSize == uploadNum){
+                                        if (uploadSize == uploadNum) {
                                             requestCommitTask();
                                         }
                                     }
@@ -606,11 +638,12 @@ public class TasksAddActivity extends BaseActivity {
                                         img_title_right.setEnabled(true);
                                     }
                                 });
-                            }
-                        }
                     }
+                }
+            }
         } catch (Exception ex) {
             Global.ProcException(ex);
+            Toast("图片过大");
         }
     }
 

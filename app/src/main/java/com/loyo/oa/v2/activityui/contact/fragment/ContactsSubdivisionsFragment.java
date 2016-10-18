@@ -1,6 +1,9 @@
 package com.loyo.oa.v2.activityui.contact.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,16 +22,25 @@ import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.contact.ContactsDepartmentActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.lang.ref.WeakReference;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * com.loyo.oa.v2.ui.fragment
@@ -34,217 +48,334 @@ import java.util.ArrayList;
  * 作者 : ykb
  * 时间 : 15/9/6.
  */
-public class ContactsSubdivisionsFragment extends BaseFragment implements View.OnClickListener {
+public class ContactsSubdivisionsFragment extends BaseFragment {
 
+    /* View */
+    private View view;
+    private ExpandableListView listView;
+
+    /* Adaptor */
+    private SubDepartmentChildListAdapter listAdapter;
+
+    /* Data */
+    ArrayList<HashMap<String, Object>> datasource;
     private String deptId;
+    private String xpath;
+
+    /* Helper */
     private MainApp app = MainApp.getMainApp();
-    private ListView listView_user, listView_department;
-    private ViewGroup layout_dept, layout_user;
-    private DepartmentListViewAdapter deptAdapter;
-    private UserListViewAdapter userAdapter;
-    private StringBuffer deptName;
-    private int defaultAvatar;
-    private int defaultSize = 0;
+    public PinyinComparator pinyinComparator;
+
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            //Bundle b = intent.getExtras();
+            if ( "com.loyo.oa.v2.USER_EDITED".equals( intent.getAction() )) {
+                //String userId = b.getString("userId");
+                listAdapter.notifyDataSetChanged();
+            }
+            else  if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
+                loadData();
+                listAdapter.datasource = datasource;
+                listAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        deptId = null == getArguments() ? "" : getArguments().getString("depId");
+        registerBroadcastReceiver();
+        pinyinComparator = new PinyinComparator();
+        loadData();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        unregisterBroadcastReceiver();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_contacts_subdivisions, container, false);
+        if (view == null) {
+            view = inflater.inflate(R.layout.fragment_sub_department, container, false);
+        }
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initUI(view);
+        setupView();
+        setupAdapterAndListener();
     }
 
-    private void initUI(View view) {
-        layout_dept = (ViewGroup) view.findViewById(R.id.layout_dept);
-        layout_user = (ViewGroup) view.findViewById(R.id.layout_user);
+    public void loadData() {
+        deptId = null == getArguments() ? "" : getArguments().getString("depId");
+        xpath = null == getArguments() ? "" : getArguments().getString("xpath");
 
-        listView_user = (ListView) view.findViewById(R.id.listView_user);
-        listView_department = (ListView) view.findViewById(R.id.listView_department);
+        ArrayList<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
+        // TODO:
+        List<DBUser> users = OrganizationManager.shareManager().directUsersOfDepartment(deptId);
+        List<DBDepartment> depts = OrganizationManager.shareManager().subDepartmentsOfDepartment(deptId);
+        Collections.sort(users, pinyinComparator);
+        Collections.sort(depts, pinyinComparator);
 
-        ArrayList<Department> listDept = Common.getLstDepartment(deptId);
-        if (listDept != null && listDept.size() > 0) {
-            deptAdapter = new DepartmentListViewAdapter(getActivity(), listDept);
-            listView_department.setAdapter(deptAdapter);
-            Global.setListViewHeightBasedOnChildren(listView_department);
-        } else {
-            layout_dept.setVisibility(View.GONE);
+
+
+        if (users.size() >0 ) {
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("name", "人员");
+            map.put("items", users);
+            result.add(map);
+        }
+        if (depts.size() >0 ) {
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("name", "部门");
+            map.put("items", depts);
+            result.add(map);
         }
 
-        LogUtil.dee("dept: "+defaultSize);
+        datasource = result;
+    }
 
-        listView_department.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    public void setupView() {
+        listView = (ExpandableListView) view.findViewById(R.id.list_view);
+        listView.setDivider(null);
+        listView.setGroupIndicator(null);
+    }
+
+    public void setupAdapterAndListener() {
+
+        listAdapter = new SubDepartmentChildListAdapter(datasource);
+        listView.setAdapter(listAdapter);
+
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Department d = (Department) adapterView.getAdapter().getItem(i);
-                if (null != d) {
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                HashMap<String, Object> group = datasource.get(groupPosition);
+                ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+                Object item = items.get(childPosition);
+                if (item.getClass()==DBDepartment.class) {
+                    DBDepartment dept = (DBDepartment)item;
                     Bundle b = new Bundle();
-                    b.putString("depId", d.getId());
-                    b.putString("depName", d.getName());
+                    b.putString("depId", dept.id!=null?dept.id:"");
+                    b.putString("depName", dept.name!=null?dept.name:"");
                     app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 }
+                else if (item.getClass()==DBUser.class) {
+                    DBUser user = (DBUser) item;
+                    Bundle b = new Bundle();
+                    b.putSerializable("userId", user.id!=null?user.id:"");
+                    app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                }
+                return true;
             }
         });
-
-        final ArrayList<User> listUser = Common.getListUser(deptId);
-        LogUtil.dee("listUser: "+listUser.size());
-        if (listUser != null && listUser.size() > 0) {
-            userAdapter = new UserListViewAdapter(getActivity(), listUser);
-            listView_user.setAdapter(userAdapter);
-            Global.setListViewHeightBasedOnChildren(listView_user);
-        } else {
-            layout_user.setVisibility(View.GONE);
-        }
-        listView_user.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                User user = listUser.get(position);
-                if (user == null) {
-                    return;
-                }
-                Bundle b = new Bundle();
-                b.putSerializable("user", user);
-                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
             }
         });
+
+        for (int i = 0; i < datasource.size(); i++) {
+            listView.expandGroup(i);
+        }
+
     }
 
+    public void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+        getContext().registerReceiver(mReceiver, filter);
+    }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.img_title_left:
-                break;
-        }
+    public void unregisterBroadcastReceiver() {
+        getContext().unregisterReceiver(mReceiver);
     }
 
     /**
-     * 展示部门Adapter 奥特曼(5人)
+     * Inner Class
      */
-    public class DepartmentListViewAdapter extends BaseAdapter {
-        LayoutInflater mInflater;
-        public ArrayList<Department> listDepartment;
 
-        public DepartmentListViewAdapter(Context _context, ArrayList<Department> lstData) {
-            mInflater = LayoutInflater.from(_context);
-            listDepartment = lstData;
+    private class SubDepartmentChildListAdapter extends BaseExpandableListAdapter
+    {
+        LayoutInflater layoutInflater;
+        ArrayList<HashMap<String, Object>> datasource;
+        private int defaultAvatar;
+
+
+        public SubDepartmentChildListAdapter(ArrayList<HashMap<String, Object>> d) {
+            layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            datasource = d;
         }
 
         @Override
-        public int getCount() {
-            return listDepartment.size();
+        public int getGroupCount() {
+            if(datasource == null) return 0;
+
+            return datasource.size();
         }
 
         @Override
-        public Object getItem(int position) {
-            return listDepartment.get(position);
+        public int getChildrenCount(int groupPosition) {
+            HashMap<String, Object> group = datasource.get(groupPosition);
+            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+            return items.size();
         }
 
         @Override
-        public long getItemId(int position) {
-            return position;
+        public HashMap<String, Object> getGroup(int groupPosition) {
+            return datasource.get(groupPosition);
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (null == convertView) {
-                convertView = mInflater.inflate(R.layout.item_contacts_department_child, null, false);
-            }
-            String members = "";
-            Department department = listDepartment.get(position);
-            TextView tv_content = com.loyo.oa.v2.tool.ViewHolder.get(convertView, R.id.tv_mydept_content);
-            String departmentName = null == department.getName() ? "部门没有名字" : department.getName();
-            if(!department.userNum.equals("0")){
-                 members = "(" + department.userNum + "人" + ")";
-                 defaultSize += Integer.parseInt(department.userNum);
-            }
+        public DBDepartment getChild(int groupPosition, int childPosition) {
+            HashMap<String, Object> group = datasource.get(groupPosition);
+            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+            return items.get(childPosition);
+        }
 
-            departmentName = departmentName.concat(members);
-            tv_content.setText(departmentName);
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
 
-            if (position == listDepartment.size() - 1) {
-                ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
-            } else {
-                ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
-            }
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
+            HashMap<String, Object> group = datasource.get(groupPosition);
+            String groupName = (String)group.get("name");
+
+            if (convertView == null)
+                convertView = layoutInflater.inflate(R.layout.item_contact_section, null);
+
+            TextView title = ViewHolder.get(convertView, R.id.section_title);
+            title.setText(groupName);
+
             return convertView;
         }
-    }
-
-
-    /**
-     * 展示人员Adapter XXX
-     */
-    public class UserListViewAdapter extends BaseAdapter {
-
-        ArrayList<User> listUser;
-
-        public UserListViewAdapter(Context _context, ArrayList<User> lstData) {
-            this.listUser = lstData;
-        }
 
         @Override
-        public int getCount() {
-            return listUser.size();
-        }
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-        @Override
-        public Object getItem(int position) {
-            return listUser.get(position);
-        }
+            HashMap<String, Object> group = datasource.get(groupPosition);
+            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+            Object item = items.get(childPosition);
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
+            if (item.getClass() == DBDepartment.class) {
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            HolderUser holder;
-            if (null == convertView) {
-                convertView = LayoutInflater.from(app).inflate(R.layout.item_contact_personnel, null, false);
-                holder = new HolderUser();
-                holder.img = (ImageView) convertView.findViewById(R.id.img);
-                holder.tv_content = (TextView) convertView.findViewById(R.id.tv_name);
-                holder.tv_position = (TextView) convertView.findViewById(R.id.tv_position);
-                holder.catalog = (TextView) convertView.findViewById(R.id.catalog);
-                convertView.setTag(holder);
-
-            } else {
-                holder = (HolderUser) convertView.getTag();
-            }
-            User user = listUser.get(position);
-            deptName = new StringBuffer();
-            Utils.getDeptName(deptName, user.getDepts());
-            holder.tv_position.setText(deptName.toString());
-            holder.tv_content.setText(user.getRealname());
-            holder.catalog.setVisibility(View.GONE);
-            if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
-                if (user.gender == 2) {
-                    defaultAvatar = R.drawable.icon_contact_avatar;
-                } else {
-                    defaultAvatar = R.drawable.img_default_user;
+                DBDepartment dept = (DBDepartment) item;
+                DepartmentViewHolder holder = null;
+                if (convertView == null || convertView.getTag().getClass()!= DepartmentViewHolder.class) {
+                    holder = new DepartmentViewHolder();
+                    convertView = layoutInflater.inflate(R.layout.item_contacts_department_child, null);
+                    holder.tv_content = (TextView) convertView.findViewById(R.id.tv_mydept_content);
+                    convertView.setTag(holder);
                 }
-                holder.img.setImageResource(defaultAvatar);
-            } else {
-                ImageLoader.getInstance().displayImage(user.avatar, holder.img);
+                else {
+                    holder = (DepartmentViewHolder)convertView.getTag();
+                }
+
+                holder.tv_content.setText(dept.name + " ( "+ dept.userNum + "人 ) ");
             }
+            else if (item.getClass() == DBUser.class) {
+                DBUser user = (DBUser) item;
+                UserViewHolder holder = null;
+                if (convertView == null || convertView.getTag().getClass()!= UserViewHolder.class) {
+                    holder = new UserViewHolder();
+                    convertView = layoutInflater.inflate(R.layout.item_contact_user, null);
+                    holder.userName = (TextView) convertView.findViewById(R.id.user_name);
+                    holder.dept = (TextView) convertView.findViewById(R.id.user_dept);
+                    holder.avatarImage = (ImageView) convertView.findViewById(R.id.avatar_view);
+                    convertView.setTag(holder);
+                }
+                else {
+                    holder = (UserViewHolder)convertView.getTag();
+                }
+
+                holder.userName.setText(user.name);
+                holder.dept.setText(user.shortDeptNames);
+                if(null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")){
+                    if (user.gender == 2) {
+                        defaultAvatar = R.drawable.icon_contact_avatar;
+                    } else {
+                        defaultAvatar = R.drawable.img_default_user;
+                    }
+                    holder.avatarImage.setImageResource(defaultAvatar);
+                }else{
+                    ImageLoader.getInstance().displayImage(user.avatar, holder.avatarImage);
+                }
+
+            }
+
+
+
             return convertView;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
+
+        public int getNearestPositionForSectionLetter(String letter) {
+
+            if (letter == null)
+                return -1;
+            for(int i = 0; i < datasource.size(); i++) {
+                HashMap<String, Object> group = datasource.get(i);
+                String groupName = (String)group.get("name");
+                if(groupName.equals(letter)) {
+                    return i;
+                }
+            }
+            return -1;
+
         }
     }
 
-    class HolderUser {
-        ImageView img;
-        TextView tv_content, tv_position, catalog;
-        ViewGroup lin;
+    static final class UserViewHolder {
+        TextView dept;
+        TextView userName;
+        ImageView avatarImage;
+    }
+
+    static final class DepartmentViewHolder {
+        TextView tv_content;
+    }
+
+    static final class PinyinComparator implements Comparator<Object> {
+
+        public int compare(Object o1, Object o2) {
+            if (o1.getClass() == DBDepartment.class) {
+                return ((DBDepartment)o1).pinyin().compareTo(((DBDepartment)o2).pinyin());
+            }
+            else if (o1.getClass() == DBUser.class) {
+                return ((DBUser)o1).pinyin().compareTo(((DBUser)o2).pinyin());
+            }
+            return 0;
+        }
     }
 }

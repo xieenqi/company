@@ -11,8 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.bean.SelectDepData;
-import com.loyo.oa.v2.activityui.other.bean.SelectUserData;
+import com.loyo.oa.v2.activityui.other.model.SelectDepData;
+import com.loyo.oa.v2.activityui.other.model.SelectUserData;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;

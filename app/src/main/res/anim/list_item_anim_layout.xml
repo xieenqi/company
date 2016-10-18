@@ -1,0 +1,7 @@
+<layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
+    android:animation="@anim/list_item_anim"
+    android:animationOrder="reverse"
+    android:delay="0.2" />
+<!--android:delay 	delay的单位为秒，表示子View进入的延长时间
+android:animationOrder 	子类的进入方式 ，其取值有，normal 0 默认 ，reverse 1 倒序 ，random 2 随机
+android:animation 	子view要执行的具体动画的文件，自定义即可-->

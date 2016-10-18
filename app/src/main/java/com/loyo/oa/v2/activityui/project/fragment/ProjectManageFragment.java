@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.project.ProjectAddActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
@@ -12,6 +13,7 @@ import com.loyo.oa.v2.activityui.project.adapter.ProjectExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Project;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
@@ -20,6 +22,7 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,21 +55,21 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
             lstData = new ArrayList<>();
         }
 
-        HashMap<String,Object> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         int pageIndex = pagination.getPageIndex();
         params.put("pageIndex", pageIndex);
         int pageSize = isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20;
         params.put("pageSize", pageSize);
         params.put("status", status);
         params.put("type", type);
-        params.put("endAt", System.currentTimeMillis()/1000);
-        params.put("startAt", DateTool.getDateToTimestamp("2014-01-01",app.df5)/1000);
-        LogUtil.d(" 项目管理列表请求： "+ MainApp.gson.toJson(params));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params,this);
+        params.put("endAt", System.currentTimeMillis() / 1000);
+        params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+        LogUtil.d(" 项目管理列表请求： " + MainApp.gson.toJson(params));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
 
-        try{
+        try {
             permission = (Permission) MainApp.rootMap.get("0401");
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
             Toast("项目创建权限,code错误:0401");
         }
@@ -145,14 +148,19 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
     /**
      * 点击 item的 操作
+     *
      * @param groupPosition
      * @param childPosition
      */
     @Override
     public void openItem(int groupPosition, int childPosition) {
+        Project item = (Project) adapter.getChild(groupPosition, childPosition);
         Intent intent = new Intent();
         intent.setClass(mActivity, ProjectInfoActivity_.class);
-        intent.putExtra("projectId", ((Project) adapter.getChild(groupPosition, childPosition)).id);
+        intent.putExtra("projectId", item.id);
+        if (!item.viewed) {//有红点需要刷新
+            intent.putExtra(ExtraAndResult.IS_UPDATE, true);
+        }
         startActivityForResult(intent, REQUEST_REVIEW);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
@@ -167,7 +175,9 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         initDropMenu();
     }
 
-    /**跳转搜索*/
+    /**
+     * 跳转搜索
+     */
     @Override
     public void openSearch() {
         Bundle mBundle = new Bundle();

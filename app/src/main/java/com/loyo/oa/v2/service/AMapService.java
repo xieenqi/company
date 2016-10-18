@@ -108,15 +108,16 @@ public class AMapService extends APSService {
         userOnlineTime();
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
-            startLocate();
-            //服务运行 通知栏显示
+            if (locationClient == null || !locationClient.isStarted()) {
+                startLocate();//定位是否在运行 如果在运行就不重复启动定位
+            }
+            //服务运行 通知栏显示 调用startForegound，让你的Service所在的线程成为前台进程
             Notification notification = new Notification();
             notification.flags = Notification.FLAG_ONGOING_EVENT;
             notification.flags |= Notification.FLAG_NO_CLEAR;
             notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
             startForeground(1, notification);
         }
-
         return START_REDELIVER_INTENT;
     }
 
@@ -139,10 +140,9 @@ public class AMapService extends APSService {
 //            locationClient = null;
 //        if (null != locationOption)
 //            locationOption = null;
-        if (locationClient != null) {//定位是否在运行 如果在运行就不重复启动定位
+        if (locationClient != null) {
             locationClient.stopLocation();
             locationClient.stopAssistantLocation();
-            locationClient.onDestroy();
         }
 
         maMapLocationListener = new MAMapLocationListener();
@@ -559,11 +559,11 @@ public class AMapService extends APSService {
     private void recycleTimer() {
         if (timer != null) {
             timer.cancel();
+            timer.purge();
             timer = null;
         }
         if (timer != null) {
             timer.cancel();
-            timer.purge();
             timer = null;
         }
     }

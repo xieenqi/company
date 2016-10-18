@@ -33,11 +33,13 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.v2.tool.AliOSSManager;
+import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.TrackLocationManager;
 import com.umeng.analytics.MobclickAgent;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 带侧滑的【主界面】
@@ -145,19 +147,16 @@ public class MainHomeActivity extends SlidingFragmentActivity {
     //打开侧滑
     public void togggle() {
         sm.toggle();
-        LogUtil.d("togggle");
     }
 
     //拦截侧滑
     public void gotoStop() {
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-        LogUtil.d("gotoStop");
     }
 
     //开始侧滑
     public void gotoStart() {
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        LogUtil.d("gotoStart");
     }
 
 //    public void changeFragment(int flag, int index) {
@@ -306,25 +305,21 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Override
     protected void onRestart() {
-        // TODO Auto-generated method stub
         super.onRestart();
     }
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        // TODO Auto-generated method stub
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
     }
 
@@ -337,24 +332,20 @@ public class MainHomeActivity extends SlidingFragmentActivity {
             sm.showMenu(false);
             return;
         }
-        showGeneralDialog(true, true, getString(R.string.app_exit_message));
-        //确定
-        generalPopView.setSureOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
                 //android 5.0以后不能隐式启动或关闭服务
                 stopService(new Intent(mContext, CheckUpdateService.class));
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
-        });
-
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });
+        },"提示",getString(R.string.app_exit_message));
     }
 }

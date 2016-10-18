@@ -27,7 +27,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
@@ -40,6 +40,8 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -140,6 +142,8 @@ public class TasksInfoActivity extends BaseActivity {
             String mTaskId;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     String keyType;
+    @Extra(ExtraAndResult.IS_UPDATE)
+    boolean isUpdate;//是否需要刷新列表
 
     private boolean isOver = false;
     private int statusSize;
@@ -153,7 +157,7 @@ public class TasksInfoActivity extends BaseActivity {
     public ArrayList<User> aboutDepts = new ArrayList<>();
     public ArrayList<User> childTaskUsers2 = new ArrayList<>();
 
-    public ArrayList<Department> deptSource = Common.getLstDepartment();
+//    public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
     public LinearLayout item_tasks_sorece;
@@ -311,20 +315,23 @@ public class TasksInfoActivity extends BaseActivity {
                 }
                 tv_toUsers.setText("参与人: " + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
+
+                // 获取部门（包括子部门）的用户
+                List<DBUser> deptsUsers = new ArrayList<DBUser>();
                 if (null != mTask.members.depts) {
-                    for (NewUser newUser : mTask.members.depts) {
-                        Common.getAllUsersByDeptId(newUser.getId(), childTaskUsers2);
+                    for (NewUser dept : mTask.members.depts) {
+                        deptsUsers.addAll(OrganizationManager.shareManager().entireUsersOfDepartment(dept.getId()));
                     }
                 }
 
-                for (User user : childTaskUsers2) {
+                for (DBUser user : deptsUsers) {
                     childTastUsers.add(user.toShortUser());
                 }
-
-                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
-                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
-
-                getAboutUser();
+//
+//                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
+//                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
+//
+//                getAboutUser();
 
             } else {
                 tv_toUsers.setText("没有参与人");
@@ -812,7 +819,7 @@ public class TasksInfoActivity extends BaseActivity {
                                 task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("review", task);
-                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
                             }
                         }
 
@@ -887,7 +894,7 @@ public class TasksInfoActivity extends BaseActivity {
             mTask.setViewed(true);
             intent.putExtra("data", mTask);
         }
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isUpdate ? 0x09 : RESULT_OK, intent);
     }
 
     /**
@@ -994,29 +1001,29 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
 
-    /**
-     * 参与人当中的部门，拆分成员工
-     */
-    void getAboutUser() {
-
-        requestDepts.addAll(mTask.members.depts);
-
-        for (Department department : deptSource) {
-            for (NewUser newUser : requestDepts) {
-                try {
-                    if (department.getId().equals(newUser.getId())) {
-                        aboutDepts.addAll(department.getUsers());
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        for (User user : aboutDepts) {
-            childTastUsers.add(user.toShortUser());
-        }
-    }
+//    /**
+//     * 参与人当中的部门，拆分成员工
+//     */
+//    void getAboutUser() {
+//
+//        requestDepts.addAll(mTask.members.depts);
+//
+//        for (Department department : deptSource) {
+//            for (NewUser newUser : requestDepts) {
+//                try {
+//                    if (department.getId().equals(newUser.getId())) {
+//                        aboutDepts.addAll(department.getUsers());
+//                    }
+//                } catch (NullPointerException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//
+//        for (User user : aboutDepts) {
+//            childTastUsers.add(user.toShortUser());
+//        }
+//    }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -1080,7 +1087,8 @@ public class TasksInfoActivity extends BaseActivity {
                     } else {
                         SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
                     }
-                                /*删除回调*/
+                    isUpdate = true;
+                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
@@ -1090,17 +1098,17 @@ public class TasksInfoActivity extends BaseActivity {
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
                         }
                     });
-                                /*复制回调*/
+                 /*复制回调*/
                 } else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable("data", mTask);
                     intent.putExtras(mBundle);
                     startActivity(intent);
-                                /*修改参与人回调*/
+                 /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
                     SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
-
+                    isUpdate = true;
                 }
                 break;
 

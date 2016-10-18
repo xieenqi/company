@@ -16,7 +16,7 @@ import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
@@ -166,7 +166,8 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * 获取数据
      */
     private void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).
+                getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
                 LogUtil.dll(" 项目的附件获取数据： " + MainApp.gson.toJson(attachments));

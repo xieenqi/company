@@ -20,7 +20,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,13 +130,16 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
                 if (null != bizForm) {
                     bizForm.setFields(filedWfinstanceInfo(bizForm.getFields()));
                     if (null == bizForm.getFields() || bizForm.getFields().size() == 0) {
-                        final GeneralPopView dailog = showGeneralDialog(true, false, "该审批类别未设置(未启用)审批内容,\n请选择其它类别！");
+
+                        sweetAlertDialogView.alertIcon(null,"该审批类别未设置(未启用)审批内容,\n请选择其它类别!");
+
+         /*               final GeneralPopView dailog = showGeneralDialog(true, false, "该审批类别未设置(未启用)审批内容,\n请选择其它类别！");
                         dailog.setNoCancelOnclick(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 dailog.dismisDialog();
                             }
-                        });
+                        });*/
                     } else {
                         mBundle = new Bundle();
                         mBundle.putSerializable("bizForm", bizForm);

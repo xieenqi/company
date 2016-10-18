@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -19,7 +20,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TrackRule;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -75,7 +76,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
 
         } catch (SQLException e) {
-            LogUtil.d(DBHelper.class.getName(), "不能创建 database"+ e.getErrorCode());
+            LogUtil.d(DBHelper.class.getName(), "不能创建 database" + e.getErrorCode());
             throw new RuntimeException(e);
         }
     }
@@ -220,11 +221,13 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     public User getUser() {
         String str = getStr("user");
-
-        if (!StringUtil.isEmpty(str)) {
-            return MainApp.gson.fromJson(str, User.class);
+        try {
+            if (!StringUtil.isEmpty(str)) {
+                return MainApp.gson.fromJson(str, User.class);
+            }
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
         }
-
         return null;
     }
 
@@ -250,7 +253,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public ArrayList<Department> getOrganization() {
-        Type type = new TypeToken<ArrayList<Department>>() {
+               Type type = new TypeToken<ArrayList<Department>>() {
         }.getType();
         String str = getStr("organization");
 

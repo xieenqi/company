@@ -8,11 +8,13 @@ import android.view.View;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Utils;
 import java.io.File;
 import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 多图选择
@@ -82,25 +84,22 @@ public class MultiImageSelectorActivity extends BaseFragmentActivity implements 
                 && PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.CAMERA", "com.loyo.oa.v2")) {
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(this, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(false);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     Utils.doSeting(MultiImageSelectorActivity.this);
                     finish();
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                    finish();
-                }
-            });
+            },"提示","需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
             return;
         }
         Intent intent = getIntent();

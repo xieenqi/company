@@ -209,9 +209,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="left|center_vertical"
-                        android:hint="请输入联系人手机号"
-                        android:inputType="phone"
-                        android:maxLength="20"
+                        android:hint="@string/app_phone_check"
+                        android:maxLength="24"
                         android:paddingRight="0dp"
                         android:textColor="@color/title_bg1"/>
 
@@ -244,9 +243,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="left|center_vertical"
-                        android:hint="请输入联系人座机"
-                        android:inputType="phone"
-                        android:maxLength="20"
+                        android:hint="@string/app_tell_check"
+                        android:maxLength="24"
                         android:paddingRight="0dp"
                         android:textColor="@color/title_bg1"/>
 

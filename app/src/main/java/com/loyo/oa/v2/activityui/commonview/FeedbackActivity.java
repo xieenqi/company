@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.FeedBackCommit;
@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -54,11 +55,16 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_feedback)
 public class FeedbackActivity extends BaseActivity {
 
-    @ViewById EditText et_content;
-    @ViewById GridView gridView_photo;
-    @ViewById ViewGroup layout_back;
-    @ViewById ImageView iv_submit;
-    @ViewById TextView tv_title;
+    @ViewById
+    EditText et_content;
+    @ViewById
+    GridView gridView_photo;
+    @ViewById
+    ViewGroup layout_back;
+    @ViewById
+    ImageView iv_submit;
+    @ViewById
+    TextView tv_title;
 
     private String uuid = StringUtil.getUUID();
     private ArrayList<Attachment> attachments = new ArrayList<>();
@@ -154,14 +160,15 @@ public class FeedbackActivity extends BaseActivity {
         hideInputKeyboard(et_content);
 
         String message = "感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快!!!";
-        showGeneralDialog(false, false, message);
-        generalPopView.setNoCancelOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
                 onBackPressed();
                 isClick = true;
             }
-        });
+        }, "提示", message);
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {

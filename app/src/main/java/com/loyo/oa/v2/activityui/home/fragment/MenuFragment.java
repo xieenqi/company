@@ -24,20 +24,21 @@ import com.loyo.oa.v2.activityui.commonview.FeedbackActivity_;
 import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.setting.SettingPasswordActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.TrackLocationService;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.FileTool;
@@ -55,6 +56,7 @@ import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -88,7 +90,6 @@ public class MenuFragment extends BaseFragment {
                 if (null != user) {
                     if (null != user.avatar && null != riv_head) {
                         ImageLoader.getInstance().displayImage(MainApp.user.avatar, riv_head);
-//                        riv_head.setGrayImg();
                     }
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
@@ -132,7 +133,6 @@ public class MenuFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        onInit();
     }
 
     private HomeApplicationFragment mHomeApplicationFragment;
@@ -264,7 +264,21 @@ public class MenuFragment extends BaseFragment {
                     mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
                     getActivity().startService(mIntentCheckUpdate);
                 } else {
-                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            cancelDialog();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            cancelDialog();
+                            Utils.doSeting(getActivity());
+                        }
+                    }, "提示", "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+
+/*                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
                     generalPopView.setSureOnclick(new View.OnClickListener() {
                         @Override
                         public void onClick(final View view) {
@@ -277,7 +291,7 @@ public class MenuFragment extends BaseFragment {
                         public void onClick(final View view) {
                             generalPopView.dismiss();
                         }
-                    });
+                    });*/
                 }
                 break;
             //退出登录
@@ -287,16 +301,22 @@ public class MenuFragment extends BaseFragment {
                 break;
             //清除缓存
             case R.id.ll_clean:
-                final GeneralPopView dialog = showGeneralDialog(true, true, "确认清除缓存？");
-                dialog.setSureOnclick(new View.OnClickListener() {
+
+                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        cancelDialog();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
                         showLoading("");
                         ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-                        dialog.dismiss();
+                        cancelDialog();
                         setDiskCacheInfo();
                     }
-                });
+                }, "提醒", "确认清除缓存?");
+
                 break;
         }
 
@@ -315,7 +335,8 @@ public class MenuFragment extends BaseFragment {
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
                 Bundle b = new Bundle();
-                b.putSerializable("user", MainApp.user);
+                String userId = MainApp.user.id;
+                b.putSerializable("userId", userId != null ? userId : "");
                 app.startActivity(getActivity(), ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
 
@@ -331,11 +352,14 @@ public class MenuFragment extends BaseFragment {
      * 更新 组织架构
      */
     void initService() {
+        /* 更新登录用户信息 */
         InitDataService_.intent(getActivity()).start();
+        /* 拉取组织架构 */
+        OrganizationService.startActionFetchAll(MainApp.getMainApp());
     }
 
     /**
-     * 刷新token 防止token过期
+     * 更新(当首页红点数据异常)
      */
     void rushHomeData() {
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
@@ -398,7 +422,7 @@ public class MenuFragment extends BaseFragment {
 
     void exit() {
         Set<String> complanTag = new HashSet<>();
-        JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), "", complanTag, new TagAliasCallback() {
+        JPushInterface.setAliasAndTags(app, "", complanTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
                 LogUtil.d("激光推送已经成功停止（注销）状态" + i);
@@ -410,9 +434,11 @@ public class MenuFragment extends BaseFragment {
         TrackLocationService.stopTrackLocation();
         MainApp.user = null;
         ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-        SharedUtil.clearInfo(getActivity());//清楚本地登录状态 即缓存信息
+        /* 清空组织架构 */
+        OrganizationManager.clearOrganizationData();
+        SharedUtil.clearInfo(app);//清楚本地登录状态 即缓存信息
         ExitActivity.getInstance().finishAllActivity();
-        app.startActivity(getActivity(), LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
+        app.startActivity(mActivity, LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }
 
     /**

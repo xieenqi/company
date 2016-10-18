@@ -52,7 +52,6 @@ public class JPushService extends BroadcastReceiver {
             TrackRule.InitTrackRule();//收到推送启动一次定位服务 避免服务kill掉
             Log.d(TAG, "[MyReceiver] 接收到推送下来的【自定义消息】: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
             //processCustomMessage(context, bundle);
-            //Global.Toast("自定义消息:\n"+bundle.getString(JPushInterface.EXTRA_MESSAGE));
             String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
             LogUtil.d("【自定义msg】键值数据： " + msg);
             HttpJpushNotification pushMsgData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);

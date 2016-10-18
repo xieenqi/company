@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -42,6 +43,7 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +51,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -56,8 +59,8 @@ import retrofit.mime.TypedString;
 
 /**
  * 【新建审批】界面
- *  v2.2 新版新建审批
- *  create by yyy on 2016/06/07
+ * v2.2 新版新建审批
+ * create by yyy on 2016/06/07
  */
 public class WfInAddActivity extends BaseActivity {
 
@@ -111,6 +114,7 @@ public class WfInAddActivity extends BaseActivity {
         setContentView(R.layout.activity_wfin_add);
         initView();
     }
+
     void initView() {
         super.setTitle("新建审批");
         mBizForm = (BizForm) getIntent().getExtras().getSerializable("bizForm");
@@ -119,7 +123,7 @@ public class WfInAddActivity extends BaseActivity {
         projectId = getIntent().getExtras().getString("projectId");
         projectTitle = getIntent().getExtras().getString("projectTitle");
 
-        cusTitle = MainApp.user.getRealname()+""+mBizForm.getName()+""+processTitle;
+        cusTitle = MainApp.user.getRealname() + "" + mBizForm.getName() + "" + processTitle;
         wfinstance_data_container = (LinearLayout) findViewById(R.id.wfinstance_data_container);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
@@ -157,12 +161,12 @@ public class WfInAddActivity extends BaseActivity {
 
     /**
      * 审批开始 结束时间规范判断:
-     *
+     * <p/>
      * 审批开始时间不能小于结束时间，
      * 从审批内容里获取到 开始时间 结束时间 的id
      * 再根据这个id去获取 开始结束 时间的值
      */
-    public void setStartendTime(){
+    public void setStartendTime() {
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             if (mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()) {
                 startTimeArr.add(mBizForm.getFields().get(i).getId());
@@ -201,7 +205,7 @@ public class WfInAddActivity extends BaseActivity {
     }
 
     void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
         ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
@@ -233,9 +237,9 @@ public class WfInAddActivity extends BaseActivity {
                 //提交审批
                 case R.id.img_title_right:
                     //没有附件
-                    if(pickPhots.size() == 0){
+                    if (pickPhots.size() == 0) {
                         subMinInfo();
-                    }else{
+                    } else {
                         newUploadAttachement();
                     }
                     break;
@@ -285,8 +289,8 @@ public class WfInAddActivity extends BaseActivity {
 
     /**
      * 新建审批 数据请求
-     * */
-    public void subMinInfo(){
+     */
+    public void subMinInfo() {
         if (submitData.isEmpty()) {
             Toast("请输入审批内容");
             return;
@@ -294,7 +298,6 @@ public class WfInAddActivity extends BaseActivity {
             Toast("请输选择部门");
             return;
         }
-
 
 
         /**审批内容，装进Post数据的list中*/
@@ -340,7 +343,7 @@ public class WfInAddActivity extends BaseActivity {
         long startTimelong;
         long endTimelong;
 
-        for(int i = 0;i<startTimeArr.size();i++) {
+        for (int i = 0; i < startTimeArr.size(); i++) {
             for (HashMap<String, Object> map : workflowValues) {
                 Set set = map.entrySet();
                 Iterator it = set.iterator();
@@ -364,7 +367,7 @@ public class WfInAddActivity extends BaseActivity {
             }
         }
 
-        if(pickPhots.size() == 0){
+        if (pickPhots.size() == 0) {
             showLoading("正在提交");
         }
 
@@ -383,7 +386,7 @@ public class WfInAddActivity extends BaseActivity {
             map.put("bizExtData", bizExtData);
         }
         map.put("memo", edt_memo.getText().toString().trim()); //备注
-
+        LogUtil.d("创建审批传参：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance, final Response response) {
@@ -410,12 +413,12 @@ public class WfInAddActivity extends BaseActivity {
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(){
+     */
+    private void newUploadAttachement() {
         showLoading("正在提交");
         try {
             uploadSize = 0;
-            uploadNum  = pickPhots.size();
+            uploadNum = pickPhots.size();
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
@@ -428,7 +431,7 @@ public class WfInAddActivity extends BaseActivity {
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
-                                        if(uploadSize == uploadNum){
+                                        if (uploadSize == uploadNum) {
                                             subMinInfo();
                                         }
                                     }
@@ -499,6 +502,7 @@ public class WfInAddActivity extends BaseActivity {
     }
 
     boolean isSave = true;
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

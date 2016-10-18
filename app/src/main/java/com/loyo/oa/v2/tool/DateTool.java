@@ -1,11 +1,10 @@
 package com.loyo.oa.v2.tool;
 
 import android.app.DatePickerDialog;
-import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
+import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 
@@ -15,12 +14,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.Locale;
 
 public class DateTool {
-
-
-
 
     /**
      * 1s==1000ms
@@ -637,9 +634,42 @@ public class DateTool {
         return times;
     }
 
+    /**
+     * 把毫秒转换成：1:20:30这里形式
+     * @param timeMs 毫秒
+     * @return
+     */
+    public static String stringForTime(int timeMs) {
+
+         StringBuilder mFormatBuilder = new StringBuilder();
+         Formatter mFormatter = new Formatter();
+        int totalSeconds = timeMs / 1000;
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+
+        mFormatBuilder.setLength(0);
+        return mFormatter.format("%02d:%02d:%02d", hours, minutes, seconds).toString();
+    }
+
 
     /**
-     * 时间戳转时间
+     * 时间戳转时间(毫秒)
+     *
+     * @param time
+     * @return
+     */
+    public static String timeMills(String time, String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs);
+        @SuppressWarnings("unused")
+        long lcc = Long.valueOf(time);
+        int i = Integer.parseInt(time);
+        String times = sdr.format(new Date(i));
+        return times;
+    }
+
+    /**
+     * 时间戳转时间(秒)
      *
      * @param time
      * @return

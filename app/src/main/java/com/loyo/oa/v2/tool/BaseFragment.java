@@ -11,8 +11,9 @@ import com.loyo.oa.v2.activityui.project.ProjectInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+
+import org.greenrobot.eventbus.Subscribe;
 
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {
 
@@ -20,16 +21,16 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     protected Activity mActivity;
     protected OnLoadSuccessCallback callback;
     protected int mId;
-    public GeneralPopView generalPopView;
     public SweetAlertDialogView sweetAlertDialogView;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = MainApp.getMainApp();
-        mActivity = getActivity();
         AppBus.getInstance().register(this);
         sweetAlertDialogView = new SweetAlertDialogView(getActivity());
+        getActivity();
     }
 
     public void onDestroy() {
@@ -37,19 +38,15 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         AppBus.getInstance().unregister(this);
     }
 
+    @Subscribe
+    public void onEvent(Object object){
+
+    }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-        //        if (activity instanceof CityBaseActivity){
-        //            mActivity = (CityBaseActivity)activity;
-        //            app = mActivity.app;
-        ////            mActivity.app.logUtil;
-        //        } else {
-        //            //TODO:提示错误
-        //            Toast.makeText(this.getActivity(),"This is not CityBaseActivity!",Toast.LENGTH_SHORT).show();
-        //        }
+        mActivity = activity;
     }
 
     @Override
@@ -99,7 +96,16 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         }
     }
 
-    //加载loading的方法
+    /**
+     * 关闭SweetAlertDialog
+     * */
+    public void cancelDialog(){
+        sweetAlertDialogView.sweetAlertDialog.dismiss();
+    }
+
+    /**
+     * 加载loading的方法
+     */
     public void showLoading(String msg) {
         DialogHelp.showLoading(getActivity(), msg, true);
     }
@@ -111,69 +117,5 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     public static void cancelLoading() {
         DialogHelp.cancelLoading();
     }
-
-    /**
-     * 通用提示弹出框init
-     */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(getActivity(), isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
-    }
-
-    int mTouchViewGroupId;
-
-//    //当控件Id>0的时候，是指定ViewGroup的ID
-//    // = 0的时候是Activity使用手势。
-//    // = -1的时候是Activity不使用手势。
-//    protected void setTouchView(int _touchViewGroupId) {
-//        final GestureDetector mDetector = new GestureDetector(new GestureDetector.OnGestureListener() {
-//            @Override
-//            public boolean onDown(MotionEvent e) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onShowPress(MotionEvent e) {
-//
-//            }
-//
-//            @Override
-//            public boolean onSingleTapUp(MotionEvent e) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onLongPress(MotionEvent e) {
-//
-//            }
-//
-//            @Override
-//            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//                return false;
-//            }
-//        });
-//        if (_touchViewGroupId <= 0) {
-//            mTouchViewGroupId = _touchViewGroupId;
-//            return;F
-//        }
-//
-//        mTouchViewGroupId = _touchViewGroupId;
-//
-//        ViewGroup vg = (ViewGroup) getActivity().findViewById(mTouchViewGroupId);
-//        vg.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return mDetector.onTouchEvent(event);
-//            }
-//        });
-//    }
 
 }

@@ -23,19 +23,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.library.module.common.SystemBarTintManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.SystemBarTintManager;
+import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.customview.CustomProgressDialog;
-import com.loyo.oa.v2.customview.GeneralPopView;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Locale;
 
@@ -50,11 +50,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     protected Context mContext;
     protected static final int NO_SCROLL = -1;
     public CustomProgressDialog customProgressDialog;
-    public GeneralPopView generalPopView;
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
     private GestureDetector mDetector;
-    private SweetAlertDialogView sweetAlertDialogView;
+    public SweetAlertDialogView sweetAlertDialogView;
 
     /**
      * 搜索跳转分类
@@ -84,7 +83,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
-        AppBus.getInstance().register(this);
+        com.loyo.oa.v2.common.event.AppBus.getInstance().register(this);
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
@@ -104,7 +103,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     protected void onDestroy() {
-        AppBus.getInstance().unregister(this);
+        com.loyo.oa.v2.common.event.AppBus.getInstance().unregister(this);
         unRegisterBaseReceiver();
         //关闭键盘
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -120,6 +119,11 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         }
         customProgressDialog = null;
         super.onDestroy();
+    }
+
+    @Subscribe
+    public void onEvent(Object object){
+
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -327,9 +331,9 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
-            //onBackPressed();
-        }
+//        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
+//            //onBackPressed();
+//        }
 
         return false;
     }
@@ -399,19 +403,16 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         DialogHelp.cancelLoading();
     }
 
-
     /**
-     * 通用提示弹出框init
+     * SweetAlertDialog关闭
      */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(this, isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
+    public void dismissSweetAlert() {
+        sweetAlertDialogView.sweetAlertDialog.dismiss();
     }
 
-    /*重启当前Activity*/
+    /**
+     * 重启当前Activity
+     */
     public void restartActivity() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);

@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.tool;
 
-
 import com.loyo.oa.v2.BuildConfig;
 
 /**
@@ -8,7 +7,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static boolean isRelease = true;                               //是否是正式产品
+    public static boolean isRelease = false;                               //是否是正式产品
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;     //dbug模式
 

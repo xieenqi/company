@@ -4,7 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.DateTool;
@@ -205,10 +205,10 @@ public class Attachment implements Serializable {
         } else {
             return AttachmentType.OTHER;
         }
-
+        fileExt = fileExt.toLowerCase();
         if (fileExt.endsWith("jpg") || fileExt.endsWith("bmp") ||
                 fileExt.endsWith("gif") || fileExt.endsWith("png") ||
-                fileExt.endsWith("jpeg")) {
+                fileExt.endsWith("jpeg") || fileExt.endsWith("PNG")) {
             return AttachmentType.IMAGE;
         }
 
