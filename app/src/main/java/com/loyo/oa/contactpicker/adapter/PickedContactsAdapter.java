@@ -78,7 +78,9 @@ public class PickedContactsAdapter extends BaseAdapter {
         } else {
             holder.name.setVisibility(View.INVISIBLE);
             holder.head.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(getItem(position).getDisplayAvatar(), holder.head);
+            if (getItem(position).getDisplayAvatar() != null) {
+                ImageLoader.getInstance().displayImage(getItem(position).getDisplayAvatar(), holder.head);
+            }
         }
         return convertView;
     }
