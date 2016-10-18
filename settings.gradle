@@ -1,1 +1,1 @@
-include ':app', ':library:sweetDialog', ':LibraryModule'
+include ':app', ':library:sweetDialog', ':LibraryModule', ':library:circularprogressbutton'
