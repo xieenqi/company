@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.tool;
 
-
 import com.loyo.oa.v2.BuildConfig;
 
 /**

@@ -26,8 +26,7 @@ import com.loyo.oa.v2.customview.filterview.DropDownMenu;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.squareup.otto.Subscribe;
-
+import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 /**

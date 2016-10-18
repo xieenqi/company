@@ -2,12 +2,8 @@ package com.loyo.oa.v2.activityui.login;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.presenter.LoginBqqPresenter;
@@ -16,6 +12,7 @@ import com.loyo.oa.v2.activityui.login.viewcontrol.LoginBqqView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -63,6 +60,9 @@ public class LoginBQQActivity extends BaseActivity implements LoginBqqView{
         SharedUtil.put(mContext, FinalVariables.TOKEN, token[1]);
         MainApp.getMainApp().startActivity(LoginBQQActivity.this, MainHomeActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
         SharedUtil.putBoolean(mContext, ExtraAndResult.WELCOM_KEY, true);
+
+        /* 拉取组织架构 */
+        OrganizationService.startActionFetchAll(MainApp.getMainApp());
     }
 
     /**

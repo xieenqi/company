@@ -1,473 +1,226 @@
 package com.loyo.oa.v2.activityui.contact.fragment;
 
-import android.content.ContentResolver;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.database.CharArrayBuffer;
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.database.DataSetObserver;
-import android.net.Uri;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AlphabetIndexer;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.contact.ContactsDepartmentActivity_;
-import com.loyo.oa.v2.activityui.work.adapter.ContactsMyDeptOtherAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.MyLetterListView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ViewHolder;
-import com.loyo.oa.v2.customview.MyLetterListView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * com.loyo.oa.v2.ui.fragment
  * 描述 :【公司的部门】   列表页
  * 作者 : ykb
  * 时间 : 15/8/24.
+ *
+ * Update by ethangong 2016/08/04 重构
+ *
  */
+
 public class ContactsDepartmentFragment extends BaseFragment {
 
+    /* View */
     private View view;
     private ExpandableListView expandableListView_user;
-    private ContactsDepartmentExpandableListAdapter userGroupExpandableListAdapter;
-    private ContactsMyDeptOtherAdapter otherDeptAdapter;
-    private ArrayList<ContactsGroup> lstUserGroupData;
     private MyLetterListView letterView;
-    private ListView listView_otheruser;
-    private AlphabetIndexer index;
-    private TextView tv_dialog;
-    private String mIndex;
-    private String myDeptId;
-    private String myDeptName;
-    private String totalNum = "0";
-    public View headView;
-    public View footView;
-    public LayoutInflater mInflater;
-    public TextView nameTv;
-    public RelativeLayout item_mydept;
-    public ArrayList<User> commyUsers = new ArrayList<>();//与部门同级的人员
+
+    /* Adaptor */
+    private ContactsDepartmentExpandableListAdapter userGroupExpandableListAdapter;
+
+    /* Data */
+    ArrayList<HashMap<String, Object>> datasource;
+
+    /* Helper */
+    public DBDepartmentPinyinComparator pinyinComparator;
+
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            //Bundle b = intent.getExtras();
+            if ( "com.loyo.oa.v2.USER_EDITED".equals( intent.getAction() )) {
+                //String userId = b.getString("userId");
+                userGroupExpandableListAdapter.notifyDataSetChanged();
+            }
+            else  if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
+                loadData();
+                userGroupExpandableListAdapter.datasource = datasource;
+                userGroupExpandableListAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lstUserGroupData = Common.getContactsGroups(null);
-        StringBuffer sb = null;
+        registerBroadcastReceiver();
+        pinyinComparator = new DBDepartmentPinyinComparator();
+        loadData();
+    }
 
-        for (int i = 0; i < lstUserGroupData.size(); i++) {
+    @Override
+    public void onResume() {
+        super.onResume();
 
-            if (sb == null) {
-                sb = new StringBuffer();
-            }
+    }
 
-            ContactsGroup ugd = lstUserGroupData.get(i);
-            sb.append(ugd.getGroupName().toUpperCase());
-        }
-
-        if (sb == null) {
-            mIndex = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        } else {
-            mIndex = "".concat(sb.toString());
-        }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        unregisterBroadcastReceiver();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_user, container, false);
-            mInflater = LayoutInflater.from(getActivity());
-
-            /*我的部门View初始化*/
-            headView = mInflater.inflate(R.layout.item_mydept_layout, null);
-            nameTv = (TextView) headView.findViewById(R.id.tv_mydept_content);
-            item_mydept = (RelativeLayout) headView.findViewById(R.id.des_mydept_layout);
-
-            /*其他人员View初始化*/
-            footView = mInflater.inflate(R.layout.fragment_other_user, null);
-            listView_otheruser = (ListView) footView.findViewById(R.id.listView_otheruser);
-            tv_dialog = (TextView) view.findViewById(R.id.tv_dialog);
-            IndexCursor cursor = new IndexCursor(lstUserGroupData);
-            index = new AlphabetIndexer(cursor, 0, mIndex);
-
-            letterView = (MyLetterListView) view.findViewById(R.id.letter_View);
-            //letterView.setKeyword(mIndex);
-            letterView.setOnTouchingLetterChangedListener(new MyLetterListView.OnTouchingLetterChangedListener() {
-                @Override
-                public void onTouchingLetterChanged(int selectionIndex, String sectionLetter, int state) {
-                    int position = index.getPositionForSection(selectionIndex);
-
-                    switch (state) {
-                        case MyLetterListView.FINGER_ACTION_DOWN: //手指按下
-//                          tv_dialog.setVisibility(View.VISIBLE);
-                            tv_dialog.setText(sectionLetter);
-                            scroll(position - 1);
-                            break;
-                        case MyLetterListView.FINGER_ACTION_MOVE: //手指滑动
-                            tv_dialog.setText(sectionLetter);
-                            scroll(position - 1);
-                            break;
-                        case MyLetterListView.FINGER_ACTION_UP:
-                            tv_dialog.setVisibility(View.GONE);   //手指离开
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            });
-
-            init_expandableListView_user();
+            setupView();
+            setupAdapterAndListener();
         }
+
         return view;
     }
 
-    void scroll(int position) {
-        int count = 0, groupPosition = 0;
-        for (ContactsGroup d : lstUserGroupData) {
-            for (int i = 0; i < d.getDepartments().size(); i++) {
-                if (count == position) {
-                    expandableListView_user.setSelectedGroup(groupPosition);
-                }
-                count++;
-            }
-            groupPosition++;
-        }
+    public void setupView() {
+        letterView = (MyLetterListView) view.findViewById(R.id.letter_View);
+
+        expandableListView_user = (ExpandableListView) view.findViewById(R.id.expandableListView_user);
+        expandableListView_user.setDivider(null);
+        expandableListView_user.setGroupIndicator(null);
     }
 
-    class IndexCursor implements Cursor {
+    public void loadData() {
+        OrganizationManager orgManager = OrganizationManager.shareManager();
+        DBDepartment company = orgManager.getsComany();
 
-        ArrayList<ContactsGroup> data;
+        List<DBDepartment> topDepartments = orgManager.subDepartmentsOfDepartment(company);
+        List<DBUser> directUsers = orgManager.directUsersOfDepartment(company);
+        List<DBDepartment> currentUserTopDepartments = orgManager.currentUserTopDepartments();
 
-        public IndexCursor(ArrayList<ContactsGroup> _data) {
-            this.data = _data;
-        }
+        Collections.sort(topDepartments, pinyinComparator);
 
-        private int position;
+        ArrayList<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
+        Iterator<DBDepartment> deptsIterator = topDepartments.iterator();
+        String previousKey = null;
+        HashMap<String, Object> previousMap = null;
+        ArrayList<DBDepartment> currentUserLevel1Depts = new ArrayList<DBDepartment>();
 
-        @Override
-        public void copyStringToBuffer(int columnIndex, CharArrayBuffer buffer) {
-
-        }
-
-        @Override
-        public short getShort(int columnIndex) {
-            return 0;
-        }
-
-        @Override
-        public void unregisterContentObserver(ContentObserver observer) {
-
-        }
-
-        @Override
-        public void registerDataSetObserver(DataSetObserver observer) {
-
-        }
-
-        @Override
-        public void unregisterDataSetObserver(DataSetObserver observer) {
-
-        }
-
-        @Override
-        public void setNotificationUri(ContentResolver cr, Uri uri) {
-
-        }
-
-        @Override
-        public Uri getNotificationUri() {
-            return null;
-        }
-
-        @Override
-        public boolean getWantsAllOnMoveCalls() {
-            return false;
-        }
-
-        @Override
-        public void setExtras(Bundle extras) {
-
-        }
-
-        @Override
-        public Bundle getExtras() {
-            return null;
-        }
-
-        @Override
-        public Bundle respond(Bundle extras) {
-            return null;
-        }
-
-        @Override
-        public int getInt(int columnIndex) {
-            return 0;
-        }
-
-        @Override
-        public long getLong(int columnIndex) {
-            return 0;
-        }
-
-        @Override
-        public float getFloat(int columnIndex) {
-            return 0;
-        }
-
-        @Override
-        public double getDouble(int columnIndex) {
-            return 0;
-        }
-
-        @Override
-        public int getType(int columnIndex) {
-            return 0;
-        }
-
-        @Override
-        public boolean isNull(int columnIndex) {
-            return false;
-        }
-
-        @Override
-        public void deactivate() {
-
-        }
-
-        @Override
-        public boolean requery() {
-            return false;
-        }
-
-        @Override
-        public boolean isAfterLast() {
-            return false;
-        }
-
-        @Override
-        public int getColumnIndex(String columnName) {
-            return 0;
-        }
-
-        @Override
-        public int getColumnIndexOrThrow(String columnName) throws IllegalArgumentException {
-            return 0;
-        }
-
-        @Override
-        public String getColumnName(int columnIndex) {
-            return null;
-        }
-
-        @Override
-        public String[] getColumnNames() {
-            return new String[0];
-        }
-
-        @Override
-        public int getColumnCount() {
-            return 0;
-        }
-
-        @Override
-        public byte[] getBlob(int columnIndex) {
-            return new byte[0];
-        }
-
-        @Override
-        public String getString(int columnIndex) {
-            int count = 0;
-            for (ContactsGroup d : lstUserGroupData) {
-                for (Department u : d.getDepartments()) {
-                    if (count == position) {
-
-                        if (u.getFullPinyin() != null && u.getFullPinyin().length() > 0) {
-                            return u.getFullPinyin().substring(0, 1).toUpperCase();
-                        } else if (u.getSimplePinyin() != null && u.getSimplePinyin().length() > 0) {
-                            return u.getSimplePinyin().substring(0, 1).toUpperCase();
-                        } else {
-                            return "";
-                        }
-                    }
-                    count++;
-                }
-            }
-            return "";
-        }
-
-        @Override
-        public void close() {
-
-        }
-
-        @Override
-        public boolean isClosed() {
-            return false;
-        }
-
-        @Override
-        public void registerContentObserver(ContentObserver observer) {
-
-        }
-
-        @Override
-        public int getCount() {
-            int count = 0;
-            for (ContactsGroup d : lstUserGroupData) {
-                count += d.getDepartments().size();
-            }
-
-            return count;
-        }
-
-        @Override
-        public int getPosition() {
-            return position;
-        }
-
-        @Override
-        public boolean move(int offset) {
-            return false;
-        }
-
-        @Override
-        public boolean moveToPosition(int position) {
-            this.position = position;
-            return true;
-        }
-
-        @Override
-        public boolean moveToFirst() {
-            return false;
-        }
-
-        @Override
-        public boolean moveToLast() {
-            return false;
-        }
-
-        @Override
-        public boolean moveToNext() {
-            return false;
-        }
-
-        @Override
-        public boolean moveToPrevious() {
-            return false;
-        }
-
-        @Override
-        public boolean isFirst() {
-            return false;
-        }
-
-        @Override
-        public boolean isLast() {
-            return false;
-        }
-
-        @Override
-        public boolean isBeforeFirst() {
-            return false;
-        }
-    }
-
-    /**
-     * 初始化列表 信息
-     */
-    void init_expandableListView_user() {
-
-        if (lstUserGroupData == null) {
-            return;
-        }
-
-        /**
-         * 获取全公司与部门平级的人员
-         * */
-        ArrayList<Department> allDepet = Common.getLstDepartment();
-        if (!(allDepet.size() > 0)) {
-            return;
-        }
-        Department commy = allDepet.get(0);
-        for (User users : commy.getUsers()) {
-            commyUsers.add(users);
-        }
-
-        /**
-         * 查询我的部门ID与名字
-         * 多部门情况下，只取了第一个部门，还需要修改
-         * */
-        if (MainApp.user.depts.size() > 0) {
-            myDeptId = MainApp.user.depts.get(0).getShortDept().getId();
-            myDeptName = MainApp.user.depts.get(0).getShortDept().getName();
-        } else {
-            myDeptName = MainApp.user.role.name;
-            myDeptId = MainApp.user.role.id;
-        }
-
-        for(Department department : MainApp.lstDepartment){
-            if(myDeptId.equals(department.getId())){
-                totalNum = department.userNum;
-                break;
-            }
-        }
-
-        if (null != myDeptName) {
-            myDeptName = myDeptName.concat("(" + totalNum + "人)");//本部门的人数
-            nameTv.setText(myDeptName);
-        }
-
-        for (ContactsGroup contactsGroup : lstUserGroupData) {
-            for (Department department : contactsGroup.getDepartments()) {
-                if (null != myDeptId && myDeptId.equals(department.getId())) {
-                    contactsGroup.getDepartments().remove(department);
+        while (deptsIterator.hasNext()) {
+            DBDepartment dept = deptsIterator.next();
+            Boolean isCurrentUserDept = false;
+            for (int i = 0; i < currentUserTopDepartments.size(); i++) {
+                DBDepartment theDept = currentUserTopDepartments.get(i);
+                if (theDept.id.equals(dept.id)) {
+                    currentUserLevel1Depts.add(dept);
+                    isCurrentUserDept = true;
                     break;
                 }
             }
+            if (isCurrentUserDept) {
+                continue;
+            }
+
+            String key = dept.getSortLetter();
+            if (key.equals(previousKey)) {
+                ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)previousMap.get("items");
+                items.add(dept);
+                previousMap.put("items", items);
+            }
+            else {
+                previousKey = key;
+                previousMap = new HashMap<String, Object>();
+                previousMap.put("name", key);
+                ArrayList<DBDepartment> items = new ArrayList<DBDepartment>();
+                items.add(dept);
+                previousMap.put("items", items);
+                result.add(previousMap);
+            }
         }
 
-        /**
-         * 设置公司级别员工展示
-         * */
-        otherDeptAdapter = new ContactsMyDeptOtherAdapter(commyUsers, getActivity());
-        listView_otheruser.setAdapter(otherDeptAdapter);
-        Global.setListViewHeightBasedOnChildren(listView_otheruser);//解决ScrollView嵌套listView不展开问题。
-        expandableListView_user = (ExpandableListView) view.findViewById(R.id.expandableListView_user);
-        expandableListView_user.setDivider(null);
-        userGroupExpandableListAdapter = new ContactsDepartmentExpandableListAdapter();
-        expandableListView_user.addHeaderView(headView);
-        expandableListView_user.addFooterView(footView);
+        if (currentUserLevel1Depts.size() > 0) {
+            HashMap<String, Object> currentUserMap = new HashMap<String, Object>();
+            currentUserMap.put("name", "我");
+            currentUserMap.put("items", currentUserLevel1Depts);
+            result.add(0, currentUserMap);
+        }
+
+        if (directUsers.size() > 0) {
+            HashMap<String, Object> level1Map = new HashMap<String, Object>();
+            level1Map.put("name", "人员");
+            level1Map.put("items", directUsers);
+            result.add(level1Map);
+        }
+
+        datasource = result;
+
+    }
+
+    public void setupAdapterAndListener() {
+        letterView.setOnTouchingLetterChangedListener(new MyLetterListView.OnTouchingLetterChangedListener() {
+            @Override
+            public void onTouchingLetterChanged(int selectionIndex, String sectionLetter, int state) {
+                int position = userGroupExpandableListAdapter.getNearestPositionForSectionLetter(sectionLetter);
+                if (position!= -1) {
+                    expandableListView_user.setSelectedGroup(position);
+                }
+            }
+        });
+        userGroupExpandableListAdapter = new ContactsDepartmentExpandableListAdapter(datasource);
         expandableListView_user.setAdapter(userGroupExpandableListAdapter);
-        expandableListView_user.setGroupIndicator(null);
+
         expandableListView_user.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                ContactsGroup group = lstUserGroupData.get(groupPosition);
-                Bundle b = new Bundle();
-                b.putString("depId", group.getDepartments().get(childPosition).getId());
-                b.putString("depName", group.getDepartments().get(childPosition).getName());
-                app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                HashMap<String, Object> group = datasource.get(groupPosition);
+                ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+                Object item = items.get(childPosition);
+                if (item.getClass()==DBDepartment.class) {
+                    DBDepartment dept = (DBDepartment)item;
+                    Bundle b = new Bundle();
+                    b.putString("depId", dept.id!=null?dept.id:"");
+                    b.putString("depName", dept.name!=null?dept.name:"");
+                    b.putString("xpath", dept.xpath!=null?dept.xpath:"");
+                    app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                }
+                else if (item.getClass()==DBUser.class) {
+                    DBUser user = (DBUser) item;
+                    Bundle b = new Bundle();
+                    b.putSerializable("userId", user.id!=null?user.id:"");
+                    app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                }
                 return true;
             }
         });
-
-        for (int i = 0; i < lstUserGroupData.size(); i++) {
-            expandableListView_user.expandGroup(i);
-        }
-
         expandableListView_user.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -475,54 +228,65 @@ public class ContactsDepartmentFragment extends BaseFragment {
             }
         });
 
-        /*本部门监听器*/
-        item_mydept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle b = new Bundle();
-                b.putString("depId", myDeptId);
-                b.putString("depName", myDeptName);
-                app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
-            }
-        });
+        for (int i = 0; i < datasource.size(); i++) {
+            expandableListView_user.expandGroup(i);
+        }
 
-        /*其他人员列表监听*/
-        listView_otheruser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Bundle b = new Bundle();
-                b.putSerializable("user", commyUsers.get(position));
-                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
-            }
-        });
     }
 
-    //-------------------------------------------------部门适配器---------------------------------------------
-    private class ContactsDepartmentExpandableListAdapter extends BaseExpandableListAdapter {
-        LayoutInflater layoutInflater;
+    public void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+        getContext().registerReceiver(mReceiver, filter);
+    }
 
-        public ContactsDepartmentExpandableListAdapter() {
+    public void unregisterBroadcastReceiver() {
+        getContext().unregisterReceiver(mReceiver);
+    }
+
+
+    /**
+     * inner class
+     */
+
+    // 部门适配器
+    private class ContactsDepartmentExpandableListAdapter extends BaseExpandableListAdapter {
+
+        LayoutInflater layoutInflater;
+        ArrayList<HashMap<String, Object>> datasource;
+        private int defaultAvatar;
+
+
+        public ContactsDepartmentExpandableListAdapter(ArrayList<HashMap<String, Object>> d) {
             layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            datasource = d;
         }
 
         @Override
         public int getGroupCount() {
-            return lstUserGroupData.size();
+            if(datasource == null) return 0;
+
+            return datasource.size();
         }
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return lstUserGroupData.get(groupPosition).getDepartments().size();
+            HashMap<String, Object> group = datasource.get(groupPosition);
+            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+            return items.size();
         }
 
         @Override
-        public ContactsGroup getGroup(int groupPosition) {
-            return lstUserGroupData.get(groupPosition);
+        public HashMap<String, Object> getGroup(int groupPosition) {
+            return datasource.get(groupPosition);
         }
 
         @Override
-        public Object getChild(int groupPosition, int childPosition) {
-            return null;
+        public DBDepartment getChild(int groupPosition, int childPosition) {
+            HashMap<String, Object> group = datasource.get(groupPosition);
+            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+            return items.get(childPosition);
         }
 
         @Override
@@ -542,35 +306,73 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
+            HashMap<String, Object> group = datasource.get(groupPosition);
+            String groupName = (String)group.get("name");
+
             if (convertView == null)
-                convertView = layoutInflater.inflate(R.layout.item_usergroup_group, null);
-            TextView title = ViewHolder.get(convertView, R.id.textView_item_titel);
-            title.setText(getGroup(groupPosition).getGroupName());
+                convertView = layoutInflater.inflate(R.layout.item_contact_section, null);
+
+            TextView title = ViewHolder.get(convertView, R.id.section_title);
+            title.setText(groupName);
+
             return convertView;
         }
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            if (convertView == null)
-                convertView = layoutInflater.inflate(R.layout.item_contacts_department_child, null);
-            final ContactsGroup group = getGroup(groupPosition);
-            TextView tv_content = ViewHolder.get(convertView, R.id.tv_mydept_content);
-            if (null != group.getDepartments() && !group.getDepartments().isEmpty()) {
-                Department department = group.getDepartments().get(childPosition);
-                if (null != department) {
 
-                    String departmentName = department.getName();
-                    //部门下的人员数量
-                    String members = "(" + department.userNum + "人)";
-                    departmentName = departmentName.concat(members);
-                    tv_content.setText(departmentName);
+            HashMap<String, Object> group = datasource.get(groupPosition);
+            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+            Object item = items.get(childPosition);
 
+            if (item.getClass() == DBDepartment.class) {
+
+                DBDepartment dept = (DBDepartment) item;
+                DepartmentViewHolder holder = null;
+                if (convertView == null || convertView.getTag().getClass()!= DepartmentViewHolder.class) {
+                    holder = new DepartmentViewHolder();
+                    convertView = layoutInflater.inflate(R.layout.item_contacts_department_child, null);
+                    holder.tv_content = (TextView) convertView.findViewById(R.id.tv_mydept_content);
+                    convertView.setTag(holder);
                 }
+                else {
+                    holder = (DepartmentViewHolder)convertView.getTag();
+                }
+
+                holder.tv_content.setText(dept.name + " ( "+ dept.userNum + "人 ) ");
             }
-            if (childPosition == getChildrenCount(groupPosition) - 1)
-                ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
-            else
-                ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
+            else if (item.getClass() == DBUser.class) {
+                DBUser user = (DBUser) item;
+                UserViewHolder holder = null;
+                if (convertView == null || convertView.getTag().getClass()!= UserViewHolder.class) {
+                    holder = new UserViewHolder();
+                    convertView = layoutInflater.inflate(R.layout.item_contact_user, null);
+                    holder.userName = (TextView) convertView.findViewById(R.id.user_name);
+                    holder.dept = (TextView) convertView.findViewById(R.id.user_dept);
+                    holder.avatarImage = (ImageView) convertView.findViewById(R.id.avatar_view);
+                    convertView.setTag(holder);
+                }
+                else {
+                    holder = (UserViewHolder)convertView.getTag();
+                }
+
+                holder.userName.setText(user.name);
+                holder.dept.setText(user.shortDeptNames);
+                if(null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")){
+                    if (user.gender == 2) {
+                        defaultAvatar = R.drawable.icon_contact_avatar;
+                    } else {
+                        defaultAvatar = R.drawable.img_default_user;
+                    }
+                    holder.avatarImage.setImageResource(defaultAvatar);
+                }else{
+                    ImageLoader.getInstance().displayImage(user.avatar, holder.avatarImage);
+                }
+
+            }
+
+
 
             return convertView;
         }
@@ -580,5 +382,45 @@ public class ContactsDepartmentFragment extends BaseFragment {
             return true;
         }
 
+        public int getNearestPositionForSectionLetter(String letter) {
+
+            if (letter == null)
+                return -1;
+            for(int i = 0; i < datasource.size(); i++) {
+                HashMap<String, Object> group = datasource.get(i);
+                String groupName = (String)group.get("name");
+                if(groupName.equals(letter)) {
+                    return i;
+                }
+            }
+            return -1;
+
+        }
+
+    }
+
+    static final class UserViewHolder {
+        TextView dept;
+        TextView userName;
+        ImageView avatarImage;
+    }
+
+    static final class DepartmentViewHolder {
+        TextView tv_content;
+    }
+
+    static final class DBDepartmentPinyinComparator implements Comparator<DBDepartment> {
+
+        public int compare(DBDepartment o1, DBDepartment o2) {
+            if ("@".equals(o1.getSortLetter())
+                    || "#".equals(o2.getSortLetter())) {
+                return -1;
+            } else if ("#".equals(o1.getSortLetter())
+                    || "@".equals(o2.getSortLetter())) {
+                return 1;
+            } else {
+                return o1.pinyin().compareTo(o2.pinyin());
+            }
+        }
     }
 }

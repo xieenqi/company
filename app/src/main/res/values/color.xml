@@ -15,6 +15,8 @@
     <color name="lightgray">#D3D3D3</color>
     <color name="black30">#4c000000</color>
     <color name="redE8">#e85840</color>
+    <color name="side_bar_text">#0070ff</color>
+    <color name="colorPrimaryDark">#303F9F</color>
 
     <!-- 销售统计 进度条 的背景颜色-->
     <color name="progress_bj">#f4f8fe</color>

@@ -253,7 +253,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public ArrayList<Department> getOrganization() {
-        Type type = new TypeToken<ArrayList<Department>>() {
+               Type type = new TypeToken<ArrayList<Department>>() {
         }.getType();
         String str = getStr("organization");
 

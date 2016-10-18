@@ -17,41 +17,21 @@ import com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.adapter.WflnstanceMySubmitAdapter;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
-import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
-import com.loyo.oa.v2.activityui.wfinstance.bean.WfinstanceUitls;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMySubmitPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinMySubmitPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMySubmitView;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.filterview.DropDownMenu;
-import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
-import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
-import static com.loyo.oa.v2.R.id.expandableListView;
-import static com.loyo.oa.v2.common.Global.Toast;
 
 /**
  * 【我提交的】

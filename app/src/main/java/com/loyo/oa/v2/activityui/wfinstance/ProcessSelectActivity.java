@@ -17,8 +17,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.squareup.otto.Subscribe;
-
+import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

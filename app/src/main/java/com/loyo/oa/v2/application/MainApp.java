@@ -27,10 +27,12 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ExitActivity;
+import com.loyo.oa.v2.tool.GlideManager;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -172,6 +174,7 @@ public class MainApp extends Application {
         loadIndustryCodeTable();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+        GlideManager.getInstance().initWithContext(getApplicationContext());
 
     }
 
@@ -288,6 +291,7 @@ public class MainApp extends Application {
         gson = new Gson();
         Utils.openGPS(this);
         DBManager.init(this);
+        OrganizationManager.init(this);
 
         try {
 //            user = DBManager.Instance().getUser();
@@ -300,7 +304,7 @@ public class MainApp extends Application {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                setOriginData();
+                //setOriginData();
             }
         }, 100);
 
@@ -309,9 +313,9 @@ public class MainApp extends Application {
     /**
      * 设置缓存的组织架构数据
      */
-    void setOriginData() {
-        lstDepartment = DBManager.Instance().getOrganization();
-    }
+//    void setOriginData() {
+//        lstDepartment = DBManager.Instance().getOrganization();
+//    }
 
     void init_DisplayImageOptions() {
         options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).

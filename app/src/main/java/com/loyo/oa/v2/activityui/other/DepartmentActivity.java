@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.adapter.DepartmentListViewAdapter;
+// import com.loyo.oa.v2.activityui.other.adapter.DepartmentListViewAdapter;
 import com.loyo.oa.v2.activityui.other.adapter.UserListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
@@ -41,7 +41,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
     ViewGroup layout_dept, layout_user, layout_checkall;
     CheckBox cb_all;
 
-    DepartmentListViewAdapter deptAdapter;
+    // DepartmentListViewAdapter deptAdapter;
     UserListViewAdapter userAdapter;
     private int count;
 
@@ -105,9 +105,9 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
         ArrayList<Department> listDept = Common.getLstDepartment(deptId);
         if (listDept != null && listDept.size() > 0) {
-            deptAdapter = new DepartmentListViewAdapter(this, listDept, select_type, show_type);
-            listView_department.setAdapter(deptAdapter);
-            Global.setListViewHeightBasedOnChildren(listView_department);
+//            deptAdapter = new DepartmentListViewAdapter(this, listDept, select_type, show_type);
+//            listView_department.setAdapter(deptAdapter);
+//            Global.setListViewHeightBasedOnChildren(listView_department);
         } else {
             layout_dept.setVisibility(View.GONE);
         }
@@ -180,15 +180,15 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
                 cb_all.toggle();
 
-                if (deptAdapter != null) {
-                    deptAdapter.setEnabled(!cb_all.isChecked());
-                    listView_department.setAdapter(deptAdapter);
-
-                    listView_department.setEnabled(!cb_all.isChecked());
-                    listView_department.setFocusable(!cb_all.isChecked());
-
-                    //变更确认的部门人数
-                }
+//                if (deptAdapter != null) {
+//                    deptAdapter.setEnabled(!cb_all.isChecked());
+//                    listView_department.setAdapter(deptAdapter);
+//
+//                    listView_department.setEnabled(!cb_all.isChecked());
+//                    listView_department.setFocusable(!cb_all.isChecked());
+//
+//                    //变更确认的部门人数
+//                }
 
                 if (userAdapter != null) {
                     userAdapter.setEnabled(!cb_all.isChecked());
