@@ -10,10 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
+import com.loyo.oa.v2.activityui.wfinstance.event.WfinRushEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
@@ -26,6 +27,7 @@ import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
@@ -33,7 +35,6 @@ import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -42,14 +43,12 @@ import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.customview.WfinEditViewGroup;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -441,8 +440,10 @@ public class WfInEditActivity extends BaseActivity {
             public void success(final WfInstance wfInstance, final Response response) {
                 HttpErrorCheck.checkResponse("新建审批cg", response);
                 if (wfInstance != null) {
+                    Toast("编辑成功");
                     isSave = false;
                     wfInstance.setViewed(true);
+                    AppBus.getInstance().post(new WfinRushEvent());
                     app.finishActivity(WfInEditActivity.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
                 } else {
                     Toast("服务器错误");

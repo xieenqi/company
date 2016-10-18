@@ -14,6 +14,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.adapter.WflnstanceMySubmitAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceListItem;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinMyApprovePresenter;
@@ -25,6 +26,8 @@ import com.loyo.oa.v2.customview.filterview.DropDownMenu;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
 
 /**
@@ -133,25 +136,6 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == -1) {
-            switch (requestCode) {
-                case ExtraAndResult.REQUEST_CODE:
-                    isTopAdd = true;
-                    page = 1;
-                    mPresenter.getApproveWfInstancesList(page,isTopAdd);
-                    break;
-                case 0x09:
-                    isTopAdd = true;
-                    page = 1;
-                    mPresenter.getApproveWfInstancesList(page,isTopAdd);
-                    break;
-            }
-        }
-    }
-
-    @Override
     public void showProgress() {
         showLoading("");
     }
@@ -207,4 +191,33 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
+
+    /**
+     * Ui刷新回调
+     * */
+    @Subscribe
+    public void onRushListData(BizForm bizForm){
+        isTopAdd = true;
+        page = 1;
+        mPresenter.getApproveWfInstancesList(page,isTopAdd);
+    }
+
+/*    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == -1) {
+            switch (requestCode) {
+                case ExtraAndResult.REQUEST_CODE:
+                    isTopAdd = true;
+                    page = 1;
+                    mPresenter.getApproveWfInstancesList(page,isTopAdd);
+                    break;
+                case 0x09:
+                    isTopAdd = true;
+                    page = 1;
+                    mPresenter.getApproveWfInstancesList(page,isTopAdd);
+                    break;
+            }
+        }
+    }*/
 }

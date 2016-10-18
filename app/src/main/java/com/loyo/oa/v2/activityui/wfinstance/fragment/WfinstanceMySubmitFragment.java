@@ -40,6 +40,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -217,7 +218,17 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         Toast(message);
     }
 
-    @Override
+    /**
+     * Ui刷新回调
+     * */
+    @Subscribe
+    public void onRushListData(BizForm bizForm){
+        isTopAdd = true;
+        page = 1;
+        mPresenter.getApproveWfInstancesList(page,isTopAdd);
+    }
+
+/*    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
@@ -234,5 +245,5 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
                     break;
             }
         }
-    }
+    }*/
 }
