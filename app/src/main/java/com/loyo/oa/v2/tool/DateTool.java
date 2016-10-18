@@ -201,15 +201,14 @@ public class DateTool {
     public static String getDiffTime(long seconds) {
         String result = "--";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
-        long millis = Long.valueOf(""+seconds) * 1000;
+        long millis = Long.valueOf("" + seconds) * 1000;
 
         long morning = getCurrentMoringMillis() + DAY_MILLIS;
         long diffTime = morning - millis;
         // 一天内
         if (diffTime < 0) {
             result = FORMATE_HOUR_YEAR.format(new Date(millis));
-        }
-        else if (diffTime <= DAY_MILLIS) {
+        } else if (diffTime <= DAY_MILLIS) {
             result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
         } else if (diffTime <= 2 * DAY_MILLIS) {// 昨天
             result = "昨天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
@@ -231,8 +230,7 @@ public class DateTool {
 
         if (diffTime < 0) {
             result = FORMATE_HOUR_YEAR.format(new Date(millis));
-        }
-        else if (diffTime <= DAY_MILLIS) {              /** 一天内 */
+        } else if (diffTime <= DAY_MILLIS) {              /** 一天内 */
             result = "今天  ".concat(FORMATE_HOUR_MINUTE.format(new Date(millis)));
 
         } else if (diffTime <= 2 * DAY_MILLIS) {   /** 昨天 */
@@ -259,8 +257,7 @@ public class DateTool {
         String timeStampString = String.valueOf(timeStamp);
         if (timeStampString.length() >= 13) {
             return getPrettyTimeStringFromMillis(timeStamp);
-        }
-        else  {
+        } else {
             return getPrettyTimeStringFromSeconds(timeStamp);
         }
     }
@@ -400,6 +397,7 @@ public class DateTool {
     public static long getSomeMonthBeginAt(int index) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(calendar.MONTH, -(index + 1));//防止下标为0
+        calendar.set(Calendar.DAY_OF_MONTH, 1);//设置为1号,当前日期既为本月第一天
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -413,6 +411,8 @@ public class DateTool {
     public static long getSomeMonthEndAt(int index) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(calendar.MONTH, -(index + 1));//防止下标为0
+        calendar.set(Calendar.DAY_OF_MONTH,
+                calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
@@ -637,13 +637,14 @@ public class DateTool {
 
     /**
      * 把毫秒转换成：1:20:30这里形式
+     *
      * @param timeMs 毫秒
      * @return
      */
     public static String stringForTime(int timeMs) {
 
-         StringBuilder mFormatBuilder = new StringBuilder();
-         Formatter mFormatter = new Formatter();
+        StringBuilder mFormatBuilder = new StringBuilder();
+        Formatter mFormatter = new Formatter();
         int totalSeconds = timeMs / 1000;
         int seconds = totalSeconds % 60;
         int minutes = (totalSeconds / 60) % 60;
