@@ -254,6 +254,11 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
     }
 
     @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
     public void onAddEvent(UploadController controller) {
         Intent intent = new Intent(this.getActivity(), MultiImageSelectorActivity.class);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
@@ -264,14 +269,14 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
     }
 
     @Override
-    public void onItemSeclected(UploadController controller, int index) {
+    public void onItemSelected(UploadController controller, int index) {
 
         ArrayList<UploadTask> taskList = controller.getTaskList();
         ArrayList<SelectPicPopupWindow.ImageInfo> newAttachment = new ArrayList<>();
         int newPosistion = index;
 
         for (int i = 0; i < taskList.size(); i++) {
-            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo(taskList.get(i).getValidatePath());
+            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://"+taskList.get(i).getValidatePath());
             newAttachment.add(attachment);
         }
 
@@ -286,6 +291,11 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
         cancelLoading();
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            Toast(count + "个附件上传失败，请重试或者删除");
+            return;
+        }
         if (taskList.size() >0) {
             postAttaData();
         }

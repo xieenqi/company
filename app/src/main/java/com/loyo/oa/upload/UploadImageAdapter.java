@@ -15,11 +15,12 @@ import java.util.ArrayList;
  * Created by EthanGong on 16/10/10.
  */
 
-public class UploadImageAdapter extends BaseAdapter {
+public class UploadImageAdapter extends BaseAdapter implements ImageCell.ImageCellCallback {
 
     private Context mContext;
     private ArrayList<UploadTask> taskList;
     private int maxSize;
+    public ImageCell.ImageCellCallback callback;
 
     public UploadImageAdapter(Context c, ArrayList<UploadTask> taskList, int maxSize) {
         mContext = c;
@@ -73,8 +74,17 @@ public class UploadImageAdapter extends BaseAdapter {
         } else {
             cell = (ImageCell) convertView;
         }
+        cell.index = i;
+        cell.callback = this;
 
         Glide.with(mContext).load(taskList.get(i).getValidatePath()).into(cell.imageView);
         return cell;
+    }
+
+    @Override
+    public void onRetry(int index) {
+        if (callback != null) {
+            callback.onRetry(index);
+        }
     }
 }

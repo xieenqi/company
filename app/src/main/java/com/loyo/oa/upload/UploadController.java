@@ -35,7 +35,7 @@ import rx.schedulers.Schedulers;
  * Created by EthanGong on 16/10/9.
  */
 
-public class UploadController {
+public class UploadController implements ImageCell.ImageCellCallback{
 
     private ArrayList<UploadTask> taskList = new ArrayList<UploadTask>();
     private Activity context;
@@ -49,6 +49,7 @@ public class UploadController {
     public UploadController(Activity context, int maxSize){
         this.context = context;
         this.adapter = new UploadImageAdapter(context, taskList, maxSize);
+        this.adapter.callback = this;
     }
 
 
@@ -85,6 +86,19 @@ public class UploadController {
         }
     }
 
+    public void retry() {
+        for (int i = 0; i < taskList.size(); i++) {
+            UploadTask task = taskList.get(i);
+            if (task.status == UploadTask.FAILED || task.status == UploadTask.CANCEL) {
+                task.status = UploadTask.WAITING;
+                task.progress = 1;
+            }
+            if (task.status == UploadTask.WAITING) {
+                executeTask(task);
+            }
+        }
+    }
+
     public void notifyCompletionIfNeeded() {
         if (isTaskListCompleted()) {
             onAllUploadTasksComplete(taskList);
@@ -112,7 +126,7 @@ public class UploadController {
                             observer.onAddEvent(UploadController.this);
 
                         }else {
-                            observer.onItemSeclected(UploadController.this, position);
+                            observer.onItemSelected(UploadController.this, position);
                         }
                     }
                 }
@@ -152,6 +166,10 @@ public class UploadController {
         uploadTask.status = UploadTask.UPLOADING;
         uploadTask.progress = progress;
 
+        if(gridView == null) {
+            return;
+        }
+
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -182,6 +200,10 @@ public class UploadController {
             onAllUploadTasksComplete(taskList);
         }
 
+        if(gridView == null) {
+            return;
+        }
+
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -206,6 +228,10 @@ public class UploadController {
         uploadTask.progress = progress;
         if (isTaskListCompleted()) {
             onAllUploadTasksComplete(taskList);
+        }
+
+        if(gridView == null) {
+            return;
         }
 
         context.runOnUiThread(new Runnable() {
@@ -247,6 +273,17 @@ public class UploadController {
                     && UploadTask.CANCEL != task.getStatus()) {
                 result = false;
                 break;
+            }
+        }
+        return result;
+    }
+
+    public int failedTaskCount() {
+        int result = 0;
+        for (int i = 0; i < taskList.size(); i++) {
+            UploadTask task = taskList.get(i);
+            if ( UploadTask.FAILED == task.getStatus() || UploadTask.CANCEL == task.getStatus()) {
+                result++;
             }
         }
         return result;
@@ -314,6 +351,7 @@ public class UploadController {
                         LogUtil.dee("ETag" + result.getETag());
                         LogUtil.dee("RequestId" + result.getRequestId());
                         onUploadTaskSuccess(uploadTask, 1.0);
+
                         Log.v("debug", "UploadSuccess");
                     }
 
@@ -338,5 +376,18 @@ public class UploadController {
                 });
         uploadTask.status = UploadTask.QUEUED;
         uploadTask.taskRef = new WeakReference<OSSAsyncTask>(task);
+    }
+
+    @Override
+    public void onRetry(final int index) {
+        final UploadControllerCallback observer = getObserver();
+        if (null != observer && index >=0 && index < taskList.size()) {
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    observer.onRetryEvent(UploadController.this, taskList.get(index));
+                }
+            });
+        }
     }
 }

@@ -7,7 +7,8 @@ import java.util.ArrayList;
  */
 
 public interface UploadControllerCallback {
+    void onRetryEvent(UploadController controller, UploadTask task);
     void onAddEvent(UploadController controller);
-    void onItemSeclected(UploadController controller, int index);
+    void onItemSelected(UploadController controller, int index);
     void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList);
 }

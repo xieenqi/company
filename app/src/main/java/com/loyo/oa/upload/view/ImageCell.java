@@ -22,6 +22,8 @@ public class ImageCell extends LinearLayout {
     public ImageView imageView;
     public View imageMask;
     private CircularProgressButton button;
+    public int index;
+    public ImageCellCallback callback;
 
     public static ImageCell instance(Context context) {
         LinearLayout content = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.upload_image_cell, null);
@@ -38,15 +40,25 @@ public class ImageCell extends LinearLayout {
             button.setProgress(-1);
             imageMask.setVisibility(INVISIBLE);
             button.setVisibility(VISIBLE);
+            button.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (callback!=null) {
+                        callback.onRetry(index);
+                    }
+                }
+            });
         }
         else {
             button.setProgress(progress);
             imageMask.setVisibility(INVISIBLE);
             button.setVisibility(VISIBLE);
+            button.setOnClickListener(null);
         }
         if (progress == 100) {
             imageMask.setVisibility(INVISIBLE);
             button.setVisibility(GONE);
+            button.setOnClickListener(null);
         }
     }
 
@@ -56,8 +68,12 @@ public class ImageCell extends LinearLayout {
         button = (CircularProgressButton) layout.findViewById(R.id.circularButton2);
         // button.setIndeterminateProgressMode(true);
         // button.setOnClickListener(null);
-        button.setClickable(false);
+        button.setClickable(true);
         this.setProgress(1);
         button.setVisibility(GONE);
+    }
+
+    public interface ImageCellCallback{
+        void onRetry(int index);
     }
 }
