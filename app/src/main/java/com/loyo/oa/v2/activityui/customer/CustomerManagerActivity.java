@@ -111,7 +111,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private float mRotation = 0;
 
     private Permission permission;
-    private String[] SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
+    private String[] SaleItemStatus = new String[]{"我的客户"};
     private List<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mTags1;
@@ -148,10 +148,10 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                             e.printStackTrace();
                         }
                         initTitleItem();
-                        try{
+                        try {
                             permission = (Permission) MainApp.rootMap.get("0404");
                             initChildren();
-                        }catch(NullPointerException e){
+                        } catch (NullPointerException e) {
                             e.printStackTrace();
                             Toast("没有获取到权限数据，请重新拉去后再试");
                             finish();
@@ -197,28 +197,28 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
 
-        //超级管理员权限判断
+        //超级管理员权限判断 没有获取到权限就不显示
         if (!MainApp.user.isSuperUser()) {
-            try {
-                perTeam = (Permission) MainApp.rootMap.get("0308"); //团队客户
-                perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
-                if (!perTeam.isEnable() && !perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户"};
-                    imageArrow.setVisibility(View.INVISIBLE);
-                } else if (perTeam.isEnable() && !perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户", "团队客户"};
-                    publicOrTeam = true;
-                    imageArrow.setVisibility(View.VISIBLE);
-                } else if (!perTeam.isEnable() && perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户", "公海客户"};
-                    publicOrTeam = false;
-                    imageArrow.setVisibility(View.VISIBLE);
-                } else {
-                    imageArrow.setVisibility(View.VISIBLE);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("团队/公海客户,code错误:0308,0309");
+            imageArrow.setVisibility(View.INVISIBLE);
+            boolean isTeam = false, isPublic = false;
+            perTeam = MainApp.rootMap.get("0308"); //团队客户
+            perOcean = MainApp.rootMap.get("0309"); //公海客户
+            if (perTeam != null && perTeam.isEnable())
+                isTeam = true;
+            if (perOcean != null && perOcean.isEnable())
+                isPublic = true;
+            if (isTeam && !isPublic) {
+                SaleItemStatus = new String[]{"我的客户", "团队客户"};
+                publicOrTeam = true;
+                imageArrow.setVisibility(View.VISIBLE);
+            } else if (!isTeam && isPublic) {
+                SaleItemStatus = new String[]{"我的客户", "公海客户"};
+                publicOrTeam = false;
+                imageArrow.setVisibility(View.VISIBLE);
+            } else if (isTeam && isPublic) {
+                SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
+                publicOrTeam = true;
+                imageArrow.setVisibility(View.VISIBLE);
             }
         } else {
             imageArrow.setVisibility(View.VISIBLE);
