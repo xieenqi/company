@@ -41,10 +41,8 @@ public class LoginBqqPresenterImpl implements LoginBqqPresenter{
                 LogUtil.d("QQ登录URL:" + url);
                 if (url.indexOf(FinalVariables.GetLogin_success_prefix()) >= 0) {
                     crolView.startMainHome(url);
-                    LogUtil.dee("1");
                 } else {
                     view.loadUrl(url);
-                    LogUtil.dee("2");
                 }
                 if (blockLoadingNetworkImage) {
                     mWebView.getSettings().setBlockNetworkImage(false);
