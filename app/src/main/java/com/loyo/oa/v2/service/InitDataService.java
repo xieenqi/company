@@ -12,6 +12,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
@@ -140,5 +141,6 @@ public class InitDataService extends IntentService {
         intent.setAction(FinalVariables.ACTION_DATA_CHANGE);
         intent.putExtra("user", user);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        AppBus.getInstance().post(user);
     }
 }

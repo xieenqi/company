@@ -54,7 +54,6 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.db.LocationDBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.point.IUser;
@@ -69,7 +68,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
-import com.loyo.oa.v2.tool.TrackLocationManager;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -271,8 +269,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         updateUser();
 
         // startTrack();
-        LocationDBManager.getInstance().initWithUser(MainApp.user!=null?MainApp.user.id:null);
-        TrackLocationManager.getInstance().startLocationTrackingIfNeeded();
         return mView;
     }
 

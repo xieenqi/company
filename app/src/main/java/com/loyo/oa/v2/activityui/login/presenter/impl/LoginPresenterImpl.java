@@ -21,6 +21,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.WaveView;
 import com.loyo.oa.v2.point.ILogin;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -110,6 +111,9 @@ public class LoginPresenterImpl implements LoginPresenter {
                 SharedUtil.putBoolean(mContext, ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
                 MainApp.getMainApp().startActivity(mActivity, MainHomeActivity.class, MainApp.ENTER_TYPE_RIGHT, true, new Bundle());
                 SharedUtil.putBoolean(mContext, ExtraAndResult.WELCOM_KEY, true);
+
+                /* 拉取组织架构 */
+                OrganizationService.startActionFetchAll(MainApp.getMainApp());
             }
         });
 

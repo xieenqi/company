@@ -11,9 +11,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Toast;
 
+import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.home.slidingmenu.SlidingFragmentActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
@@ -31,13 +32,16 @@ import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.db.LocationDBManager;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.upload.alioss.AliOSSManager;
-import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.LocationManager;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.TrackLocationManager;
 import com.umeng.analytics.MobclickAgent;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -67,6 +71,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         }
         onInitSlideMenu();
         tintManager.setTintColor(Color.parseColor("#33000000"));
+        AppBus.getInstance().register(this);
     }
 
 
@@ -81,12 +86,20 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 return;
             }
         }
-        startService(new Intent(this, InitDataService_.class));
-        permissionLocation();
 
         /* 初始化AliOSSManager */
         AliOSSManager.getInstance().initWithContext(getApplicationContext());
         TrackLocationManager.getInstance().initWithContext(getApplicationContext());
+        LocationManager.getInstance().initWithContext(getApplicationContext());
+
+        startService(new Intent(this, InitDataService_.class));
+        permissionLocation();
+    }
+
+    @Subscribe
+    public void onUserChanged(User user) {
+        LocationDBManager.getInstance().initWithUser(user.id);
+        TrackLocationManager.getInstance().startLocationTrackingIfNeeded();
     }
 
     @Override
@@ -320,6 +333,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Override
     protected void onDestroy() {
+        AppBus.getInstance().unregister(this);
         super.onDestroy();
     }
 

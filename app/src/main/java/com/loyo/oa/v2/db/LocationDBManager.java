@@ -21,6 +21,7 @@ import java.util.List;
 public class LocationDBManager {
 
     private MainApp mApp;
+    private String userIdentifer;
     private LocationDBHelper mDBHealper;
 
     private static LocationDBManager ourInstance = new LocationDBManager();
@@ -35,7 +36,11 @@ public class LocationDBManager {
     }
 
     public synchronized void initWithUser(String userId) {
+        if (userIdentifer == userId) {
+            return;
+        }
         if (userId != null) {
+            userIdentifer = userId;
             mDBHealper = new LocationDBHelper(userId);
         }
         else {

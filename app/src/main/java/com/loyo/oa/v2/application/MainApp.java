@@ -185,7 +185,7 @@ public class MainApp extends Application {
             public void run() {
                 super.run();
                 try {
-                    TrueTime.build().withNtpHost("1.cn.pool.ntp.org").initialize();
+                    TrueTime.build().withNtpHost("0.asia.pool.ntp.org").initialize();
                 }
                 catch (Exception e) {
 
