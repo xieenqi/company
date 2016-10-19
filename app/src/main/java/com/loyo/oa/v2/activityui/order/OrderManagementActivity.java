@@ -41,11 +41,10 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
     private ListView lv_order_title;
     private float mRotation = 0;
     private Animation rotateAnimation;//标题动画
-    private String[] SaleItemStatus = new String[]{"我的订单", "团队订单"};
+    private String[] SaleItemStatus = new String[]{"我的订单"};
     private List<BaseFragment> fragments = new ArrayList<>();
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
-    private Permission permission;
 
 
     @Override
@@ -62,7 +61,7 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
         img_title_arrow = (ImageView) findViewById(R.id.img_title_arrow);
-        img_title_arrow.setVisibility(View.VISIBLE);
+        img_title_arrow.setVisibility(View.INVISIBLE);
         lv_order_title = (ListView) findViewById(R.id.lv_order_title);
         ll_category = (LinearLayout) findViewById(R.id.ll_category);
         ll_category.setOnClickListener(this);
@@ -75,18 +74,11 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setVisibility(View.INVISIBLE);
         //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0328");
-                if (!permission.isEnable()) {
-                    SaleItemStatus = new String[]{"我的订单"};
-                    img_title_arrow.setVisibility(View.INVISIBLE);
-                    layout_title_action.setEnabled(false);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("团队订单权限,code错误:0328");
-            }
+        Permission permission = MainApp.rootMap.get("0216");
+        if (permission != null && permission.isEnable() && permission.dataRange > 1) {
+            SaleItemStatus = new String[]{"我的订单", "团队订单"};
+            img_title_arrow.setVisibility(View.VISIBLE);
+            layout_title_action.setEnabled(true);
         }
         initTitleItem();
         initChildren();

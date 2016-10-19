@@ -46,12 +46,11 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
     private ListView lv_order_title;
     private Animation rotateAnimation;//标题动画
     private FragmentManager fragmentManager = getSupportFragmentManager();
-    private Permission permission;
 
     private int mIndex = -1;
     private float mRotation = 0;
     private WorksheetListType[] SaleItemStatus = new WorksheetListType[]
-            {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE, WorksheetListType.TEAM};
+            {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE};
     private List<BaseFragment> fragments = new ArrayList<>();
 
     @Override
@@ -82,18 +81,10 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
         //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0330");
-                if (!permission.isEnable()) {
-                    SaleItemStatus = new WorksheetListType[]
-                            {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE};
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                SaleItemStatus = new WorksheetListType[]
-                        {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE};
-            }
+        Permission permission = MainApp.rootMap.get("0218");
+        if ((permission != null && permission.isEnable() && permission.dataRange > 1) || MainApp.user.isSuperUser()) {
+            SaleItemStatus = new WorksheetListType[]
+                    {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE, WorksheetListType.TEAM};
         }
         initTitleItem();
         initChildren();
@@ -148,7 +139,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
             case R.id.img_title_search_right:
 
                 WorksheetListType type = WorksheetListType.RESPONSABLE;
-                if (mIndex >=0 && mIndex < SaleItemStatus.length) {
+                if (mIndex >= 0 && mIndex < SaleItemStatus.length) {
                     type = SaleItemStatus[mIndex];
                 }
 

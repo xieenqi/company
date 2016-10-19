@@ -47,11 +47,10 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
     private ListView lv_order_title;
     private Animation rotateAnimation;//标题动画
     private FragmentManager fragmentManager = getSupportFragmentManager();
-    private Permission permission;
 
     private int mIndex = -1;
     private float mRotation = 0;
-    private String[] SaleItemStatus = new String[]{"我的线索", "团队线索"};
+    private String[] SaleItemStatus = new String[]{"我的线索"};
     private List<BaseFragment> fragments = new ArrayList<>();
 
     @Override
@@ -68,7 +67,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
         img_title_arrow = (ImageView) findViewById(R.id.img_title_arrow);
-        img_title_arrow.setVisibility(View.VISIBLE);
+        img_title_arrow.setVisibility(View.INVISIBLE);
         lv_order_title = (ListView) findViewById(R.id.lv_order_title);
         ll_category = (LinearLayout) findViewById(R.id.ll_category);
         ll_category.setOnClickListener(this);
@@ -81,21 +80,11 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
         //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0329");
-                if (!permission.isEnable()) {
-                    SaleItemStatus = new String[]{"我的线索"};
-                    img_title_arrow.setVisibility(View.INVISIBLE);
-                    layout_title_action.setEnabled(false);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                // Toast("团队线索权限,code错误:0329");
-                SaleItemStatus = new String[]{"我的线索"};
-                img_title_arrow.setVisibility(View.INVISIBLE);
-                layout_title_action.setEnabled(false);
-            }
+        Permission permission = MainApp.rootMap.get("0217");
+        if ((permission != null && permission.isEnable() && permission.dataRange > 1) || MainApp.user.isSuperUser()) {
+            SaleItemStatus = new String[]{"我的线索", "团队线索"};
+            img_title_arrow.setVisibility(View.VISIBLE);
+            layout_title_action.setEnabled(true);
         }
         initTitleItem();
         initChildren();
@@ -149,9 +138,9 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                         type = 2;
                     }
                 }
-                LogUtil.dee("type:"+type);
+                LogUtil.dee("type:" + type);
                 Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE,type);
+                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
                 app.startActivity(this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
