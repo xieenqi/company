@@ -3,7 +3,6 @@ package com.loyo.oa.v2.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.other.model.User;
@@ -13,18 +12,15 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
-
-// Add by ethan on 2016-08-03
-import com.loyo.oa.v2.db.*;
 
 import org.androidannotations.annotations.EIntentService;
 
@@ -33,6 +29,8 @@ import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+// Add by ethan on 2016-08-03
 
 /**
  * 【组织架构】后台拉取服务
@@ -143,5 +141,6 @@ public class InitDataService extends IntentService {
         intent.setAction(FinalVariables.ACTION_DATA_CHANGE);
         intent.putExtra("user", user);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        AppBus.getInstance().post(user);
     }
 }

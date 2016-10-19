@@ -756,6 +756,7 @@
         <service
             android:name=".service.InitDataService_"
             android:enabled="true"/>
+        <!--UploadTrackLocationService-->
         <service
             android:name=".service.OrganizationService"
             android:enabled="true"/>
@@ -764,6 +765,7 @@
             android:enabled="true"/>
 
         <receiver android:name=".service.TrackLogRecevier"/>
+        <receiver android:name=".service.TrackLocationScheduleReceiver"/>
         <receiver android:name=".service.TrackRuleReceiver">
             <intent-filter>
                 <action android:name="com.tencent.android.tpush.action.SDK"/>
@@ -778,10 +780,10 @@
 
         <!-- 高德定位后台服务 -->
         <service
-            android:name=".service.AMapService"
+            android:name=".service.TrackLocationService"
             android:enabled="true">
             <intent-filter android:priority="1000">
-                <action android:name="com.loyo.oa.v2.service.AMapService"/>
+                <action android:name="com.loyo.oa.v2.service.TrackLocationService"/>
             </intent-filter>
         </service>
 

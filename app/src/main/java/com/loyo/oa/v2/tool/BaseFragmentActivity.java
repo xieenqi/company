@@ -27,6 +27,8 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 
+import org.greenrobot.eventbus.Subscribe;
+
 public class BaseFragmentActivity extends FragmentActivity {
 
     protected MainApp app;
@@ -94,6 +96,11 @@ public class BaseFragmentActivity extends FragmentActivity {
         // 设置一个颜色给系统栏
         tintManager.setTintColor(Color.parseColor("#2c9dfc"));
         sweetAlertDialogView = new SweetAlertDialogView(this);
+    }
+
+    @Subscribe
+    public void onEvent(Object object){
+
     }
 
     /**

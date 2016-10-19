@@ -19,10 +19,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
+import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
@@ -57,9 +57,9 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.point.IUser;
-import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.service.TrackLocationService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -267,7 +267,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         }
         LogUtil.d("用户获取的token：---> " + app.getToken());
         updateUser();
-        startTrack();
+
+        // startTrack();
         return mView;
     }
 
@@ -568,7 +569,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
 
     //获取轨迹，并设置AlarmManager
     void startTrack() {
-        if (!Utils.isServiceRunning(AMapService.class.getName())) {
+        if (!Utils.isServiceRunning(TrackLocationService.class.getName())) {
         }
         TrackRule.InitTrackRule();
     }
