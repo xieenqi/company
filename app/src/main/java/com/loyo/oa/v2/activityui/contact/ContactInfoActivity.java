@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -115,11 +116,11 @@ public class ContactInfoActivity extends BaseActivity {
      * 更新登录用户资料
      */
     void getUserInfo() {
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
+        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<NewUser>() {
             @Override
-            public void success(final User users, final Response response) {
+            public void success(final NewUser users, final Response response) {
 
-                user = users;
+                user = users.data;
                 HttpErrorCheck.checkResponse(response);
                 initData();
 
@@ -186,7 +187,7 @@ public class ContactInfoActivity extends BaseActivity {
             if (age >= 150) {
                 return;
             }
-            Utils.setContent(tv_birthday, user.birthDay.substring(0,10));
+            Utils.setContent(tv_birthday, user.birthDay.substring(0, 10));
             Utils.setContent(tv_age, age + "");
         }
 

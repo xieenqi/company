@@ -21,6 +21,7 @@ import android.os.Handler;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.FeedbackActivity_;
+import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
@@ -324,12 +325,12 @@ public class MenuFragment extends BaseFragment {
      */
     void updateUserinfo() {
         showLoading("");
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
+        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<NewUser>() {
             @Override
-            public void success(final User user, final Response response) {
+            public void success(final NewUser user, final Response response) {
                 HttpErrorCheck.checkResponse("获取个人资料修改", response);
                 String json = MainApp.gson.toJson(user);
-                MainApp.user = user;
+                MainApp.user = user.data;
                 DBManager.Instance().putUser(json);
                 Bundle b = new Bundle();
                 b.putSerializable("user", MainApp.user);

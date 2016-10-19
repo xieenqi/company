@@ -581,8 +581,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         updateUser();
         //超级管理员判断
         if (null != MainApp.user && !MainApp.user.isSuperUser()) {
-            if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
-                    0 == MainApp.user.newpermission.size()) {
+            if (null == MainApp.user || null == MainApp.user.permissionGroup) {
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
@@ -600,17 +599,18 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 return;
             }
 
-            ArrayList<Permission> suitesNew = new ArrayList<>();
-            suitesNew.clear();
-            suitesNew.addAll(MainApp.user.newpermission);
-
-            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
-            for (Permission permission : suitesNew) {
-                if (!TextUtils.isEmpty(permission.code)) {
-                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
-                    mappedPermission.put(permission.code, permission);
-                }
-            }
+//            ArrayList<Permission> suitesNew = new ArrayList<>();
+//            suitesNew.clear();
+//            suitesNew.addAll(MainApp.user.newpermission);
+//
+//            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
+//            for (Permission permission : suitesNew) {
+//                if (!TextUtils.isEmpty(permission.code)) {
+//                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+//                    mappedPermission.put(permission.code, permission);
+//                }
+//            }
+            Map<String, Permission> mappedPermission = MainApp.rootMap;
             int itemsLength = items.size();
             for (int i = 0; i < itemsLength; i++) {
                 String code = items.get(i).code;
@@ -618,6 +618,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 if ((p == null || p.enable == false) && code != "0") {
                     items.remove(i);
                     i--;
+                    itemsLength--;
                 }
             }
             int caseItemsLength = caseItems.size();
@@ -627,6 +628,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 if ((p == null || p.enable == false) && code != "0") {
                     caseItems.remove(i);
                     i--;
+                    caseItemsLength--;
                 }
             }
         }

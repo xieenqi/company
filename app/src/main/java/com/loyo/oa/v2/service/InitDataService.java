@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.application.MainApp;
@@ -51,20 +52,20 @@ public class InitDataService extends IntentService {
         if (null != DBManager.Instance().getUser()) {
             setRootMap(DBManager.Instance().getUser());//取缓存的用户对象
         }
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
+        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<NewUser>() {
             @Override
-            public void success(User user, Response response) {
+            public void success(NewUser user, Response response) {
                 try {
                     if (Config_project.is_developer_mode)
                         HttpErrorCheck.checkResponse("获取user", response);
                     String json = MainApp.gson.toJson(user);
-                    MainApp.user = user;
-                    setRootMap(user);
-                    sendDataChangeBroad(user);
+                    MainApp.user = user.data;
+                    setRootMap(user.data);
                     DBManager.Instance().putUser(json);//保存用户信息
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("name", user.name);
-                    map.put("id", user.id);
+//                    HashMap<String, String> map = new HashMap<>();
+//                    map.put("name", user.name);
+//                    map.put("id", user.id);
+                    sendDataChangeBroad(user.data);
                 } catch (Exception E) {
                     E.printStackTrace();
                 }
@@ -97,12 +98,16 @@ public class InitDataService extends IntentService {
      * 权限数据保存为Map
      */
     void setRootMap(User user) {
-        HashMap<String, Object> map = new HashMap<>();
-        if (user != null && null != user.newpermission) {
-            for (Permission permission : user.newpermission) {
+        HashMap<String, Permission> map = new HashMap<>();
+        if (user != null && null != user.permissionGroup) {
+            for (Permission permission : user.permissionGroup.topModules) {
+                map.put(permission.getCode(), permission);
+            }
+            for (Permission permission : user.permissionGroup.subModules) {
                 map.put(permission.getCode(), permission);
             }
             MainApp.rootMap = map;
+            LogUtil.d("x相关权限:" + MainApp.gson.toJson(map));
         }
     }
 
