@@ -20,9 +20,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.OrganizationManager;
@@ -31,6 +31,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,6 +187,10 @@ public class SelectDetUserSerach extends BaseActivity {
                 resultData.add(u);
                 continue;
             } else if (u.simplePinyin != null && u.simplePinyin.startsWith(key)) {
+                resultData.add(u);
+                continue;
+            }
+            else if (u.shortDeptNames != null && u.shortDeptNames.contains(key)) {
                 resultData.add(u);
                 continue;
             }

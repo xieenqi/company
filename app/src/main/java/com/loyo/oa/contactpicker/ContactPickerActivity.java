@@ -400,6 +400,9 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
             } else if (usrModel.user.simplePinyin != null && usrModel.user.simplePinyin.startsWith(key)) {
                 result.add(usrModel);
                 continue;
+            } else if (usrModel.user.shortDeptNames != null && usrModel.user.shortDeptNames.contains(key)) {
+                result.add(usrModel);
+                continue;
             }
         }
 
