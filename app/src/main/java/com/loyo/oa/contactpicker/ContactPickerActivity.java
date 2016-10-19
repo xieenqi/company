@@ -237,7 +237,6 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     }
 
     private void loadData() {
-
         if (/* 正在加载组织架构数据 */
                 OrganizationManager.isOrganizationCached() == false
                         && OrganizationService.isFetchingOrganziationData()) {
@@ -314,6 +313,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
                             progressWheel.setVisibility(View.GONE);
                             noDataPlaceholder.setVisibility(View.VISIBLE);
                             tipView.setText("无组织架构数据");
+                            fetchButton.setVisibility(View.VISIBLE);
                             noCacheContainer.setVisibility(View.VISIBLE);
                         }
                     }
