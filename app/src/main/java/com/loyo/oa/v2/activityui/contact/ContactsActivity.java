@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,25 +16,19 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
-import com.loyo.oa.v2.activityui.other.DepartmentUserSearchActivity;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsDepartmentFragment;
 import com.loyo.oa.v2.activityui.contact.fragment.ContactsInMyDeptFragment;
+import com.loyo.oa.v2.activityui.other.DepartmentUserSearchActivity;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
+import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
-import java.util.ArrayList;
-
-import java.util.List;
 
 /**
  * 通讯录 联系人 页面
@@ -167,7 +160,8 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
      */
     void getUserAndDepartmentSize() {
         try{
-            myDepartmentContactsSize = OrganizationManager.shareManager().getCurrentUserSameDeptsUsers().size();
+            // myDepartmentContactsSize = OrganizationManager.shareManager().getCurrentUserSameDeptsUsers().size();
+            myDepartmentContactsSize = OrganizationManager.shareManager().getCurrentUserSameDeptsUsers2().size();
             DBDepartment company = OrganizationManager.shareManager().getsComany();
             departmentsSize          = String.valueOf((company!= null?company.userNum : 0));
         }catch (Exception e){

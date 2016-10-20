@@ -9,38 +9,28 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.contact.ContactsDepartmentActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.db.sort.DepartmentPinyinComparator;
+import com.loyo.oa.v2.db.sort.UserPinyinComparator;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.lang.ref.WeakReference;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * com.loyo.oa.v2.ui.fragment
@@ -64,7 +54,6 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
 
     /* Helper */
     private MainApp app = MainApp.getMainApp();
-    public PinyinComparator pinyinComparator;
 
     /* Broadcasr */
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -87,7 +76,6 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerBroadcastReceiver();
-        pinyinComparator = new PinyinComparator();
         loadData();
 
     }
@@ -122,15 +110,16 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
     public void loadData() {
         deptId = null == getArguments() ? "" : getArguments().getString("depId");
         xpath = null == getArguments() ? "" : getArguments().getString("xpath");
+        DBDepartment dept = OrganizationManager.shareManager().getDepartment(deptId);
+        if (dept == null){
+            return;
+        }
 
         ArrayList<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
-        // TODO:
-        List<DBUser> users = OrganizationManager.shareManager().directUsersOfDepartment(deptId);
-        List<DBDepartment> depts = OrganizationManager.shareManager().subDepartmentsOfDepartment(deptId);
-        Collections.sort(users, pinyinComparator);
-        Collections.sort(depts, pinyinComparator);
-
-
+        List<DBUser> users = dept.allDirectUsers();
+        List<DBDepartment> childDepts = new ArrayList<>(dept.childDepts);
+        Collections.sort(users, new UserPinyinComparator());
+        Collections.sort(childDepts, new DepartmentPinyinComparator());
 
         if (users.size() >0 ) {
             HashMap<String, Object> map = new HashMap<String, Object>();
@@ -138,10 +127,10 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
             map.put("items", users);
             result.add(map);
         }
-        if (depts.size() >0 ) {
+        if (childDepts.size() >0 ) {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("name", "部门");
-            map.put("items", depts);
+            map.put("items", childDepts);
             result.add(map);
         }
 
@@ -364,18 +353,5 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
 
     static final class DepartmentViewHolder {
         TextView tv_content;
-    }
-
-    static final class PinyinComparator implements Comparator<Object> {
-
-        public int compare(Object o1, Object o2) {
-            if (o1.getClass() == DBDepartment.class) {
-                return ((DBDepartment)o1).pinyin().compareTo(((DBDepartment)o2).pinyin());
-            }
-            else if (o1.getClass() == DBUser.class) {
-                return ((DBUser)o1).pinyin().compareTo(((DBUser)o2).pinyin());
-            }
-            return 0;
-        }
     }
 }
