@@ -19,11 +19,13 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
@@ -36,9 +38,10 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
@@ -59,6 +62,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -1025,6 +1029,40 @@ public class TasksInfoActivity extends BaseActivity {
 //        }
 //    }
 
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+
+        if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            member = Compat.convertStaffCollectionToMembers(collection);
+            if (null == member || (member.users.size()==0 && member.depts.size()==0)) {
+                tv_toUsers.setText("无参与人");
+            } else {
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (null != member.depts) {
+                    for (NewUser newUser : member.depts) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (null != member.users) {
+                    for (NewUser newUser : member.users) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (!TextUtils.isEmpty(joinName)) {
+                    joinName.deleteCharAt(joinName.length() - 1);
+                }
+                editJoiner();
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
@@ -1085,7 +1123,21 @@ public class TasksInfoActivity extends BaseActivity {
                         bundle.putBoolean("type", IsCreator());
                         app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
                     } else {
-                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
+//                        SelectDetUserActivity2.startThisForAllSelect(this,
+//                                joinUserId == null ? null : joinUserId.toString(), true);
+                        {
+                            StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                            if (collection != null) {
+                                bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                            }
+                            bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                            Intent intent = new Intent();
+                            intent.setClass(this, ContactPickerActivity.class);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
                     }
                     isUpdate = true;
                  /*删除回调*/
@@ -1107,7 +1159,21 @@ public class TasksInfoActivity extends BaseActivity {
                     startActivity(intent);
                  /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
-                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
+//                    SelectDetUserActivity2.startThisForAllSelect(this,
+//                            joinUserId == null ? null : joinUserId.toString(), true);
+                    {
+                        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                        if (collection != null) {
+                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                        }
+                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                        Intent intent = new Intent();
+                        intent.setClass(this, ContactPickerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                     isUpdate = true;
                 }
                 break;

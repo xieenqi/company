@@ -21,8 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.discuss.bean.HttpCrecter;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
@@ -33,6 +35,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -46,6 +49,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -517,6 +522,31 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
     }
 
     /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+        StaffMemberCollection collection = event.data;
+        NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+        if (user == null) {
+            return;
+        }
+
+        String id = user.getId();
+        if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
+            Toast("不能@自己");
+            return;
+        }
+        String name = user.getName();
+        mHaitSelectUsers.add(new HaitHelper.SelectUser(name, id));
+        String selectName = add$Name(name);
+        int index = et_discuss.getSelectionStart();
+        Editable editable = et_discuss.getText();
+        editable.insert(index, selectName);
+        showKeyBoard(et_discuss);
+    }
+
+    /**
      * 组合@的用户名 -- xxx + '\u2005'
      *
      * @param selectName
@@ -589,10 +619,16 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
          * 当用户输入'@'是跳转选择艾特用户的界面
          */
         private void toSelectUserByHait() {
+//            Bundle bundle = new Bundle();
+//            bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
+//            app.startActivityForResult(DiscussDetialActivity.this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
+//                    ExtraAndResult.REQUEST_CODE, bundle);
             Bundle bundle = new Bundle();
-            bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-            app.startActivityForResult(DiscussDetialActivity.this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
-                    ExtraAndResult.REQUEST_CODE, bundle);
+            bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+            Intent intent = new Intent();
+            intent.setClass(DiscussDetialActivity.this, ContactPickerActivity.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
 
         @Override

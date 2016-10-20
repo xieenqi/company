@@ -16,11 +16,11 @@ import java.util.List;
 public class PickedContacts {
     List<PickUserModel> pickedUsers = new ArrayList<>();
     List<PickDepartmentModel> pickedDepartments = new ArrayList<>();
-
+    private boolean deptSelection = true;
     int mCount = 0;
 
-    public PickedContacts() {
-
+    public PickedContacts(boolean deptSelection) {
+        this.deptSelection = deptSelection;
     }
 
     public PickedContacts(String joinedIds) {
@@ -32,6 +32,11 @@ public class PickedContacts {
             mCount++;
         }
         model.setSelected(true);
+        if (!deptSelection) {
+            pickedUsers.add(model);
+            return;
+        }
+
         HashSet<DBDepartment> depts = model.user.depts;
         boolean hasSelectAll = false;
         DBDepartment topSelected = null;
@@ -80,6 +85,11 @@ public class PickedContacts {
             mCount--;
         }
         model.setSelected(false);
+        if (!deptSelection) {
+            pickedUsers.remove(model);
+            return;
+        }
+
         HashSet<DBDepartment> depts = model.user.depts;
         DBDepartment topSelected = null;
         boolean hasSelectAll = false;

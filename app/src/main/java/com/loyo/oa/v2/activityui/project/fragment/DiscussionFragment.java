@@ -97,6 +97,14 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     }
 
     @Override
+    public void onDestroy() {
+        if (mHaitHelper !=null) {
+            mHaitHelper.clean();
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onProjectChange(int status) {
         if (null != project) {
             project.status = status;

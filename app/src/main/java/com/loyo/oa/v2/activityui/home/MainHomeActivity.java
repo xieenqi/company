@@ -32,7 +32,6 @@ import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.db.LocationDBManager;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
@@ -71,7 +70,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         }
         onInitSlideMenu();
         tintManager.setTintColor(Color.parseColor("#33000000"));
-        AppBus.getInstance().register(this);
     }
 
 
@@ -333,7 +331,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Override
     protected void onDestroy() {
-        AppBus.getInstance().unregister(this);
         super.onDestroy();
     }
 

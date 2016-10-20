@@ -448,10 +448,10 @@ public class TasksAddActivity extends BaseActivity {
                     bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
                 }
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
-                app.startActivityForResult(this, ContactPickerActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        FinalVariables.REQUEST_SELECT_PROJECT, bundle);
-
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
 
                 break;
@@ -468,10 +468,10 @@ public class TasksAddActivity extends BaseActivity {
                     bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
                 }
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
-                app.startActivityForResult(this, ContactPickerActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        FinalVariables.REQUEST_SELECT_PROJECT, bundle);
-
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
                 break;
 
