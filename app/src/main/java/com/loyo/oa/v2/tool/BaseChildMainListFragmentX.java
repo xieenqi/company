@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.TaskRecord;
@@ -167,7 +168,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         app.getRestAdapter().create(IProject.class).getProjectNewSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
             @Override
             public void success(Pagination paginationx, Response response) {
-                HttpErrorCheck.checkResponse("获取项目详情的任务，报告，审批json",response);
+                HttpErrorCheck.checkResponse("获取项目详情的任务，报告，审批json", response);
 
                 mExpandableListView.onRefreshComplete();
                 if (!Pagination.isEmpty(paginationx)) {
@@ -194,7 +195,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
-                if(null != mExpandableListView){
+                if (null != mExpandableListView) {
                     mExpandableListView.onRefreshComplete();
                 }
             }
@@ -221,7 +222,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
 
 
     public void showPop() {
-        sweetAlertDialogView.alertIcon(null,"此功能权限已关闭\n请联系管理员开启后再试!");
+        sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
     }
 
     /**
@@ -290,12 +291,24 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     public void openItem(int groupPosition, int childPosition) {
         switch (type) {
             case 1:
+                if (!workPsn) {
+                    showPop();
+                    return;
+                }
                 goToReviewPage(WorkReportsInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WorkReportRecord) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
             case 2:
+                if (!taskPsn) {
+                    showPop();
+                    return;
+                }
                 goToReviewPage(TasksInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((TaskRecord) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
             case 12:
+                if (!wiftPsn) {
+                    showPop();
+                    return;
+                }
                 goToReviewPage(WfinstanceInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WfInstanceRecord) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
         }
