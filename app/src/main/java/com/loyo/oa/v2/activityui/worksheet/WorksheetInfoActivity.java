@@ -15,6 +15,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorksheet;
@@ -191,6 +192,11 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
             //跳转订单
             case R.id.tv_related_order:
+                Permission permissin = MainApp.rootMap.get("0216");
+                if (!permissin.enable) {
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                    return;
+                }
                 mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_ID, mWorksheetInfo.data.orderId);
                 app.startActivity(this, OrderDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
