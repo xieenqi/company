@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
@@ -93,6 +94,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     private View mView;
 
     private ScreenDeptPopupView deptPopupView;
+    private Permission permission;
 
 
     private Handler mHandler = new Handler() {
@@ -100,7 +102,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ExtraAndResult.MSG_SEND: {
-                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
                     break;
                 }
                 /*部门选择回调*/
@@ -185,7 +187,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     }
 
     private void initView(View view) {
-
+        permission = (Permission) getArguments().getSerializable("permission");
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
@@ -422,15 +424,15 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     public void wersi() {
         try {
             //为超管或权限为全公司 展示全公司成员
-            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
+            if (permission != null && permission.dataRange == Permission.COMPANY) {
                 setUser(mDeptSource);
             }
             //权限为部门 展示我的部门
-            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
+            else if (permission != null && permission.dataRange == Permission.TEAM) {
                 deptSort();
             }
             //权限为个人 展示自己
-            else if (MainApp.user.role.getDataRange() == Role.SELF) {
+            else if (permission != null && permission.dataRange == Permission.PERSONAL) {
                 data.clear();
                 SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
                 saleTeamScreen.setId(MainApp.user.getId());

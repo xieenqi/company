@@ -194,8 +194,8 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
         //超级管理员权全公司  没有获取到权限就不显示
-        Permission perCustomer = MainApp.rootMap.get("0205"); //客户权限
-        if ((perCustomer != null && perCustomer.isEnable() && perCustomer.dataRange < 3) || MainApp.user.isSuperUser()) {
+        permission = MainApp.rootMap.get("0205"); //客户权限
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
             publicOrTeam = true;
         }

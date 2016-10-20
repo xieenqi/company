@@ -52,6 +52,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
     private float mRotation = 0;
     private String[] SaleItemStatus = new String[]{"我的线索"};
     private List<BaseFragment> fragments = new ArrayList<>();
+    private Permission permission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +81,8 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
         //超级管理员\权限判断
-        Permission permission = MainApp.rootMap.get("0217");
-        if ((permission != null && permission.isEnable() && permission.dataRange <3) || MainApp.user.isSuperUser()) {
+        permission = MainApp.rootMap.get("0217");
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new String[]{"我的线索", "团队线索"};
             img_title_arrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
@@ -102,6 +103,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                 fragment = (BaseFragment) Fragment.instantiate(this, MyClueFragment.class.getName(), b);
             } else {
                 Bundle b = new Bundle();
+                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamClueFragment.class.getName(), b);
             }
             fragments.add(fragment);

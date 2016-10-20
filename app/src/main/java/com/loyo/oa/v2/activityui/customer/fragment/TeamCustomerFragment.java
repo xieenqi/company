@@ -77,7 +77,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private TextView nearTv;
     private ViewGroup nearLayout;
     private NearCount nearCount;
-    //    private Permission permission;
+    private Permission permission;
     private SaleTeamScreen saleTeamScreen;
     private PullToRefreshListView listView;
     private SaleCommPopupView saleCommPopupView;
@@ -112,7 +112,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
             switch (msg.what) {
 
                 case DEPARTMENT_USER_DATA_LOADED: {
-                    saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                    saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
                     break;
                 }
 
@@ -198,7 +198,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
     public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-//        permission = (Permission) getArguments().getSerializable("permission");
+        permission = (Permission) getArguments().getSerializable("permission");
         mDoubleTags.addAll(mTags);
 
         for (int i = 0; i < sort.length; i++) {
@@ -249,15 +249,15 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     public void wersi() {
         try {
             //为超管或权限为全公司 展示全公司成员
-            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
+            if (permission != null && permission.dataRange == Permission.COMPANY) {
                 setUser(mDeptSource);
             }
             //权限为部门 展示我的部门
-            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
+            else if (permission != null && permission.dataRange == Permission.TEAM) {
                 deptSort();
             }
             //权限为个人 展示自己
-            else if (MainApp.user.role.getDataRange() == Role.SELF) {
+            else if (permission != null && permission.dataRange == Permission.PERSONAL) {
                 data.clear();
                 saleTeamScreen = new SaleTeamScreen();
                 saleTeamScreen.setId(MainApp.user.getId());

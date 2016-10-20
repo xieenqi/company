@@ -67,6 +67,7 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     private float mRotation = 0;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
+    private Permission permission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +117,8 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         img_title_search_right.setVisibility(View.INVISIBLE);
 
         //超级管理员 全公司  权限判断
-        Permission permission = MainApp.rootMap.get("0215");
-        if ((permission != null && permission.isEnable() && permission.dataRange <3) || MainApp.user.isSuperUser()) {
+        permission = MainApp.rootMap.get("0215");
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new String[]{"我的机会", "团队机会"};
             imageArrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
@@ -152,6 +153,7 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
             } else {
                 Bundle b = new Bundle();
                 b.putSerializable("stage", mSaleStages);
+                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamSaleFragment.class.getName(), b);
             }
             fragments.add(fragment);

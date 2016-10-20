@@ -52,6 +52,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
     private WorksheetListType[] SaleItemStatus = new WorksheetListType[]
             {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE};
     private List<BaseFragment> fragments = new ArrayList<>();
+    private Permission permission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
         //超级管理员\权限判断
-        Permission permission = MainApp.rootMap.get("0218");
+        permission = MainApp.rootMap.get("0218");
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new WorksheetListType[]
                     {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE, WorksheetListType.TEAM};
@@ -112,6 +113,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
         fragments.add(fragment);
 
         b = new Bundle();
+        b.putSerializable("permission", permission);
         fragment = (BaseFragment) Fragment.instantiate(this, TeamWorksheetFragment.class.getName(), b);
         fragments.add(fragment);
 

@@ -45,6 +45,7 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
     private List<BaseFragment> fragments = new ArrayList<>();
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
+    private Permission permission;
 
 
     @Override
@@ -74,8 +75,8 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setVisibility(View.INVISIBLE);
         //超级管理员\权限判断
-        Permission permission = MainApp.rootMap.get("0216");
-        if (permission != null && permission.isEnable() && permission.dataRange <3) {
+        permission = MainApp.rootMap.get("0216");
+        if (permission != null && permission.isEnable() && permission.dataRange < 3) {
             SaleItemStatus = new String[]{"我的订单", "团队订单"};
             img_title_arrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
@@ -96,7 +97,7 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
                 fragment = (BaseFragment) Fragment.instantiate(this, MyOrderFragment.class.getName(), b);
             } else {
                 Bundle b = new Bundle();
-//                b.putSerializable("stage", mSaleStages);
+                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamOrderFragment.class.getName(), b);
             }
             fragments.add(fragment);

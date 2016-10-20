@@ -9,6 +9,10 @@ import java.util.ArrayList;
 
 public class Permission implements Serializable {
 
+    public static int COMPANY = 1;
+    public static int TEAM = 2;
+    public static int PERSONAL = 3;
+
     public String name;
 
     public String code;
@@ -40,4 +44,5 @@ public class Permission implements Serializable {
     public void setCode(String code) {
         this.code = code;
     }
+
 }
