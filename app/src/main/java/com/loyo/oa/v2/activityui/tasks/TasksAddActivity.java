@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,10 +36,10 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
@@ -58,13 +57,13 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-import org.greenrobot.eventbus.Subscribe;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -173,9 +172,6 @@ public class TasksAddActivity extends BaseActivity {
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
 
-    private StaffMemberCollection selectedCollection;
-
-
     @AfterViews
     void initUI() {
         super.setTitle("创建任务");
@@ -209,8 +205,43 @@ public class TasksAddActivity extends BaseActivity {
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-        Log.v("debug", "onContactPicked");
-        selectedCollection = event.data;
+
+        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            newUser = Compat.convertStaffCollectionToNewUser(collection);
+            if (newUser == null) {
+                tv_responsiblePerson.setText("无负责人");
+            }
+            else {
+                tv_responsiblePerson.setText(newUser.getName());
+            }
+        }
+        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            members = Compat.convertStaffCollectionToMembers(collection);
+            if (null == members || (members.users.size()==0 && members.depts.size()==0)) {
+                tv_toUsers.setText("无参与人");
+            } else {
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (null != members.depts) {
+                    for (NewUser newUser : members.depts) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (null != members.users) {
+                    for (NewUser newUser : members.users) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (!TextUtils.isEmpty(joinName)) {
+                    joinName.deleteCharAt(joinName.length() - 1);
+                }
+                tv_toUsers.setText(joinName.toString());
+            }
+        }
     }
 
     /**
@@ -409,22 +440,39 @@ public class TasksAddActivity extends BaseActivity {
 //                SelectDetUserActivity2.startThisForOnly(TasksAddActivity.this, null);
 //                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
+            {
+                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
                 Bundle bundle = new Bundle();
-                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
-                if (selectedCollection != null) {
-                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, selectedCollection);
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
                 }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
                 app.startActivityForResult(this, ContactPickerActivity.class, MainApp.ENTER_TYPE_RIGHT,
                         FinalVariables.REQUEST_SELECT_PROJECT, bundle);
 
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            }
 
                 break;
 
             //参与人选项
             case R.id.tv_toUsers:
-                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
+//                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            {
+                StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                app.startActivityForResult(this, ContactPickerActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                        FinalVariables.REQUEST_SELECT_PROJECT, bundle);
+
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            }
                 break;
 
             case R.id.layout_del:

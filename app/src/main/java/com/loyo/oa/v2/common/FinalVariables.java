@@ -185,4 +185,7 @@ public final class FinalVariables {
     public static final String ACTION_DATA_CHANGE = "com.loyo.oa.v2.ACTION_DATA_CHANGE";
     public static final String ACTION_DATA_CUSTOMER = "com.loyo.oa.v2.ACTION_DATA_CUSTOMER";
 
+    public static final String PICK_RESPONSIBLE_USER_REQUEST = "com.loyo.oa.pickcontact.PICK_RESPONSIBLE_USER_REQUEST";
+    public static final String PICK_INVOLVE_USER_REQUEST = "com.loyo.oa.pickcontact.PICK_INVOLVE_USER_REQUEST";
+
 }

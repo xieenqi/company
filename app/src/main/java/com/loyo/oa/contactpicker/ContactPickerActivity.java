@@ -63,8 +63,10 @@ import rx.schedulers.Schedulers;
 public class ContactPickerActivity extends BaseActivity implements View.OnClickListener, OnDepartmentSelected<PickDepartmentCell>, OnPickUserEvent {
 
     /* 常量 */
-    public static final String SINGLE_SELECTION_KEY = "com.loyo.oa.v2.SINGLE_SELECTION";
-    public static final String STAFF_COLLECTION_KEY = "com.loyo.oa.v2.STAFF_COLLECTION";
+    public static final String SINGLE_SELECTION_KEY = "com.loyo.oa.contactpicker.SINGLE_SELECTION";
+    public static final String STAFF_COLLECTION_KEY = "com.loyo.oa.contactpicker.STAFF_COLLECTION";
+    public static final String REQUEST_KEY = "com.loyo.oa.contactpicker.ContactPickerActivity.REQUEST";
+    public static final String SESSION_KEY = "com.loyo.oa.contactpicker.ContactPickerActivity.SESSION";
 
     /* UI */
     private LinearLayout ll_back;
@@ -97,6 +99,8 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     private List<PickUserModel> searchBase = new ArrayList<>();
     private boolean singleSelection = false;
     private StaffMemberCollection previousSelection;
+    private String requestIdentifer;
+    private String sessionIdentifer;
 
     /* Broadcasr */
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -123,6 +127,8 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         /** 是否单选，默认多选 */
         singleSelection = getIntent().getBooleanExtra(SINGLE_SELECTION_KEY,false);
         previousSelection = (StaffMemberCollection) getIntent().getSerializableExtra(STAFF_COLLECTION_KEY);
+        requestIdentifer = (String) getIntent().getSerializableExtra(REQUEST_KEY);
+        sessionIdentifer = (String) getIntent().getSerializableExtra(SESSION_KEY);
 
         registerBroadcastReceiver();
         initView();
@@ -296,7 +302,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void call(Boolean suc) {
                         noCacheContainer.setVisibility(View.INVISIBLE);
-                        selectAllContainer.setVisibility(View.VISIBLE);
+                        selectAllContainer.setVisibility(singleSelection?View.GONE:View.VISIBLE);
                         departmentAdapter.clearData();
                         departmentAdapter.addData(departments);
 
@@ -443,7 +449,10 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
     private void doResultAction() {
         if (pickedContacts.getCount() > 0) {
             StaffMemberCollection collection = pickedContacts.getStaffMemberCollection();
-            AppBus.getInstance().post(new ContactPickedEvent(collection));
+            ContactPickedEvent event = new ContactPickedEvent(collection);
+            event.request = requestIdentifer;
+            event.session = sessionIdentifer;
+            AppBus.getInstance().post(event);
         }
         finish();
     }
