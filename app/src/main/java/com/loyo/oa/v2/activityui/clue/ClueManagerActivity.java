@@ -81,7 +81,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
 
         //超级管理员\权限判断
         Permission permission = MainApp.rootMap.get("0217");
-        if ((permission != null && permission.isEnable() && permission.dataRange > 1) || MainApp.user.isSuperUser()) {
+        if ((permission != null && permission.isEnable() && permission.dataRange <3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new String[]{"我的线索", "团队线索"};
             img_title_arrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);

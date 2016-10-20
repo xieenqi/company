@@ -82,7 +82,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
 
         //超级管理员\权限判断
         Permission permission = MainApp.rootMap.get("0218");
-        if ((permission != null && permission.isEnable() && permission.dataRange > 1) || MainApp.user.isSuperUser()) {
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new WorksheetListType[]
                     {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE, WorksheetListType.TEAM};
         }

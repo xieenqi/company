@@ -75,7 +75,7 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setVisibility(View.INVISIBLE);
         //超级管理员\权限判断
         Permission permission = MainApp.rootMap.get("0216");
-        if (permission != null && permission.isEnable() && permission.dataRange > 1) {
+        if (permission != null && permission.isEnable() && permission.dataRange <3) {
             SaleItemStatus = new String[]{"我的订单", "团队订单"};
             img_title_arrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);

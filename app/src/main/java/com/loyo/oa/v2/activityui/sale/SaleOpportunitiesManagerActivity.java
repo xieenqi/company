@@ -60,7 +60,6 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     private ImageView imageArrow;
     private RelativeLayout layout_title_action, img_title_search_right;
 
-    private Permission permission;
     private Animation rotateAnimation;//标题动画
     private String[] SaleItemStatus = new String[]{"我的机会"};
     private List<BaseFragment> fragments = new ArrayList<>();
@@ -117,8 +116,8 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         img_title_search_right.setVisibility(View.INVISIBLE);
 
         //超级管理员 全公司  权限判断
-        permission = MainApp.rootMap.get("0215");
-        if ((permission != null && permission.isEnable() && permission.dataRange > 1) || MainApp.user.isSuperUser()) {
+        Permission permission = MainApp.rootMap.get("0215");
+        if ((permission != null && permission.isEnable() && permission.dataRange <3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new String[]{"我的机会", "团队机会"};
             imageArrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
