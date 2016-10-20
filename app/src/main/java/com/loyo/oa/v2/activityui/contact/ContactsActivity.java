@@ -163,7 +163,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
             // myDepartmentContactsSize = OrganizationManager.shareManager().getCurrentUserSameDeptsUsers().size();
             myDepartmentContactsSize = OrganizationManager.shareManager().getCurrentUserSameDeptsUsers2().size();
             DBDepartment company = OrganizationManager.shareManager().getsComany();
-            departmentsSize          = String.valueOf((company!= null?company.userNum : 0));
+            departmentsSize          = String.valueOf((company!= null?company.allUsers().size() : 0));
         }catch (Exception e){
             Toast("数据拉取中，请等待");
             finish();
