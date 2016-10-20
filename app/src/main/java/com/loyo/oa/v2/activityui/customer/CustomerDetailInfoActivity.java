@@ -79,9 +79,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     public boolean isMyUser;
     public boolean isPutOcen;
     public boolean isRoot = false;
-    public Permission perDelete;
-    public Permission perOcean;
-    public Permission perGet;
     private MembersRoot memRoot;
 
 
@@ -160,7 +157,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             img_public.setVisibility(View.VISIBLE);
         } else {
             if (customerType == 3) {
-                perGet = MainApp.rootMap.get("0404");
+                Permission perGet = MainApp.rootMap.get("0404");
                 if (perGet != null && perGet.isEnable()) {
                     img_public.setVisibility(View.VISIBLE);
                 }
@@ -263,8 +260,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         boolean isDelte = false, isPublic = false;
          /*超级管理员\web控制权限判断*/
         if (!MainApp.user.isSuperUser()) {
-            perDelete = MainApp.rootMap.get("0405");
-            perOcean = MainApp.rootMap.get("0403");
+            Permission perDelete = MainApp.rootMap.get("0405");
+            Permission perOcean = MainApp.rootMap.get("0403");
             if (perDelete != null && perDelete.enable)
                 isDelte = true;
             if (perOcean != null && perOcean.enable)

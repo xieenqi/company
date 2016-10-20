@@ -14,7 +14,7 @@ public class Permission implements Serializable {
     public String code;
 
     public boolean enable = false;
-    public int dataRange;
+    public int dataRange = 10;
 
 
     public String getName() {

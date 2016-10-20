@@ -49,12 +49,18 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_signin_list)
 public class SignInListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
 
-    @ViewById ViewGroup layout_back;
-    @ViewById TextView tv_title;
-    @ViewById(R.id.listView_legworks) PullToRefreshListView lv;
-    @ViewById ViewGroup layout_add;
-    @Extra Customer mCustomer;
-    @Extra boolean isMyUser;
+    @ViewById
+    ViewGroup layout_back;
+    @ViewById
+    TextView tv_title;
+    @ViewById(R.id.listView_legworks)
+    PullToRefreshListView lv;
+    @ViewById
+    ViewGroup layout_add;
+    @Extra
+    Customer mCustomer;
+    @Extra
+    boolean isMyUser;
 
     private PaginationX<LegWork> workPaginationX = new PaginationX<>(20);
     private ArrayList<LegWork> legWorks = new ArrayList<>();
@@ -77,10 +83,9 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         //超级管理员\权限判断
         if (!MainApp.user.isSuperUser()) {
             try {
-                permission = (Permission) MainApp.rootMap.get("0206");
+                permission = MainApp.rootMap.get("0228");
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("发布公告权限,code错误:0402");
             }
         }
         getData();
@@ -102,7 +107,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
     @Click(R.id.layout_add)
     void createNewSignIn() {
         if (null != permission && !permission.isEnable()) {
-            sweetAlertDialogView.alertIcon(null,"此功能权限已关闭\n请联系管理员开启后再试!");
+            sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
         } else {
             Bundle b = new Bundle();
             b.putSerializable("data", mCustomer);
@@ -127,6 +132,10 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int i, final long l) {
+                if (null != permission && !permission.isEnable()) {
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                    return;
+                }
                 LegWork legWork = legWorks.get(i - 1);
                 previewLegwork(legWork);
             }

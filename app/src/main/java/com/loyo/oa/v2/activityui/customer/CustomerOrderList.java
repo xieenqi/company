@@ -94,6 +94,10 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
         listView_demands.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (null != permission && !permission.isEnable()) {
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                    return;
+                }
                 Intent mIntent = new Intent();
 //              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                 mIntent.putExtra(ExtraAndResult.EXTRA_ID, listAdapter.getItemData(position - 1).id);
@@ -123,7 +127,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
 
                 if (null != permission && !permission.isEnable()) {
 
-                    sweetAlertDialogView.alertIcon(null,"此功能权限已关闭\n请联系管理员开启后再试!");
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
 /*
                     showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
                             .setNoCancelOnclick(new View.OnClickListener() {

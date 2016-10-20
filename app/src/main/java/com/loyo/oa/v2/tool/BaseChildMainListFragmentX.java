@@ -143,7 +143,6 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("发布公告权限,code错误:0402");
             }
         }
     }
