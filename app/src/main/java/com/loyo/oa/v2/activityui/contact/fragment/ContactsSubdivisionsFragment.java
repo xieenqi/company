@@ -64,6 +64,9 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
                 //String userId = b.getString("userId");
                 listAdapter.notifyDataSetChanged();
             }
+            else if ("com.loyo.oa.v2.USER_REFRESH".equals( intent.getAction())) {
+                listAdapter.notifyDataSetChanged();
+            }
             else  if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
                 loadData();
                 listAdapter.datasource = datasource;
@@ -186,6 +189,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment {
     public void registerBroadcastReceiver(){
         IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
         filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+        filter.addAction("com.loyo.oa.v2.USER_REFRESH");
         getContext().registerReceiver(mReceiver, filter);
     }
 
