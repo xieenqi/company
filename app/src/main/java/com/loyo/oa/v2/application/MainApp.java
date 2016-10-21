@@ -23,7 +23,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
-
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -123,7 +123,7 @@ public class MainApp extends Application {
     public String region;//地区
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
-    public static HashMap<String, Object> rootMap;
+    public static HashMap<String, Permission> rootMap;
 
     public ScaleAnimation animShow;  //显示动画
     public ScaleAnimation animHide;  //隐藏动画

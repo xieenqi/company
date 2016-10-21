@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.other.model.User;
 
@@ -29,15 +30,21 @@ public interface IUser {
 
     /**
      * 以id获取人多信息
+     * "/user/{id}/profile"  改成"/user/{id}/newprofile"
      *
      * @param id
      * @param callback
      */
-    @GET("/user/{id}/profile")
-    void getUserById(@Path("id") String id, Callback<User> callback);
+    @GET("/user/{id}/newprofile")
+    void getUserById(@Path("id") String id, Callback<NewUser> callback);
 
-    @GET("/user/profile")
-    void getProfile(retrofit.Callback<User> cb);
+    /**
+     * 获取个人信息 "/user/profile"改为 "/user/newprofile" 权限管理换接口
+     *
+     * @param cb
+     */
+    @GET("/user/newprofile")
+    void getProfile(retrofit.Callback<NewUser> cb);
 
     @PUT("/")
     void updatePassword(@Body HashMap<String, Object> map, retrofit.Callback<Object> cb);

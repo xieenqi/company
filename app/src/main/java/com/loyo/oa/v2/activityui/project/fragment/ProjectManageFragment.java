@@ -39,7 +39,6 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
     private static final int[] FILTER_TYPEID_ARRAY = new int[]{0, 3, 2, 1};
     private static final String[] FILTER_STATUS_ARRAY = new String[]{"全部状态", "进行中", "已结束"};
     private ProjectExpandableListAdapter adapter;
-    private Permission permission;
     private int type = 0;
     private int status = 0;
 
@@ -66,13 +65,6 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         LogUtil.d(" 项目管理列表请求： " + MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
-
-        try {
-            permission = (Permission) MainApp.rootMap.get("0401");
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            Toast("项目创建权限,code错误:0401");
-        }
     }
 
     @Override

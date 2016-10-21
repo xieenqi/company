@@ -73,7 +73,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private TextView nearTv;
     private ViewGroup nearLayout;
     private NearCount nearCount;
-    private Permission permission;
+//    private Permission permission;
     private SaleTeamScreen saleTeamScreen;
     private PullToRefreshListView listView;
     private SaleCommPopupView saleCommPopupView;
@@ -171,7 +171,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     }
 
     public void initView(View view) {
-        permission = (Permission) getArguments().getSerializable("permission");
+//        permission = (Permission) getArguments().getSerializable("permission");
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
 
         for (int i = 0; i < sort.length; i++) {

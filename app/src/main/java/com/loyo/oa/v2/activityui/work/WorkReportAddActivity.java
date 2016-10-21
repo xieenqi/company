@@ -97,13 +97,13 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 动态数据UI更新
-     * */
+     */
     public static final int UPDATE_SUCCESS = 0x01;
 
     /**
      * 周报数据回调
-     * */
-    public static final int WEEK_RESULT    = 0x02;
+     */
+    public static final int WEEK_RESULT = 0x02;
 
     @ViewById
     SwitchView crm_switch;
@@ -184,7 +184,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private Handler mHandler = new Handler() {
         public void handleMessage(final Message msg) {
 
-            switch (msg.what){
+            switch (msg.what) {
 
                 //刷新动态数据UI
                 case UPDATE_SUCCESS:
@@ -203,7 +203,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 case WEEK_RESULT:
                     beginAt = weeksDialog.GetBeginandEndAt()[0];
                     endAt = weeksDialog.GetBeginandEndAt()[1];
-                    openDynamic(beginAt/1000+"",endAt/1000+"");
+                    openDynamic(beginAt / 1000 + "", endAt / 1000 + "");
                     break;
             }
         }
@@ -228,7 +228,7 @@ public class WorkReportAddActivity extends BaseActivity {
         rb3 = (RadioButton) findViewById(R.id.rb3);
 
         if (weeksDialog == null) {
-            weeksDialog = new WeeksDialog(tv_time,mHandler);
+            weeksDialog = new WeeksDialog(tv_time, mHandler);
         }
 
         /**动态统计开关*/
@@ -318,7 +318,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 .defaultComment(new RCallback<HttpDefaultComment>() {
                     @Override
                     public void success(final HttpDefaultComment reviewer, final Response response) {
-                        HttpErrorCheck.checkResponse("报告默认点评人：",response);
+                        HttpErrorCheck.checkResponse("报告默认点评人：", response);
                         mReviewer = new Reviewer();
                         if (reviewer.reviewer != null) {
                             mReviewer.user = reviewer.reviewer.user;
@@ -391,44 +391,41 @@ public class WorkReportAddActivity extends BaseActivity {
      * @param b
      */
     private void crmSwitch(final boolean b) {
-        long beginTime,endTime;
+        long beginTime, endTime;
         if (b) {
             switch (mSelectType) {
                 //本日
                 case WorkReport.DAY:
-                    if(tv_time.getText().toString().contains("补签")){
-                        beginTime = beginAt/1000;
-                        endTime   = endAt/1000;
-                    }else{
-                        beginTime = DateTool.getCurrentMoringMillis()/1000;
-                        endTime = DateTool.getNextMoringMillis()/1000;
+                    if (tv_time.getText().toString().contains("补签")) {
+                        beginTime = beginAt / 1000;
+                        endTime = endAt / 1000;
+                    } else {
+                        beginTime = DateTool.getCurrentMoringMillis() / 1000;
+                        endTime = DateTool.getNextMoringMillis() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
                 //本周
                 case WorkReport.WEEK:
-                    if(tv_time.getText().toString().contains("补签")){
-                        beginTime = weeksDialog.GetBeginandEndAt()[0]/1000;
-                        endTime = weeksDialog.GetBeginandEndAt()[1]/1000;
-                    }else{
-                        beginTime = DateTool.getBeginAt_ofWeek()/1000;
-                        endTime = DateTool.getEndAt_ofWeek()/1000;
+                    if (tv_time.getText().toString().contains("补签")) {
+                        beginTime = weeksDialog.GetBeginandEndAt()[0] / 1000;
+                        endTime = weeksDialog.GetBeginandEndAt()[1] / 1000;
+                    } else {
+                        beginTime = DateTool.getBeginAt_ofWeek() / 1000;
+                        endTime = DateTool.getEndAt_ofWeek() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
                 //本月
                 case WorkReport.MONTH:
-                    if(tv_time.getText().toString().contains("补签")){
-                        beginTime = beginAt/1000;
-                        endTime   = endAt/1000;
-                    }else{
-                        beginTime = DateTool.getBeginAt_ofWeek()/1000;
-                        endTime = DateTool.getEndAt_ofWeek()/1000;
+                    if (tv_time.getText().toString().contains("补签")) {
+                        beginTime = beginAt / 1000;
+                        endTime = endAt / 1000;
+                    } else {
+                        beginTime = DateTool.getBeginAt_ofMonthMills() / 1000;
+                        endTime = DateTool.getEndAt_ofMonth() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
-                    break;
-
-                default:
                     break;
             }
         }
@@ -785,7 +782,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
                         tv_time.setText(currentValue + "(补签)");
                         retroIndex = 0;
-                        openDynamic(beginAt/1000+"",endAt/1000+"");
+                        openDynamic(beginAt / 1000 + "", endAt / 1000 + "");
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
