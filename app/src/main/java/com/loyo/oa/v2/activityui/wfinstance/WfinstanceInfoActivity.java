@@ -817,7 +817,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 }
                 Intent intent = new Intent();
                 intent.putExtra("delete", wfInstance);
-                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
+                AppBus.getInstance().post(new BizForm());
+                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
             }
 
             @Override

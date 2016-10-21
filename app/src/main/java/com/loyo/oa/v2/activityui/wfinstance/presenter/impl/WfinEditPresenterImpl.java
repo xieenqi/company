@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
@@ -20,6 +19,7 @@ import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -50,17 +50,15 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
     private ArrayList<String> startTimeArr = new ArrayList<>();
     private ArrayList<String> endTimeArr = new ArrayList<>();
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
-    private ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
     private ArrayList<Boolean> isRequiredList = new ArrayList<>();
     private ArrayList postValue = new ArrayList<>();
     private WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
 
 
-    public WfinEditPresenterImpl(Context mContext,WfinEditView crolView,Activity mActivity,BizForm mBizForm){
+    public WfinEditPresenterImpl(Context mContext,WfinEditView crolView,Activity mActivity){
         this.mContext = mContext;
         this.crolView = crolView;
         this.mActivity = mActivity;
-        this.mBizForm = mBizForm;
     }
 
     /**
@@ -113,7 +111,8 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
      * 设置开始结束时间规范
      * */
     @Override
-    public void setStartendTime(ViewGroup layout_wfinstance_data, LinearLayout wfinstance_data_container) {
+    public void setStartendTime(ArrayList<HashMap<String, Object>> wfInstanceValuesDatas,BizForm mBizForm,LinearLayout layout_wfinstance_data, LinearLayout wfinstance_data_container) {
+        this.mBizForm = mBizForm;
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             if (mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()) {
                 startTimeArr.add(mBizForm.getFields().get(i).getId());
@@ -127,8 +126,33 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
         wfinstance_data_container.removeAllViews();
         //审批内容 有多少组就执行多少次动态view
         for (int i = 0; i < wfInstanceValuesDatas.size(); i++) {
-            editTypeData(i,wfinstance_data_container);
+            editTypeData(i,wfinstance_data_container,wfInstanceValuesDatas);
         }
+    }
+
+    /**
+     * 编辑加审批内容 栏目
+     */
+    void editTypeData(int position,LinearLayout wfinstance_data_container,ArrayList<HashMap<String, Object>> wfInstanceValuesDatas) {
+        if (mBizForm == null) {
+            Toast("请选择类型");
+            return;
+        }
+        if (null == mBizForm.getFields()) {
+            LogUtil.dee("mBizForm return");
+            return;
+        }
+
+        HashMap<String, Object> newValues = new HashMap<String, Object>();
+        for (BizFormFields field : mBizForm.getFields()) {
+            newValues.put(field.getId(), wfInstanceValuesDatas.get(position).get(field.getId()));
+        }
+
+        LogUtil.dee("newValues size:"+newValues.size());
+        submitData.add(newValues);
+        WfinEditViewGroup viewGroup = new WfinEditViewGroup(mContext, mBizForm.getFields(), submitData, wfInstanceValuesDatas, position);
+        viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
+        addIsRequired();
     }
 
     /**
@@ -270,34 +294,10 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
     }
 
 
-    /**
-     * 编辑加审批内容 栏目
-     */
-    void editTypeData(int position,LinearLayout wfinstance_data_container) {
-        if (mBizForm == null) {
-            Toast("请选择类型");
-            return;
-        }
-        if (null == mBizForm.getFields()) {
-            return;
-        }
-
-        HashMap<String, Object> newValues = new HashMap<String, Object>();
-        for (BizFormFields field : mBizForm.getFields()) {
-            newValues.put(field.getId(), wfInstanceValuesDatas.get(position).get(field.getId()));
-        }
-
-        submitData.add(newValues);
-        WfinEditViewGroup viewGroup = new WfinEditViewGroup(mContext, mBizForm.getFields(), submitData, wfInstanceValuesDatas, position);
-        viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
-        addIsRequired();
-    }
-
     /*内容是否必填，加入list*/
     void addIsRequired() {
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             isRequiredList.add(mBizForm.getFields().get(i).isRequired());
         }
     }
-
 }
