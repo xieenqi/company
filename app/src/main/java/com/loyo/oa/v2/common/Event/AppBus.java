@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.common.event;
 
 
+import android.util.Log;
+
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -17,5 +19,23 @@ public class AppBus extends EventBus {
             }
         }
         return bus;
+    }
+
+    public void register(Object subscriber) {
+        try {
+            super.register(subscriber);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void unregister(Object subscriber) {
+        try {
+            super.unregister(subscriber);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
