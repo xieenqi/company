@@ -22,6 +22,9 @@ public interface IUser {
     @GET("/")
     ArrayList<Department> getOrganization();
 
+    @GET("/")
+    void asynGetOrganization(Callback<ArrayList<Department>> callback);
+
     @GET("/user/subordinates")
     ArrayList<User> getSubordinates();
 
