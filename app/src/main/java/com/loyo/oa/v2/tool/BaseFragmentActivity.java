@@ -20,10 +20,11 @@ import android.widget.Toast;
 
 import com.library.module.common.SystemBarTintManager;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 
@@ -85,6 +86,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         app = (MainApp) getApplicationContext();
         mContext = this;
         registerBaseReceiver();
+        AppBus.getInstance().register(this);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         ExitActivity.getInstance().addActivity(this);
         // 创建状态栏的管理实例
@@ -125,6 +127,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     @Override
     protected void onDestroy() {
+        AppBus.getInstance().unregister(this);
         unRegisterBaseReceiver();
         //关闭键盘
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

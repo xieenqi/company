@@ -17,22 +17,18 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.contact.ContactsDepartmentActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.MyLetterListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.db.sort.DepartmentPinyinComparator;
+import com.loyo.oa.v2.db.sort.UserPinyinComparator;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -60,9 +56,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
     /* Data */
     ArrayList<HashMap<String, Object>> datasource;
 
-    /* Helper */
-    public DBDepartmentPinyinComparator pinyinComparator;
-
     /* Broadcasr */
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -84,7 +77,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerBroadcastReceiver();
-        pinyinComparator = new DBDepartmentPinyinComparator();
         loadData();
     }
 
@@ -123,11 +115,12 @@ public class ContactsDepartmentFragment extends BaseFragment {
         OrganizationManager orgManager = OrganizationManager.shareManager();
         DBDepartment company = orgManager.getsComany();
 
-        List<DBDepartment> topDepartments = orgManager.subDepartmentsOfDepartment(company);
-        List<DBUser> directUsers = orgManager.directUsersOfDepartment(company);
-        List<DBDepartment> currentUserTopDepartments = orgManager.currentUserTopDepartments();
+        List<DBDepartment> topDepartments = new ArrayList<>(company.childDepts);
+        List<DBUser> directUsers = company.allDirectUsers();
+        List<DBDepartment> currentUserTopDepartments = orgManager.currentUserTopDepartments2();
 
-        Collections.sort(topDepartments, pinyinComparator);
+        Collections.sort(topDepartments, new DepartmentPinyinComparator());
+        Collections.sort(directUsers, new UserPinyinComparator());
 
         ArrayList<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
         Iterator<DBDepartment> deptsIterator = topDepartments.iterator();
@@ -407,20 +400,5 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
     static final class DepartmentViewHolder {
         TextView tv_content;
-    }
-
-    static final class DBDepartmentPinyinComparator implements Comparator<DBDepartment> {
-
-        public int compare(DBDepartment o1, DBDepartment o2) {
-            if ("@".equals(o1.getSortLetter())
-                    || "#".equals(o2.getSortLetter())) {
-                return -1;
-            } else if ("#".equals(o1.getSortLetter())
-                    || "@".equals(o2.getSortLetter())) {
-                return 1;
-            } else {
-                return o1.pinyin().compareTo(o2.pinyin());
-            }
-        }
     }
 }

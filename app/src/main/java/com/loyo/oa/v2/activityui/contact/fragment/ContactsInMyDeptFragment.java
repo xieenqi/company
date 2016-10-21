@@ -19,11 +19,11 @@ import com.loyo.oa.v2.common.CharacterParser;
 import com.loyo.oa.v2.customview.SideBar;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.db.sort.UserPinyinComparator;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 
 /**
@@ -51,7 +51,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
 
     /* Helper */
     public CharacterParser characterParser;
-    public DBUserPinyinComparator pinyinComparator;
 
     /* Method */
 
@@ -76,7 +75,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pinyinComparator = new DBUserPinyinComparator();
         characterParser = CharacterParser.getInstance();
         registerBroadcastReceiver();
         loadData();
@@ -108,8 +106,8 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     }
 
     public void loadData(){
-        myUserList = (ArrayList<DBUser>) OrganizationManager.shareManager().getCurrentUserSameDeptsUsers();
-        Collections.sort(myUserList, pinyinComparator);
+        myUserList = (ArrayList<DBUser>) OrganizationManager.shareManager().getCurrentUserSameDeptsUsers2();
+        Collections.sort(myUserList, new UserPinyinComparator());
         this.buildData();
     }
 
@@ -175,24 +173,5 @@ public class ContactsInMyDeptFragment extends BaseFragment {
 
             }
         });
-    }
-
-    /**
-     *  Inner Class
-     */
-
-    static final class DBUserPinyinComparator implements Comparator<DBUser> {
-
-        public int compare(DBUser o1, DBUser o2) {
-            if ("@".equals(o1.getSortLetter())
-                    || "#".equals(o2.getSortLetter())) {
-                return -1;
-            } else if ("#".equals(o1.getSortLetter())
-                    || "@".equals(o2.getSortLetter())) {
-                return 1;
-            } else {
-                return o1.pinyin().compareTo(o2.pinyin());
-            }
-        }
     }
 }

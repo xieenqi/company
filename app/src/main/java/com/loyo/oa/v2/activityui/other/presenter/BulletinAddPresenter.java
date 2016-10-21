@@ -13,6 +13,9 @@ import java.util.ArrayList;
 
 public interface BulletinAddPresenter {
 
+    /* 获取Members */
+    Members getMembers();
+
     /*通知人员回调处理*/
     void dealDepartmentResult(Members member);
 

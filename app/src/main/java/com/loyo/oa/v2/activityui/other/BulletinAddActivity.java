@@ -2,30 +2,39 @@ package com.loyo.oa.v2.activityui.other;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
 import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.compat.Compat;
+import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.customview.CusGridView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +62,6 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     private ImageGridViewAdapter mGridViewAdapter;
     private ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
-    private StringBuffer joinUserId, joinName;
 
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
@@ -80,7 +88,18 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      */
     @Click(R.id.layout_recevier)
     void receiverClick() {
-        SelectDetUserActivity2.startThisForAllSelect(BulletinAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
+        StaffMemberCollection collection =
+                Compat.convertMembersToStaffCollection(mBulletinAddPresenter.getMembers());
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+        if (collection != null) {
+            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+        }
+        Intent intent = new Intent();
+        intent.setClass(BulletinAddActivity.this, ContactPickerActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     /**
@@ -132,6 +151,20 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     /**
      * 人员选择 回调
      * */
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+        StaffMemberCollection collection = event.data;
+        Members members = Compat.convertStaffCollectionToMembers(collection);
+        if (members == null) {
+            return;
+        }
+        mBulletinAddPresenter.dealDepartmentResult(members);
+    }
+
     @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
     void onDepartmentUserResult(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK || data == null) {

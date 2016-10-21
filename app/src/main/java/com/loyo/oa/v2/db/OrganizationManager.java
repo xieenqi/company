@@ -280,10 +280,6 @@ public class OrganizationManager {
     /* 当前登录用户同部门的所有用户（包括子部门） */
     public List<DBUser> getCurrentUserSameDeptsUsers() {
 
-//        if (caches.get(kCurrentUserSameDeptsUsers) != null) {
-//            return (List<DBUser>)caches.get(kCurrentUserSameDeptsUsers);
-//        }
-
         List<DBUser> result = new ArrayList<DBUser>();
 
         // 查找所在部门
@@ -313,11 +309,27 @@ public class OrganizationManager {
             }
         }
 
-//        caches.put(kCurrentUserSameDeptsUsers, result);
-
         return result;
     }
 
+    public List<DBUser> getCurrentUserSameDeptsUsers2() {
+
+        List<DBUser> result = new ArrayList<DBUser>();
+
+        DBUser currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return result;
+        }
+
+        for (DBDepartment dept:currentUser.depts) {
+            result.addAll(dept.allUsers());
+        }
+
+        // 排重
+        result = new ArrayList<DBUser>(new HashSet<DBUser>(result));
+
+        return result;
+    }
     // 当前登录用户所在所有部门的xpath列表
     public List<String> _currentUserDeptXpaths() {
         DBUser currentUser = getCurrentUser();
@@ -413,6 +425,26 @@ public class OrganizationManager {
                 result.add(dept);
             }
         }
+
+        return result;
+    }
+
+    public List<DBDepartment> currentUserTopDepartments2() {
+
+        List<DBDepartment> result = new ArrayList<DBDepartment>();
+
+        DBUser currentUser = getCurrentUser();
+        for (DBDepartment dept:currentUser.depts) {
+            while (dept.parentDept !=null && !dept.parentDept.isRoot ) {
+                dept = dept.parentDept;
+            }
+            if (!dept.isRoot) {
+                result.add(dept);
+            }
+        }
+
+        // 排重
+        result = new ArrayList<DBDepartment>(new HashSet<DBDepartment>(result));
 
         return result;
     }

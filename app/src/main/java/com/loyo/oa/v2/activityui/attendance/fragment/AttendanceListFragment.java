@@ -13,18 +13,19 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.activityui.attendance.adapter.AttendanceListAdapter;
-import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceList;
 import com.loyo.oa.v2.activityui.attendance.AttendanceDetailsActivity_;
-import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
+import com.loyo.oa.v2.activityui.attendance.adapter.AttendanceListAdapter;
 import com.loyo.oa.v2.activityui.attendance.adapter.CustomerDataManager;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
 import com.loyo.oa.v2.activityui.attendance.model.DayofAttendance;
+import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceList;
+import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceListPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceListView;
 import com.loyo.oa.v2.application.MainApp;
@@ -33,7 +34,6 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.CustomRecyclerView;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -42,12 +42,14 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -103,7 +105,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     @Override
     public void onDestroy() {
         super.onDestroy();
-        AppBus.getInstance().unregister(getActivity());
     }
 
     @Nullable
@@ -123,7 +124,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     }
 
     private void initUI() {
-        AppBus.getInstance().register(getActivity());
         mPresenter = new AttendanceListPresenterImpl(mActivity, this);
         recyclerView = (CustomRecyclerView) mView.findViewById(R.id.recy_data_select);
         tv_count_title = (TextView) mView.findViewById(R.id.tv_count_title);

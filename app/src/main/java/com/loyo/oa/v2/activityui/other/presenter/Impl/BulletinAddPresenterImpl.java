@@ -52,6 +52,12 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
         this.mContext = mContext;
     }
 
+    /** 获取Members */
+    @Override
+    public Members getMembers() {
+        return this.member;
+    }
+
     /**
      * 通知人员回调处理
      * */

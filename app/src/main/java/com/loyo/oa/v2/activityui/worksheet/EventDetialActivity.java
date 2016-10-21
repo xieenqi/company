@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
@@ -25,7 +28,9 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorksheet;
@@ -33,7 +38,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -73,8 +78,15 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                 switch (aciton1) {
                     case Transfer:
                     case Dispatch:
-                        SelectDetUserActivity2.startThisForOnly(EventDetialActivity.this, null);
-                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                        SelectDetUserActivity2.startThisForOnly(EventDetialActivity.this, null);
+//                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                        Intent intent = new Intent();
+                        intent.setClass(this, ContactPickerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                         break;
                     case Redo:
                     case Finish:
@@ -92,8 +104,15 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                 switch (aciton2) {
                     case Transfer:
                     case Dispatch:
-                        SelectDetUserActivity2.startThisForOnly(EventDetialActivity.this, null);
-                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                        SelectDetUserActivity2.startThisForOnly(EventDetialActivity.this, null);
+//                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                        Intent intent = new Intent();
+                        intent.setClass(this, ContactPickerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                         break;
                     case Redo:
                     case Finish:
@@ -318,6 +337,21 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 setEventPersonal(u.getId());
                 break;
+        }
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+
+        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            NewUser newUser = Compat.convertStaffCollectionToNewUser(collection);
+            if (newUser != null) {
+                setEventPersonal(newUser.getId());
+            }
         }
     }
 }
