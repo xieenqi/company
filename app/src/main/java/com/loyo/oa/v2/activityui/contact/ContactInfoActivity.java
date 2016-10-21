@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -155,14 +156,14 @@ public class ContactInfoActivity extends BaseActivity {
      * 更新登录用户资料
      */
     void getUserInfo() {
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
+        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<NewUser>() {
             @Override
-            public void success(final User theUser, final Response response) {
-                user.mobile = theUser.mobile;
-                user.birthDay = theUser.birthDay;
-                user.weixinId = theUser.weixinId;
-                user.avatar = theUser.avatar;
-                user.gender = theUser.gender;
+            public void success(final NewUser theUser, final Response response) {
+                user.mobile = theUser.data.mobile;
+                user.birthDay = theUser.data.birthDay;
+                user.weixinId = theUser.data.weixinId;
+                user.avatar = theUser.data.avatar;
+                user.gender = theUser.data.gender;
 
                 OrganizationManager.shareManager().updateUser(user);
 
@@ -264,7 +265,7 @@ public class ContactInfoActivity extends BaseActivity {
             if (age >= 150) {
                 return;
             }
-            Utils.setContent(tv_birthday, user.birthDay.substring(0,10));
+            Utils.setContent(tv_birthday, user.birthDay.substring(0, 10));
             Utils.setContent(tv_age, age + "");
         }
     }

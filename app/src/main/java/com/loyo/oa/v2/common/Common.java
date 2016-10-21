@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.google.gson.reflect.TypeToken;
+import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.bean.ContactsGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
@@ -508,14 +509,14 @@ public final class Common {
      * @param id
      */
     public static void getUserInfo(final Activity activity, final MainApp app, String id) {
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getUserById(id, new Callback<User>() {
+        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getUserById(id, new Callback<NewUser>() {
             @Override
-            public void success(User user, Response response) {
+            public void success(NewUser user, Response response) {
                 HttpErrorCheck.checkResponse("讨论其它人的信息：", response);
                 //点击进入人的详情页面
                 if (null != user) {
                     Bundle b = new Bundle();
-                    b.putSerializable("user", user);
+                    b.putSerializable("user", user.data);
                     app.startActivity(activity, ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 } else {
                     Global.Toast("没有人员信息");

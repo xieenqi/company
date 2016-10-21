@@ -21,6 +21,7 @@ import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen1;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen2;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
@@ -51,15 +52,17 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
     private AdapterSaleTeamScreen2 adapter2;
     private List<SaleTeamScreen> depementData;
     private List<SaleTeamScreen> userData = new ArrayList<>();
-
+    private ArrayList<User> deptAllUser = new ArrayList<>();
+    private Permission permission;
     private int deptPosition = 0;
 
-    public ScreenDeptPopupView(final Activity context, List<SaleTeamScreen> data, Handler handler) {
+    public ScreenDeptPopupView(final Activity context, List<SaleTeamScreen> data, Handler handler, Permission permission) {
         LayoutInflater inflater = LayoutInflater.from(context);
         contentView = inflater.inflate(R.layout.saleteam_screentag1, null, false);
         this.depementData = data;
         this.mContext = context;
         this.mHandler = handler;
+        this.permission = permission;
         initView();
 
         this.setContentView(contentView);
@@ -124,7 +127,7 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         //设置全体人员 名字
         if (position == 0) {
             //如果数据权限为自己，则isKind: false请求数据传id true请求数据传xPath
-            if (MainApp.user.role.getDataRange() == Role.SELF) {
+            if (permission != null && permission.dataRange == Permission.PERSONAL) {
                 isKind = false;
             } else {
                 isKind = true;

@@ -27,6 +27,7 @@ import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -73,13 +74,13 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
     private boolean isPullDown = true, isKind;
     private List<OrderListItem> listData = new ArrayList<>();
     private String xPath = "", userId = "";
-
+    private Permission permission;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ExtraAndResult.MSG_SEND: {
-                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
                     break;
                 }
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
@@ -129,6 +130,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void initView(View view) {
+        permission = (Permission) getArguments().getSerializable("permission");
         setFilterData();
         screen1 = (LinearLayout) view.findViewById(R.id.screen1);
         screen2 = (LinearLayout) view.findViewById(R.id.screen2);
@@ -184,15 +186,15 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
     public void wersi() {
         try {
             //为超管或权限为全公司 展示全公司成员
-            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
+            if (permission != null && permission.dataRange == Permission.COMPANY) {
                 setUser(OrganizationManager.shareManager().allDepartments());
             }
             //权限为部门 展示我的部门
-            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
+            else if (permission != null && permission.dataRange == Permission.TEAM) {
                 setUser(OrganizationManager.shareManager().currentUserDepartments());
             }
             //权限为个人 展示自己
-            else if (MainApp.user.role.getDataRange() == Role.SELF) {
+            else if (permission != null && permission.dataRange == Permission.PERSONAL) {
                 data.clear();
                 SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
                 saleTeamScreen.setId(MainApp.user.getId());

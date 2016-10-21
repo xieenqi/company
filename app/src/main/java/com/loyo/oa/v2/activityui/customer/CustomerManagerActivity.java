@@ -111,15 +111,12 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private float mRotation = 0;
 
     private Permission permission;
-    private String[] SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
+    private String[] SaleItemStatus = new String[]{"我的客户", "公海客户"};
     private List<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mTags1;
     private ArrayList<Tag> mTags2;
     private ArrayList<Tag> mTags3;
-
-    public Permission perTeam;
-    public Permission perOcean;
     public boolean publicOrTeam;
 
     @Override
@@ -148,10 +145,10 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                             e.printStackTrace();
                         }
                         initTitleItem();
-                        try{
-                            permission = (Permission) MainApp.rootMap.get("0404");
+                        try {
+//                            permission = MainApp.rootMap.get("0404");
                             initChildren();
-                        }catch(NullPointerException e){
+                        } catch (NullPointerException e) {
                             e.printStackTrace();
                             Toast("没有获取到权限数据，请重新拉去后再试");
                             finish();
@@ -196,32 +193,11 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
-
-        //超级管理员权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                perTeam = (Permission) MainApp.rootMap.get("0308"); //团队客户
-                perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
-                if (!perTeam.isEnable() && !perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户"};
-                    imageArrow.setVisibility(View.INVISIBLE);
-                } else if (perTeam.isEnable() && !perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户", "团队客户"};
-                    publicOrTeam = true;
-                    imageArrow.setVisibility(View.VISIBLE);
-                } else if (!perTeam.isEnable() && perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户", "公海客户"};
-                    publicOrTeam = false;
-                    imageArrow.setVisibility(View.VISIBLE);
-                } else {
-                    imageArrow.setVisibility(View.VISIBLE);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("团队/公海客户,code错误:0308,0309");
-            }
-        } else {
-            imageArrow.setVisibility(View.VISIBLE);
+        //超级管理员权全公司  没有获取到权限就不显示
+        permission = MainApp.rootMap.get("0205"); //客户权限
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+            SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
+            publicOrTeam = true;
         }
 
         if (SaleItemStatus.length != 1) {

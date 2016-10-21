@@ -162,14 +162,6 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
 
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
 
- /*                   showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
-                            .setNoCancelOnclick(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    generalPopView.dismiss();
-                                }
-                            });*/
-
                 } else {
                     if (customerId == null) {
                         break;
@@ -272,6 +264,10 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (null != permission && !permission.isEnable()) {
+                        sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                        return;
+                    }
                     Intent mIntent = new Intent();
                     mIntent.putExtra("id", record.getId());
                     mIntent.setClass(SaleManageActivity.this, SaleDetailsActivity.class);

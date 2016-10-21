@@ -50,10 +50,9 @@ public class AttendanceManagerActivity extends BaseFragmentActivity {
     @ViewById(R.id.lv_attendance_category)
     ListView categoryListView;
 
-    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};
+    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤"};
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
-    private Permission permission;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private List<BaseFragment> fragments = new ArrayList<>();
     private int mIndex = -1, Identity;
@@ -71,23 +70,12 @@ public class AttendanceManagerActivity extends BaseFragmentActivity {
         setTouchView(-1);
         tv_title_1.setText("我的考勤");
         img_title_left.setOnTouchListener(Global.GetTouch());
-
+        imageArrow.setVisibility(View.INVISIBLE);
         //超级管理员判断
-        if(!MainApp.user.isSuperUser()){
-            try{
-                permission = (Permission) MainApp.rootMap.get("0317");
-                if(!permission.isEnable()){
-                    imageArrow.setVisibility(View.INVISIBLE);
-                    ATTENDANCE_FILTER_STRS = new String[]{"我的考勤"};
-                }else{
-                    imageArrow.setVisibility(View.VISIBLE);
-                }
-            }catch (NullPointerException e){
-                e.printStackTrace();
-                Toast("团队考勤权限,code错误:0317");
-            }
-        }else{
+        Permission permission = MainApp.rootMap.get("0211");
+        if (permission != null && permission.isEnable() && permission.dataRange<3) {
             imageArrow.setVisibility(View.VISIBLE);
+            ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};
         }
 
         rotateAnimation = initAnimation();
@@ -108,7 +96,7 @@ public class AttendanceManagerActivity extends BaseFragmentActivity {
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_title_action:
-                if(ATTENDANCE_FILTER_STRS.length != 1){
+                if (ATTENDANCE_FILTER_STRS.length != 1) {
                     changeCategoryView();
                 }
                 break;

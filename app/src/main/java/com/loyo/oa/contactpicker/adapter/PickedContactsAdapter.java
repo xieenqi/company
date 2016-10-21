@@ -62,7 +62,7 @@ public class PickedContactsAdapter extends BaseAdapter {
         PickedContactsAdapter.Holder holder;
         if (convertView == null) {
             holder = new PickedContactsAdapter.Holder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_select_user, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_select_user, parent);
             holder.head = (RoundImageView) convertView.findViewById(R.id.riv_head);
             holder.name = (TextView) convertView.findViewById(R.id.tv_name);
             convertView.setTag(holder);

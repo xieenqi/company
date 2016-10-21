@@ -171,16 +171,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
         isAdd = true;
 
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                Permission permission = (Permission) MainApp.rootMap.get("0409");
-                if (permission.isEnable()) {
-                    isDelete = true;
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
 
         /* 分区1 */
         section1_username.setText(sales.name);
@@ -318,6 +308,11 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      * 右上角菜单
      */
     private void functionButton() {
+        Permission permission = MainApp.rootMap.get("0409");
+        if ((permission != null && permission.isEnable()) || MainApp.user.isSuperUser()) {
+            isDelete = true;
+        }
+
         ActionSheetDialog dialog = new ActionSheetDialog(ClueDetailActivity.this).builder();
         dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override

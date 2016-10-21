@@ -39,7 +39,7 @@ import java.util.List;
 @EActivity(R.layout.activity_sign_list_my)
 public class SignInManagerActivity extends BaseFragmentActivity {
 
-    private String[] LEGWORK_FILTER_STRS = new String[]{"我的拜访", "团队拜访"};
+    private String[] LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
     @ViewById
     ViewGroup img_title_left;
     @ViewById
@@ -53,7 +53,6 @@ public class SignInManagerActivity extends BaseFragmentActivity {
     @ViewById(R.id.lv_signin_category)
     ListView categoryListView;
 
-    private Permission permission;
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
     private float mRotation = 0;
@@ -68,22 +67,11 @@ public class SignInManagerActivity extends BaseFragmentActivity {
         img_title_left.setOnTouchListener(Global.GetTouch());
 //        findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
 //        findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
-
+        imageArrow.setVisibility(View.INVISIBLE);
         /*超级管理员,Web权限判断*/
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0310");
-                if (!permission.isEnable()) {
-                    LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
-                    imageArrow.setVisibility(View.INVISIBLE);
-                } else {
-                    imageArrow.setVisibility(View.VISIBLE);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "团队拜访权限，code错误:0310", Toast.LENGTH_SHORT).show();
-            }
-        } else {
+        Permission permission = MainApp.rootMap.get("0228");
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+            LEGWORK_FILTER_STRS = new String[]{"我的拜访", "团队拜访"};
             imageArrow.setVisibility(View.VISIBLE);
         }
 

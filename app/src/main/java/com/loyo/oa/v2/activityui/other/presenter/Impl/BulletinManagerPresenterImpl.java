@@ -16,8 +16,10 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.RCallback;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -34,12 +36,11 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
     private ArrayList<Bulletin> bulletins = new ArrayList<>();
 
     private Activity mActivity;
-    private Context  mContext;
-    private Permission mPermission;
+    private Context mContext;
 
     private boolean isTopAdd = true;
 
-    public BulletinManagerPresenterImpl(BulletinManagerView crolView, Context mContext, Activity mActivity){
+    public BulletinManagerPresenterImpl(BulletinManagerView crolView, Context mContext, Activity mActivity) {
         this.crolView = crolView;
         this.mContext = mContext;
         this.mActivity = mActivity;
@@ -47,9 +48,9 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
     /**
      * 请求列表数据
-     * */
+     */
     @Override
-    public void requestListData(int pageIndex,int pageSize) {
+    public void requestListData(int pageIndex, int pageSize) {
         crolView.showProgress("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex);
@@ -84,11 +85,11 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
     /**
      * 数据绑定
-     * */
+     */
     @Override
     public void bindListData(PullToRefreshRecycleView mRecycleView) {
         if (null == adapter) {
-            adapter = new NoticeAdapter(bulletins,mContext,mActivity);
+            adapter = new NoticeAdapter(bulletins, mContext, mActivity);
             mRecycleView.getRefreshableView().setAdapter(adapter);
 
         } else {
@@ -98,20 +99,13 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
     /**
      * 权限认证
-     * */
+     */
     @Override
     public void isPermission() {
         //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                mPermission = (Permission) MainApp.rootMap.get("0402");
-                if (!mPermission.isEnable()) {
-                    crolView.permissionSuccess();
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                crolView.showMsg("发布公告权限,code错误:0402");
-            }
+        Permission mPermission = MainApp.rootMap.get("0402");
+        if (mPermission != null && mPermission.isEnable()) {
+            crolView.permissionSuccess();
         }
     }
 }

@@ -7,13 +7,18 @@ import java.util.ArrayList;
  * Created by loyo_dev1 on 16/1/20.
  */
 
-public class Permission implements Serializable{
+public class Permission implements Serializable {
+
+    public static int COMPANY = 1;
+    public static int TEAM = 2;
+    public static int PERSONAL = 3;
 
     public String name;
 
     public String code;
 
-    public boolean enable;
+    public boolean enable = false;
+    public int dataRange = 10;
 
 
     public String getName() {
@@ -39,4 +44,5 @@ public class Permission implements Serializable{
     public void setCode(String code) {
         this.code = code;
     }
+
 }
