@@ -1,6 +1,9 @@
 package com.loyo.oa.v2.activityui.contact;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,20 +11,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.db.OrganizationManager;
-import com.loyo.oa.v2.db.bean.*;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.AfterViews;
@@ -79,6 +82,23 @@ public class ContactInfoActivity extends BaseActivity {
 
     private int defaultAvatar;
 
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            updateUIWithUser(user);
+        }
+    };
+
+    public void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        registerReceiver(mReceiver, filter);
+    }
+
+    public void unregisterBroadcastReceiver() {
+        unregisterReceiver(mReceiver);
+    }
+
     @AfterViews
     void initViews() {
         layout_call.setOnTouchListener(Global.GetTouch());
@@ -89,7 +109,21 @@ public class ContactInfoActivity extends BaseActivity {
             tv_edit.setVisibility(View.VISIBLE);
             layout_action.setVisibility(View.GONE);
         }
+        registerBroadcastReceiver();
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
         initData();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterBroadcastReceiver();
+        super.onDestroy();
     }
 
     @Click({R.id.tv_edit, R.id.layout_back, R.id.layout_call, R.id.layout_msg})
@@ -122,19 +156,15 @@ public class ContactInfoActivity extends BaseActivity {
     void getUserInfo() {
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
-            public void success(final User users, final Response response) {
-//                OrganizationManager.updateDBUserWithUser(user, responseUser);
-//                OrganizationManager.shareManager().updateUser(user);
-//                HttpErrorCheck.checkResponse(response);
-//                updateUIWithUser(user);
-//
-//                Intent it = new Intent("com.loyo.oa.v2.USER_EDITED");
-//                it.putExtra("userId", user.id);
-//                sendBroadcast(it);
+            public void success(final User theUser, final Response response) {
+                user.mobile = theUser.mobile;
+                user.birthDay = theUser.birthDay;
+                user.weixinId = theUser.weixinId;
+                user.avatar = theUser.avatar;
+                user.gender = theUser.gender;
 
                 HttpErrorCheck.checkResponse(response);
                 updateUIWithUser(user);
-
             }
 
             @Override
