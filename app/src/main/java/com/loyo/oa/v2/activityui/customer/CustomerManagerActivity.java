@@ -146,7 +146,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                         }
                         initTitleItem();
                         try {
-                            permission = MainApp.rootMap.get("0404");
+//                            permission = MainApp.rootMap.get("0404");
                             initChildren();
                         } catch (NullPointerException e) {
                             e.printStackTrace();
