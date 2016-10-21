@@ -17,6 +17,8 @@ import com.loyo.oa.v2.activityui.login.WelcomeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -133,6 +135,18 @@ public class LauncherActivity extends Activity {
                     TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainHomeActivity.class);//MainHomeActivity  NewMainActivity
         }
         startActivity(intent);
+
+        // Add by ethangong 16/08/08
+        /* 登录用户未成功更新组织架构时，再次拉取组织架构 */
+        if (!TextUtils.isEmpty(MainApp.getToken()) /* TODO: 还需要验证token有效性 */
+                && !OrganizationManager.isOrganizationCached()) {
+            OrganizationService.startActionFetchAll(MainApp.getMainApp());
+        }
+        else if (OrganizationManager.isOrganizationCached()){
+            // 读取缓存
+            OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
+        }
+
         finish();
 //        overridePendingTransition(R.anim.exit_buttomtotop, R.anim.exit_toptobuttom);
     }

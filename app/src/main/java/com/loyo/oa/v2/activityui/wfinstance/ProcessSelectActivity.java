@@ -17,6 +17,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -114,12 +115,19 @@ public class ProcessSelectActivity extends BaseActivity {
         }
     };
 
+    /**
+     * Ui刷新回调
+     * */
+    @Subscribe
+    public void rushListData(BizForm bizForm){
+        app.finishActivity(ProcessSelectActivity.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
+    }
 
-    @Override
+/*    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == WfInstanceManageActivity.WFIN_FINISH_RUSH){
             app.finishActivity(ProcessSelectActivity.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
         }
-    }
+    }*/
 }

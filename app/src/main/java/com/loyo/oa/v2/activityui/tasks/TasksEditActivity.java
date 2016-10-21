@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
@@ -33,6 +36,7 @@ import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
@@ -56,6 +60,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.Serializable;
@@ -469,14 +474,40 @@ public class TasksEditActivity extends BaseActivity {
 
             /*编辑负责人*/
             case R.id.layout_responsiblePerson:
-                SelectDetUserActivity2.startThisForOnly(TasksEditActivity.this, null);
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                SelectDetUserActivity2.startThisForOnly(TasksEditActivity.this, null);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            {
+                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
                 break;
 
             /*编辑参与人*/
             case R.id.tv_toUsers:
-                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            {
+                StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
                 break;
 
 
@@ -659,6 +690,50 @@ public class TasksEditActivity extends BaseActivity {
                 dialog_Product.dismiss();
             }
         });
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+
+        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            newUser = Compat.convertStaffCollectionToNewUser(collection);
+            if (newUser == null) {
+                tv_responsiblePerson.setText("无负责人");
+            }
+            else {
+                tv_responsiblePerson.setText(newUser.getName());
+            }
+        }
+        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            member = Compat.convertStaffCollectionToMembers(collection);
+            if (null == member || (member.users.size()==0 && member.depts.size()==0)) {
+                tv_toUsers.setText("无参与人");
+            } else {
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (null != member.depts) {
+                    for (NewUser newUser : member.depts) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (null != member.users) {
+                    for (NewUser newUser : member.users) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (!TextUtils.isEmpty(joinName)) {
+                    joinName.deleteCharAt(joinName.length() - 1);
+                }
+                tv_toUsers.setText(joinName.toString());
+            }
+        }
     }
 
     @Override

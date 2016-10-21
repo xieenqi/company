@@ -30,6 +30,7 @@ public class ContactsDepartmentActivity extends BaseFragmentActivity {
 
     @Extra String depId;
     @Extra String depName;
+    @Extra String xpath;
 
     @AfterViews
     void initViews() {
@@ -40,6 +41,8 @@ public class ContactsDepartmentActivity extends BaseFragmentActivity {
 
         Bundle bundle = new Bundle();
         bundle.putString("depId", depId);
+        bundle.putString("depName", depName);
+        bundle.putString("xpath", xpath);
 //        if (depId == MainApp.user.getDepts().get(0).getId()) {
 //            getSupportFragmentManager().beginTransaction().add(R.id.container, Fragment.instantiate(this, ContactsInDepartmentFragment.class.getName(), bundle)).commit();
 //        } else {

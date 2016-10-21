@@ -9,6 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
@@ -19,6 +22,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.PaymentPopView;
@@ -30,6 +34,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -329,7 +335,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         dialog.addSheetItem("转移给他人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                SelectDetUserActivity2.startThisForOnly(ClueDetailActivity.this, null);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                Intent intent = new Intent();
+                intent.setClass(ClueDetailActivity.this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
@@ -536,6 +547,30 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         HttpErrorCheck.checkError(error);
                     }
                 });
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+        StaffMemberCollection collection = event.data;
+        final NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+        if (user == null) {
+            return;
+        }
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                transferClue(user.getId());
+            }
+        },"提示","转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
     }
 
     @Override

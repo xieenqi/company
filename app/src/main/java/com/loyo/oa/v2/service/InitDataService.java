@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
@@ -25,11 +26,11 @@ import org.androidannotations.annotations.EIntentService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+// Add by ethan on 2016-08-03
 
 /**
  * 【组织架构】后台拉取服务
@@ -74,21 +75,21 @@ public class InitDataService extends IntentService {
                 HttpErrorCheck.checkError(error);
             }
         });
-        try {
-            //all或者one
-            String organizationUpdateInfo = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
-            //open或者run
-            String appStatus = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.APP_START);
-            if ("one".equals(organizationUpdateInfo) || "openOne".equals(appStatus)) {//个人信息变动
-                getOrganization();
-            } else if ("all".equals(organizationUpdateInfo) && "open".equals(appStatus)) {//启动app是 之前组织架构有变动
-                getOrganization();
-            } else if ("all".equals(organizationUpdateInfo) && "run".equals(appStatus)) {//手动跟新数据
-                getOrganization();
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
-        }
+//        try {
+//            //all或者one
+//            String organizationUpdateInfo = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE);
+//            //open或者run
+//            String appStatus = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.APP_START);
+//            if ("one".equals(organizationUpdateInfo) || "openOne".equals(appStatus)) {//个人信息变动
+//                getOrganization();
+//            } else if ("all".equals(organizationUpdateInfo) && "open".equals(appStatus)) {//启动app是 之前组织架构有变动
+//                getOrganization();
+//            } else if ("all".equals(organizationUpdateInfo) && "run".equals(appStatus)) {//手动跟新数据
+//                getOrganization();
+//            }
+//        } catch (Exception ex) {
+//            Global.ProcException(ex);
+//        }
     }
 
     /**
@@ -105,6 +106,8 @@ public class InitDataService extends IntentService {
     }
 
     /**
+     * <<<<<<< HEAD
+     * =======
      * 后台 更新 组织架构
      */
     void getOrganization() {
@@ -128,6 +131,7 @@ public class InitDataService extends IntentService {
     }
 
     /**
+     * >>>>>>> develop-bug-fix2
      * 发送数据变化的广播
      *
      * @param user
@@ -137,5 +141,6 @@ public class InitDataService extends IntentService {
         intent.setAction(FinalVariables.ACTION_DATA_CHANGE);
         intent.putExtra("user", user);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        AppBus.getInstance().post(user);
     }
 }

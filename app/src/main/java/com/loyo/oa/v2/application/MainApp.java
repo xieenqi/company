@@ -12,26 +12,30 @@ import android.os.Message;
 import android.support.multidex.MultiDex;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.instacart.library.truetime.TrueTime;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
-import com.loyo.oa.v2.activityui.other.bean.User;
-import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.other.model.UserGroupData;
+
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ExitActivity;
+import com.loyo.oa.v2.tool.GlideManager;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -173,6 +177,21 @@ public class MainApp extends Application {
         loadIndustryCodeTable();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+        GlideManager.getInstance().initWithContext(getApplicationContext());
+
+        /*  */
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    TrueTime.build().withNtpHost("0.asia.pool.ntp.org").initialize();
+                }
+                catch (Exception e) {
+
+                }
+            }
+        }.start();
 
     }
 
@@ -289,6 +308,7 @@ public class MainApp extends Application {
         gson = new Gson();
         Utils.openGPS(this);
         DBManager.init(this);
+        OrganizationManager.init(this);
 
         try {
 //            user = DBManager.Instance().getUser();
@@ -301,7 +321,7 @@ public class MainApp extends Application {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                setOriginData();
+                //setOriginData();
             }
         }, 100);
 
@@ -310,9 +330,9 @@ public class MainApp extends Application {
     /**
      * 设置缓存的组织架构数据
      */
-    void setOriginData() {
-        lstDepartment = DBManager.Instance().getOrganization();
-    }
+//    void setOriginData() {
+//        lstDepartment = DBManager.Instance().getOrganization();
+//    }
 
     void init_DisplayImageOptions() {
         options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).

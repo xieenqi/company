@@ -10,6 +10,8 @@ import java.io.Serializable;
 public class BaseEvent implements Serializable {
     public int eventCode; /* 主事件码*/
     public int subCode;   /* 子事件码 */
+    public String request;
+    public String session;
 
     public Bundle bundle; /* 数据 */
 

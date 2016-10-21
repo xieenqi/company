@@ -15,26 +15,36 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
+import com.loyo.oa.v2.activityui.other.CommonAdapter;
+import com.loyo.oa.v2.activityui.other.ViewHolder;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.tasks.bean.CornBody;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CountTextWatcher;
+import com.loyo.oa.v2.customview.CusGridView;
+import com.loyo.oa.v2.customview.DateTimePickDialog;
+import com.loyo.oa.v2.customview.RepeatTaskView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
@@ -47,23 +57,16 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.activityui.other.CommonAdapter;
-import com.loyo.oa.v2.activityui.other.ViewHolder;
-import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.customview.CusGridView;
-import com.loyo.oa.v2.customview.DateTimePickDialog;
-import com.loyo.oa.v2.customview.RepeatTaskView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -169,7 +172,6 @@ public class TasksAddActivity extends BaseActivity {
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
 
-
     @AfterViews
     void initUI() {
         super.setTitle("创建任务");
@@ -195,6 +197,50 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(customerId)) {
             tv_mycustomer.setText(customerName);
             layout_mycustomer.setEnabled(false);
+        }
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+
+        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            newUser = Compat.convertStaffCollectionToNewUser(collection);
+            if (newUser == null) {
+                tv_responsiblePerson.setText("无负责人");
+            }
+            else {
+                tv_responsiblePerson.setText(newUser.getName());
+            }
+        }
+        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            members = Compat.convertStaffCollectionToMembers(collection);
+            if (null == members || (members.users.size()==0 && members.depts.size()==0)) {
+                tv_toUsers.setText("无参与人");
+            } else {
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (null != members.depts) {
+                    for (NewUser newUser : members.depts) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (null != members.users) {
+                    for (NewUser newUser : members.users) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (!TextUtils.isEmpty(joinName)) {
+                    joinName.deleteCharAt(joinName.length() - 1);
+                }
+                tv_toUsers.setText(joinName.toString());
+            }
         }
     }
 
@@ -391,14 +437,42 @@ public class TasksAddActivity extends BaseActivity {
 
             //负责人选项
             case R.id.layout_responsiblePerson:
-                SelectDetUserActivity2.startThisForOnly(TasksAddActivity.this, null);
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                SelectDetUserActivity2.startThisForOnly(TasksAddActivity.this, null);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
+            {
+                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+
                 break;
 
             //参与人选项
             case R.id.tv_toUsers:
-                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            {
+                StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
                 break;
 
             case R.id.layout_del:

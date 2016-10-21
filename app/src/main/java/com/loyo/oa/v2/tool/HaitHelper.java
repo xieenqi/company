@@ -13,11 +13,16 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
+import com.loyo.oa.v2.common.event.AppBus;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +54,11 @@ public class HaitHelper {
     private void init() {
         et_scanner.addTextChangedListener(new MyTextWatcher());
         et_scanner.setOnKeyListener(new MyOnKeyListener());
+        AppBus.getInstance().register(this);
+    }
+
+    public void clean() {
+        AppBus.getInstance().unregister(this);
     }
 
     private class MyTextWatcher implements TextWatcher {
@@ -80,18 +90,31 @@ public class HaitHelper {
          * 当用户输入'@'是跳转选择艾特用户的界面
          */
         private void toSelectUserByHait() {
+//            Bundle bundle = new Bundle();
+//            bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
             Bundle bundle = new Bundle();
-            bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
+            bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+
             if (null == mFragment) {
-                MainApp.getMainApp().startActivityForResult((Activity) et_scanner.getContext(),
-                        SelectDetUserActivity2.class,
-                        MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.REQUEST_CODE,
-                        bundle);
+//                MainApp.getMainApp().startActivityForResult((Activity) et_scanner.getContext(),
+//                        SelectDetUserActivity2.class,
+//                        MainApp.ENTER_TYPE_RIGHT,
+//                        ExtraAndResult.REQUEST_CODE,
+//                        bundle);
+
+                Intent intent = new Intent();
+                intent.setClass((Activity) et_scanner.getContext(), ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                ((Activity) et_scanner.getContext()).startActivity(intent);
+
             } else {
-                mFragment.startActivityForResult(new Intent(mFragment.getActivity(),
-                                SelectDetUserActivity2.class).putExtras(bundle),
-                        ExtraAndResult.REQUEST_CODE);
+//                mFragment.startActivityForResult(new Intent(mFragment.getActivity(),
+//                                SelectDetUserActivity2.class).putExtras(bundle),
+//                        ExtraAndResult.REQUEST_CODE);
+                Intent intent = new Intent();
+                intent.setClass(mFragment.getActivity(), ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                mFragment.getActivity().startActivity(intent);
             }
         }
 
@@ -235,6 +258,31 @@ public class HaitHelper {
             }
             showKeyBoard();
         }
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+
+        StaffMemberCollection collection = event.data;
+        NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+        if (user != null) {
+            String id = user.getId();
+            if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
+                Global.Toast("不能@自己");
+                // ((BaseActivity) (mFragment != null ? mFragment.getActivity() : et_scanner.getContext())).Toast("不能@自己");
+                return;
+            }
+            String name = user.getName();
+            mHaitSelectUsers.add(new SelectUser(name, id));
+            String selectName = add$Name(name);
+            int index = et_scanner.getSelectionStart();
+            Editable editable = et_scanner.getText();
+            editable.insert(index, selectName);
+        }
+        showKeyBoard();
     }
 
     /**

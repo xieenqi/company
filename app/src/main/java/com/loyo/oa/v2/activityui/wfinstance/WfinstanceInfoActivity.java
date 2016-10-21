@@ -32,13 +32,17 @@ import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
+import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;
+import com.loyo.oa.v2.activityui.wfinstance.event.WfinRushEvent;
 import com.loyo.oa.v2.activityui.work.adapter.WorkflowNodesListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ListView_inScrollView;
 import com.loyo.oa.v2.db.DBManager;
@@ -51,19 +55,16 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -826,6 +827,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             }
         });
     }
+
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {

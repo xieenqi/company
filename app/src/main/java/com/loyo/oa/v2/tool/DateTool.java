@@ -1,11 +1,10 @@
 package com.loyo.oa.v2.tool;
 
 import android.app.DatePickerDialog;
-import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
+import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 

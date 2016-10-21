@@ -1,6 +1,9 @@
 package com.loyo.oa.v2.activityui.contact;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,18 +11,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.AfterViews;
@@ -71,10 +76,29 @@ public class ContactInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_action;
     @Extra
-    User user;
+    String  userId;
 
-    private StringBuffer myDeptName;
+    private DBUser user;
+
     private int defaultAvatar;
+
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            updateUIWithUser(user);
+            getUserInfo();
+        }
+    };
+
+    public void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        registerReceiver(mReceiver, filter);
+    }
+
+    public void unregisterBroadcastReceiver() {
+        unregisterReceiver(mReceiver);
+    }
 
     @AfterViews
     void initViews() {
@@ -82,11 +106,25 @@ public class ContactInfoActivity extends BaseActivity {
         layout_msg.setOnTouchListener(Global.GetTouch());
         layout_back.setOnTouchListener(Global.GetTouch());
         tv_edit.setOnTouchListener(Global.GetTouch());
-        if (user.equals(MainApp.user)) {
+        if (userId!=null && userId.equals(MainApp.user.id)) {
             tv_edit.setVisibility(View.VISIBLE);
             layout_action.setVisibility(View.GONE);
         }
+        registerBroadcastReceiver();
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
         initData();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterBroadcastReceiver();
+        super.onDestroy();
     }
 
     @Click({R.id.tv_edit, R.id.layout_back, R.id.layout_call, R.id.layout_msg})
@@ -96,8 +134,10 @@ public class ContactInfoActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.tv_edit:
+
+                // TODO:
                 Bundle b = new Bundle();
-                b.putSerializable("user", user);
+                b.putSerializable("userId", userId);
                 app.startActivityForResult(this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, b);
                 break;
             case R.id.layout_call:
@@ -117,12 +157,21 @@ public class ContactInfoActivity extends BaseActivity {
     void getUserInfo() {
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
-            public void success(final User users, final Response response) {
+            public void success(final User theUser, final Response response) {
+                user.mobile = theUser.mobile;
+                user.birthDay = theUser.birthDay;
+                user.weixinId = theUser.weixinId;
+                user.avatar = theUser.avatar;
+                user.gender = theUser.gender;
 
-                user = users;
+                OrganizationManager.shareManager().updateUser(user);
+
+                Intent it = new Intent("com.loyo.oa.v2.USER_REFRESH");
+                it.putExtra("userId", user.id);
+                sendBroadcast(it);
+
                 HttpErrorCheck.checkResponse(response);
-                initData();
-
+                updateUIWithUser(user);
             }
 
             @Override
@@ -140,23 +189,12 @@ public class ContactInfoActivity extends BaseActivity {
      */
     private void initData() {
         tv_title.setText("通讯录");
+        user = OrganizationManager.shareManager().getUser(userId);
+
         if (null == user) {
             return;
         }
 
-        myDeptName = new StringBuffer();
-
-        /*获取部门名字和职位名字，包括多部门情况下*/
-        for (int i = 0; i < user.getDepts().size(); i++) {
-            myDeptName.append(user.getDepts().get(i).getShortDept().getName());
-            if (!user.getDepts().get(i).getTitle().isEmpty()
-                    && user.getDepts().get(i).getTitle().length() > 0) {
-                myDeptName.append(" | " + user.getDepts().get(i).getTitle());
-            }
-            if (i != user.getDepts().size() - 1) {
-                myDeptName.append(" ; ");
-            }
-        }
 
         //默认头像，头像获取
         if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
@@ -167,11 +205,11 @@ public class ContactInfoActivity extends BaseActivity {
             }
             img_title_user.setImageResource(defaultAvatar);
         } else {
-            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
+            ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
         }
 
-        Utils.setContent(tv_realname, user.getRealname());
-        Utils.setContent(tv_deptname, myDeptName.toString());
+        Utils.setContent(tv_realname, user.name);
+        Utils.setContent(tv_deptname, user.shortDeptNames);
 
         Utils.setContent(tv_phone, user.mobile);
         String gender = "";
@@ -190,6 +228,45 @@ public class ContactInfoActivity extends BaseActivity {
             Utils.setContent(tv_age, age + "");
         }
 
+    }
+
+    public void updateUIWithUser(DBUser user){
+        if (null == user) {
+            return;
+        }
+
+
+        //默认头像，头像获取
+        if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
+            if (user.gender == 2) {
+                defaultAvatar = R.drawable.icon_contact_avatar;
+            } else {
+                defaultAvatar = R.drawable.img_default_user;
+            }
+            img_title_user.setImageResource(defaultAvatar);
+        } else {
+            ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
+        }
+
+        Utils.setContent(tv_realname, user.name);
+        Utils.setContent(tv_deptname, user.shortDeptNames);
+
+        Utils.setContent(tv_phone, user.mobile);
+        String gender = "";
+        if (user.gender == 2)
+            gender = "女";
+        else if (user.gender == 1)
+            gender = "男";
+        Utils.setContent(tv_sex, gender);
+        Utils.setContent(tv_weixin, user.weixinId);
+        if (!TextUtils.isEmpty(user.birthDay)) {
+            int age = Utils.getAge(user.birthDay.substring(0, 4));
+            if (age >= 150) {
+                return;
+            }
+            Utils.setContent(tv_birthday, user.birthDay.substring(0,10));
+            Utils.setContent(tv_age, age + "");
+        }
     }
 
     @Override

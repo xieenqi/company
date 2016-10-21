@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -22,7 +25,9 @@ import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.PaymentPopView;
@@ -34,6 +39,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -401,8 +408,15 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
             //收款人
             case R.id.ll_priecer:
-                SelectDetUserActivity2.startThisForOnly(OrderAddEstimateActivity.this, null);
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                SelectDetUserActivity2.startThisForOnly(OrderAddEstimateActivity.this, null);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
 
             //附件
@@ -513,6 +527,23 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
                 break;
 
+        }
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+
+        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+            if (user == null) {
+                return;
+            }
+            newUser = user;
+            tv_priceer.setText(newUser.getName());
         }
     }
 }

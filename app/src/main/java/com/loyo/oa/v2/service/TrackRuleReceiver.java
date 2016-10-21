@@ -37,7 +37,7 @@ public class TrackRuleReceiver extends BroadcastReceiver {
 
         //3个小时重新获取TrackRule
         if (!alarmUp || StringUtil.isEmpty(strLastCheck) || hours >= 3) {
-            TrackRule.StartTrackRule(30*1000);
+            // TrackRule.StartTrackRule(30*1000);
         }
     }
 }

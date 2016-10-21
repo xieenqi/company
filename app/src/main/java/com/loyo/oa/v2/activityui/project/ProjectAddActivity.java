@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.project;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,23 +9,28 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.adapter.ProjectMemberListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
-import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.customview.CountTextWatcher;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -32,6 +38,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +89,7 @@ public class ProjectAddActivity extends BaseActivity {
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
     private Members members = new Members();//参与人回传数据
+    private Members managers = new Members();//参与人回传数据
     private ArrayList<ManagersMembers> membersNowData = new ArrayList<>();//当前参与人数据
 
     @AfterViews
@@ -137,13 +145,120 @@ public class ProjectAddActivity extends BaseActivity {
     //选【负责人】
     @Click(R.id.layout_managers)
     void ManagersClick() {
-        SelectDetUserActivity2.startThisForMulitSelect(ProjectAddActivity.this, mManagerIds == null ? null : mManagerIds.toString(), false);
+//        SelectDetUserActivity2.startThisForMulitSelect(ProjectAddActivity.this,
+//                mManagerIds == null ? null : mManagerIds.toString(), false);
+
+        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(managers);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+        bundle.putBoolean(ContactPickerActivity.DEPARTMENT_SELECTION_KEY, false);
+        if (collection != null) {
+            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+        }
+        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+        Intent intent = new Intent();
+        intent.setClass(this, ContactPickerActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     //选【参与人】
     @Click(R.id.layout_members)
     void MembersClick() {
-        SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString(), true);
+        //SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString(), true);
+        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+        if (collection != null) {
+            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+        }
+        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+        Intent intent = new Intent();
+        intent.setClass(this, ContactPickerActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+
+        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            Members selected = Compat.convertStaffCollectionToMembers(collection);
+            if (selected == null){
+                return;
+            }
+
+            managers = selected;
+            mManagerNames = new StringBuffer();
+            mManagerIds = new StringBuffer();
+
+            if (managers != null) {
+                if (null != managers.depts) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : managers.depts) {
+                        mManagerNames.append(newUser.getName() + ",");
+                        mManagerIds.append(newUser.getId() + ",");
+                    }
+                }
+                if (null != managers.users) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : managers.users) {
+                        mManagerNames.append(newUser.getName() + ",");
+                        mManagerIds.append(newUser.getId() + ",");
+                    }
+                }
+                if (!TextUtils.isEmpty(mManagerNames)) {
+                    mManagerNames.deleteCharAt(mManagerNames.length() - 1);
+                }
+            }
+
+            tv_managers.setText(mManagerNames);
+
+            ArrayList<HttpProject.ProjectManaer> projectManagers = getProjectManager();
+            if (mProject != null && !ListUtil.IsEmpty(projectManagers)) {
+                mProject.setManagers(projectManagers);
+            }
+
+            if (mProject != null && !ListUtil.IsEmpty(mProject.managers)) {
+                if (mProjectMember.removeAll(mProject.managers)) {
+                    setMemberOnActivityResult();
+                }
+            }
+        }
+        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            Members selected = Compat.convertStaffCollectionToMembers(collection);
+            if (selected == null){
+                return;
+            }
+            isEditMember = true;
+            members = selected;
+            if (null == members || (members.depts.size()==0 && members.users.size()==0)) {
+                tv_members.setText("无参与人");
+            } else {
+                mMemberNames = new StringBuffer();
+                mMemberIds = new StringBuffer();
+                if (null != members.depts) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
+                        mMemberNames.append(newUser.getName() + ",");
+                        mMemberIds.append(newUser.getId() + ",");
+                    }
+                }
+                if (null != members.users) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : members.users) {
+                        mMemberNames.append(newUser.getName() + ",");
+                        mMemberIds.append(newUser.getId() + ",");
+                    }
+                }
+                if (!TextUtils.isEmpty(mMemberNames)) {
+                    mMemberNames.deleteCharAt(mMemberNames.length() - 1);
+                }
+            }
+            membersNowData = getMenbersAdd();
+            setMemberOnActivityResult();
+        }
     }
 
     /**

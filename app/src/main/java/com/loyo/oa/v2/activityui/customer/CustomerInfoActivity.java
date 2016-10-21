@@ -10,6 +10,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
@@ -21,13 +25,15 @@ import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.Locate;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
@@ -38,12 +44,15 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -422,7 +431,21 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 dismissSweetAlert();
-                SelectDetUserActivity2.startThisForOnly(CustomerInfoActivity.this, null);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                if (owner != null) {
+                    NewUser ownerUser = new NewUser();
+                    ownerUser.setAvatar(owner.getAvatar());
+                    ownerUser.setId(owner.getId());
+                    ownerUser.setName(owner.getName());
+                    StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(ownerUser);
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(CustomerInfoActivity.this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         },"提示",getString(R.string.app_userdetalis_message));
 
@@ -516,7 +539,28 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 break;
             /*选参与人*/
             case R.id.layout_customer_join_users:
-                SelectDetUserActivity2.startThisForMulitSelect(CustomerInfoActivity.this, mManagerIds == null ? null : mManagerIds.toString(), false);
+            {
+//                SelectDetUserActivity2.startThisForMulitSelect(CustomerInfoActivity.this,
+//                        mManagerIds == null ? null : mManagerIds.toString(), false);
+
+                Members selectedMembers = new Members();
+                for (Member m:members){
+                    selectedMembers.users.add(m.getUser());
+                }
+
+                StaffMemberCollection collection = Compat.convertMembersToStaffCollection(selectedMembers);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                bundle.putBoolean(ContactPickerActivity.DEPARTMENT_SELECTION_KEY, false);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
                 break;
             /*地区选择*/
             case R.id.layout_customer_district:
@@ -604,6 +648,71 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         intent.putExtra(Customer.class.getName(), mCustomer);
         intent.putExtra("isCreator", true);//默认为true
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+
+        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+            if (user == null) {
+                return;
+            }
+            else {
+                owner.id = user.getId();
+                owner.name = user.getName();
+                owner.avatar = user.getAvatar();
+                tv_customer_responser.setText(user.getName());
+            }
+        }
+        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            Members selectedMembers = Compat.convertStaffCollectionToMembers(collection);
+            if (selectedMembers == null) {
+                return;
+            }
+            cusMembers = selectedMembers;
+            mManagerNames = new StringBuffer();
+            mManagerIds = new StringBuffer();
+
+            if (members != null) {
+                if (cusMembers.depts.size() > 0) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
+                        if (!MainApp.user.id.equals(newUser.getId())) {
+                            mManagerNames.append(newUser.getName() + ",");
+                            mManagerIds.append(newUser.getId() + ",");
+                        } else {
+                            Toast("你已经是负责人，不能选自己为参与人!");
+                        }
+                    }
+                }
+                if (cusMembers.users.size() > 0) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                        if (!MainApp.user.id.equals(newUser.getId())) {
+                            mManagerNames.append(newUser.getName() + ",");
+                            mManagerIds.append(newUser.getId() + ",");
+                        } else {
+                            Toast("你已经是负责人，不能选自己为参与人!");
+                        }
+                    }
+                }
+                if (!TextUtils.isEmpty(mManagerNames)) {
+                    mManagerNames.deleteCharAt(mManagerNames.length() - 1);
+                }
+            }
+
+            members = Utils.convert2Members(mManagerIds.toString(), mManagerNames.toString());
+            if (members.size() != 0) {
+                img_del_join_users.setVisibility(View.VISIBLE);
+                tv_customer_join_users.setText(mManagerNames);
+            } else {
+                tv_customer_join_users.setText("无参与人");
+            }
+        }
     }
 
     @Override
