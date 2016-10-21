@@ -1,7 +1,8 @@
 package com.loyo.oa.v2.activityui.wfinstance.presenter;
 
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public interface WfinEditPresenter {
     void newUploadAttachement(String uuid,File file);
 
     /*设置开始结束时间规范*/
-    void setStartendTime(ViewGroup layout_wfinstance_data,LinearLayout wfinstance_data_container);
+    void setStartendTime(ArrayList<HashMap<String, Object>> wfInstanceValuesDatas,BizForm mBizForm,LinearLayout layout_wfinstance_data, LinearLayout wfinstance_data_container);
 
     /*新增审批内容 栏目处理*/
     void addTypeData(LinearLayout wfinstance_data_container);
