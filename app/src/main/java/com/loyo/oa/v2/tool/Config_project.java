@@ -17,7 +17,7 @@ public class Config_project {
 
     //public static String IP = "http://112.74.66.99";                     //产品预上线环境
 
-//    public static String IP = "http://ukuaiqi.com";                      //网站产品正式环境
+    //public static String IP = "http://ukuaiqi.com";                      //网站产品正式环境
 
     //public static String IP = "http://192.168.31.136";
 
