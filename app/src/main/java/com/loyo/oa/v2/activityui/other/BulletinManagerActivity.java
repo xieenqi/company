@@ -132,8 +132,8 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
      * 展示Loading
      * */
     @Override
-    public void showProgress() {
-        showLoading("");
+    public void showProgress(String msg) {
+        showLoading(msg);
     }
 
     /**

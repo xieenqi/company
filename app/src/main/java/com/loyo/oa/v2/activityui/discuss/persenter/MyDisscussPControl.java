@@ -44,7 +44,7 @@ public class MyDisscussPControl implements MyDiscussPersenter {
     @Override
     public void getPageData(Object... pag) {
         if (isfirst)
-            vControl.showProgress();
+            vControl.showProgress("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex + "");
         map.put("pageSize", "10");

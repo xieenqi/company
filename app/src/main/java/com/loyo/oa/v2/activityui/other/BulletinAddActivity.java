@@ -140,7 +140,10 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         mBulletinAddPresenter.dealDepartmentResult((Members) data.getSerializableExtra("data"));
     }
 
-    @Override   /*格式验证*/
+    /**
+     * 格式验证
+     * */
+    @Override
     public void verifyError(int code) {
         switch (code) {
             case 1:

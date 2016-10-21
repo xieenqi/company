@@ -153,7 +153,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
         }
         LogUtil.dee("5");
         if (pickPhots.size() == 0) {
-            crolView.showProgress();
+            crolView.showProgress("");
         }
         crolView.requestAddWfinVeriSuccess(workflowValues);
     }
@@ -246,7 +246,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
      * */
     @Override
     public void newUploadAttachement(String uuid, int bizType, final ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
-        crolView.showProgress();
+        crolView.showProgress("");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();

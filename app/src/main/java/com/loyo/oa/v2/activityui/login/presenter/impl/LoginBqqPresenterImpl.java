@@ -34,7 +34,7 @@ public class LoginBqqPresenterImpl implements LoginBqqPresenter{
      * */
     @Override
     public void loadWebView(final WebView mWebView) {
-        crolView.showProgress();
+        crolView.showProgress("");
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
                 final boolean blockLoadingNetworkImage = true;

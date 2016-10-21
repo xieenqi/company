@@ -78,9 +78,10 @@ public class LoginBQQActivity extends BaseActivity implements LoginBqqView{
         return super.onKeyDown(keyCode, event);
     }
 
+
     @Override
-    public void showProgress() {
-        showLoading("");
+    public void showProgress(String msg) {
+        showLoading(msg);
     }
 
     @Override

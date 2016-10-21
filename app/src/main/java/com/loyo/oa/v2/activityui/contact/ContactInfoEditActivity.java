@@ -255,29 +255,6 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             Utils.setContent(tv_birthday, user.birthDay);
             Utils.setContent(tv_age, Utils.getAge(user.birthDay.substring(0, 4)) + "");
         }
-
-        /*获取职位与部门名字*/
-//        if (null != user.depts && !user.depts.isEmpty()) {
-//            StringBuilder departments = new StringBuilder();
-//            StringBuilder posiName = new StringBuilder();
-//            for (int i = 0; i < user.depts.size(); i++) {
-//                UserInfo info = user.depts.get(i);
-//                if (null != info.getShortDept() && !TextUtils.isEmpty(info.getShortDept().getName())) {
-//                    if (!TextUtils.isEmpty(departments)) {
-//                        departments.append("|");
-//                    }
-//                    departments.append(info.getShortDept().getName());
-//                }
-//                if (null != info.getTitle() && !TextUtils.isEmpty(info.getTitle())) {
-//                    if (!TextUtils.isEmpty(posiName)) {
-//                        posiName.append("|");
-//                    }
-//                    posiName.append(info.getTitle());
-//                }
-//            }
-//            tv_departments.setText(departments);
-//            tv_positions.setText(posiName);
-//        }
     }
 
 
@@ -351,7 +328,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     }
 
     @Override
-    public void showProgress() {
+    public void showProgress(String msg) {
 
     }
 

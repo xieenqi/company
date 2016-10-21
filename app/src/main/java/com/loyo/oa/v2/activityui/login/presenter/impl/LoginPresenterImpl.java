@@ -116,7 +116,6 @@ public class LoginPresenterImpl implements LoginPresenter {
                 OrganizationService.startActionFetchAll(MainApp.getMainApp());
             }
         });
-
     }
 
     /**

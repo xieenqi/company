@@ -136,8 +136,8 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
 
 
     @Override
-    public void showProgress() {
-        showLoading("");
+    public void showProgress(String msg) {
+        showLoading(msg);
     }
 
     @Override

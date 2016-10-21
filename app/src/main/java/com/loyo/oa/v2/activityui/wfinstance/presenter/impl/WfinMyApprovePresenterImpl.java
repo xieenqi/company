@@ -94,7 +94,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
      * */
     @Override
     public void getApproveWfInstancesList(int page, final boolean isTopAdd) {
-        crolView.showProgress();
+        crolView.showProgress("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 20);

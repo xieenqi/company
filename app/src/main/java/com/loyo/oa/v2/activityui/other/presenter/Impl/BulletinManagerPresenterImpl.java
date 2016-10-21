@@ -50,7 +50,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
      * */
     @Override
     public void requestListData(int pageIndex,int pageSize) {
-        crolView.showProgress();
+        crolView.showProgress("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);

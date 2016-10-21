@@ -14,6 +14,9 @@ import android.widget.RelativeLayout;
 
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.help.Inputtips;
+import com.amap.api.services.help.InputtipsQuery;
+import com.amap.api.services.help.Tip;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.loyo.oa.v2.R;
@@ -22,6 +25,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.RecycleViewDivider;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +34,7 @@ import java.util.List;
  * 【地图微调】搜索
  * Created by yyy on 16/7/21.
  */
-public class MapModifySerachView extends BaseActivity implements View.OnClickListener, PoiSearch.OnPoiSearchListener {
+public class MapModifySerachView extends BaseActivity implements View.OnClickListener, PoiSearch.OnPoiSearchListener,Inputtips.InputtipsListener {
 
     private RelativeLayout img_title_left;
     private EditText edt_search;
@@ -116,13 +120,12 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
         }
     };
 
-
     /**
      * 开始进行poi搜索
      */
     protected void doSearchQuery(String address) {
         currentPage = 1;
-        query = new PoiSearch.Query(address, "", app.cityCode);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        query = new PoiSearch.Query(address, "", "");// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query.setPageSize(150);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页
         query.setCityLimit(true);
@@ -191,6 +194,11 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onPoiItemSearched(PoiItem poiItem, int i) {
+
+    }
+
+    @Override
+    public void onGetInputtips(List<Tip> list, int i) {
 
     }
 }

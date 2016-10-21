@@ -9,7 +9,7 @@ public interface BaseView {
     /**
      * 显示加载状态
      */
-    void showProgress();
+    void showProgress(String message);
 
     /**
      * 隐藏加载状态
