@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.discuss.bean;
 
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 
 import java.io.Serializable;
 import java.util.Date;

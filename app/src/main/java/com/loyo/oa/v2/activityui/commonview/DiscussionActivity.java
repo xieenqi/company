@@ -77,6 +77,14 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
     }
 
     @Override
+    protected void onDestroy() {
+        if (mHaitHelper !=null) {
+            mHaitHelper.clean();
+        }
+        super.onDestroy();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         mHaitHelper.onActivityResult(requestCode, resultCode, data);
     }

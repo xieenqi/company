@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.loyo.oa.v2.activityui.commonview.SelectUserHelper;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;

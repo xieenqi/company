@@ -10,10 +10,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.bean.MySubmitWflnstance;
+import com.loyo.oa.v2.activityui.wfinstance.event.WfinRushEvent;
+import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinEditPresenter;
+import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinEditPresenterImpl;
+import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinEditView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
@@ -26,6 +30,7 @@ import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
@@ -33,7 +38,6 @@ import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -42,14 +46,12 @@ import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.customview.WfinEditViewGroup;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -59,15 +61,15 @@ import retrofit.mime.TypedString;
  * 【编辑审批】界面
  * create by yyy on 2016/06/08
  */
-public class WfInEditActivity extends BaseActivity {
+public class WfInEditActivity extends BaseActivity implements WfinEditView{
 
     /**
      * 部门选择 请求码
      */
     public static final int RESULT_DEPT_CHOOSE = 5;
 
-    private ArrayList<String> startTimeArr = new ArrayList<>();
-    private ArrayList<String> endTimeArr = new ArrayList<>();
+/*    private ArrayList<String> startTimeArr = new ArrayList<>();
+    private ArrayList<String> endTimeArr = new ArrayList<>();*/
     private String projectId;
     private String deptId;
     private String uuid;
@@ -91,16 +93,18 @@ public class WfInEditActivity extends BaseActivity {
     private CusGridView gridView_photo;
     private EditText edt_memo;
     private EditText tv_title;
-    private WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
-    private ArrayList postValue = new ArrayList<>();
+/*    private WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
+    private ArrayList postValue = new ArrayList<>();*/
 
     private WfInstance mWfInstance;
     private BizForm mBizForm;
     private ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
-    private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
+    //private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-    private ArrayList<Boolean> isRequiredList = new ArrayList<>();
+    //private ArrayList<Boolean> isRequiredList = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
+
+    private WfinEditPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +148,8 @@ public class WfInEditActivity extends BaseActivity {
         if (null != mWfInstance.bizForm) {
             mBizForm = mWfInstance.bizForm;
             try {
-                setStartendTime();
+                mPresenter.setStartendTime(layout_wfinstance_data,wfinstance_data_container);
+                //setStartendTime();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -165,6 +170,7 @@ public class WfInEditActivity extends BaseActivity {
         tv_title.setText(cusTitle);
         edt_memo.setText(memo);
         gridView_photo.setVisibility(View.GONE);
+        mPresenter = new WfinEditPresenterImpl(mContext,this,WfInEditActivity.this,mBizForm);
 
         //init_gridView_photo();
         projectAddWfinstance();
@@ -179,7 +185,7 @@ public class WfInEditActivity extends BaseActivity {
      * 从审批内容里获取到 开始时间 结束时间 的id
      * 再根据这个id去获取 开始结束 时间的值
      */
-    public void setStartendTime() {
+/*    public void setStartendTime() {
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             if (mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()) {
                 startTimeArr.add(mBizForm.getFields().get(i).getId());
@@ -195,7 +201,7 @@ public class WfInEditActivity extends BaseActivity {
         for (int i = 0; i < wfInstanceValuesDatas.size(); i++) {
             editTypeData(i);
         }
-    }
+    }*/
 
     /**
      * 设置默认的部门 信息
@@ -223,7 +229,7 @@ public class WfInEditActivity extends BaseActivity {
     /**
      * 获取附件
      */
-    private void getAttachments() {
+/*    private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
@@ -237,7 +243,7 @@ public class WfInEditActivity extends BaseActivity {
                 super.failure(error);
             }
         });
-    }
+    }*/
 
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
@@ -273,12 +279,14 @@ public class WfInEditActivity extends BaseActivity {
                     break;
                 //提交审批
                 case R.id.img_title_right:
-                    subMinInfo();
+                    //subMinInfo();
+                    mPresenter.requestEditWfinVeri(deptId);
                     break;
 
                 //新增内容
                 case R.id.btn_add:
-                    addTypeData();
+                    //addTypeData();
+                    mPresenter.addTypeData(wfinstance_data_container);
                     break;
 
                 default:
@@ -300,7 +308,7 @@ public class WfInEditActivity extends BaseActivity {
     /**
      * 编辑加审批内容 栏目
      */
-    void editTypeData(int position) {
+/*    void editTypeData(int position) {
         if (mBizForm == null) {
             Toast("请选择类型");
             return;
@@ -318,13 +326,13 @@ public class WfInEditActivity extends BaseActivity {
         WfinEditViewGroup viewGroup = new WfinEditViewGroup(this, mBizForm.getFields(), submitData, wfInstanceValuesDatas, position);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         addIsRequired();
-    }
+    }*/
 
 
     /**
      * 新增加审批内容 栏目
      */
-    void addTypeData() {
+/*    void addTypeData() {
         if (mBizForm == null) {
             Toast("请选择类型");
             return;
@@ -341,19 +349,19 @@ public class WfInEditActivity extends BaseActivity {
         WfinAddViewGroup viewGroup = new WfinAddViewGroup(this, mBizForm.getFields(), submitData);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         addIsRequired();
-    }
+    }*/
 
     /*内容是否必填，加入list*/
-    void addIsRequired() {
+/*    void addIsRequired() {
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             isRequiredList.add(mBizForm.getFields().get(i).isRequired());
         }
-    }
+    }*/
 
     /**
      * 编辑审批 数据请求
      */
-    public void subMinInfo() {
+/*    public void subMinInfo() {
         if (submitData.isEmpty()) {
             Toast("请输入审批内容");
             return;
@@ -362,7 +370,7 @@ public class WfInEditActivity extends BaseActivity {
             return;
         }
 
-        /**审批内容，装进Post数据的list中*/
+        *//**审批内容，装进Post数据的list中*//*
         postValue.clear();
         ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
         wfInstanceAdd.getWorkflowValuesAdd().wfInstanceValuesDatas.clear();
@@ -394,9 +402,9 @@ public class WfInEditActivity extends BaseActivity {
             }
         }
 
-        /**
+        *//**
          * 获取请假/出差系统字段的 开始结束时间
-         * */
+         * *//*
         String startTimeDate = "";
         String endTimeDate = "";
 
@@ -441,8 +449,10 @@ public class WfInEditActivity extends BaseActivity {
             public void success(final WfInstance wfInstance, final Response response) {
                 HttpErrorCheck.checkResponse("新建审批cg", response);
                 if (wfInstance != null) {
+                    Toast("编辑成功");
                     isSave = false;
                     wfInstance.setViewed(true);
+                    AppBus.getInstance().post(new WfinRushEvent());
                     app.finishActivity(WfInEditActivity.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
                 } else {
                     Toast("服务器错误");
@@ -455,17 +465,17 @@ public class WfInEditActivity extends BaseActivity {
                 super.failure(error);
             }
         });
-    }
+    }*/
 
     /**
      * 批量上传附件
      */
-    private void newUploadAttachement(File file) {
+/*    private void newUploadAttachement(File file) {
         if (uploadSize == 0) {
             showLoading("正在上传");
         }
         uploadSize++;
-        TypedFile typedFile = new TypedFile("image/*", file);
+        TypedFile typedFile = new TypedFile("image*//*", file);
         TypedString typedUuid = new TypedString(uuid);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
                 new RCallback<Attachment>() {
@@ -481,7 +491,7 @@ public class WfInEditActivity extends BaseActivity {
                         HttpErrorCheck.checkError(error);
                     }
                 });
-    }
+    }*/
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -503,7 +513,8 @@ public class WfInEditActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                newUploadAttachement(newFile);
+                                //newUploadAttachement(newFile);
+                                mPresenter.newUploadAttachement(uuid,newFile);
                             }
                         }
                     }
@@ -580,5 +591,52 @@ public class WfInEditActivity extends BaseActivity {
         if (isSave) {
             DBManager.Instance().putWfInstance(MainApp.gson.toJson(wfInstance));
         }
+    }
+
+    @Override
+    public void showProgress(String msg) {
+        showLoading(msg);
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading();
+    }
+
+    @Override
+    public void showMsg(String msg) {
+        Toast(msg);
+    }
+
+    /**
+     * 获取附件成功处理
+     * */
+    @Override
+    public void getAttachmentsEmbl(ArrayList<Attachment> attachments) {
+        lstData_Attachment = attachments;
+        init_gridView_photo();
+    }
+
+    /**
+     * 请求编辑验证
+     * */
+    @Override
+    public void requestEditVeriEmbl(ArrayList<HashMap<String, Object>> workflowValues) {
+        mPresenter.requestEditWfin(mWfInstance.id,
+                tv_title.getText().toString(),
+                deptId,workflowValues,
+                projectId,edt_memo.getText().toString().trim());
+    }
+
+    /**
+     * 请求编辑成功处理
+     * */
+    @Override
+    public void requestEditWfinEmbl(WfInstance wfInstance) {
+        Toast("编辑成功");
+        isSave = false;
+        wfInstance.setViewed(true);
+        AppBus.getInstance().post(new WfinRushEvent());
+        app.finishActivity(WfInEditActivity.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
     }
 }

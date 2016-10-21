@@ -407,10 +407,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
             case R.id.img_title_right:
                 if (null != mWorkReport.creator && app.user.id.equals(mWorkReport.creator.getId())) {
-//                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-//                    intent.putExtra("extra", "复制报告");
-//                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
-//                } else {//只有创建者才可以负责报告
+                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+                    intent.putExtra("extra", "复制报告");
+                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+                } else {//只有创建者才可以复制报告
                     LogUtil.dll("报告详情，右上角按钮 else");
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                     intent.putExtra("delete", true);

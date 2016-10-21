@@ -16,12 +16,14 @@ import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen1;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen2;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -49,7 +51,6 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
     private AdapterSaleTeamScreen2 adapter2;
     private List<SaleTeamScreen> depementData;
     private List<SaleTeamScreen> userData = new ArrayList<>();
-    private ArrayList<User> deptAllUser = new ArrayList<>();
 
     private int deptPosition = 0;
 
@@ -146,13 +147,16 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
      */
     public void getFirstDept(int position) {
         userData.clear();
-        deptAllUser.clear();
-        if (depementData.size() > 0)
-            Common.getAllUsersByDeptId(depementData.get(position).getId(), deptAllUser);
+        List<DBUser> deptAllUser = new ArrayList<DBUser>();
+        if (depementData.size() > 0) {
+            String deptId = depementData.get(position).getId();
+            deptAllUser.addAll(OrganizationManager.shareManager().entireUsersOfDepartment(deptId));
+        }
+
         for (int i = 0; i < deptAllUser.size(); i++) {
             saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(deptAllUser.get(i).getRealname());
-            saleTeamScreen.setId(deptAllUser.get(i).getId());
+            saleTeamScreen.setName(deptAllUser.get(i).name);
+            saleTeamScreen.setId(deptAllUser.get(i).id);
             userData.add(saleTeamScreen);
         }
         saleTeamScreen = new SaleTeamScreen();

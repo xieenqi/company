@@ -323,6 +323,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
                 //没有附件
                 if (pickPhots.size() == 0) {
+                    showLoading("");
                     requestCommitTask();
                 } else {
                     newUploadAttachement();

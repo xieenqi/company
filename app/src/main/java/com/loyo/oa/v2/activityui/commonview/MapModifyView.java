@@ -377,7 +377,6 @@ public class MapModifyView extends BaseActivity
                             adapter.notifyDataSetChanged();
                         }
                         adapter.selectPositioni(selectPosition);
-                        //LogUtil.dee("resutl:" + MainApp.gson.toJson(resultItems));
                     } else {
                         Toast("没有查询到相关信息！");
                     }

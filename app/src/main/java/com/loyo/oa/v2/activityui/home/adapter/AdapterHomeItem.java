@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.home.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactsActivity;
@@ -19,7 +17,6 @@ import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -185,14 +182,10 @@ public class AdapterHomeItem extends BaseAdapter {
             item_newmain_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (items.get(position).title.equals("通讯录")) {
-                        if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
-                            mIntent.setClass(activity, ContactsActivity.class);
-                            activity.startActivity(mIntent);
-                            activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                        } else {
-                            Toast.makeText(activity, "数据获取中请等待，或手动更新数据", Toast.LENGTH_SHORT).show();
-                        }
+                    if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
+                        mIntent.setClass(activity, ContactsActivity.class);
+                        activity.startActivity(mIntent);
+                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     } else if (items.get(position).title.equals("审批流程")) {
                         try {
                             mIntent.setClass(activity, Class.forName(items.get(position).cls));

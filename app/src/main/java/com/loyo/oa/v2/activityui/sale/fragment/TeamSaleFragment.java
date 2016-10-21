@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.sale.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,12 +28,14 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleTeamList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.bean.SaleStage;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.SaleStage;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -92,7 +92,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private PullToRefreshListView listView;
     private SaleCommPopupView saleCommPopupView;
     private ScreenDeptPopupView saleScreenPopupView;
-    private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
     private List<SaleTeamScreen> data = new ArrayList<>();
     private ArrayList<SaleStage> mSaleStages;
@@ -204,7 +203,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         listView.setEmptyView(emptyView);
 
         showLoading("");
-        mDeptSource = Common.getLstDepartment();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -232,11 +230,11 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         try {
             //为超管或权限为全公司 展示全公司成员
             if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-                setUser(mDeptSource);
+                setUser(OrganizationManager.shareManager().allDepartments());
             }
             //权限为部门 展示我的部门
             else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
-                deptSort();
+                setUser(OrganizationManager.shareManager().currentUserDepartments());
             }
             //权限为个人 展示自己
             else if (MainApp.user.role.getDataRange() == Role.SELF) {
@@ -279,6 +277,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     /**
      * 组装销售阶段筛选数据
      */
+
     public void setStageData() {
         saleTeamScreen = new SaleTeamScreen();
         saleTeamScreen.setName("全部阶段");
@@ -366,13 +365,13 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     /**
      * 组装部门格式
      */
-    private void setUser(List<Department> values) {
+    private void setUser(List<DBDepartment> depts) {
         data.clear();
-        for (Department department : values) {
+        for (DBDepartment department : depts) {
             saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(department.getId());
-            saleTeamScreen.setName(department.getName());
-            saleTeamScreen.setxPath(department.getXpath());
+            saleTeamScreen.setId(department.id);
+            saleTeamScreen.setName(department.name);
+            saleTeamScreen.setxPath(department.xpath);
             data.add(saleTeamScreen);
         }
     }
@@ -380,19 +379,18 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     /**
      * 过滤出我的部门
      */
-    private void deptSort() {
-        newDeptSource.clear();
-        User user = MainApp.user;
-        for (Department department : mDeptSource) {
-            for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
-                    newDeptSource.add(department);
-                }
-            }
-        }
-        setUser(newDeptSource);
-    }
-
+//    private void deptSort() {
+//        newDeptSource.clear();
+//        User user = MainApp.user;
+//        for (Department department : mDeptSource) {
+//            for (int i = 0; i < user.getDepts().size(); i++) {
+//                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
+//                    newDeptSource.add(department);
+//                }
+//            }
+//        }
+//        setUser(newDeptSource);
+//    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
