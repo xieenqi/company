@@ -64,6 +64,9 @@ public class ContactsInMyDeptFragment extends BaseFragment {
                 //String userId = b.getString("userId");
                 adapter.notifyDataSetChanged();
             }
+            else if ("com.loyo.oa.v2.USER_REFRESH".equals( intent.getAction())) {
+                adapter.notifyDataSetChanged();
+            }
             else  if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
                 loadData();
                 adapter.setDatasource(datasource);
@@ -114,6 +117,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public void registerBroadcastReceiver(){
         IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
         filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+        filter.addAction("com.loyo.oa.v2.USER_REFRESH");
         getContext().registerReceiver(mReceiver, filter);
     }
 

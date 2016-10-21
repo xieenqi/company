@@ -87,6 +87,7 @@ public class ContactInfoActivity extends BaseActivity {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             updateUIWithUser(user);
+            getUserInfo();
         }
     };
 
@@ -162,6 +163,12 @@ public class ContactInfoActivity extends BaseActivity {
                 user.weixinId = theUser.weixinId;
                 user.avatar = theUser.avatar;
                 user.gender = theUser.gender;
+
+                OrganizationManager.shareManager().updateUser(user);
+
+                Intent it = new Intent("com.loyo.oa.v2.USER_REFRESH");
+                it.putExtra("userId", user.id);
+                sendBroadcast(it);
 
                 HttpErrorCheck.checkResponse(response);
                 updateUIWithUser(user);
