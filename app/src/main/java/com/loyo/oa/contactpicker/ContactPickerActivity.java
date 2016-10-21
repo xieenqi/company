@@ -271,6 +271,16 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
             selectAllContainer.setVisibility(View.INVISIBLE);
         }
 
+        if (OrganizationManager.shareManager().getsComany() == null) {
+            /** 无缓存组织架构数据 */
+            progressWheel.setVisibility(View.GONE);
+            noDataPlaceholder.setVisibility(View.VISIBLE);
+            tipView.setText("无组织架构数据");
+            fetchButton.setVisibility(View.VISIBLE);
+            noCacheContainer.setVisibility(View.VISIBLE);
+            return;
+        }
+
         pickedContacts = new PickedContacts(deptSelection);
 
         Observable.just("loadData")
