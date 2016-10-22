@@ -82,7 +82,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
     ViewGroup layout_discussion;
     @ViewById
     TextView tv_review_time;
-
     @ViewById
     ImageView img_workreport_status;
     @ViewById
