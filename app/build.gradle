@@ -7,7 +7,7 @@ def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
 android {
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.2'
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     packagingOptions {
@@ -90,7 +90,7 @@ android {
 //    }
 
     dependencies {
-
+        compile 'com.android.support:multidex:1.0.1'
         compile fileTree(include: ['*.jar'], dir: 'libs')
         compile 'com.android.support:appcompat-v7:23.1.1'
         compile 'com.android.support:recyclerview-v7:23.1.1'

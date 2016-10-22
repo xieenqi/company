@@ -26,6 +26,7 @@ import com.loyo.oa.v2.tool.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.Date;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -33,26 +34,24 @@ import retrofit.client.Response;
  * 【公海客户】适配器
  * Created by yyy on 16/6/2.
  */
-public class CommCustomerAdapter extends BaseAdapter{
+public class CommCustomerAdapter extends BaseAdapter {
 
     private ArrayList<Customer> mCustomers;
     private Context mContext;
     private Permission permission;
     private Handler mHandler;
 
-    public CommCustomerAdapter(final Context context, ArrayList<Customer> customers, Permission permission, Handler mHandler){
-        this.permission = permission;
+    public CommCustomerAdapter(final Context context, ArrayList<Customer> customers, Handler mHandler) {
         this.mHandler = mHandler;
         mCustomers = customers;
-        mContext  = context;
+        mContext = context;
     }
 
     public void permissionTest(ImageView img) {
+        permission = MainApp.rootMap.get("0404");
             /*超级管理员/Web控制权限判断*/
-        if (!MainApp.user.isSuperUser()) {
-            if (null != permission && !permission.isEnable()) {
-                img.setVisibility(View.INVISIBLE);
-            }
+        if ((null != permission && permission.isEnable()) || MainApp.user.isSuperUser()) {
+            img.setVisibility(View.VISIBLE);
         }
     }
 
@@ -100,7 +99,7 @@ public class CommCustomerAdapter extends BaseAdapter{
         tv_title.setText(customer.name);
         String tagItems = Utils.getTagItems(customer);
         String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
-
+        img_public.setVisibility(View.INVISIBLE);
         permissionTest(img_public);
         layout_go_where.setVisibility(View.GONE);
         layout2.setVisibility(View.VISIBLE);
@@ -108,7 +107,7 @@ public class CommCustomerAdapter extends BaseAdapter{
         img1.setImageResource(R.drawable.icon_customer_tag);
         img2.setImageResource(R.drawable.icon_customer_follow_time);
         tv_content1.setText("标签：" + tagItems);
-        tv_content2.setText ("跟进时间：" + lastActivityAt);
+        tv_content2.setText("跟进时间：" + lastActivityAt);
 
 
         img_public.setOnTouchListener(Global.GetTouch());
