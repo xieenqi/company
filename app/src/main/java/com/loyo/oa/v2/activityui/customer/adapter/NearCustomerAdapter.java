@@ -24,7 +24,7 @@ import java.util.Date;
  * 【附近客户】适配器
  * Created by yyy on 16/6/2.
  */
-public class NearCustomerAdapter extends BaseAdapter{
+public class NearCustomerAdapter extends BaseAdapter {
 
     private ArrayList<Customer> mCustomers;
     private Context mContext;
@@ -32,9 +32,9 @@ public class NearCustomerAdapter extends BaseAdapter{
     private DecimalFormat df = new DecimalFormat("0.0");
     private boolean isNear = false;
 
-    public NearCustomerAdapter(final Context context, ArrayList<Customer> customers, int customer_type){
+    public NearCustomerAdapter(final Context context, ArrayList<Customer> customers, int customer_type) {
         mCustomers = customers;
-        mContext  = context;
+        mContext = context;
         this.customer_type = customer_type;
     }
 
@@ -166,7 +166,11 @@ public class NearCustomerAdapter extends BaseAdapter{
         img_go_where.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.goWhere(mContext, customer.loc.loc[1], customer.loc.loc[0], customer.loc.addr);
+                if (null != customer.position && customer.position.loc.length > 0) {
+                    Utils.goWhere(mContext, customer.position.loc[1], customer.position.loc[0], customer.position.addr);
+                } else {
+                    Global.Toast("没有获取到有效地址");
+                }
             }
         });
 

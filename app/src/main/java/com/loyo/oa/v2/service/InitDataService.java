@@ -4,10 +4,10 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -25,7 +25,9 @@ import org.androidannotations.annotations.EIntentService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -94,10 +96,12 @@ public class InitDataService extends IntentService {
      */
     void setRootMap(User user) {
         HashMap<String, Object> map = new HashMap<>();
-        for (Permission permission : user.newpermission) {
-            map.put(permission.getCode(), permission);
+        if (user != null && null != user.newpermission) {
+            for (Permission permission : user.newpermission) {
+                map.put(permission.getCode(), permission);
+            }
+            MainApp.rootMap = map;
         }
-        MainApp.rootMap = map;
     }
 
     /**
@@ -118,7 +122,8 @@ public class InitDataService extends IntentService {
             //清除之前缓存通讯录部门的数据
             SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
         } else {
-            LogUtil.d("更新 组织 架构 sb 失败");
+            LogUtil.d("更新 组织 架构  失败");
+            Global.Toast("数据更新失败,稍后重试");
         }
     }
 

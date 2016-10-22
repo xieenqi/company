@@ -6,22 +6,18 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
-import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.customer.bean.Locate;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
@@ -42,19 +38,18 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -128,15 +123,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     private boolean isMem = false;
     private String addres;
-    private Intent mIntent;
+    private Bundle mBundle;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
     private Locate mLocate = new Locate();
     private User owner = new User();
     private ArrayList<Member> members = new ArrayList<>();
     private Members cusMembers = new Members();
     private CustomerRegional regional = new CustomerRegional();
-    private Industry industry = new Industry();
-    private Animation animation;
+    //    private Industry industry = new Industry();
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
     private ArrayList<CustomerExtraData> mCustomerExtraDatas;
@@ -144,6 +138,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     private double laPosition;//当前位置的经纬度
     private double loPosition;
+    private boolean cusLocation = false;//定位权限
+    private boolean cusDetialAdress = false;//客户的详细地址
+    private boolean cusBrief = false;//客户简介
 
     @AfterViews
     void initUI() {
@@ -157,7 +154,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         layout_customer_join_users.setOnTouchListener(Global.GetTouch());
         img_del_join_users.setOnTouchListener(Global.GetTouch());
         layout_customer_district.setOnTouchListener(Global.GetTouch());
-        animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
         getCustomer();
     }
@@ -186,6 +182,40 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         finish();
                     }
                 });
+        requestJurisdiction();
+    }
+
+    /**
+     * 获取新建客户权限
+     */
+    public void requestJurisdiction() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bizType", 100);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
+            @Override
+            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
+                HttpErrorCheck.checkResponse("编辑客户那些字段必填权限", response);
+                for (ContactLeftExtras customerJur : cuslist) {
+                    if (customerJur.label.contains("简介") && customerJur.required) {
+                        cusBrief = true;
+                        edt_customer_memo.setHint("请输入客户简介(必填)");
+                    } else if (customerJur.label.contains("定位") && customerJur.required) {
+                        tv_address.setHint("客户地址(必填)");
+                        cusLocation = true;//定位必填
+                    } else if (customerJur.label.contains("客户地址") && customerJur.required) {
+                        cusDetialAdress = true;//详细地址必填
+                        edt_address_details.setHint("请输入客户详细地址(必填)");
+                    }
+                }
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+                Utils.dialogDismiss();
+            }
+        });
     }
 
     /**
@@ -293,10 +323,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             regional = mCustomer.regional;
         }
 
-        if (null != mCustomer.industry) {
-            industry = mCustomer.industry;
-        }
-
         try {
             if (null != mCustomer.position && mCustomer.position.loc.length > 1) {
                 laPosition = mCustomer.position.loc[1];
@@ -386,7 +412,21 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 显示修改负责任 对话框
      */
     private void showLeaveDialog() {
-        showGeneralDialog(true, true, getString(R.string.app_userdetalis_message));
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                SelectDetUserActivity2.startThisForOnly(CustomerInfoActivity.this, null);
+            }
+        },"提示",getString(R.string.app_userdetalis_message));
+
+/*        showGeneralDialog(true, true, getString(R.string.app_userdetalis_message));
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -402,7 +442,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             public void onClick(final View view) {
                 generalPopView.dismiss();
             }
-        });
+        });*/
     }
 
     /**
@@ -451,9 +491,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 break;
             /*刷新地理位置*/
             case R.id.img_refresh_address:
-                mIntent = new Intent(this, MapModifyView.class);
-                mIntent.putExtra("page", MapModifyView.CUSTOMER_PAGE);
-                startActivityForResult(mIntent, 0x01);
+                mBundle = new Bundle();
+                mBundle.putInt("page", MapModifyView.CUSTOMER_DETAILS_PAGE);
+                if (null != mCustomer.position && mCustomer.position.loc.length > 0) {
+                    mBundle.putDoubleArray("loc", mCustomer.position.loc);
+                    mBundle.putString("address", mCustomer.position.addr);
+                }
+                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
             /*路径规划*/
             case R.id.img_go_where:
@@ -494,11 +538,19 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         String addressDetails = edt_address_details.getText().toString().trim();
 
         if (TextUtils.isEmpty(customerName)) {
-            Toast.makeText(this, "客户姓名不能为空", Toast.LENGTH_SHORT).show();
+            Toast("客户姓名不能为空");
             return;
         }
-        if (TextUtils.isEmpty(customerAddress)) {
-            Toast.makeText(this, "客户地址不能为空", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(customerAddress) && cusLocation) {
+            Toast("客户地址不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(addressDetails) && cusDetialAdress) {
+            Toast("客户详细地址不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(summary) && cusBrief) {
+            Toast("客户简介不能为空");
             return;
         }
         if (!TextUtils.isEmpty(addressDetails)) {
@@ -562,17 +614,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             return;
         }
 
-        /*地图微调，数据回调*/
-        if (resultCode == MapModifyView.SERACH_MAP) {
-            positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-            laPosition = positionResultItem.laPosition;
-            loPosition = positionResultItem.loPosition;
-            tv_address.setText(positionResultItem.address);
-            mLocate.addr = positionResultItem.address;
-            mLocate.setLoc(new double[]{loPosition, laPosition});
-        }
-
         switch (requestCode) {
+
+            /**
+             * 地图微调，数据回调
+             * */
+            case MapModifyView.SERACH_MAP:
+
+                positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+                if (null != positionResultItem) {
+                    laPosition = positionResultItem.laPosition;
+                    loPosition = positionResultItem.loPosition;
+                    tv_address.setText(positionResultItem.address);
+                    mLocate.addr = positionResultItem.address;
+                    mLocate.setLoc(new double[]{loPosition, laPosition});
+                }
+
+                break;
 
             /**
              * 负责人回调

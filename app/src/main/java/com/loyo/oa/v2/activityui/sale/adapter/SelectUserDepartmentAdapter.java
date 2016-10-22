@@ -67,7 +67,7 @@ public class SelectUserDepartmentAdapter extends RecyclerView.Adapter<SelectUser
         if (mDepartments.get(position).getXpath().split("/").length > 2) {
             holder.detName.setTextColor(Color.parseColor("#c9c9c9"));
         } else {
-            holder.detName.setTextColor(mContext.getResources().getColor(R.color.text_black_1));
+            holder.detName.setTextColor(mContext.getResources().getColor(R.color.text33));
         }
         holder.detName.setSelected(position == mSelectIndex);
         holder.detName.setOnClickListener(new View.OnClickListener() {

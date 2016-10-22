@@ -21,10 +21,11 @@ import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -36,7 +37,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -177,8 +181,10 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             @Override
             public void onClick(final View view) {
 
-                if (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE) {
+                LogUtil.dee("点击的:"+position);
+                LogUtil.dee("点击的Size:"+mAttachments.size());
 
+                if (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("data", mAttachments);
                     bundle.putSerializable("position", position);
@@ -215,26 +221,49 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     holder.layout_action_delete.setVisibility(View.INVISIBLE);
                 }
             }
-//            /**权限设置*/
-//            holder.layout_action_update.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(final View view) {
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("data", attachment);
-//                    bundle.putSerializable("users", users);
-//                    if (null != callback) {
-//                        callback.onRightClick(bundle);
-//                    } else {
-//                        app.startActivityForResult((Activity) mContext, AttachmentRightActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_ATTACHMENT, bundle);
-//                    }
-//                }
-//            });
 
             /**附件删除*/
             holder.layout_action_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    final GeneralPopView generalPopView = new GeneralPopView(mContext, true);
+
+                    final SweetAlertDialogView sweetAlertDialog = new SweetAlertDialogView(mContext);
+                    sweetAlertDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            Utils.dialogShow(mContext, "请稍候");
+                            HashMap<String, Object> map = new HashMap<String, Object>();
+                            map.put("bizType", bizType);
+                            map.put("uuid", uuid);
+                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), map, new RCallback<Attachment>() {
+                                @Override
+                                public void success(final Attachment att, final Response response) {
+                                    HttpErrorCheck.checkResponse(response);
+                                    if (mAction != null) {
+                                        mAction.afterDelete(attachment);
+                                    }
+                                    Utils.dialogDismiss();
+                                }
+
+                                @Override
+                                public void failure(final RetrofitError error) {
+                                    super.failure(error);
+                                    HttpErrorCheck.checkError(error);
+                                    Utils.dialogDismiss();
+                                }
+                            });
+
+                            sweetAlertDialog.dismiss();
+
+                        }
+                    }, "提示", "是否删除附件?");
+
+/*                    final GeneralPopView generalPopView = new GeneralPopView(mContext, true);
                     generalPopView.show();
                     generalPopView.setMessage("是否删除附件?");
                     generalPopView.setCanceledOnTouchOutside(true);
@@ -273,7 +302,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                         public void onClick(final View view) {
                             generalPopView.dismiss();
                         }
-                    });
+                    });*/
                 }
             });
         }
@@ -287,6 +316,20 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
 
     public interface AttachmentAction {
         void afterDelete(Attachment attachment);
+    }
+
+    public void refreshData() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }, 200);
     }
 
     class ViewHolder {

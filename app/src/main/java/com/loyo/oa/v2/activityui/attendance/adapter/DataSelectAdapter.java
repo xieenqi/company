@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.attendance.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
+import com.loyo.oa.v2.application.MainApp;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,6 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
     private int defaultPosition;
     private int type;
     private boolean itemLock;
-    private ScaleAnimation animation;
 
     public DataSelectAdapter(Context mContext, ArrayList<DataSelect> data, int windowW, int type, int defaultPosition) {
         this.mContext = mContext;
@@ -44,11 +43,6 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
     public MViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View mView = View.inflate(mContext, R.layout.item_data_select, null);
         MViewHolder holder = new MViewHolder(mView);
-
-        animation = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration(120);//设置动画持续时间
-
         return holder;
     }
 
@@ -83,7 +77,7 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
             if (dataSelect.bottom.substring(0, 1).equals("0")) {
                 holder.name.setText(dataSelect.bottom.substring(1, 2) + "月");
             } else {
-                holder.name.setText(dataSelect.bottom + "月");
+                holder.name.setText(dataSelect.bottom + "");
             }
         }
 
@@ -93,24 +87,16 @@ public class DataSelectAdapter extends RecyclerView.Adapter<DataSelectAdapter.MV
 
         if (itemLock && selectPosition == position) {
             if (position == 0) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    holder.num.setBackground(null);
-                } else {
-                    holder.num.setBackgroundDrawable(null);
-                }
+                holder.num.setBackgroundColor(Color.parseColor("#ffffff"));
             }
             holder.num.setTextColor(Color.parseColor("#ffffff"));
             holder.num.setBackgroundResource(R.drawable.shape_count_gd);
-            holder.num.setAnimation(animation);
+            holder.num.setAnimation(MainApp.getMainApp().animShow);
         } else {
             if (position == 0) {
                 holder.num.setBackgroundResource(R.drawable.shape_count_top);
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    holder.num.setBackground(null);
-                } else {
-                    holder.num.setBackgroundDrawable(null);
-                }
+                holder.num.setBackgroundColor(Color.parseColor("#ffffff"));
             }
             holder.num.setTextColor(mContext.getResources().getColor(R.color.text33));
         }

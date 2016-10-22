@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:src="@drawable/welcome_04"/>
-Ï
+
     <ImageView
         android:id="@+id/welcomeOkButton"
         android:layout_width="wrap_content"

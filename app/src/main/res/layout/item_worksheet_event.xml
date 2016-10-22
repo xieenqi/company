@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_other_view"
+        android:layout_marginRight="@dimen/margin_other_view"
+        android:layout_marginTop="@dimen/dimen_3"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/dimen_50"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            >
+
+            <com.loyo.oa.v2.customview.RoundImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="@dimen/dimen_40"
+                android:layout_height="@dimen/dimen_40"
+                android:src="@drawable/icon_none_user"
+                />
+
+            <ImageView
+                android:id="@+id/iv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:layout_marginLeft="@dimen/margin_other_view"
+            android:paddingTop="@dimen/dimen_10"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text=""
+            android:textColor="@color/text33"
+            android:textSize="@dimen/dimen_12"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_40"
+        android:layout_marginLeft="@dimen/margin_other_view"
+        android:layout_marginRight="@dimen/margin_other_view"
+    >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="@dimen/dimen_40"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:maxLines="5"
+                android:text=""
+                android:ellipsize="end"
+                android:singleLine="false"
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp12"/>
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_marginRight="@dimen/dimen_8"
+                android:gravity="center_vertical|left"
+                android:text=""
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp12"/>
+
+            <View
+                android:id="@+id/seperator"
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/lineCC"
+                />
+
+            <TextView
+                android:id="@+id/tv_time2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_8"
+                android:layout_marginRight="@dimen/dimen_8"
+                android:gravity="center_vertical|left"
+                android:text=""
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp12"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            />
+
+    </RelativeLayout>
+
+    <include layout="@layout/include_solid_line15"/>
+</LinearLayout>

@@ -139,7 +139,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                                     mListData, R.drawable.default_image, mIsAdd));
                 } else {
                     //显示文件
-                    imageView.setImageResource(Global.getAttachmentIcon(attachment.getUrl()));
+                    imageView.setImageResource(Global.getAttachmentIcon(attachment.originalName));
                     textView.setText(attachment.getOriginalName());
 
                     imageView.setOnClickListener(new View.OnClickListener() {
@@ -171,17 +171,16 @@ public class SignInGridViewAdapter extends BaseAdapter {
                 }
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
-                mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+                mActivity.startActivityForResult(intent, MainApp.GET_IMG);
             }
 
             /*拜访签到*/
             else if (mListData.size() <= 9) {
-                LogUtil.dee("mListData:" + mListData.size());
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
                 intent.putExtra("imgsize", (9 - mListData.size()));
                 intent.putExtra("addpg", true);
-                mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+                mActivity.startActivityForResult(intent, MainApp.GET_IMG);
             }
         }
     }

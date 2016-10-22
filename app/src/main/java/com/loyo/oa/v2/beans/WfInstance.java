@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.beans;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
+import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
@@ -18,20 +20,16 @@ public class WfInstance extends BaseBeans implements Serializable {
     public static final int STATUS_APPROVED = 4;
     public static final int STATUS_FINISHED = 5;
 
-    public long created_at;
     public long createdAt;
-    public int serverTime;
     public int updatedAt;
     public int status;
     public String id;
     public String memo;
     public String title;
-    public String attachmentUUId;//string, optional): ,
-    public String wftemplateId;//int64, optional): ,
-    public String next_executor_name;
-    public ArrayList<HashMap<String, Object>> workflowValues;//WorkFlowValues, optional):
-    public ArrayList<WfNodes> workflowNodes;//array[WfNodes], optional): ,
-    public User nextExecutor;
+    public String attachmentUUId;
+    public String wftemplateId;
+    public ArrayList<HashMap<String, Object>> workflowValues;
+    public ArrayList<WfNodes> workflowNodes;//审批节点
     public User creator;//&{organization User}, optional): ,
     public ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
     public BizForm bizForm;//&{bizform BizForm}, optional): ,
@@ -40,6 +38,8 @@ public class WfInstance extends BaseBeans implements Serializable {
     public ProjectInfoName ProjectInfo;
     public SaleDetails chance;//销售机会
     public boolean viewed;
+    public OrderDetail order;
+    public ArrayList<EstimateAdd> paymentRecord;
 
     public boolean isViewed() {
         return viewed;
@@ -50,7 +50,7 @@ public class WfInstance extends BaseBeans implements Serializable {
     }
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return status + "";
     }
 

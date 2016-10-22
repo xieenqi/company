@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.tool;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -10,45 +11,54 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
+import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
 import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.customer.bean.TagItem;
+import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -60,12 +70,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -81,14 +105,282 @@ public class Utils {
     static ProgressDialog progressDialog;
     static ProgressDialog progressDialogAtt;
     static WindowManager windowManager;
+    static boolean scrollFlag;
+    static int lastVisibleItemPosition;
 
     protected Utils() {
         throw new UnsupportedOperationException(); // 防止子类调用
     }
 
-    public static WindowManager getWindowHW(Context mContext){
+    public static WindowManager getWindowHW(Context mContext) {
         windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         return windowManager;
+    }
+
+    /**
+     * 根据当前选择的秒数还原时间点
+     *
+     */
+
+    private static String getCheckTimeBySeconds(float progress,float totalSeconds2, String startTimeStr) {
+
+        String return_h = "", return_m = "", return_s = "";
+        float ms = (progress * totalSeconds2) / 100;
+        String[] st = startTimeStr.split(":");
+        int st_h = Integer.valueOf(st[0]);
+        int st_m = Integer.valueOf(st[1]);
+        int st_s = Integer.valueOf(st[2]);
+        int total = st_h * 3600 + st_m * 60 + st_s;
+        float mtotal = ms + total;
+        int h = (int) (mtotal / 3600);
+        int m = (int) ((mtotal % 3600) / 60);
+
+        int s = (int) (mtotal % 60);
+        return_h = h + "";
+        return_m = m + "";
+        return_s = s + "";
+
+        return return_h + ":" + return_m + ":" + return_s;
+    }
+
+
+    /**
+     * 计算连个时间之间的秒数
+     */
+
+    public static int totalSeconds(String startTime, String endTime) {
+
+        String[] st = startTime.split(":");
+        String[] et = endTime.split(":");
+
+        int st_h = Integer.valueOf(st[0]);
+        int st_m = Integer.valueOf(st[1]);
+        int st_s = Integer.valueOf(st[2]);
+
+        int et_h = Integer.valueOf(et[0]);
+        int et_m = Integer.valueOf(et[1]);
+        int et_s = Integer.valueOf(et[2]);
+
+        int totalSeconds = (et_h - st_h) * 3600 + (et_m - st_m) * 60
+                + (et_s - st_s);
+
+        return totalSeconds;
+
+    }
+
+    /**
+     * 根据当前选择的秒数还原时间点
+     *
+     * @param args
+     */
+
+    public static String getCheckTimeBySeconds(int progress, String startTime) {
+
+        String return_h = "", return_m = "", return_s = "";
+
+        String[] st = startTime.split(":");
+
+        int st_h = Integer.valueOf(st[0]);
+        int st_m = Integer.valueOf(st[1]);
+        int st_s = Integer.valueOf(st[2]);
+
+        int h = progress / 3600;
+
+        int m = (progress % 3600) / 60;
+
+        int s = progress % 60;
+
+        if ((s + st_s) >= 60) {
+
+            int tmpSecond = (s + st_s) % 60;
+
+            m = m + 1;
+
+            if (tmpSecond >= 10) {
+                return_s = tmpSecond + "";
+            } else {
+                return_s = "0" + (tmpSecond);
+            }
+
+        } else {
+            if ((s + st_s) >= 10) {
+                return_s = s + st_s + "";
+            } else {
+                return_s = "0" + (s + st_s);
+            }
+
+        }
+
+        if ((m + st_m) >= 60) {
+
+            int tmpMin = (m + st_m) % 60;
+
+            h = h + 1;
+
+            if (tmpMin >= 10) {
+                return_m = tmpMin + "";
+            } else {
+                return_m = "0" + (tmpMin);
+            }
+
+        } else {
+            if ((m + st_m) >= 10) {
+                return_m = (m + st_m) + "";
+            } else {
+                return_m = "0" + (m + st_m);
+            }
+
+        }
+
+        if ((st_h + h) < 10) {
+            return_h = "0" + (st_h + h);
+        } else {
+            return_h = st_h + h + "";
+        }
+
+        return return_h + ":" + return_m + ":" + return_s;
+    }
+
+    public static String getStringTime(int cnt,String timeData) {
+        int hour = cnt/3600;
+        int min = cnt % 3600 / 60;
+        int second = cnt % 60;
+        return String.format(Locale.CHINA,timeData,hour,min,second);
+    }
+
+
+    /**
+     * MD5加密
+     * */
+    public static String md5(String string) {
+        byte[] hash;
+        try {
+            hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Huh, MD5 should be supported?", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Huh, UTF-8 should be supported?", e);
+        }
+
+        StringBuilder hex = new StringBuilder(hash.length * 2);
+        for (byte b : hash) {
+            if ((b & 0xFF) < 0x10) hex.append("0");
+            hex.append(Integer.toHexString(b & 0xFF));
+        }
+        return hex.toString();
+    }
+
+
+    /**
+     * 图片二值化
+     * */
+    public static Bitmap toGrayscale(Bitmap bmpOriginal) {
+        int width, height;
+        height = bmpOriginal.getHeight();
+        width = bmpOriginal.getWidth();
+
+        Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        Canvas c = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(bmpOriginal, 0, 0, paint);
+        return bmpGrayscale;
+    }
+
+    /**
+     * 自动弹出软键盘
+     * time: 设置弹出延迟时间，目的在于等页面渲染完成，否则自动弹出会失效
+     */
+    public static void autoEjetcEdit(final EditText edt, int time) {
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+                           public void run() {
+                               InputMethodManager inputManager =
+                                       (InputMethodManager) edt.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                               inputManager.showSoftInput(edt, 0);
+                           }
+                       },
+                time);
+    }
+
+    /**
+     * 获取屏幕宽度
+     */
+    public static int getWindowWidth(Context context) {
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+
+        int width = wm.getDefaultDisplay().getWidth();
+        return width;
+    }
+
+    /**
+     * 获取屏幕高度
+     */
+    public static int getWindowHeight(Context context) {
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+
+        int height = wm.getDefaultDisplay().getHeight();
+        return height;
+    }
+
+    /**
+     * 转换文件大小
+     *
+     * @param fileS
+     * @return
+     */
+    public static String FormetFileSize(long fileS) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        String fileSizeString = "";
+        if (fileS < 1024) {
+            fileSizeString = df.format((double) fileS) + "B";
+        } else if (fileS < 1048576) {
+            fileSizeString = df.format((double) fileS / 1024) + "K";
+        } else if (fileS < 1073741824) {
+            fileSizeString = df.format((double) fileS / 1048576) + "M";
+        } else {
+            fileSizeString = df.format((double) fileS / 1073741824) + "G";
+        }
+        return fileSizeString;
+    }
+
+
+    /**
+     * 图片类型
+     */
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            type = mime.getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
+
+    /**
+     * @param list
+     */
+    private ArrayList removeDuplicateObj(ArrayList list) {
+        // ................
+        Set someSet = new HashSet(list);
+
+        // 将Set中的集合，放到一个临时的链表中(tempList)
+        Iterator iterator = someSet.iterator();
+        ArrayList tempList = new ArrayList();
+        int i = 0;
+        while (iterator.hasNext()) {
+
+            tempList.add(iterator.next().toString());
+            i++;
+        }
+        return tempList;
     }
 
     /**
@@ -357,26 +649,20 @@ public class Utils {
             sendIntent.putExtra("sms_body", "");
             context.startActivity(sendIntent);
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(context, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用短信权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
-//                            new String[]{Manifest.permission.SEND_SMS},
-//                            RESULT_OK);
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     doSeting(context);
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });
+            },"提示","需要使用短信权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 
@@ -398,26 +684,19 @@ public class Utils {
             sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(sendIntent);
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(context, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(context);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
-//                            new String[]{Manifest.permission.CALL_PHONE},
-//                            RESULT_OK);
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     doSeting(context);
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });
+            },"提示","需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 
@@ -466,6 +745,7 @@ public class Utils {
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(it);
                 LocationUtilGD.sotpLocation();
+                UMengTools.sendLocationInfo(address, longitude, latitude);
             }
 
             @Override
@@ -564,6 +844,82 @@ public class Utils {
         ForegroundColorSpan redSpan = new ForegroundColorSpan(color);
         builder.setSpan(redSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
+    }
+
+    /**
+     * 改变文字颜色
+     *
+     * @param content
+     */
+    public static SpannableStringBuilder modifyTextHTTP(String content, int color, int start, int end) {
+
+        if (TextUtils.isEmpty(content) || (start >= content.length() || end > content.length() || start > end || end < 0 || start < 0)) {
+            return null;
+        }
+
+        SpannableStringBuilder builder = new SpannableStringBuilder(content);
+        // ForegroundColorSpan 为文字前景色，BackgroundColorSpan为文字背景色
+        ForegroundColorSpan redSpan = new ForegroundColorSpan(color);
+        builder.setSpan(redSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        builder.setSpan(new URLSpan(content), 2, 5,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
+    }
+
+    public static CharSequence checkAutoLink(String content, Activity activity) {
+
+        String url = "百度 https://www.baidu.com/，腾讯 http://www.qq.com/，淘宝 www.taobao.com/";//此处测试，就不用参数了
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(content);
+
+        Pattern pattern = Pattern.compile("((http{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)");
+
+        Matcher matcher = pattern.matcher(spannableStringBuilder);
+
+        while (matcher.find()) {
+            setClickableSpan(spannableStringBuilder, matcher, activity);
+        }
+
+//        Pattern pattern2 = Pattern.compile("([\\s>])((www|ftp)\\.[\\w\\\\x80-\\\\xff\\#$%&~/.\\-;:=,?@\\[\\]+]*)");
+//
+//        matcher.reset();
+//
+//        matcher = pattern2.matcher(spannableStringBuilder);-
+//
+//        while (matcher.find()) {
+//            setClickableSpan(spannableStringBuilder, matcher);
+//        }
+
+        return spannableStringBuilder;
+
+    }
+
+    //给符合的设置自定义点击事件
+
+    private static void setClickableSpan(final SpannableStringBuilder clickableHtmlBuilder, final Matcher matcher, final Activity activity) {
+
+        int start = matcher.start();
+
+        int end = matcher.end();
+
+        final String url = matcher.group();
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+
+            public void onClick(View view) {
+
+                Intent intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                intent.setData(Uri.parse(url));
+                activity.startActivity(intent);
+//                Global.Toast("点击了超链接？？？？？？？？？？？");
+            }
+
+        };
+
+        clickableHtmlBuilder.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
     }
 
     /**
@@ -1182,6 +1538,28 @@ public class Utils {
         }
     }
 
+    public static String getRingDuring(String mUri){
+        String duration=null;
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+
+        try {
+            if (mUri != null) {
+                HashMap<String, String> headers=null;
+                if (headers == null) {
+                    headers = new HashMap<String, String>();
+                    headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                }
+                mmr.setDataSource(mUri, headers);
+            }
+
+            duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+        } catch (Exception ex) {
+        } finally {
+            mmr.release();
+        }
+        return duration;
+    }
+
     /**
      * 设置小数位数控制
      * 限制输入小数的位数
@@ -1209,4 +1587,68 @@ public class Utils {
         };
         return lengthfilter;
     }
+
+
+    /**
+     * 添加按钮，根据滑动显示隐藏(recyclerView)
+     */
+    public static void btnHideForRecy(RecyclerView recyclerView, final View btn) {
+
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //正数下滑 负数上滑
+                if (dy > 0) {
+                    if (btn.getVisibility() == View.VISIBLE)
+                        btn.startAnimation(MainApp.getMainApp().animHide);
+                    btn.setVisibility(View.INVISIBLE);
+                } else {
+                    if (btn.getVisibility() == View.INVISIBLE)
+                        btn.startAnimation(MainApp.getMainApp().animShow);
+                    btn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    /**
+     * 添加按钮，根据滑动显示隐藏(ListView)
+     */
+    public static void btnHideForListView(final ListView listView, final View btn) {
+        lastVisibleItemPosition = 0;
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrollFlag = true;
+                } else {
+                    scrollFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (scrollFlag) {
+                    if (firstVisibleItem > lastVisibleItemPosition) {
+                        LogUtil.dee("上滑");
+                        if (btn.getVisibility() == View.VISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animHide);
+                        btn.setVisibility(View.INVISIBLE);
+                    }
+                    if (firstVisibleItem < lastVisibleItemPosition) {
+                        LogUtil.dee("下滑");
+                        if (btn.getVisibility() == View.INVISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animShow);
+                        btn.setVisibility(View.VISIBLE);
+                    }
+                    if (firstVisibleItem == lastVisibleItemPosition) {
+                        return;
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
+                }
+            }
+        });
+    }
+
 }

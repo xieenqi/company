@@ -1,71 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    android:orientation="vertical">
 
-   <LinearLayout
-       android:layout_width="fill_parent"
-       android:layout_height="200dp"
-       android:orientation="horizontal"
-       >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="220dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
 
-       <ListView
-           android:id="@+id/saleteam_screentag1_lv1"
-           android:layout_width="0dip"
-           android:layout_height="fill_parent"
-           android:layout_weight="1"
-           android:divider="@null"
-           android:scrollbars="none"
-           />
+        <ListView
+            android:id="@+id/saleteam_screentag1_lv1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:divider="@color/white"
+            android:scrollbars="none" />
 
-       <ListView
-           android:id="@+id/saleteam_screentag1_lv2"
-           android:layout_width="0dip"
-           android:layout_height="fill_parent"
-           android:layout_weight="1"
-           android:divider="@null"
-           android:background="@color/ececec"
-           android:scrollbars="none"
-           />
+        <ListView
+            android:id="@+id/saleteam_screentag1_lv2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/lineCC"
+            android:divider="@color/lineCC"
+            android:scrollbars="none" />
 
-       </LinearLayout>
+    </LinearLayout>
 
     <RelativeLayout
-        android:visibility="gone"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        >
+        android:visibility="gone">
 
         <Button
             android:id="@+id/saleteam_screentag1_cancel"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:layout_marginBottom="@dimen/dimen_10"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_35"
+            android:layout_marginBottom="@dimen/dimen_10"
             android:layout_marginLeft="@dimen/margin_other_view"
-            android:background="@drawable/round_bg_shpe3"
+            android:layout_marginTop="@dimen/dimen_10"
             android:minWidth="@dimen/dimen_100"
             android:padding="@dimen/dimen_2"
             android:text="全部取消"
-            android:textSize="14sp"
-            android:textColor="@color/gray"/>
+            android:textColor="@color/text99"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/saleteam_screentag1_confirm"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:layout_marginBottom="@dimen/dimen_10"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_35"
             android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dimen_10"
             android:layout_marginRight="@dimen/margin_other_view"
-            android:background="@drawable/round_bg_shpe3"
+            android:layout_marginTop="@dimen/dimen_10"
             android:minWidth="@dimen/dimen_100"
             android:padding="@dimen/dimen_2"
             android:text="确定"
-            android:textSize="14sp"
-            android:textColor="@color/title_bg1"/>
+            android:textColor="@color/title_bg1"
+            android:textSize="14sp" />
 
-        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/shade"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/dialog_bj" />
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,7 @@ import java.util.Calendar;
 
 /**
  * com.loyo.oa.v2.customview
- * 描述 : 新增客户联系人 动态字段 【销售机会的动态字段也在用】
+ * 描述 : 新增【客户联系人】【销售机会】动态字段
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
@@ -60,9 +61,6 @@ public class ContactAddforExtraData extends LinearLayout {
         this.extras = extras;
         this.mContact = mContact;//为null 不是联系模块
         bindView(edit, valueColor, valueSize);
-
-        LogUtil.dee("新增联系人 动态字段Contact:" + MainApp.gson.toJson(mContact));
-        LogUtil.dee("新增联系人 动态字段ContactExtras:" + MainApp.gson.toJson(extras));
     }
 
     public ArrayList<ContactLeftExtras> getExtras() {
@@ -80,7 +78,7 @@ public class ContactAddforExtraData extends LinearLayout {
         if (null == extras || extras.isEmpty()) {
             return;
         }
-
+        LogUtil.dee("ContactLeftExtras:" + MainApp.gson.toJson(extras));
         for (int i = 0; i < extras.size(); i++) {
             ContactLeftExtras customerExtra = extras.get(i);
             if (null == customerExtra) {
@@ -223,9 +221,28 @@ public class ContactAddforExtraData extends LinearLayout {
                 tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
-                tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if (customerExtra.required) {
-                    tv_content.setHint("必填");
+                if (customerExtra.fieldName.equals("wiretel") || customerExtra.fieldName.equals("tel")) {
+                    tv_content.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+                    if (customerExtra.required) {
+                        if (customerExtra.val != null && customerExtra.val.equals("座机")) {
+                            tv_content.setHint(mContext.getString(R.string.app_tell_check) + "(必填)");
+                        } else if (customerExtra.val != null && customerExtra.val.equals("手机")) {
+                            tv_content.setHint(mContext.getString(R.string.app_phone_check) + "(必填)");
+                        } else {
+                            tv_content.setHint("必填");
+                        }
+                    } else {
+                        if (customerExtra.fieldName != null && customerExtra.fieldName.equals("wiretel")) {
+                            tv_content.setHint(mContext.getString(R.string.app_tell_check));
+                        } else if (customerExtra.fieldName != null && customerExtra.fieldName.equals("tel")) {
+                            tv_content.setHint(mContext.getString(R.string.app_phone_check));
+                        }
+                    }
+                } else {
+                    tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
+                    if (customerExtra.required) {
+                        tv_content.setHint("必填");
+                    }
                 }
                 if (null == mContact) {
                     tv_content.setText(customerExtra.val);
@@ -307,8 +324,8 @@ public class ContactAddforExtraData extends LinearLayout {
     }
 
     private class BizFiedTextWatcher implements TextWatcher {
+
         private ContactLeftExtras extra;
-        boolean isOne = true;
 
         private BizFiedTextWatcher(ContactLeftExtras extra) {
             this.extra = extra;
@@ -316,11 +333,6 @@ public class ContactAddforExtraData extends LinearLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-            /*if (!isOne) {
-                extra.val = s.toString();
-            }
-            isOne = false;*/
-
             extra.val = s.toString();
         }
 

@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.SharedUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * 启动
@@ -30,14 +31,12 @@ public class WelcomeActivity extends Activity {
         final ViewPager viewPager = (ViewPager) findViewById(R.id.welcome_pager);
         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
         viewPager.setAdapter(new PagerAdapter() {
-
-            private static final int COUNT = 4;
-
             private final int[] IMAGE_RES = new int[]{
                     R.drawable.welcome_01,
                     R.drawable.welcome_02,
                     R.drawable.welcome_03,
-                    R.drawable.welcome_04
+                    R.drawable.welcome_04,
+                    R.drawable.welcome_05
             };
 
             @Override
@@ -61,7 +60,9 @@ public class WelcomeActivity extends Activity {
                 container.addView(view);
                 ImageView imageView = (ImageView) view.findViewById(R.id.welcomeImage);
                 imageView.setImageResource(IMAGE_RES[position]);
+//TODO 引导页面暂时没有压缩处理 后期发版如果有oom则压缩处理
                 ImageView buttonOk = (ImageView) view.findViewById(R.id.welcomeOkButton);
+//                ImageLoader.getInstance().displayImage("drawable://" + IMAGE_RES[position],imageView);
                 if (position == getCount() - 1) {
                     buttonOk.setVisibility(View.VISIBLE);
                     buttonOk.setOnClickListener(new View.OnClickListener() {

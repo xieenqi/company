@@ -36,6 +36,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     private Button btn_add;
     private DropDownMenu mMenu;
     private ViewStub emptyView;
-    private static final String FILTER_STATUS[] = new String[]{"全部状态", "待我审批的", "我同意的", "我驳回的"};
+    private static final String FILTER_STATUS[] = new String[]{"全部状态", "待我审批的", "未到我审批的", "我同意的", "我驳回的"};
     private ArrayList<BizForm> mBizForms = new ArrayList<>();
     private String bizFormId = "";
     private WflnstanceMySubmitAdapter mAdapter;
@@ -84,7 +85,6 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
-        btn_add.setVisibility(View.GONE);
         expandableListView.setOnRefreshListener(this);
         expandableListView.setEmptyView(emptyView);
         page = 1;
@@ -105,7 +105,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
         mMenu.setShowCheck(true);//是否显示展开list的选中项
         mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
-        mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
+        mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.text33));//Menu的文字颜色
         mMenu.setmMenuListTextSize(14);//Menu展开list的文字大小
         mMenu.setmMenuListTextColor(Color.BLACK);//Menu展开list的文字颜色
         mMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
@@ -150,8 +150,19 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
                 switch (ColumnIndex) {
                     case 0:
                         status = RowIndex;
+                        switch (status) {//加未到我审批的 导致筛选状态对不上 特转一次
+                            case 2:
+                                status = 4;
+                                break;
+                            case 3:
+                                status = 2;
+                                break;
+                            case 4:
+                                status = 3;
+                                break;
+                        }
                         break;
-                    case 2:
+                    case 1:
                         if (RowIndex == 0) {
                             bizFormId = "";
                         } else {
@@ -192,15 +203,20 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
                             return;
                         }
                         ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
-                        if (null != lstDataTemp && lstDataTemp.size() == 0) {
+                        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
                             Toast("没有更多数据了");
                             return;
                         }
                         //下接获取最新时，清空
-                        if (isTopAdd) {
-                            lstData.clear();
+//                        if (isTopAdd) {
+//                            lstData.clear();
+//                        }
+//                        lstData.addAll(lstDataTemp);
+                        if (!isTopAdd) {
+                            lstData.addAll(lstDataTemp);
+                        } else {
+                            lstData = lstDataTemp;
                         }
-                        lstData.addAll(lstDataTemp);
                         datas = WfinstanceUitls.convertGroupApproveData(lstData);
                         changeAdapter();
                         expand();
@@ -241,6 +257,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
                 return false;
             }
         });
+        Utils.btnHideForListView(ListView, btn_add);
     }
 
     public void initAdapter() {
@@ -262,8 +279,12 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     }
 
     public void openItem(int groupPosition, int childPosition) {
+        WflnstanceListItem item = (WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition);
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition)).id);
+        intent.putExtra(ExtraAndResult.EXTRA_ID, item.id);
+        if (!item.viewed) {//有红点需要刷新
+            intent.putExtra(ExtraAndResult.IS_UPDATE, true);
+        }
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -290,6 +311,11 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         if (resultCode == -1) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE:
+                    isTopAdd = true;
+                    page = 1;
+                    getData();
+                    break;
+                case 0x09:
                     isTopAdd = true;
                     page = 1;
                     getData();

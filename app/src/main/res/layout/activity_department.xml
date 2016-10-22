@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_dept_titel"
                     android:background="@drawable/layout_bg1"
-                    android:divider="@color/activity_split"
+                    android:divider="@color/lineCC"
                     android:dividerHeight="0.5dp"/>
 
             </LinearLayout>
@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_item_titel"
                     android:background="@drawable/layout_bg1"
-                    android:divider="@color/activity_split"
+                    android:divider="@color/lineCC"
                     android:dividerHeight="0.5dp"/>
 
             </LinearLayout>

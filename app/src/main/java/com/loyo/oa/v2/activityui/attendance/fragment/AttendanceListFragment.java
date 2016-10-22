@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,19 +16,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.activityui.attendance.PreviewAttendanceActivity_;
+import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
 import com.loyo.oa.v2.activityui.attendance.adapter.CustomerDataManager;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
-import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attendance.bean.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
 import com.loyo.oa.v2.activityui.attendance.bean.DayofAttendance;
-import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -37,6 +36,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.CustomRecyclerView;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -46,16 +46,18 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
-import com.loyo.oa.v2.customview.AttenDancePopView;
-import com.loyo.oa.v2.customview.GeneralPopView;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -65,11 +67,11 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/9/15.
  */
-public class AttendanceListFragment extends BaseFragment implements View.OnClickListener,LocationUtilGD.AfterLocation {
+public class AttendanceListFragment extends BaseFragment implements View.OnClickListener, LocationUtilGD.AfterLocation {
 
     private Boolean inEnable;
     private Boolean outEnable;
-    private Button   btn_add;
+    private Button btn_add;
     private CustomRecyclerView recyclerView;
     private ListView lv;
     private TextView tv_count_title;
@@ -85,7 +87,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private ArrayList<DayofAttendance> attendances = new ArrayList<DayofAttendance>();
     private ValidateInfo validateInfo = new ValidateInfo();
     private AttendanceListAdapter adapter;
-    private GeneralPopView generalPopView;
     private LinearLayoutManager layoutManager;
     private CustomerDataManager customerDataManager;
     private DataSelectAdapter dataSelectAdapter;
@@ -95,7 +96,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private int qtime, page = 1;
     private int type;                    //我的考勤【1】 团队考勤【2】
     private boolean isPullDowne = true;  //是否下拉刷新 默认是
-    private boolean isAttAdd    = false;
+    private boolean isAttAdd = false;
     private int outKind;                 //0上班  1下班  2加班
     private long checkdateTime;
     private Calendar cal;
@@ -104,7 +105,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     @Override
     public void onResume() {
         super.onResume();
-        if(isAttAdd){
+        if (isAttAdd) {
             getData(page);
         }
     }
@@ -125,7 +126,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void initUI(){
+    private void initUI() {
         recyclerView = (CustomRecyclerView) mView.findViewById(R.id.recy_data_select);
         tv_count_title = (TextView) mView.findViewById(R.id.tv_count_title);
         tv_later = (TextView) mView.findViewById(R.id.tv_later);
@@ -155,7 +156,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     if (view.getLastVisiblePosition() == view.getCount() - 1) {
                         //加载更多功能的代码
                         // Toast("到底部啦");
-                        if (type == 2 && null == DialogHelp.loadingDialog ) {
+                        if (type == 2 && null == DialogHelp.loadingDialog) {
                             loadMore();
                         }
                     }
@@ -171,49 +172,36 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             }
         });
-
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                scorllW += dx;
-                LogUtil.dee("scorllW:"+scorllW);
-                if(windowW == scorllW){
-                    Toast("滑动到了 屏幕宽度");
-                }
-            }
-        });
+        Utils.btnHideForListView(lv, btn_add);
     }
 
     /**
      * 时间选择控件初始化
-     * */
-    public void DataSelectInit(){
+     */
+    public void DataSelectInit() {
 
         int year = Integer.parseInt(DateTool.getNowTime("yyyy"));
 
-        if(type == 2){
-            dataSelects = DateTool.getYearAllofDay(2015,year);
+        if (type == 2) {
+            dataSelects = DateTool.getYearAllofDay(2015, year);
             Collections.reverse(dataSelects);
             dataSelects.remove(dataSelects.size() - 1);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
             data_time_tv.setText(dataSelects.get(0).yearMonDay);
-            layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,true);//true 反向显示 false 正常显示
-            //customerDataManager = new CustomerDataManager(1, StaggeredGridLayoutManager.HORIZONTAL);
-            //customerDataManager.setSpeedRatio(0.5);
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true);//true 反向显示 false 正常显示
             recyclerView.setLayoutManager(layoutManager);
-            dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,2,0);
+            dataSelectAdapter = new DataSelectAdapter(getActivity(), dataSelects, windowW, 2, 0);
             recyclerView.setAdapter(dataSelectAdapter);
             qtime = Integer.parseInt(dataSelects.get(0).mapOftime);
-        }else{
-            dataSelects = DateTool.getYearAllofMonth(2015,year);
+        } else {
+            dataSelects = DateTool.getYearAllofMonth(2015, year);
             Collections.reverse(dataSelects);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
             data_time_tv.setText(dataSelects.get(0).yearMonDay);
-            layoutManager = new LinearLayoutManager(getActivity(),1,true);//true 反向显示 false 正常显示
+            layoutManager = new LinearLayoutManager(getActivity(), 1, true);//true 反向显示 false 正常显示
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerView.setLayoutManager(layoutManager);
-            dataSelectAdapter = new DataSelectAdapter(getActivity(),dataSelects,windowW,1,0);
+            dataSelectAdapter = new DataSelectAdapter(getActivity(), dataSelects, windowW, 1, 0);
             recyclerView.setAdapter(dataSelectAdapter);
             qtime = Integer.parseInt(dataSelects.get(0).mapOftime);
         }
@@ -303,37 +291,25 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     }
 
-    /**
-     * 通用提示弹出框init
-     */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(getActivity(), isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
-    }
 
     /**
      * 早退提示
      */
     public void attanceWorry() {
-        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
-        //确认
-        generalPopView.setSureOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                cancelDialog();
                 intentValue();
             }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });
+        },"提示",getString(R.string.app_attanceworry_message));
+
     }
 
     /**
@@ -360,7 +336,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         int type = validateItem.getType();
         map.clear();
         map.put("inorout", type);
-        new LocationUtilGD(getActivity(), this);
+        new LocationUtilGD(app, this);
     }
 
 
@@ -383,7 +359,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 加班提示框
      */
     public void popOutToast() {
-        final AttenDancePopView popView = new AttenDancePopView(getActivity());
+        final AttenDancePopView popView = new AttenDancePopView(mActivity);
         popView.show();
         popView.setCanceledOnTouchOutside(true);
 
@@ -419,28 +395,29 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     private void setAttendance() {
         if (null == validateInfo) {
+            LogUtil.dee("return validateInfo = null");
             return;
         }
 
         if (!Global.isConnected()) {
-            Toast("没有网络连接，不能打卡");
+            Toast("请检查您的网络连接");
             return;
         }
         /*工作日*/
         if (validateInfo.isWorkDay()) {
-            /*加班*/
-            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) {
+
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) { /*加班*/
                 popOutToast();
-                /*不加班*/
-            } else {
+
+            } else { /*非加班*/
                 dealInOutWork();
             }
-            /*非工作日，下班状态*/
-        } else if (!validateInfo.isWorkDay() && outEnable) {
+
+        } else if (!validateInfo.isWorkDay() && outEnable) { /*非工作日，下班状态*/
             outKind = 2;
             startAttanceLocation();
-            /*非工作日，上班状态*/
-        } else if (!validateInfo.isWorkDay() && inEnable) {
+
+        } else if (!validateInfo.isWorkDay() && inEnable) { /*非工作日，上班状态*/
             outKind = 0;
             startAttanceLocation();
         }
@@ -455,7 +432,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(final ValidateInfo _validateInfo, final Response response) {
-                HttpErrorCheck.checkResponse("考勤信息:", response);
+                HttpErrorCheck.checkResponse("考勤信息1:", response);
                 if (null == _validateInfo) {
                     Toast("获取考勤信息失败");
                     return;
@@ -546,14 +523,13 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 获取列表
      */
     private void getData(final int page) {
-        LogUtil.dee("调用中");
         isAttAdd = false;
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
         map.put("qtime", qtime);
         map.put("pageIndex", page);
-        map.put("pageSize", 20);
+        map.put("pageSize", 2000);
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
@@ -616,14 +592,18 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
+        UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
-        LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         DialogHelp.showLoading(getActivity(), "", true);
         MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
+                if (null == attendanceRecord) {
+                    Toast("没有获取到考勤信息");
+                    return;
+                }
                 attendanceRecords = attendanceRecord;
-                HttpErrorCheck.checkResponse("考勤信息：", response);
+                HttpErrorCheck.checkResponse("考勤信息2：", response);
                 attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
@@ -645,7 +625,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();
+        Toast("获取打卡位置失败");
     }
 
     /**
@@ -722,7 +702,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     if (recordOut.getExtraState() == 1) {
                         color = getActivity().getResources().getColor(R.color.text99);
                     } else if (recordOut.getExtraState() == 2) {
-                        color = getActivity().getResources().getColor(R.color.red);
+                        color = getActivity().getResources().getColor(R.color.red1);
                     }
                 }
             }

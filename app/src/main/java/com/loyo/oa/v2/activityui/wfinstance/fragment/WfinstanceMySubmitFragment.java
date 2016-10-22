@@ -36,6 +36,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -192,15 +193,21 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
                             return;
                         }
                         ArrayList<WflnstanceListItem> lstDataTemp = mySubmitWflnstance.records;
-                        if (null != lstDataTemp && lstDataTemp.size() == 0) {
+                        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
                             Toast("没有更多数据了");
                             return;
                         }
                         //下拉获取最新时，清空
-                        if (isTopAdd) {
-                            lstData.clear();
+//                        if (isTopAdd) {
+//                            lstData.clear();
+//                        }
+//                        lstData.addAll(lstDataTemp);
+
+                        if (!isTopAdd) {
+                            lstData.addAll(lstDataTemp);
+                        } else {
+                            lstData = lstDataTemp;
                         }
-                        lstData.addAll(lstDataTemp);
                         datas = WfinstanceUitls.convertGroupSubmitData(lstData);
                         changeAdapter();
                         expand();
@@ -241,6 +248,7 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
                 return false;
             }
         });
+        Utils.btnHideForListView(ListView, btn_add);
     }
 
     public void initAdapter() {
@@ -262,8 +270,12 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     }
 
     public void openItem(int groupPosition, int childPosition) {
+        WflnstanceListItem item = (WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition);
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition)).id);
+        intent.putExtra(ExtraAndResult.EXTRA_ID, item.id);
+        if (!item.viewed) {//有红点需要刷新
+            intent.putExtra(ExtraAndResult.IS_UPDATE, true);
+        }
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -290,6 +302,11 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         if (resultCode == -1) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE:
+                    isTopAdd = true;
+                    page = 1;
+                    getData();
+                    break;
+                case 0x09:
                     isTopAdd = true;
                     page = 1;
                     getData();

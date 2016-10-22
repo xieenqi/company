@@ -340,10 +340,10 @@ public class ProjectAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mMemberIds) && null != mAdapter) {
             projectTransObj.members = mAdapter.GetProjectMembers();
             for (ManagersMembers managersMembers : projectTransObj.members) {
-                if (null == managersMembers.dept.id) {
+                if (managersMembers.dept != null && null == managersMembers.dept.id) {
                     managersMembers.dept = null;
                 }
-                if (null == managersMembers.user.id) {
+                if (managersMembers.user != null && null == managersMembers.user.id) {
                     managersMembers.user = null;
                 }
             }

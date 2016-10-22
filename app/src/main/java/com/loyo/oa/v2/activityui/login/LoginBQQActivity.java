@@ -9,7 +9,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -65,6 +64,7 @@ public class LoginBQQActivity extends BaseActivity {
                     MainApp.isQQLogin = true;
                     SharedUtil.put(mContext, FinalVariables.TOKEN, token[1]);
                     app.startActivity(LoginBQQActivity.this, MainHomeActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                    SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
                 } else {
                     view.loadUrl(url);
                 }

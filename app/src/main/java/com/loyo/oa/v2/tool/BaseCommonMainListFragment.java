@@ -85,7 +85,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-
     }
 
     @Override
@@ -179,6 +178,10 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                 return false;
             }
         });
+
+
+        Utils.btnHideForListView(expandableListView, btn_add);
+
     }
 
     /**
@@ -215,16 +218,19 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
         pagination = tPaginationX;
         ArrayList<T> lstDataTemp = tPaginationX.getRecords();
-        if (null != lstDataTemp && lstDataTemp.size() == 0) {
+        if (null != lstDataTemp && lstDataTemp.size() == 0 && !isTopAdd) {
             Toast("没有更多数据了");
             return;
         }
         //下接获取最新时，清空
-        if (isTopAdd) {
-            lstData.clear();
+//        if (isTopAdd) {
+//            lstData.clear();
+//        }
+        if (!isTopAdd) {
+            lstData.addAll(lstDataTemp);
+        } else {
+            lstData = lstDataTemp;
         }
-
-        lstData.addAll(lstDataTemp);
         pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
         changeAdapter();
         expand();

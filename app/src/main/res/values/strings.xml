@@ -5,6 +5,8 @@
     <string name="dialog_cancel">取消</string>
     <string name="app_succeed">成功！</string>
     <string name="app_exit_message">确定退出应用?</string>
+    <string name="app_phone_check">限数字,如13912345678</string>
+    <string name="app_tell_check">限数字,如02812345678</string>
     <string name="app_bulletin_message">通知发送后不能修改和删除,是否确认发布?</string>
     <string name="app_userinfoedt_message">您有数据未提交,是否提交?</string>
     <string name="app_userdetalis_message">负责人更改后，此客户所有数据和管理权限将归属新的负责人，您确定要更改负责人？</string>
@@ -47,5 +49,25 @@
     <string name="newmain_post_cus">新建客户</string>
     <string name="newmain_post_att">考勤打卡</string>
     <string name="newmain_post_sign">拜访签到</string>
+
+
+    <string name="estimate_page_string1">成交金额</string>
+    <string name="estimate_page_string2">开票总金额</string>
+    <string name="estimate_page_string3">未回款</string>
+
+    <string name="estimate_page_string4">回款日期</string>
+    <string name="estimate_page_string5">回款金额</string>
+    <string name="estimate_page_string6">开票金额</string>
+    <string name="estimate_page_string7">收款人</string>
+    <string name="estimate_page_string8">付款方式</string>
+    <string name="estimate_page_string9">附件</string>
+    <string name="estimate_page_string10">是否开票</string>
+    <string name="title_activity_clue_detail">ClueDetailActivity</string>
+    <string name="title_activity_clue_followup">ClueFollowupActivity</string>
+    <string name="title_activity_clue_followup_create">ClueFollowupCreateActivity</string>
+    <string name="title_activity_worksheet_manage">WorksheetManageActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

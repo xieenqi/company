@@ -39,13 +39,13 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.ContactAddforExtraData;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -411,16 +411,25 @@ public class AddMySaleActivity extends BaseActivity {
                 return;
             }
             if (!(intentionProductData.size() > 0)) {
-                final GeneralPopView dailog = showGeneralDialog(false, false, "赢单提交时请添加意向产品！");
-                dailog.setNoCancelOnclick(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dailog.dismisDialog();
-                    }
-                });
+                sweetAlertDialogView.alertMessage("提示","赢单提交时请添加意向产品!");
                 return;
             } else {
-                final GeneralPopView dailog2 = showGeneralDialog(true, true,
+
+                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dismissSweetAlert();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dismissSweetAlert();
+                        addSaleOpportunitty();
+                    }
+                },"提示","请确认赢单产品的金额和数量是否正确！\n" +
+                        "对应客户：" + tv_customer.getText().toString() + "\n销售总金额：¥" + et_money.getText().toString());
+
+/*                final GeneralPopView dailog2 = showGeneralDialog(true, true,
                         "请确认赢单产品的金额和数量是否正确！\n" +
                                 "对应客户：" + tv_customer.getText().toString() + "\n销售总金额：¥" + et_money.getText().toString());
                 dailog2.setSureOnclick(new View.OnClickListener() {
@@ -435,7 +444,7 @@ public class AddMySaleActivity extends BaseActivity {
                     public void onClick(View v) {
                         dailog2.dismisDialog();
                     }
-                });
+                });*/
                 return;
             }
         }
@@ -489,7 +498,6 @@ public class AddMySaleActivity extends BaseActivity {
                 }
             });
         } else {
-            LogUtil.dee("编辑发送数据:" + MainApp.gson.toJson(map));
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                     create(ISale.class).updateSaleOpportunity(map, chanceId, new Callback<SaleOpportunityAdd>() {
                 @Override

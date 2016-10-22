@@ -22,7 +22,6 @@ import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -92,19 +91,6 @@ public final class Common {
         }
 
         return MainApp.lstUserGroupData == null ? new ArrayList<UserGroupData>() : MainApp.lstUserGroupData;
-    }
-
-    /**
-     * 获取我的部门
-     */
-    public static Department getMyDeptment(String deptId) {
-        Department department = new Department();
-        for (Department department2 : getLstDepartment()) {
-            if (department2.getId().equals(deptId)) {
-                department = department2;
-            }
-        }
-        return department;
     }
 
     /**
@@ -201,6 +187,7 @@ public final class Common {
      * @return
      */
     public static ArrayList<ContactsGroup> getContactsGroups(String deptId) {
+
         //缓存组织架构部门的数据 （组织架构没有变动 都取之前的缓存）
         String originDepartenmData = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.ORGANIZATION_DEPARTENT);
         if (!TextUtils.isEmpty(originDepartenmData)) {
@@ -214,21 +201,27 @@ public final class Common {
 
         SparseArray<ArrayList<Department>> maps = new SparseArray<>();//相当于 map 全部字母表 下的部门列表
         ArrayList<ContactsGroup> contactsGroups = new ArrayList<>();
-//        companyId=MainApp.user.companyId;
+
         try {
             for (char index = '#'; index <= 'Z'; index += (char) 1) {
-                ArrayList<Department> departments = new ArrayList<>();//相同首字母 部门集合
-                for (Department department : departmentList) {//遍历组织架构
+                //相同首字母 部门集合
+                ArrayList<Department> departments = new ArrayList<>();
+                //遍历组织架构
+                for (Department department : departmentList) {
                     if (department == null) {
                         continue;
                     }
-                    if (department.getId().equals(department.xpath)) {
-                        companyId = department.getId();
-                        continue;
+                    if(companyId == null){
+                        if (department.getId().equals(department.xpath)) {
+                            companyId = department.getId();
+                            continue;
+                        }
                     }
+
                     String xpath = department.getXpath();
 
-                    if (!TextUtils.isEmpty(companyId) && !TextUtils.isEmpty(xpath) && xpath.startsWith(companyId) && xpath.split("/").length == 2) {
+                    //去掉xpath.startsWith(companyId)判断后，能正常显示渠道部
+                    if (!TextUtils.isEmpty(companyId) && !TextUtils.isEmpty(xpath) && xpath.split("/").length == 2) {
                         String groupName_current = department.getGroupName();
                         if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
                             departments.add(department);
@@ -236,14 +229,12 @@ public final class Common {
                             departments.add(0, department);
                         }
                     }
-
                 }
                 if (!departments.isEmpty()) {
                     maps.put(index, departments);
                 }
             }
         } catch (Exception e) {
-            LogUtil.d(" 组织通讯录 ？？？？？？？？？？？？？？？？？？？？？？？？ 部门数据异常 " + e.toString());
             e.printStackTrace();
         }
         if (maps.size() > 0) {
@@ -483,7 +474,7 @@ public final class Common {
         /*获取我的部门下标*/
         for (int i = 0; i < getLstDepartment().size(); i++) {
             if (null == MainApp.user.depts)
-                continue;
+                break;
             for (int j = 0; j < MainApp.user.depts.size(); j++) {
                 if (getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())) {
                     positions = i;

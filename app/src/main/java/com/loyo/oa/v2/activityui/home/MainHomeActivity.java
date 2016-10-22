@@ -22,18 +22,23 @@ import com.loyo.oa.v2.activityui.home.fragment.HomeFragment;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.activityui.home.slidingmenu.SlidingFragmentActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
+import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.tool.AliOSSManager;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.umeng.analytics.MobclickAgent;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 带侧滑的【主界面】
@@ -77,6 +82,9 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         }
         startService(new Intent(this, InitDataService_.class));
         permissionLocation();
+
+        /* 初始化AliOSSManager */
+        AliOSSManager.getInstance().initWithContext(getApplicationContext());
     }
 
     @Override
@@ -275,6 +283,20 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
+                case 16://订单详情
+                    intent.setClass(MainHomeActivity.this, OrderDetailActivity.class);
+//              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 18://工单 事件相关都跳转到 工单详情
+                case 19:
+                    intent.setClass(MainHomeActivity.this, WorksheetDetailActivity.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
                 default:
                     break;
             }
@@ -315,24 +337,20 @@ public class MainHomeActivity extends SlidingFragmentActivity {
             sm.showMenu(false);
             return;
         }
-        showGeneralDialog(true, true, getString(R.string.app_exit_message));
-        //确定
-        generalPopView.setSureOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
                 //android 5.0以后不能隐式启动或关闭服务
                 stopService(new Intent(mContext, CheckUpdateService.class));
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
-        });
-
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });
+        },"提示",getString(R.string.app_exit_message));
     }
 }

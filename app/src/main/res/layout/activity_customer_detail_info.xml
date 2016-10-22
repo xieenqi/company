@@ -43,7 +43,6 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:layout_marginTop="@dimen/dimen_10"
                         android:singleLine="true"
                         android:textColor="@color/text33"
@@ -436,6 +435,43 @@
                 </RelativeLayout>
 
                 <include layout="@layout/include_solid_line_left"/>
+
+                <RelativeLayout
+                    android:id="@+id/ll_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_48"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_order_title"
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="订单管理"/>
+
+                    <TextView
+                        android:id="@+id/tv_order_count"
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_12"
+                        android:layout_toRightOf="@+id/tv_order_title"
+                        android:gravity="center"
+                        android:text="(0)"
+                        android:textColor="@color/text99"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dimen_4"
+                        android:src="@drawable/right_arrow"/>
+                </RelativeLayout>
+
+                <include layout="@layout/include_solid_line_left"/>
+
 
                 <RelativeLayout
                     android:id="@+id/layout_task"

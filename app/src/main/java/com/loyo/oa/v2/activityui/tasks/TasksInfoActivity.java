@@ -88,7 +88,7 @@ public class TasksInfoActivity extends BaseActivity {
     public String beProjects;
 
     private String taskId;  //任务ID
-//    private String userId;
+    //    private String userId;
     private String uuid = StringUtil.getUUID();
 
     @ViewById
@@ -140,6 +140,8 @@ public class TasksInfoActivity extends BaseActivity {
             String mTaskId;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     String keyType;
+    @Extra(ExtraAndResult.IS_UPDATE)
+    boolean isUpdate;//是否需要刷新列表
 
     private boolean isOver = false;
     private int statusSize;
@@ -228,9 +230,8 @@ public class TasksInfoActivity extends BaseActivity {
 
         boolean isInTask = false; //判断当前用户是否在任务中
         for (int i = 0; i < users.size(); i++) {
-            if (MainApp.user.id.equals(users.get(i).getId())
-                    || isMenberShortDept(users.get(i).getId(), users.get(i).getXpath())
-                    ) {
+            if (null != users.get(i) && (MainApp.user.id.equals(users.get(i).getId())
+                    || isMenberShortDept(users.get(i).getId(), users.get(i).getXpath()))) {
                 isInTask = true;
                 break;
             }
@@ -489,11 +490,11 @@ public class TasksInfoActivity extends BaseActivity {
 
             if ("1".equals(reviewer.status)) {
                 tv_task_status.setText("通过");
-                tv_task_status.setTextColor(getResources().getColor(R.color.green));
+                tv_task_status.setTextColor(getResources().getColor(R.color.green51));
                 tv_task_status.setVisibility(View.GONE);
             } else {
                 tv_task_status.setText("不通过");
-                tv_task_status.setTextColor(getResources().getColor(R.color.red));
+                tv_task_status.setTextColor(getResources().getColor(R.color.red1));
             }
             layout_test_Add_area.addView(mView);
         }
@@ -678,7 +679,7 @@ public class TasksInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updatesTask(id, cid, map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkResponse("更新子任务",response);
+                HttpErrorCheck.checkResponse("更新子任务", response);
                 Toast("更新成功");
             }
 
@@ -704,7 +705,6 @@ public class TasksInfoActivity extends BaseActivity {
         app.getRestAdapter().create(ITask.class).getTask(mTaskId, keyType, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                LogUtil.dee("任务详情:" + MainApp.gson.toJson(task));
                 HttpErrorCheck.checkResponse("任务详情返回", response);
                 mTask = task;
                 updateUI();
@@ -797,7 +797,7 @@ public class TasksInfoActivity extends BaseActivity {
     void openUpload() {
         Intent intent = new Intent(this, SelectPicPopupWindow.class);
         intent.putExtra("localpic", true);
-        startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+        startActivityForResult(intent, MainApp.GET_IMG);
     }
 
     /**
@@ -814,7 +814,7 @@ public class TasksInfoActivity extends BaseActivity {
                                 task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("review", task);
-                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
                             }
                         }
 
@@ -889,7 +889,7 @@ public class TasksInfoActivity extends BaseActivity {
             mTask.setViewed(true);
             intent.putExtra("data", mTask);
         }
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isUpdate ? 0x09 : RESULT_OK, intent);
     }
 
     /**
@@ -1082,7 +1082,8 @@ public class TasksInfoActivity extends BaseActivity {
                     } else {
                         SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
                     }
-                                /*删除回调*/
+                    isUpdate = true;
+                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
@@ -1092,17 +1093,17 @@ public class TasksInfoActivity extends BaseActivity {
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
                         }
                     });
-                                /*复制回调*/
+                 /*复制回调*/
                 } else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable("data", mTask);
                     intent.putExtras(mBundle);
                     startActivity(intent);
-                                /*修改参与人回调*/
+                 /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
                     SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
-
+                    isUpdate = true;
                 }
                 break;
 

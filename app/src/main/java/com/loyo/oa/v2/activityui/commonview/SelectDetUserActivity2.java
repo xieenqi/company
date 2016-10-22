@@ -221,6 +221,14 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         initListener();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mSelectUserDepartmentAdapter != null && !(mSelectUserDepartmentAdapter.getItemCount() > 0)) {
+            loadingData();
+        }
+    }
+
     private void initData() {
         // 获取屏幕高度\宽度
         screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
@@ -252,17 +260,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         } else {
             tv_add.setVisibility(View.VISIBLE);
         }
-
-//        if (!isDataBinded()) {
-        showLoading("数据正在加载...");
-        mDeptSource = Common.getLstDepartment();
-        deptSort(); //重新排序
-        SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
-        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
-        thread.start();
-//        } else {
-//            updata();
-//        }
+        loadingData();
     }
 
     private void assignViews() {
@@ -277,6 +275,22 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         tv_add.setText("确定");
     }
 
+    /**
+     * 组装加载数据
+     */
+    private void loadingData() {
+//        if (!isDataBinded()) {
+        showLoading("数据正在加载...");
+        mDeptSource = Common.getLstDepartment();
+        deptSort(); //重新排序
+        SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
+        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
+        thread.start();
+//        } else {
+//            updata();
+//        }
+    }
+
     private void initListener() {
         ll_back.setOnClickListener(this);
         tv_add.setOnClickListener(this);
@@ -288,13 +302,10 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
                 SelectUserData data = SelectUserHelper.mCurrentSelectDatas.get(position);
                 if (data.getClass() == SelectDepData.class) {
                     ((SelectDepData) data).setAllSelect(false);
-                    LogUtil.dee("1");
                 } else if (data.getClass() == SelectUserData.class) {
                     ((SelectUserData) data).setCallbackSelect(false);
                     mSelectUsersAdapter.notifyDataSetChanged();
-                    LogUtil.dee("2");
                 } else {
-                    LogUtil.dee("3");
                     data.setCallbackSelect(false);
                 }
             }

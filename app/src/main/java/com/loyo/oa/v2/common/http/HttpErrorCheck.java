@@ -5,7 +5,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.google.gson.JsonSyntaxException;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -83,9 +85,9 @@ public class HttpErrorCheck {
         try {
             String msg = Utils.
                     convertStreamToString(error.
-                    getResponse()
-                    .getBody()
-                    .in());
+                            getResponse()
+                            .getBody()
+                            .in());
             LogUtil.d("error获得的：", msg);
             JSONObject job = new JSONObject(msg);
             if (500 == error.getResponse().getStatus()) {
@@ -127,10 +129,13 @@ public class HttpErrorCheck {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(tag + " 接口成功result：" + result);
             LogUtil.d(tag + " 接口成功URL：" + response.getUrl());
+            checkResponseError(result);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             LogUtil.d("Body空response:" + response.getUrl());
+            e.printStackTrace();
+        } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
     }
@@ -141,11 +146,32 @@ public class HttpErrorCheck {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(" 接口成功result：" + result);
             LogUtil.d(" 接口成功URL：" + response.getUrl());
+            checkResponseError(result);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             LogUtil.d("Body空response:" + response.getUrl());
             e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 检查response 的错误信息
+     *
+     * @param result
+     */
+    private static void checkResponseError(String result) throws JsonSyntaxException {
+        BaseBean data = MainApp.gson.fromJson(result, BaseBean.class);
+        switch (data.errcode) {
+            case 1:
+                Toast("非常抱歉,服务器错误");
+                break;
+            case 2:
+                Toast("请求参数错误");
+                break;
+
         }
     }
 }

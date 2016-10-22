@@ -11,13 +11,25 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 
 public interface ITrackLog {
-
-    @POST("/tracklog")
-    void createTrackLog(@Body HashMap<String, String> body, retrofit.Callback<TrackLog> cb);
+    /***
+     * 最新上传轨迹 经纬度 时间
+     * @param body
+     * @param cb
+     */
+    @POST("/api/v1/track_logs ")
+    void newUploadTrack(@Body HashMap<String, Object> body, Callback<TrackLog> cb);
 
     @GET("/trackrule")
     void getTrackRule(retrofit.Callback<TrackRule> cb);
 
     @POST("/tracklog/multiple")
-    void uploadTrackLogs(@Body HashMap<String,Object> tracklogs, Callback<Object> callback);
+    void uploadTrackLogs(@Body HashMap<String, Object> tracklogs, Callback<Object> callback);
+
+    /**
+     * 轨迹用户在线
+     *
+     * @param cb
+     */
+    @GET("/tracklog/record")
+    void getUserOneLine(Callback<Object> cb);
 }

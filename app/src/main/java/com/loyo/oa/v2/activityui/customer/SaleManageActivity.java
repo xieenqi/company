@@ -93,7 +93,6 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                 permission = (Permission) MainApp.rootMap.get("0215");
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("发布公告权限,code错误:0402");
             }
         }
     }
@@ -101,6 +100,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
+        isTopAdd = true;
         page = 1;
         getData();
     }
@@ -119,7 +119,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                     public void success(PaginationX<SaleRecord> resultData, Response response) {
                         HttpErrorCheck.checkResponse(" 客户销售机会列表：", response);
                         listView_demands.onRefreshComplete();
-                        if (null != resultData && resultData.getRecords().size() > 0) {
+                        if (null != resultData && !(resultData.getRecords().size() < 0)) {
                             if (isTopAdd) {
                                 listData.clear();
                             }
@@ -159,13 +159,16 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
             case R.id.layout_add:
 
                 if (null != permission && !permission.isEnable()) {
-                    showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
+
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+
+ /*                   showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
                             .setNoCancelOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     generalPopView.dismiss();
                                 }
-                            });
+                            });*/
 
                 } else {
                     if (customerId == null) {

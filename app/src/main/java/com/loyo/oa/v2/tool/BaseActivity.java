@@ -23,17 +23,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.library.module.common.SystemBarTintManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.SystemBarTintManager;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.util.Locale;
 
@@ -48,10 +49,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     protected Context mContext;
     protected static final int NO_SCROLL = -1;
     public CustomProgressDialog customProgressDialog;
-    public GeneralPopView generalPopView;
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
     private GestureDetector mDetector;
+    public SweetAlertDialogView sweetAlertDialogView;
 
     /**
      * 搜索跳转分类
@@ -64,11 +65,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public static final int ATTENT_ADD = 0X11;   //考勤打卡
     public static final int SALE_ADD = 0X15;   //新建销售机会
     public static final int FOLLOW_ADD = 0X16;   //新建销售机会
+    public static final int ORDER_ADD = 0X17;   //新建订单
     public static final int CUSTOMER_MANAGE = 0X04;//客户管理
     public static final int TASKS_MANAGE = 0X05;//任务管理
     public static final int WORK_MANAGE = 0X06;//工作报告管理
     public static final int PEOJECT_MANAGE = 0x07; //项目管理
     public static final int WFIN_MANAGE = 0x09; //审批列表
+    public static final int CLUE_MANAGE = 0x20; //线索列表
+
     public SystemBarTintManager tintManager;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +81,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
-
+        AppBus.getInstance().register(this);
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
@@ -92,6 +96,27 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         tintManager.setNavigationBarTintEnabled(true);
         // 设置一个颜色给系统栏
         tintManager.setTintColor(getResources().getColor(R.color.title_bg1));
+        sweetAlertDialogView = new SweetAlertDialogView(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        AppBus.getInstance().unregister(this);
+        unRegisterBaseReceiver();
+        //关闭键盘
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+
+        ExitActivity.getInstance().removeActivity(this);
+        if (customProgressDialog != null && customProgressDialog.isShowing()) {
+            customProgressDialog.dismiss();
+            app.logUtil.d("onDestroy");
+        }
+        customProgressDialog = null;
+        super.onDestroy();
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -192,24 +217,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         ((TextView) findViewById(id)).setText(title);
     }
 
-    @Override
-    protected void onDestroy() {
-        unRegisterBaseReceiver();
-        //关闭键盘
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        if (imm.isActive()) {
-            imm.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-
-        ExitActivity.getInstance().removeActivity(this);
-        if (customProgressDialog != null && customProgressDialog.isShowing()) {
-            customProgressDialog.dismiss();
-            app.logUtil.d("onDestroy");
-        }
-        customProgressDialog = null;
-        super.onDestroy();
-    }
 
     @Override
     public void onBackPressed() {
@@ -317,9 +324,9 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
-            //onBackPressed();
-        }
+//        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
+//            //onBackPressed();
+//        }
 
         return false;
     }
@@ -363,6 +370,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     }
 
     /**
+     * 手动 显示软键盘
+     */
+    public void showInputKeyboard(EditText view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
+    }
+
+    /**
      * 加载loading的方法
      */
     public void showLoading(String msg) {
@@ -381,19 +396,16 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         DialogHelp.cancelLoading();
     }
 
-
     /**
-     * 通用提示弹出框init
+     * SweetAlertDialog关闭
      */
-    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
-        generalPopView = new GeneralPopView(this, isKind);
-        generalPopView.show();
-        generalPopView.setMessage(message);
-        generalPopView.setCanceledOnTouchOutside(isOut);
-        return generalPopView;
+    public void dismissSweetAlert() {
+        sweetAlertDialogView.sweetAlertDialog.dismiss();
     }
 
-    /*重启当前Activity*/
+    /**
+     * 重启当前Activity
+     */
     public void restartActivity() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);

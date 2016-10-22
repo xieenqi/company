@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.os.Handler;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.FeedbackActivity_;
@@ -37,18 +38,22 @@ import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
+import com.loyo.oa.v2.tool.FileTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -59,15 +64,15 @@ public class MenuFragment extends BaseFragment {
     private GestureDetector gesture; //手势识别
     private float minDistance = 120;//手势滑动最小距离
     private float minVelocity = 200;//手势滑动最小速度
-    private LinearLayout ll_user, ll_pwd, ll_feed_back, ll__update, ll_version, ll_exit;
+    private LinearLayout ll_user, ll_pwd, ll_feed_back, ll__update, ll_version, ll_exit, ll_clean;
     private RoundImageView riv_head;
-    private TextView tv_name, tv_member, tv_version_info;
+    private TextView tv_name, tv_member, tv_version_info, tv_file;
     private ImageView iv_new_version;
     public static ExitAppCallback callback;
     private Intent mIntentCheckUpdate;
     private boolean isUpdataData = false;
     private boolean isExite = false;
-
+    Handler handler = new Handler();
     //个人信息 和版本信息
     private BroadcastReceiver userInfoAndVersionInfo = new BroadcastReceiver() {
         @Override
@@ -82,14 +87,17 @@ public class MenuFragment extends BaseFragment {
                 if (null != user) {
                     if (null != user.avatar && null != riv_head) {
                         ImageLoader.getInstance().displayImage(MainApp.user.avatar, riv_head);
+//                        riv_head.setGrayImg();
                     }
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
                 }
                 if (isUpdataData) {
+                    cancelLoading();
                     Toast("数据更新成功！");
                     isUpdataData = false;
                 }
+                setDiskCacheInfo();
             } else if ("exite".equals(info) && !isExite) {
                 exit();
                 isExite = true;
@@ -161,17 +169,20 @@ public class MenuFragment extends BaseFragment {
         ll__update = (LinearLayout) view.findViewById(R.id.ll__update);
         ll_version = (LinearLayout) view.findViewById(R.id.ll_version);
         ll_exit = (LinearLayout) view.findViewById(R.id.ll_exit);
+        ll_clean = (LinearLayout) view.findViewById(R.id.ll_clean);
         riv_head = (RoundImageView) view.findViewById(R.id.riv_head);
         tv_name = (TextView) view.findViewById(R.id.tv_name);
         tv_member = (TextView) view.findViewById(R.id.tv_member);
         tv_version_info = (TextView) view.findViewById(R.id.tv_version_info);
         iv_new_version = (ImageView) view.findViewById(R.id.iv_new_version);
+        tv_file = (TextView) view.findViewById(R.id.tv_file);
         ll_user.setOnTouchListener(touch);
         ll_pwd.setOnTouchListener(touch);
         ll_feed_back.setOnTouchListener(touch);
         ll__update.setOnTouchListener(touch);
         ll_version.setOnTouchListener(touch);
         ll_exit.setOnTouchListener(touch);
+        ll_clean.setOnTouchListener(touch);
         try {
             PackageInfo pi = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
             tv_version_info.setText("(当前v" + pi.versionName + ")");
@@ -236,7 +247,8 @@ public class MenuFragment extends BaseFragment {
                 SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
                 isUpdataData = true;
                 if (Utils.isNetworkAvailable(getActivity())) {
-                    Global.Toast("开始更新");
+                    //Global.Toast("开始更新");
+                    showLoading("正在更新组织架构，请稍等", false);
                     rushHomeData();
                     initService();
                 } else {
@@ -251,7 +263,21 @@ public class MenuFragment extends BaseFragment {
                     mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
                     getActivity().startService(mIntentCheckUpdate);
                 } else {
-                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            cancelDialog();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            cancelDialog();
+                            Utils.doSeting(getActivity());
+                        }
+                    }, "提示", "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+
+/*                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
                     generalPopView.setSureOnclick(new View.OnClickListener() {
                         @Override
                         public void onClick(final View view) {
@@ -264,13 +290,32 @@ public class MenuFragment extends BaseFragment {
                         public void onClick(final View view) {
                             generalPopView.dismiss();
                         }
-                    });
+                    });*/
                 }
                 break;
             //退出登录
             case R.id.ll_exit:
                 exit();
                 isExite = false;
+                break;
+            //清除缓存
+            case R.id.ll_clean:
+
+                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        cancelDialog();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        showLoading("");
+                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
+                        cancelDialog();
+                        setDiskCacheInfo();
+                    }
+                }, "提醒", "确认清除缓存?");
+
                 break;
         }
 
@@ -309,7 +354,7 @@ public class MenuFragment extends BaseFragment {
     }
 
     /**
-     * 刷新token 防止token过期
+     * 更新(当首页红点数据异常)
      */
     void rushHomeData() {
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
@@ -371,29 +416,44 @@ public class MenuFragment extends BaseFragment {
     }
 
     void exit() {
-//        showLoading("退出系统中");
         Set<String> complanTag = new HashSet<>();
-        JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), "", complanTag, new TagAliasCallback() {
+        JPushInterface.setAliasAndTags(app, "", complanTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
-//                cancelLoading();
                 LogUtil.d("激光推送已经成功停止（注销）状态" + i);
-//                if (i != 0) {
-//                    Toast("请重试");
-//                    return;
-//                }
-                //设置别名 为空
-
                 JPushInterface.stopPush(app);
             }
         });
-        //清楚token与用户资料
-        MainApp.setToken(null);
+        MainApp.setToken(null);//清楚token与用户资料
+        InitDataService_.intent(app).stop();//避免后台多次调用接口 没有token 导致accst_token无效 的问题
         MainApp.user = null;
-
-        //清楚本地登录状态
-        SharedUtil.clearInfo(getActivity());
+        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
+        SharedUtil.clearInfo(app);//清楚本地登录状态 即缓存信息
         ExitActivity.getInstance().finishAllActivity();
-        app.startActivity(getActivity(), LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
+        app.startActivity(mActivity, LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
+    }
+
+    /**
+     * 设置缓存信息
+     */
+    private void setDiskCacheInfo() {
+        final File cacheDir = StorageUtils.getOwnCacheDirectory(app, "imageloader/Cache");
+        LogUtil.d("缓存路径：" + cacheDir.getPath());
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                final String length = FileTool.formatFileSize(cacheDir.getPath());
+                handler.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        tv_file.setText(length.equals("0B") ? "" : length);
+                        cancelLoading();
+                    }
+                });
+                LogUtil.d("缓存路径文件大小：" + length);
+            }
+        }).start();
     }
 }

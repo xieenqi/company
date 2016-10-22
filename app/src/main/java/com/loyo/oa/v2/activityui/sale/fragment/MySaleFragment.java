@@ -37,6 +37,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,6 +157,8 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
+
+        Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
     }
 
 
@@ -250,9 +253,6 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -260,9 +260,6 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 

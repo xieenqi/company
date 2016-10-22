@@ -49,7 +49,7 @@
                     android:layout_height="match_parent"
                     android:cacheColorHint="#00000000"
                     android:choiceMode="singleChoice"
-                    android:divider="@color/activity_split"
+                    android:divider="@color/lineCC"
                     android:dividerHeight="@dimen/dimen_0.5"
                     android:paddingLeft="@dimen/dimen_10"
                     android:paddingRight="@dimen/dimen_10"

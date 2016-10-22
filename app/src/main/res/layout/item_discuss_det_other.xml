@@ -14,7 +14,7 @@
         android:layout_marginTop="@dimen/dimen_8"
         android:gravity="center"
         android:text="2016/03/10"
-        android:textColor="@color/text_black_2"
+        android:textColor="@color/text99"
         android:textSize="@dimen/text_sp12"/>
 
     <TextView
@@ -26,7 +26,7 @@
         android:layout_marginTop="@dimen/dimen_4"
         android:singleLine="true"
         android:text="LIBO"
-        android:textColor="@color/text_black_2"
+        android:textColor="@color/text66"
         android:textSize="@dimen/text_sp12"/>
 
     <LinearLayout
@@ -61,16 +61,16 @@
             android:paddingLeft="@dimen/dimen_24"
             android:paddingRight="@dimen/dimen_16"
             android:paddingTop="@dimen/dimen_16"
-            android:text="asssdhavuvdsufvusvd阿布多啥办法把收到回复fba"
-            android:textColor="@color/text_black_1"
+            android:text=""
+            android:textColor="@color/text33"
+            android:textIsSelectable="true"
             android:textSize="@dimen/text_sp14"/>
+
 
         <RelativeLayout
             android:layout_width="@dimen/dimen_40"
             android:layout_height="@dimen/dimen_40"
             android:layout_toLeftOf="@+id/tv_mine_content">
-
-
         </RelativeLayout>
 
     </LinearLayout>

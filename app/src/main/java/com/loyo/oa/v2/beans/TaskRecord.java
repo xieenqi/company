@@ -19,7 +19,7 @@ public class TaskRecord extends BaseBeans implements Serializable{
     public CornBody cornBody;
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return status + "";
     }
 

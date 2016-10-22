@@ -14,25 +14,26 @@ import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * 【附件上传】自定义popwindow
- *
+ * <p/>
  * create by yyy on 2016/03/11
  */
 public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
-    public  static final int GET_IMG  = 10;
-    private static final int PHOTO   = 1;
-    private static final int PICTURE = 2;
     private static final String RESTORE_FILEURI = "fileUri";
     private List<String> mSelectPath;
 
@@ -71,11 +72,11 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
         /**判断是直接调用相机，还是弹出选相框*/
         if (null != getIntent() && null != getIntent().getExtras()) {
-            addpg    = getIntent().getBooleanExtra("addpg", false);
+            addpg = getIntent().getBooleanExtra("addpg", false);
             localpic = getIntent().getBooleanExtra("localpic", false);
-            imgSize  = getIntent().getIntExtra("imgsize",0);
+            imgSize = getIntent().getIntExtra("imgsize", 0);
 
-            if(!addpg){
+            if (!addpg) {
                 imgSize = 9;
             }
 
@@ -122,6 +123,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         }
     }
 
+    /*本地展示调用，记得前面加文件路径 "file://" */
     public static class ImageInfo implements Serializable {
         public String path;
 
@@ -156,7 +158,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 // 选择模式
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                startActivityForResult(intent, PICTURE);
+                startActivityForResult(intent, MainApp.PICTURE);
 
                 break;
 
@@ -171,7 +173,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
     /**
      * 处理拍照权限
-     * */
+     */
     private void takePhotoIntent() {
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
@@ -182,37 +184,34 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
             LogUtil.d("相机路径：" + fileUri);
             if (null != fileUri) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                startActivityForResult(intent, PHOTO);
+                startActivityForResult(intent, MainApp.PHOTO);
             } else {
                 Global.Toast("相机不可用");
             }
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(this, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     Utils.doSeting(SelectPicPopupWindow.this);
                     finish();
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                    finish();
-                }
-            });
+            },"提示","需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 
     /**
      * 处理相册权限
-     * */
-    public void dealPermisson(){
+     */
+    public void dealPermisson() {
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
             try {
@@ -221,28 +220,26 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_PICK);
                 intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, PICTURE);
+                startActivityForResult(intent, MainApp.PICTURE);
             } catch (ActivityNotFoundException e) {
                 Global.ProcException(e);
             }
         } else {
-            final GeneralPopView generalPopView = new GeneralPopView(this, true);
-            generalPopView.show();
-            generalPopView.setMessage("需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
-            generalPopView.setCanceledOnTouchOutside(true);
-            generalPopView.setSureOnclick(new View.OnClickListener() {
+
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
                     Utils.doSeting(SelectPicPopupWindow.this);
                 }
-            });
-            generalPopView.setCancelOnclick(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    generalPopView.dismiss();
-                }
-            });
+            },"提示","需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
         }
     }
 
@@ -256,10 +253,10 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         ArrayList<ImageInfo> pickArray = new ArrayList<>();
         mIntent = new Intent();
 
-        switch (requestCode){
+        switch (requestCode) {
 
             //拍照回调
-            case PHOTO:
+            case MainApp.PHOTO:
                 pickArray.add(new ImageInfo(fileUri.toString()));
                 if (pickArray.isEmpty()) {
                     setResult(RESULT_CANCELED);
@@ -270,22 +267,15 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 break;
 
             //相册选择回调
-            case PICTURE:
-                if(null != data){
+            case MainApp.PICTURE:
+                if (null != data) {
                     mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                    for(String path : mSelectPath){
-                        pickArray.add(new ImageInfo("file://"+path));
+                    for (String path : mSelectPath) {
+                        pickArray.add(new ImageInfo("file://" + path));
                     }
                     mIntent.putExtra("data", pickArray);
                     setResult(RESULT_OK, mIntent);
                 }
-
-                //选择文件
-           /* if (data.getData() != null) {
-                pickArray.add(new ImageInfo(data.getData().toString()));
-                i.putExtra("data", pickArray);
-                setResult(RESULT_OK, i);
-            }*/
                 break;
 
         }

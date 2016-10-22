@@ -176,7 +176,7 @@
                     android:maxWidth="@dimen/dimen_75"
                     android:singleLine="false"
                     android:text="距离"
-                    android:textColor="@color/text2"
+                    android:textColor="@color/text33"
                     android:textSize="11.5sp"/>
 
                 <ImageView

@@ -400,6 +400,7 @@ public class WfInEditActivity extends BaseActivity {
         String startTimeDate = "";
         String endTimeDate = "";
 
+
         long startTimelong;
         long endTimelong;
 
@@ -433,7 +434,6 @@ public class WfInEditActivity extends BaseActivity {
         map.put("workflowValues", workflowValues);             //流程 内容
         map.put("projectId", projectId);                       //项目Id
         map.put("memo", edt_memo.getText().toString().trim()); //备注
-        LogUtil.dee("新建审批 发送数据:" + MainApp.gson.toJson(map));
 
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(mWfInstance.id, map, new RCallback<WfInstance>() {
@@ -492,7 +492,7 @@ public class WfInEditActivity extends BaseActivity {
         switch (requestCode) {
 
             //上传附件回调
-            case SelectPicPopupWindow.GET_IMG:
+            case MainApp.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     uploadSize = 0;

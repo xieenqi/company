@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
@@ -34,6 +35,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
@@ -51,15 +53,20 @@ import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.RepeatTaskView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -159,6 +166,8 @@ public class TasksAddActivity extends BaseActivity {
     private StringBuffer joinUserId;
     private String uuid = StringUtil.getUUID();
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private List<String> mSelectPath;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
 
 
     @AfterViews
@@ -234,15 +243,15 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(projectTitle)) {
             tv_Project.setText(projectTitle);
         }
-         getBundle();
+        getBundle();
 
     }
 
     /**
      * 图片列表绑定
-     * */
+     */
     void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
         ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
@@ -251,7 +260,7 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
-        if(pickPhots.size() == 0){
+        if (pickPhots.size() == 0) {
             showLoading("正在提交");
         }
         bizExtData = new PostBizExtData();
@@ -340,17 +349,17 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
 
-                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().equals("不重复")) {
+                if (TextUtils.isEmpty(tv_deadline.getText().toString()) && tv_retask.getText().toString().equals("不重复")) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().trim().isEmpty()) {
+                if (TextUtils.isEmpty(tv_deadline.getText().toString()) && tv_retask.getText().toString().trim().isEmpty()) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if (tv_retask.getText().toString().equals("不重复") && mDeadline <= 0) {
+                if (TextUtils.isEmpty(tv_retask.getText().toString()) && mDeadline <= 0) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
@@ -361,10 +370,10 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
                 //没有附件
-                if(pickPhots.size() == 0){
+                if (pickPhots.size() == 0) {
                     requestCommitTask();
                     //有附件
-                }else{
+                } else {
                     img_title_right.setEnabled(false);
                     newUploadAttachement();
                 }
@@ -424,7 +433,6 @@ public class TasksAddActivity extends BaseActivity {
     @Click(R.id.layout_remind)
     void remindonClick() {
         if (dialog_Product == null) {
-
             LayoutInflater inflater = getLayoutInflater();
             View layout = inflater.inflate(R.layout.dialog_products_select, null, false);
             AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(layout);
@@ -467,14 +475,14 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void onCancel() {
                 isKind = true;
-                tv_deadline.setText("不截止");
-                tv_remind.setTextColor(mContext.getResources().getColor(R.color.gray0990));
+                tv_deadline.setText("");
+                tv_remind.setTextColor(mContext.getResources().getColor(R.color.activity_bg));
                 layout_remind.setEnabled(false);
                 layout_retask.setVisibility(View.VISIBLE);
                 layout_retask_view.setVisibility(View.VISIBLE);
             }
 
-        }, false, "不截止");
+        }, false, "取消");
     }
 
     /**
@@ -573,25 +581,26 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(){
+     */
+    private void newUploadAttachement() {
         showLoading("正在提交");
         try {
             uploadSize = 0;
-            uploadNum  = pickPhots.size();
+            uploadNum = pickPhots.size();
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
                         TypedFile typedFile = new TypedFile("image/*", newFile);
+                        LogUtil.dee("typeFile:" + typedFile);
                         TypedString typedUuid = new TypedString(uuid);
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
                                 new RCallback<Attachment>() {
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
-                                        if(uploadSize == uploadNum){
+                                        if (uploadSize == uploadNum) {
                                             requestCommitTask();
                                         }
                                     }
@@ -603,11 +612,12 @@ public class TasksAddActivity extends BaseActivity {
                                         img_title_right.setEnabled(true);
                                     }
                                 });
-                            }
-                        }
                     }
+                }
+            }
         } catch (Exception ex) {
             Global.ProcException(ex);
+            Toast("图片过大");
         }
     }
 
@@ -618,6 +628,7 @@ public class TasksAddActivity extends BaseActivity {
         }
 
         switch (requestCode) {
+
             /*关联客户回调*/
             case FinalVariables.REQUEST_SELECT_CUSTOMER:
                 Customer customer = (Customer) data.getSerializableExtra("data");
@@ -644,25 +655,33 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
-            /*上传附件回调*/
-            case SelectPicPopupWindow.GET_IMG:
-                pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
-                init_gridView_photo();
+            /*相册选择 回调*/
+            case MainApp.PICTURE:
+                if (null != data) {
+                    pickPhotsResult = new ArrayList<>();
+                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    for (String path : mSelectPath) {
+                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                    }
+                    pickPhots.addAll(pickPhotsResult);
+                    init_gridView_photo();
+                }
                 break;
 
-            //附件删除回调
+            /*附件删除回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 pickPhots.remove(data.getExtras().getInt("position"));
                 init_gridView_photo();
                 break;
 
-            //用户单选, 负责人
+            /*用户单选, 负责人*/
             case SelectDetUserActivity2.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 newUser = u;
                 tv_responsiblePerson.setText(newUser.getName());
                 break;
-            //用户选择, 参与人
+
+            /*用户选择, 参与人*/
             case SelectDetUserActivity2.REQUEST_ALL_SELECT:
                 members = (Members) data.getSerializableExtra("data");
                 if (null == members) {

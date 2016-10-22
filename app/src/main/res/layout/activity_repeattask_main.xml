@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/dialog_blue"
+        android:background="@color/title_bg1"
         >
 
         <TextView
@@ -62,7 +62,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="@dimen/dimen_1"
-        android:background="@color/gray0990"
+        android:background="@color/lineCC"
         />
 
     <LinearLayout
@@ -79,7 +79,7 @@
             android:background="@drawable/attendance_popview_selector"
             android:gravity="center"
             android:text="不重复"
-            android:textColor="@color/dialog_blue"
+            android:textColor="@color/title_bg1"
             android:textSize="16sp"
             />
 
@@ -91,7 +91,7 @@
             android:background="@drawable/attendance_popview_selector"
             android:gravity="center"
             android:text="确定"
-            android:textColor="@color/dialog_blue"
+            android:textColor="@color/title_bg1"
             android:textSize="16sp"
             />
 

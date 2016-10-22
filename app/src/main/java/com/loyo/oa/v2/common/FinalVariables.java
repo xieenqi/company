@@ -71,11 +71,11 @@ public final class FinalVariables {
      * 企业QQ url
      */
     public static String GetBQQLogin() {
-        return "http://ukuaiqi.com/oauth2/bqq/authorize";
+        return Config_project.isRelease ? "http://ukuaiqi.com/oauth2/bqq/authorize" : "http://staging.ukuaiqi.com/oauth2/bqq/authorize";
     }
 
     public static String GetLogin_success_prefix() {
-        return "http://ukuaiqi.com/oauth2/authorized?authorizationToken";
+        return Config_project.isRelease ? "http://ukuaiqi.com/oauth2/authorized?authorizationToken" : "http://staging.ukuaiqi.com/oauth2/authorized?authorizationToken";
     }
 
     public static final String attachments = "/attachment/";//上传附件
@@ -148,7 +148,14 @@ public final class FinalVariables {
      * 公海客户查询
      **/
     public static final String SEARCH_CUSTOMERS_PUBLIC = Config_project.API_URL_CUSTOMER() + "/customer/sharedsearch";
-
+    /**
+     * 我的线索查询
+     */
+    public static final String SERACH_CLUE_MY = Config_project.API_URL_CUSTOMER() + "/salesleads/mobile";
+    /**
+     * 团队线索查询
+     */
+    public static final String SERACH_CLUE_TEAM = Config_project.API_URL_CUSTOMER() + "/salesleads/mobile/team";
 
     /**
      * 登陆
@@ -169,7 +176,7 @@ public final class FinalVariables {
 
     //基础缓存
     public static final String BASE_SHARE = "base_share";
-//    public static final String NUMBER_PWD = "number_pwd"; //数字密码 2015－01－21
+    //    public static final String NUMBER_PWD = "number_pwd"; //数字密码 2015－01－21
     public static final String TOKEN = "token";
 
     public static final String LAST_TRACKLOG = "last_track_log";

@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/activity_bg"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/saleteam_topview"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
-        >
+        android:background="@color/white"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/saleteam_screen1"
@@ -23,17 +24,16 @@
                 android:id="@+id/saleteam_screen1_commy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="全公司"
+                android:ellipsize="end"
                 android:maxEms="6"
                 android:singleLine="true"
-                android:ellipsize="end"
-                />
+                android:text="全公司" />
 
             <ImageView
                 android:id="@+id/saleteam_screen1_iv1"
-                android:layout_marginLeft="@dimen/dimen_5"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                android:layout_marginLeft="@dimen/dimen_5"
                 android:background="@drawable/arrow_down" />
 
         </LinearLayout>
@@ -41,10 +41,9 @@
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/lineCC"
-            android:layout_marginBottom="1dp"
-            android:layout_marginTop="1dp"
-            />
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/lineCC" />
 
         <LinearLayout
             android:id="@+id/saleteam_screen2"
@@ -61,9 +60,9 @@
 
             <ImageView
                 android:id="@+id/saleteam_screen1_iv2"
-                android:layout_marginLeft="@dimen/dimen_5"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                android:layout_marginLeft="@dimen/dimen_5"
                 android:background="@drawable/arrow_down" />
 
         </LinearLayout>
@@ -71,10 +70,9 @@
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/lineCC"
-            android:layout_marginBottom="1dp"
-            android:layout_marginTop="1dp"
-            />
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/lineCC" />
 
         <LinearLayout
             android:id="@+id/saleteam_screen3"
@@ -91,23 +89,23 @@
 
             <ImageView
                 android:id="@+id/saleteam_screen1_iv3"
-                android:layout_marginLeft="@dimen/dimen_5"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                android:layout_marginLeft="@dimen/dimen_5"
                 android:background="@drawable/arrow_down" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line"/>
+    <include layout="@layout/include_solid_line" />
 
     <ViewStub
         android:id="@+id/vs_nodata"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inflatedId="@+id/layout_nodata"
-        android:layout="@layout/item_layout_nodata"/>
+        android:layout="@layout/item_layout_nodata" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -145,12 +143,11 @@
         </RelativeLayout>
 
 
-
         <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
             android:id="@+id/saleteam_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/whitesmoke"
+            android:background="@color/white"
             android:cacheColorHint="#00000000"
             android:divider="@null"
             android:drawSelectorOnTop="true"
@@ -158,9 +155,8 @@
             android:fastScrollEnabled="false"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
-            android:smoothScrollbar="true"
             android:scrollbars="none"
-            />
+            android:smoothScrollbar="true" />
 
         <Button
             android:id="@+id/btn_add"
@@ -170,8 +166,7 @@
             android:layout_marginBottom="3dp"
             android:background="@drawable/bg_btn_circle"
             android:textColor="@color/white"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
     </FrameLayout>
 </LinearLayout>

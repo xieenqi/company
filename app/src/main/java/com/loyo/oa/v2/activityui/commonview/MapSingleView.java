@@ -28,6 +28,7 @@ public class MapSingleView extends BaseActivity implements View.OnClickListener{
     private LatLng latlng;
     private double laPosition,loPosition;
     private String address;
+    private StringBuffer stringBuffer;
     private Intent mIntent;
     private Marker mMarker;
     private TextView title;
@@ -84,6 +85,13 @@ public class MapSingleView extends BaseActivity implements View.OnClickListener{
             laPosition = mIntent.getDoubleExtra("la", 0);
             loPosition = mIntent.getDoubleExtra("lo", 0);
             address    = mIntent.getStringExtra("address");
+            stringBuffer = new StringBuffer();
+            for(int i = 0;i<address.length();i++){
+                stringBuffer.append(address.charAt(i));
+                if(i == 20){
+                    stringBuffer.append("\n");
+                }
+            }
         }
         mapView = (MapView) findViewById(R.id.mapView);
         latlng = new LatLng(laPosition,loPosition);
@@ -110,7 +118,7 @@ public class MapSingleView extends BaseActivity implements View.OnClickListener{
                 .position(latlng)
                 .icon(BitmapDescriptorFactory.defaultMarker())
                 .title("定位地址:")
-                .snippet(address)
+                .snippet(stringBuffer.toString())
                 .draggable(true));
         mMarker.showInfoWindow();//内容默认显示出来
     }

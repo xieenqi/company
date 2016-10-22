@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -23,6 +24,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.RoundImageView;
@@ -52,6 +54,7 @@ public class HaitMyActivity extends BaseActivity {
     private HaitAdapter adapter;
     private boolean isTopAdd = true;
     private int pageIndex = 1;
+    private boolean isUpdate = false;
 
 
     @Override
@@ -65,11 +68,8 @@ public class HaitMyActivity extends BaseActivity {
 
     private void initView() {
         assignViews();
-        // tv_back.setText("我的讨论");
         tv_title1.setText("@我的");
-
         lv_myDiscuss.setMode(PullToRefreshBase.Mode.BOTH);
-
         linearLayoutManager = new LinearLayoutManager(this);
         lv_myDiscuss.getRefreshableView().setLayoutManager(linearLayoutManager);
         adapter = new HaitAdapter();
@@ -140,6 +140,16 @@ public class HaitMyActivity extends BaseActivity {
                 });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isUpdate) {
+            Intent intent = new Intent();
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
 
     private class HaitAdapter extends RecyclerView.Adapter<HaitViewHolder> {
         private List<HttpMyDiscussItem> datas = new ArrayList<>();
@@ -165,7 +175,7 @@ public class HaitMyActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(final HaitViewHolder holder, final int position) {
             HttpMyDiscussItem info = datas.get(position);
-            holder.tv_time.setText(info.updatedAt.substring(11, 19));
+            holder.tv_time.setText(info.newUpdatedAt != 0 ? DateTool.getDiffTime(info.newUpdatedAt) : info.updatedAt.substring(11, 19));
             holder.tv_content.setText(info.atContent);
             holder.tv_title.setText(parseTitle(info.creator.name, info.title));
             ImageLoader.getInstance().displayImage(info.creator.avatar, holder.iv_avatar);
@@ -223,9 +233,10 @@ public class HaitMyActivity extends BaseActivity {
                     Intent intent = new Intent(HaitMyActivity.this, DiscussDetialActivity.class);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
-                    intent.putExtra(ExtraAndResult.EXTRA_ID, "");//@我界面不刷新红点
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, " ");//@我界面不刷新红点
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);
                     startActivity(intent);
+                    isUpdate = true;//此时需要刷新讨论列表
                 }
             });
             itemView.setOnTouchListener(Global.GetTouch());

@@ -40,7 +40,7 @@ public class JPushService extends BroadcastReceiver {
         manger = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Bundle bundle = intent.getExtras();
         LogUtil.d("[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
-        TrackRule.InitTrackRule();//收到推送启动一次定位服务 避免服务kill掉
+
         Common.getToken();//检查刷新token
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
@@ -49,9 +49,9 @@ public class JPushService extends BroadcastReceiver {
             //send the Registration Id to your server...
 
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
+            TrackRule.InitTrackRule();//收到推送启动一次定位服务 避免服务kill掉
             Log.d(TAG, "[MyReceiver] 接收到推送下来的【自定义消息】: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
             //processCustomMessage(context, bundle);
-            //Global.Toast("自定义消息:\n"+bundle.getString(JPushInterface.EXTRA_MESSAGE));
             String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
             LogUtil.d("【自定义msg】键值数据： " + msg);
             HttpJpushNotification pushMsgData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);
@@ -60,7 +60,7 @@ public class JPushService extends BroadcastReceiver {
              * 同时刷新token
              */
             if (7 == pushMsgData.silentType) {
-                TrackRule.InitTrackRule();
+//                TrackRule.InitTrackRule();
             } else if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新8组织架构与9个人信息
                 if (!getUserInfo(pushMsgData))
                     pushMsgData.silentType = 8;//更改别人的信息制动转成 更新8组织架构
@@ -83,6 +83,7 @@ public class JPushService extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
+            TrackRule.InitTrackRule();//收到推送启动一次定位服务 避免服务kill掉
             Log.d(TAG, "[MyReceiver] 用户点击打开了【通知】");//buzzType 1，任务 2，报告 3，审批 4.项目 5.通知公告
 
             String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);

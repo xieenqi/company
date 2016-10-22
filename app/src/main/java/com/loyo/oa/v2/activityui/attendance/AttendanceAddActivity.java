@@ -39,6 +39,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -57,6 +58,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -132,6 +134,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         tv_address.setText(address);
         refreshLocation(longitude, latitude);
         LocationUtilGD.sotpLocation();
+        UMengTools.sendLocationInfo(address, longitude, latitude);
     }
 
     @Override
@@ -143,7 +146,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     }
 
 
-    private static final class MHandler extends Handler {
+    private final class MHandler extends Handler {
         private WeakReference<AttendanceAddActivity> mActivity;
         private static final int TEXT_LEN = 6;
 
@@ -172,10 +175,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                 }
             }
 
-            if (0 == msg.what) {
-                mActivity.get().recycle();
-                mActivity.get().showTimeOutDialog();
-            }
+            if (isRun)
+                if (0 == msg.what) {
+                    mActivity.get().recycle();
+                    mActivity.get().showTimeOutDialog();
+                }
         }
     }
 
@@ -360,6 +364,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
     /**
      * 检查提交的数据
      *
@@ -411,14 +421,21 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 显示打卡超时对话框
      */
     private void showTimeOutDialog() {
-        showGeneralDialog(false, false, getString(R.string.app_attendance_outtime_message));
+
+        sweetAlertDialogView.alertIconClick(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                finish();
+            }
+        },getString(R.string.app_attendance_outtime_message), null);
+
+/*        showGeneralDialog(false, false, getString(R.string.app_attendance_outtime_message));
         generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-//                onBackPressed();
                 finish();
             }
-        });
+        });*/
 
     }
 
@@ -426,7 +443,21 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 弹出外勤确认对话框
      */
     private void showOutAttendanceDialog() {
-        showGeneralDialog(true, true, getString(R.string.app_attendance_out_message));
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                commitAttendance();
+            }
+        },"提示",getString(R.string.app_attendance_out_message));
+
+/*        showGeneralDialog(true, true, getString(R.string.app_attendance_out_message));
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -440,7 +471,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             public void onClick(final View view) {
                 generalPopView.dismiss();
             }
-        });
+        });*/
     }
 
     /**
@@ -500,18 +531,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             @Override
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-//                    Toast("请检查您的网络连接");
-//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-//                    if (error.getResponse().getStatus() == 500) {
-//                        Toast("网络异常500，请稍候再试");
-//                        try {
-//                            LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
             }
         });
     }
@@ -559,7 +578,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         });
     }
 
-    @OnActivityResult(SelectPicPopupWindow.GET_IMG)
+    @OnActivityResult(MainApp.GET_IMG)
     void onGetImageResult(final Intent data) {
         if (null == data) {
             return;
@@ -589,5 +608,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         } catch (Exception ex) {
             Global.ProcException(ex);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        recycle();
     }
 }

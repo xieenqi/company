@@ -15,7 +15,7 @@ public class TeamLegwork extends BaseBeans {
 
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return null;
     }
 

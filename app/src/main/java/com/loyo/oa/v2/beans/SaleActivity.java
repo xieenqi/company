@@ -1,9 +1,14 @@
 package com.loyo.oa.v2.beans;
 
+import android.widget.ImageView;
+
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -26,19 +31,12 @@ public class SaleActivity extends BaseBeans implements Serializable {
     public String typeName;
     public long remindAt;
     public String contactName;
+    public String audioUrl;
+    public long audioLength;
 
-    //    type SaleActivitySimple struct {
-//        Id          bson.ObjectId `json:"id"`
-//        CreatorName string        `json:"creatorName"` //跟进人
-//        CreateAt    int64         `json:"createAt"`
-//        Content     string        `json:"content,omitempty"`
-//        RemindAt    int64         `json:"remindAt"`
-//        TypeName    string        `json:"typeName,omitempty"`
-//        ContactId   string        `json:"-"`
-//        ContactName string        `json:"contactName,omitempty"` //联系人
-//    }
+
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return getCreateAt() + "";
     }
 

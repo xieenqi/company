@@ -49,7 +49,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         View view = inflater.inflate(R.layout.fragment_main_home, null, false);
         initView(view);
         registerBaseReceiver();
-        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~主界面-->onCreateView()"+savedInstanceState);
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~主界面-->onCreateView()" + savedInstanceState);
         return view;
     }
 
@@ -155,6 +155,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
                     mBundle = new Bundle();
                     mBundle.putParcelable("view", heading);
                     mHomeApplicationFragment.setArguments(mBundle);
+                    mHomeApplicationFragment.setHomeFragment(HomeFragment.this);
                     return mHomeApplicationFragment;
                 case 1:
                     if (mHomeStatisticsFragment == null) {

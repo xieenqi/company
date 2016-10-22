@@ -49,7 +49,9 @@ public class ProjectDescriptionActivity extends BaseActivity {
     void initViews() {
         img_title_left.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText("项目介绍");
-        if (null == project) {
+        if (null == project || null == project.creator) {
+            Toast("此项目没有创建人");
+            onBackPressed();
             return;
         }
         tv_extra.setText(project.creator.getRealname() + " " + MainApp.getMainApp().df2.format(new Date(project.getCreatedAt())) + " 发布");

@@ -55,7 +55,7 @@
                 android:padding="@dimen/dimen_2"
                 android:text="全部取消"
                 android:textSize="14sp"
-                android:textColor="@color/gray"/>
+                android:textColor="@color/text99"/>
 
             <Button
                 android:id="@+id/btn_confirm"

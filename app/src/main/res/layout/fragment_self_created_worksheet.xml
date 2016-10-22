@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:id="@+id/saleteam_topview"
+        android:layout_width="fill_parent"
+        android:layout_height="46dp"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        >
+
+        <LinearLayout
+            android:id="@+id/salemy_screen1"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_tab1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="150dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:text="全部阶段"/>
+
+            <ImageView
+                android:id="@+id/salemy_screen1_iv1"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:background="@drawable/arrow_down"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/lineCC"
+            />
+
+        <LinearLayout
+            android:id="@+id/salemy_screen2"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_tab2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="150dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:text="全部类型"/>
+
+            <ImageView
+                android:id="@+id/salemy_screen1_iv2"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:background="@drawable/arrow_down"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/include_solid_line"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ViewStub
+            android:id="@+id/vs_nodata"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inflatedId="@+id/layout_nodata"
+            android:layout="@layout/item_layout_nodata"/>
+
+        <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView
+            android:id="@+id/expandableListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="false"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:drawSelectorOnTop="false"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="false"
+            android:footerDividersEnabled="true"
+            android:groupIndicator="@null"
+            android:headerDividersEnabled="true"
+            android:orientation="vertical"
+            android:scrollbars="none"
+            android:smoothScrollbar="true"
+            ptr:ptrMode="both"/>
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="3dp"
+            android:background="@drawable/bg_btn_circle"
+            android:textColor="@color/white"/>
+
+    </FrameLayout>
+</LinearLayout>

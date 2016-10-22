@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.service;
 
-import android.app.Service;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
@@ -13,33 +13,32 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.APSService;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LocateData;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.LDBManager;
 import com.loyo.oa.v2.point.ITrackLog;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
-import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.UMengTools;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import retrofit.RestAdapter;
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -49,7 +48,7 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/8/19.
  */
-public class AMapService extends Service {
+public class AMapService extends APSService {
     private final String TAG = getClass().getSimpleName();
     /**
      * 请求定位的最小时间间隔
@@ -74,11 +73,11 @@ public class AMapService extends Service {
     private LocalBinder mBinder = new LocalBinder();
     private LDBManager ldbManager;
     private boolean isCache;//是否有缓存
-    private RestAdapter mRestAdapter;
     private String oldAddress = "";
 
     private static AMapLocationClient locationClient = null;
     private static AMapLocationClientOption locationOption = null;
+    Timer timer;
 
     public class LocalBinder extends Binder {
         public AMapService getService() {
@@ -98,42 +97,14 @@ public class AMapService extends Service {
 
     @Override
     public void onCreate() {
-        app = (MainApp) getApplicationContext();
-        ldbManager = new LDBManager();
-        mRestAdapter = new RestAdapter.Builder()
-                .setEndpoint(Config_project.SERVER_URL())
-                .setLogLevel(RestAdapter.LogLevel.NONE)
-                .build();
-
-        startLocate();
         super.onCreate();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        acquireWakeLock();
-        if (intent != null && intent.hasExtra("track")) {
-            trackRule = (TrackRule) intent.getSerializableExtra("track");
-        }
-        return START_REDELIVER_INTENT;
-    }
-
-    @Override
-    public void onDestroy() {
-        releaseWakeLock();
-        stopLocate();
-        TrackRule.StartTrackRule(10 * 1000);
-        super.onDestroy();
+        initLocation();
     }
 
     /**
-     * 开启定位
+     * 初始化定位资源
      */
-    private void startLocate() {
-//        mLocationManagerProxy = LocationManagerProxy.getInstance(this.getApplicationContext());
-//        maMapLocationListener = new MAMapLocationListener();
-//        mLocationManagerProxy.setGpsEnable(true);
-//        mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, MIN_SCAN_SPAN_MILLS, MIN_SCAN_SPAN_DISTANCE, maMapLocationListener);
+    private void initLocation() {
         maMapLocationListener = new MAMapLocationListener();
         locationClient = new AMapLocationClient(app);
         locationOption = new AMapLocationClientOption();
@@ -149,6 +120,44 @@ public class AMapService extends Service {
         locationClient.setLocationListener(maMapLocationListener);
         // 设置定位参数
         locationClient.setLocationOption(locationOption);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        acquireWakeLock();
+        app = (MainApp) getApplicationContext();
+        ldbManager = new LDBManager();
+        userOnlineTime();
+        if (intent != null && intent.hasExtra("track")) {
+            trackRule = (TrackRule) intent.getSerializableExtra("track");
+            startLocate();
+            //服务运行 通知栏显示 调用startForegound，让你的Service所在的线程成为前台进程
+            Notification notification = new Notification();
+            notification.flags = Notification.FLAG_ONGOING_EVENT;
+            notification.flags |= Notification.FLAG_NO_CLEAR;
+            notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
+            startForeground(1, notification);
+        }
+        return START_REDELIVER_INTENT;
+    }
+
+    @Override
+    public void onDestroy() {
+        releaseWakeLock();
+        stopLocate();
+        TrackRule.StartTrackRule(10 * 1000);
+        recycleTimer();
+        super.onDestroy();
+    }
+
+    /**
+     * 开启定位
+     */
+    private void startLocate() {
+        if (locationClient != null) {//定位是否在运行 如果在运行就不重复启动定位
+            locationClient.stopLocation();
+            locationClient.stopAssistantLocation();
+        }
         // 启动定位
         locationClient.startLocation();
         locationClient.startAssistantLocation();
@@ -164,7 +173,7 @@ public class AMapService extends Service {
             LogUtil.d("=====onLocation轨迹Changed=====aMapLocation");
 
             releaseWakeLock();//释放cpu
-            if (!checkRule()) {
+            if (!TrackRule.checkRule(trackRule)) {
                 SharedUtil.remove(app, "lat");
                 SharedUtil.remove(app, "lng");
                 return;
@@ -173,7 +182,7 @@ public class AMapService extends Service {
             if (aMapLocation != null) {
                 /*不获取服务器时间*/
                 //getCurrentTime(aMapLocation);
-                dealLocation(aMapLocation, System.currentTimeMillis());
+                dealLocation(aMapLocation);
             } else {
                 LogUtil.d(TAG + "位置回调失败！");
             }
@@ -185,18 +194,17 @@ public class AMapService extends Service {
      * 处理轨迹
      *
      * @param aMapLocation
-     * @param currentTime
      */
-    private void dealLocation(AMapLocation aMapLocation, long currentTime) {
+    private void dealLocation(AMapLocation aMapLocation) {
         String address = aMapLocation.getAddress();
         float accuracy = aMapLocation.getAccuracy();//定位精度
         String provider = aMapLocation.getProvider();//获取定位提供者
         String time = MainApp.getMainApp().df1.format(new Date(aMapLocation.getTime()));
-        boolean isTimeMin = currentTime - aMapLocation.getTime() >= 2 * 60 * 1000;
         LogUtil.d("【轨迹定位】：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " +
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
                 " 定位信息：" + aMapLocation.getErrorInfo() + "--" + aMapLocation.getLocationDetail());
+        isCache = SharedUtil.getBoolean(app, "isCache");
         if (isCache) {//上传缓存的地址数据
             uploadCacheLocation();
         }
@@ -212,23 +220,22 @@ public class AMapService extends Service {
             address = addressBuilder.toString();
         }
         oldAddress = SharedUtil.get(app, "address");
+        SharedUtil.put(app, "latOld", String.valueOf(aMapLocation.getLatitude()));
+        SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
-        if (TextUtils.isEmpty(address) ||
-                (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
+        //TextUtils.isEmpty(address) ||
+        if ((aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
                 || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || oldAddress.equals(address)) {
             LogUtil.d("当前位置偏移量很大，直接return");
-            //缓存有效定位
-            SharedUtil.put(app, "latOld", String.valueOf(aMapLocation.getLatitude()));
-            SharedUtil.put(app, "lngOld", String.valueOf(aMapLocation.getLongitude()));
             return;
         }
-        if (Global.isConnected()) {//检查是否有网络
-            if (isEmptyStr(address)) {
-                aMapLocation.setAddress("未知地址");
-            }
-        } else {
-            aMapLocation.setAddress("未知地址(离线)");
-        }
+//        if (Global.isConnected()) {//检查是否有网络
+//            if (isEmptyStr(address)) {
+//                aMapLocation.setAddress("未知地址");
+//            }
+//        } else {
+//            aMapLocation.setAddress("未知地址(离线)");
+//        }
 
         processLocation(aMapLocation);
     }
@@ -254,19 +261,19 @@ public class AMapService extends Service {
             LogUtil.d("获取到的distance : " + distance);
             LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE));
 
-            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE) || maxLocation(aMapLocation)) {
+            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
                 LogUtil.d("小于请求定位的最小间隔！");
                 return;
             }
         }
+        uploadLocation(aMapLocation);
         if (Global.isConnected()) {
-            uploadLocation(aMapLocation);
         } else {
-            isCache = true;
             LocateData data = buildLocateData(aMapLocation);
             ldbManager.addLocateData(data);
+            SharedUtil.putBoolean(app, "isCache", true);
+//            isCache = true;
         }
-        uploadLocation(aMapLocation);
     }
 
     /**
@@ -297,41 +304,66 @@ public class AMapService extends Service {
         final double latitude = location.getLatitude();
         final double longitude = location.getLongitude();
         final String address = location.getAddress();
-
-        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude + "," + latitude, System.currentTimeMillis() / 1000)));
+        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(longitude
+                + "," + latitude, System.currentTimeMillis() / 1000)));
         final HashMap<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("tracklogs", trackLogs);
+        jsonObject.put("trackLogs", trackLogs);//tracklogs
+//新版上传轨迹
+        RestAdapterFactory.getInstance().build(Config_project.NEW_UPLOCATION()).create(ITrackLog.class)
+                .newUploadTrack(jsonObject, new Callback<TrackLog>() {
+                    @Override
+                    public void success(TrackLog trackLog, Response response) {
+                        HttpErrorCheck.checkResponse(" new >>>> 【后台】 >>>>>上传轨迹: ", response);
 
-        app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
-            @Override
-            public void success(Object trackLog, Response response) {
-                LogUtil.d("【轨迹上报成功！！！】,address : " + address);
-                HttpErrorCheck.checkResponse("上报轨迹", response);
-                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
+                        SharedUtil.put(MainApp.getMainApp(), "lat", String.valueOf(latitude));
+                        SharedUtil.put(MainApp.getMainApp(), "lng", String.valueOf(longitude));
+                        SharedUtil.remove(MainApp.getMainApp(), "address");
+                        SharedUtil.put(MainApp.getMainApp(), "address", address);
+                    }
 
-                SharedUtil.put(app, "lat", String.valueOf(latitude));
-                SharedUtil.put(app, "lng", String.valueOf(longitude));
-                SharedUtil.put(app, "address", address);
-            }
+                    @Override
+                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+                        LocateData data = buildLocateData(location);
+                        ldbManager.addLocateData(data);
+                        SharedUtil.putBoolean(app, "isCache", true);
+                    }
+                });
 
-            @Override
-            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-                LogUtil.d(TAG + " 【 轨迹 】,轨迹上报失败");
-                LocateData data = buildLocateData(location);
-                ldbManager.addLocateData(data);
-                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "2|" + app.df1.format(new Date()));
-                //fixes bugly1043 空指针异常 v3.1.1 ykb 07-15
-                UMengTools.sendCustomErroInfo(getApplicationContext(), location);
-                String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
-                if (null != MainApp.user)
-                    Global.ProcException(new Exception(" 轨迹上【搜集】报失败:" + error.getMessage() +
-                            " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(jsonObject)
-                            + "用户：" + app.gson.toJson(MainApp.user)));
-                isCache = true;
-                super.failure(error);
-            }
-        });
+
+//        app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
+//            @Override
+//            public void success(Object trackLog, Response response) {
+//                LogUtil.d("【轨迹上报成功！!!!!!!!！！】,address : " + address);
+//                HttpErrorCheck.checkResponse("上报轨迹", response);
+//                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
+//
+//                SharedUtil.put(app, "lat", String.valueOf(latitude));
+//                SharedUtil.put(app, "lng", String.valueOf(longitude));
+//                SharedUtil.remove(app, "address");
+//                SharedUtil.put(app, "address", address);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+////                HttpErrorCheck.checkError(error);
+//                LogUtil.d(TAG + " 【 轨迹 】,轨迹上报失败");
+//                LocateData data = buildLocateData(location);
+//                ldbManager.addLocateData(data);
+//                SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "2|" + app.df1.format(new Date()));
+//                //fixes bugly1043 空指针异常 v3.1.1 ykb 07-15
+//                UMengTools.sendCustomErroInfo(getApplicationContext(), location);
+//                String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
+//                if (null != MainApp.user)
+//                    Global.ProcException(new Exception(" 轨迹上【搜集】报失败:" + error.getMessage() +
+//                            " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(jsonObject)
+//                            + "用户：" + app.gson.toJson(MainApp.user)));
+//                SharedUtil.putBoolean(app, "isCache", true);
+////                isCache = true;
+//                UMengTools.sendCustomTrajectory(app, error, jsonObject);
+//                super.failure(error);
+//            }
+//        });
     }
 
     /**
@@ -350,54 +382,6 @@ public class AMapService extends Service {
         data.setProvider(TextUtils.isEmpty(aMapLocation.getProvider()) ? "" : aMapLocation.getProvider());
 
         return data;
-    }
-
-    /**
-     * 检测轨迹规则 后台是否产生轨迹
-     *
-     * @return
-     */
-    private boolean checkRule() {
-        boolean unRuleable = trackRule == null || trackRule.getWeekdays() == null || trackRule.getWeekdays().length() != 7;
-        if (unRuleable) {
-            LogUtil.d("checkRule,轨迹规则【设置】错误，trackRule is null ? : " + (trackRule == null) +
-                    " weekdays : " + (trackRule == null ? "NULL" : trackRule.getWeekdays().length()));
-        }
-
-        int day_of_week = DateTool.get_DAY_OF_WEEK(new Date());
-        day_of_week = day_of_week == 1 ? 7 : day_of_week - 1;
-
-        boolean unInDay = true;
-        if (!TextUtils.isEmpty(trackRule.getWeekdays()) && trackRule.getWeekdays().length() >= day_of_week) {
-            unInDay = '1' != (trackRule.getWeekdays().charAt(day_of_week - 1));
-        }
-        if (unInDay) {
-            LogUtil.d("checkRule,当日未【设置】上报轨迹,weekdays : " + trackRule.getWeekdays() + " dayofweek : " + day_of_week);
-        }
-
-        boolean isInTime = false;
-        SimpleDateFormat sdf = app.df6;
-        String currentDate = sdf.format(new Date());
-        try {
-            Date currDate = sdf.parse(currentDate);
-            Date startDate = sdf.parse(trackRule.startTime);
-            Date endDate = sdf.parse(trackRule.endTime);
-
-            if (currDate.after(startDate) && currDate.before(endDate)) {
-                isInTime = true;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (!isInTime) {
-            LogUtil.d("checkRule,该时间段内未【设置】上报轨迹");
-        }
-
-        if (!unRuleable && !unInDay && isInTime) {
-            return true;
-        }
-        return false;
     }
 
 
@@ -441,14 +425,14 @@ public class AMapService extends Service {
                     @Override
                     public void success(Object o, Response response) {
                         HttpErrorCheck.checkResponse("【缓存轨迹】上传成功： ", response);
-                        isCache = false;
                         ldbManager.clearAllLocateDatas();
+//                        isCache = false;
+                        SharedUtil.putBoolean(app, "isCache", false);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         super.failure(error);
-                        isCache = true;
                         if (null != MainApp.user)
                             Global.ProcException(new Exception(" 《缓存》轨迹上【搜集】报失败:" + error.getMessage() +
                                     " url：" + error.getUrl() + " 定位信息：" + app.gson.toJson(tracklogsMap)
@@ -537,6 +521,50 @@ public class AMapService extends Service {
         }
         wakeLock = null;
     }
+
+    /**
+     * 计时器 记录用户在线
+     */
+    private void userOnlineTime() {
+        long timerOk = 5 * 60 * 1000;
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                app.getRestAdapter().create(ITrackLog.class).getUserOneLine(new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("用户在线：", response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+                    }
+                });
+            }
+        }, timerOk, timerOk);
+    }
+
+    /**
+     * 回收计时器
+     */
+    private void recycleTimer() {
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
 
     /**
      * 获取最近的一次位置信息

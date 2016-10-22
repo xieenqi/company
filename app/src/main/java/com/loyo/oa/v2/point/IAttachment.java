@@ -1,9 +1,15 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
+import com.loyo.oa.v2.beans.AttachmentBatch;
+import com.loyo.oa.v2.beans.AttachmentForNew;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
@@ -38,17 +44,6 @@ public interface IAttachment {
     @GET("/attachment/uuid/{uuid}")
     void getAttachments(@Path("uuid") String uuid, Callback<ArrayList<Attachment>> cb);
 
-    @GET("/attachment/{uuid}/count")
-    void getAttachementsCount(@Path("uuid") String uuid,Callback<Attachment> callback);
-
-    /**
-     * 获取企业附件大小
-     * @param companyId
-     * @param callback
-     */
-    @GET("/attachment/{companyId}/sumsize")
-    void getCompanyAttachmentSize(@Path("companyId") String companyId,Callback<Attachment> callback);
-
     /**
      * 上传附件
      * @param uuid
@@ -61,5 +56,20 @@ public interface IAttachment {
     @Multipart
     @POST("/attachment/")
     void newUpload(@Part("uuid") TypedString uuid,@Part("bizType")int biz,@Part("attachments")TypedFile attachments,Callback<Attachment> callback);
+
+    /**
+     * 获取阿里云附件Token
+     * */
+    @POST("/attachment/sign")
+    void getServerToken(Callback<OssToken> callback);
+
+    @POST("/attachment/sign")
+    OssToken syncGetServerToken();
+
+    /**
+     * 上传附件信息
+     * */
+    @POST("/attachment/batch")
+    void setAttachementData(@Body ArrayList<AttachmentBatch> attachment,Callback<ArrayList<AttachmentForNew>> callback);
 
 }

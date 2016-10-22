@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.beans;
 
+import android.text.TextUtils;
+
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.discuss.bean.DiscussCounter;
@@ -48,7 +50,7 @@ public class WorkReport extends BaseBeans {
     }
 
     @Override
-    String getOrderStr() {
+    public String getOrderStr() {
         return createdAt + "";
     }
 
@@ -75,13 +77,21 @@ public class WorkReport extends BaseBeans {
      */
     public boolean isRelevant() {
         String myId = MainApp.user.id;
-
+        ArrayList<UserInfo> depts = MainApp.user.depts;
         if (null != reviewer.user && myId.equals(reviewer.user.getId())) {
             return true;
         }
         for (NewUser menber : members.users) {
             if (null != menber && myId.equals(menber.getId())) {
                 return true;
+            }
+        }
+        for (UserInfo ele : depts) {//多部门的情况
+            for (NewUser menber : members.depts) {
+                if (null != menber && ele != null && ele.getShortDept() != null && !TextUtils.isEmpty(menber.getXpath())
+                        && ele.getShortDept().getXpath().startsWith(menber.getXpath())) {
+                    return true;
+                }
             }
         }
         if (null != creator && myId.equals(creator.id)) {

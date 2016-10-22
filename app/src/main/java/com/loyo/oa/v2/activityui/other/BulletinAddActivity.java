@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,6 +19,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -40,7 +40,9 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -76,6 +78,8 @@ public class BulletinAddActivity extends BaseActivity {
     private Members member = new Members();
     private StringBuffer joinUserId, joinName;
 
+    private List<String> mSelectPath;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
     private String title;
     private String content;
 
@@ -135,11 +139,16 @@ public class BulletinAddActivity extends BaseActivity {
      * 批量上传附件
      */
     private void newUploadAttachement() {
-        showGeneralDialog(true, true, getString(R.string.app_bulletin_message));
-        generalPopView.setSureOnclick(new View.OnClickListener() {
+
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
             @Override
-            public void onClick(View v) {
-                generalPopView.dismiss();
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
                 showLoading("正在提交");
                 try {
                     uploadSize = 0;
@@ -177,14 +186,7 @@ public class BulletinAddActivity extends BaseActivity {
                     Global.ProcException(ex);
                 }
             }
-        });
-
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                generalPopView.dismiss();
-            }
-        });
+        },"提示",getString(R.string.app_bulletin_message));
     }
 
 
@@ -223,21 +225,33 @@ public class BulletinAddActivity extends BaseActivity {
         });
     }
 
-
-    @OnActivityResult(SelectPicPopupWindow.GET_IMG)
+    /**
+     * 相册选择 回调
+     */
+    @OnActivityResult(MainApp.PICTURE)
     void onPhotoResult(final Intent data) {
+
         if (null != data) {
-            pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
+            pickPhotsResult = new ArrayList<>();
+            mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            for (String path : mSelectPath) {
+                pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+            }
+            pickPhots.addAll(pickPhotsResult);
             init_gridView_photo();
-        } else {
-            Toast("请重新选择");
         }
+
     }
 
-
+    /**
+     * 相册删除 回调
+     */
     @OnActivityResult(FinalVariables.REQUEST_DEAL_ATTACHMENT)
-    void onDeletePhotoResult(final int resultCode, final Intent data) {
-
+    void onDeletePhotoResult(final Intent data) {
+        if (data != null) {
+            pickPhots.remove(data.getExtras().getInt("position"));
+            init_gridView_photo();
+        }
     }
 
     @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)

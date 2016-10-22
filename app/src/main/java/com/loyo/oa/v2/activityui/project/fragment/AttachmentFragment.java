@@ -136,7 +136,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                 Intent intent = new Intent(getActivity(), SelectPicPopupWindow.class);
                 intent.putExtra("localpic", true);
                 intent.putExtra("addpg", false);
-                startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+                startActivityForResult(intent, MainApp.GET_IMG);
                 break;
         }
     }
@@ -166,7 +166,8 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * 获取数据
      */
     private void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).
+                getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
                 LogUtil.dll(" 项目的附件获取数据： " + MainApp.gson.toJson(attachments));
@@ -282,7 +283,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
             /**
              * 附件上传回调
              * */
-            case SelectPicPopupWindow.GET_IMG:
+            case MainApp.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     if (pickPhots == null) {

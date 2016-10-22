@@ -26,27 +26,29 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.bean.NearCount;
+import com.loyo.oa.v2.activityui.customer.bean.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.activityui.customer.bean.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.SaleCommPopupView;
+import com.loyo.oa.v2.customview.ScreenTagPopupView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.SaleCommPopupView;
-import com.loyo.oa.v2.customview.ScreenTagPopupView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.tool.UMengTools;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,7 +89,9 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private String position;
     private int page = 1;
     private int tagPostion;
+    private int lastVisibleItemPosition;
     private boolean isPullUp = false;
+    private boolean scrollFlag;
 
     private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
@@ -198,6 +202,37 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         btn_add.setOnTouchListener(Global.GetTouch());
         showLoading("");
         getData();
+
+        Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
+
+
+/*        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrollFlag = true;
+                } else {
+                    scrollFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (scrollFlag) {
+                    if (firstVisibleItem > lastVisibleItemPosition) {
+                        LogUtil.dee("上滑");
+                    }
+                    if (firstVisibleItem < lastVisibleItemPosition) {
+                        LogUtil.dee("下滑");
+                    }
+                    if (firstVisibleItem == lastVisibleItemPosition) {
+                        return;
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
+                }
+            }
+        });*/
+
     }
 
     /**
@@ -270,6 +305,8 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
                         HttpErrorCheck.checkError(error);
                     }
                 });
+
+                UMengTools.sendLocationInfo(address, longitude, latitude);
             }
 
             @Override
@@ -335,9 +372,6 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
      * PopupWindow关闭 恢复背景正常颜色
      */
     private void closePopupWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 1f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -345,9 +379,6 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
      * PopupWindow打开，背景变暗
      */
     private void openPopWindow(ImageView view) {
-        windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha = 0.9f;
-        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
@@ -367,7 +398,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
 
                 //时间
                 case R.id.cus_screen1:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true,tagPostion);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
                     saleCommPopupView.showAsDropDown(screen1);
                     openPopWindow(tagImage1);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -380,7 +411,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
 
                 //标签
                 case R.id.cus_screen2:
-                    screenTagPopupView = new ScreenTagPopupView(getActivity(), mTags, mHandler);
+                    screenTagPopupView = new ScreenTagPopupView(mActivity, mTags, mHandler);
                     screenTagPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

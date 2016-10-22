@@ -16,12 +16,12 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.activityui.customer.bean.Member;
 import com.loyo.oa.v2.activityui.customer.bean.MembersRoot;
+import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -44,6 +44,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.Date;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -57,66 +58,15 @@ import retrofit.client.Response;
 public class CustomerDetailInfoActivity extends BaseActivity {
 
     @ViewById
-    ViewGroup img_title_left;
+    ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
+            layout_call, layout_wiretel_call, layout_sale_activity, layout_visit, layout_task, layout_attachment,
+            ll_sale, ll_order;
     @ViewById
-    ViewGroup img_title_right;
-    @ViewById
-    TextView tv_title_1;
+    TextView tv_title_1, tv_customer_name, tv_address, tv_tags, tv_contact_name,
+            tv_contact_tel, customer_detail_wiretel, tv_sale_number, tv_visit_times, tv_task_count, tv_attachment_count,
+            tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count;
     @ViewById
     ImageView img_public;
-
-    @ViewById
-    ViewGroup layout_customer_info;
-    @ViewById
-    TextView tv_customer_name;
-    @ViewById
-    TextView tv_address;
-    @ViewById
-    TextView tv_tags;
-
-    @ViewById
-    ViewGroup layout_contact;
-    @ViewById
-    TextView tv_contact_name;
-    @ViewById
-    TextView tv_contact_tel;
-    @ViewById
-    ViewGroup layout_send_sms;
-    @ViewById
-    ViewGroup layout_call;
-    @ViewById
-    ViewGroup layout_wiretel_call;
-
-    @ViewById
-    ViewGroup layout_sale_activity;
-    @ViewById
-    ViewGroup layout_visit;
-    @ViewById
-    ViewGroup layout_task;
-    @ViewById
-    ViewGroup layout_attachment;
-
-    @ViewById
-    TextView customer_detail_wiretel;
-    @ViewById
-    TextView tv_sale_number;
-    @ViewById
-    TextView tv_visit_times;
-    @ViewById
-    TextView tv_task_count;
-    @ViewById
-    TextView tv_attachment_count;
-    @ViewById
-    ViewGroup ll_sale;
-    @ViewById
-    TextView tv_follow_content;
-    @ViewById
-    TextView tv_follow_crecter_type;
-    @ViewById
-    TextView tv_contact_Number;
-    @ViewById
-    TextView tv_sale_count;
-
     /*之前由传过来的Customer获取客户ID，改为直接把客户ID传过来*/
     Customer mCustomer;
     @Extra("Id")
@@ -137,7 +87,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     void initViews() {
         setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
-
+        showLoading("", false);
     }
 
     @Override
@@ -150,7 +100,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 获取数据
      */
     private void getData() {
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
@@ -203,12 +152,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null == mCustomer) {
             return;
         }
-        //推送过来的公海客户
-//        if (1 == customerType && !mCustomer.lock) {
-//            customerType = 3;
-//        }
+
         /*超级管理员,我的客户,Web权限控制判断*/
-        if (MainApp.user.isSuperUser() && customerType == 3) {
+        if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 3) {
             img_public.setVisibility(View.VISIBLE);
         } else {
             if (customerType == 3) {
@@ -236,12 +182,21 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * */
         isMyUser = (customerType != 3) ? true : false;
 
-        if (customerType != 3 && customerType != 0 && !(customerType == 1 && isMenber(mCustomer))) {
-            img_title_right.setOnTouchListener(Global.GetTouch());
+        if (mCustomer.lock) {
+            if (null != mCustomer.owner) {
+                if (mCustomer.owner.id.equals(MainApp.user.getId())) {
+                    img_title_right.setOnTouchListener(Global.GetTouch());
+                } else {
+                    img_title_right.setVisibility(View.INVISIBLE);
+                }
+            }
         } else {
             img_title_right.setVisibility(View.INVISIBLE);
         }
 
+        if (customerType == 2) {//团队客户火力全开 相当于自己的客户
+            img_title_right.setVisibility(View.VISIBLE);
+        }
         img_title_left.setOnTouchListener(Global.GetTouch());
         layout_customer_info.setOnTouchListener(Global.GetTouch());
         img_public.setOnTouchListener(Global.GetTouch());
@@ -268,14 +223,18 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         }
         tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
         tv_sale_count.setText("(" + mCustomer.counter.getDemand() + ")");
+        tv_order_count.setText("(" + mCustomer.counter.order + ")");
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
+
         //突出显示跟进动态
         tv_sale_number.setText("(" + mCustomer.saleActivityNum + ")");
         if (null != mCustomer.saleActivityInfo) {
+            tv_follow_content.setVisibility(View.VISIBLE);
+            tv_follow_crecter_type.setVisibility(View.VISIBLE);
             tv_follow_content.setText(mCustomer.saleActivityInfo.content);
             tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
                     mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
@@ -390,7 +349,24 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      */
     private void setPopView(final boolean isKind, final String message) {
 
-        showGeneralDialog(true, true, message);
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                if (isKind) {
+                    delete();
+                } else {
+                    toPublic();
+                }
+            }
+        }, "提示", message);
+
+/*        showGeneralDialog(true, true, message);
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -408,7 +384,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             public void onClick(final View view) {
                 generalPopView.dismiss();
             }
-        });
+        });*/
     }
 
 
@@ -450,7 +426,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call, R.id.ll_sale})
+            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call, R.id.ll_sale, R.id.ll_order})
     void onClick(final View view) {
         Bundle bundle = new Bundle();
         Class<?> _class = null;
@@ -533,7 +509,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_sale_activity:
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
-                _class = SaleActivitiesManageActivity.class;
+                _class = CustomerDynamicManageActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;
             /*拜访签到*/
@@ -556,7 +532,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putInt("fromPage", Common.CUSTOMER_PAGE);
                 bundle.putSerializable("uuid", mCustomer.uuid);
                 bundle.putInt("bizType", 6);
-                //bundle.putSerializable("goneBtn", 1);
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
                 break;
@@ -566,6 +541,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = SaleManageActivity.class;
+                requestCode = ExtraAndResult.REQUEST_CODE;
+                break;
+            /*订单管理*/
+            case R.id.ll_order:
+                bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
+                bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
+                _class = CustomerOrderList.class;
                 requestCode = ExtraAndResult.REQUEST_CODE;
                 break;
         }
@@ -605,7 +588,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
-//                getData();
                 /*如果修改了负责人，不是自己，则finish该页面*/
                 try {
                     Bundle bundle = data.getExtras();
@@ -624,10 +606,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
-//                getData();
                 break;
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS:
-//                getData();
                 break;
             default:
                 break;
@@ -636,6 +616,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         switch (resultCode) {
             case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
                 isPutOcen = true;
+                break;
+            //新建跟进 回调
+            case FinalVariables.REQUEST_CREATE_TASK:
                 break;
         }
     }

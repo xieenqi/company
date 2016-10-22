@@ -4,7 +4,7 @@
 
     <stroke android:width="@dimen/dimen_0.5" android:color="@color/work_info_solid" />
 
-    <solid android:color="@color/work_info_gray" />
+    <solid android:color="@color/item_bj_fb" />
     <corners android:radius="@dimen/dimen_3"/>
 
     <size

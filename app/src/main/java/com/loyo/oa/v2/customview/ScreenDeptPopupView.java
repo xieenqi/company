@@ -54,8 +54,8 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
     private int deptPosition = 0;
 
     public ScreenDeptPopupView(final Activity context, List<SaleTeamScreen> data, Handler handler) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        contentView = inflater.inflate(R.layout.saleteam_screentag1, null);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        contentView = inflater.inflate(R.layout.saleteam_screentag1, null, false);
         this.depementData = data;
         this.mContext = context;
         this.mHandler = handler;
@@ -64,17 +64,18 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         this.setContentView(contentView);
         this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        this.setBackgroundDrawable(new ColorDrawable(0000000000));
+        this.setBackgroundDrawable(new ColorDrawable(0000000000));//AndroidRuntime
         this.setFocusable(true);
         this.setOutsideTouchable(true);
         this.update();
-        getFirstDept(0);
+        if (data.size() > 0)
+            getFirstDept(0);
 
         adapter1 = new AdapterSaleTeamScreen1(context, depementData, 1);
         listView1.setAdapter(adapter1);
         adapter2 = new AdapterSaleTeamScreen2(context, userData, 2);
         listView2.setAdapter(adapter2);
-        adapter2.refshData(0);
+//        adapter2.refshData(0);
     }
 
     public void initView() {
@@ -103,6 +104,12 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
                 adapter2.selectPosition(position);
                 adapter2.notifyDataSetChanged();
                 resultData(position);
+            }
+        });
+        contentView.findViewById(R.id.shade).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
     }

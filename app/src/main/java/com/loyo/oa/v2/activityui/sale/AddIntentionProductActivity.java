@@ -236,6 +236,9 @@ public class AddIntentionProductActivity extends BaseActivity {
 
         }
     };
+    /**
+     * 销售价
+     */
     private TextWatcher watcherPrice = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -251,19 +254,16 @@ public class AddIntentionProductActivity extends BaseActivity {
             if (!s.toString().contains(".") && s.toString().length() > 7) {
                 s.delete(7, s.toString().length());
             }
-            if (!TextUtils.isEmpty(tv_price.getText().toString()) && !"0".equals(tv_price.getText().toString())) {
-                tv_discount.setText(Utils.setValueDouble((transformationNumber(s.toString())
-                        / transformationNumber(tv_price.getText().toString()) * 100)) + "%");
-            } else {
-                tv_discount.setText("");
-            }
+            setDiscount(s.toString());
             if (!TextUtils.isEmpty(et_number.getText().toString())) {
                 tv_total.setText((Utils.setValueDouble(transformationNumber(s.toString())
                         * transformationNumber(et_number.getText().toString()))) + "");
             }
         }
     };
-
+    /**
+     * 销售数量
+     */
     private TextWatcher watcherNumber = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -309,6 +309,7 @@ public class AddIntentionProductActivity extends BaseActivity {
     private void SelectProduct() {
         if (null == lstData_Product || !(lstData_Product.size() > 0)) {
             Toast("没有可以选择的产品");
+            getData();
             return;
         }
         if (null == dialog_Product) {
@@ -332,14 +333,14 @@ public class AddIntentionProductActivity extends BaseActivity {
                 productId = item.id;
                 productUnit = item.unit;
                 tv_price.setText(Utils.setValueDouble(item.unitPrice + ""));
+                et_price.setText(Utils.setValueDouble(item.unitPrice + ""));
 
-                et_price.setText("");
                 et_number.setText("");
-                tv_discount.setText("");
                 tv_total.setText("");
                 et_remake.setText("");
                 tv_oldePrice.setText("产品原价(" + item.unit + ")");
                 tv_salePrice.setText("销售价格(" + item.unit + ")");
+                setDiscount(et_price.getText().toString());
                 dialog_Product.dismiss();
             }
         });
@@ -373,5 +374,16 @@ public class AddIntentionProductActivity extends BaseActivity {
         return product;
     }
 
+    /**
+     * 设置折扣
+     */
+    private void setDiscount(String salePrice) {
+        if (!TextUtils.isEmpty(tv_price.getText().toString()) && !"0".equals(tv_price.getText().toString())) {
+            tv_discount.setText(Utils.setValueDouble((transformationNumber(salePrice)
+                    / transformationNumber(tv_price.getText().toString()) * 100)) + "%");
+        } else {
+            tv_discount.setText("");
+        }
+    }
 
 }

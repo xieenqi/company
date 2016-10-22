@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.home.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -45,17 +47,6 @@ public class AdapterHomeItem extends BaseAdapter {
         }
     }
 
-//    public AdapterHomeItem(Context context, ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
-//        this.mContext = context;
-//        this.items = items;
-//        this.mItemNumbers = mItemNumbers;
-//        try {
-//            inflter = LayoutInflater.from(context);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     /**
      * 设置item数据
      *
@@ -65,7 +56,6 @@ public class AdapterHomeItem extends BaseAdapter {
         crmTi = false;
         oaTi = false;
         this.items = items;
-        notifyDataSetChanged();
     }
 
     /**
@@ -77,7 +67,51 @@ public class AdapterHomeItem extends BaseAdapter {
         this.mItemNumbers = mItemNumbers;
         crmTi = false;
         oaTi = false;
-        notifyDataSetChanged();
+        if (items != null && null != mItemNumbers) {
+            for (HomeItem item : items) {
+                for (HttpMainRedDot num : mItemNumbers) {
+                    if ((item.title.equals("工作报告") && num.bizType == 1)) {
+                        if (num.bizNum > 0) {
+                            item.extra = num.bizNum + "个待点评(含抄送)";
+                        }
+                        item.viewed = num.viewed;
+                    } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
+                        if (num.bizNum > 0) {
+                            item.extra = num.bizNum + "个未完成";
+                        }
+                        item.viewed = num.viewed;
+                    } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
+                        if (num.bizNum > 0) {
+                            item.extra = num.bizNum + "个待我审批";
+                        } else {
+                            item.extra = " ";
+                        }
+                        wfinstanceCount = num.bizNum;
+                        item.viewed = num.viewed;
+                    } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
+                        if (num.bizNum > 0) {
+                            item.extra = num.bizNum + "个进行中";
+                        }
+                        item.viewed = num.viewed;
+                    }
+//            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
+//                extra = num.bizNum + "个将掉公海";
+//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+//            } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
+//                extra = num.bizNum + "个需拜访";
+//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+//            }
+                    else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
+//                        item.extra = num.bizNum + "个外勤";
+                        item.viewed = num.viewed;
+                    } else if (item.title.equals("公告通知") && num.bizType == 19) { //通知公告红点
+                        item.viewed = num.viewed;
+                    } else if (item.title.equals("我的讨论") && num.bizType == 14) { //我的讨论红点
+                        item.viewed = num.viewed;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -95,11 +129,7 @@ public class AdapterHomeItem extends BaseAdapter {
         return position;
     }
 
-    public void remove(final int arg0) {
-        items.remove(arg0);
-        notifyDataSetChanged();
-    }
-
+    @SuppressLint("InflateParams")
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
         final ViewHolder holder;
@@ -114,109 +144,12 @@ public class AdapterHomeItem extends BaseAdapter {
             holder.item_newmain_topview = (LinearLayout) convertView.findViewById(R.id.item_newmain_topview);
             holder.item_newmain_layout = (LinearLayout) convertView.findViewById(R.id.item_newmain_layout);
             convertView.setTag(holder);
-
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         final HomeItem item = items.get(position);
-        if (null != mItemNumbers) {//首页红点 有数据才加载
-            for (HttpMainRedDot num : mItemNumbers) {
-                String extra = "";
-                if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                    if (num.bizNum > 0) {
-                        extra = num.bizNum + "个待点评(含抄送)";
-                    }
-                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                    if (num.bizNum > 0) {
-                        extra = num.bizNum + "个未完成";
-                    }
-                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                    if (num.bizNum > 0) {
-                        extra = num.bizNum + "个待我审批";
-                    } else {
-                        extra = " ";
-                    }
-                    wfinstanceCount = num.bizNum;
-                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
-                    if (num.bizNum > 0) {
-                        extra = num.bizNum + "个进行中";
-                    }
-                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                }
-//            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
-//                extra = num.bizNum + "个将掉公海";
-//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-//            } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
-//                extra = num.bizNum + "个需拜访";
-//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-//            }
-                else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
-                    extra = num.bizNum + "个外勤";
-                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                } else if (item.title.equals("公告通知") && num.bizType == 19) { //通知公告红点
-                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                } else if (item.title.equals("我的讨论") && num.bizType == 14) { //我的讨论红点
-                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                }
-                if (!TextUtils.isEmpty(extra)) {
-                    holder.tv_extra.setText(extra);
-                }
-            }
-        }
-
-        //列表分组
-        if (item.tag == 1) {
-            holder.item_newmain_topview.setVisibility(crmTi ? View.GONE : View.VISIBLE);
-            holder.tv_title.setText("CRM");
-            crmTi = true;
-        } else if (item.tag == 2) {
-            holder.item_newmain_topview.setVisibility(oaTi ? View.GONE : View.VISIBLE);
-            holder.tv_title.setText("OA");
-            oaTi = true;
-        } else if (item.tag == 0) {
-            holder.item_newmain_topview.setVisibility(View.GONE);
-        }
-        holder.img_item.setImageResource(item.imageViewRes);
-        holder.tv_item.setText(item.title);
-
-        //跳转对应业务
-        holder.item_newmain_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (items.get(position).title.equals("通讯录")) {
-                    if (null != MainApp.lstDepartment) {
-                        mIntent.setClass(activity, ContactsActivity.class);
-                        activity.startActivity(mIntent);
-                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                    } else {
-                        Toast.makeText(activity, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
-                    }
-                } else if (items.get(position).title.equals("审批流程")) {
-                    try {
-                        mIntent.setClass(activity, Class.forName(items.get(position).cls));
-                        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, wfinstanceCount);
-                        activity.startActivity(mIntent);
-                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        mIntent.setClass(activity, Class.forName(items.get(position).cls));
-                        activity.startActivity(mIntent);
-                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        });
-
+        holder.setContentView(item, position);
         return convertView;
     }
 
@@ -228,5 +161,59 @@ public class AdapterHomeItem extends BaseAdapter {
         TextView tv_extra;
         ImageView view_number;
         TextView tv_title;
+
+        public void setContentView(HomeItem item, final int position) {
+
+            tv_extra.setText(item.extra);
+            view_number.setVisibility(item.viewed ? View.GONE : View.VISIBLE);
+            //列表分组
+            if (item.tag == 1) {
+                item_newmain_topview.setVisibility(crmTi ? View.GONE : View.VISIBLE);
+                tv_title.setText("CRM");
+                crmTi = true;
+            } else if (item.tag == 2) {
+                item_newmain_topview.setVisibility(oaTi ? View.GONE : View.VISIBLE);
+                tv_title.setText("OA");
+                oaTi = true;
+            } else if (item.tag == 0) {
+                item_newmain_topview.setVisibility(View.GONE);
+            }
+            img_item.setImageResource(item.imageViewRes);
+            tv_item.setText(item.title);
+
+            //跳转对应业务
+            item_newmain_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (items.get(position).title.equals("通讯录")) {
+                        if (null != MainApp.lstDepartment && MainApp.lstDepartment.size() != 0) {
+                            mIntent.setClass(activity, ContactsActivity.class);
+                            activity.startActivity(mIntent);
+                            activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                        } else {
+                            Toast.makeText(activity, "数据获取中请等待，或手动更新数据", Toast.LENGTH_SHORT).show();
+                        }
+                    } else if (items.get(position).title.equals("审批流程")) {
+                        try {
+                            mIntent.setClass(activity, Class.forName(items.get(position).cls));
+                            mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, wfinstanceCount);
+                            activity.startActivity(mIntent);
+                            activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            mIntent.setClass(activity, Class.forName(items.get(position).cls));
+                            activity.startActivity(mIntent);
+                            activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
+        }
     }
 }
