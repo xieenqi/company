@@ -19,9 +19,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
@@ -148,7 +146,7 @@ public class DepartmentUserSearchActivity extends BaseActivity {
         for (DBUser u : data) {
             if (u == null) {
                 continue;
-            } else if (u.name != null && u.name.startsWith(key)) {
+            } else if (u.name != null && u.name.contains(key)) {
                 resultData.add(u);
                 continue;
             } else if (u.fullPinyin != null && u.fullPinyin.startsWith(key)) {

@@ -357,6 +357,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         }
 
         if (index == 0) {
+            searchBase.clear();
             searchBase.addAll(result);
         }
 
