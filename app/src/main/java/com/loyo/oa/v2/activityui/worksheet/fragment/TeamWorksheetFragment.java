@@ -418,14 +418,17 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         try {
             //为超管或权限为全公司 展示全公司成员
             if (permission != null && permission.dataRange == Permission.COMPANY) {
+                tv_tab0.setText("全公司");
                 setUser(OrganizationManager.shareManager().allDepartments());
             }
             //权限为部门 展示我的部门
             else if (permission != null && permission.dataRange == Permission.TEAM) {
+                tv_tab0.setText("本部门");
                 setUser(OrganizationManager.shareManager().currentUserDepartments());
             }
             //权限为个人 展示自己
             else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+                tv_tab0.setText("我");
                 data.clear();
                 SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
                 saleTeamScreen.setId(MainApp.user.getId());

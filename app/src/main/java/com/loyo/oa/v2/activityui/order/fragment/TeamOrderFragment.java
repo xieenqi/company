@@ -17,18 +17,15 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.TeamOrderAdapter;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
@@ -187,14 +184,17 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         try {
             //为超管或权限为全公司 展示全公司成员
             if (permission != null && permission.dataRange == Permission.COMPANY) {
+                saleteam_screen1_commy.setText("全公司");
                 setUser(OrganizationManager.shareManager().allDepartments());
             }
             //权限为部门 展示我的部门
             else if (permission != null && permission.dataRange == Permission.TEAM) {
+                saleteam_screen1_commy.setText("本部门");
                 setUser(OrganizationManager.shareManager().currentUserDepartments());
             }
             //权限为个人 展示自己
             else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+                saleteam_screen1_commy.setText("我");
                 data.clear();
                 SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
                 saleTeamScreen.setId(MainApp.user.getId());

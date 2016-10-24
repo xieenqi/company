@@ -18,7 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
+import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
@@ -27,16 +28,14 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.SaleCommPopupView;
+import com.loyo.oa.v2.customview.ScreenDeptPopupView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.ISale;
@@ -45,10 +44,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.SaleCommPopupView;
-import com.loyo.oa.v2.customview.ScreenDeptPopupView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -234,14 +229,17 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         try {
             //为超管或权限为全公司 展示全公司成员
             if (permission != null && permission.dataRange == Permission.COMPANY) {
+                saleteam_screen1_commy.setText("全公司");
                 setUser(OrganizationManager.shareManager().allDepartments());
             }
             //权限为部门 展示我的部门
             else if (permission != null && permission.dataRange == Permission.TEAM) {
+                saleteam_screen1_commy.setText("本部门");
                 setUser(OrganizationManager.shareManager().currentUserDepartments());
             }
             //权限为个人 展示自己
             else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+                saleteam_screen1_commy.setText("我");
                 data.clear();
                 saleTeamScreen = new SaleTeamScreen();
                 saleTeamScreen.setId(MainApp.user.getId());
