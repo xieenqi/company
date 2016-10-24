@@ -467,7 +467,16 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
 
     /** 选择结束 */
     private void doResultAction() {
-        if (pickedContacts.getCount() > 0) {
+        if (singleSelection) {
+            if (pickedContacts.getCount() > 0) { // 单选至少要有一个用户
+                StaffMemberCollection collection = pickedContacts.getStaffMemberCollection();
+                ContactPickedEvent event = new ContactPickedEvent(collection);
+                event.request = requestIdentifer;
+                event.session = sessionIdentifer;
+                AppBus.getInstance().post(event);
+            }
+        }
+        else { // 多选可以为0个用户，比如删除参与人操作
             StaffMemberCollection collection = pickedContacts.getStaffMemberCollection();
             ContactPickedEvent event = new ContactPickedEvent(collection);
             event.request = requestIdentifer;
@@ -494,7 +503,7 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
             List<PickedModel> list = pickedContacts.getPickedContacts();
             for (PickedModel picked:list) {
                 if (picked.isDepartment == false) {
-                    ((PickUserModel)picked).setSelected(false);
+                    pickedContacts.deleteUser((PickUserModel) picked);
                 }
             }
             pickedContacts.clearSelection();
