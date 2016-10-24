@@ -52,7 +52,9 @@ import retrofit.client.Response;
  * 【事件详情】页面
  * Created by xeq on 16/8/30.
  */
-public class EventDetialActivity extends BaseActivity implements View.OnClickListener {
+public class EventDetailActivity extends BaseActivity implements View.OnClickListener {
+
+    private static String PICK_USER_SESSION = "com.loyo.EventDetailActivity.PICK_USER_SESSION";
 
     private LinearLayout ll_back, ll_handleInfoList, layout_bottom_btn;
     private TextView tv_title, tv_content, tv_responsor, tv_type, tv_worksheet, tv_status, tv_startTime, tv_endTime, tv_day;
@@ -78,11 +80,12 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                 switch (aciton1) {
                     case Transfer:
                     case Dispatch:
-//                        SelectDetUserActivity2.startThisForOnly(EventDetialActivity.this, null);
+//                        SelectDetUserActivity2.startThisForOnly(EventDetailActivity.this, null);
 //                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
                         bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                        bundle.putSerializable(ContactPickerActivity.SESSION_KEY, EventDetailActivity.PICK_USER_SESSION);
                         Intent intent = new Intent();
                         intent.setClass(this, ContactPickerActivity.class);
                         intent.putExtras(bundle);
@@ -104,10 +107,11 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
                 switch (aciton2) {
                     case Transfer:
                     case Dispatch:
-//                        SelectDetUserActivity2.startThisForOnly(EventDetialActivity.this, null);
+//                        SelectDetUserActivity2.startThisForOnly(EventDetailActivity.this, null);
 //                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                        bundle.putSerializable(ContactPickerActivity.SESSION_KEY, EventDetailActivity.PICK_USER_SESSION);
                         bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
                         Intent intent = new Intent();
                         intent.setClass(this, ContactPickerActivity.class);
@@ -346,7 +350,9 @@ public class EventDetialActivity extends BaseActivity implements View.OnClickLis
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
 
-        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
+        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)
+                &&
+                EventDetailActivity.PICK_USER_SESSION.equals(event.session)) {
             StaffMemberCollection collection = event.data;
             NewUser newUser = Compat.convertStaffCollectionToNewUser(collection);
             if (newUser != null) {
