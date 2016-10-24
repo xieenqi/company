@@ -611,8 +611,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     mappedPermission.put(permission.code, permission);
                 }
             }
-            int itemsLength = items.size();
-            for (int i = 0; i < itemsLength; i++) {
+            for (int i = 0; i < items.size(); i++) {
                 String code = items.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {

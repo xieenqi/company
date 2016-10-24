@@ -246,7 +246,9 @@
                     android:gravity="right|center_vertical"
                     android:hint="请选择"
                     android:textColor="@color/text66"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    android:maxEms="15"
+                    />
 
                 <ImageView
                     android:layout_width="wrap_content"

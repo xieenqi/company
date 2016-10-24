@@ -11,16 +11,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
+import com.loyo.oa.v2.activityui.order.event.OrderAddWorkSheetFinish;
 import com.loyo.oa.v2.activityui.sale.IntentionProductActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
+import com.loyo.oa.v2.activityui.worksheet.OrderWorksheetListActivity;
+import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -37,7 +39,10 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -56,6 +61,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private LinearLayout ll_customer; //对应客户
     private LinearLayout ll_stage;    //意向产品
     private LinearLayout ll_estimate; //回款
+    private LinearLayout ll_addorder; //工单
     private LinearLayout ll_source;   //附件
     private LinearLayout tv_custom;   //附件
 
@@ -64,6 +70,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private ArrayList<ContactLeftExtras> mCusList;
     private ArrayList<SaleIntentionalProduct> productData;//意向产品的数据
     private ArrayList<EstimateAdd> estimateData;          //回款记录数据
+    private ArrayList<OrderWorksheetListModel> reWorkSheet = new ArrayList<>();
 
     private EditText et_name;     //订单标题
     private TextView tv_customer; //对应客户
@@ -71,6 +78,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private EditText et_money;    //成交金额
     private TextView tv_estimate; //添加回款
     private TextView tv_source;   //附件
+    private TextView tv_addorder; //工单
     private EditText et_ordernum; //订单编号
     private EditText et_remake;   //备注
 
@@ -79,6 +87,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private int fromPage;
     private int attamentSize = 0;
     private String uuid;
+    public  static String orderTitle;
 
     private OrderDetail mOrderDetail;
     private OrderAddforExtraData orderAddforExtra;
@@ -121,6 +130,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         }
 
         tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_addorder = (TextView) findViewById(R.id.tv_addorder);
         iv_submit = (ImageView) findViewById(R.id.iv_submit);
         iv_submit.setImageResource(R.drawable.right_submit1);
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
@@ -129,6 +139,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         ll_estimate = (LinearLayout) findViewById(R.id.ll_estimate);
         ll_source = (LinearLayout) findViewById(R.id.ll_source);
         tv_custom = (LinearLayout) findViewById(R.id.tv_custom);
+        ll_addorder = (LinearLayout) findViewById(R.id.ll_addorder);
 
         et_name = (EditText) findViewById(R.id.et_name);
         tv_customer = (TextView) findViewById(R.id.tv_customer);
@@ -149,6 +160,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         ll_stage.setOnClickListener(this);
         ll_estimate.setOnClickListener(this);
         ll_source.setOnClickListener(this);
+        ll_addorder.setOnClickListener(this);
 
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             tv_title.setText("编辑订单");
@@ -320,6 +332,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         map.put("proInfo", productData);
         map.put("paymentRecords", estimateData);
         map.put("extensionDatas", fieldData);
+        map.put("reWorkSheet", reWorkSheet);
         LogUtil.dee("提交参数:" + MainApp.gson.toJson(map));
 
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
@@ -368,7 +381,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                         HttpErrorCheck.checkError(error);
                     }
                 });
-
     }
 
     @Override
@@ -415,6 +427,18 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 app.startActivityForResult(this, OrderEstimateListActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, mBundle);
                 break;
 
+            //工单
+            case R.id.ll_addorder:
+                Intent mIntent = new Intent(OrderAddActivity.this, OrderWorksheetListActivity.class);
+                if(!TextUtils.isEmpty(et_name.getText().toString())){
+                    orderTitle = et_name.getText().toString();
+                }else{
+                    orderTitle = "";
+                }
+                mIntent.putExtra(ExtraAndResult.EXTRA_NAME,reWorkSheet);
+                startActivity(mIntent);
+                break;
+
             //附件
             case R.id.ll_source:
                 mBundle = new Bundle();
@@ -456,6 +480,20 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             }
         }
         return estimateName.length() > 0 ? estimateName.substring(0, estimateName.length() - 1) : "";
+    }
+
+    /**
+     * 添加工单数据回调
+     * */
+    @Subscribe
+    public void onOrderAddWorkSheetFinish(OrderAddWorkSheetFinish event){
+        reWorkSheet.clear();
+        reWorkSheet.addAll((Collection<? extends OrderWorksheetListModel>) event.bundle.getSerializable(ExtraAndResult.EXTRA_ID));
+        StringBuffer sBuffer = new StringBuffer();
+        for(OrderWorksheetListModel orderWorksheetListModel:reWorkSheet){
+            sBuffer.append(orderWorksheetListModel.title+",");
+        }
+        tv_addorder.setText(sBuffer.toString());
     }
 
     @Override
@@ -501,7 +539,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 attamentSize = data.getIntExtra("size", 0);
                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
                 break;
-
 
         }
     }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
@@ -153,6 +154,11 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 step2Fragment.removeAttachmentAt(data.getExtras().getInt("position"));
                 break;
+
+            default:{
+                Log.v("","");
+                break;
+            }
         }
     }
 }

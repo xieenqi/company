@@ -7,7 +7,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 /**
  * Created by EthanGong on 16/9/1.
  */
-public class WorksheetEventChangeEvent extends CommonEvent<WorksheetEvent>{
+public class WorksheetEventChangeEvent extends CommonEvent<WorksheetEvent> {
 
     public WorksheetEventChangeEvent() {
         eventCode = ExtraAndResult.WORKSHEET_EVENT_CHANGE;

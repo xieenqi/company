@@ -45,7 +45,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static com.loyo.oa.v2.application.MainApp.PICTURE;
 
 public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnClickListener, UploadControllerCallback {
     private View mView;
@@ -75,7 +74,10 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
             mView = inflater.inflate(R.layout.activity_worksheet_add_step2, null);
             controller = new UploadController(this.getActivity(), 9);
             controller.setObserver(this);
+
             initUI(mView);
+
+            controller.loadView(gridView);
         }
         return mView;
     }
@@ -131,11 +133,9 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                 ((WorksheetAddActivity)getActivity()).previousStep();
                 break;
             case R.id.img_title_right:
-
                 showLoading("");
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
-
                 break;
         }
     }
@@ -265,7 +265,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-controller.count()) /*最大可选择图片数量*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-        this.startActivityForResult(intent, PICTURE);
+        this.getActivity().startActivityForResult(intent, MainApp.PICTURE);
     }
 
     @Override

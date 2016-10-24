@@ -1,8 +1,5 @@
 package com.loyo.oa.v2.common.event;
 
-
-import android.util.Log;
-
 import org.greenrobot.eventbus.EventBus;
 
 /**

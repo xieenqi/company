@@ -17,6 +17,7 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -59,7 +60,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         lv_notice.getRefreshableView().setLayoutManager(layoutManager);
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
         getData();
-        Utils.btnHideForRecy(lv_notice.getRefreshableView(), btn_notice_add);
     }
 
     /**
@@ -119,7 +119,8 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
      * */
     @Override
     public void permissionSuccess() {
-        btn_notice_add.setVisibility(View.INVISIBLE);
+        btn_notice_add.setVisibility(View.VISIBLE);
+        Utils.btnHideForRecy(lv_notice.getRefreshableView(), btn_notice_add);
     }
 
 

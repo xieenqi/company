@@ -15,6 +15,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.point.INotice;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,7 +106,9 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
         if (!MainApp.user.isSuperUser()) {
             try {
                 mPermission = (Permission) MainApp.rootMap.get("0402");
-                if (!mPermission.isEnable()) {
+                LogUtil.dee("mPermission:"+mPermission.isEnable());
+                LogUtil.dee("mPermission:"+mPermission.getName());
+                if (mPermission.isEnable()) {
                     crolView.permissionSuccess();
                 }
             } catch (NullPointerException e) {
