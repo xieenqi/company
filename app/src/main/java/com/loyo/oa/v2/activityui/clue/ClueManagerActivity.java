@@ -18,13 +18,11 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.clue.fragment.MyClueFragment;
 import com.loyo.oa.v2.activityui.clue.fragment.TeamClueFragment;
-import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -86,6 +84,10 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
             SaleItemStatus = new String[]{"我的线索", "团队线索"};
             img_title_arrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
+        }
+        else {
+            img_title_arrow.setVisibility(View.GONE);
+            layout_title_action.setEnabled(false);
         }
         initTitleItem();
         initChildren();
