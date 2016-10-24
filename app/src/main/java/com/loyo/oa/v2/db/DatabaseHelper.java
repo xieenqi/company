@@ -4,10 +4,6 @@ package com.loyo.oa.v2.db;
  * Created by EthanGong on 16/8/2.
  */
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -15,12 +11,19 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.db.bean.DBPosition;
+import com.loyo.oa.v2.db.bean.DBRole;
+import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.db.bean.DBUserNode;
 
-import com.loyo.oa.v2.db.bean.*;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
 
-    private static final String TABLE_NAME = "sqlite-test.db";
+    private static final String TABLE_NAME = "sqlite-organization.db";
     private static final int DATABASE_VERSION = 1;
     private Map<String, Dao> daos = new HashMap<String, Dao>();
 
