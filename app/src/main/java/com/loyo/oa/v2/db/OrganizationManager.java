@@ -495,80 +495,31 @@ public class OrganizationManager {
 
     // 部门直属用户列表(非只部门用户)
     public List<DBUser> directUsersOfDepartment(DBDepartment parent) {
-        List<DBUser> result = new ArrayList<DBUser>();
-        if (parent == null) {
-            return result;
+        List<DBUser> result = new ArrayList<>();
+        DBDepartment dept = getDepartment(parent.id);
+        if (dept != null) {
+            result.addAll(dept.allUsers());
         }
-
-        List<String> userIds = new ArrayList<String>();
-        for (DBUserNode node : nodesCache) {
-            if (node.departmentId != null
-                    && node.departmentId.equals(parent.id)
-                    && node.userId != null) {
-                userIds.add(node.userId);
-            }
-        }
-
-        for (DBUser user : usersCache) {
-            if (userIds.contains(user.id)) {
-                result.add(user);
-            }
-        }
-
         return result;
     }
 
     public List<DBUser> directUsersOfDepartment(String parentId) {
-        List<DBUser> result = new ArrayList<DBUser>();
-        if (parentId == null) {
-            return result;
+        List<DBUser> result = new ArrayList<>();
+        DBDepartment dept = getDepartment(parentId);
+        if (dept != null) {
+            result.addAll(dept.allDirectUsers());
         }
-
-        List<String> userIds = new ArrayList<String>();
-        for (DBUserNode node : nodesCache) {
-            if (node.departmentId != null
-                    && node.departmentId.equals(parentId)
-                    && node.userId != null) {
-                userIds.add(node.userId);
-            }
-        }
-
-        for (DBUser user : usersCache) {
-            if (userIds.contains(user.id)) {
-                result.add(user);
-            }
-        }
-
         return result;
     }
 
     // 部门下全体人员（包括子部门人员）
     public List<DBUser> entireUsersOfDepartment(String parentId) {
-        List<DBUser> result = new ArrayList<DBUser>();
-        if (parentId == null) {
-            return result;
+
+        List<DBUser> result = new ArrayList<>();
+        DBDepartment dept = getDepartment(parentId);
+        if (dept != null) {
+            result.addAll(dept.allUsers());
         }
-
-        List<String> targetUserIds= new ArrayList<String>();
-        for (DBUserNode node : nodesCache) {
-            if (node.userId != null
-                    && node.departmentXpath != null
-                    && node.departmentXpath.contains(parentId))
-            {
-                targetUserIds.add(node.userId);
-            }
-        }
-
-        // 排重
-        targetUserIds = new ArrayList<String>(new HashSet<String>(targetUserIds));
-
-        // 按Id查询用户
-        for(DBUser user : usersCache) {
-            if (targetUserIds.contains(user.id)) {
-                result.add(user);
-            }
-        }
-
         return result;
     }
 
