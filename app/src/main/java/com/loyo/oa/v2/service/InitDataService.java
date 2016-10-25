@@ -100,6 +100,7 @@ public class InitDataService extends IntentService {
             for (Permission permission : user.permissionGroup.subModules) {
                 map.put(permission.getCode(), permission);
             }
+
             MainApp.rootMap = map;
             LogUtil.d("x相关权限:" + MainApp.gson.toJson(map));
         }

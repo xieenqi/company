@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -32,6 +33,7 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +42,7 @@ import java.util.List;
  * 【新建审批】界面
  * Restruture by yyy on 16/10/18
  */
-public class WfInAddActivity extends BaseActivity implements WfinAddView{
+public class WfInAddActivity extends BaseActivity implements WfinAddView {
 
     /**
      * 部门选择 请求码
@@ -53,7 +55,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
     private String uuid = StringUtil.getUUID();
     private String processTitle;
     private String cusTitle;
-    private String projectTitle;
+    private String projectTitle, Process;
     private int bizType = 12;
     private boolean isSave = true;
 
@@ -63,7 +65,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
     private ViewGroup ll_dept;
     private ViewGroup ll_project;
     private LinearLayout wfinstance_data_container;
-    private TextView wordcount;
+    private TextView wordcount, tv_process;
     private TextView tv_dept;
     private TextView tv_project;
     private Button btn_add;
@@ -88,12 +90,14 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
 
     void initView() {
         super.setTitle("新建审批");
+        Bundle bundle = getIntent().getExtras();
+        mBizForm = (BizForm) bundle.getSerializable("bizForm");
+        processTitle = bundle.getString("title");
+        mTemplateId = bundle.getString("mTemplateId");
+        projectId = bundle.getString("projectId");
+        projectTitle = bundle.getString("projectTitle");
+        Process = bundle.getString("Process");//。流程说明
 
-        mBizForm = (BizForm) getIntent().getExtras().getSerializable("bizForm");
-        processTitle = getIntent().getExtras().getString("title");
-        mTemplateId = getIntent().getExtras().getString("mTemplateId");
-        projectId = getIntent().getExtras().getString("projectId");
-        projectTitle = getIntent().getExtras().getString("projectTitle");
 
         cusTitle = MainApp.user.getRealname() + "" + mBizForm.getName() + "" + processTitle;
         wfinstance_data_container = (LinearLayout) findViewById(R.id.wfinstance_data_container);
@@ -105,6 +109,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
         wordcount = (TextView) findViewById(R.id.wordcount);
         tv_dept = (TextView) findViewById(R.id.tv_dept);
         tv_project = (TextView) findViewById(R.id.tv_project);
+        tv_process = (TextView) findViewById(R.id.tv_process);
         btn_add = (Button) findViewById(R.id.btn_add);
         gridView_photo = (CusGridView) findViewById(R.id.gridView_photo);
         edt_memo = (EditText) findViewById(R.id.edt_memo);
@@ -125,7 +130,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
 
         tv_title.setText(cusTitle);
 
-        mPresenter = new WfinAddPresenterImpl(WfInAddActivity.this,mContext,this,mBizForm);
+        mPresenter = new WfinAddPresenterImpl(WfInAddActivity.this, mContext, this, mBizForm);
         mPresenter.setStartendTime();
         init_gridView_photo();
         projectAddWfinstance();
@@ -149,6 +154,10 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
      * 项目 过来要 创建 审批
      */
     public void projectAddWfinstance() {
+        if (!TextUtils.isEmpty(Process)) {
+            tv_process.setVisibility(View.VISIBLE);
+            tv_process.setText("流程说明:" + Process);
+        }
         if (!TextUtils.isEmpty(projectId)) {
             ll_project.setEnabled(false);
             tv_project.setText(projectTitle);
@@ -157,7 +166,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
 
     /**
      * 初始化adapter
-     * */
+     */
     void init_gridView_photo() {
         imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
         ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
@@ -165,7 +174,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
 
     /**
      * 监听器
-     * */
+     */
     private View.OnClickListener onClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -194,9 +203,9 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
                 case R.id.img_title_right:
                     //没有附件
                     if (pickPhots.size() == 0) {
-                        mPresenter.addWfinVeri(deptId,pickPhots);
+                        mPresenter.addWfinVeri(deptId, pickPhots);
                     } else {
-                        mPresenter.newUploadAttachement(uuid,bizType,pickPhots);
+                        mPresenter.newUploadAttachement(uuid, bizType, pickPhots);
                     }
                     break;
 
@@ -303,7 +312,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
 
     /**
      * 设置时间格式处理
-     * */
+     */
     @Override
     public void setStartendTimeEmbl() {
         layout_wfinstance_data.setVisibility(View.VISIBLE);
@@ -314,18 +323,18 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
 
     /**
      * 新建审批验证通过操作
-     * */
+     */
     @Override
     public void requestAddWfinVeriSuccess(ArrayList<HashMap<String, Object>> workflowValues) {
-        mPresenter.requestAddWfin(tv_title.getText().toString(),deptId,workflowValues,
-                                  mTemplateId,projectId,uuid, edt_memo.getText().toString().trim(),
-                                  pickPhots);
+        mPresenter.requestAddWfin(tv_title.getText().toString(), deptId, workflowValues,
+                mTemplateId, projectId, uuid, edt_memo.getText().toString().trim(),
+                pickPhots);
 
     }
 
     /**
      * 新建审批成功处理
-     * */
+     */
     @Override
     public void requestAddWfinSuccessEmbl(WfInstance wfInstance) {
         isSave = false;
@@ -338,9 +347,9 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView{
 
     /**
      * 附件上传成功处理
-     * */
+     */
     @Override
     public void uploadSuccessEmbl(ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
-        mPresenter.addWfinVeri(deptId,pickPhots);
+        mPresenter.addWfinVeri(deptId, pickPhots);
     }
 }

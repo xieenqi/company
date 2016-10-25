@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.adapter.ProcessChooseAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -17,14 +18,17 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
  * 【审批流程】选择
- *  v2.2 新版审批创建流程
+ * v2.2 新版审批创建流程
  * Created by yyy on 2016/06/07
  */
 public class ProcessSelectActivity extends BaseActivity {
@@ -34,7 +38,7 @@ public class ProcessSelectActivity extends BaseActivity {
     private Bundle mBundle;
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
-    public  static ProcessSelectActivity instance = null;
+    public static ProcessSelectActivity instance = null;
 
     public String projectId;
     public String projectTitle;
@@ -69,7 +73,8 @@ public class ProcessSelectActivity extends BaseActivity {
                 mBundle.putString("mTemplateId", wfTemplateArrayList.get(position).getId());
                 mBundle.putString("projectTitle", projectTitle);
                 mBundle.putString("projectId", projectId);
-                app.startActivityForResult(ProcessSelectActivity.this,WfInAddActivity.class,MainApp.ENTER_TYPE_RIGHT,0,mBundle);
+                mBundle.putString("Process", wfTemplateArrayList.get(position).content);//流程说明
+                app.startActivityForResult(ProcessSelectActivity.this, WfInAddActivity.class, MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
             }
         });
     }
@@ -88,7 +93,7 @@ public class ProcessSelectActivity extends BaseActivity {
             public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX, final Response response) {
                 HttpErrorCheck.checkResponse("获取审批流程", response);
                 wfTemplateArrayList = bizFormFieldsPaginationX;
-                final ProcessChooseAdapter adapter=new ProcessChooseAdapter(ProcessSelectActivity.this,bizFormFieldsPaginationX);
+                final ProcessChooseAdapter adapter = new ProcessChooseAdapter(ProcessSelectActivity.this, bizFormFieldsPaginationX);
                 lv_deptList.setAdapter(adapter);
             }
 
@@ -117,9 +122,9 @@ public class ProcessSelectActivity extends BaseActivity {
 
     /**
      * Ui刷新回调
-     * */
+     */
     @Subscribe
-    public void rushListData(BizForm bizForm){
+    public void rushListData(BizForm bizForm) {
         app.finishActivity(ProcessSelectActivity.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
     }
 
