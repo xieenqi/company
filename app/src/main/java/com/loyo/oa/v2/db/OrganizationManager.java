@@ -454,12 +454,9 @@ public class OrganizationManager {
 
         List<DBDepartment> result = new ArrayList<DBDepartment>();
 
-        List<String> currentDeptId = _currentUserDeptIds();
-        for (DBDepartment dept : departmentsCache) {
-            if (dept.id != null
-                    && currentDeptId.contains(dept.id)) { // 按id查找
-                result.add(dept);
-            }
+        DBUser currentUser = getCurrentUser();
+        if (currentUser != null) {
+            result.addAll(currentUser.depts);
         }
 
         return result;
