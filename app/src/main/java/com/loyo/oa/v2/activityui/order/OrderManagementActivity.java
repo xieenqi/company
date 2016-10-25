@@ -76,12 +76,11 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setVisibility(View.INVISIBLE);
         //超级管理员\权限判断
         permission = MainApp.rootMap.get("0216");
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3)||MainApp.user.isSuperUser()) {
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new String[]{"我的订单", "团队订单"};
             img_title_arrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
-        }
-        else {
+        } else {
             img_title_arrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
         }
@@ -169,7 +168,7 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
         if (index != mIndex && fragments.size() > 0) {
             mIndex = index;
             try {
-                fragmentManager.beginTransaction().replace(R.id.fl_order_container, fragments.get(index)).commit();
+                fragmentManager.beginTransaction().replace(R.id.fl_order_container, fragments.get(index)).commitAllowingStateLoss();
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             }

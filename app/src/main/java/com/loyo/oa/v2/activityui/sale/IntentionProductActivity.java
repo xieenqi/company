@@ -119,6 +119,7 @@ public class IntentionProductActivity extends BaseActivity {
                     Bundle product = new Bundle();
                     product.putString("saleId", saleId);
                     product.putInt("data", fromPage);
+                    product.putSerializable("productList", listData);
                     app.startActivityForResult(IntentionProductActivity.this, AddIntentionProductActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                     break;

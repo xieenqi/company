@@ -5,6 +5,7 @@ package com.loyo.oa.v2.db;
  */
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.j256.ormlite.misc.TransactionManager;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -277,41 +277,6 @@ public class OrganizationManager {
         return result;
     }
 
-    /* 当前登录用户同部门的所有用户（包括子部门） */
-    public List<DBUser> getCurrentUserSameDeptsUsers() {
-
-        List<DBUser> result = new ArrayList<DBUser>();
-
-        // 查找所在部门
-        List<String> currentDeptXpath = _currentUserDeptXpaths();
-
-        List<String> targetUserIds= new ArrayList<String>();
-        for (DBUserNode node : nodesCache) {
-            Iterator<String> xpathIterator = currentDeptXpath.iterator();
-            while (xpathIterator.hasNext()) {
-                String xpath = xpathIterator.next();
-                if (node.userId != null
-                        && node.departmentXpath != null
-                        && node.departmentXpath.startsWith(xpath))
-                {
-                    targetUserIds.add(node.userId);
-                }
-            }
-        }
-
-        // 排重
-        targetUserIds = new ArrayList<String>(new HashSet<String>(targetUserIds));
-
-        // 按Id查询用户
-        for(DBUser user : usersCache) {
-            if (targetUserIds.contains(user.id)) {
-                result.add(user);
-            }
-        }
-
-        return result;
-    }
-
     public List<DBUser> getCurrentUserSameDeptsUsers2() {
 
         List<DBUser> result = new ArrayList<DBUser>();
@@ -330,105 +295,8 @@ public class OrganizationManager {
 
         return result;
     }
-    // 当前登录用户所在所有部门的xpath列表
-    public List<String> _currentUserDeptXpaths() {
-        DBUser currentUser = getCurrentUser();
-        List<String> currentDeptXpath = new ArrayList<String>();
-
-        if (currentUser == null) {
-            return currentDeptXpath;
-        }
-
-        for (DBUserNode node : nodesCache) {
-            if (node.userId != null
-                    && node.userId.equals(currentUser.id)
-                    && node.departmentXpath != null)
-            {
-                currentDeptXpath.add(node.departmentXpath);
-            }
-        }
-
-        return currentDeptXpath;
-    }
-
-    // 当前登录用户所在所有部门的id列表
-    public List<String> _currentUserDeptIds() {
-        DBUser currentUser = getCurrentUser();
-        List<String> currentDeptId = new ArrayList<String>();
-
-        if (currentUser == null) {
-            return currentDeptId;
-        }
-
-        for (DBUserNode node : nodesCache) {
-            if (node.userId != null
-                    && node.userId.equals(currentUser.id)
-                    && node.departmentId != null)
-            {
-                currentDeptId.add(node.departmentId);
-            }
-        }
-
-        return currentDeptId;
-    }
-
-    // 当前登录用户所在所有一级部门的xpath列表
-    public List<String> _currentUserTopDeptXpaths() {
-        List<String> currentTopDeptXpath = new ArrayList<String>();
-
-        List<String> currentDeptXpath = _currentUserDeptXpaths();
-        for(String xpath : currentDeptXpath) {
-            String[] components = xpath.split("/");
-            if (components.length < 2) {
-                continue;
-            }
-            String target = String.format("%s/%s", components[0], components[1]);
-            currentTopDeptXpath.add(target);
-        }
-
-
-        return currentTopDeptXpath;
-    }
-
-
-    // 当前登录用户所在所有一级部门的id列表
-    public List<String> _currentUserTopDeptIds() {
-        List<String> currentTopDeptId = new ArrayList<String>();
-
-        List<String> currentDeptXpath = _currentUserDeptXpaths();
-        for(String xpath : currentDeptXpath) {
-            String[] components = xpath.split("/");
-            if (components.length < 2) {
-                continue;
-            }
-            String target = String.format("%s", components[1]);
-            currentTopDeptId.add(target);
-        }
-
-        return currentTopDeptId;
-    }
 
     // 当前登录用户所在所有一级部门列表
-    public List<DBDepartment> currentUserTopDepartments() {
-
-        List<DBDepartment> result = new ArrayList<DBDepartment>();
-
-        List<String> currentTopDeptXpath = _currentUserTopDeptXpaths();
-        List<String> currentTopDeptId = _currentUserTopDeptIds();
-        for (DBDepartment dept : departmentsCache) {
-            if (dept.xpath != null
-                    && currentTopDeptXpath.contains(dept.xpath)) { // 按xpath查找
-                result.add(dept);
-            }
-            else if (dept.xpath != null
-                    && currentTopDeptId.contains(dept.id)) { // 按id查找
-                result.add(dept);
-            }
-        }
-
-        return result;
-    }
-
     public List<DBDepartment> currentUserTopDepartments2() {
 
         List<DBDepartment> result = new ArrayList<DBDepartment>();
@@ -454,43 +322,9 @@ public class OrganizationManager {
 
         List<DBDepartment> result = new ArrayList<DBDepartment>();
 
-        List<String> currentDeptId = _currentUserDeptIds();
-        for (DBDepartment dept : departmentsCache) {
-            if (dept.id != null
-                    && currentDeptId.contains(dept.id)) { // 按id查找
-                result.add(dept);
-            }
-        }
-
-        return result;
-    }
-
-    // 部门的子部门列表
-    public List<DBDepartment> subDepartmentsOfDepartment(DBDepartment parent) {
-        List<DBDepartment> result = new ArrayList<DBDepartment>();
-        if (parent == null) {
-            return result;
-        }
-
-        for (DBDepartment dept : departmentsCache) {
-            if (parent.id.equals(dept.superiorId)) {
-                result.add(dept);
-            }
-        }
-
-        return result;
-    }
-
-    public List<DBDepartment> subDepartmentsOfDepartment(String parentId) {
-        List<DBDepartment> result = new ArrayList<DBDepartment>();
-        if (parentId == null) {
-            return result;
-        }
-
-        for (DBDepartment dept : departmentsCache) {
-            if (parentId.equals(dept.superiorId)) {
-                result.add(dept);
-            }
+        DBUser currentUser = getCurrentUser();
+        if (currentUser != null) {
+            result.addAll(currentUser.depts);
         }
 
         return result;
@@ -498,80 +332,31 @@ public class OrganizationManager {
 
     // 部门直属用户列表(非只部门用户)
     public List<DBUser> directUsersOfDepartment(DBDepartment parent) {
-        List<DBUser> result = new ArrayList<DBUser>();
-        if (parent == null) {
-            return result;
+        List<DBUser> result = new ArrayList<>();
+        DBDepartment dept = getDepartment(parent.id);
+        if (dept != null) {
+            result.addAll(dept.allUsers());
         }
-
-        List<String> userIds = new ArrayList<String>();
-        for (DBUserNode node : nodesCache) {
-            if (node.departmentId != null
-                    && node.departmentId.equals(parent.id)
-                    && node.userId != null) {
-                userIds.add(node.userId);
-            }
-        }
-
-        for (DBUser user : usersCache) {
-            if (userIds.contains(user.id)) {
-                result.add(user);
-            }
-        }
-
         return result;
     }
 
     public List<DBUser> directUsersOfDepartment(String parentId) {
-        List<DBUser> result = new ArrayList<DBUser>();
-        if (parentId == null) {
-            return result;
+        List<DBUser> result = new ArrayList<>();
+        DBDepartment dept = getDepartment(parentId);
+        if (dept != null) {
+            result.addAll(dept.allDirectUsers());
         }
-
-        List<String> userIds = new ArrayList<String>();
-        for (DBUserNode node : nodesCache) {
-            if (node.departmentId != null
-                    && node.departmentId.equals(parentId)
-                    && node.userId != null) {
-                userIds.add(node.userId);
-            }
-        }
-
-        for (DBUser user : usersCache) {
-            if (userIds.contains(user.id)) {
-                result.add(user);
-            }
-        }
-
         return result;
     }
 
     // 部门下全体人员（包括子部门人员）
     public List<DBUser> entireUsersOfDepartment(String parentId) {
-        List<DBUser> result = new ArrayList<DBUser>();
-        if (parentId == null) {
-            return result;
+
+        List<DBUser> result = new ArrayList<>();
+        DBDepartment dept = getDepartment(parentId);
+        if (dept != null) {
+            result.addAll(dept.allUsers());
         }
-
-        List<String> targetUserIds= new ArrayList<String>();
-        for (DBUserNode node : nodesCache) {
-            if (node.userId != null
-                    && node.departmentXpath != null
-                    && node.departmentXpath.contains(parentId))
-            {
-                targetUserIds.add(node.userId);
-            }
-        }
-
-        // 排重
-        targetUserIds = new ArrayList<String>(new HashSet<String>(targetUserIds));
-
-        // 按Id查询用户
-        for(DBUser user : usersCache) {
-            if (targetUserIds.contains(user.id)) {
-                result.add(user);
-            }
-        }
-
         return result;
     }
 
@@ -593,8 +378,17 @@ public class OrganizationManager {
         }
 
         if (list.size() > 1) {
-            //DBUser
-            List<String> deptXpaths = _currentUserDeptXpaths();
+
+            List<String> deptXpaths = new ArrayList<>();
+            DBUser currentUser = getCurrentUser();
+            if (currentUser != null) {
+                for (DBDepartment dept:currentUser.depts) {
+                    if (!TextUtils.isEmpty(dept.xpath)) {
+                        deptXpaths.add(dept.xpath);
+                    }
+                }
+            }
+
             String anyXpath = deptXpaths.size()> 0? deptXpaths.get(0):null;
             if (anyXpath != null) {
                 for (DBDepartment dept: list) {
@@ -621,7 +415,11 @@ public class OrganizationManager {
 
     // 公司的所有一级部门列表
     public List<DBDepartment> topDepartments() {
-        List<DBDepartment> result = subDepartmentsOfDepartment(getsComany());
+        List<DBDepartment> result = new ArrayList<>();
+        DBDepartment company = getsComany();
+        if (company != null) {
+            result.addAll(company.childDepts);
+        }
         return result;
     }
 

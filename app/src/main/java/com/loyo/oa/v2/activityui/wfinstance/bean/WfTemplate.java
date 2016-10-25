@@ -8,22 +8,24 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2014/12/31.
  */
-public class WfTemplate implements Serializable{
-    private  String  bizformId ;//int64, optional): ,
+public class WfTemplate implements Serializable {
+    private String bizformId;//int64, optional): ,
 
-    private  String  companyId ;//int, optional): ,
+    private String companyId;//int, optional): ,
 
-    private  long  createdAt ;//&{time Time}, optional): ,
+    private long createdAt;//&{time Time}, optional): ,
 
-    private User creator ;//&{organization User}, optional): ,
+    private User creator;//&{organization User}, optional): ,
 
-    private  boolean  enable ;//bool, optional): ,
+    private boolean enable;//bool, optional): ,
 
-    private  String   id ;//int64, optional): ,
+    private String id;//int64, optional): ,
 
-    private  String    title ;//string, optional): ,
+    private String title;//string, optional): ,
 
-    private ArrayList<WfTplNodes> wfTplNodes ;//array[WfTplNodes], optional):
+    private ArrayList<WfTplNodes> wfTplNodes;//array[WfTplNodes], optional):
+
+    public String content;//流程说明
 
     public String getBizformId() {
         return bizformId;

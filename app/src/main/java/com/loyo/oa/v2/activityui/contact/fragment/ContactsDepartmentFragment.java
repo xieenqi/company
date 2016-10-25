@@ -117,6 +117,10 @@ public class ContactsDepartmentFragment extends BaseFragment {
     public void loadData() {
         OrganizationManager orgManager = OrganizationManager.shareManager();
         DBDepartment company = orgManager.getsComany();
+        if (company == null) {
+            datasource = new ArrayList<HashMap<String, Object>>();
+            return;
+        }
 
         List<DBDepartment> topDepartments = new ArrayList<>(company.childDepts);
         List<DBUser> directUsers = company.allDirectUsers();
