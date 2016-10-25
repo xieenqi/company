@@ -181,7 +181,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     }
 
     private void initView(View view) {
-        permission = (Permission) getArguments().getSerializable("permission");
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
@@ -240,6 +239,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     }
 
     private void initFilters() {
+        permission = (Permission) getArguments().getSerializable("permission");
         statusFilters = new ArrayList<WorksheetStatus>();
         statusFilters.add(WorksheetStatus.Null);
         statusFilters.add(WorksheetStatus.WAITASSIGN);
