@@ -165,7 +165,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 
     private void initView(View view) {
         permission = (Permission) getArguments().getSerializable("permission");
-        setFilterData();
         screen1 = (LinearLayout) view.findViewById(R.id.screen1);
         screen2 = (LinearLayout) view.findViewById(R.id.screen2);
         screen3 = (LinearLayout) view.findViewById(R.id.screen3);
@@ -197,6 +196,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         });
         adapter = new TeamClueAdapter(getActivity());
         lv_list.setAdapter(adapter);
+        setFilterData();
         getData();
     }
 

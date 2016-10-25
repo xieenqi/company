@@ -124,7 +124,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
 
     private void initView(View view) {
         permission = (Permission) getArguments().getSerializable("permission");
-        setFilterData();
+
         screen1 = (LinearLayout) view.findViewById(R.id.screen1);
         screen2 = (LinearLayout) view.findViewById(R.id.screen2);
         screen3 = (LinearLayout) view.findViewById(R.id.screen3);
@@ -153,6 +153,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         });
         adapter = new TeamOrderAdapter(app);
         lv_list.setAdapter(adapter);
+        setFilterData();
         getData();
 
     }

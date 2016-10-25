@@ -257,7 +257,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     }
 
     private void setFilterData() {
-        wersi();
         statusData.clear();
         for (int i = 0; i < statusFilters.size(); i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
@@ -271,6 +270,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
             saleTeamScreen.setName(typeFilters.get(i).name);
             typeData.add(saleTeamScreen);
         }
+        wersi();
     }
 
     @Override
