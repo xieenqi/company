@@ -95,10 +95,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case ExtraAndResult.MSG_SEND: {
-                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
-                    break;
-                }
                 /*部门选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG1:
                     isPullDown = true;
@@ -176,6 +172,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
             groupsData = new GroupsData();
             initFilters();
             initView(mView);
+            setFilterData();
         }
         return mView;
     }
@@ -255,19 +252,11 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         if (types != null) {
             typeFilters.addAll(types);
         }
-        setFilterData();
-
         statusIndex = 0;
         typeIndex = 0;
     }
 
     private void setFilterData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                wersi();
-            }
-        }).start();
         statusData.clear();
         for (int i = 0; i < statusFilters.size(); i++) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
@@ -281,6 +270,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
             saleTeamScreen.setName(typeFilters.get(i).name);
             typeData.add(saleTeamScreen);
         }
+        wersi();
     }
 
     @Override
@@ -415,34 +405,29 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     }
 
     public void wersi() {
-        try {
-            //为超管或权限为全公司 展示全公司成员
-            if (permission != null && permission.dataRange == Permission.COMPANY) {
-                tv_tab0.setText("全公司");
-                setUser(OrganizationManager.shareManager().allDepartments());
-            }
-            //权限为部门 展示我的部门
-            else if (permission != null && permission.dataRange == Permission.TEAM) {
-                tv_tab0.setText("本部门");
-                setUser(OrganizationManager.shareManager().currentUserDepartments());
-            }
-            //权限为个人 展示自己
-            else if (permission != null && permission.dataRange == Permission.PERSONAL) {
-                tv_tab0.setText("我");
-                data.clear();
-                SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-                saleTeamScreen.setId(MainApp.user.getId());
-                saleTeamScreen.setName(MainApp.user.name);
-                saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
-                data.add(saleTeamScreen);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } finally { /** 子线程读数据，主线程加载数据 */
-            Message msg = new Message();
-            msg.what = ExtraAndResult.MSG_SEND;
-            mHandler.sendMessage(msg);
+        //为超管或权限为全公司 展示全公司成员
+        if (permission != null && permission.dataRange == Permission.COMPANY) {
+            tv_tab0.setText("全公司");
+            setUser(OrganizationManager.shareManager().allDepartments());
         }
+        //权限为部门 展示我的部门
+        else if (permission != null && permission.dataRange == Permission.TEAM) {
+            tv_tab0.setText("本部门");
+            setUser(OrganizationManager.shareManager().currentUserDepartments());
+
+            tv_tab0.setText("本部门");
+        }
+        //权限为个人 展示自己
+        else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+            tv_tab0.setText("我");
+            data.clear();
+            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
+            saleTeamScreen.setId(MainApp.user.getId());
+            saleTeamScreen.setName(MainApp.user.name);
+            saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
+            data.add(saleTeamScreen);
+        }
+        deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
     }
 
     /**
