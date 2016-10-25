@@ -11,24 +11,21 @@ import android.widget.TextView;
 
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.adapter.ProjectMemberListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 
@@ -36,7 +33,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -52,10 +48,6 @@ import retrofit.client.Response;
 
 @EActivity(R.layout.activity_project_add)
 public class ProjectAddActivity extends BaseActivity {
-
-    static final int REQUEST_MANAGERS = 100;
-    static final int REQUEST_MEMBERS = 200;
-
     @ViewById
     TextView wordcount;
     @ViewById
@@ -79,18 +71,12 @@ public class ProjectAddActivity extends BaseActivity {
     @Extra("mUpdate")
     boolean mUpdate;
 
+    List<HttpProject.ProjectManaer> selectedManagers;
+    List<HttpProject.ProjectMember> selectedMembers;
+
     ProjectMemberListViewAdapter mAdapter;
-    ArrayList<HttpProject.ProjectMember> mProjectMember = new ArrayList<>();
 
-    private boolean isEditMember = false;
-    private StringBuffer mMemberIds = new StringBuffer();
-    private StringBuffer mMemberNames = new StringBuffer();
-
-    private StringBuffer mManagerIds = new StringBuffer();
-    private StringBuffer mManagerNames = new StringBuffer();
-    private Members members = new Members();//参与人回传数据
-    private Members managers = new Members();//参与人回传数据
-    private ArrayList<ManagersMembers> membersNowData = new ArrayList<>();//当前参与人数据
+    private ArrayList<HttpProject.ProjectMember> membersNowData = new ArrayList<>();//当前参与人数据
 
     @AfterViews
     void initViews() {
@@ -109,33 +95,25 @@ public class ProjectAddActivity extends BaseActivity {
             if (!mProject.isCreator()) {//非创建者不能修改负责人
                 layout_managers.setOnClickListener(null);
             }
+
+            selectedManagers = mProject.managers;
+            selectedMembers = mProject.members;
+
+            edt_title.setText(mProject.title);
+            edt_content.setText(mProject.content);
+            if (mProject.isManager() && !mProject.isCreator()) {
+                ll_managerGon.setVisibility(View.GONE);
+            }
+            String managerNames = ProjectMember.getManagersName(mProject.managers);
+            tv_managers.setText(managerNames);
+
             membersNowData.clear();
-            membersNowData.addAll(getMenbersEdit());
-            setProjectExtra();
+            membersNowData.addAll(selectedMembers);
+            setMemberOnActivityResult();
         }
         edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
     }
 
-    void setProjectExtra() {
-        if (TextUtils.isEmpty(mProject.getId())) {
-            return;
-        }
-        edt_title.setText(mProject.title);
-        edt_content.setText(mProject.content);
-        if (mProject.isManager() && !mProject.isCreator()) {
-            ll_managerGon.setVisibility(View.GONE);
-        }
-        mManagerIds.append(ProjectMember.GetMnagerUserIds(mProject.managers));
-        mManagerNames.append(ProjectMember.getManagersName(mProject.managers));
-
-        if (null != mProject.members) {
-            mMemberIds.append(ProjectMember.GetMenberUserIds(mProject.members));
-            mMemberNames.append(ProjectMember.GetUserNames(mProject.members));
-        }
-
-        tv_managers.setText(mManagerNames);
-        setMemberOnActivityResult();
-    }
 
     @Click(R.id.img_title_left)
     void close() {
@@ -144,11 +122,8 @@ public class ProjectAddActivity extends BaseActivity {
 
     //选【负责人】
     @Click(R.id.layout_managers)
-    void ManagersClick() {
-//        SelectDetUserActivity2.startThisForMulitSelect(ProjectAddActivity.this,
-//                mManagerIds == null ? null : mManagerIds.toString(), false);
-
-        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(managers);
+    void selectManagersClick() {
+        StaffMemberCollection collection = convertProjectManagerListToStaffMemberCollection(selectedManagers);
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
         bundle.putBoolean(ContactPickerActivity.DEPARTMENT_SELECTION_KEY, false);
@@ -164,9 +139,8 @@ public class ProjectAddActivity extends BaseActivity {
 
     //选【参与人】
     @Click(R.id.layout_members)
-    void MembersClick() {
-        //SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString(), true);
-        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
+    void selectMembersClick() {
+        StaffMemberCollection collection = convertProjectMemberListToStaffMemberCollection(selectedMembers);
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
         if (collection != null) {
@@ -187,241 +161,61 @@ public class ProjectAddActivity extends BaseActivity {
 
         if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
-            Members selected = Compat.convertStaffCollectionToMembers(collection);
+            List<HttpProject.ProjectManaer> selected = convertStaffMemberCollectionToProjectManagerList(collection);
             if (selected == null){
                 return;
             }
+            selectedManagers = selected;
 
-            managers = selected;
-            mManagerNames = new StringBuffer();
-            mManagerIds = new StringBuffer();
 
-            if (managers != null) {
-                if (null != managers.depts) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : managers.depts) {
-                        mManagerNames.append(newUser.getName() + ",");
-                        mManagerIds.append(newUser.getId() + ",");
-                    }
-                }
-                if (null != managers.users) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : managers.users) {
-                        mManagerNames.append(newUser.getName() + ",");
-                        mManagerIds.append(newUser.getId() + ",");
-                    }
-                }
-                if (!TextUtils.isEmpty(mManagerNames)) {
-                    mManagerNames.deleteCharAt(mManagerNames.length() - 1);
-                }
-            }
+            tv_managers.setText(ProjectMember.getManagersName((ArrayList<HttpProject.ProjectManaer>)selectedManagers));
 
-            tv_managers.setText(mManagerNames);
-
-            ArrayList<HttpProject.ProjectManaer> projectManagers = getProjectManager();
-            if (mProject != null && !ListUtil.IsEmpty(projectManagers)) {
-                mProject.setManagers(projectManagers);
-            }
-
-            if (mProject != null && !ListUtil.IsEmpty(mProject.managers)) {
-                if (mProjectMember.removeAll(mProject.managers)) {
-                    setMemberOnActivityResult();
-                }
+            if (mProject != null) {
+                mProject.setManagers((ArrayList<HttpProject.ProjectManaer>)selectedManagers);
             }
         }
         else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
-            Members selected = Compat.convertStaffCollectionToMembers(collection);
-            if (selected == null){
-                return;
-            }
-            isEditMember = true;
-            members = selected;
-            if (null == members || (members.depts.size()==0 && members.users.size()==0)) {
+            List<HttpProject.ProjectMember> selected = convertStaffMemberCollectionToProjectMemberList(collection);
+            selectedMembers = selected;
+            if (null == selectedMembers || (selectedMembers.size()==0)) {
                 tv_members.setText("无参与人");
             } else {
-                mMemberNames = new StringBuffer();
-                mMemberIds = new StringBuffer();
-                if (null != members.depts) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
-                        mMemberNames.append(newUser.getName() + ",");
-                        mMemberIds.append(newUser.getId() + ",");
-                    }
-                }
-                if (null != members.users) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : members.users) {
-                        mMemberNames.append(newUser.getName() + ",");
-                        mMemberIds.append(newUser.getId() + ",");
-                    }
-                }
-                if (!TextUtils.isEmpty(mMemberNames)) {
-                    mMemberNames.deleteCharAt(mMemberNames.length() - 1);
-                }
             }
-            membersNowData = getMenbersAdd();
+            membersNowData.clear();
+            membersNowData.addAll(selectedMembers);
             setMemberOnActivityResult();
         }
     }
 
-    /**
-     * 负责人回调
-     * 说  明:组装StringBuffer用于显示名字
-     * 权限控制view设置
-     */
-    @OnActivityResult(SelectDetUserActivity2.REQUEST_MULTI_SELECT)
-    void OnResultManagers(final int resultCode, final Intent data) {
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-
-        members = (Members) data.getSerializableExtra("data");
-        mManagerNames = new StringBuffer();
-        mManagerIds = new StringBuffer();
-
-        if (members != null) {
-            if (null != members.depts) {
-                for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
-                    mManagerNames.append(newUser.getName() + ",");
-                    mManagerIds.append(newUser.getId() + ",");
-                }
-            }
-            if (null != members.users) {
-                for (com.loyo.oa.v2.beans.NewUser newUser : members.users) {
-                    mManagerNames.append(newUser.getName() + ",");
-                    mManagerIds.append(newUser.getId() + ",");
-                }
-            }
-            if (!TextUtils.isEmpty(mManagerNames)) {
-                mManagerNames.deleteCharAt(mManagerNames.length() - 1);
-            }
-        }
-
-        tv_managers.setText(mManagerNames);
-
-        ArrayList<HttpProject.ProjectManaer> projectManagers = getProjectManager();
-        if (mProject != null && !ListUtil.IsEmpty(projectManagers)) {
-            mProject.setManagers(projectManagers);
-        }
-
-        if (mProject != null && !ListUtil.IsEmpty(mProject.managers)) {
-            if (mProjectMember.removeAll(mProject.managers)) {
-                setMemberOnActivityResult();
-            }
-        }
-    }
-
-    /**
-     * 参与人回调
-     * 说  明:组装StringBuffer用于显示名字
-     * 权限控制view设置
-     */
-    @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
-    void OnResultMembers(final int resultCode, final Intent data) {
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-        isEditMember = true;
-
-        members = (Members) data.getSerializableExtra("data");
-        if (null == members) {
-            tv_members.setText("无参与人");
-        } else {
-            mMemberNames = new StringBuffer();
-            mMemberIds = new StringBuffer();
-            if (null != members.depts) {
-                for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
-                    mMemberNames.append(newUser.getName() + ",");
-                    mMemberIds.append(newUser.getId() + ",");
-                }
-            }
-            if (null != members.users) {
-                for (com.loyo.oa.v2.beans.NewUser newUser : members.users) {
-                    mMemberNames.append(newUser.getName() + ",");
-                    mMemberIds.append(newUser.getId() + ",");
-                }
-            }
-            if (!TextUtils.isEmpty(mMemberNames)) {
-                mMemberNames.deleteCharAt(mMemberNames.length() - 1);
-            }
-        }
-        membersNowData = getMenbersAdd();
-        setMemberOnActivityResult();
-    }
 
     void setMemberOnActivityResult() {
-        if (mProjectMember == null) {
-            mProjectMember = new ArrayList<>();
-        } else {
-            mProjectMember.clear();
-        }
-        if (!TextUtils.isEmpty(mMemberIds)) {
-            String[] memberIds = mMemberIds.toString().split(",");
-            String[] memberNames = mMemberNames.toString().split(",");
-
-            for (int i = 0; i < memberIds.length; i++) {
-                String uId = memberIds[i];
-                if (!TextUtils.isEmpty(uId)) {
-                    HttpProject.ProjectMember member = new HttpProject().new ProjectMember();
-                    if (!isEditMember) {
-                        member.canReadAll = mProject.members.get(i).canReadAll;
-                    }
-                    User uu = new User();
-                    uu.id = uId;
-                    uu.name = memberNames[i];
-                    member.user = uu;
-                    mProjectMember.add(member);
-                }
-            }
-        }
-
-        // 从Members中去掉与Manager重复的用户
-        if (mProject != null && !ListUtil.IsEmpty(mProject.managers) && !ListUtil.IsEmpty(mProjectMember)) {
-            mProjectMember.removeAll(mProject.managers);
-        } else {
-            ArrayList<HttpProject.ProjectManaer> projectManagers = getProjectManager();
-            if (!ListUtil.IsEmpty(projectManagers)) {
-                mProjectMember.removeAll(projectManagers);
-            }
-        }
 
         /**
          * 新建编辑，给adapter不同的数据源
          * */
-        mAdapter = new ProjectMemberListViewAdapter(this, membersNowData);
-
-        /**
-         * 适配器初始化 删除item监听
-         * */
-        mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
-            @Override
-            public void DeleteMember() {
-                mMemberIds.delete(0, mMemberIds.length());
-                for (ManagersMembers ele : mAdapter.GetProjectMembers()) {
-                    HttpProject.ProjectMember mm = new HttpProject().new ProjectMember();
-                    mm.canReadAll = ele.canReadAll;
-                    if (null != ele.user) {
-                        mm.user.id = ele.user.id;
-                        mm.user.name = ele.user.name;
-                        mProjectMember.add(mm);
-                        mMemberIds.append(ele.user.id + ",");
-                    }
-
-                    if (null != ele.dept) {
-                        mm.dept.id = ele.dept.id;
-                        mm.dept.name = ele.dept.name;
-                        mProjectMember.add(mm);
-                        mMemberIds.append(ele.dept.id + ",");
+        if (mAdapter == null) {
+            mAdapter = new ProjectMemberListViewAdapter(this, membersNowData);
+            mAdapter.setAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
+                @Override
+                public void deleteMemberAtIndex(int index) {
+                    mAdapter.notifyDataSetInvalidated();
+                    if (index>=0 && index<selectedMembers.size()) {
+                        selectedMembers.remove(index);
                     }
                 }
-                mAdapter.notifyDataSetInvalidated();
-            }
-        });
+            });
 
-        lv_project_members.setAdapter(mAdapter);
+            lv_project_members.setAdapter(mAdapter);
+        }
+
+        mAdapter.notifyDataSetInvalidated();
         Global.setListViewHeightBasedOnChildren(lv_project_members);
     }
 
     @Click(R.id.img_title_right)
-    void CreateOrUpdateProject() {
-        if (TextUtils.isEmpty(mManagerIds)) {
+    void createOrUpdateProject() {
+        if (selectedManagers.size() == 0) {
             Toast("项目负责人不能为空!");
             return;
         }
@@ -438,43 +232,20 @@ public class ProjectAddActivity extends BaseActivity {
         String content = edt_content.getText().toString().trim();//内容
         projectTransObj.content = content;
 
-        /*取消项目内容，非空判断 2016-4-28*/
-        /*if (TextUtils.isEmpty(content)) {
-            Toast("项目内容不能为空!");
-            return;
-        } else {
-            projectTransObj.content = content;
-        }*/
-
-        projectTransObj.managers = getProjectManager();
-
-        /**
-         * 获取post参与人数据
-         * 过滤为空的dept或user
-         * */
-        if (!TextUtils.isEmpty(mMemberIds) && null != mAdapter) {
-            projectTransObj.members = mAdapter.GetProjectMembers();
-            for (ManagersMembers managersMembers : projectTransObj.members) {
-                if (managersMembers.dept != null && null == managersMembers.dept.id) {
-                    managersMembers.dept = null;
-                }
-                if (managersMembers.user != null && null == managersMembers.user.id) {
-                    managersMembers.user = null;
-                }
-            }
-        }
+        projectTransObj.managers = selectedManagers;
+        projectTransObj.members = mAdapter.getProjectMembers();
 
         if (mUpdate) {
-            UpdateProject(projectTransObj);
+            updateProject(projectTransObj);
         } else {
-            CreateProject(projectTransObj);
+            createProject(projectTransObj);
         }
     }
 
     /**
      * 项目创建
      */
-    void CreateProject(final ProjectTransObj obj) {
+    void createProject(final ProjectTransObj obj) {
         LogUtil.d(" 创建项目传递数据： " + MainApp.gson.toJson(obj));
         showLoading("");
         app.getRestAdapter().create(IProject.class).Create(obj, new RCallback<Project>() {
@@ -499,7 +270,7 @@ public class ProjectAddActivity extends BaseActivity {
     /**
      * 项目编辑
      */
-    void UpdateProject(final ProjectTransObj obj) {
+    void updateProject(final ProjectTransObj obj) {
         LogUtil.d(" 编辑项目传递数据: " + MainApp.gson.toJson(obj));
         showLoading("");
         app.getRestAdapter().create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
@@ -520,91 +291,11 @@ public class ProjectAddActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 组装【负责人】的请求参数
-     *
-     * @return
-     */
-    ArrayList<HttpProject.ProjectManaer> getProjectManager() {
-        if (TextUtils.isEmpty(mManagerIds)) {
-            return new ArrayList<>();
-        }
-        String[] arr = mManagerIds.toString().split(",");
-        String[] arrName = mManagerNames.toString().split(",");
-        ArrayList<HttpProject.ProjectManaer> mManager = new ArrayList<>();
-        for (int i = 0; i < arr.length; i++) {
-            if (!TextUtils.isEmpty(arr[i])) {
-                HttpProject.ProjectManaer mm = new HttpProject().new ProjectManaer();
-                mm.canReadAll = true;
-                mm.user.id = arr[i];
-                mm.user.name = arrName[i];
-                mManager.add(mm);
-            }
-        }
-        return mManager;
-    }
-
-
-    /**
-     * 编辑 组装【参与人】的请求参数
-     *
-     * @return
-     */
-    public ArrayList<ManagersMembers> getMenbersEdit() {
-        ArrayList<ManagersMembers> newData = new ArrayList<>();
-        for (HttpProject.ProjectMember mm : mProject.members) {
-            if (null != mm.dept && null != mm.dept.name) {
-                ManagersMembers menb = new ManagersMembers();
-                menb.dept.name = mm.dept.name;
-                menb.dept.id = mm.dept.id;
-                menb.dept.xpath = mm.dept.xpath;
-                newData.add(menb);
-            }
-
-            if (null != mm.user && null != mm.user.name) {
-                ManagersMembers menb = new ManagersMembers();
-                menb.user.name = mm.user.name;
-                menb.user.id = mm.user.id;
-                menb.user.avatar = mm.user.avatar;
-                newData.add(menb);
-            }
-        }
-        return newData;
-    }
-
-    /**
-     * 新建 组装【参与人】的请求参数
-     *
-     * @return
-     */
-    public ArrayList<ManagersMembers> getMenbersAdd() {
-        ArrayList<ManagersMembers> newData = new ArrayList<>();
-        if (null != members.depts) {
-            for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
-                ManagersMembers menb = new ManagersMembers();
-                menb.dept.name = newUser.getName();
-                menb.dept.id = newUser.getId();
-                menb.dept.xpath = newUser.getXpath();
-                newData.add(menb);
-            }
-        }
-
-        if (null != members.users) {
-            for (com.loyo.oa.v2.beans.NewUser newUser : members.users) {
-                ManagersMembers menb = new ManagersMembers();
-                menb.user.name = newUser.getName();
-                menb.user.id = newUser.getId();
-                menb.user.avatar = newUser.getAvatar();
-                newData.add(menb);
-            }
-        }
-        return newData;
-    }
 
     public class ProjectTransObj {
         public String title;
         public String content;
-        public List<ManagersMembers> members;
+        public List<HttpProject.ProjectMember> members;
         public List<HttpProject.ProjectManaer> managers;
     }
 
@@ -619,5 +310,106 @@ public class ProjectAddActivity extends BaseActivity {
         public String id;
         public String name;
         public String xpath;
+    }
+
+    private static StaffMemberCollection
+    convertProjectManagerListToStaffMemberCollection(List<HttpProject.ProjectManaer> managers) {
+
+        if (managers == null) {
+            return null;
+        }
+
+        StaffMemberCollection collection = new StaffMemberCollection();
+
+        for (HttpProject.ProjectManaer manager:managers) {
+            if (manager.user != null) {
+                StaffMember staffMember = new StaffMember();
+                staffMember.id = manager.user.getId();
+                staffMember.name = manager.user.getName();
+                staffMember.avatar = manager.user.getAvatar();
+                collection.users.add(staffMember);
+            }
+        }
+        return collection;
+    }
+
+    private static List<HttpProject.ProjectManaer>
+    convertStaffMemberCollectionToProjectManagerList(StaffMemberCollection collection) {
+
+        if (collection == null) {
+            return null;
+        }
+
+        ArrayList<HttpProject.ProjectManaer> result = new ArrayList<>();
+
+        for (StaffMember user:collection.users) {
+            HttpProject.ProjectManaer manager = new HttpProject.ProjectManaer();
+            User innerUser = new User();
+            innerUser.id = user.id;
+            innerUser.name = user.name;
+            innerUser.avatar = user.avatar;
+            manager.user = innerUser;
+            result.add(manager);
+        }
+
+        return result;
+    }
+
+    private static StaffMemberCollection
+    convertProjectMemberListToStaffMemberCollection(List<HttpProject.ProjectMember> members) {
+        if (members == null) {
+            return null;
+        }
+
+        StaffMemberCollection collection = new StaffMemberCollection();
+
+        for (HttpProject.ProjectMember member:members) {
+            if (member.user != null) {
+                StaffMember staffMember = new StaffMember();
+                staffMember.id = member.user.getId();
+                staffMember.name = member.user.getName();
+                staffMember.avatar = member.user.getAvatar();
+                collection.users.add(staffMember);
+            }
+            else if (member.dept != null) {
+                StaffMember staffMember = new StaffMember();
+                staffMember.id = member.dept.id;
+                staffMember.name = member.dept.name;
+                staffMember.xpath = member.dept.xpath;
+                collection.depts.add(staffMember);
+            }
+        }
+        return collection;
+    }
+
+    private static List<HttpProject.ProjectMember>
+    convertStaffMemberCollectionToProjectMemberList(StaffMemberCollection collection) {
+        if (collection == null) {
+            return null;
+        }
+
+        ArrayList<HttpProject.ProjectMember> result = new ArrayList<>();
+
+        for (StaffMember dept:collection.depts) {
+            HttpProject.ProjectMember member = new HttpProject.ProjectMember();
+            HttpProject.Dept innerDept = new HttpProject.Dept();
+            innerDept.id = dept.id;
+            innerDept.name = dept.name;
+            innerDept.xpath = dept.xpath;
+            member.dept = innerDept;
+            result.add(member);
+        }
+
+        for (StaffMember user:collection.users) {
+            HttpProject.ProjectMember member = new HttpProject.ProjectMember();
+            User innerUser = new User();
+            innerUser.id = user.id;
+            innerUser.name = user.name;
+            innerUser.avatar = user.avatar;
+            member.user = innerUser;
+            result.add(member);
+        }
+
+        return result;
     }
 }

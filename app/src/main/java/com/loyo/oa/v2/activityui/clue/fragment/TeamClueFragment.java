@@ -22,13 +22,11 @@ import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
@@ -79,7 +77,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
     private ScreenDeptPopupView deptPopupView;
-
+    private Permission permission;
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private TeamClueAdapter adapter;
@@ -90,7 +88,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ExtraAndResult.MSG_SEND: {
-                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
                     break;
                 }
                 /*状态选择回调*/
@@ -170,6 +168,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initView(View view) {
+        permission = (Permission) getArguments().getSerializable("permission");
         setFilterData();
         screen1 = (LinearLayout) view.findViewById(R.id.screen1);
         screen2 = (LinearLayout) view.findViewById(R.id.screen2);
@@ -228,15 +227,18 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     public void wersi() {
         try {
             //为超管或权限为全公司 展示全公司成员
-            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
+            if (permission != null && permission.dataRange == Permission.COMPANY) {
+                saleteam_screen1_commy.setText("全公司");
                 setUser(OrganizationManager.shareManager().allDepartments());
             }
             //权限为部门 展示我的部门
-            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
+            else if (permission != null && permission.dataRange == Permission.TEAM) {
+                saleteam_screen1_commy.setText("本部门");
                 setUser(OrganizationManager.shareManager().currentUserDepartments());
             }
             //权限为个人 展示自己
-            else if (MainApp.user.role.getDataRange() == Role.SELF) {
+            else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+                saleteam_screen1_commy.setText("我");
                 data.clear();
                 SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
                 saleTeamScreen.setId(MainApp.user.getId());

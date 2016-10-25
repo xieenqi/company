@@ -50,7 +50,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     protected TextView tv_title_1;
     protected DropDownMenu mMenu;
     private ViewStub emptyView;
-    private Permission permission;
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
     protected PaginationX<T> pagination = new PaginationX<T>(20);
@@ -71,12 +70,12 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         GetData();
     }
 
-    private Runnable UiRunner = new Runnable() {
-        @Override
-        public void run() {
-            btn_add.setVisibility(View.INVISIBLE);
-        }
-    };
+//    private Runnable UiRunner = new Runnable() {
+//        @Override
+//        public void run() {
+//            btn_add.setVisibility(View.INVISIBLE);
+//        }
+//    };
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -110,19 +109,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                     addNewItem();
                 }
             });
-
-            if (null != MainApp.user && !MainApp.user.isSuperUser()) {
-                try {
-                    permission = (Permission) MainApp.rootMap.get("0401");
-                    if (!permission.isEnable() && MainApp.permissionPage == 1) {
-                        btn_add.setVisibility(View.INVISIBLE);
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    Toast("创建项目权限,code错误");
-                }
-            }
-
             img_title_left = (ViewGroup) mView.findViewById(R.id.img_title_left);
             img_title_left.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -147,6 +133,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
             initTab();
             init();
         }
+
         return mView;
     }
 
@@ -178,9 +165,16 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                 return false;
             }
         });
+        btn_add.setVisibility(View.INVISIBLE);
+        Permission permission = MainApp.rootMap.get("0401");
+        if (permission != null && permission.isEnable() && MainApp.permissionPage == 1) {
+            btn_add.setVisibility(View.VISIBLE);
+            Utils.btnHideForListView(expandableListView, btn_add);
+        } else if (MainApp.permissionPage != 1) {
+            Utils.btnHideForListView(expandableListView, btn_add);
+            btn_add.setVisibility(View.VISIBLE);
+        }
 
-
-        Utils.btnHideForListView(expandableListView, btn_add);
 
     }
 

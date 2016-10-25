@@ -56,6 +56,7 @@ import retrofit.client.Response;
  * Created by xeq on 16/8/27.
  */
 public class WorksheetDetailActivity extends BaseActivity implements View.OnClickListener {
+    private static String PICK_USER_SESSION = "com.loyo.WorksheetDetailActivity.PICK_USER_SESSION";
     private LinearLayout img_title_left;
     private LinearLayout ll_worksheet_info;
     private LinearLayout ll_events, ll_wran;
@@ -79,18 +80,17 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, (WorksheetEventsSupporter) msg.obj);
                     bundle.putSerializable(ExtraAndResult.EXTRA_DATA, (WorksheetDetail) detail);
                     bundle.putString(ExtraAndResult.EXTRA_ID2, detail.id);
-                    app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
+                    app.startActivityForResult(WorksheetDetailActivity.this, EventDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
 
                 }
                 break;
                 case ExtraAndResult.WORKSHEET_EVENT_TRANSFER://设置负责人
                 case ExtraAndResult.WORKSHEET_EVENT_DISPATCH://设置负责人
                     eventId = (String) msg.obj;
-//                    SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
-//                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 {
                     Bundle bundle = new Bundle();
                     bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                    bundle.putSerializable(ContactPickerActivity.SESSION_KEY, WorksheetDetailActivity.PICK_USER_SESSION);
                     Intent intent = new Intent();
                     intent.setClass(WorksheetDetailActivity.this, ContactPickerActivity.class);
                     intent.putExtras(bundle);
@@ -202,11 +202,10 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.tv_setting://批量设置
                 eventId = "";
-//                SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
-//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                bundle.putSerializable(ContactPickerActivity.SESSION_KEY, WorksheetDetailActivity.PICK_USER_SESSION);
                 Intent intent = new Intent();
                 intent.setClass(WorksheetDetailActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
@@ -369,12 +368,14 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-        StaffMemberCollection collection = event.data;
-        NewUser u = Compat.convertStaffCollectionToNewUser(collection);
-        if (!TextUtils.isEmpty(eventId)) {
-            setEventPersonal(u.getId());
-        } else {
-            setAllEventPersonal(u.getId());
+        if (WorksheetDetailActivity.PICK_USER_SESSION.equals(event.session)) {
+            StaffMemberCollection collection = event.data;
+            NewUser u = Compat.convertStaffCollectionToNewUser(collection);
+            if (!TextUtils.isEmpty(eventId)) {
+                setEventPersonal(u.getId());
+            } else {
+                setAllEventPersonal(u.getId());
+            }
         }
     }
 

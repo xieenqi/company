@@ -204,9 +204,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // TODO: 建立单独的获取配置Service
-        /* 获取配置数据 */
-        WorksheetConfig.fetchWorksheetTypes();
     }
 
     @Override
@@ -223,7 +220,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
         //只有登录进来才加载loading
-        LogUtil.d("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START)) + "代开值 ----" + SharedUtil.get(app, ExtraAndResult.APP_START));
         if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
             showLoading("");
         }
@@ -309,13 +305,13 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 组装首页Item数据
      */
     void updateUser() {
-
-        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", "com.loyo.oa.v2.activityui.other.BulletinManagerActivity_", "0", 0),
+//产品确定 除了讨论模块其它都受权限控制 20161019
+        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", "com.loyo.oa.v2.activityui.other.BulletinManagerActivity_", "0200", 0),
                 new HomeItem(R.drawable.newmain_discuss, "我的讨论", "com.loyo.oa.v2.activityui.discuss.MyDiscussActivity", "0", 0),
                 new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity", "0213", 0),
                 new HomeItem(R.drawable.newmain_clue, "销售线索", "com.loyo.oa.v2.activityui.clue.ClueManagerActivity", "0217", 1),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
-                new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signin.SignInManagerActivity_", "0206", 1),
+                new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signin.SignInManagerActivity_", "0228", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
                 new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0216", 1),//新加订单
                 new HomeItem(R.drawable.newmain_worksheet, "工单管理", "com.loyo.oa.v2.activityui.worksheet.WorksheetManageActivity", "0218"/* 测试是始终显示 */, 1),//新加工单
@@ -332,8 +328,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
                 new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
-                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign),
                 new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
+                new MoreWindowItem("拜访签到", "0228", R.drawable.newmain_post_sign),
                 new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
     }
 
@@ -565,6 +561,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                         super.failure(error);
                     }
                 });
+        // TODO: 建立单独的获取配置Service  目前初始化数据在首页加载完成在加载
+        /* 获取配置数据 */
+        WorksheetConfig.fetchWorksheetTypes();
     }
 
     //获取轨迹，并设置AlarmManager
@@ -581,8 +580,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         updateUser();
         //超级管理员判断
         if (null != MainApp.user && !MainApp.user.isSuperUser()) {
-            if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
-                    0 == MainApp.user.newpermission.size()) {
+            if (null == MainApp.user || null == MainApp.user.permissionGroup) {
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
@@ -600,23 +598,26 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 return;
             }
 
-            ArrayList<Permission> suitesNew = new ArrayList<>();
-            suitesNew.clear();
-            suitesNew.addAll(MainApp.user.newpermission);
-
-            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
-            for (Permission permission : suitesNew) {
-                if (!TextUtils.isEmpty(permission.code)) {
-                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
-                    mappedPermission.put(permission.code, permission);
-                }
-            }
-            for (int i = 0; i < items.size(); i++) {
+//            ArrayList<Permission> suitesNew = new ArrayList<>();
+//            suitesNew.clear();
+//            suitesNew.addAll(MainApp.user.newpermission);
+//
+//            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
+//            for (Permission permission : suitesNew) {
+//                if (!TextUtils.isEmpty(permission.code)) {
+//                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+//                    mappedPermission.put(permission.code, permission);
+//                }
+//            }
+            Map<String, Permission> mappedPermission = MainApp.rootMap;
+            int itemsLength = items.size();
+            for (int i = 0; i < itemsLength; i++) {
                 String code = items.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {
                     items.remove(i);
                     i--;
+                    itemsLength--;
                 }
             }
             int caseItemsLength = caseItems.size();
@@ -626,6 +627,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 if ((p == null || p.enable == false) && code != "0") {
                     caseItems.remove(i);
                     i--;
+                    caseItemsLength--;
                 }
             }
         }
@@ -818,7 +820,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
             @Override
             public void success(final User user, final Response response) {
-                HttpErrorCheck.checkResponse(response);
                 requestNumber();
             }
 

@@ -17,9 +17,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
@@ -29,24 +26,27 @@ import com.loyo.oa.v2.activityui.worksheet.adapter.TeamWorksheetsAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
-import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.fragment.BaseGroupsDataFragment;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -76,9 +76,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     private ArrayList<SaleTeamScreen> typeData = new ArrayList<>();
     private ArrayList<WorksheetStatus> statusFilters;
     private ArrayList<WorksheetTemplate> typeFilters;
-
-    private List<Department> mDeptSource;  //部门和用户集合
-    private List<Department> newDeptSource = new ArrayList<>();//我的部门
     private List<SaleTeamScreen> data = new ArrayList<>();
 
     private LinearLayout salemy_screen0, salemy_screen1, salemy_screen2;
@@ -91,6 +88,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     private View mView;
 
     private ScreenDeptPopupView deptPopupView;
+    private Permission permission;
 
 
     private Handler mHandler = new Handler() {
@@ -98,7 +96,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ExtraAndResult.MSG_SEND: {
-                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
                     break;
                 }
                 /*部门选择回调*/
@@ -183,7 +181,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     }
 
     private void initView(View view) {
-
+        permission = (Permission) getArguments().getSerializable("permission");
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
@@ -264,7 +262,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     }
 
     private void setFilterData() {
-        mDeptSource = Common.getLstDepartment();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -420,15 +417,18 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     public void wersi() {
         try {
             //为超管或权限为全公司 展示全公司成员
-            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-                setUser(mDeptSource);
+            if (permission != null && permission.dataRange == Permission.COMPANY) {
+                tv_tab0.setText("全公司");
+                setUser(OrganizationManager.shareManager().allDepartments());
             }
             //权限为部门 展示我的部门
-            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
-                deptSort();
+            else if (permission != null && permission.dataRange == Permission.TEAM) {
+                tv_tab0.setText("本部门");
+                setUser(OrganizationManager.shareManager().currentUserDepartments());
             }
             //权限为个人 展示自己
-            else if (MainApp.user.role.getDataRange() == Role.SELF) {
+            else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+                tv_tab0.setText("我");
                 data.clear();
                 SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
                 saleTeamScreen.setId(MainApp.user.getId());
@@ -446,31 +446,15 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     }
 
     /**
-     * 过滤出我的部门
-     */
-    private void deptSort() {
-        newDeptSource.clear();
-        User user = MainApp.user;
-        for (Department department : mDeptSource) {
-            for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
-                    newDeptSource.add(department);
-                }
-            }
-        }
-        setUser(newDeptSource);
-    }
-
-    /**
      * 组装部门格式
      */
-    private void setUser(List<Department> values) {
+    private void setUser(List<DBDepartment> values) {
         data.clear();
-        for (Department department : values) {
+        for (DBDepartment department : values) {
             SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(department.getId());
-            saleTeamScreen.setName(department.getName());
-            saleTeamScreen.setxPath(department.getXpath());
+            saleTeamScreen.setId(department.id);
+            saleTeamScreen.setName(department.name);
+            saleTeamScreen.setxPath(department.xpath);
             data.add(saleTeamScreen);
         }
     }

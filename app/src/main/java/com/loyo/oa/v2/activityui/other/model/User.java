@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.other.model;
 
 import android.text.TextUtils;
 
+import com.loyo.oa.v2.activityui.commonview.bean.PermissionGroup;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Permission;
@@ -10,6 +11,7 @@ import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.activityui.commonview.SelectUserHelper;
 import com.loyo.oa.v2.application.MainApp;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -36,13 +38,15 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     public Position shortPosition;
     public Department shortDept;
     public ArrayList<UserInfo> depts = new ArrayList<>();
-    public ArrayList<Permission> newpermission = new ArrayList<>();
+    //    public ArrayList<Permission> newpermission = new ArrayList<>();
     public boolean isBQQ;
     public boolean index;
     public boolean isSuperUser = false;
     public int gender;
     public long updatedAt;
     public long createdAt;
+
+    public PermissionGroup permissionGroup;//最新权限数据
 
 
     public boolean isSuperUser() {
@@ -84,7 +88,6 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     public static void setImageUrl(String imageUrl) {
         User.imageUrl = imageUrl;
     }
-
 
 
     @Override

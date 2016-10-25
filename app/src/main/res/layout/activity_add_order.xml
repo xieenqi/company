@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_title"/>
+    <include layout="@layout/include_title" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        >
+        android:scrollbars="vertical">
 
         <LinearLayout
             android:id="@+id/layout_body"
@@ -25,8 +24,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/text_item1"
@@ -35,7 +33,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="订单标题"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <EditText
                     android:id="@+id/et_name"
@@ -51,7 +49,7 @@
                     android:paddingBottom="@dimen/dimen_5"
                     android:paddingTop="@dimen/dimen_5"
                     android:textColor="@color/text66"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -59,11 +57,11 @@
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
                     android:src="@drawable/right_arrow"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
 
             <LinearLayout
@@ -79,7 +77,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="对应客户"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_customer"
@@ -90,18 +88,18 @@
                     android:gravity="right|center_vertical"
                     android:hint="必填,请选择"
                     android:textColor="@color/text66"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_stage"
@@ -116,7 +114,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="购买产品"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_stage"
@@ -127,24 +125,23 @@
                     android:gravity="right|center_vertical"
                     android:hint="必填,请选择"
                     android:textColor="@color/text66"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/text_item1"
@@ -153,7 +150,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="成交金额"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <EditText
                     android:id="@+id/et_money"
@@ -171,7 +168,7 @@
                     android:paddingTop="@dimen/dimen_5"
                     android:singleLine="true"
                     android:textColor="@color/text66"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -179,11 +176,11 @@
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
                     android:src="@drawable/right_arrow"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_estimate"
@@ -198,7 +195,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="添加回款"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_estimate"
@@ -209,18 +206,18 @@
                     android:gravity="right|center_vertical"
                     android:hint="请选择"
                     android:textColor="@color/text66"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_addorder"
@@ -235,7 +232,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="添加工单"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_addorder"
@@ -245,27 +242,25 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:hint="请选择"
-                    android:textColor="@color/text66"
-                    android:textSize="15sp"
                     android:maxEms="15"
-                    />
+                    android:textColor="@color/text66"
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/text_item1"
@@ -274,7 +269,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="订单编号"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <EditText
                     android:id="@+id/et_ordernum"
@@ -290,7 +285,7 @@
                     android:paddingBottom="@dimen/dimen_5"
                     android:paddingTop="@dimen/dimen_5"
                     android:textColor="@color/text66"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -298,10 +293,10 @@
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
                     android:src="@drawable/right_arrow"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/ll_source"
@@ -317,7 +312,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:minWidth="@dimen/dimen_60"
                     android:text="附件"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     style="@style/text_item1"
@@ -327,24 +322,24 @@
                     android:gravity="right|center_vertical"
                     android:hint=""
                     android:textColor="@color/text66"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
                 android:id="@+id/tv_custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <EditText
                 android:id="@+id/et_remake"
@@ -359,7 +354,7 @@
                 android:paddingBottom="@dimen/dimen_5"
                 android:paddingTop="@dimen/dimen_5"
                 android:textColor="@color/text66"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

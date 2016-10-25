@@ -24,15 +24,12 @@ import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.TeamCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.NearCount;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
 import com.loyo.oa.v2.activityui.customer.bean.Tag;
-import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -112,7 +109,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
             switch (msg.what) {
 
                 case DEPARTMENT_USER_DATA_LOADED: {
-                    saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
+                    saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
                     break;
                 }
 
@@ -249,15 +246,18 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     public void wersi() {
         try {
             //为超管或权限为全公司 展示全公司成员
-            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
+            if (permission != null && permission.dataRange == Permission.COMPANY) {
+                screen.setText("全公司");
                 setUser(OrganizationManager.shareManager().allDepartments());
             }
             //权限为部门 展示我的部门
-            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
+            else if (permission != null && permission.dataRange == Permission.TEAM) {
+                screen.setText("本部门");
                 setUser(OrganizationManager.shareManager().currentUserDepartments());
             }
             //权限为个人 展示自己
-            else if (MainApp.user.role.getDataRange() == Role.SELF) {
+            else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+                screen.setText("我");
                 data.clear();
                 saleTeamScreen = new SaleTeamScreen();
                 saleTeamScreen.setId(MainApp.user.getId());

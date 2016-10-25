@@ -215,6 +215,10 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                     @Override
                     public void success(PaginationLegWork paginationX, Response response) {
                         HttpErrorCheck.checkResponse("团队客户拜访", response);
+                        if (paginationX == null) {
+                            Toast("服务端错误,没有数据");
+                            return;
+                        }
                         legworkPaginationX = paginationX;
                         if (isTopAdd) {
                             legWorks.clear();

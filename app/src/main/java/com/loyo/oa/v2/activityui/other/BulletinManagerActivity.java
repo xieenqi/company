@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinManagerPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinManagerView;
@@ -19,6 +20,7 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -26,16 +28,20 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
 /**
- *【通知公告】列表页
+ * 【通知公告】列表页
  * Restructure by yyy on 16/10/10
  */
 @EActivity(R.layout.activity_notice)
-public class BulletinManagerActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2,BulletinManagerView {
+public class BulletinManagerActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, BulletinManagerView {
 
-    @ViewById ViewGroup img_title_left;
-    @ViewById TextView tv_title_1;
-    @ViewById PullToRefreshRecycleView lv_notice;
-    @ViewById Button btn_notice_add;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    TextView tv_title_1;
+    @ViewById
+    PullToRefreshRecycleView lv_notice;
+    @ViewById
+    Button btn_notice_add;
     protected PaginationX<Bulletin> mPagination = new PaginationX(20);
     private boolean isTopAdd = true;
     private final int REQUEST_NEW = 1;
@@ -46,7 +52,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     @AfterViews
     void initViews() {
         setTouchView(-1);
-        managerPresenter = new BulletinManagerPresenterImpl(this,mContext,BulletinManagerActivity.this);
+        managerPresenter = new BulletinManagerPresenterImpl(this, mContext, BulletinManagerActivity.this);
         managerPresenter.isPermission();
 
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -66,12 +72,12 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
      * 获取通知列表
      */
     void getData() {
-        managerPresenter.requestListData(mPagination.getPageIndex(),isTopAdd ? mPagination.getPageSize() >= 20 ? mPagination.getPageSize() : 20 : 20);
+        managerPresenter.requestListData(mPagination.getPageIndex(), isTopAdd ? mPagination.getPageSize() >= 20 ? mPagination.getPageSize() : 20 : 20);
     }
 
     /**
      * 返回
-     * */
+     */
     @Click(R.id.img_title_left)
     void onClick(final View v) {
         onBackPressed();
@@ -116,7 +122,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     /**
      * 权限认证成功
-     * */
+     */
     @Override
     public void permissionSuccess() {
         btn_notice_add.setVisibility(View.VISIBLE);
@@ -131,7 +137,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     /**
      * 展示Loading
-     * */
+     */
     @Override
     public void showProgress(String msg) {
         showLoading(msg);
@@ -139,7 +145,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     /**
      * 隐藏Loading
-     * */
+     */
     @Override
     public void hideProgress() {
 
@@ -147,7 +153,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     /**
      * 绑定数据
-     * */
+     */
     @Override
     public void bindListData() {
         managerPresenter.bindListData(lv_notice);
@@ -155,7 +161,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     /**
      * 刷新完成
-     * */
+     */
     @Override
     public void refreshCmpl() {
         lv_notice.onRefreshComplete();

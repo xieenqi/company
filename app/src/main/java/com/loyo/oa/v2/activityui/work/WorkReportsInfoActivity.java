@@ -223,12 +223,11 @@ public class WorkReportsInfoActivity extends BaseActivity {
         super.setTitle("报告详情");
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
-
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
         layout_discussion.setOnTouchListener(Global.GetTouch());
-
+        img_title_right.setVisibility(View.GONE);
     }
 
     void updateUI(final WorkReport mWorkReport) {
@@ -314,9 +313,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 edt_content.setText(mWorkReport.reviewer.comment);
                 edt_content.setEnabled(false);
             }
-            if (!mWorkReport.creator.id.equals(MainApp.user.id)) {
+            if (mWorkReport.creator.id.equals(MainApp.user.id)) {
                 //显示编辑、删除按钮
-                img_title_right.setVisibility(View.GONE);
+                img_title_right.setVisibility(View.VISIBLE);
             }
         } else {
             layout_score.setVisibility(View.GONE);
@@ -331,9 +330,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 btn_workreport_review.setVisibility(View.GONE);
             }
 
-            if (!mWorkReport.creator.id.equals(MainApp.user.id)) {
+            if (mWorkReport.creator.id.equals(MainApp.user.id)) {
                 //显示编辑、删除按钮
-                img_title_right.setVisibility(View.GONE);
+                img_title_right.setVisibility(View.VISIBLE);
             }
 
         }
@@ -405,7 +404,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                if (null != mWorkReport.creator && app.user.id.equals(mWorkReport.creator.getId())) {
+                if (mWorkReport.isReviewed()) {
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                     intent.putExtra("extra", "复制报告");
                     startActivityForResult(intent, MSG_DELETE_WORKREPORT);

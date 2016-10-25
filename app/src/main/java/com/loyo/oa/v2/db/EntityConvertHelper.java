@@ -259,9 +259,8 @@ public class EntityConvertHelper {
                     namesBuilder.append(name);
                 }
             }
-            if (dep.getShortPosition() != null){
-
-                String name = dep.getShortPosition().getName();
+            if (dep.getTitle() != null){
+                String name = dep.getTitle();
                 if (name != null && name.length() > 0) {
                     namesBuilder.append("|" + name);
                 }

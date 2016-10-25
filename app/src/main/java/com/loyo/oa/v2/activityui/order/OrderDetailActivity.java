@@ -22,6 +22,7 @@ import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -176,6 +177,11 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 functionBuuton();
                 break;
             case R.id.tv_customer://跳转到相关客户
+                Permission permissin = MainApp.rootMap.get("0205");
+                if (!permissin.enable) {
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                    return;
+                }
                 Intent intent = new Intent();
                 intent.putExtra("Id", mData.customerId);
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
@@ -184,6 +190,11 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
             case R.id.tv_wfname://跳转到相关审批
+                Permission permissinWF = MainApp.rootMap.get("0204");
+                if (!permissinWF.enable) {
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                    return;
+                }
                 Intent intentWf = new Intent();
                 intentWf.putExtra(ExtraAndResult.EXTRA_ID, mData.wfId);
                 intentWf.setClass(OrderDetailActivity.this, WfinstanceInfoActivity_.class);
@@ -223,7 +234,11 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
             case R.id.ll_worksheet://工单
-
+                Permission permissinWS = MainApp.rootMap.get("0218");
+                if (!permissinWS.enable) {
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                    return;
+                }
                 boolean canAddWorksheet = false;
                 if (mData.status == 3 || mData.status == 4) {
                     canAddWorksheet = true;
@@ -366,7 +381,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                             dismissSweetAlert();
                             terminationOrder();
                         }
-                    },"提示","此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
+                    }, "提示", "此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
                             "意外终止后不可恢复，你确定要终止吗？");
                 }
             });

@@ -194,7 +194,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
     private void bindData() {
 
         if (null == adapter) {
-            adapter = new CommCustomerAdapter(getActivity(), mCustomers, permission, mHandler);
+            adapter = new CommCustomerAdapter(getActivity(), mCustomers, mHandler);
             listView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
