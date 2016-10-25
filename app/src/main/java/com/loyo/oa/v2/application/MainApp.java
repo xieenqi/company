@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.application;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +18,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.instacart.library.truetime.TrueTime;
 import com.loyo.oa.v2.R;
-
-import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.customer.bean.Industry;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.beans.Permission;
@@ -60,6 +60,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -141,6 +142,9 @@ public class MainApp extends Application {
     public static User user;//InitDataService 在这里负值
     public CellInfo cellInfo;
 
+    /* app是否在前台 */
+    private static boolean isActive;
+
     public static String getToken() {
         if (!StringUtil.isEmpty(token)) {
             return token;
@@ -164,7 +168,6 @@ public class MainApp extends Application {
             @Override
             public void success(ArrayList<Industry> industries, Response response) {
                 mIndustries = industries;
-
             }
         });
 
@@ -174,6 +177,7 @@ public class MainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        addActivityLifecycleCallback();
         mainApp = this;
         init();
         loadIndustryCodeTable();
@@ -198,6 +202,7 @@ public class MainApp extends Application {
     }
 
     private void addActivityLifecycleCallback() {
+
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -211,9 +216,13 @@ public class MainApp extends Application {
 
             @Override
             public void onActivityResumed(Activity activity) {
-                if (user != null) {
-                    LocationDBManager.getInstance().initWithUser(user.id);
-                    TrackLocationManager.getInstance().startLocationTrackingIfNeeded();
+                //app 从后台唤醒，进入前台
+                if (!isActive) {
+                    isActive = true;
+                    if (user != null) {
+                        LocationDBManager.getInstance().initWithUser(user.id);
+                        TrackLocationManager.getInstance().startLocationTrackingIfNeeded();
+                    }
                 }
             }
 
@@ -224,7 +233,9 @@ public class MainApp extends Application {
 
             @Override
             public void onActivityStopped(Activity activity) {
-
+                if (!isAppOnForeground()) {
+                    isActive = false;
+                }
             }
 
             @Override
@@ -237,6 +248,24 @@ public class MainApp extends Application {
 
             }
         });
+    }
+
+    public boolean isAppOnForeground() {
+        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = getApplicationContext().getPackageName();
+
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.processName.equals(packageName)
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
