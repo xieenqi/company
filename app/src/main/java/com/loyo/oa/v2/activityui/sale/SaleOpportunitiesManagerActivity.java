@@ -123,6 +123,10 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
             imageArrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
         }
+        else {
+            img_title_arrow.setVisibility(View.GONE);
+            layout_title_action.setEnabled(false);
+        }
         getStageData();
     }
 

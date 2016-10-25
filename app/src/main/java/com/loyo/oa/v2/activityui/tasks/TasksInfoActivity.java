@@ -544,8 +544,14 @@ public class TasksInfoActivity extends BaseActivity {
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
 
-        tv_discussion_count.setText("(" + mTask.getBizExtData().getDiscussCount() + ")");
-        tv_attachment_count.setText("(" + mTask.getBizExtData().getAttachmentCount() + ")");
+        if (mTask.getBizExtData() != null){
+            tv_discussion_count.setText("(" + mTask.getBizExtData().getDiscussCount() + ")");
+            tv_attachment_count.setText("(" + mTask.getBizExtData().getAttachmentCount() + ")");
+        }
+        else { // Added By Ethan 2016-10-22 Android-任务管理：任务中数据为空，点击任务APP崩溃  ID： 1000408
+            tv_discussion_count.setText("(0)");
+            tv_attachment_count.setText("(0)");
+        }
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {

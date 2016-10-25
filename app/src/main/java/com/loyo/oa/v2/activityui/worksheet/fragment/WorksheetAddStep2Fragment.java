@@ -265,7 +265,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-controller.count()) /*最大可选择图片数量*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-        this.startActivityForResult(intent, PICTURE);
+        this.getActivity().startActivityForResult(intent, PICTURE);
     }
 
     @Override

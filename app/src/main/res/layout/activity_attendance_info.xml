@@ -33,7 +33,6 @@
                     android:layout_height="@dimen/dimen_40"
                     android:layout_marginRight="@dimen/dimen_10"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/icon_contact_avatar"
                     />
 
                 <TextView
