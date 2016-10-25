@@ -46,13 +46,14 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
     private ImageUploadGridView gridView;
     private LinearLayout ll_intent_kind;
     private TextView tv_kind;
+    private TextView tv_title;
     private EditText et_title;
     private EditText edt_content;
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
 
     private OrderWorksheetAddPresenter mPresenter;
-    private OrderWorksheetListModel mOworssheetList;
+    private OrderWorksheetListModel mOrderWorksheet;
     private UploadController controller;
 
     private String uuid = StringUtil.getUUID();
@@ -77,6 +78,7 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
 
         edt_content = (EditText) findViewById(R.id.edt_content);
         tv_kind = (TextView) findViewById(R.id.tv_kind);
+        tv_title = (TextView) findViewById(R.id.tv_title_1);
         et_title = (EditText) findViewById(R.id.et_title);
         ll_intent_kind = (LinearLayout) findViewById(R.id.ll_intent_kind);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -87,13 +89,13 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
         img_title_right.setOnClickListener(this);
         img_title_left.setOnClickListener(this);
         mPresenter = new OrderWorksheetAddPresenterImpl(mContext, this);
-
+        tv_title.setText("新建工单");
         controller.loadView(gridView);
 
         if (null != getIntent().getSerializableExtra(ExtraAndResult.EXTRA_NAME)) {
-            mOworssheetList = (OrderWorksheetListModel) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_NAME);
+            mOrderWorksheet = (OrderWorksheetListModel) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_NAME);
         } else {
-            mOworssheetList = new OrderWorksheetListModel();
+            mOrderWorksheet = new OrderWorksheetListModel();
         }
         editUI();
     }
@@ -103,7 +105,7 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
      */
     private void editUI() {
 
-        if (null == mOworssheetList.templateName || TextUtils.isEmpty(mOworssheetList.templateName)) {
+        if (null == mOrderWorksheet.templateName || TextUtils.isEmpty(mOrderWorksheet.templateName)) {
             return;
         }
 
@@ -111,19 +113,20 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
         LogUtil.dee("获取到的position:" + position);
 
         isEdit = true;
-        tv_kind.setText(mOworssheetList.templateName);
-        edt_content.setText(mOworssheetList.content);
+        tv_kind.setText(mOrderWorksheet.templateName);
+        edt_content.setText(mOrderWorksheet.content);
+        et_title.setText(mOrderWorksheet.title);
 
-        if (TextUtils.isEmpty(et_title.getText().toString())) {
+/*        if (TextUtils.isEmpty(et_title.getText().toString())) {
             if (TextUtils.isEmpty(OrderAddActivity.orderTitle)) {
-                et_title.setText(mOworssheetList.templateName);
+                et_title.setText(mOrderWorksheet.templateName);
             } else {
-                et_title.setText(OrderAddActivity.orderTitle + "-" + mOworssheetList.templateName);
+                et_title.setText(OrderAddActivity.orderTitle + "-" + mOrderWorksheet.templateName);
             }
-        }
+        }*/
 
-        if (null != mOworssheetList.mSelectPath) {
-            mPresenter.addPhoto(mOworssheetList.mSelectPath, controller, uuid);
+        if (null != mOrderWorksheet.mSelectPath) {
+            mPresenter.addPhoto(mOrderWorksheet.mSelectPath, controller, uuid);
         }
     }
 
@@ -131,12 +134,12 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
      * 回调跳转
      */
     public void setResultIntent(int size) {
-        mOworssheetList.size = size;
-        mOworssheetList.uuid = uuid;
-        mOworssheetList.content = edt_content.getText().toString();
+        mOrderWorksheet.size = size;
+        mOrderWorksheet.uuid = uuid;
+        mOrderWorksheet.content = edt_content.getText().toString();
         OrderWorksheetAddFinish event = new OrderWorksheetAddFinish();
         event.bundle = new Bundle();
-        event.bundle.putSerializable(ExtraAndResult.EXTRA_ID, mOworssheetList);
+        event.bundle.putSerializable(ExtraAndResult.EXTRA_ID, mOrderWorksheet);
         event.bundle.putBoolean(ExtraAndResult.WELCOM_KEY, isEdit);
         event.bundle.putInt(ExtraAndResult.APP_START, position);
         AppBus.getInstance().post(event);
@@ -161,6 +164,7 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
                     return;
                 }
 
+                mOrderWorksheet.title = et_title.getText().toString();
                 showLoading("");
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
@@ -197,9 +201,8 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
             }
         }
 
-        mOworssheetList.templateName = template.name;
-        mOworssheetList.templateId = template.id;
-        mOworssheetList.title = OrderAddActivity.orderTitle + "" + value;
+        mOrderWorksheet.templateName = template.name;
+        mOrderWorksheet.templateId = template.id;
     }
 
     /**
@@ -208,7 +211,7 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
     @Override
     public void setUploadAttachmentEmbl(int size, List<String> mFilePath) {
         setResultIntent(size);
-        mOworssheetList.mSelectPath = mFilePath;
+        mOrderWorksheet.mSelectPath = mFilePath;
     }
 
     @Override

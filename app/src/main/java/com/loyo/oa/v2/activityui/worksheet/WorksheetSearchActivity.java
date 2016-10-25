@@ -136,7 +136,7 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
 
         ExpandableListView innerListView = expandableListView.getRefreshableView();
         if (searchType != WorksheetListType.RESPONSABLE) {
-            adapter = new WorksheetListAdapter(this, groupsData,false);
+            adapter = new WorksheetListAdapter(this, groupsData,false,false);
         }
         else {
             adapter = new ResponsableWorksheetsAdapter(this, groupsData, WorksheetEventFinishAction.FROM_SEARCH_LIST);

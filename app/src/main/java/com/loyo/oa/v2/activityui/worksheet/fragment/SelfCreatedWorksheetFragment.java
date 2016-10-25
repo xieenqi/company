@@ -237,7 +237,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
     @Override
     public void initAdapter() {
         if (null == adapter) {
-            adapter = new WorksheetListAdapter(mActivity, groupsData,true);
+            adapter = new WorksheetListAdapter(mActivity, groupsData,true,false);
             mExpandableListView.getRefreshableView().setAdapter(adapter);
         }
     }
