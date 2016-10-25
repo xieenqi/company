@@ -11,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.OrderAddWorkSheetAttachmentActivity;
+import com.loyo.oa.v2.activityui.order.OrderAttachmentActivity;
 import com.loyo.oa.v2.activityui.order.event.OrderAddWorkSheetFinish;
 import com.loyo.oa.v2.activityui.worksheet.adapter.OrderworksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
@@ -113,9 +115,16 @@ public class OrderWorksheetListActivity extends BaseActivity implements View.OnC
      * 新建工单回调
      */
     @Subscribe
-    public void onOrderWorksheetAddFinish(OrderWorksheetAddFinish orderWorksheetAddFinish) {
-        mOworssheetList = (OrderWorksheetListModel) orderWorksheetAddFinish.bundle.getSerializable(ExtraAndResult.EXTRA_ID);
-        reWorkSheet.add(mOworssheetList);
+    public void onOrderWorksheetAddFinish(OrderWorksheetAddFinish event) {
+        mOworssheetList = (OrderWorksheetListModel) event.bundle.getSerializable(ExtraAndResult.EXTRA_ID);
+        boolean isEdit = event.bundle.getBoolean(ExtraAndResult.WELCOM_KEY,false);
+        int position = event.bundle.getInt(ExtraAndResult.APP_START);
+        LogUtil.dee("onOrderWorksheetAddFinish:"+position);
+        if(isEdit){
+            reWorkSheet.set(position,mOworssheetList);
+        }else{
+            reWorkSheet.add(mOworssheetList);
+        }
         bindAdapter();
     }
 
@@ -129,11 +138,26 @@ public class OrderWorksheetListActivity extends BaseActivity implements View.OnC
     }
 
     /**
-     * 删除工单
+     * 编辑工单
      */
     @Override
     public void editWorkSheet(int position) {
-        Toast("编辑");
+        Intent mIntent = new Intent(OrderWorksheetListActivity.this,OrderWorksheetAddActivity.class);
+        mIntent.putExtra(ExtraAndResult.EXTRA_NAME,reWorkSheet.get(position));
+        mIntent.putExtra(ExtraAndResult.APP_START,position);
+        LogUtil.dee("editWorkSheet:"+position);
+        startActivity(mIntent);
+    }
+
+    /**
+     * 查看附件
+     * */
+    @Override
+    public void intentAttachment(int position) {
+        Bundle mBundle = new Bundle();
+        mBundle.putBoolean("isOver", true);
+        mBundle.putString("uuid",reWorkSheet.get(position).uuid);
+        app.startActivityForResult(this, OrderAddWorkSheetAttachmentActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_HIDEDIALOG, mBundle);
     }
 
     /**

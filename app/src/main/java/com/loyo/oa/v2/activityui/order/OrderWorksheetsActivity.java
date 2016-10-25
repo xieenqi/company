@@ -49,12 +49,12 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
 
     private OrderDetail detail;
     private int page = 1;
+    private int status;
     private boolean isPullDown = true;
     private Bundle mBundle;
     protected GroupsData groupsData;
 
     private BaseGroupsDataAdapter adapter;
-
     private LayoutInflater mInflater;
 
     boolean isMyUser;
@@ -69,6 +69,7 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
         mBundle = getIntent().getExtras();
         detail = ( OrderDetail) mBundle.getSerializable(ExtraAndResult.EXTRA_OBJ);
         canAddWorksheet = (boolean)mBundle.getBoolean(ExtraAndResult.EXTRA_BOOLEAN);
+        status = mBundle.getInt(ExtraAndResult.EXTRA_ID);
         if (detail == null || detail.id == null) {
             Toast("参数错误");
             finish();
@@ -130,18 +131,19 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                Intent mIntent = new Intent(getApplicationContext(), WorksheetDetailActivity.class);
-
-                String wsId = null;
-                Worksheet ws =(Worksheet) groupsData.get(groupPosition, childPosition);
-                wsId = ws.id;
-                if (wsId == null) {
-                    wsId = "";
+                if(status == 1){
+                    sweetAlertDialogView.alertIcon(null, "订单未通过审核,无法查看工单详情!");
+                }else{
+                    Intent mIntent = new Intent(getApplicationContext(), WorksheetDetailActivity.class);
+                    String wsId = null;
+                    Worksheet ws =(Worksheet) groupsData.get(groupPosition, childPosition);
+                    wsId = ws.id;
+                    if (wsId == null) {
+                        wsId = "";
+                    }
+                    mIntent.putExtra(ExtraAndResult.EXTRA_ID, wsId);
+                    startActivity(mIntent);
                 }
-
-                mIntent.putExtra(ExtraAndResult.EXTRA_ID, wsId);
-                startActivity(mIntent);
-
                 return true;
             }
         });
@@ -226,6 +228,7 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
 
             default:
                 break;
+
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.upload.UploadController;
 import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
@@ -42,23 +43,22 @@ import java.util.List;
 
 public class OrderWorksheetAddActivity extends BaseActivity implements View.OnClickListener, OrderWorksheetAddView, UploadControllerCallback {
 
-    private EditText edt_content;
     private ImageUploadGridView gridView;
     private LinearLayout ll_intent_kind;
-
     private TextView tv_kind;
     private EditText et_title;
-
+    private EditText edt_content;
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
 
     private OrderWorksheetAddPresenter mPresenter;
-    private OrderWorksheetListModel mOworssheetList = new OrderWorksheetListModel();
-
+    private OrderWorksheetListModel mOworssheetList;
     private UploadController controller;
 
     private String uuid = StringUtil.getUUID();
     private int bizType = 29;
+    private int position;
+    private boolean isEdit = false;  //是否为编辑
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,11 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
         initUI();
     }
 
+    /**
+     * 初始化
+     */
     private void initUI() {
+
         controller = new UploadController(OrderWorksheetAddActivity.this, 9);
         controller.setObserver(this);
 
@@ -85,19 +89,56 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
         mPresenter = new OrderWorksheetAddPresenterImpl(mContext, this);
 
         controller.loadView(gridView);
+
+        if (null != getIntent().getSerializableExtra(ExtraAndResult.EXTRA_NAME)) {
+            mOworssheetList = (OrderWorksheetListModel) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_NAME);
+        } else {
+            mOworssheetList = new OrderWorksheetListModel();
+        }
+        editUI();
+    }
+
+    /**
+     * 设置编辑参数
+     */
+    private void editUI() {
+
+        if (null == mOworssheetList.templateName || TextUtils.isEmpty(mOworssheetList.templateName)) {
+            return;
+        }
+
+        position = getIntent().getIntExtra(ExtraAndResult.APP_START, 0);
+        LogUtil.dee("获取到的position:" + position);
+
+        isEdit = true;
+        tv_kind.setText(mOworssheetList.templateName);
+        edt_content.setText(mOworssheetList.content);
+
+        if (TextUtils.isEmpty(et_title.getText().toString())) {
+            if (TextUtils.isEmpty(OrderAddActivity.orderTitle)) {
+                et_title.setText(mOworssheetList.templateName);
+            } else {
+                et_title.setText(OrderAddActivity.orderTitle + "-" + mOworssheetList.templateName);
+            }
+        }
+
+        if (null != mOworssheetList.mSelectPath) {
+            mPresenter.addPhoto(mOworssheetList.mSelectPath, controller, uuid);
+        }
     }
 
     /**
      * 回调跳转
      */
     public void setResultIntent(int size) {
-        LogUtil.dee("size:" + size);
         mOworssheetList.size = size;
         mOworssheetList.uuid = uuid;
         mOworssheetList.content = edt_content.getText().toString();
         OrderWorksheetAddFinish event = new OrderWorksheetAddFinish();
         event.bundle = new Bundle();
         event.bundle.putSerializable(ExtraAndResult.EXTRA_ID, mOworssheetList);
+        event.bundle.putBoolean(ExtraAndResult.WELCOM_KEY, isEdit);
+        event.bundle.putInt(ExtraAndResult.APP_START, position);
         AppBus.getInstance().post(event);
         onBackPressed();
     }
@@ -114,9 +155,16 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
 
             /*提交*/
             case R.id.img_title_right:
+
+                if (TextUtils.isEmpty(tv_kind.getText().toString())) {
+                    Toast("请选择工单类型!");
+                    return;
+                }
+
                 showLoading("");
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
+
                 break;
 
             /*工单类型*/
@@ -135,7 +183,6 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
      */
     @Override
     public void getWorkSheetTypeEmbl(int index, String value, SweetAlertDialogView sweetAlertDialogView, ArrayList<WorksheetTemplate> types) {
-
         WorksheetTemplate template = types.get(index - 1);
         if (template.hasItems == false) {
             sweetAlertDialogView.alertIcon(null, "该工单类型未配置模版,请选择其他类型!");
@@ -143,7 +190,11 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
         }
         tv_kind.setText(value);
         if (TextUtils.isEmpty(et_title.getText().toString())) {
-            et_title.setText(OrderAddActivity.orderTitle + "-" + value);
+            if (TextUtils.isEmpty(OrderAddActivity.orderTitle)) {
+                et_title.setText(value);
+            } else {
+                et_title.setText(OrderAddActivity.orderTitle + "-" + value);
+            }
         }
 
         mOworssheetList.templateName = template.name;
@@ -153,10 +204,11 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
 
     /**
      * 上传附件成功处理
-     * */
+     */
     @Override
-    public void setUploadAttachmentEmbl(int size) {
+    public void setUploadAttachmentEmbl(int size, List<String> mFilePath) {
         setResultIntent(size);
+        mOworssheetList.mSelectPath = mFilePath;
     }
 
     @Override
@@ -208,7 +260,7 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
             return;
         }
         if (taskList.size() > 0) {
-            mPresenter.uploadAttachmentAt(controller,uuid,bizType);
+            mPresenter.uploadAttachmentAt(controller, uuid, bizType);
         } else {
             setResultIntent(taskList.size());
         }

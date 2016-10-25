@@ -2,15 +2,23 @@ package com.loyo.oa.v2.activityui.worksheet.adapter;
 
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.order.OrderAttachmentActivity;
 import com.loyo.oa.v2.activityui.worksheet.OrderWorksheetListActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
+import com.loyo.oa.v2.activityui.worksheet.viewcontrol.OrderWorksheetAddView;
+import com.loyo.oa.v2.activityui.worksheet.viewcontrol.OrderWorksheetListView;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 
 import java.util.ArrayList;
 
@@ -22,9 +30,9 @@ public class OrderworksheetListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<OrderWorksheetListModel> mData;
-    public OrderWorksheetListActivity crolView;
+    private OrderWorksheetListView crolView;
 
-    public OrderworksheetListAdapter(Context mContext, ArrayList<OrderWorksheetListModel> mData, OrderWorksheetListActivity crolView){
+    public OrderworksheetListAdapter(Context mContext, ArrayList<OrderWorksheetListModel> mData, OrderWorksheetListView crolView){
         this.mContext = mContext;
         this.mData    = mData;
         this.crolView = crolView;
@@ -60,6 +68,7 @@ public class OrderworksheetListAdapter extends BaseAdapter {
             holder.tv_delete  = (TextView) convertView.findViewById(R.id.tv_delete);
             holder.tv_edit    = (TextView) convertView.findViewById(R.id.tv_edit);
             holder.tv_source  = (TextView) convertView.findViewById(R.id.tv_source);
+            holder.ll_source  = (LinearLayout) convertView.findViewById(R.id.ll_source);
 
             convertView.setTag(holder);
         }else{
@@ -74,6 +83,10 @@ public class OrderworksheetListAdapter extends BaseAdapter {
         }else{
             holder.tv_source.setText("附件");
         }
+
+        holder.tv_delete.setOnTouchListener(Global.GetTouch());
+        holder.tv_edit.setOnTouchListener(Global.GetTouch());
+        holder.ll_source.setOnTouchListener(Global.GetTouch());
 
         /*删除*/
         holder.tv_delete.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +104,14 @@ public class OrderworksheetListAdapter extends BaseAdapter {
             }
         });
 
+        /*查看附件*/
+        holder.ll_source.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crolView.intentAttachment(position);
+            }
+        });
+
         return convertView;
     }
 
@@ -101,5 +122,6 @@ public class OrderworksheetListAdapter extends BaseAdapter {
         TextView tv_source;          //附件
         TextView tv_delete;          //删除
         TextView tv_edit;            //编辑
+        LinearLayout ll_source;      //附件
     }
 }

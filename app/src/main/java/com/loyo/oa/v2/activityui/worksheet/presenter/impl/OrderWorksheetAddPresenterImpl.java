@@ -16,6 +16,7 @@ import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -35,6 +36,7 @@ public class OrderWorksheetAddPresenterImpl implements OrderWorksheetAddPresente
     private Context mContext;
     private OrderWorksheetAddView crolView;
     private ArrayList<AttachmentBatch> attachment;
+    private List<String> mFilePath;
 
     public OrderWorksheetAddPresenterImpl(Context mContext,OrderWorksheetAddView crolView){
         this.mContext = mContext;
@@ -97,7 +99,7 @@ public class OrderWorksheetAddPresenterImpl implements OrderWorksheetAddPresente
             @Override
             public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
                 HttpErrorCheck.checkResponse("上传附件信息", response);
-                crolView.setUploadAttachmentEmbl(attachmentForNew.size());
+                crolView.setUploadAttachmentEmbl(attachmentForNew.size(),mFilePath);
             }
 
             @Override
@@ -110,6 +112,7 @@ public class OrderWorksheetAddPresenterImpl implements OrderWorksheetAddPresente
 
     private void buildAttachment(UploadController controller,String uuid,int bizType) {
         ArrayList<UploadTask> list = controller.getTaskList();
+        mFilePath = new ArrayList<>();
         attachment = new ArrayList<AttachmentBatch>();
         for (int i = 0; i < list.size(); i++) {
             UploadTask task = list.get(i);
@@ -120,8 +123,7 @@ public class OrderWorksheetAddPresenterImpl implements OrderWorksheetAddPresente
             attachmentBatch.name = task.getKey();
             attachmentBatch.size = Integer.parseInt(task.size + "");
             attachment.add(attachmentBatch);
+            mFilePath.add(task.getValidatePath());
         }
     }
-
-
 }

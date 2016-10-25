@@ -155,6 +155,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:gravity="center"
+            android:textColor="@color/text99"
             android:text="删除" />
 
         <View
@@ -170,6 +171,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:gravity="center"
+            android:textColor="@color/text99"
             android:text="编辑" />
     </LinearLayout>
 

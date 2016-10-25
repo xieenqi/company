@@ -5,6 +5,7 @@ import com.loyo.oa.v2.common.BaseView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yyy on 16/10/22.
@@ -16,5 +17,5 @@ public interface OrderWorksheetAddView extends BaseView{
     void getWorkSheetTypeEmbl(int index,String value,SweetAlertDialogView sweetAlertDialogView,ArrayList<WorksheetTemplate> types);
 
     /*上传附件成功处理*/
-    void setUploadAttachmentEmbl(int size);
+    void setUploadAttachmentEmbl(int size, List<String> mFilePath);
 }

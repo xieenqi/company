@@ -45,6 +45,7 @@
             android:gravity="center"
             android:text="附件上传"
             android:textColor="@color/title_bg1"
+            android:visibility="gone"
             />
     </RelativeLayout>
 </LinearLayout>

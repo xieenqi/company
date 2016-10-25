@@ -12,4 +12,7 @@ public interface OrderWorksheetListView {
     /*编辑工单*/
     void editWorkSheet(int position);
 
+    /*查看附件*/
+    void intentAttachment(int position);
+
 }

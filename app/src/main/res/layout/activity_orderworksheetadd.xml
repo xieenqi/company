@@ -59,7 +59,10 @@
                 android:id="@+id/ll_intent_title"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                >
 
                 <TextView
                     style="@style/text_item1"

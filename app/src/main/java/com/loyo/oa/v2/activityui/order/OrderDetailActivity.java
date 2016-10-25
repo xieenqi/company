@@ -232,6 +232,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_OBJ, mData);
                 mBundle.putBoolean(ExtraAndResult.EXTRA_BOOLEAN,canAddWorksheet);
+                mBundle.putInt(ExtraAndResult.EXTRA_ID,mData.status);
                 app.startActivityForResult(this, OrderWorksheetsActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
         }
@@ -367,15 +368,6 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                         }
                     },"提示","此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
                             "意外终止后不可恢复，你确定要终止吗？");
-   /*                 final GeneralPopView wran = showGeneralDialog(true, false, "此订单无法再创建回款计划、回款记录，而且添加的回款记录也无法纳入业绩统计。" +
-                            "意外终止后不可恢复，你确定要终止吗？");
-                    wran.setNoCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            terminationOrder();
-                            wran.dismisDialog();
-                        }
-                    });*/
                 }
             });
         if (isDelete)
@@ -395,16 +387,6 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                             deleteOrder();
                         }
                     },"提示","删除不可恢复\n确定删除？");
-
-/*                    final GeneralPopView wran = showGeneralDialog(true, false, "删除不可恢复\n确定删除？");
-                    wran.setNoCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            deleteOrder();
-                            wran.dismisDialog();
-                        }
-                    });*/
-
                 }
             });
         dialog.show();
