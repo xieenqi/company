@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.model.User;
 
 import java.util.ArrayList;

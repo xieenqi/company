@@ -4,7 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.point.IUser;

@@ -8,21 +8,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.help.Tip;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.List;
 
 /**
+ * 【地点微调搜索页】adapter
  * Created by yyy on 16/7/20.
  */
 public class MapModifyViewSerachAdapter extends RecyclerView.Adapter<MapModifyViewSerachAdapter.MViewHolder> {
 
     private Context mContext;
-    private List<PoiItem> mData;
+    private List<PoiItem> poiItems;
+    private List<Tip> gelItems;
+    private int page; //业务区分0:poi 1:非poi
 
-    public MapModifyViewSerachAdapter(List<PoiItem> mData, Context mContext){
-        this.mData = mData;
+    public MapModifyViewSerachAdapter(List<PoiItem> poiItems,List<Tip> gelItems, Context mContext,int page){
+        this.poiItems = poiItems;
+        this.gelItems = gelItems;
         this.mContext = mContext;
+        this.page = page;
+        LogUtil.dee("page:"+page);
     }
 
 
@@ -30,20 +38,27 @@ public class MapModifyViewSerachAdapter extends RecyclerView.Adapter<MapModifyVi
     public MViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_mapmodifyview,parent,false);
         MViewHolder holder = new MViewHolder(view);
-
         return holder;
     }
 
     @Override
     public void onBindViewHolder(MViewHolder holder, int position) {
-        PoiItem poiItem = mData.get(position);
-        holder.address.setText(poiItem.getTitle());
-        holder.message.setText(poiItem.getSnippet());
+        if(page == 0){
+            PoiItem poiItem = poiItems.get(position);
+            holder.address.setText(poiItem.getTitle());
+            holder.message.setText(poiItem.getSnippet());
+        }else{
+            Tip tip = gelItems.get(position);
+            holder.address.setText(tip.getName());
+            holder.message.setText(tip.getDistrict());
+            LogUtil.dee("name:"+tip.getName());
+            LogUtil.dee("msg:"+tip.getDistrict());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return poiItems.size();
     }
 
     public class MViewHolder extends RecyclerView.ViewHolder{

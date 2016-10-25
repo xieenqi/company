@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.db;
 
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
+import com.loyo.oa.v2.activityui.customer.model.Department;
+import com.loyo.oa.v2.activityui.customer.model.Role;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.db.bean.DBDepartment;

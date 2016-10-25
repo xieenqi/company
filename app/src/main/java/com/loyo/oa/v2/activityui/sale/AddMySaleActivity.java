@@ -26,7 +26,7 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
-import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;

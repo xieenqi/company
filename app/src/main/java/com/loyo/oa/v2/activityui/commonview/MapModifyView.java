@@ -22,6 +22,8 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
+import com.amap.api.services.help.Inputtips;
+import com.amap.api.services.help.Tip;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.amap.api.services.poisearch.PoiSearch.OnPoiSearchListener;
@@ -39,6 +41,7 @@ import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 /**

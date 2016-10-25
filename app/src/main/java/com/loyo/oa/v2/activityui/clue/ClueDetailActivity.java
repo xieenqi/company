@@ -17,7 +17,7 @@ import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
+import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Permission;

@@ -22,7 +22,7 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.adapter.ProductsRadioListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.Product;
+import com.loyo.oa.v2.activityui.customer.model.Product;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

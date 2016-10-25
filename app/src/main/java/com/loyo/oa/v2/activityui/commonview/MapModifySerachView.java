@@ -49,14 +49,15 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
     private int currentPage;
     private int fromPage;
 
-    private List<PoiItem> poiItems = new ArrayList<>();
+    private List<Tip> gelItems = new ArrayList<>();     //非Pis搜索结果
+    private List<PoiItem> poiItems = new ArrayList<>(); //Poi搜索结果
     private MapModifyViewSerachAdapter adapter;
     private LinearLayoutManager mLinearLayoutManager;
 
     private Intent mIntent;
     private Bundle mBundle;
-
     private LatLonPoint mLatLonPoint;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,9 +117,24 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
 
         @Override
         public void afterTextChanged(Editable s) {
-            doSearchQuery(s.toString());
+            if (fromPage == MapModifyView.SIGNIN_PAGE) {
+                doSearchQuery(s.toString());
+            }else{
+                doGeneralSerach(s.toString());
+            }
         }
     };
+
+    /**
+     * 开始普通搜索
+     * */
+    private void doGeneralSerach(String s){
+        InputtipsQuery inputquery = new InputtipsQuery(s.toString(), "");
+        inputquery.setCityLimit(true);
+        Inputtips inputTips = new Inputtips(MapModifySerachView.this, inputquery);
+        inputTips.setInputtipsListener(this);
+        inputTips.requestInputtipsAsyn();
+    }
 
     /**
      * 开始进行poi搜索
@@ -173,7 +189,7 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
                         mViewStub.setVisibility(View.GONE);
                         mRecyclerView.setVisibility(View.VISIBLE);
                         if (null == adapter) {
-                            adapter = new MapModifyViewSerachAdapter(poiItems, this);
+                            adapter = new MapModifyViewSerachAdapter(poiItems,gelItems,this,0);
                             mRecyclerView.setAdapter(adapter);
                         } else {
                             adapter.notifyDataSetChanged();
@@ -197,8 +213,30 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
 
     }
 
+    /**
+     * 非兴趣点POI搜索回调
+     * */
     @Override
-    public void onGetInputtips(List<Tip> list, int i) {
-
+    public void onGetInputtips(List<Tip> list, int code) {
+        if(code == 1000){
+            if(null != list){
+                gelItems.addAll(list);
+                mViewStub.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+                if (null == adapter) {
+                    LogUtil.dee("gelItems:"+MainApp.gson.toJson(gelItems));
+                    adapter = new MapModifyViewSerachAdapter(poiItems,gelItems,this,1);
+                    mRecyclerView.setAdapter(adapter);
+                } else {
+                    adapter.notifyDataSetChanged();
+                }
+            }else{
+                mViewStub.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+                Toast("没有查询到相关信息！");
+            }
+        }else{
+            Toast("非1000");
+        }
     }
 }

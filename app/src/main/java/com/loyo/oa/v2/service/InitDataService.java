@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;

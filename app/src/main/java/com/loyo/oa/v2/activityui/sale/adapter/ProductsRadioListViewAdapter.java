@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Product;
+import com.loyo.oa.v2.activityui.customer.model.Product;
 
 import java.util.ArrayList;
 

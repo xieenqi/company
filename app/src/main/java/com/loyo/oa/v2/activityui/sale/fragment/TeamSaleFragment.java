@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;

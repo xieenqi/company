@@ -3,11 +3,10 @@ package com.loyo.oa.v2.activityui.other.model;
 import android.text.TextUtils;
 
 import com.loyo.oa.v2.activityui.commonview.bean.PermissionGroup;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Position;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
+import com.loyo.oa.v2.activityui.customer.model.Role;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.activityui.commonview.SelectUserHelper;
 import com.loyo.oa.v2.application.MainApp;
