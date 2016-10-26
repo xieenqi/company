@@ -491,7 +491,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
         reWorkSheet.addAll((Collection<? extends OrderWorksheetListModel>) event.bundle.getSerializable(ExtraAndResult.EXTRA_ID));
         StringBuffer sBuffer = new StringBuffer();
         for(OrderWorksheetListModel orderWorksheetListModel:reWorkSheet){
-            sBuffer.append(orderWorksheetListModel.title+",");
+            if(reWorkSheet.size() > 1){
+                sBuffer.append(orderWorksheetListModel.title+",");
+            }else{
+                sBuffer.append(orderWorksheetListModel.title);
+            }
         }
         tv_addorder.setText(sBuffer.toString());
     }

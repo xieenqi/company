@@ -71,7 +71,7 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         listView_bizform = (ListView) findViewById(R.id.listView_bizform);
         if (lstData_BizForm != null) {
-            wfInstanceTypeSelectListViewAdapter = new WfInstanceTypeSelectListViewAdapter(this, lstData_BizForm, false);
+            wfInstanceTypeSelectListViewAdapter = new WfInstanceTypeSelectListViewAdapter(this, lstData_BizForm, true);
             listView_bizform.setAdapter(wfInstanceTypeSelectListViewAdapter);
             listView_bizform.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
