@@ -65,10 +65,20 @@ public class WorksheetListAdapter extends BaseGroupsDataAdapter {
         LinearLayout ll_order;    // 所属订单Ll
 
         public void loadData(Worksheet ws) {
+
             if(fromOrder){
+                tv_creator_show.setText("分派人: ");
+                tv_creator_name.setText(ws.dispatcherName);
                 ll_order.setVisibility(View.GONE);
             }else{
                 ll_order.setVisibility(View.VISIBLE);
+                if(fromSelfCreated){
+                    tv_creator_show.setText("分派人: ");
+                    tv_creator_name.setText(ws.dispatcherName);
+                }else{
+                    tv_creator_show.setText("创建人: ");
+                    tv_creator_name.setText(ws.creatorName);
+                }
             }
 
             tv_content.setText(ws.title);
@@ -77,14 +87,8 @@ public class WorksheetListAdapter extends BaseGroupsDataAdapter {
             }else {
                 tv_order.setText(ws.orderName);
             }
+
             tv_progress.setText("完成度( "+ws.finishCount + "/" + ws.totalCount + " )");
-            if(fromSelfCreated){
-                tv_creator_show.setText("分派人: ");
-                tv_creator_name.setText(ws.dispatcherName);
-            }else{
-                tv_creator_show.setText("创建人: ");
-                tv_creator_name.setText(ws.creatorName);
-            }
         }
     }
 }
