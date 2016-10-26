@@ -207,27 +207,17 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <!-- <activity -->
-
-
-        <!-- < -->
-        <!-- < -->
-        <!-- < -->
-        <!-- < -->
-        <!-- < -->
-        <!-- < -->
-        <!-- < HEAD -->
-        <!-- ======= -->
-        <!-- android:name=".activityui.other.DepartmentUserActivity" -->
-        <!-- android:launchMode="singleTop" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:theme="@style/FragmentActivityTheme" -->
-        <!-- android:windowSoftInputMode="adjustUnspecified|stateHidden" /> -->
-        <!-- <activity>>>>>>> develop-bug-fix2 -->
-        <!-- android:name=".activityui.signin.SignInfoActivity" -->
-        <!-- android:launchMode="singleTop" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:windowSoftInputMode="adjustUnspecified|stateHidden" /> -->
+         <activity
+         android:name=".activityui.other.DepartmentUserActivity"
+         android:launchMode="singleTop"
+         android:screenOrientation="portrait"
+         android:theme="@style/FragmentActivityTheme"
+         android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+         <activity
+         android:name=".activityui.signin.SignInfoActivity"
+         android:launchMode="singleTop"
+         android:screenOrientation="portrait"
+         android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activityui.signin.SignInManagerActivity_"
             android:launchMode="singleTop"

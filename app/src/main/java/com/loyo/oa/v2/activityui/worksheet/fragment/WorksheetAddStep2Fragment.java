@@ -55,7 +55,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
     private ImageUploadGridView gridView;
     UploadController controller;
 
-    private String uuid = StringUtil.getUUID();
+    private String uuid;
     private int bizType = 29;
     private ArrayList<AttachmentBatch> attachment;
 
@@ -64,7 +64,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (WorksheetAddActivity)getActivity();
+        mActivity = (WorksheetAddActivity) getActivity();
     }
 
     @Nullable
@@ -99,14 +99,14 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         tv_title_1.setText("填写工单内容");
 
         if (mActivity != null) {
-            edt_title.setText(mActivity.selectedOrder.title +"-"+ mActivity.selectedType.name);
+            edt_title.setText(mActivity.selectedOrder.title + "-" + mActivity.selectedType.name);
         }
         controller.loadView(gridView);
     }
 
     public void addPhoto(List<String> photos) {
         for (String path : photos) {
-            controller.addUploadTask("file://" + path, null,  uuid);
+            controller.addUploadTask("file://" + path, null, uuid);
         }
         controller.reloadGridView();
     }
@@ -130,9 +130,10 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
-                ((WorksheetAddActivity)getActivity()).previousStep();
+                ((WorksheetAddActivity) getActivity()).previousStep();
                 break;
             case R.id.img_title_right:
+                uuid = StringUtil.getUUID();
                 showLoading("");
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
@@ -180,7 +181,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         if (content != null) {
             map.put("content", content);
         }
-        if (attachment!= null && attachment.size() > 0) {
+        if (attachment != null && attachment.size() > 0) {
             map.put("uuid", uuid);
         }
 
@@ -199,8 +200,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                     AppBus.getInstance().post(ws);
 
                     app.finishActivity(getActivity(), MainApp.ENTER_TYPE_LEFT, 0, intent);
-                }
-                else {
+                } else {
                     Toast("" + wrapper.errmsg);
                 }
             }
@@ -237,19 +237,19 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         IAttachment service = RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class);
 
         service.setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
-                    @Override
-                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        HttpErrorCheck.checkResponse("上传附件信息", response);
+            @Override
+            public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
+                HttpErrorCheck.checkResponse("上传附件信息", response);
 
-                        // TODO:
-                        commitWorksheet();
-                    }
+                // TODO:
+                commitWorksheet();
+            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
         showLoading("");
     }
 
@@ -262,7 +262,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
     public void onAddEvent(UploadController controller) {
         Intent intent = new Intent(this.getActivity(), MultiImageSelectorActivity.class);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-controller.count()) /*最大可选择图片数量*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
         this.getActivity().startActivityForResult(intent, MainApp.PICTURE);
@@ -276,7 +276,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         int newPosistion = index;
 
         for (int i = 0; i < taskList.size(); i++) {
-            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://"+taskList.get(i).getValidatePath());
+            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://" + taskList.get(i).getValidatePath());
             newAttachment.add(attachment);
         }
 
@@ -296,10 +296,9 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
             Toast(count + "个附件上传失败，请重试或者删除");
             return;
         }
-        if (taskList.size() >0) {
+        if (taskList.size() > 0) {
             postAttaData();
-        }
-        else {
+        } else {
             commitWorksheet();
         }
     }

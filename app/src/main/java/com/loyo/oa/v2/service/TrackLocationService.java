@@ -13,6 +13,8 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.APSService;
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
 import com.instacart.library.truetime.TrueTime;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.db.LocationDBManager;
@@ -37,7 +39,7 @@ import retrofit.client.Response;
 
 public class TrackLocationService extends APSService {
 
-    public final static int TRACK_PERIOD_SECONDS = 30;
+    public final static int TRACK_PERIOD_SECONDS = 60;
     public final static int UPLOAD_LOCATIONS_COUNT = 20;
     private final String TAG = getClass().getSimpleName();
     /**【定位精度】*/
@@ -52,6 +54,7 @@ public class TrackLocationService extends APSService {
     private LocationDBManager mLocationDBManager;
 
     private static AMapLocationClient locationClient = null;
+    private static LocationDBManager.LocationEntity previousValidPoint = null;
 
     public static void stopTrackLocation() {
         if (locationClient==null) {
@@ -60,6 +63,7 @@ public class TrackLocationService extends APSService {
         if (locationClient.isStarted()) {
             locationClient.stopLocation();
         }
+        locationClient.setLocationListener(null);
         locationClient.onDestroy();
         locationClient = null;
     }
@@ -135,6 +139,7 @@ public class TrackLocationService extends APSService {
             if (locationClient.isStarted()) {
                 locationClient.stopLocation();
             }
+            locationClient.setLocationListener(null);
             locationClient.onDestroy();
             locationClient = null;
         }
@@ -185,6 +190,8 @@ public class TrackLocationService extends APSService {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
 
+
+
             if (aMapLocation == null) {
                 return;
             }
@@ -196,6 +203,8 @@ public class TrackLocationService extends APSService {
             }
             catch (Exception e) {
             }
+
+            // Log.v("loctrack", aMapLocation.getLatitude()+" ,"+aMapLocation.getLongitude()  +"    "+ DateTool.getHHMMSS(date));
 
             if (! TrackLocationManager.getInstance().needTracking(date)) {
                 return;
@@ -271,9 +280,47 @@ public class TrackLocationService extends APSService {
     }
 
     private synchronized void uploadLocations(final List<LocationDBManager.LocationEntity> list) {
+        if (list.size()<= 0) {
+            isUploading = false;
+            uploadNext();
+            return;
+        }
+
         final String UUID = StringUtil.getUUID();
         mLocationDBManager.markAsUploadingWithID(list, UUID);
         ArrayList<LocationDBManager.LocationUploadModel> models = new ArrayList<LocationDBManager.LocationUploadModel>();
+
+
+
+        if (previousValidPoint == null) {
+            previousValidPoint = list.get(0);
+        }
+
+        List<LocationDBManager.LocationEntity> deviatedList = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            LatLng loc1 = new LatLng(previousValidPoint.getLatitude(), previousValidPoint.getLongitude());
+            LocationDBManager.LocationEntity point = list.get(i);
+            LatLng loc2 = new LatLng(point.getLatitude(), point.getLongitude());
+
+            double distance1 = AMapUtils.calculateLineDistance(loc1, loc2);
+
+            // 最大速度30m/s，超过这个速度，认为是偏离点
+            if (distance1 > 30 * (point.timestamp - previousValidPoint.timestamp)) {
+                deviatedList.add(point);
+            }
+            else {
+                previousValidPoint = list.get(i);
+            }
+        }
+
+        list.removeAll(deviatedList);
+        if (list.size()<= 0) {
+            isUploading = false;
+            uploadNext();
+            return;
+        }
+
 
         for (int i = 0; i < list.size(); i++) {
             LocationDBManager.LocationEntity entity = list.get(i);

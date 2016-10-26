@@ -332,7 +332,7 @@ public class MenuFragment extends BaseFragment {
             @Override
             public void success(final NewUser user, final Response response) {
                 HttpErrorCheck.checkResponse("获取个人资料修改", response);
-                String json = MainApp.gson.toJson(user);
+                String json = MainApp.gson.toJson(user.data);
                 MainApp.user = user.data;
                 DBManager.Instance().putUser(json);
                 Bundle b = new Bundle();

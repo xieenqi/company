@@ -104,7 +104,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
 
-    private String uuid = StringUtil.getUUID();
+    private String uuid;
     private String tagItemIds;
     private String myAddress;
 
@@ -206,8 +206,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     /**
      * 批量上传附件
      */
-    private void newUploadAttachement() {
-        showLoading("正在提交");
+    private void newUploadAttachement(final Customer customer) {
+        showLoading("正在提交附件");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -224,7 +224,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
-                                            requestCommitTask();
+                                            cancelLoading();
+                                            customerSendSucess(customer);
                                         }
                                     }
 
@@ -280,6 +281,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             //提交
             case R.id.img_title_right:
+                uuid = StringUtil.getUUID();
                 customer_name = edt_name.getText().toString().trim();
                 customerAddress = et_address.getText().toString().trim();
                 customerContract = edt_contract.getText().toString().trim();
@@ -320,14 +322,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         return;
                     }
                 }*/
-
-                //没有附件
-                if (pickPhots.size() == 0) {
-                    showLoading("");
-                    requestCommitTask();
-                } else {
-                    newUploadAttachement();
-                }
+                showLoading("");
+                requestCommitTask();
                 break;
 
             case R.id.layout_customer_label:
@@ -435,16 +431,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void success(final Customer customer, final Response response) {
                 HttpErrorCheck.checkResponse(response);
-                try {
-                    Customer retCustomer = customer;
-                    Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-                    isSave = false;
-                    Intent intent = new Intent();
-                    intent.putExtra(Customer.class.getName(), retCustomer);
-                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);
-
-                } catch (Exception e) {
-                    Global.ProcException(e);
+                //没有附件
+                if (pickPhots.size() == 0) {
+                    customerSendSucess(customer);
+                } else {
+                    newUploadAttachement(customer);
                 }
             }
 
@@ -454,6 +445,24 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 HttpErrorCheck.checkError(error);
             }
         });
+    }
+
+    /**
+     * 数据提交成功关闭页面
+     *
+     * @param retCustomer
+     */
+    public void customerSendSucess(Customer retCustomer) {
+        try {
+            Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+            isSave = false;
+            Intent intent = new Intent();
+            intent.putExtra(Customer.class.getName(), retCustomer);
+            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);
+
+        } catch (Exception e) {
+            Global.ProcException(e);
+        }
     }
 
     boolean isSave = true;

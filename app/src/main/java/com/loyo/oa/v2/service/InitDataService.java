@@ -52,7 +52,7 @@ public class InitDataService extends IntentService {
                 try {
                     if (Config_project.is_developer_mode)
                         HttpErrorCheck.checkResponse("获取user", response);
-                    String json = MainApp.gson.toJson(user);
+                    String json = MainApp.gson.toJson(user.data);
                     MainApp.user = user.data;
                     setRootMap(user.data);
                     DBManager.Instance().putUser(json);//保存用户信息
