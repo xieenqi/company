@@ -31,6 +31,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.adapter.MapModifyViewAdapter;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RecycleViewDivider;
 import com.loyo.oa.v2.common.RecyclerItemClickListener;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -100,12 +101,13 @@ public class MapModifyView extends BaseActivity
     private PoiResult poiResult;    // poi返回的结果
     private PoiSearch.Query query;  // Poi查询条件类
     private PoiSearch poiSearch;    // POI搜索
-    private PoiItem resultPoiItem;
+    //private PoiItem resultPoiItem;
     private LatLng mTarget;
     private Intent mIntent;
     private Bundle mBundle;
     private ArrayList<PositionResultItem> resultItems = new ArrayList<>();
     private PositionResultItem headerItem;
+    private PositionResultItem serachItem;
     private double[] locCustomer;
     private String defaultAddress;
 
@@ -357,17 +359,17 @@ public class MapModifyView extends BaseActivity
                     if (isResutl) {
                         isResutl = false;
                         for (PositionResultItem positionResultItem : resultItems) {
-                            if (resultPoiItem.getTitle().contains(positionResultItem.address)) {
+                            if (serachItem.address.contains(positionResultItem.address)) {
                                 resultItems.remove(positionResultItem);
                                 break;
                             }
                         }
-                        posi = new PositionResultItem();
+                        /*posi = new PositionResultItem();
                         posi.laPosition = resultPoiItem.getLatLonPoint().getLatitude();
                         posi.loPosition = resultPoiItem.getLatLonPoint().getLongitude();
                         posi.address = resultPoiItem.getTitle();
-                        posi.message = resultPoiItem.getSnippet();
-                        resultItems.add(posi);
+                        posi.message = resultPoiItem.getSnippet();*/
+                        resultItems.add(serachItem);
                     }
 
                     if (resultItems != null && resultItems.size() > 0) {
@@ -528,8 +530,10 @@ public class MapModifyView extends BaseActivity
         if (resultCode == SERACH_MAP) {
             isResutl = true;
             selectPosition = 0;
-            resultPoiItem = data.getParcelableExtra("data");
-            locationMapCenter(resultPoiItem.getLatLonPoint().getLatitude(), resultPoiItem.getLatLonPoint().getLongitude());
+            //resultPoiItem = data.getParcelableExtra("data");
+            serachItem = (PositionResultItem) data.getSerializableExtra(ExtraAndResult.EXTRA_OBJ);
+            //locationMapCenter(resultPoiItem.getLatLonPoint().getLatitude(), resultPoiItem.getLatLonPoint().getLongitude());
+            locationMapCenter(serachItem.laPosition, serachItem.loPosition);
         }
     }
 }

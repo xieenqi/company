@@ -7,19 +7,31 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/include_item_title"/>
+    <include layout="@layout/include_item_title" />
 
     <ScrollView
         android:id="@+id/wfinstance_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
-        >
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_process"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/activity_bg"
+                android:paddingBottom="@dimen/dimen_5"
+                android:paddingLeft="@dimen/margin_other_view"
+                android:paddingRight="@dimen/margin_other_view"
+                android:paddingTop="@dimen/dimen_5"
+                android:textColor="@color/text99"
+                android:textSize="15sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,7 +47,7 @@
                     android:layout_marginBottom="@dimen/dimen_17"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginTop="@dimen/dimen_17"
-                    android:text="审批名称"/>
+                    android:text="审批标题" />
 
                 <EditText
                     android:id="@+id/tv_title"
@@ -43,20 +55,19 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:textColor="@color/title_bg1"
                     android:background="@null"
+                    android:ellipsize="end"
+                    android:gravity="right|center_vertical"
                     android:maxEms="15"
                     android:singleLine="true"
-                    android:ellipsize="end"
-                    />
+                    android:textColor="@color/title_bg1" />
 
                 <ImageView
-                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    android:src="@drawable/right_arrow"
+                    android:visibility="invisible" />
 
             </LinearLayout>
 
@@ -71,13 +82,7 @@
                     style="@style/view_split"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
-
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                    android:layout_marginRight="@dimen/margin_side_edge" />
 
                 <LinearLayout
                     android:id="@+id/ll_dept"
@@ -94,7 +99,7 @@
                         android:layout_marginBottom="@dimen/dimen_17"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_marginTop="@dimen/dimen_17"
-                        android:text="所属部门"/>
+                        android:text="所属部门" />
 
                     <TextView
                         android:id="@+id/tv_dept"
@@ -104,13 +109,13 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:text=""
-                        android:textColor="@color/title_bg1"/>
+                        android:textColor="@color/title_bg1" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -123,8 +128,7 @@
                 android:animateLayoutChanges="true"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -140,15 +144,14 @@
                         android:gravity="left|center_vertical"
                         android:paddingLeft="@dimen/dimen_14"
                         android:text="审批内容"
-                        android:textColor="#999999"/>
+                        android:textColor="#999999" />
 
                     <LinearLayout
                         android:id="@+id/wfinstance_data_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:orientation="vertical">
-                    </LinearLayout>
+                        android:orientation="vertical"></LinearLayout>
 
                 </LinearLayout>
 
@@ -159,7 +162,7 @@
                     android:background="@color/activity_bg"
                     android:text="新增内容"
                     android:textColor="@color/green51"
-                    android:textSize="@dimen/text_sp15"/>
+                    android:textSize="@dimen/text_sp15" />
 
             </LinearLayout>
 
@@ -179,13 +182,11 @@
                     android:hint="备注"
                     android:maxLength="500"
                     android:minHeight="@dimen/dimen_160"
-                    android:minWidth="@dimen/view_h_title"
-                    />
+                    android:minWidth="@dimen/view_h_title" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/wordcount"
@@ -196,8 +197,7 @@
                         android:layout_marginRight="20dp"
                         android:text="0/500"
                         android:textColor="@color/text99"
-                        android:textSize="12sp"
-                        />
+                        android:textSize="12sp" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -218,15 +218,14 @@
                         android:horizontalSpacing="@dimen/activity_horizontal_margin"
                         android:listSelector="@android:color/transparent"
                         android:numColumns="3"
-                        android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+                        android:verticalSpacing="@dimen/activity_horizontal_margin" />
 
                 </LinearLayout>
 
                 <View
                     style="@style/view_split"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    />
+                    android:layout_marginLeft="@dimen/margin_other_view" />
 
                 <LinearLayout
                     android:id="@+id/ll_project"
@@ -243,7 +242,7 @@
                         android:layout_marginBottom="@dimen/dimen_16"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_marginTop="@dimen/dimen_16"
-                        android:text="所属项目"/>
+                        android:text="所属项目" />
 
                     <TextView
                         android:id="@+id/tv_project"
@@ -253,21 +252,20 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:text=""
-                        android:textColor="@color/title_bg1"/>
+                        android:textColor="@color/title_bg1" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </LinearLayout>
 
                 <View
                     style="@style/view_split"
                     android:layout_width="match_parent"
                     android:layout_marginBottom="@dimen/dimen_10"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    />
+                    android:layout_marginLeft="@dimen/margin_other_view" />
             </LinearLayout>
 
         </LinearLayout>

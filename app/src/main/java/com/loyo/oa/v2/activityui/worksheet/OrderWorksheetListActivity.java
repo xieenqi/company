@@ -69,7 +69,9 @@ public class OrderWorksheetListActivity extends BaseActivity implements View.OnC
         tv_title = (TextView) findViewById(R.id.tv_title);
         listView_worksheet = (ListView) findViewById(R.id.listView_worksheet);
 
+        tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("工单");
+
         layout_add.setOnClickListener(this);
         layout_back.setOnClickListener(this);
         bindAdapter();

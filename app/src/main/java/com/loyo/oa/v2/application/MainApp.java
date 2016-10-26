@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.application;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +14,9 @@ import android.support.multidex.MultiDex;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.instacart.library.truetime.TrueTime;
 import com.loyo.oa.v2.R;
-
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.customer.model.Industry;
@@ -30,6 +29,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.LocationDBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
@@ -42,6 +42,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.TrackLocationManager;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -58,6 +59,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -139,6 +141,9 @@ public class MainApp extends Application {
     public static User user;//InitDataService 在这里负值
     public CellInfo cellInfo;
 
+    /* app是否在前台 */
+    private static boolean isActive;
+
     public static String getToken() {
         if (!StringUtil.isEmpty(token)) {
             return token;
@@ -162,7 +167,6 @@ public class MainApp extends Application {
             @Override
             public void success(ArrayList<Industry> industries, Response response) {
                 mIndustries = industries;
-
             }
         });
 
@@ -172,6 +176,7 @@ public class MainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        addActivityLifecycleCallback();
         mainApp = this;
         init();
         loadIndustryCodeTable();
@@ -193,6 +198,73 @@ public class MainApp extends Application {
             }
         }.start();
 
+    }
+
+    private void addActivityLifecycleCallback() {
+
+        this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                //app 从后台唤醒，进入前台
+                if (!isActive) {
+                    isActive = true;
+                    if (user != null) {
+                        LocationDBManager.getInstance().initWithUser(user.id);
+                        TrackLocationManager.getInstance().startLocationTrackingIfNeeded();
+                    }
+                }
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+                if (!isAppOnForeground()) {
+                    isActive = false;
+                }
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
+    }
+
+    public boolean isAppOnForeground() {
+        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = getApplicationContext().getPackageName();
+
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.processName.equals(packageName)
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

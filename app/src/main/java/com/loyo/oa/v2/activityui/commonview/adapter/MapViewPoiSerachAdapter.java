@@ -12,27 +12,27 @@ import com.amap.api.services.help.Tip;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.LogUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * 【地点微调搜索页】adapter
  * Created by yyy on 16/7/20.
  */
-public class MapModifyViewSerachAdapter extends RecyclerView.Adapter<MapModifyViewSerachAdapter.MViewHolder> {
+public class MapViewPoiSerachAdapter extends RecyclerView.Adapter<MapViewPoiSerachAdapter.MViewHolder> {
 
     private Context mContext;
     private List<PoiItem> poiItems;
     private List<Tip> gelItems;
     private int page; //业务区分0:poi 1:非poi
 
-    public MapModifyViewSerachAdapter(List<PoiItem> poiItems,List<Tip> gelItems, Context mContext,int page){
+    public MapViewPoiSerachAdapter(List<PoiItem> poiItems, List<Tip> gelItems, Context mContext, int page){
         this.poiItems = poiItems;
         this.gelItems = gelItems;
         this.mContext = mContext;
         this.page = page;
-        LogUtil.dee("page:"+page);
     }
-
 
     @Override
     public MViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -51,14 +51,16 @@ public class MapModifyViewSerachAdapter extends RecyclerView.Adapter<MapModifyVi
             Tip tip = gelItems.get(position);
             holder.address.setText(tip.getName());
             holder.message.setText(tip.getDistrict());
-            LogUtil.dee("name:"+tip.getName());
-            LogUtil.dee("msg:"+tip.getDistrict());
         }
     }
 
     @Override
     public int getItemCount() {
-        return poiItems.size();
+        if(page == 0){
+            return poiItems.size();
+        }else{
+            return gelItems.size();
+        }
     }
 
     public class MViewHolder extends RecyclerView.ViewHolder{

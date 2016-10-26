@@ -108,11 +108,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
             switch (msg.what) {
 
-                case DEPARTMENT_USER_DATA_LOADED: {
-                    saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
-                    break;
-                }
-
                 //部门筛选
                 case CustomerManagerActivity.CUSTOMER_DEPT_CREEN:
                     saleTeamScreen = (SaleTeamScreen) msg.getData().getSerializable("data");
@@ -234,45 +229,34 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
          * 子线程读数据，主线程加载数据
          *
          */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                wersi();
-            }
-        }).start();
+
+        wersi();
         getData();
     }
 
     public void wersi() {
-        try {
-            //为超管或权限为全公司 展示全公司成员
-            if (permission != null && permission.dataRange == Permission.COMPANY) {
-                screen.setText("全公司");
-                setUser(OrganizationManager.shareManager().allDepartments());
-            }
-            //权限为部门 展示我的部门
-            else if (permission != null && permission.dataRange == Permission.TEAM) {
-                screen.setText("本部门");
-                setUser(OrganizationManager.shareManager().currentUserDepartments());
-            }
-            //权限为个人 展示自己
-            else if (permission != null && permission.dataRange == Permission.PERSONAL) {
-                screen.setText("我");
-                data.clear();
-                saleTeamScreen = new SaleTeamScreen();
-                saleTeamScreen.setId(MainApp.user.getId());
-                saleTeamScreen.setName(MainApp.user.name);
-                saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
-                data.add(saleTeamScreen);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } finally { /** 子线程读数据，主线程加载数据 */
-            Message msg = new Message();
-            msg.what = DEPARTMENT_USER_DATA_LOADED;
-            mHandler.sendMessage(msg);
-            }
+        //为超管或权限为全公司 展示全公司成员
+        if (permission != null && permission.dataRange == Permission.COMPANY) {
+            screen.setText("全公司");
+            setUser(OrganizationManager.shareManager().allDepartments());
         }
+        //权限为部门 展示我的部门
+        else if (permission != null && permission.dataRange == Permission.TEAM) {
+            screen.setText("本部门");
+            setUser(OrganizationManager.shareManager().currentUserDepartments());
+        }
+        //权限为个人 展示自己
+        else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+            screen.setText("我");
+            data.clear();
+            saleTeamScreen = new SaleTeamScreen();
+            saleTeamScreen.setId(MainApp.user.getId());
+            saleTeamScreen.setName(MainApp.user.name);
+            saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
+            data.add(saleTeamScreen);
+        }
+        saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
+    }
 
         /**
          * 显示附近客户

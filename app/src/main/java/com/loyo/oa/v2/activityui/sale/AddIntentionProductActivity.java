@@ -57,6 +57,7 @@ public class AddIntentionProductActivity extends BaseActivity {
     private String saleId = "";
     private String oldId = "";
     private int fromPage = 0;
+    private ArrayList<SaleIntentionalProduct> productListData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class AddIntentionProductActivity extends BaseActivity {
     private void getIntentData() {
         saleId = getIntent().getStringExtra("saleId");
         fromPage = getIntent().getIntExtra("data", 0);
+        productListData = (ArrayList<SaleIntentionalProduct>) getIntent().getSerializableExtra("productList");
         SaleIntentionalProduct intentProduct = (SaleIntentionalProduct) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentProduct) {
             tv_title.setText("编辑意向产品");
@@ -177,6 +179,14 @@ public class AddIntentionProductActivity extends BaseActivity {
      * 新增意向产品
      */
     public void addProduct() {
+        if (productListData != null && productListData.size() > 0) {
+            for (SaleIntentionalProduct ele : productListData) {
+                if (productId.equals(ele.id)) {
+                    Toast("产品已经存在,不能重复添加");
+                    return;
+                }
+            }
+        }
         showLoading("");
         final SaleIntentionalProduct data = assembleData();
         HashMap<String, Object> map = new HashMap<>();
@@ -219,6 +229,14 @@ public class AddIntentionProductActivity extends BaseActivity {
                     } else if (fromPage == ActionCode.SALE_PRO_EDIT && !TextUtils.isEmpty(saleId)) {
                         editProduct();
                     } else {
+                        if (productListData != null && productListData.size() > 0) {
+                            for (SaleIntentionalProduct ele : productListData) {
+                                if (productId.equals(ele.id)) {
+                                    Toast("产品已经存在,不能重复添加");
+                                    return;
+                                }
+                            }
+                        }
                         SaleIntentionalProduct data = assembleData();
                         if (null != data) {
                             Intent intent = new Intent();
