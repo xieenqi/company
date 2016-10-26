@@ -21,7 +21,7 @@ import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;

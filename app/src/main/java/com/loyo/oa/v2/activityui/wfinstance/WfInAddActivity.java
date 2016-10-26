@@ -18,7 +18,7 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinAddView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -156,7 +156,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     public void projectAddWfinstance() {
         if (!TextUtils.isEmpty(Process)) {
             tv_process.setVisibility(View.VISIBLE);
-            tv_process.setText("流程说明:" + Process);
+            tv_process.setText("流程说明: " + Process);
         }
         if (!TextUtils.isEmpty(projectId)) {
             ll_project.setEnabled(false);

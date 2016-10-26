@@ -17,6 +17,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -183,14 +184,15 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
         ImageLoader.getInstance().displayImage(mAttendanceDetails.user.avatar, iv_avartar);
         final User user = mAttendanceDetails.user;
         tv_name.setText(user.getRealname());
-        LogUtil.dll("考勤详情 员工信息:" + MainApp.gson.toJson(user));
-        String deptName = "";
-        if (null != Common.getDepartment(user.depts.get(0).getShortDept().getId())) {
-            deptName = TextUtils.isEmpty(user.departmentsName) ?
-                    Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
+
+        LogUtil.dee("user:"+MainApp.gson.toJson(user.depts));
+
+        StringBuffer roleBuffer = new StringBuffer();
+        for(UserInfo userInfo:user.depts){
+            roleBuffer.append(userInfo.getShortDept().getName()+":"+userInfo.getShortPosition().getName() +" | ");
         }
-        tv_role.setText(deptName + " " + (TextUtils.isEmpty(user.depts.get(0).getShortDept().getName())
-                ? "-" : user.depts.get(0).getShortDept().title));
+
+        tv_role.setText(roleBuffer.toString().substring(0,roleBuffer.toString().length() - 3));
 
         /*确认加班*/
         if (mAttendanceDetails.extraState == 2) {

@@ -52,7 +52,11 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/text99"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    android:maxEms="25"
+                    android:ellipsize="end"
+                    />
 
             </LinearLayout>
 

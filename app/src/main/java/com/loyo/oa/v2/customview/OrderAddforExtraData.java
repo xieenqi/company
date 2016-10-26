@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;

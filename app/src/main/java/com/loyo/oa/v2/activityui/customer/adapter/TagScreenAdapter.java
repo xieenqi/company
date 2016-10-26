@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.customer.model.Tag;
 
 import java.util.ArrayList;
 

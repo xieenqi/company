@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
-import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.activityui.order.common.ViewOrderDetailsExtra;

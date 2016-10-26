@@ -16,7 +16,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.TeamOrderAdapter;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;

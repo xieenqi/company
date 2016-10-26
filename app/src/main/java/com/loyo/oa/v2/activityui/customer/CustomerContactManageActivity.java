@@ -1,10 +1,8 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.CallBackCallid;
-import com.loyo.oa.v2.activityui.customer.bean.CallBackResp;
-import com.loyo.oa.v2.activityui.customer.bean.CallClientInfo;
-import com.loyo.oa.v2.activityui.customer.bean.CallUserResp;
-import com.loyo.oa.v2.activityui.customer.bean.CustomerClientBean;
-import com.loyo.oa.v2.activityui.customer.bean.PhoneCallBack;
+import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -28,14 +21,10 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.ContactViewGroup;
-import com.loyo.oa.v2.tool.RestAdapterPhoneFactory;
-import com.loyo.oa.v2.tool.SharedUtil;
-import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;

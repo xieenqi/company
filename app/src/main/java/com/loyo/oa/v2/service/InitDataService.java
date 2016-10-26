@@ -3,7 +3,6 @@ package com.loyo.oa.v2.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-
 import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
@@ -17,11 +16,8 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import org.androidannotations.annotations.EIntentService;
-
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 

@@ -13,7 +13,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;

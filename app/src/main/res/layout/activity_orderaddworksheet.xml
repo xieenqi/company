@@ -26,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_add"
-            android:dividerHeight="@dimen/dimen_10"
             android:divider="@android:color/white"
             android:listSelector="@android:color/transparent"
             android:scrollbars="none"

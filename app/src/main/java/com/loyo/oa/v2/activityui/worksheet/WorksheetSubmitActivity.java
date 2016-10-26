@@ -18,7 +18,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
-import com.loyo.oa.v2.activityui.customer.bean.HttpLoc;
+import com.loyo.oa.v2.activityui.customer.model.HttpLoc;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;

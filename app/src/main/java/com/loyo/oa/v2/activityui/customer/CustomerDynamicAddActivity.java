@@ -15,7 +15,7 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;

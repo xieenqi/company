@@ -14,13 +14,12 @@ import android.support.multidex.MultiDex;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.instacart.library.truetime.TrueTime;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.Industry;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
+import com.loyo.oa.v2.activityui.customer.model.Department;
+import com.loyo.oa.v2.activityui.customer.model.Industry;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.beans.Permission;

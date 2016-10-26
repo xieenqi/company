@@ -2,7 +2,7 @@ package com.loyo.oa.v2.common.compat;
 
 import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
-import com.loyo.oa.v2.activityui.customer.bean.Member;
+import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 

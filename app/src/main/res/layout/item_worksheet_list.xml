@@ -158,33 +158,63 @@
     <include layout="@layout/include_solid_line_left" />
 
     <LinearLayout
+        android:id="@+id/ll_action"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_48">
+        android:layout_height="@dimen/dimen_50"
+        android:orientation="horizontal">
 
-        <TextView
+        <LinearLayout
             android:id="@+id/tv_delete"
             android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
             android:gravity="center"
-            android:textColor="@color/text99"
-            android:text="删除" />
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dimen_16"
+            android:paddingTop="@dimen/dimen_16">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_order_delete"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="删除"
+                android:textColor="@color/text99"/>
+        </LinearLayout>
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dimen_10"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:background="@color/lineCC" />
+            android:layout_marginBottom="@dimen/dimen_8"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:background="@color/lineCC"
+            />
 
-        <TextView
+        <LinearLayout
             android:id="@+id/tv_edit"
             android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
             android:gravity="center"
-            android:textColor="@color/text99"
-            android:text="编辑" />
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dimen_16"
+            android:paddingTop="@dimen/dimen_16">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_order_edit"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="编辑"
+                android:textColor="@color/text99"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <include layout="@layout/include_solid_line" />

@@ -65,8 +65,8 @@ public class OrderworksheetListAdapter extends BaseAdapter {
             holder.tv_worksheet_title = (TextView) convertView.findViewById(R.id.tv_worksheet_title);
             holder.tv_worksheet_kind  = (TextView) convertView.findViewById(R.id.tv_worksheet_kind);
             holder.tv_worksheet_memo  = (TextView) convertView.findViewById(R.id.tv_worksheet_memo);
-            holder.tv_delete  = (TextView) convertView.findViewById(R.id.tv_delete);
-            holder.tv_edit    = (TextView) convertView.findViewById(R.id.tv_edit);
+            holder.tv_delete  = (LinearLayout) convertView.findViewById(R.id.tv_delete);
+            holder.tv_edit    = (LinearLayout) convertView.findViewById(R.id.tv_edit);
             holder.tv_source  = (TextView) convertView.findViewById(R.id.tv_source);
             holder.tv_index   = (TextView) convertView.findViewById(R.id.tv_index);
             holder.ll_source  = (LinearLayout) convertView.findViewById(R.id.ll_source);
@@ -122,9 +122,9 @@ public class OrderworksheetListAdapter extends BaseAdapter {
         TextView tv_worksheet_kind;  //工单类型
         TextView tv_worksheet_memo;  //备注
         TextView tv_source;          //附件
-        TextView tv_delete;          //删除
-        TextView tv_edit;            //编辑
         TextView tv_index;           //编号
+        LinearLayout tv_delete;      //删除
+        LinearLayout tv_edit;        //编辑
         LinearLayout ll_source;      //附件
     }
 }

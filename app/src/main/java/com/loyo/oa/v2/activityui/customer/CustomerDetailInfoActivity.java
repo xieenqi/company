@@ -1,25 +1,18 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.activityui.customer.bean.Member;
-import com.loyo.oa.v2.activityui.customer.bean.MembersRoot;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Member;
+import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;

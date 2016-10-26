@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.j256.ormlite.misc.TransactionManager;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;

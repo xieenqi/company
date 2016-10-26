@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
-import com.loyo.oa.v2.activityui.customer.bean.Item_info_Group;
+import com.loyo.oa.v2.activityui.customer.model.Item_info_Group;
 import com.loyo.oa.v2.beans.PagingGroupData;
 
 import java.util.ArrayList;
