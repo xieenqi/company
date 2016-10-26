@@ -104,7 +104,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
 
-    private String uuid = StringUtil.getUUID();
+    private String uuid;
     private String tagItemIds;
     private String myAddress;
 
@@ -281,6 +281,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             //提交
             case R.id.img_title_right:
+                uuid = StringUtil.getUUID();
                 customer_name = edt_name.getText().toString().trim();
                 customerAddress = et_address.getText().toString().trim();
                 customerContract = edt_contract.getText().toString().trim();
