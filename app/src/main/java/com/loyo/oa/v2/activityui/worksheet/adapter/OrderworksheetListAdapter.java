@@ -68,6 +68,7 @@ public class OrderworksheetListAdapter extends BaseAdapter {
             holder.tv_delete  = (TextView) convertView.findViewById(R.id.tv_delete);
             holder.tv_edit    = (TextView) convertView.findViewById(R.id.tv_edit);
             holder.tv_source  = (TextView) convertView.findViewById(R.id.tv_source);
+            holder.tv_index   = (TextView) convertView.findViewById(R.id.tv_index);
             holder.ll_source  = (LinearLayout) convertView.findViewById(R.id.ll_source);
 
             convertView.setTag(holder);
@@ -75,6 +76,7 @@ public class OrderworksheetListAdapter extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
 
+        holder.tv_index.setText("工单"+(position+1));
         holder.tv_worksheet_title.setText(mOrderWorksheet.title);
         holder.tv_worksheet_kind.setText(mOrderWorksheet.templateName);
         holder.tv_worksheet_memo.setText(mOrderWorksheet.content);
@@ -122,6 +124,7 @@ public class OrderworksheetListAdapter extends BaseAdapter {
         TextView tv_source;          //附件
         TextView tv_delete;          //删除
         TextView tv_edit;            //编辑
+        TextView tv_index;           //编号
         LinearLayout ll_source;      //附件
     }
 }
