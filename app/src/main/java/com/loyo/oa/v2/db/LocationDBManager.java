@@ -205,6 +205,14 @@ public class LocationDBManager {
             this.address = address;
             this.uploadID = "";
         }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
     }
 
     public static class LocationUploadModel implements Serializable {

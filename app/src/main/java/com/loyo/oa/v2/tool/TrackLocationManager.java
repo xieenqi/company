@@ -71,11 +71,16 @@ public class TrackLocationManager {
         }
     }
 
-    public void stopLocationTracking() {
-        if (mContext == null) {
-            return;
+    public void startLocationTracking() {
+        if (mContext != null) {
+            mContext.startService(new Intent(mContext, TrackLocationService.class));
         }
-        TrackLocationService.stopTrackLocation();
+    }
+
+    public void stopLocationTracking() {
+        if (mContext != null) {
+            TrackLocationService.stopTrackLocation();
+        }
     }
 
     /** 时间校正,获取准确的时间,而不是使用本地的系统时间 */
