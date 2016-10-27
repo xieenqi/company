@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.TrackLocationRule;
+//import com.loyo.oa.v2.beans.TrackLocationRule;
+
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
 
@@ -23,8 +24,8 @@ public interface ITrackLog {
     @GET("/trackrule")
     void getTrackRule(retrofit.Callback<TrackRule> cb);
 
-    @GET("/trackrule")
-    void getTrackLocationRule(retrofit.Callback<TrackLocationRule> cb);
+//    @GET("/trackrule")
+//    void getTrackLocationRule(retrofit.Callback<TrackLocationRule> cb);
 
     @POST("/tracklog/multiple")
     void uploadTrackLogs(@Body HashMap<String, Object> tracklogs, Callback<Object> callback);
