@@ -32,12 +32,9 @@ import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.db.LocationDBManager;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.v2.tool.LocationManager;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.TrackLocationManager;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -87,8 +84,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
         /* 初始化AliOSSManager */
         AliOSSManager.getInstance().initWithContext(getApplicationContext());
-        TrackLocationManager.getInstance().initWithContext(getApplicationContext());
-        LocationManager.getInstance().initWithContext(getApplicationContext());
 
         startService(new Intent(this, InitDataService_.class));
         permissionLocation();
@@ -96,8 +91,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Subscribe
     public void onUserChanged(User user) {
-        LocationDBManager.getInstance().initWithUser(user.id);
-        TrackLocationManager.getInstance().startLocationTrackingIfNeeded();
     }
 
     @Override

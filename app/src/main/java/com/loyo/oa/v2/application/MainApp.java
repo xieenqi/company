@@ -14,12 +14,12 @@ import android.support.multidex.MultiDex;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
-import com.instacart.library.truetime.TrueTime;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.customer.model.Industry;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
 import com.loyo.oa.v2.beans.Permission;
@@ -29,7 +29,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.db.LocationDBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
@@ -42,7 +41,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.TrackLocationManager;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -184,20 +182,6 @@ public class MainApp extends Application {
         JPushInterface.init(this);
         GlideManager.getInstance().initWithContext(getApplicationContext());
 
-        /*  */
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                try {
-                    TrueTime.build().withNtpHost("0.asia.pool.ntp.org").initialize();
-                }
-                catch (Exception e) {
-
-                }
-            }
-        }.start();
-
     }
 
     private void addActivityLifecycleCallback() {
@@ -218,10 +202,6 @@ public class MainApp extends Application {
                 //app 从后台唤醒，进入前台
                 if (!isActive) {
                     isActive = true;
-                    if (user != null) {
-                        LocationDBManager.getInstance().initWithUser(user.id);
-                        TrackLocationManager.getInstance().startLocationTrackingIfNeeded();
-                    }
                 }
             }
 
