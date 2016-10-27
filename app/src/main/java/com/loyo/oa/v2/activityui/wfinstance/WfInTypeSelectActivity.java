@@ -21,9 +21,10 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -70,7 +71,7 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         listView_bizform = (ListView) findViewById(R.id.listView_bizform);
         if (lstData_BizForm != null) {
-            wfInstanceTypeSelectListViewAdapter = new WfInstanceTypeSelectListViewAdapter(this, lstData_BizForm, false);
+            wfInstanceTypeSelectListViewAdapter = new WfInstanceTypeSelectListViewAdapter(this, lstData_BizForm, true);
             listView_bizform.setAdapter(wfInstanceTypeSelectListViewAdapter);
             listView_bizform.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -203,11 +204,19 @@ public class WfInTypeSelectActivity extends BaseActivity implements View.OnClick
         return newField;
     }
 
-    @Override
+    /**
+     * Ui刷新回调
+     * */
+    @Subscribe
+    public void rushListData(BizForm bizForm){
+        app.finishActivity(WfInTypeSelectActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, new Intent());
+    }
+
+/*    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == WfInstanceManageActivity.WFIN_FINISH_RUSH) {
             app.finishActivity(WfInTypeSelectActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, new Intent());
         }
-    }
+    }*/
 }

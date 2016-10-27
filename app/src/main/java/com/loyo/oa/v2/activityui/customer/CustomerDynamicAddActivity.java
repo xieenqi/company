@@ -1,27 +1,22 @@
 package com.loyo.oa.v2.activityui.customer;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alibaba.sdk.android.oss.ClientException;
-import com.alibaba.sdk.android.oss.OSS;
-import com.alibaba.sdk.android.oss.ServiceException;
-import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
-import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
-import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
-import com.alibaba.sdk.android.oss.model.PutObjectRequest;
-import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
@@ -33,13 +28,11 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.AliOSSManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -51,7 +44,6 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,41 +52,31 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static com.loyo.oa.v2.application.MainApp.PICTURE;
+
 /**
  * 【新建跟进】客户管理
  * <p/>
  * Create by yyy on 16/08/24
  */
-public class CustomerDynamicAddActivity extends BaseActivity implements View.OnClickListener {
+public class CustomerDynamicAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
 
-    private InputMethodManager inputManager;
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
-    private CusGridView gridView_photo;
-    private LinearLayout layout_image,layout_status;
+    private ImageUploadGridView gridView;
+    UploadController controller;
+    private LinearLayout layout_image;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name;
     private Customer mCustomer;
     private String tagItemIds, contactId, contactName = "无";
-    private LinearLayout ll_customer, ll_contact, ll_contactItem, layout_photo;
-    private ImageGridViewAdapter imageGridViewAdapter;
-    private OSS oss;
+    private LinearLayout ll_customer, ll_contact, ll_contactItem;
 
     private String content;
     private String uuid = StringUtil.getUUID();
-    private String ak;
-    private String sk;
-    private String token;
-    private String expiration;
-    private int attachmentCount = 0; //当前附件总数
-    private int uploadSize;
-    private int uploadNum = 0;      //上传附件数量
     private int bizType = 17;
 
     private List<String> mSelectPath;
-    private AttachmentBatch attachmentBatch;
-    private ArrayList<AttachmentBatch> attachment;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
 
 
     @Override
@@ -106,6 +88,8 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             Bundle bundle = getIntent().getExtras();
             mCustomer = (Customer) bundle.getSerializable(Customer.class.getName());
         }
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
 
         initUI();
         getTempSaleActivity();
@@ -122,13 +106,11 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         super.setTitle("写跟进");
         edt = (EditText) findViewById(R.id.edt);
         layout_image = (LinearLayout) findViewById(R.id.layout_image);
-        layout_photo = (LinearLayout) findViewById(R.id.layout_photo);
-        layout_status = (LinearLayout) findViewById(R.id.layout_status);
         layout_image.setOnClickListener(this);
         layout_image.setOnTouchListener(Global.GetTouch());
         tv_remain_time = (TextView) findViewById(R.id.tv_remain_time);
         tv_sale_action = (TextView) findViewById(R.id.tv_sale_action);
-        gridView_photo = (CusGridView) findViewById(R.id.gridView_photo);
+        gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -163,56 +145,22 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         if (null != mCustomer) {
             getDefaultContact(mCustomer.contacts);
         }
-        init_gridView_photo();
+        controller.loadView(gridView);
     }
 
-    /**
-     * 传附件到Oss
-     */
-    public void uploadFileToOSS(String oKey, String filePath) {
-
-        // 构造上传请求
-        PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(), oKey, filePath);
-
-        //异步上传时可以设置进度回调
-        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
-            @Override
-            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                LogUtil.dee("currentSize: " + currentSize + " totalSize: " + totalSize);
-            }
-        });
-
-        OSSAsyncTask task = AliOSSManager.getInstance().getOss()
-                .asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-                    @Override
-                    public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                        uploadSize++;
-                        LogUtil.dee("UploadSuccess");
-                        LogUtil.dee("ETag" + result.getETag());
-                        LogUtil.dee("RequestId" + result.getRequestId());
-                        if (uploadSize == uploadNum) {
-                            postAttaData();
-                            cancelLoading();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-
-                        // 本地异常如网络异常等
-                        if (clientExcepion != null) {
-                            clientExcepion.printStackTrace();
-                        }
-
-                        // 服务异常
-                        if (serviceException != null) {
-                            LogUtil.dee("ErrorCode" + serviceException.getErrorCode());
-                            LogUtil.dee("RequestId" + serviceException.getRequestId());
-                            LogUtil.dee("HostId" + serviceException.getHostId());
-                            LogUtil.dee("RawMessage" + serviceException.getRawMessage());
-                        }
-                    }
-                });
+    private void buildAttachment() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = bizType;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
     }
 
     /**
@@ -223,7 +171,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         map.put("customerId", mCustomer.getId());
         map.put("content", content);
         map.put("typeId", tagItemIds);
-        if (pickPhots.size() != 0) {
+        if (attachment.size() != 0) {
             map.put("uuid", uuid);
         }
         if (!tv_remain_time.getText().toString().isEmpty() || !tv_remain_time.getText().toString().equals("不提醒")) {
@@ -250,42 +198,12 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         });
     }
 
-
-    /**
-     * 组装附件数据
-     */
-    public void setAttachmentData() {
-        try {
-            uploadSize = 0;
-            uploadNum = pickPhots.size();
-            attachment = new ArrayList<>();
-            showLoading("");
-            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
-                Uri uri = Uri.parse(item.path);
-                File newFile = Global.scal(this, uri);
-                if (newFile != null && newFile.length() > 0) {
-                    if (newFile.exists()) {
-                        attachmentBatch = new AttachmentBatch();
-                        attachmentBatch.UUId = uuid;
-                        attachmentBatch.bizType = bizType;
-                        attachmentBatch.mime = Utils.getMimeType(newFile.getPath());
-                        attachmentBatch.name = uuid + "/" + newFile.getName();
-                        attachmentBatch.size = Integer.parseInt(newFile.length() + "");
-                        attachment.add(attachmentBatch);
-                        uploadFileToOSS(uuid + "/" + newFile.getName(), newFile.getPath());
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Global.ProcException(ex);
-        }
-    }
-
     /**
      * 上传附件信息
      */
     public void postAttaData() {
         showLoading("");
+        buildAttachment();
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
                 .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
                     @Override
@@ -299,17 +217,6 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                         HttpErrorCheck.checkError(error);
                     }
                 });
-    }
-
-    /**
-     * 图片列表绑定
-     */
-    void init_gridView_photo() {
-/*        if(pickPhots.size() != 0){
-            layout_photo.setVisibility(View.VISIBLE);
-        }*/
-        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
-        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
     /**
@@ -386,11 +293,9 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                     return;
                 }
 
-                if (pickPhots.size() != 0 /*当前提交有附件*/) {
-                    setAttachmentData();
-                } else {
-                    commitDynamic();
-                }
+                showLoading("");
+                controller.startUpload();
+                controller.notifyCompletionIfNeeded();
 
                 break;
 
@@ -412,7 +317,12 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
 
             /*选择图片*/
             case R.id.layout_image:
-                app.startSelectImage(CustomerDynamicAddActivity.this, pickPhots);
+                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-controller.count()) /*最大可选择图片数量*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
+                this.startActivityForResult(intent, PICTURE);
                 break;
 
         }
@@ -500,23 +410,72 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             /*相册选择 回调*/
             case MainApp.PICTURE:
                 if (null != data) {
-                    pickPhotsResult = new ArrayList<>();
                     mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                        controller.addUploadTask("file://" + path, null,  uuid);
                     }
-                    pickPhots.addAll(pickPhotsResult);
-                    init_gridView_photo();
-                    Utils.autoEjetcEdit(edt,300);
+                    controller.reloadGridView();
+
                 }
                 break;
 
            /*附件删除回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                pickPhots.remove(data.getExtras().getInt("position"));
-                init_gridView_photo();
+                controller.removeTaskAt(data.getExtras().getInt("position"));
+                controller.reloadGridView();
                 break;
 
+        }
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        Intent intent = new Intent(this, MultiImageSelectorActivity.class);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-controller.count()) /*最大可选择图片数量*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
+        this.startActivityForResult(intent, PICTURE);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<SelectPicPopupWindow.ImageInfo> newAttachment = new ArrayList<>();
+        int newPosistion = index;
+
+        for (int i = 0; i < taskList.size(); i++) {
+            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://"+taskList.get(i).getValidatePath());
+            newAttachment.add(attachment);
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("data", newAttachment);
+        bundle.putInt("position", newPosistion);
+        bundle.putBoolean("isEdit", true);
+        MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageAddActivity.class,
+                MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+        cancelLoading();
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            Toast(count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() >0) {
+            postAttaData();
+        }
+        else {
+            commitDynamic();
         }
     }
 }

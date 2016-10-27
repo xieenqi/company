@@ -25,7 +25,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -194,7 +194,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
     private void bindData() {
 
         if (null == adapter) {
-            adapter = new CommCustomerAdapter(getActivity(), mCustomers, permission, mHandler);
+            adapter = new CommCustomerAdapter(getActivity(), mCustomers, mHandler);
             listView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();

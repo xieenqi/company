@@ -21,21 +21,20 @@ import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -70,7 +69,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
     private List<SaleTeamScreen> data = new ArrayList<>();
-
+    private SaleTeamScreen saleTeamScreen;
     private LinearLayout screen1, screen2, screen3;
     private ImageView screen1_iv1, screen2_iv2, screen3_iv3;
     private TextView saleteam_screen1_commy;
@@ -78,7 +77,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
     private ScreenDeptPopupView deptPopupView;
-
+    private Permission permission;
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private TeamClueAdapter adapter;
@@ -88,10 +87,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case ExtraAndResult.MSG_SEND: {
-                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
-                    break;
-                }
                 /*状态选择回调*/
                 case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
                     isPullDown = true;
@@ -169,7 +164,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initView(View view) {
-        setFilterData();
+        permission = (Permission) getArguments().getSerializable("permission");
         screen1 = (LinearLayout) view.findViewById(R.id.screen1);
         screen2 = (LinearLayout) view.findViewById(R.id.screen2);
         screen3 = (LinearLayout) view.findViewById(R.id.screen3);
@@ -201,6 +196,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         });
         adapter = new TeamClueAdapter(getActivity());
         lv_list.setAdapter(adapter);
+        setFilterData();
         getData();
     }
 
@@ -215,70 +211,59 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             saleTeamScreen.setName(status[i]);
             statusData.add(saleTeamScreen);
         }
-        mDeptSource = Common.getLstDepartment();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                wersi();
-            }
-        }).start();
+        wersi();
     }
 
     public void wersi() {
-        try {
-            //为超管或权限为全公司 展示全公司成员
-            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-                setUser(mDeptSource);
-            }
-            //权限为部门 展示我的部门
-            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
-                deptSort();
-            }
-            //权限为个人 展示自己
-            else if (MainApp.user.role.getDataRange() == Role.SELF) {
-                data.clear();
-                SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-                saleTeamScreen.setId(MainApp.user.getId());
-                saleTeamScreen.setName(MainApp.user.name);
-                saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
-                data.add(saleTeamScreen);
-            }
-
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } finally { /** 子线程读数据，主线程加载数据 */
-            Message msg = new Message();
-            msg.what = ExtraAndResult.MSG_SEND;
-            mHandler.sendMessage(msg);
+        //为超管或权限为全公司 展示全公司成员
+        if (permission != null && permission.dataRange == Permission.COMPANY) {
+            saleteam_screen1_commy.setText("全公司");
+            setUser(OrganizationManager.shareManager().allDepartments());
         }
+        //权限为部门 展示我的部门
+        else if (permission != null && permission.dataRange == Permission.TEAM) {
+            saleteam_screen1_commy.setText("本部门");
+            setUser(OrganizationManager.shareManager().currentUserDepartments());
+        }
+        //权限为个人 展示自己
+        else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+            saleteam_screen1_commy.setText("我");
+            data.clear();
+            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
+            saleTeamScreen.setId(MainApp.user.getId());
+            saleTeamScreen.setName(MainApp.user.name);
+            saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
+            data.add(saleTeamScreen);
+        }
+        deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
     }
 
-    /**
-     * 过滤出我的部门
-     */
-    private void deptSort() {
-        newDeptSource.clear();
-        User user = MainApp.user;
-        for (Department department : mDeptSource) {
-            for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
-                    newDeptSource.add(department);
-                }
-            }
-        }
-        setUser(newDeptSource);
-    }
+//    /**
+//     * 过滤出我的部门
+//     */
+//    private void deptSort() {
+//        newDeptSource.clear();
+//        User user = MainApp.user;
+//        for (Department department : mDeptSource) {
+//            for (int i = 0; i < user.getDepts().size(); i++) {
+//                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
+//                    newDeptSource.add(department);
+//                }
+//            }
+//        }
+//        setUser(newDeptSource);
+//    }
 
     /**
      * 组装部门格式
      */
-    private void setUser(List<Department> values) {
+    private void setUser(List<DBDepartment> values) {
         data.clear();
-        for (Department department : values) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(department.getId());
-            saleTeamScreen.setName(department.getName());
-            saleTeamScreen.setxPath(department.getXpath());
+        for (DBDepartment department : values) {
+            saleTeamScreen = new SaleTeamScreen();
+            saleTeamScreen.setId(department.id);
+            saleTeamScreen.setName(department.name);
+            saleTeamScreen.setxPath(department.xpath);
             data.add(saleTeamScreen);
         }
     }

@@ -181,7 +181,7 @@ public class WaveView extends Button {
                 radius = 0;
                 break;
         }
-        invalidate();
+            invalidate();
     }
 
     /**

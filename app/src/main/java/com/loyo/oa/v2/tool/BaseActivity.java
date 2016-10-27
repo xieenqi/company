@@ -26,15 +26,16 @@ import android.widget.Toast;
 import com.library.module.common.SystemBarTintManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.customview.CustomProgressDialog;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Locale;
 
@@ -81,7 +82,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
-        AppBus.getInstance().register(this);
+        com.loyo.oa.v2.common.event.AppBus.getInstance().register(this);
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
@@ -101,7 +102,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     protected void onDestroy() {
-        AppBus.getInstance().unregister(this);
+        com.loyo.oa.v2.common.event.AppBus.getInstance().unregister(this);
         unRegisterBaseReceiver();
         //关闭键盘
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -117,6 +118,11 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         }
         customProgressDialog = null;
         super.onDestroy();
+    }
+
+    @Subscribe
+    public void onEvent(Object object){
+
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {

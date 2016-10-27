@@ -1,24 +1,18 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.activityui.customer.bean.Member;
-import com.loyo.oa.v2.activityui.customer.bean.MembersRoot;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Member;
+import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -28,6 +22,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -77,9 +72,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     public boolean isMyUser;
     public boolean isPutOcen;
     public boolean isRoot = false;
-    public Permission perDelete;
-    public Permission perOcean;
-    public Permission perGet;
     private MembersRoot memRoot;
 
 
@@ -158,14 +150,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             img_public.setVisibility(View.VISIBLE);
         } else {
             if (customerType == 3) {
-                try {
-                    perGet = (Permission) MainApp.rootMap.get("0404");
-                    if (perGet.isEnable()) {
-                        img_public.setVisibility(View.VISIBLE);
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    Toast("客户挑入权限,code错误");
+                Permission perGet = MainApp.rootMap.get("0404");
+                if (perGet != null && perGet.isEnable()) {
+                    img_public.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -266,83 +253,95 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 显示编辑客户弹出框
      */
     private void showEditPopu() {
-
-        LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
-        View menuView = mLayoutInflater.inflate(R.layout.popu_child_task_edit_layout, null, false);
-
-        Button btn_child_delete_task = (Button) menuView.findViewById(R.id.btn_child_delete_task);
-        Button btnCancel = (Button) menuView.findViewById(R.id.btn_cancel_edit);
-        Button btnUpdate = (Button) menuView.findViewById(R.id.btn_child_add_update);
-
-        btnUpdate.setText("投入公海");
-        btn_child_delete_task.setText("删除");
-
-        /*超级管理员\web控制权限判断*/
+        boolean isDelte = false, isPublic = false;
+         /*超级管理员\web控制权限判断*/
         if (!MainApp.user.isSuperUser()) {
-            try {
-                perDelete = (Permission) MainApp.rootMap.get("0405");
-                perOcean = (Permission) MainApp.rootMap.get("0403");
-                if (!perDelete.isEnable()) {
-                    btn_child_delete_task.setVisibility(View.GONE);
-                }
-                if (!perOcean.isEnable()) {
-                    btnUpdate.setVisibility(View.GONE);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("客户挑入/删除权限,code错误:0405,0403");
-            }
+            Permission perDelete = MainApp.rootMap.get("0405");
+            Permission perOcean = MainApp.rootMap.get("0403");
+            if (perDelete != null && perDelete.enable)
+                isDelte = true;
+            if (perOcean != null && perOcean.enable)
+                isPublic = true;
         }
 
-        btn_child_delete_task.setOnTouchListener(Global.GetTouch());
-        btnCancel.setOnTouchListener(Global.GetTouch());
-        btnUpdate.setOnTouchListener(Global.GetTouch());
-
-        final PopupWindow popupWindow = new PopupWindow(menuView, -1, -1, true);
-        popupWindow.setAnimationStyle(R.style.PopupAnimation);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-        popupWindow.showAtLocation(findViewById(R.id.tv_title_1), Gravity.BOTTOM, 0, 0);
-
-        menuView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(final View view, final MotionEvent motionEvent) {
-                popupWindow.dismiss();
-                return false;
-            }
-        });
-
-        PopuOnClickListener listener = new PopuOnClickListener(popupWindow);
-        btn_child_delete_task.setOnClickListener(listener);
-        btnCancel.setOnClickListener(listener);
-        btnUpdate.setOnClickListener(listener);
-
-    }
-
-    /**
-     * 处理popuwindow里按钮的点击事件
-     */
-    private class PopuOnClickListener implements View.OnClickListener {
-        private PopupWindow mWindow;
-
-        PopuOnClickListener(final PopupWindow window) {
-            mWindow = window;
-        }
-
-        @Override
-        public void onClick(final View view) {
-            switch (view.getId()) {
-                case R.id.btn_child_delete_task:
+        ActionSheetDialog dialog = new ActionSheetDialog(CustomerDetailInfoActivity.this).builder();
+        if (isDelte || MainApp.user.isSuperUser())
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
                     setPopView(true, "你确定要删除客户?");
-                    break;
-                case R.id.btn_child_add_update:
+                }
+            });
+        if (isPublic || MainApp.user.isSuperUser())
+            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
                     setPopView(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
-                    break;
-                default:
-                    break;
-            }
-            mWindow.dismiss();
-        }
+                }
+            });
+        dialog.show();
+//
+//
+//        LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
+//        View menuView = mLayoutInflater.inflate(R.layout.popu_child_task_edit_layout, null, false);
+//
+//        Button btn_child_delete_task = (Button) menuView.findViewById(R.id.btn_child_delete_task);
+//        Button btnCancel = (Button) menuView.findViewById(R.id.btn_cancel_edit);
+//        Button btnUpdate = (Button) menuView.findViewById(R.id.btn_child_add_update);
+//
+//        btnUpdate.setText("投入公海");
+//        btn_child_delete_task.setText("删除");
+//
+//
+//        btn_child_delete_task.setOnTouchListener(Global.GetTouch());
+//        btnCancel.setOnTouchListener(Global.GetTouch());
+//        btnUpdate.setOnTouchListener(Global.GetTouch());
+//
+//        final PopupWindow popupWindow = new PopupWindow(menuView, -1, -1, true);
+//        popupWindow.setAnimationStyle(R.style.PopupAnimation);
+//        popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
+//        popupWindow.showAtLocation(findViewById(R.id.tv_title_1), Gravity.BOTTOM, 0, 0);
+//
+//        menuView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(final View view, final MotionEvent motionEvent) {
+//                popupWindow.dismiss();
+//                return false;
+//            }
+//        });
+//
+//        PopuOnClickListener listener = new PopuOnClickListener(popupWindow);
+//        btn_child_delete_task.setOnClickListener(listener);
+//        btnCancel.setOnClickListener(listener);
+//        btnUpdate.setOnClickListener(listener);
+
     }
+
+//    /**
+//     * 处理popuwindow里按钮的点击事件
+//     */
+//    private class PopuOnClickListener implements View.OnClickListener {
+//        private PopupWindow mWindow;
+//
+//        PopuOnClickListener(final PopupWindow window) {
+//            mWindow = window;
+//        }
+//
+//        @Override
+//        public void onClick(final View view) {
+//            switch (view.getId()) {
+//                case R.id.btn_child_delete_task:
+//                    setPopView(true, "你确定要删除客户?");
+//                    break;
+//                case R.id.btn_child_add_update:
+//                    setPopView(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+//                    break;
+//                default:
+//                    break;
+//            }
+//            mWindow.dismiss();
+//        }
+//    }
 
     /**
      * 提示弹出框
@@ -365,26 +364,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 }
             }
         }, "提示", message);
-
-/*        showGeneralDialog(true, true, message);
-        //确定
-        generalPopView.setSureOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                if (isKind) {
-                    delete();
-                } else {
-                    toPublic();
-                }
-            }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });*/
     }
 
 

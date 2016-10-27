@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.commonview.bean.OssToken;
+import com.loyo.oa.upload.alioss.OssToken;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 

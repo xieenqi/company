@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.clue.bean;
 
-import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
+import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 
 import java.io.Serializable;
 

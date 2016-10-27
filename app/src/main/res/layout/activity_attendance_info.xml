@@ -33,7 +33,6 @@
                     android:layout_height="@dimen/dimen_40"
                     android:layout_marginRight="@dimen/dimen_10"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/icon_contact_avatar"
                     />
 
                 <TextView
@@ -53,7 +52,11 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/text99"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    android:maxEms="25"
+                    android:ellipsize="end"
+                    />
 
             </LinearLayout>
 
@@ -90,7 +93,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="left|center"
                         android:text=""
-                        android:textColor="@color/text99"
+                        android:textColor="@color/text33"
                         />
                 </LinearLayout>
 
@@ -103,7 +106,19 @@
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:singleLine="false"
                     android:text=""
-                    android:textColor="@color/text99"
+                    android:textColor="@color/text33"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:singleLine="false"
+                    android:text=""
+                    android:textColor="@color/text33"
                     />
 
             </LinearLayout>

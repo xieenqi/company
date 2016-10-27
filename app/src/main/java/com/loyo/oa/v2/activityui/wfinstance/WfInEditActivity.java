@@ -10,64 +10,52 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.event.WfinRushEvent;
+import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinEditPresenter;
+import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinEditPresenterImpl;
+import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinEditView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
-import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.wfinstance.bean.WfInstanceAdd;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
-import com.loyo.oa.v2.customview.WfinAddViewGroup;
-import com.loyo.oa.v2.customview.WfinEditViewGroup;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 
 /**
  * 【编辑审批】界面
- * create by yyy on 2016/06/08
+ * Restruture by yyy on 16/10/21
  */
-public class WfInEditActivity extends BaseActivity {
+public class WfInEditActivity extends BaseActivity implements WfinEditView{
 
     /**
      * 部门选择 请求码
      */
     public static final int RESULT_DEPT_CHOOSE = 5;
 
-    private ArrayList<String> startTimeArr = new ArrayList<>();
-    private ArrayList<String> endTimeArr = new ArrayList<>();
     private String projectId;
     private String deptId;
     private String uuid;
@@ -80,7 +68,7 @@ public class WfInEditActivity extends BaseActivity {
 
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
-    private ViewGroup layout_wfinstance_data;
+    private LinearLayout layout_wfinstance_data;
     private ViewGroup ll_dept;
     private ViewGroup ll_project;
     private LinearLayout wfinstance_data_container;
@@ -91,16 +79,13 @@ public class WfInEditActivity extends BaseActivity {
     private CusGridView gridView_photo;
     private EditText edt_memo;
     private EditText tv_title;
-    private WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
-    private ArrayList postValue = new ArrayList<>();
 
     private WfInstance mWfInstance;
     private BizForm mBizForm;
     private ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
-    private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-    private ArrayList<Boolean> isRequiredList = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
+    private WfinEditPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +102,7 @@ public class WfInEditActivity extends BaseActivity {
         wfinstance_data_container = (LinearLayout) findViewById(R.id.wfinstance_data_container);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
-        layout_wfinstance_data = (ViewGroup) findViewById(R.id.layout_wfinstance_data);
+        layout_wfinstance_data = (LinearLayout) findViewById(R.id.layout_wfinstance_data);
         ll_dept = (ViewGroup) findViewById(R.id.ll_dept);
         ll_project = (ViewGroup) findViewById(R.id.ll_project);
         wordcount = (TextView) findViewById(R.id.wordcount);
@@ -140,14 +125,11 @@ public class WfInEditActivity extends BaseActivity {
         img_title_right.setOnClickListener(onClick);
         ll_dept.setOnClickListener(onClick);
         edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
+        mPresenter = new WfinEditPresenterImpl(mContext,this,WfInEditActivity.this);
 
         if (null != mWfInstance.bizForm) {
             mBizForm = mWfInstance.bizForm;
-            try {
-                setStartendTime();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
+            mPresenter.setStartendTime(wfInstanceValuesDatas,mBizForm,layout_wfinstance_data,wfinstance_data_container);
         }
         if (null != mWfInstance.title) {
             cusTitle = mWfInstance.title;
@@ -169,32 +151,7 @@ public class WfInEditActivity extends BaseActivity {
         //init_gridView_photo();
         projectAddWfinstance();
         setDefaultDept();
-        //getAttachments();
-    }
-
-    /**
-     * 审批开始 结束时间规范判断:
-     * <p/>
-     * 审批开始时间不能小于结束时间，
-     * 从审批内容里获取到 开始时间 结束时间 的id
-     * 再根据这个id去获取 开始结束 时间的值
-     */
-    public void setStartendTime() {
-        for (int i = 0; i < mBizForm.getFields().size(); i++) {
-            if (mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()) {
-                startTimeArr.add(mBizForm.getFields().get(i).getId());
-            }
-            if (mBizForm.getFields().get(i).getName().equals("结束时间") && mBizForm.getFields().get(i).isSystem()) {
-                endTimeArr.add(mBizForm.getFields().get(i).getId());
-            }
-        }
-        layout_wfinstance_data.setVisibility(View.VISIBLE);
-        submitData.clear();
-        wfinstance_data_container.removeAllViews();
-        //审批内容 有多少组就执行多少次动态view
-        for (int i = 0; i < wfInstanceValuesDatas.size(); i++) {
-            editTypeData(i);
-        }
+        //mPresenter.getAttachments(uuid);
     }
 
     /**
@@ -221,24 +178,8 @@ public class WfInEditActivity extends BaseActivity {
     }
 
     /**
-     * 获取附件
-     */
-    private void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                lstData_Attachment = attachments;
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("获取附件失败");
-                super.failure(error);
-            }
-        });
-    }
-
+     * adapter初始化
+     * */
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
@@ -273,12 +214,12 @@ public class WfInEditActivity extends BaseActivity {
                     break;
                 //提交审批
                 case R.id.img_title_right:
-                    subMinInfo();
+                    mPresenter.requestEditWfinVeri(deptId);
                     break;
 
                 //新增内容
                 case R.id.btn_add:
-                    addTypeData();
+                    mPresenter.addTypeData(wfinstance_data_container);
                     break;
 
                 default:
@@ -287,6 +228,9 @@ public class WfInEditActivity extends BaseActivity {
         }
     };
 
+    /**
+     * 获取审批内容
+     * */
     void initData_WorkflowValues() {
         if (null == mWfInstance || null == mWfInstance.workflowValues) {
             return;
@@ -297,191 +241,6 @@ public class WfInEditActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 编辑加审批内容 栏目
-     */
-    void editTypeData(int position) {
-        if (mBizForm == null) {
-            Toast("请选择类型");
-            return;
-        }
-        if (null == mBizForm.getFields()) {
-            return;
-        }
-
-        HashMap<String, Object> newValues = new HashMap<String, Object>();
-        for (BizFormFields field : mBizForm.getFields()) {
-            newValues.put(field.getId(), wfInstanceValuesDatas.get(position).get(field.getId()));
-        }
-
-        submitData.add(newValues);
-        WfinEditViewGroup viewGroup = new WfinEditViewGroup(this, mBizForm.getFields(), submitData, wfInstanceValuesDatas, position);
-        viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
-        addIsRequired();
-    }
-
-
-    /**
-     * 新增加审批内容 栏目
-     */
-    void addTypeData() {
-        if (mBizForm == null) {
-            Toast("请选择类型");
-            return;
-        }
-        if (null == mBizForm.getFields()) {
-            return;
-        }
-
-        HashMap<String, Object> newValues = new HashMap<String, Object>();
-        for (BizFormFields field : mBizForm.getFields()) {
-            newValues.put(field.getId(), "");
-        }
-        submitData.add(newValues);
-        WfinAddViewGroup viewGroup = new WfinAddViewGroup(this, mBizForm.getFields(), submitData);
-        viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
-        addIsRequired();
-    }
-
-    /*内容是否必填，加入list*/
-    void addIsRequired() {
-        for (int i = 0; i < mBizForm.getFields().size(); i++) {
-            isRequiredList.add(mBizForm.getFields().get(i).isRequired());
-        }
-    }
-
-    /**
-     * 编辑审批 数据请求
-     */
-    public void subMinInfo() {
-        if (submitData.isEmpty()) {
-            Toast("请输入审批内容");
-            return;
-        } else if (TextUtils.isEmpty(deptId)) {
-            Toast("请输选择部门");
-            return;
-        }
-
-        /**审批内容，装进Post数据的list中*/
-        postValue.clear();
-        ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
-        wfInstanceAdd.getWorkflowValuesAdd().wfInstanceValuesDatas.clear();
-        for (int k = 0; k < submitData.size(); k++) {
-            HashMap<String, Object> jsonMapValues = new HashMap<>();
-            HashMap<String, Object> map_Values = submitData.get(k);
-            try {
-                for (BizFormFields field : mBizForm.getFields()) {
-                    for (String key : map_Values.keySet()) {
-                        if (!TextUtils.equals(field.getId(), key)) {
-                            continue;
-                        }
-                        postValue.add(map_Values.get(key));
-                        jsonMapValues.put(key, map_Values.get(key));
-                    }
-                }
-                workflowValues.add(jsonMapValues);
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("操作失败！");
-                return;
-            }
-        }
-
-        for (int i = 0; i < postValue.size(); i++) {
-            if (null != postValue.get(i) && TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i) == true) {
-                Toast("请填写\"必填项\"");
-                return;
-            }
-        }
-
-        /**
-         * 获取请假/出差系统字段的 开始结束时间
-         * */
-        String startTimeDate = "";
-        String endTimeDate = "";
-
-
-        long startTimelong;
-        long endTimelong;
-
-        for (int i = 0; i < startTimeArr.size(); i++) {
-            for (HashMap<String, Object> map : workflowValues) {
-                Set set = map.entrySet();
-                Iterator it = set.iterator();
-                while (it.hasNext()) {
-                    Map.Entry me = (Map.Entry) it.next();
-                    if (startTimeArr.get(i).equals(me.getKey())) {
-                        startTimeDate = (String) map.get(startTimeArr.get(i));
-                    }
-
-                    if (endTimeArr.get(i).equals(me.getKey())) {
-                        endTimeDate = (String) map.get(endTimeArr.get(i));
-                    }
-                }
-                startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
-                endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
-
-                if (startTimelong > endTimelong && startTimelong != endTimelong) {
-                    Toast("开始时间不能大于结束时间!");
-                    return;
-                }
-            }
-        }
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("title", tv_title.getText().toString());       //自定义标题
-        map.put("deptId", deptId);                             //部门 id
-        map.put("workflowValues", workflowValues);             //流程 内容
-        map.put("projectId", projectId);                       //项目Id
-        map.put("memo", edt_memo.getText().toString().trim()); //备注
-
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(mWfInstance.id, map, new RCallback<WfInstance>() {
-            @Override
-            public void success(final WfInstance wfInstance, final Response response) {
-                HttpErrorCheck.checkResponse("新建审批cg", response);
-                if (wfInstance != null) {
-                    isSave = false;
-                    wfInstance.setViewed(true);
-                    app.finishActivity(WfInEditActivity.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
-                } else {
-                    Toast("服务器错误");
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
-    }
-
-    /**
-     * 批量上传附件
-     */
-    private void newUploadAttachement(File file) {
-        if (uploadSize == 0) {
-            showLoading("正在上传");
-        }
-        uploadSize++;
-        TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedUuid = new TypedString(uuid);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachments, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        getAttachments();
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -503,7 +262,7 @@ public class WfInEditActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                newUploadAttachement(newFile);
+                                mPresenter.newUploadAttachement(uuid,newFile);
                             }
                         }
                     }
@@ -580,5 +339,52 @@ public class WfInEditActivity extends BaseActivity {
         if (isSave) {
             DBManager.Instance().putWfInstance(MainApp.gson.toJson(wfInstance));
         }
+    }
+
+    @Override
+    public void showProgress(String msg) {
+        showLoading(msg);
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading();
+    }
+
+    @Override
+    public void showMsg(String msg) {
+        Toast(msg);
+    }
+
+    /**
+     * 获取附件成功处理
+     * */
+    @Override
+    public void getAttachmentsEmbl(ArrayList<Attachment> attachments) {
+        lstData_Attachment = attachments;
+        init_gridView_photo();
+    }
+
+    /**
+     * 请求编辑验证
+     * */
+    @Override
+    public void requestEditVeriEmbl(ArrayList<HashMap<String, Object>> workflowValues) {
+        mPresenter.requestEditWfin(mWfInstance.id,
+                tv_title.getText().toString(),
+                deptId,workflowValues,
+                projectId,edt_memo.getText().toString().trim());
+    }
+
+    /**
+     * 请求编辑成功处理
+     * */
+    @Override
+    public void requestEditWfinEmbl(WfInstance wfInstance) {
+        Toast("编辑成功");
+        isSave = false;
+        wfInstance.setViewed(true);
+        AppBus.getInstance().post(new WfinRushEvent());
+        app.finishActivity(WfInEditActivity.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
     }
 }

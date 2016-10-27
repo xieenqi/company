@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:ptr="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical">
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView
         android:id="@+id/expandableListView"
@@ -12,8 +12,7 @@
         android:layout_above="@+id/layout_btn"
         android:animateLayoutChanges="true"
         android:cacheColorHint="#00000000"
-        android:divider="@color/lineCC"
-        android:dividerHeight="0.5dp"
+        android:divider="@null"
         android:drawSelectorOnTop="false"
         android:fadingEdge="none"
         android:fastScrollEnabled="false"
@@ -22,14 +21,14 @@
         android:headerDividersEnabled="true"
         android:paddingBottom="@dimen/dimen_5"
         android:smoothScrollbar="true"
-        ptr:ptrMode="both"/>
+        ptr:ptrMode="both" />
 
     <ViewStub
         android:id="@+id/vs_nodata"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inflatedId="@+id/layout_nodata"
-        android:layout="@layout/item_layout_nodata"/>
+        android:layout="@layout/item_layout_nodata" />
 
     <FrameLayout
         android:id="@+id/topGroup"
@@ -54,28 +53,28 @@
             android:visibility="invisible">
 
             <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-            <ImageView
-                android:layout_gravity="center"
-                android:layout_marginRight="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/icon_common_add"
-                />
-            <TextView
-                android:id="@+id/tv_add"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/view_h_title"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:text="asd"
-                android:textSize="15sp"
-                android:textColor="@color/title_bg1"/>
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/icon_common_add" />
+
+                <TextView
+                    android:id="@+id/tv_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/view_h_title"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="asd"
+                    android:textColor="@color/title_bg1"
+                    android:textSize="15sp" />
 
             </LinearLayout>
         </RelativeLayout>

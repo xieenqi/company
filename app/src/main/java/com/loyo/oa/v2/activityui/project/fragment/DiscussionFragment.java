@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -94,6 +94,14 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             getData();
         }
         return mView;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mHaitHelper !=null) {
+            mHaitHelper.clean();
+        }
+        super.onDestroy();
     }
 
     @Override

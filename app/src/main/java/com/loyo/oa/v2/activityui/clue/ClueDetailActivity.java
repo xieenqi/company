@@ -9,16 +9,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
+import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.PaymentPopView;
@@ -30,6 +34,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -165,16 +171,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
         isAdd = true;
 
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                Permission permission = (Permission) MainApp.rootMap.get("0409");
-                if (permission.isEnable()) {
-                    isDelete = true;
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
 
         /* 分区1 */
         section1_username.setText(sales.name);
@@ -312,10 +308,19 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      * 右上角菜单
      */
     private void functionButton() {
+        Permission permission = MainApp.rootMap.get("0409");
+        if ((permission != null && permission.isEnable()) || MainApp.user.isSuperUser()) {
+            isDelete = true;
+        }
+
         ActionSheetDialog dialog = new ActionSheetDialog(ClueDetailActivity.this).builder();
         dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
+                if (null == data || null == data.data || data.data.sales == null) {
+                    Toast("数据不全不能转为客户");
+                    return;
+                }
                 Bundle mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
                 app.startActivityForResult(ClueDetailActivity.this, ClueTransferActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
@@ -325,7 +330,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         dialog.addSheetItem("转移给他人", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                SelectDetUserActivity2.startThisForOnly(ClueDetailActivity.this, null);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                Intent intent = new Intent();
+                intent.setClass(ClueDetailActivity.this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
@@ -357,7 +367,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                             dismissSweetAlert();
                             deleteClue();
                         }
-                    },"提示","线索删除过后不可恢复，\n你确定要删除？");
+                    }, "提示", "线索删除过后不可恢复，\n你确定要删除？");
 
 /*                    final GeneralPopView dailog = showGeneralDialog(true, true, "线索删除过后不可恢复，\n你确定要删除？");
                     dailog.setSureOnclick(new View.OnClickListener() {
@@ -534,6 +544,30 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 });
     }
 
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+        StaffMemberCollection collection = event.data;
+        final NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+        if (user == null) {
+            return;
+        }
+        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+            }
+        }, new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                dismissSweetAlert();
+                transferClue(user.getId());
+            }
+        },"提示","转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -556,7 +590,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         dismissSweetAlert();
                         transferClue(u.getId());
                     }
-                },"提示","转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
+                }, "提示", "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
 
 /*                final GeneralPopView dailog = showGeneralDialog(true, true, "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
                 dailog.setSureOnclick(new View.OnClickListener() {

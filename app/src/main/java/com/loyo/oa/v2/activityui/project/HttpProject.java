@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.activityui.project;
 
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.UserInfo;
 
 import java.io.Serializable;
@@ -40,15 +40,15 @@ public class HttpProject implements Serializable {
         public int workreport;
     }
 
-    public class ProjectManaer implements Serializable {
+    public static class ProjectManaer implements Serializable {
         public User user = new User();
         public boolean canReadAll;
     }
 
 
-    public class ProjectMember implements Serializable {
-        public User user = new User();
-        public Dept dept = new Dept();
+    public static class ProjectMember implements Serializable {
+        public User user;
+        public Dept dept;
         public boolean canReadAll;
     }
 
@@ -87,7 +87,7 @@ public class HttpProject implements Serializable {
         return false;
     }
 
-    public class Dept implements Serializable {
+    public static class Dept implements Serializable {
         public String id;
         public String xpath;
         public String name;

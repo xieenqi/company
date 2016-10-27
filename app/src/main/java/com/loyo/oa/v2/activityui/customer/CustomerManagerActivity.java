@@ -21,7 +21,7 @@ import com.loyo.oa.v2.activityui.customer.fragment.TeamCustomerFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -111,15 +111,12 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private float mRotation = 0;
 
     private Permission permission;
-    private String[] SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
+    private String[] SaleItemStatus = new String[]{"我的客户", "公海客户"};
     private List<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mTags1;
     private ArrayList<Tag> mTags2;
     private ArrayList<Tag> mTags3;
-
-    public Permission perTeam;
-    public Permission perOcean;
     public boolean publicOrTeam;
 
     @Override
@@ -135,7 +132,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     public void getStageData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                GetTags(new RCallback<ArrayList<com.loyo.oa.v2.activityui.customer.bean.Tag>>() {
+                GetTags(new RCallback<ArrayList<com.loyo.oa.v2.activityui.customer.model.Tag>>() {
                     @Override
                     public void success(ArrayList<Tag> tags, Response response) {
                         HttpErrorCheck.checkResponse("客户标签：", response);
@@ -148,10 +145,10 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                             e.printStackTrace();
                         }
                         initTitleItem();
-                        try{
-                            permission = (Permission) MainApp.rootMap.get("0404");
+                        try {
+//                            permission = MainApp.rootMap.get("0404");
                             initChildren();
-                        }catch(NullPointerException e){
+                        } catch (NullPointerException e) {
                             e.printStackTrace();
                             Toast("没有获取到权限数据，请重新拉去后再试");
                             finish();
@@ -173,9 +170,9 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         mTags2 = new ArrayList<>(tags.size());
         mTags3 = new ArrayList<>(tags.size());
 
-        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.customer.bean.Tag>) Utils.deepCopyT(mTags);
-        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.customer.bean.Tag>) Utils.deepCopyT(mTags);
-        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.customer.bean.Tag>) Utils.deepCopyT(mTags);
+        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.customer.model.Tag>) Utils.deepCopyT(mTags);
+        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.customer.model.Tag>) Utils.deepCopyT(mTags);
+        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.customer.model.Tag>) Utils.deepCopyT(mTags);
     }
 
     private void initView() {
@@ -196,32 +193,11 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
-
-        //超级管理员权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                perTeam = (Permission) MainApp.rootMap.get("0308"); //团队客户
-                perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
-                if (!perTeam.isEnable() && !perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户"};
-                    imageArrow.setVisibility(View.INVISIBLE);
-                } else if (perTeam.isEnable() && !perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户", "团队客户"};
-                    publicOrTeam = true;
-                    imageArrow.setVisibility(View.VISIBLE);
-                } else if (!perTeam.isEnable() && perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户", "公海客户"};
-                    publicOrTeam = false;
-                    imageArrow.setVisibility(View.VISIBLE);
-                } else {
-                    imageArrow.setVisibility(View.VISIBLE);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("团队/公海客户,code错误:0308,0309");
-            }
-        } else {
-            imageArrow.setVisibility(View.VISIBLE);
+        //超级管理员权全公司  没有获取到权限就不显示
+        permission = MainApp.rootMap.get("0205"); //客户权限
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+            SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
+            publicOrTeam = true;
         }
 
         if (SaleItemStatus.length != 1) {

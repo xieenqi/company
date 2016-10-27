@@ -4,13 +4,9 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Base64;
 
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 
 import java.lang.ref.SoftReference;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.RequestInterceptor;

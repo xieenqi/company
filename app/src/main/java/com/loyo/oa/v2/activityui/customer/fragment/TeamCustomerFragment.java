@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -23,17 +22,14 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.TeamCustomerAdapter;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.NearCount;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.customer.model.Department;
+import com.loyo.oa.v2.activityui.customer.model.NearCount;
+import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -43,6 +39,8 @@ import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.ScreenTagPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -86,7 +84,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private TeamCustomerAdapter adapter;
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mDoubleTags = new ArrayList<>();
-    private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
     private List<SaleTeamScreen> data = new ArrayList<>();
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
@@ -110,11 +107,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
-
-                case DEPARTMENT_USER_DATA_LOADED: {
-                    saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
-                    break;
-                }
 
                 //部门筛选
                 case CustomerManagerActivity.CUSTOMER_DEPT_CREEN:
@@ -230,53 +222,46 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         screen3.setOnClickListener(click);
 
         showLoading("");
-        mDeptSource = Common.getLstDepartment();
+//        mDeptSource = Common.getLstDepartment();
 
         /**
          * bugfix : Updated by ethan 2016/09/11
          * 子线程读数据，主线程加载数据
          *
          */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                wersi();
-            }
-        }).start();
+
+        wersi();
         getData();
     }
 
     public void wersi() {
-        try {
-            //为超管或权限为全公司 展示全公司成员
-            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-                setUser(mDeptSource);
-            }
-            //权限为部门 展示我的部门
-            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
-                deptSort();
-            }
-            //权限为个人 展示自己
-            else if (MainApp.user.role.getDataRange() == Role.SELF) {
-                data.clear();
-                saleTeamScreen = new SaleTeamScreen();
-                saleTeamScreen.setId(MainApp.user.getId());
-                saleTeamScreen.setName(MainApp.user.name);
-                saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
-                data.add(saleTeamScreen);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } finally { /** 子线程读数据，主线程加载数据 */
-            Message msg = new Message();
-            msg.what = DEPARTMENT_USER_DATA_LOADED;
-            mHandler.sendMessage(msg);
+        //为超管或权限为全公司 展示全公司成员
+        if (permission != null && permission.dataRange == Permission.COMPANY) {
+            screen.setText("全公司");
+            setUser(OrganizationManager.shareManager().allDepartments());
         }
+        //权限为部门 展示我的部门
+        else if (permission != null && permission.dataRange == Permission.TEAM) {
+            screen.setText("本部门");
+            setUser(OrganizationManager.shareManager().currentUserDepartments());
+        }
+        //权限为个人 展示自己
+        else if (permission != null && permission.dataRange == Permission.PERSONAL) {
+            screen.setText("我");
+            data.clear();
+            saleTeamScreen = new SaleTeamScreen();
+            saleTeamScreen.setId(MainApp.user.getId());
+            saleTeamScreen.setName(MainApp.user.name);
+            saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
+            data.add(saleTeamScreen);
+        }
+        saleScreenPopupView = new ScreenDeptPopupView(mActivity, data, mHandler, permission);
     }
 
-    /**
-     * 显示附近客户
-     */
+        /**
+         * 显示附近客户
+         */
+
     private void showNearCustomersView() {
         nearLayout.setVisibility(View.VISIBLE);
         int oX = app.diptoPx(240);
@@ -430,13 +415,13 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     /**
      * 组装部门格式
      */
-    private void setUser(List<Department> values) {
+    private void setUser(List<DBDepartment> values) {
         data.clear();
-        for (Department department : values) {
+        for (DBDepartment department : values) {
             saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(department.getId());
-            saleTeamScreen.setName(department.getName());
-            saleTeamScreen.setxPath(department.getXpath());
+            saleTeamScreen.setId(department.id);
+            saleTeamScreen.setName(department.name);
+            saleTeamScreen.setxPath(department.xpath);
             data.add(saleTeamScreen);
         }
     }
@@ -444,18 +429,19 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     /**
      * 过滤出我的部门
      */
-    private void deptSort() {
-        newDeptSource.clear();
-        User user = MainApp.user;
-        for (Department department : mDeptSource) {
-            for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department != null && department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
-                    newDeptSource.add(department);
-                }
-            }
-        }
-        setUser(newDeptSource);
-    }
+//    private void deptSort() {
+//        newDeptSource.clear();
+//        User user = MainApp.user;
+//        for (Department department : mDeptSource) {
+//            for (int i = 0; i < user.getDepts().size(); i++) {
+//                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
+//                    newDeptSource.add(department);
+//                }
+//            }
+//        }
+//        setUser(newDeptSource);
+//    }
+
 
     private View.OnClickListener click = new View.OnClickListener() {
         @Override

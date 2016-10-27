@@ -98,28 +98,6 @@ public class AMapService extends APSService {
     @Override
     public void onCreate() {
         super.onCreate();
-        initLocation();
-    }
-
-    /**
-     * 初始化定位资源
-     */
-    private void initLocation() {
-        maMapLocationListener = new MAMapLocationListener();
-        locationClient = new AMapLocationClient(app);
-        locationOption = new AMapLocationClientOption();
-        locationOption.setGpsFirst(true);//设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
-        //* 注意：只有在高精度模式下的单次定位有效，其他方式无效
-        locationOption.setInterval(1000 * 60 * 2);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
-        locationOption.setOnceLocation(false);//false持续定位 true单次定位
-        locationOption.setHttpTimeOut(15000);//设置联网超时时间
-        locationOption.setNeedAddress(true);
-        // 设置定位模式为低功耗模式
-        locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
-        // 设置定位监听
-        locationClient.setLocationListener(maMapLocationListener);
-        // 设置定位参数
-        locationClient.setLocationOption(locationOption);
     }
 
     @Override
@@ -130,7 +108,9 @@ public class AMapService extends APSService {
         userOnlineTime();
         if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
-            startLocate();
+            if (locationClient == null || !locationClient.isStarted()) {
+                startLocate();//定位是否在运行 如果在运行就不重复启动定位
+            }
             //服务运行 通知栏显示 调用startForegound，让你的Service所在的线程成为前台进程
             Notification notification = new Notification();
             notification.flags = Notification.FLAG_ONGOING_EVENT;
@@ -154,10 +134,32 @@ public class AMapService extends APSService {
      * 开启定位
      */
     private void startLocate() {
-        if (locationClient != null) {//定位是否在运行 如果在运行就不重复启动定位
+//        if (null != maMapLocationListener)
+//            maMapLocationListener = null;
+//        if (null != locationClient)
+//            locationClient = null;
+//        if (null != locationOption)
+//            locationOption = null;
+        if (locationClient != null) {
             locationClient.stopLocation();
             locationClient.stopAssistantLocation();
         }
+
+        maMapLocationListener = new MAMapLocationListener();
+        locationClient = new AMapLocationClient(app);
+        locationOption = new AMapLocationClientOption();
+        locationOption.setGpsFirst(true);//设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
+        //* 注意：只有在高精度模式下的单次定位有效，其他方式无效
+        locationOption.setInterval(1000 * 60 * 2);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
+        locationOption.setOnceLocation(false);//false持续定位 true单次定位
+        locationOption.setHttpTimeOut(15000);//设置联网超时时间
+        locationOption.setNeedAddress(true);
+        // 设置定位模式为低功耗模式
+        locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+        // 设置定位监听
+        locationClient.setLocationListener(maMapLocationListener);
+        // 设置定位参数
+        locationClient.setLocationOption(locationOption);
         // 启动定位
         locationClient.startLocation();
         locationClient.startAssistantLocation();
@@ -227,6 +229,7 @@ public class AMapService extends APSService {
         if ((aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
                 || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || oldAddress.equals(address)) {
             LogUtil.d("当前位置偏移量很大，直接return");
+            //缓存有效定位
             return;
         }
 //        if (Global.isConnected()) {//检查是否有网络
@@ -261,10 +264,10 @@ public class AMapService extends APSService {
             LogUtil.d("获取到的distance : " + distance);
             LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE));
 
-            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
-                LogUtil.d("小于请求定位的最小间隔！");
-                return;
-            }
+//            if ((distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE)) {
+//                LogUtil.d("小于请求定位的最小间隔！");
+//                return;
+//            }
         }
         uploadLocation(aMapLocation);
         if (Global.isConnected()) {

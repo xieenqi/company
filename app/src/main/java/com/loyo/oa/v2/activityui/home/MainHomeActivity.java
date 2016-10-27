@@ -11,9 +11,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Toast;
 
+import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.home.slidingmenu.SlidingFragmentActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
@@ -31,12 +32,13 @@ import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
-import com.loyo.oa.v2.tool.AliOSSManager;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.umeng.analytics.MobclickAgent;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -66,6 +68,9 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         }
         onInitSlideMenu();
         tintManager.setTintColor(Color.parseColor("#33000000"));
+                /* 初始化AliOSSManager */
+        AliOSSManager.getInstance().initWithContext(getApplicationContext());
+        OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
     }
 
 
@@ -80,11 +85,13 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 return;
             }
         }
+
         startService(new Intent(this, InitDataService_.class));
         permissionLocation();
+    }
 
-        /* 初始化AliOSSManager */
-        AliOSSManager.getInstance().initWithContext(getApplicationContext());
+    @Subscribe
+    public void onUserChanged(User user) {
     }
 
     @Override
@@ -145,19 +152,16 @@ public class MainHomeActivity extends SlidingFragmentActivity {
     //打开侧滑
     public void togggle() {
         sm.toggle();
-        LogUtil.d("togggle");
     }
 
     //拦截侧滑
     public void gotoStop() {
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-        LogUtil.d("gotoStop");
     }
 
     //开始侧滑
     public void gotoStart() {
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        LogUtil.d("gotoStart");
     }
 
 //    public void changeFragment(int flag, int index) {
@@ -306,25 +310,21 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Override
     protected void onRestart() {
-        // TODO Auto-generated method stub
         super.onRestart();
     }
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        // TODO Auto-generated method stub
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
     }
 

@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.common;
 
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import java.util.Comparator;
 
 /**

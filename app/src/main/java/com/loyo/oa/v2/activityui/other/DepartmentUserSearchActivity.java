@@ -18,18 +18,19 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
-import com.loyo.oa.v2.activityui.other.bean.User;
-import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 【通讯录搜索】
@@ -40,8 +41,8 @@ public class DepartmentUserSearchActivity extends BaseActivity {
     private EditText edt_search;
     private PullToRefreshListView listView;
     private ImageView iv_clean;
-    private ArrayList<User> data = new ArrayList<>();
-    private ArrayList<User> resultData = new ArrayList<>();
+    private List<DBUser> data = new ArrayList<DBUser>();
+    private List<DBUser> resultData = new ArrayList<DBUser>();
     private ViewGroup img_title_left;
     private int type = -1;
 
@@ -54,9 +55,7 @@ public class DepartmentUserSearchActivity extends BaseActivity {
             type = intent.hasExtra("type") ? intent.getIntExtra("type", -1) : -1;
         }
 
-        for (UserGroupData d : Common.getLstUserGroupData()) {
-            data.addAll(d.getLstUser());
-        }
+        data = OrganizationManager.shareManager().allUsers();
 
         //data = MainApp.selectAllUsers;
         edt_search = (EditText) findViewById(R.id.edt_search);
@@ -89,10 +88,10 @@ public class DepartmentUserSearchActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                User user = resultData.get((int) id);
+                DBUser user = resultData.get((int) id);
                 if (type == 1) {
                     Bundle b = new Bundle();
-                    b.putSerializable("user", user);
+                    b.putSerializable("userId", user.id!=null?user.id:"");
                     MainApp.getMainApp().startActivity(DepartmentUserSearchActivity.this, ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 } else {
                     Intent intent = new Intent();
@@ -144,16 +143,20 @@ public class DepartmentUserSearchActivity extends BaseActivity {
             return;
         }
 
-        for (User u : data) {
+        for (DBUser u : data) {
             if (u == null) {
                 continue;
-            } else if (u.getRealname() != null && u.getRealname().contains(key)) {
+            } else if (u.name != null && u.name.contains(key)) {
                 resultData.add(u);
                 continue;
-            } else if (u.fullPinyin != null && u.fullPinyin.contains(key)) {
+            } else if (u.fullPinyin != null && u.fullPinyin.startsWith(key)) {
                 resultData.add(u);
                 continue;
-            } else if (u.simplePinyin != null && u.simplePinyin.contains(key)) {
+            } else if (u.simplePinyin != null && u.simplePinyin.startsWith(key)) {
+                resultData.add(u);
+                continue;
+            }
+            else if (u.shortDeptNames != null && u.shortDeptNames.contains(key)) {
                 resultData.add(u);
                 continue;
             }
@@ -191,32 +194,33 @@ public class DepartmentUserSearchActivity extends BaseActivity {
             if (null == convertView) {
                 convertView = LayoutInflater.from(DepartmentUserSearchActivity.this).inflate(R.layout.item_contact_personnel, null, false);
             }
-            User user = resultData.get(position);
+            DBUser user = resultData.get(position);
             ImageView img = ViewHolder.get(convertView, R.id.img);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_name);
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
             TextView catalog = ViewHolder.get(convertView, R.id.catalog);
 
 
-            tv_content.setText(user.getRealname());
+            tv_content.setText(user.name);
 
-            String deptName, workName;
+//            String deptName, workName;
 
-            try {
-                deptName = user.depts.get(0).getShortDept().getName();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                deptName = "无";
-            }
-
-            try {
-                workName = user.role.name;
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                workName = "无";
-            }
-
-            tv_position.setText(deptName + " | " + workName);
+//            try {
+//                deptName = user.depts.get(0).getShortDept().getName();
+//            } catch (NullPointerException e) {
+//                e.printStackTrace();
+//                deptName = "无";
+//            }
+//
+//            try {
+//                workName = user.role.name;
+//            } catch (NullPointerException e) {
+//                e.printStackTrace();
+//                workName = "无";
+//            }
+//
+//            tv_position.setText(deptName + " | " + workName);
+            tv_position.setText(user.shortDeptNames!=null?user.shortDeptNames:"");
             catalog.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(user.avatar)) {
                 ImageLoader.getInstance().displayImage(user.avatar, img);

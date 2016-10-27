@@ -26,13 +26,12 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
-import com.loyo.oa.v2.activityui.customer.bean.NearCount;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.customer.model.NearCount;
+import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -73,7 +72,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private TextView nearTv;
     private ViewGroup nearLayout;
     private NearCount nearCount;
-    private Permission permission;
+//    private Permission permission;
     private SaleTeamScreen saleTeamScreen;
     private PullToRefreshListView listView;
     private SaleCommPopupView saleCommPopupView;
@@ -171,7 +170,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     }
 
     public void initView(View view) {
-        permission = (Permission) getArguments().getSerializable("permission");
+//        permission = (Permission) getArguments().getSerializable("permission");
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
 
         for (int i = 0; i < sort.length; i++) {
