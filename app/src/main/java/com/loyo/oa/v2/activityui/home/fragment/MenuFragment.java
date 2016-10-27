@@ -67,7 +67,7 @@ public class MenuFragment extends BaseFragment {
     private GestureDetector gesture; //手势识别
     private float minDistance = 120;//手势滑动最小距离
     private float minVelocity = 200;//手势滑动最小速度
-    private LinearLayout ll_user, ll_pwd, ll_feed_back, ll__update, ll_version, ll_exit, ll_clean;
+    private LinearLayout ll_system, ll_feed_back, ll__update, ll_version, ll_exit, ll_setting, ll_head;
     private RoundImageView riv_head;
     private TextView tv_name, tv_member, tv_version_info, tv_file;
     private ImageView iv_new_version;
@@ -164,26 +164,27 @@ public class MenuFragment extends BaseFragment {
     }
 
     private void initView(View view) {
-        ll_user = (LinearLayout) view.findViewById(R.id.ll_user);
-        ll_pwd = (LinearLayout) view.findViewById(R.id.ll_pwd);
+        ll_head = (LinearLayout) view.findViewById(R.id.ll_head);
+//        ll_user = (LinearLayout) view.findViewById(R.id.ll_user);
+        ll_system = (LinearLayout) view.findViewById(R.id.ll_system);
         ll_feed_back = (LinearLayout) view.findViewById(R.id.ll_feed_back);
         ll__update = (LinearLayout) view.findViewById(R.id.ll__update);
         ll_version = (LinearLayout) view.findViewById(R.id.ll_version);
         ll_exit = (LinearLayout) view.findViewById(R.id.ll_exit);
-        ll_clean = (LinearLayout) view.findViewById(R.id.ll_clean);
+        ll_setting = (LinearLayout) view.findViewById(R.id.ll_setting);
         riv_head = (RoundImageView) view.findViewById(R.id.riv_head);
         tv_name = (TextView) view.findViewById(R.id.tv_name);
         tv_member = (TextView) view.findViewById(R.id.tv_member);
         tv_version_info = (TextView) view.findViewById(R.id.tv_version_info);
         iv_new_version = (ImageView) view.findViewById(R.id.iv_new_version);
         tv_file = (TextView) view.findViewById(R.id.tv_file);
-        ll_user.setOnTouchListener(touch);
-        ll_pwd.setOnTouchListener(touch);
+        ll_head.setOnTouchListener(touch);
+        ll_system.setOnTouchListener(touch);
         ll_feed_back.setOnTouchListener(touch);
         ll__update.setOnTouchListener(touch);
         ll_version.setOnTouchListener(touch);
         ll_exit.setOnTouchListener(touch);
-        ll_clean.setOnTouchListener(touch);
+        ll_setting.setOnTouchListener(touch);
         try {
             PackageInfo pi = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
             tv_version_info.setText("(当前v" + pi.versionName + ")");
@@ -231,12 +232,12 @@ public class MenuFragment extends BaseFragment {
     private void onClickView(View v) {
         switch (v.getId()) {
             //个人资料
-            case R.id.ll_user:
+            case R.id.ll_head:
                 updateUserinfo();
                 break;
-            //修改密码
-            case R.id.ll_pwd:
-                app.startActivity(getActivity(), SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+            //系统消息
+            case R.id.ll_system:
+//                app.startActivity(getActivity(), SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             //意见反馈
             case R.id.ll_feed_back:
@@ -299,23 +300,23 @@ public class MenuFragment extends BaseFragment {
                 exit();
                 isExite = false;
                 break;
-            //清除缓存
-            case R.id.ll_clean:
-
-                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        cancelDialog();
-                    }
-                }, new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        showLoading("");
-                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-                        cancelDialog();
-                        setDiskCacheInfo();
-                    }
-                }, "提醒", "确认清除缓存?");
+            //设置
+            case R.id.ll_setting:
+//
+//                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+//                    @Override
+//                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                        cancelDialog();
+//                    }
+//                }, new SweetAlertDialog.OnSweetClickListener() {
+//                    @Override
+//                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                        showLoading("");
+//                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
+//                        cancelDialog();
+//                        setDiskCacheInfo();
+//                    }
+//                }, "提醒", "确认清除缓存?");
 
                 break;
         }

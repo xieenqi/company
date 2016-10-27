@@ -76,8 +76,8 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     RoundImageView img_title_user;
     @ViewById
     ViewGroup layout_birthday;
-    @ViewById
-    ViewGroup layout_mobile;
+//    @ViewById
+//    ViewGroup layout_mobile;
     @ViewById
     TextView tv_mobile;
     @ViewById
@@ -148,12 +148,12 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         iv_submit.setOnTouchListener(Global.GetTouch());
         layout_birthday.setOnTouchListener(Global.GetTouch());
         layout_set_avartar.setOnTouchListener(Global.GetTouch());
-        layout_mobile.setOnTouchListener(Global.GetTouch());
+//        layout_mobile.setOnTouchListener(Global.GetTouch());
         //et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
         initData();
     }
 
-    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.layout_mobile, R.id.iv_submit})
+    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit,  R.id.iv_submit})
     void onClick(final View v) {
         switch (v.getId()) {
 
@@ -183,10 +183,10 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
                 updateProfile();
                 break;
 
-            /*修改电话*/
-            case R.id.layout_mobile:
-                app.startActivityForResult(this, ResePhoneActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.MSG_SEND,new Bundle());
-                break;
+//            /*修改电话*/
+//            case R.id.layout_mobile:
+//                app.startActivityForResult(this, ResePhoneActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.MSG_SEND,new Bundle());
+//                break;
 
             default:
                 break;

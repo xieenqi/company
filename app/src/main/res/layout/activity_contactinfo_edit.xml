@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,13 +14,12 @@
         android:background="@color/title_bg1"
         android:orientation="horizontal">
 
-        <include layout="@layout/include_common_title_2"/>
+        <include layout="@layout/include_common_title_2" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,38 +39,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <com.loyo.oa.v2.customview.RoundImageView
                         android:id="@+id/img_title_user"
                         android:layout_width="@dimen/dimen_40"
                         android:layout_height="@dimen/dimen_40"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:src="@drawable/icon_contact_avatar"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:src="@drawable/icon_contact_avatar" />
 
                     <TextView
                         android:id="@+id/name_title_user"
-                        android:layout_toRightOf="@+id/img_title_user"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="name"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        />
+                        android:layout_marginLeft="30dp"
+                        android:layout_toRightOf="@+id/img_title_user"
+                        android:text="name" />
 
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@+id/iv_set_avartar"
-                    android:gravity="center_vertical"
-                    android:text="设置头像"
-                    android:textColor="@color/text33"
-                    android:textSize="15sp"/>
 
                 <ImageView
                     android:id="@+id/iv_set_avartar"
@@ -81,70 +68,48 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/dimen_4"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/right_arrow"
-                    />
+                    android:src="@drawable/right_arrow" />
 
 
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_15"
-                android:background="@color/activity_bg"
-                />
-
+            <include layout="@layout/include_solid_line15" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_other_view"
+                    android:layout_marginRight="@dimen/margin_other_view"
                     android:background="@color/white"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <RelativeLayout
-                        android:id="@+id/layout_mobile"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="@dimen/view_h_title">
 
 
-                        <RelativeLayout
+                        <TextView
+                            android:id="@+id/tv_phone_title"
+                            style="@style/text_style99"
+                            android:text="手机" />
+
+                        <TextView
+                            android:id="@+id/tv_mobile"
+                            style="@style/text_item1"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/view_h_title"
-                            android:layout_centerInParent="true"
-                            >
+                            android:layout_height="fill_parent"
+                            android:layout_toRightOf="@+id/tv_phone_title"
+                            android:background="@null"
+                            android:gravity="right|center_vertical"
+                            android:textColor="@color/text99" />
 
-                            <TextView
-                                android:id="@+id/tv_phone_title"
-                                style="@style/text_style99"
-                                android:text="手机"
-                                />
-
-                            <TextView
-                                android:id="@+id/tv_mobile"
-                                style="@style/text_item1"
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
-                                android:layout_marginLeft="@dimen/dimen_50"
-                                android:layout_toRightOf="@+id/tv_phone_title"
-                                android:background="@null"
-                                />
-
-                        </RelativeLayout>
                     </RelativeLayout>
-
-                    <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent"
-                        android:visibility="gone"/>
 
                     <RelativeLayout
                         android:id="@+id/layout_qq"
@@ -156,8 +121,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
-                            android:layout_centerInParent="true"
-                            >
+                            android:layout_centerInParent="true">
 
                             <TextView
                                 android:id="@+id/tv_qq_title"
@@ -167,7 +131,7 @@
                                 android:layout_alignParentLeft="true"
                                 android:text="Q Q"
                                 android:textColor="#999999"
-                                android:textSize="20sp"/>
+                                android:textSize="20sp" />
 
                             <EditText
                                 android:id="@+id/et_qq"
@@ -176,15 +140,14 @@
                                 android:layout_height="fill_parent"
                                 android:layout_marginLeft="@dimen/dimen_30"
                                 android:layout_toRightOf="@+id/tv_qq_title"
-                                android:background="@null"
-                                />
+                                android:background="@null" />
 
                         </RelativeLayout>
                     </RelativeLayout>
 
                     <View
                         style="@style/view_split"
-                        android:layout_width="match_parent"/>
+                        android:layout_width="match_parent" />
 
                     <RelativeLayout
                         android:id="@+id/layout_weixin"
@@ -195,13 +158,12 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
-                            android:layout_centerInParent="true"
-                            >
+                            android:layout_centerInParent="true">
 
                             <TextView
                                 android:id="@+id/tv_weixin_title"
                                 style="@style/text_style99"
-                                android:text="微信"/>
+                                android:text="微信" />
 
                             <EditText
                                 android:id="@+id/et_weixin"
@@ -213,15 +175,14 @@
                                 android:background="@null"
                                 android:hint="请输入微信号"
                                 android:maxLength="20"
-                                android:textColor="#383838"
-                                />
+                                android:textColor="#383838" />
 
                         </RelativeLayout>
                     </RelativeLayout>
 
                     <View
                         style="@style/view_split"
-                        android:layout_width="match_parent"/>
+                        android:layout_width="match_parent" />
 
                     <RelativeLayout
                         android:id="@+id/layout_sex"
@@ -232,14 +193,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
                             android:layout_centerInParent="true"
-                            android:gravity="center_vertical"
-                            >
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/tv_sex_title"
                                 style="@style/text_style99"
-                                android:text="性别"
-                                />
+                                android:text="性别" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -247,8 +206,7 @@
                                 android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_sex_title"
                                 android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                >
+                                android:orientation="horizontal">
 
                                 <RadioGroup
                                     android:layout_width="match_parent"
@@ -260,14 +218,14 @@
                                         android:id="@+id/sex_male"
                                         android:layout_width="wrap_content"
                                         android:layout_height="match_parent"
-                                        android:text="女"/>
+                                        android:text="女" />
 
                                     <RadioButton
                                         android:id="@+id/sex_famale"
                                         android:layout_width="wrap_content"
                                         android:layout_height="match_parent"
                                         android:layout_marginLeft="@dimen/dimen_30"
-                                        android:text="男"/>
+                                        android:text="男" />
 
                                 </RadioGroup>
                             </LinearLayout>
@@ -276,7 +234,7 @@
 
                     <View
                         style="@style/view_split"
-                        android:layout_width="match_parent"/>
+                        android:layout_width="match_parent" />
 
                     <RelativeLayout
                         android:id="@+id/layout_birthday"
@@ -286,14 +244,12 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
-                            android:layout_centerInParent="true"
-                            >
+                            android:layout_centerInParent="true">
 
                             <TextView
                                 android:id="@+id/tv_birthday_title"
                                 style="@style/text_style99"
-                                android:text="生日"
-                                />
+                                android:text="生日" />
 
                             <TextView
                                 android:id="@+id/tv_birthday"
@@ -302,9 +258,8 @@
                                 android:layout_height="fill_parent"
                                 android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_birthday_title"
-                                android:textColor="#383838"
-                                />
-                            <!--
+                                android:textColor="#383838" />
+
                             <ImageView
                                 android:id="@+id/iv_set_birthday"
                                 android:layout_width="wrap_content"
@@ -313,15 +268,13 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginRight="@dimen/margin_side_edge"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/right_arrow"
-                                />
-                            -->
+                                android:src="@drawable/right_arrow" />
                         </RelativeLayout>
                     </RelativeLayout>
 
                     <View
                         style="@style/view_split"
-                        android:layout_width="match_parent"/>
+                        android:layout_width="match_parent" />
 
                     <RelativeLayout
                         android:id="@+id/layout_age"
@@ -332,14 +285,12 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
-                            android:layout_centerInParent="true"
-                            >
+                            android:layout_centerInParent="true">
 
                             <TextView
                                 android:id="@+id/tv_age_title"
                                 style="@style/text_style99"
-                                android:text="年龄"
-                                />
+                                android:text="年龄" />
 
                             <TextView
                                 android:id="@+id/tv_age"
@@ -348,15 +299,12 @@
                                 android:layout_height="fill_parent"
                                 android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_age_title"
-                                android:textColor="#999999"
-                                />
+                                android:textColor="#999999" />
 
                         </RelativeLayout>
                     </RelativeLayout>
 
-                    <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent"/>
+                    <include layout="@layout/include_solid_line15" />
 
                     <RelativeLayout
                         android:id="@+id/layout_departments"
@@ -367,14 +315,12 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
-                            android:layout_centerInParent="true"
-                            >
+                            android:layout_centerInParent="true">
 
                             <TextView
                                 android:id="@+id/tv_departments_title"
                                 style="@style/text_style99"
-                                android:text="部门"
-                                />
+                                android:text="部门" />
 
                             <TextView
                                 android:id="@+id/tv_departments"
@@ -383,15 +329,14 @@
                                 android:layout_height="fill_parent"
                                 android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_departments_title"
-                                android:textColor="#999999"
-                                />
+                                android:textColor="#999999" />
 
                         </RelativeLayout>
                     </RelativeLayout>
 
                     <View
                         style="@style/view_split"
-                        android:layout_width="match_parent"/>
+                        android:layout_width="match_parent" />
 
                     <RelativeLayout
                         android:id="@+id/layout_positions"
@@ -402,14 +347,12 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/view_h_title"
-                            android:layout_centerInParent="true"
-                            >
+                            android:layout_centerInParent="true">
 
                             <TextView
                                 android:id="@+id/tv_positions_title"
                                 style="@style/text_style99"
-                                android:text="职位"
-                                />
+                                android:text="职位" />
 
                             <TextView
                                 android:id="@+id/tv_positions"
@@ -418,8 +361,7 @@
                                 android:layout_height="fill_parent"
                                 android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_positions_title"
-                                android:textColor="#999999"
-                                />
+                                android:textColor="#999999" />
 
                         </RelativeLayout>
                     </RelativeLayout>
