@@ -90,7 +90,7 @@ public class WorksheetSubmitActivity extends BaseActivity implements View.OnClic
     private HttpLoc httpLoc = new HttpLoc();
     private List<String> mSelectPath;
     private PositionResultItem positionResultItem;
-    private ArrayList<AttachmentBatch> attachment;
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
     UploadController controller;
 
 

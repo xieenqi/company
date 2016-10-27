@@ -69,7 +69,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
     private int bizType = 17;
 
     private List<String> mSelectPath;
-    private ArrayList<AttachmentBatch> attachment;
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
     UploadController controller;
 
 

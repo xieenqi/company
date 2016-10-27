@@ -57,7 +57,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
 
     private String uuid;
     private int bizType = 29;
-    private ArrayList<AttachmentBatch> attachment;
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
 
     WorksheetAddActivity mActivity;
 
