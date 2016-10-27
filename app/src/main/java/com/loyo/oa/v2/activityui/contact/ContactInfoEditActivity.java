@@ -57,10 +57,10 @@ import retrofit.http.HEAD;
 /**
  * 【编辑个人信息】
  * Restruture by yyy on 16/10/12
- * */
+ */
 
 @EActivity(R.layout.activity_contactinfo_edit)
-public class ContactInfoEditActivity extends BaseActivity implements ContactInfoView{
+public class ContactInfoEditActivity extends BaseActivity implements ContactInfoView {
 
     private final int REQUEST_IMAGE = 100;
 
@@ -76,14 +76,14 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     RoundImageView img_title_user;
     @ViewById
     ViewGroup layout_birthday;
-//    @ViewById
+    //    @ViewById
 //    ViewGroup layout_mobile;
     @ViewById
     TextView tv_mobile;
     @ViewById
-    TextView et_qq;
+    ViewGroup layout_weixin;
     @ViewById
-    EditText et_weixin;
+    TextView et_weixin;
     @ViewById
     RadioButton sex_famale;
     @ViewById
@@ -99,7 +99,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     @ViewById
     TextView name_title_user;
     @Extra
-    String  userId;
+    String userId;
 
     private DBUser user;
 
@@ -130,7 +130,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
                 Utils.setContent(tv_age, age + "");
             }
 
-            if(msg.what == 0x02){
+            if (msg.what == 0x02) {
                 tv_mobile.setText(resultPhone);
             }
         }
@@ -139,7 +139,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     @AfterViews
     void initViews() {
         setTouchView(-1);
-        mPresenter = new ContactInfoEditPresenterImpl(this,mContext,ContactInfoEditActivity.this);
+        mPresenter = new ContactInfoEditPresenterImpl(this, mContext, ContactInfoEditActivity.this);
 
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("编辑个人资料");
@@ -153,7 +153,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         initData();
     }
 
-    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit,  R.id.iv_submit})
+    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.iv_submit})
     void onClick(final View v) {
         switch (v.getId()) {
 
@@ -165,7 +165,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             /*设置头像*/
             case R.id.layout_set_avartar:
                 Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                mPresenter.setHeadImage(ContactInfoEditActivity.this,intent,REQUEST_IMAGE);
+                mPresenter.setHeadImage(ContactInfoEditActivity.this, intent, REQUEST_IMAGE);
                 break;
 
             /*生日设置*/
@@ -177,9 +177,9 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             case R.id.iv_submit:
                 //关闭键盘
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm.isActive()) {
-                    imm.hideSoftInputFromWindow(et_weixin.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                }
+//                if (imm.isActive()) {
+//                    imm.hideSoftInputFromWindow(et_weixin.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                }
                 updateProfile();
                 break;
 
@@ -271,16 +271,16 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         }
 
         showLoading("正在提交");
-        mPresenter.updateProfile(user.id,tv_mobile.getText().toString(),
-                                 sex,tv_birthday.getText().toString(),
-                                 et_weixin.getText().toString(),path);
+        mPresenter.updateProfile(user.id, tv_mobile.getText().toString(),
+                sex, tv_birthday.getText().toString(),
+                et_weixin.getText().toString(), path);
 
     }
 
 
     /**
      * 更新资料成功处理
-     * */
+     */
     @Override
     public void updateProfileEmbl() {
         Toast("修改个人信息成功");
@@ -288,7 +288,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 
         mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
         app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
-        if (user.id != null){
+        if (user.id != null) {
             user.mobile = tv_mobile.getText().toString();
             user.birthDay = tv_birthday.getText().toString();
             user.weixinId = et_weixin.getText().toString();
@@ -304,7 +304,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 
     /**
      * 设置生日
-     * */
+     */
     @Override
     public void setBrithday(Handler mHandler, String birthStr) {
         this.birthStr = birthStr;
@@ -313,7 +313,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 
     /**
      * 弹出框响应
-     * */
+     */
     @Override
     public void leaveDialogEmbl() {
         updateProfile();
@@ -321,7 +321,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 
     /**
      * 设置头像
-     * */
+     */
     @Override
     public void setHeadImage(String path) {
         this.path = path;
@@ -344,10 +344,10 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 
     /**
      * 退出事件
-     * */
+     */
     @Override
     public void onBackPressed() {
-        if (!mPresenter.isDataChange(tv_mobile,tv_birthday,et_weixin,user,sex)) {
+        if (!mPresenter.isDataChange(tv_mobile, tv_birthday, et_weixin, user, sex)) {
             mPresenter.showLeaveDialog(sweetAlertDialogView);
         } else {
             app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
@@ -356,7 +356,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 
     /**
      * Result回调
-     * */
+     */
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -366,8 +366,8 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         }
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
             List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-            mPresenter.upload(mSelectPath,uuid,img_title_user);
-        }else if(requestCode == ExtraAndResult.MSG_SEND){
+            mPresenter.upload(mSelectPath, uuid, img_title_user);
+        } else if (requestCode == ExtraAndResult.MSG_SEND) {
             resultPhone = data.getStringExtra("phone");
             mHandler.sendEmptyMessage(0x02);
         }

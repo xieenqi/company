@@ -19,7 +19,7 @@ import java.util.List;
 public interface ContactInfoEditPresenter {
 
     /*编辑个人资料*/
-    void updateProfile(String id,String tel,int sex,String birthDay,String weixinId,String path);
+    void updateProfile(String id, String tel, int sex, String birthDay, String weixinId, String path);
 
     /*生日选择控件*/
     void pickDate(Handler mHandler);
@@ -28,7 +28,7 @@ public interface ContactInfoEditPresenter {
     void showLeaveDialog(SweetAlertDialogView sweetAlertDialogView);
 
     /*判断数据是否被编辑过*/
-    boolean isDataChange(TextView tv_mobile, TextView tv_birthday, EditText et_weixin, DBUser mUser, int sex);
+    boolean isDataChange(TextView tv_mobile, TextView tv_birthday, TextView et_weixin, DBUser mUser, int sex);
 
     /*设置头像跳转*/
     void setHeadImage(Activity mActivity, Intent mIntent, int REQUEST_IMAGE);
