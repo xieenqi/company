@@ -60,8 +60,6 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
             tv_assignment_time,  /*分派时间*/
             tv_finish_time,      /*完成时间*/
             tv_termination_time; /*终止时间*/
-
-
     /**
      * Data
      */

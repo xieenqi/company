@@ -29,7 +29,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!-- <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/> -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <!-- 升级到系统权限 修改手机连接网路状态权限 -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
