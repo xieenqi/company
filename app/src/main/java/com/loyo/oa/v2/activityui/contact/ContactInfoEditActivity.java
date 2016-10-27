@@ -153,7 +153,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         initData();
     }
 
-    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.iv_submit})
+    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.iv_submit,R.id.layout_weixin})
     void onClick(final View v) {
         switch (v.getId()) {
 
@@ -182,7 +182,9 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 //                }
                 updateProfile();
                 break;
-
+            case R.id.layout_weixin:
+                Toast("修改微信");
+                break;
 //            /*修改电话*/
 //            case R.id.layout_mobile:
 //                app.startActivityForResult(this, ResePhoneActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.MSG_SEND,new Bundle());
