@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.loyo.oa.upload.UploadController;
 import com.loyo.oa.upload.UploadTask;
-import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.presenter.OrderWorksheetAddPresenter;
@@ -16,7 +15,6 @@ import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -35,7 +33,7 @@ public class OrderWorksheetAddPresenterImpl implements OrderWorksheetAddPresente
 
     private Context mContext;
     private OrderWorksheetAddView crolView;
-    private ArrayList<AttachmentBatch> attachment;
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
     private List<String> mFilePath;
 
     public OrderWorksheetAddPresenterImpl(Context mContext,OrderWorksheetAddView crolView){

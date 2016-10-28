@@ -76,7 +76,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     private int bizType = 17;
 
     private List<String> mSelectPath;
-    private ArrayList<AttachmentBatch> attachment;
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
 
 
     @Override

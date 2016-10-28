@@ -32,6 +32,7 @@ import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -67,6 +68,9 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         }
         onInitSlideMenu();
         tintManager.setTintColor(Color.parseColor("#33000000"));
+                /* 初始化AliOSSManager */
+        AliOSSManager.getInstance().initWithContext(getApplicationContext());
+        OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
     }
 
 
@@ -81,9 +85,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 return;
             }
         }
-
-        /* 初始化AliOSSManager */
-        AliOSSManager.getInstance().initWithContext(getApplicationContext());
 
         startService(new Intent(this, InitDataService_.class));
         permissionLocation();

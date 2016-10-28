@@ -57,7 +57,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     private SwipeListView mListViewAttachment;
 
     private Intent mIntent;
-    private ArrayList<AttachmentBatch> attachment;
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
     private ArrayList<Attachment> mListAttachment;
     private AttachmentSwipeAdapter adapter;
     private List<String> mSelectPath;

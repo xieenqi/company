@@ -16,7 +16,6 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
@@ -56,7 +55,7 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
     private SwipeListView mListViewAttachment;
 
     private Intent mIntent;
-    private ArrayList<AttachmentBatch> attachment;
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
     private ArrayList<Attachment> mListAttachment;
     private AttachmentSwipeAdapter adapter;
     private List<String> mSelectPath;
