@@ -9,12 +9,15 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -27,6 +30,7 @@ import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -106,6 +110,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private String uuid;
     private String tagItemIds;
     private String myAddress;
+    private String contactName = "";
+    private String contactPhone = "";
 
     private String customer_name;
     private String customerAddress;
@@ -139,9 +145,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     };
 
-
     @AfterViews
     void initUI() {
+        contactName = getIntent().getStringExtra(ExtraAndResult.EXTRA_NAME);
+        contactPhone = getIntent().getStringExtra(ExtraAndResult.EXTRA_DATA);
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         edit_address_details = (EditText) findViewById(R.id.edit_address_details);
@@ -156,6 +164,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
         edt_contract_tel.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
         edt_contract_telnum.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+
+        if(!TextUtils.isEmpty(contactName)){
+            edt_contract.setText(contactName);
+        }
+        if(!TextUtils.isEmpty(contactPhone)){
+            edt_contract_tel.setText(contactPhone.replaceAll(" ",""));
+        }
     }
 
     LocationUtilGD locationGd;

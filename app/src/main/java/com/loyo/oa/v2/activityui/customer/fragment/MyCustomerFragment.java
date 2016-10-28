@@ -24,10 +24,14 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
+import com.loyo.oa.v2.activityui.customer.MyContactMailList;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.Tag;
+import com.loyo.oa.v2.activityui.customer.presenter.MyCustomerFragPresenter;
+import com.loyo.oa.v2.activityui.customer.presenter.impl.MyCustomerFragPresenterImpl;
+import com.loyo.oa.v2.activityui.customer.viewcontrol.MyCustomerFragView;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -59,7 +63,7 @@ import retrofit.client.Response;
  * 【我的客户】列表
  * Created by yyy on 16/6/1.
  */
-public class MyCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
+public class MyCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,MyCustomerFragView{
 
     private Intent mIntent;
     private View mView;
@@ -79,6 +83,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private ScreenTagPopupView screenTagPopupView;
     private WindowManager.LayoutParams windowParams;
     private MyCustomerAdapter adapter;
+    private MyCustomerFragPresenter mPresenter;
 
     private String filed = "lastActAt";
     private String order = "desc";
@@ -201,37 +206,8 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         btn_add.setOnTouchListener(Global.GetTouch());
         showLoading("");
         getData();
-
+        mPresenter =  new MyCustomerFragPresenterImpl(getActivity(),this);
         Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
-
-
-/*        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    scrollFlag = true;
-                } else {
-                    scrollFlag = false;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (scrollFlag) {
-                    if (firstVisibleItem > lastVisibleItemPosition) {
-                        LogUtil.dee("上滑");
-                    }
-                    if (firstVisibleItem < lastVisibleItemPosition) {
-                        LogUtil.dee("下滑");
-                    }
-                    if (firstVisibleItem == lastVisibleItemPosition) {
-                        return;
-                    }
-                    lastVisibleItemPosition = firstVisibleItem;
-                }
-            }
-        });*/
-
     }
 
     /**
@@ -389,10 +365,8 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
             switch (v.getId()) {
                 //新建客户
                 case R.id.btn_add:
-                    mIntent = new Intent();
-                    mIntent.setClass(getActivity(), CustomerAddActivity_.class);
-                    startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
-                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    mPresenter.setInsertPopWindiw(btn_add);
+                    //showPopupWindow();
                     break;
 
                 //时间
@@ -442,5 +416,26 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
                 getData();
                 break;
         }
+    }
+
+    /**
+     * 通讯录导入客户
+     * */
+    @Override
+    public void intentAutoInsert(PopupWindow popupWindow) {
+        popupWindow.dismiss();
+        startActivityForResult(new Intent(getActivity(), MyContactMailList.class), getActivity().RESULT_FIRST_USER);
+    }
+
+    /**
+     * 手动添加客户
+     * */
+    @Override
+    public void intentHandInsert(PopupWindow popupWindow) {
+        popupWindow.dismiss();
+        mIntent = new Intent();
+        mIntent.setClass(getActivity(), CustomerAddActivity_.class);
+        startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+        getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 }
