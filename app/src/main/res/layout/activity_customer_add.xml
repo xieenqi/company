@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_item_title"/>
+    <include layout="@layout/include_item_title" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,8 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,8 +30,7 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/margin_other_view"
-                    android:paddingRight="@dimen/margin_other_view"
-                    >
+                    android:paddingRight="@dimen/margin_other_view">
 
 
                     <EditText
@@ -44,8 +42,7 @@
                         android:hint="请输入客户名称"
                         android:maxLength="50"
                         android:paddingLeft="@dimen/dimen_1"
-                        android:singleLine="true"
-                        />
+                        android:singleLine="true" />
 
                     <TextView
                         android:id="@+id/tv_search"
@@ -54,11 +51,10 @@
                         android:background="@drawable/tv_frame_customer"
                         android:gravity="center"
                         android:text="查重"
-                        android:textColor="@color/title_bg1"
-                        />
+                        android:textColor="@color/title_bg1" />
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <LinearLayout
                     android:id="@+id/layout_address"
@@ -68,8 +64,7 @@
                     android:minHeight="@dimen/view_h_title"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/margin_other_view"
-                    android:paddingRight="@dimen/margin_other_view"
-                    >
+                    android:paddingRight="@dimen/margin_other_view">
 
 
                     <TextView
@@ -77,9 +72,9 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:paddingTop="@dimen/dimen_10"
-                        android:text="定   位"
+                        android:text="定位    "
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp15"/>
+                        android:textSize="@dimen/text_sp15" />
 
                     <EditText
                         android:id="@+id/et_address"
@@ -94,19 +89,18 @@
                         android:lineSpacingExtra="6dp"
                         android:paddingBottom="@dimen/dimen_10"
                         android:paddingTop="@dimen/dimen_3"
-                        android:textSize="14sp"
-                        />
+                        android:textSize="14sp" />
 
                     <ImageView
                         android:id="@+id/img_refresh_address"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/icon_position_modify"/>
+                        android:src="@drawable/icon_position_modify" />
 
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -115,8 +109,7 @@
                     android:minHeight="@dimen/view_h_title"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/margin_other_view"
-                    android:paddingRight="@dimen/margin_other_view"
-                    >
+                    android:paddingRight="@dimen/margin_other_view">
 
 
                     <TextView
@@ -124,9 +117,9 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:paddingTop="@dimen/dimen_10"
-                        android:text="地    址"
+                        android:text="地址    "
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp15"/>
+                        android:textSize="@dimen/text_sp15" />
 
                     <EditText
                         android:id="@+id/edit_address_details"
@@ -142,12 +135,11 @@
                         android:paddingBottom="@dimen/dimen_10"
                         android:paddingTop="@dimen/dimen_3"
                         android:textColor="@color/title_bg1"
-                        android:textSize="14sp"
-                        />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -155,8 +147,7 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/margin_other_view"
-                    android:paddingRight="@dimen/margin_other_view"
-                    >
+                    android:paddingRight="@dimen/margin_other_view">
 
 
                     <TextView
@@ -165,7 +156,7 @@
                         android:gravity="center_vertical"
                         android:text="联系人"
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp15"/>
+                        android:textSize="@dimen/text_sp15" />
 
                     <EditText
                         android:id="@+id/edt_contract"
@@ -178,11 +169,11 @@
                         android:inputType="textPersonName"
                         android:maxLength="20"
                         android:paddingRight="0dp"
-                        android:textColor="@color/title_bg1"/>
+                        android:textColor="@color/title_bg1" />
 
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -190,20 +181,19 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/margin_other_view"
-                    android:paddingRight="@dimen/margin_other_view"
-                    >
-
+                    android:paddingRight="@dimen/margin_other_view">
 
                     <TextView
+                        android:id="@+id/tv_phone_name1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="手机号"
+                        android:text="手机    "
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp15"/>
+                        android:textSize="@dimen/text_sp15" />
 
                     <EditText
-                        android:id="@+id/edt_contract_tel"
+                        android:id="@+id/edt_contract_tel1"
                         style="@style/edtText_normal"
                         android:layout_width="0px"
                         android:layout_height="match_parent"
@@ -212,11 +202,118 @@
                         android:hint="@string/app_phone_check"
                         android:maxLength="24"
                         android:paddingRight="0dp"
-                        android:textColor="@color/title_bg1"/>
+                        android:textColor="@color/title_bg1"
+                        android:numeric="integer"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_phone_insert1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_contact_insert" />
 
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
+
+                <LinearLayout
+                    android:id="@+id/ll_phone_layout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_h_title"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/margin_other_view">
+
+                        <TextView
+                            android:id="@+id/tv_phone_name2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="手    机"
+                            android:textColor="@color/text33"
+                            android:textSize="@dimen/text_sp15" />
+
+                        <EditText
+                            android:id="@+id/edt_contract_tel2"
+                            style="@style/edtText_normal"
+                            android:layout_width="0px"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="left|center_vertical"
+                            android:hint="@string/app_phone_check"
+                            android:maxLength="24"
+                            android:paddingRight="0dp"
+                            android:textColor="@color/title_bg1"
+                            android:numeric="integer"
+                            />
+
+                        <ImageView
+                            android:id="@+id/iv_phone_insert2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/icon_contact_insert" />
+
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_phone_layout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_h_title"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/margin_other_view">
+
+                        <TextView
+                            android:id="@+id/tv_phone_name3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="手    机"
+                            android:textColor="@color/text33"
+                            android:textSize="@dimen/text_sp15" />
+
+                        <EditText
+                            android:id="@+id/edt_contract_tel3"
+                            style="@style/edtText_normal"
+                            android:layout_width="0px"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="left|center_vertical"
+                            android:hint="@string/app_phone_check"
+                            android:maxLength="24"
+                            android:paddingRight="0dp"
+                            android:textColor="@color/title_bg1"
+                            android:numeric="integer"
+                            />
+
+                        <ImageView
+                            android:id="@+id/iv_phone_insert3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/icon_contact_insert"
+                            android:visibility="invisible" />
+
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -224,20 +321,19 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/margin_other_view"
-                    android:paddingRight="@dimen/margin_other_view"
-                    >
-
+                    android:paddingRight="@dimen/margin_other_view">
 
                     <TextView
+                        android:id="@+id/tv_call_name1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="座    机"
+                        android:text="座机    "
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp15"/>
+                        android:textSize="@dimen/text_sp15" />
 
                     <EditText
-                        android:id="@+id/edt_contract_telnum"
+                        android:id="@+id/edt_contract_telnum1"
                         style="@style/edtText_normal"
                         android:layout_width="0px"
                         android:layout_height="match_parent"
@@ -246,12 +342,118 @@
                         android:hint="@string/app_tell_check"
                         android:maxLength="24"
                         android:paddingRight="0dp"
-                        android:textColor="@color/title_bg1"/>
+                        android:textColor="@color/title_bg1"
+                        android:numeric="integer"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_call_insert1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_contact_insert" />
 
                 </LinearLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
+                <LinearLayout
+                    android:id="@+id/ll_call_layout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_h_title"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/margin_other_view">
+
+                        <TextView
+                            android:id="@+id/tv_call_name2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="座    机"
+                            android:textColor="@color/text33"
+                            android:textSize="@dimen/text_sp15" />
+
+                        <EditText
+                            android:id="@+id/edt_contract_telnum2"
+                            style="@style/edtText_normal"
+                            android:layout_width="0px"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="left|center_vertical"
+                            android:hint="@string/app_tell_check"
+                            android:maxLength="24"
+                            android:paddingRight="0dp"
+                            android:textColor="@color/title_bg1"
+                            android:numeric="integer"
+                            />
+
+                        <ImageView
+                            android:id="@+id/iv_call_insert2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/icon_contact_insert" />
+
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_call_layout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_h_title"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="@dimen/margin_other_view">
+
+                        <TextView
+                            android:id="@+id/tv_call_name3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="座    机"
+                            android:textColor="@color/text33"
+                            android:textSize="@dimen/text_sp15" />
+
+                        <EditText
+                            android:id="@+id/edt_contract_telnum3"
+                            style="@style/edtText_normal"
+                            android:layout_width="0px"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="left|center_vertical"
+                            android:hint="@string/app_tell_check"
+                            android:maxLength="24"
+                            android:paddingRight="0dp"
+                            android:textColor="@color/title_bg1"
+                            android:numeric="integer"
+                            />
+
+                        <ImageView
+                            android:id="@+id/iv_call_insert3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/icon_contact_insert"
+                            android:visibility="invisible"
+                            />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -274,7 +476,7 @@
 
                 <View
                     style="@style/view_split"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="match_parent" />
 
                 <Button
                     android:id="@+id/btn_add_new_contract"
@@ -282,11 +484,11 @@
                     android:layout_height="@dimen/view_h_title"
                     android:background="#00000000"
                     android:text="增加联系人"
-                    android:textColor="@color/title_bg1"/>
+                    android:textColor="@color/title_bg1" />
 
                 <View
                     style="@style/view_split"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="match_parent" />
 
             </LinearLayout>
 
@@ -303,17 +505,15 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/margin_other_view"
-                    android:paddingRight="@dimen/dimen_4"
-                    >
-
+                    android:paddingRight="@dimen/dimen_4">
 
                     <TextView
                         style="@style/text_item1"
                         android:layout_width="80dp"
                         android:layout_height="fill_parent"
-                        android:text="标    签"
+                        android:text="标签"
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp15"/>
+                        android:textSize="@dimen/text_sp15" />
 
                     <TextView
                         android:id="@+id/tv_labels"
@@ -323,14 +523,14 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1"/>
+                        android:textColor="@color/title_bg1" />
 
                     <ImageView
                         android:id="@+id/img_title_right_toUser"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </LinearLayout>
 
 
@@ -361,7 +561,7 @@
                              android:text="添加照片"/>
                      </LinearLayout>-->
 
-                    <include layout="@layout/include_solid_line_left"/>
+                    <include layout="@layout/include_solid_line_left" />
 
                     <com.loyo.oa.v2.customview.CusGridView
                         android:id="@+id/gridView_photo"
@@ -372,7 +572,7 @@
                         android:horizontalSpacing="@dimen/activity_horizontal_margin"
                         android:listSelector="@android:color/transparent"
                         android:numColumns="3"
-                        android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+                        android:verticalSpacing="@dimen/activity_horizontal_margin" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

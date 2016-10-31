@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,13 +19,18 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.SideBar;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ContactInfoUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 【手机通讯录】列表
@@ -56,6 +62,31 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
      * 初始化
      */
     private void initUI() {
+
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.READ_CONTACTS", "com.loyo.oa.v2")
+                && PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.WRITE_CONTACTS", "com.loyo.oa.v2")) {
+        } else {
+
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                    Utils.doSeting(MyContactMailList.this);
+                    finish();
+                }
+            },"提示","需要使用通讯录读写权限\n请在”设置”>“应用”>“权限”中配置权限");
+            return;
+        }
+
         pinyinComparator = new PinyinComparator();
         contactInfoUtil = new ContactInfoUtil(mContext);
         contactInfoList = contactInfoUtil.getMyCallContactInfo();
