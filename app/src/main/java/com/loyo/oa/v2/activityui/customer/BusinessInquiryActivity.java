@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 
@@ -31,8 +32,8 @@ import java.net.URLEncoder;
 public class BusinessInquiryActivity extends BaseActivity {
     private WebView webView;
     private ProgressBar pb_progress;
-    //    private RelativeLayout img_title_left, img_title_right;
-//    private TextView tv_title_1;
+    private TextView tv_ext;
+    //    private TextView tv_title_1;
     private String url = "https://info.camcard.com/site/sdk?";
     private String sdk = "from_sdk=";
     private String user = "&user=email_lihuan@360loyo.com";
@@ -54,16 +55,17 @@ public class BusinessInquiryActivity extends BaseActivity {
         String Keyword = getIntent().getStringExtra("Keyword");
         webView = (WebView) findViewById(R.id.webView);
         pb_progress = (ProgressBar) findViewById(R.id.pb_progress);
-//        img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
-//        img_title_right = (RelativeLayo、ut) findViewById(R.id.img_title_right);
+        tv_ext = (TextView) findViewById(R.id.tv_ext);
+        tv_ext.setOnTouchListener(Global.GetTouch());
+        tv_ext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        //        img_title_right = (RelativeLayo、ut) findViewById(R.id.img_title_right);
 //        tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
 //        img_title_right.setVisibility(View.INVISIBLE);
-//        img_title_left.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onBackPressed();
-//            }
-//        });
 //        tv_title_1.setText("工商查询");//from_sdk=loyo&search=
 
         url = url + sdk + URLEncoder.encode("loyo", "UTF-8") + search + URLEncoder.encode(Keyword, "UTF-8") + user;

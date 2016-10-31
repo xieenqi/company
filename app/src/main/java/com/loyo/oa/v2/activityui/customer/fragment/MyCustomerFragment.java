@@ -63,7 +63,7 @@ import retrofit.client.Response;
  * 【我的客户】列表
  * Created by yyy on 16/6/1.
  */
-public class MyCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,MyCustomerFragView{
+public class MyCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, MyCustomerFragView {
 
     private Intent mIntent;
     private View mView;
@@ -76,7 +76,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private TextView nearTv;
     private ViewGroup nearLayout;
     private NearCount nearCount;
-//    private Permission permission;
+    //    private Permission permission;
     private SaleTeamScreen saleTeamScreen;
     private PullToRefreshListView listView;
     private SaleCommPopupView saleCommPopupView;
@@ -206,7 +206,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         btn_add.setOnTouchListener(Global.GetTouch());
         showLoading("");
         getData();
-        mPresenter =  new MyCustomerFragPresenterImpl(getActivity(),this);
+        mPresenter = new MyCustomerFragPresenterImpl(getActivity(), this);
         Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
     }
 
@@ -420,7 +420,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
 
     /**
      * 通讯录导入客户
-     * */
+     */
     @Override
     public void intentAutoInsert(PopupWindow popupWindow) {
         popupWindow.dismiss();
@@ -429,7 +429,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
 
     /**
      * 手动添加客户
-     * */
+     */
     @Override
     public void intentHandInsert(PopupWindow popupWindow) {
         popupWindow.dismiss();
