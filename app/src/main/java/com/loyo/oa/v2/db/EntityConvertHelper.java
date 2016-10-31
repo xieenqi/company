@@ -299,7 +299,7 @@ public class EntityConvertHelper {
             role = new DBRole();
             role.id = roleId;
             role.name = roleObj.name;
-            role.dataRange = roleObj.dataRange;
+//            role.dataRange = roleObj.dataRange;
         }
         return role;
     }

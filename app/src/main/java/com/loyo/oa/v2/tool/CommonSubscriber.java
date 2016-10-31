@@ -17,9 +17,7 @@ import rx.Subscriber;
  * 时间 : 15/10/22.
  */
 public abstract class CommonSubscriber extends Subscriber<Serializable> {
-
     private Context mContext;
-
     public CommonSubscriber(Activity activity) {
         super();
         mContext = activity;

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 def AAVersion = '4.1.0'
-def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
+def outputPath = 'D:\\jenkins\\workspace\\loyo-android-v2\\app\\build\\apk'
 
 android {
     useLibrary 'org.apache.http.legacy'
