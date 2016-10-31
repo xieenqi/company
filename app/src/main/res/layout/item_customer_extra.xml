@@ -19,7 +19,7 @@
             android:layout_marginLeft="@dimen/margin_other_view"
             android:gravity="center_vertical"
             android:minWidth="80dp"
-            android:text="ddddd"
+            android:text="内容"
             android:textSize="15sp"/>
 
         <RelativeLayout

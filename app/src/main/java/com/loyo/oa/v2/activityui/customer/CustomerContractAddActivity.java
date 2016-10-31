@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
@@ -42,6 +46,37 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     public ArrayList<ContactLeftExtras> mContactLeftExtras;
     public ArrayList<ContactRequestParam> requestContactParam = new ArrayList<>();
 
+    private TextView tv_phone_name1;
+    private TextView tv_phone_name2;
+    private TextView tv_phone_name3;
+
+    private TextView tv_call_name1;
+    private TextView tv_call_name2;
+    private TextView tv_call_name3;
+
+    private EditText edt_contract_tel1;
+    private EditText edt_contract_tel2;
+    private EditText edt_contract_tel3;
+
+    private EditText edt_contract_telnum1;
+    private EditText edt_contract_telnum2;
+    private EditText edt_contract_telnum3;
+
+    private ImageView iv_phone_insert1;
+    private ImageView iv_phone_insert2;
+    private ImageView iv_phone_insert3;
+
+    private ImageView iv_call_insert1;
+    private ImageView iv_call_insert2;
+    private ImageView iv_call_insert3;
+
+    private LinearLayout ll_phone_layout2;
+    private LinearLayout ll_phone_layout3;
+    private LinearLayout ll_call_layout2;
+    private LinearLayout ll_call_layout3;
+
+    private ImageView img_maillist_contact;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,12 +92,49 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     }
 
     void initUI() {
+
+        tv_phone_name1 = (TextView) findViewById(R.id.tv_phone_name1);
+        tv_phone_name2 = (TextView) findViewById(R.id.tv_phone_name2);
+        tv_phone_name3 = (TextView) findViewById(R.id.tv_phone_name3);
+
+        tv_call_name1 = (TextView) findViewById(R.id.tv_call_name1);
+        tv_call_name2 = (TextView) findViewById(R.id.tv_call_name2);
+        tv_call_name3 = (TextView) findViewById(R.id.tv_call_name3);
+
+        edt_contract_tel1 = (EditText) findViewById(R.id.edt_contract_tel1);
+        edt_contract_tel2 = (EditText) findViewById(R.id.edt_contract_tel2);
+        edt_contract_tel3 = (EditText) findViewById(R.id.edt_contract_tel3);
+
+        edt_contract_telnum1 = (EditText) findViewById(R.id.edt_contract_telnum1);
+        edt_contract_telnum2 = (EditText) findViewById(R.id.edt_contract_telnum2);
+        edt_contract_telnum3 = (EditText) findViewById(R.id.edt_contract_telnum3);
+
+        iv_phone_insert1 = (ImageView) findViewById(R.id.iv_phone_insert1);
+        iv_phone_insert2 = (ImageView) findViewById(R.id.iv_phone_insert2);
+
+        iv_call_insert1 = (ImageView) findViewById(R.id.iv_call_insert1);
+        iv_call_insert2 = (ImageView) findViewById(R.id.iv_call_insert2);
+
+        ll_phone_layout2 = (LinearLayout) findViewById(R.id.ll_phone_layout2);
+        ll_phone_layout3 = (LinearLayout) findViewById(R.id.ll_phone_layout3);
+        ll_call_layout2 = (LinearLayout) findViewById(R.id.ll_call_layout2);
+        ll_call_layout3 = (LinearLayout) findViewById(R.id.ll_call_layout3);
+
+        img_maillist_contact = (ImageView) findViewById(R.id.img_maillist_contact);
+
         layout_contact_extra_info = (LinearLayout) findViewById(R.id.layout_contact_extra_info);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_right.setOnClickListener(this);
+
+        iv_phone_insert1.setOnClickListener(this);
+        iv_phone_insert2.setOnClickListener(this);
+        iv_call_insert1.setOnClickListener(this);
+        iv_call_insert2.setOnClickListener(this);
+        img_maillist_contact.setOnClickListener(this);
+
         img_title_right.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
         getContactsFields();
     }
@@ -77,9 +149,49 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
+
+            /*通讯录导入*/
+            case R.id.img_maillist_contact:
+                startActivityForResult(new Intent(CustomerContractAddActivity.this, MyContactMailList.class), RESULT_FIRST_USER);
+                break;
+
+            /*手机添加1*/
+            case R.id.iv_phone_insert1:
+                tv_phone_name1.setText("手机1    ");
+                tv_phone_name2.setText("手机2    ");
+                iv_phone_insert1.setVisibility(View.INVISIBLE);
+                ll_phone_layout2.setVisibility(View.VISIBLE);
+                break;
+
+            /*手机添加2*/
+            case R.id.iv_phone_insert2:
+                tv_phone_name3.setText("手机3    ");
+                iv_phone_insert2.setVisibility(View.INVISIBLE);
+                ll_phone_layout3.setVisibility(View.VISIBLE);
+                break;
+
+            /*电话添加1*/
+            case R.id.iv_call_insert1:
+                tv_call_name1.setText("座机1    ");
+                tv_call_name2.setText("座机2    ");
+                iv_call_insert1.setVisibility(View.INVISIBLE);
+                ll_call_layout2.setVisibility(View.VISIBLE);
+                break;
+
+            /*电话添加2*/
+            case R.id.iv_call_insert2:
+                tv_call_name3.setText("座机3    ");
+                iv_call_insert2.setVisibility(View.INVISIBLE);
+                ll_call_layout3.setVisibility(View.VISIBLE);
+                break;
+
+
+            /*返回*/
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
+
+            /*提交*/
             case R.id.img_title_right:
                 HashMap<String, Object> maps = new HashMap<>();
                 for (ContactLeftExtras contactLeftExtras : mContactLeftExtras) {

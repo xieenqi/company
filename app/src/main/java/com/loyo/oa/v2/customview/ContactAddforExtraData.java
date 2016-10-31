@@ -79,7 +79,7 @@ public class ContactAddforExtraData extends LinearLayout {
             return;
         }
         LogUtil.dee("ContactLeftExtras:" + MainApp.gson.toJson(extras));
-        for (int i = 0; i < extras.size(); i++) {
+        for (int i = 0; i < extras.size(); i++ ) {
             ContactLeftExtras customerExtra = extras.get(i);
             if (null == customerExtra) {
                 continue;

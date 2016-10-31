@@ -277,21 +277,6 @@ public class MenuFragment extends BaseFragment {
                             Utils.doSeting(getActivity());
                         }
                     }, "提示", "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
-
-/*                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
-                    generalPopView.setSureOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            generalPopView.dismiss();
-                            Utils.doSeting(getActivity());
-                        }
-                    });
-                    generalPopView.setCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            generalPopView.dismiss();
-                        }
-                    });*/
                 }
                 break;
             //退出登录
