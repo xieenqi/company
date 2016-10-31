@@ -71,9 +71,9 @@ public class BusinessInquiryActivity extends BaseActivity {
     }
 
     private void initWebSetting() {
-//        if (Build.VERSION.SDK_INT >= 14) {
-//            webView.shouldDelayChildPressedState();
-//        }
+        if (Build.VERSION.SDK_INT >= 14) {
+            webView.shouldDelayChildPressedState();
+        }
         webView.setInitialScale(39);// 为25%，最小缩放等级
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         WebSettings setting = webView.getSettings();
@@ -82,14 +82,8 @@ public class BusinessInquiryActivity extends BaseActivity {
         setting.setLoadWithOverviewMode(true);
         setting.setDefaultFontSize(45);
         setting.setJavaScriptEnabled(true);
+        setting.setDomStorageEnabled(true);//重要
         setting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);// 自适应屏幕宽
-
-//        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
-//        WebSettings set = webView.getSettings();
-//        set.setSavePassword(false);
-//        set.setSaveFormData(false);
-//        CookieManager cookieManager = CookieManager.getInstance();
-//        cookieManager.removeAllCookie();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -116,16 +110,9 @@ public class BusinessInquiryActivity extends BaseActivity {
             }
 
             @Override
-            public void onReceivedError(WebView view, int errorCode,
-                                        String description, String failingUrl) {
-                LogUtil.d("加载错误:" + errorCode + "  " + description + "  " + failingUrl);
-                super.onReceivedError(view, errorCode, description, failingUrl);
-            }
-
-            @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                super.onReceivedSslError(view, handler, error);
-                LogUtil.d("加载错误https:" + error);
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                webView.loadUrl(url);
+                return true;//super.shouldOverrideUrlLoading(view, url);
             }
         });
         webView.loadUrl(url);
