@@ -402,6 +402,7 @@
     <color name="diseditable">#999999</color>
 
     <!-- 多级筛选-->
+    <color name="black_drop_menu_bg">#7f000000</color>
 
 
     <!-- 登录界面字体 线的颜色-->
