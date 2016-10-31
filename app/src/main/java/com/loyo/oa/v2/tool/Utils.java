@@ -810,23 +810,23 @@ public class Utils {
         return false;
     }
 
-    /**
-     * 是否有权限
-     *
-     * @return
-     */
-    public static boolean hasRights() {
-        if (MainApp.user == null) {
-            return false;
-        }
-        Role role = MainApp.user.role;
-        if (null != role) {
-            if (role.getDataRange() != Role.SELF) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    /**
+//     * 是否有权限
+//     *
+//     * @return
+//     */
+//    public static boolean hasRights() {
+//        if (MainApp.user == null) {
+//            return false;
+//        }
+//        Role role = MainApp.user.role;
+//        if (null != role) {
+//            if (role.getDataRange() != Role.SELF) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * 改变文字颜色

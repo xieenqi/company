@@ -84,8 +84,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
             SaleItemStatus = new String[]{"我的线索", "团队线索"};
             img_title_arrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
-        }
-        else {
+        } else {
             img_title_arrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
         }
@@ -133,14 +132,10 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
             /*搜索*/
             case R.id.img_title_search_right:
                 int type;
-                if (Utils.hasRights()) {
-                    type = mIndex + 1;
+                if (mIndex == 0) {
+                    type = 1;
                 } else {
-                    if (mIndex == 0) {
-                        type = 1;
-                    } else {
-                        type = 2;
-                    }
+                    type = 2;
                 }
                 LogUtil.dee("type:" + type);
                 Bundle b = new Bundle();
