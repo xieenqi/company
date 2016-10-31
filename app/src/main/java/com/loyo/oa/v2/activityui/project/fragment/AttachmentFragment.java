@@ -103,31 +103,31 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         });
     }
 
-    /**
-     * 检测权限
-     *
-     * @return
-     */
-    private boolean checkRights() {
-        boolean hasRights = false;
-        if (mProject.creator.equals(MainApp.user)) {
-            hasRights = true;
-        } else {
-            ArrayList<HttpProject.ProjectManaer> members = mProject.managers;
-            if (null != members && !members.isEmpty()) {
-                for (int i = 0; i < members.size(); i++) {
-                    if (members.get(i).user.equals(MainApp.user)) {
-                        hasRights = true;
-                        break;
-                    }
-                }
-            }
-        }
-        if (mProject.status == 2) {
-            return false;
-        }
-        return hasRights;
-    }
+//    /**
+//     * 检测权限
+//     *
+//     * @return
+//     */
+//    private boolean checkRights() {
+//        boolean hasRights = false;
+//        if (mProject.creator.equals(MainApp.user)) {
+//            hasRights = true;
+//        } else {
+//            ArrayList<HttpProject.ProjectManaer> members = mProject.managers;
+//            if (null != members && !members.isEmpty()) {
+//                for (int i = 0; i < members.size(); i++) {
+//                    if (members.get(i).user.equals(MainApp.user)) {
+//                        hasRights = true;
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        if (mProject.status == 2) {
+//            return false;
+//        }
+//        return hasRights;
+//    }
 
     @Override
     public void onClick(View view) {

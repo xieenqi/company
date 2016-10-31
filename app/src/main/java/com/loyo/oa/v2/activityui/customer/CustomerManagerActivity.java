@@ -290,14 +290,14 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                 break;
             //搜索
             case R.id.img_title_search_right:
-                int type;
-                if (Utils.hasRights()) {
+                int type = 0;
+                if (SaleItemStatus.length == 3) {
                     type = mIndex + 1;
-                } else {
+                } else if (SaleItemStatus.length == 2) {
                     if (mIndex == 0) {
-                        type = 1;
+                        type = CustomerSearchActivity.CUSTOMERS_SELF;
                     } else {
-                        type = 3;
+                        type = CustomerSearchActivity.CUSTOMERS_PUBLIC;
                     }
                 }
                 Bundle b = new Bundle();
