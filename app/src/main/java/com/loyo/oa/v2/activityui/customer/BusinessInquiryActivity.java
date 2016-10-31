@@ -1,11 +1,13 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -29,8 +31,8 @@ import java.net.URLEncoder;
 public class BusinessInquiryActivity extends BaseActivity {
     private WebView webView;
     private ProgressBar pb_progress;
-    private RelativeLayout img_title_left, img_title_right;
-    private TextView tv_title_1;
+    //    private RelativeLayout img_title_left, img_title_right;
+//    private TextView tv_title_1;
     private String url = "https://info.camcard.com/site/sdk?";
     private String sdk = "from_sdk=";
     private String user = "&user=email_lihuan@360loyo.com";
@@ -49,10 +51,11 @@ public class BusinessInquiryActivity extends BaseActivity {
     }
 
     private void initView() throws UnsupportedEncodingException {
+        String Keyword = getIntent().getStringExtra("Keyword");
         webView = (WebView) findViewById(R.id.webView);
         pb_progress = (ProgressBar) findViewById(R.id.pb_progress);
-        img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
-//        img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
+//        img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
+//        img_title_right = (RelativeLayo、ut) findViewById(R.id.img_title_right);
 //        tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
 //        img_title_right.setVisibility(View.INVISIBLE);
 //        img_title_left.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +66,7 @@ public class BusinessInquiryActivity extends BaseActivity {
 //        });
 //        tv_title_1.setText("工商查询");//from_sdk=loyo&search=
 
-        url = url + sdk + URLEncoder.encode("loyo", "UTF-8") + search + URLEncoder.encode("成都乐育", "UTF-8") + user;
+        url = url + sdk + URLEncoder.encode("loyo", "UTF-8") + search + URLEncoder.encode(Keyword, "UTF-8") + user;
         initWebSetting();
     }
 
@@ -117,6 +120,12 @@ public class BusinessInquiryActivity extends BaseActivity {
                                         String description, String failingUrl) {
                 LogUtil.d("加载错误:" + errorCode + "  " + description + "  " + failingUrl);
                 super.onReceivedError(view, errorCode, description, failingUrl);
+            }
+
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                super.onReceivedSslError(view, handler, error);
+                LogUtil.d("加载错误https:" + error);
             }
         });
         webView.loadUrl(url);

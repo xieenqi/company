@@ -45,13 +45,26 @@
                         android:singleLine="true" />
 
                     <TextView
+                        android:id="@+id/tv_gscx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_gscx"
+                        android:textColor="@color/title_bg1" />
+
+
+                    <View
+                        android:layout_width="@dimen/dimen_0.5"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/dimen_8"
+                        android:background="@color/lineCC" />
+
+                    <TextView
                         android:id="@+id/tv_search"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/tv_frame_customer"
-                        android:gravity="center"
-                        android:text="查重"
+                        android:background="@drawable/icon_check"
                         android:textColor="@color/title_bg1" />
+
                 </LinearLayout>
 
                 <include layout="@layout/include_solid_line_left" />
@@ -201,10 +214,9 @@
                         android:gravity="left|center_vertical"
                         android:hint="@string/app_phone_check"
                         android:maxLength="24"
-                        android:paddingRight="0dp"
-                        android:textColor="@color/title_bg1"
                         android:numeric="integer"
-                        />
+                        android:paddingRight="0dp"
+                        android:textColor="@color/title_bg1" />
 
                     <ImageView
                         android:id="@+id/iv_phone_insert1"
@@ -249,10 +261,9 @@
                             android:gravity="left|center_vertical"
                             android:hint="@string/app_phone_check"
                             android:maxLength="24"
-                            android:paddingRight="0dp"
-                            android:textColor="@color/title_bg1"
                             android:numeric="integer"
-                            />
+                            android:paddingRight="0dp"
+                            android:textColor="@color/title_bg1" />
 
                         <ImageView
                             android:id="@+id/iv_phone_insert2"
@@ -298,10 +309,9 @@
                             android:gravity="left|center_vertical"
                             android:hint="@string/app_phone_check"
                             android:maxLength="24"
-                            android:paddingRight="0dp"
-                            android:textColor="@color/title_bg1"
                             android:numeric="integer"
-                            />
+                            android:paddingRight="0dp"
+                            android:textColor="@color/title_bg1" />
 
                         <ImageView
                             android:id="@+id/iv_phone_insert3"
@@ -341,10 +351,9 @@
                         android:gravity="left|center_vertical"
                         android:hint="@string/app_tell_check"
                         android:maxLength="24"
-                        android:paddingRight="0dp"
-                        android:textColor="@color/title_bg1"
                         android:numeric="integer"
-                        />
+                        android:paddingRight="0dp"
+                        android:textColor="@color/title_bg1" />
 
                     <ImageView
                         android:id="@+id/iv_call_insert1"
@@ -389,10 +398,9 @@
                             android:gravity="left|center_vertical"
                             android:hint="@string/app_tell_check"
                             android:maxLength="24"
-                            android:paddingRight="0dp"
-                            android:textColor="@color/title_bg1"
                             android:numeric="integer"
-                            />
+                            android:paddingRight="0dp"
+                            android:textColor="@color/title_bg1" />
 
                         <ImageView
                             android:id="@+id/iv_call_insert2"
@@ -438,18 +446,16 @@
                             android:gravity="left|center_vertical"
                             android:hint="@string/app_tell_check"
                             android:maxLength="24"
-                            android:paddingRight="0dp"
-                            android:textColor="@color/title_bg1"
                             android:numeric="integer"
-                            />
+                            android:paddingRight="0dp"
+                            android:textColor="@color/title_bg1" />
 
                         <ImageView
                             android:id="@+id/iv_call_insert3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/icon_contact_insert"
-                            android:visibility="invisible"
-                            />
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <include layout="@layout/include_solid_line_left" />
