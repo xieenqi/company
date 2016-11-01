@@ -81,6 +81,7 @@ public class BusinessInquiryActivity extends BaseActivity {
             String szImei = TelephonyMgr.getDeviceId();
             return "1818068" + szImei.substring(szImei.length() - 4, szImei.length());
         } else {
+
             return MainApp.user.mobile;
         }
     }
