@@ -11,23 +11,23 @@ import java.util.List;
  * Created by EthanGong on 2016/11/1.
  */
 
-public class SOTimeFilterMenuModel implements MenuModel {
+public class CommonSortTypeMenuModel implements MenuModel {
 
-    private SaleOpportunityTimeFilter type;
+    private CommonSortType type;
     private boolean isSelected;
 
     public static FilterModel getFilterModel() {
 
         List<MenuModel> list = new ArrayList<>();
-        list.add(new SOTimeFilterMenuModel(SaleOpportunityTimeFilter.CREATE));
-        list.add(new SOTimeFilterMenuModel(SaleOpportunityTimeFilter.UPDATE));
-        list.add(new SOTimeFilterMenuModel(SaleOpportunityTimeFilter.AMOUNT));
+        list.add(new CommonSortTypeMenuModel(CommonSortType.CREATE));
+        list.add(new CommonSortTypeMenuModel(CommonSortType.UPDATE));
+        list.add(new CommonSortTypeMenuModel(CommonSortType.AMOUNT));
 
         FilterModel model = new FilterModel(list, "排序", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 
-    public SOTimeFilterMenuModel(SaleOpportunityTimeFilter type) {
+    public CommonSortTypeMenuModel(CommonSortType type) {
         this.type = type;
     }
 

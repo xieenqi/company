@@ -15,7 +15,7 @@ import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
-import com.loyo.oa.dropdownmenu.filtermenu.SOTimeFilterMenuModel;
+import com.loyo.oa.dropdownmenu.filtermenu.CommonSortTypeMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.SaleStageMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
@@ -159,7 +159,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         List<FilterModel> options = new ArrayList<>();
         options.add(new OrganizationFilterModel(depts, title));
         options.add(SaleStageMenuModel.getStageFilterModel(mSaleStages));
-        options.add(SOTimeFilterMenuModel.getFilterModel());
+        options.add(CommonSortTypeMenuModel.getFilterModel());
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
         adapter.setCallback(new OnMenuModelsSelected() {
