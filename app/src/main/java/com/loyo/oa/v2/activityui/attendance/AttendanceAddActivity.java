@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceAddPresenterImpl;
@@ -30,23 +31,25 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Date;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 【新增考勤】
- *  Restruture by yyy on 16/10/11
- *
+ * Restruture by yyy on 16/10/11
  */
 @EActivity(R.layout.activity_attendance_add)
-public class AttendanceAddActivity extends BaseActivity implements LocationUtilGD.AfterLocation,AttendanceAddView {
+public class AttendanceAddActivity extends BaseActivity implements LocationUtilGD.AfterLocation, AttendanceAddView {
 
     @ViewById
     ViewGroup img_title_left;
@@ -110,7 +113,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         iv_refresh_address.clearAnimation();
         animation.reset();
         tv_address.setText(address);
-        mPresenter.refreshLocation(longitude, latitude,tv_address.getText().toString());
+        mPresenter.refreshLocation(longitude, latitude, tv_address.getText().toString());
         LocationUtilGD.sotpLocation();
         UMengTools.sendLocationInfo(address, longitude, latitude);
     }
@@ -151,8 +154,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         img_title_right.setOnTouchListener(Global.GetTouch());
         iv_refresh_address.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
-        mPresenter = new AttendanceAddPresenterImpl(mAttendanceRecord,mContext,this,AttendanceAddActivity.this);
-        mPresenter.mHndler(tv_count_time,tv_count_time2,tvTimeName);
+        mPresenter = new AttendanceAddPresenterImpl(mAttendanceRecord, mContext, this, AttendanceAddActivity.this);
+        mPresenter.mHndler(tv_count_time, tv_count_time2, tvTimeName);
         initLogicData();
     }
 
@@ -220,10 +223,10 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
             /*提交*/
             case R.id.img_title_right:
-                if(!mPresenter.checkAttendanceData(et_reason.getText().toString(),
-                                                   tv_address.getText().toString(),
-                                                   outKind,mAttendanceRecord.getState())){
-                                                   return;
+                if (!mPresenter.checkAttendanceData(et_reason.getText().toString(),
+                        tv_address.getText().toString(),
+                        outKind, mAttendanceRecord.getState())) {
+                    return;
                 }
 
                 if (NeedPhoto && attachments.size() == 0) {
@@ -267,44 +270,44 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                 dismissSweetAlert();
                 commitAttendance();
             }
-        },"提示",getString(R.string.app_attendance_out_message));
+        }, "提示", getString(R.string.app_attendance_out_message));
     }
 
     /**
      * 提交考勤
      */
     private void commitAttendance() {
-        mPresenter.commitAttendance(attachments,isPopup,
-                                    outKind,state,uuid,tv_address.getText().toString(),
-                                    et_reason.getText().toString(),extraWorkStartTime,
-                                    serverTime,lateMin,earlyMin);
+        mPresenter.commitAttendance(attachments, isPopup,
+                outKind, state, uuid, tv_address.getText().toString(),
+                et_reason.getText().toString(), extraWorkStartTime,
+                serverTime, lateMin, earlyMin);
     }
 
     /**
      * 附件删除回调
-     * */
+     */
     @OnActivityResult(FinalVariables.REQUEST_DEAL_ATTACHMENT)
     void onDealImageResult(final Intent data) {
         if (null == data) {
             return;
         }
-        mPresenter.deleteAttachments(uuid,(Attachment) data.getSerializableExtra("delAtm"));
+        mPresenter.deleteAttachments(uuid, (Attachment) data.getSerializableExtra("delAtm"));
     }
 
     /**
      * 选择附件回调
-     * */
+     */
     @OnActivityResult(MainApp.GET_IMG)
     void onGetImageResult(final Intent data) {
         if (null == data) {
             return;
         }
-        mPresenter.uploadAttachments(uuid,(ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
+        mPresenter.uploadAttachments(uuid, (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
     }
 
     /**
      * 获取附件成功处理
-     * */
+     */
     @Override
     public void setAttachmentEmbl(ArrayList<Attachment> mAttachment) {
         attachments = mAttachment;
@@ -313,7 +316,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     /**
      * 删除附件成功处理
-     * */
+     */
     @Override
     public void deleteAttaSuccessEmbl(Attachment mDelAttachment) {
         attachments.remove(mDelAttachment);
@@ -322,7 +325,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     /**
      * 弹窗提示
-     * */
+     */
     @Override
     public void showMsg(String message) {
         Toast(message);
@@ -330,7 +333,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     /**
      * 打卡成功
-     * */
+     */
     @Override
     public void attendanceSuccess() {
         Toast("打卡成功!");
@@ -339,7 +342,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     /**
      * 显示打卡超时对话框
-     * */
+     */
     @Override
     public void showTimeOutDialog() {
         sweetAlertDialogView.alertIconClick(new SweetAlertDialog.OnSweetClickListener() {
@@ -347,12 +350,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 finish();
             }
-        },getString(R.string.app_attendance_outtime_message), null);
+        }, getString(R.string.app_attendance_outtime_message), null);
     }
 
     /**
      * 关闭键盘
-     * */
+     */
     @Override
     public void finish() {
         mPresenter.recycle();

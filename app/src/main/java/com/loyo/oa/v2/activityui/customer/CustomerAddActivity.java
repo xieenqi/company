@@ -88,6 +88,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     Button btn_add_new_contract;
     @ViewById
     CusGridView gridView_photo;
+    @ViewById
+    TextView tv_gscx;
 
 
     private TextView tv_phone_name1;
@@ -321,8 +323,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
-            R.id.layout_customer_label, R.id.img_refresh_address,R.id.iv_phone_insert1,
-            R.id.iv_phone_insert2,R.id.iv_call_insert1,R.id.iv_call_insert2})
+            R.id.layout_customer_label, R.id.img_refresh_address, R.id.iv_phone_insert1,
+            R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx})
     public void onClick(final View v) {
         switch (v.getId()) {
 
@@ -371,6 +373,17 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("name", edt_name.getText().toString());
                     app.startActivityForResult((Activity) mContext, CustomerRepeat.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
+
+                } else {
+                    Toast("客户名称不能为空");
+                }
+                break;
+             /*工商查询*/
+            case R.id.tv_gscx:
+                if (!edt_name.getText().toString().isEmpty()) {
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("Keyword", edt_name.getText().toString());
+                    app.startActivityForResult((Activity) mContext, BusinessInquiryActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
 
                 } else {
                     Toast("客户名称不能为空");
