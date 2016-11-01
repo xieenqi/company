@@ -7,6 +7,7 @@ public class WorksheetTemplate {
         Null = new WorksheetTemplate();
         Null.name = "全部类型";
         Null.enabled = true;
+        Null.id = "";
     }
 
     public String id;
