@@ -4,28 +4,31 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
+import com.loyo.oa.dropdownmenu.filtermenu.view.CommonMenuCell;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
-import com.loyo.oa.dropdownmenu.filtermenu.view.DepartmentMenuCell;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by EthanGong on 2016/10/31.
  */
 
-public class OrganizationDepartmentAdpater extends RecyclerView.Adapter<DepartmentMenuCell> implements OnMenuItemClick {
+public class CommonMenuAdapter extends RecyclerView.Adapter<CommonMenuCell> implements OnMenuItemClick {
 
-    private OrganizationFilterModel filterModel;
+    private List<MenuModel> data = new ArrayList<>();
     public int selectedIndex = 0;
 
     private OnMenuItemClick callback;
 
     @Override
-    public DepartmentMenuCell onCreateViewHolder(ViewGroup parent, int viewType) {
-        return DepartmentMenuCell.instance(parent);
+    public CommonMenuCell onCreateViewHolder(ViewGroup parent, int viewType) {
+        return CommonMenuCell.instance(parent);
     }
 
     @Override
-    public void onBindViewHolder(DepartmentMenuCell holder, int position) {
-        MenuModel model = filterModel.getChildrenAtIndex(position);
+    public void onBindViewHolder(CommonMenuCell holder, int position) {
+        MenuModel model = data.get(position);
         holder.setIndex(position);
         holder.setCallback(this);
         holder.valueView.setText(model.getValue());
@@ -34,11 +37,7 @@ public class OrganizationDepartmentAdpater extends RecyclerView.Adapter<Departme
 
     @Override
     public int getItemCount() {
-        if (filterModel == null) {
-            return 0;
-        }
-
-        return filterModel.getChildrenCount();
+        return data.size();
     }
 
     @Override
@@ -52,10 +51,12 @@ public class OrganizationDepartmentAdpater extends RecyclerView.Adapter<Departme
         }
     }
 
-    public void setFilterModel(OrganizationFilterModel model) {
-        this.filterModel = model;
+    public void loadData(List<MenuModel> list) {
+        data.clear();
+        data.addAll(list);
         notifyDataSetChanged();
     }
+
 
     public void setCallback(OnMenuItemClick callback) {
         this.callback = callback;

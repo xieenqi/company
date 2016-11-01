@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.dropdownmenu.filtermenu.OrganizationDepartmentAdpater;
+import com.loyo.oa.dropdownmenu.filtermenu.OrganizationDepartmentAdapter;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationUserAdapter;
 
@@ -26,7 +26,7 @@ public class OrganizationMenuView extends LinearLayout {
     private RecyclerView deptView;
     private RecyclerView userView;
 
-    private OrganizationDepartmentAdpater deptAdapter;
+    private OrganizationDepartmentAdapter deptAdapter;
     private OrganizationUserAdapter userAdapter;
 
     private OrganizationFilterModel filterModel;
@@ -45,7 +45,7 @@ public class OrganizationMenuView extends LinearLayout {
 
     private void init(Context context) {
         setBackgroundColor(Color.WHITE);
-        deptAdapter = new OrganizationDepartmentAdpater();
+        deptAdapter = new OrganizationDepartmentAdapter();
         userAdapter = new OrganizationUserAdapter();
         inflate(context, R.layout.layout_org_menu_view, this);
         deptView = (RecyclerView)findViewById(R.id.department_view);

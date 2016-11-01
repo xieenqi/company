@@ -4,163 +4,105 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
     >
-
-    <LinearLayout
-        android:id="@+id/cus_topview"
-        android:layout_width="fill_parent"
-        android:layout_height="46dp"
-        android:orientation="horizontal"
-        >
-
-        <LinearLayout
-            android:id="@+id/cus_screen1"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="时间"/>
-
-            <ImageView
-                android:id="@+id/cus_screen1_iv1"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="@dimen/dimen_5"
-                android:background="@drawable/arrow_down"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/lineCC"
-            />
-
-        <LinearLayout
-            android:id="@+id/cus_screen2"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="标签"/>
-
-            <ImageView
-                android:id="@+id/cus_screen1_iv2"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="@dimen/dimen_5"
-                android:background="@drawable/arrow_down"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <include layout="@layout/include_solid_line"/>
-
-    <FrameLayout
+    <com.loyo.oa.dropdownmenu.DropDownMenu
+        android:id="@+id/drop_down_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:id="@+id/re_nodata"
+        <FrameLayout
+            android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center"
-            android:visibility="gone">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <RelativeLayout
+                android:id="@+id/re_nodata"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:visibility="gone">
 
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginBottom="22dp"
-                    android:src="@drawable/img_nodata"/>
-
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="没有相关数据"
-                    android:textColor="#878787"
-                    android:textSize="18sp"/>
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_marginBottom="22dp"
+                        android:src="@drawable/img_nodata"/>
 
-        </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="没有相关数据"
+                        android:textColor="#878787"
+                        android:textSize="18sp"/>
 
-        <ViewStub
-            android:id="@+id/vs_nodata"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inflatedId="@+id/layout_nodata"
-            android:layout="@layout/item_layout_nodata"/>
+                </LinearLayout>
 
-        <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
-            android:id="@+id/lv_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/activity_bg"
-            android:cacheColorHint="#00000000"
-            android:divider="@null"
-            android:drawSelectorOnTop="true"
-            android:fadingEdge="none"
-            android:fastScrollEnabled="false"
-            android:footerDividersEnabled="true"
-            android:headerDividersEnabled="true"
-            android:scrollbars="none"
-            android:smoothScrollbar="true"
-            />
+            </RelativeLayout>
 
-        <FrameLayout
-            android:id="@+id/layout_near_customers"
-            android:layout_width="@dimen/dimen_150"
-            android:layout_height="@dimen/dimen_45"
-            android:layout_gravity="right"
-            android:layout_below="@+id/cus_topview"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:visibility="gone">
-
-            <ImageView
+            <ViewStub
+                android:id="@+id/vs_nodata"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_near_customer_count_bg"/>
+                android:inflatedId="@+id/layout_nodata"
+                android:layout="@layout/item_layout_nodata"/>
 
-            <TextView
-                android:id="@+id/tv_near_customers"
+            <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
+                android:id="@+id/lv_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:textColor="@color/title_bg1"
+                android:background="@color/activity_bg"
+                android:cacheColorHint="#00000000"
+                android:divider="@null"
+                android:drawSelectorOnTop="true"
+                android:fadingEdge="none"
+                android:fastScrollEnabled="false"
+                android:footerDividersEnabled="true"
+                android:headerDividersEnabled="true"
+                android:scrollbars="none"
+                android:smoothScrollbar="true"
                 />
+
+            <FrameLayout
+                android:id="@+id/layout_near_customers"
+                android:layout_width="@dimen/dimen_150"
+                android:layout_height="@dimen/dimen_45"
+                android:layout_gravity="right"
+                android:layout_below="@+id/cus_topview"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_near_customer_count_bg"/>
+
+                <TextView
+                    android:id="@+id/tv_near_customers"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:textColor="@color/title_bg1"
+                    />
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_btn_circle"
+                android:textColor="@color/white"/>
+
         </FrameLayout>
-
-        <Button
-            android:id="@+id/btn_add"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="3dp"
-            android:background="@drawable/bg_btn_circle"
-            android:textColor="@color/white"/>
-
-    </FrameLayout>
+    </com.loyo.oa.dropdownmenu.DropDownMenu>
 </LinearLayout>

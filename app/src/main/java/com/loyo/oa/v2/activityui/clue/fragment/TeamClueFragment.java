@@ -137,7 +137,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         filterMenu.setMenuAdapter(adapter);
         adapter.setCallback(new OnMenuModelsSelected() {
             @Override
-            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels) {
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
                 MenuModel model = selectedModels.get(0);
                 String key = model.getKey();
@@ -166,20 +166,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 getData();
             }
         });
-    }
-
-    public void wersi() {
-        //为超管或权限为全公司 展示全公司成员
-        if (permission != null && permission.dataRange == Permission.COMPANY) {
-            setUser(OrganizationManager.shareManager().allDepartments());
-        }
-        //权限为部门 展示我的部门
-        else if (permission != null && permission.dataRange == Permission.TEAM) {
-            setUser(OrganizationManager.shareManager().currentUserDepartments());
-        }
-        //权限为个人 展示自己
-        else if (permission != null && permission.dataRange == Permission.PERSONAL) {
-        }
     }
 
     /**

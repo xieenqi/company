@@ -90,7 +90,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         filterMenu.setMenuAdapter(adapter);
         adapter.setCallback(new OnMenuModelsSelected() {
             @Override
-            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels) {
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
                 MenuModel model = selectedModels.get(0);
                 String key = model.getKey();

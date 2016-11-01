@@ -4,14 +4,16 @@ import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.loyo.oa.dropdownmenu.callback.OnMenuButtonClick;
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.view.OrganizationMenuView;
+import com.loyo.oa.dropdownmenu.filtermenu.view.TagMenuView;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuListType;
 import com.loyo.oa.dropdownmenu.utils.UIUtil;
 import com.loyo.oa.dropdownmenu.view.SingleListView;
-import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
-import com.loyo.oa.dropdownmenu.filtermenu.view.OrganizationMenuView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +67,9 @@ public class DefaultMenuAdapter implements MenuAdapter {
         if (model.getType() == MenuListType.ORGANIZATION) {
             return UIUtil.dp(context, 200);
         }
+        else if (model.getType() == MenuListType.TAG) {
+            return UIUtil.dp(context, 350);
+        }
 
         int height = 50 * model.getChildrenCount() + 10;
 
@@ -94,7 +99,7 @@ public class DefaultMenuAdapter implements MenuAdapter {
                             List<Integer> idxes = new ArrayList<Integer>();
                             idxes.add(index);
                             model.setSelectedIndexes(idxes);
-                            DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, model.getSelectedModels());
+                            DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, model.getSelectedModels(), null);
                         }
                     }
                 });
@@ -112,8 +117,28 @@ public class DefaultMenuAdapter implements MenuAdapter {
                             List<Integer> idxes = new ArrayList<Integer>();
                             idxes.add(index);
                             model.setSelectedIndexes(idxes);
-                            DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, view.getSelectedMenuModels());
+                            DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, view.getSelectedMenuModels(), null);
                         }
+                    }
+                });
+                result = view;
+            }
+            break;
+            case TAG:
+            {
+                final TagMenuView view = new TagMenuView(context);
+                view.setFilterModel(model);
+                view.setCallback(new OnMenuButtonClick(){
+
+                    @Override
+                    public void onMenuConfirmClick() {
+                        DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, view.getSelectedMenuModels(), view.getSelectedTagParams());
+                    }
+
+                    @Override
+                    public void onMenuResetClick() {
+                        DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, view.getSelectedMenuModels(), "");
+
                     }
                 });
                 result = view;

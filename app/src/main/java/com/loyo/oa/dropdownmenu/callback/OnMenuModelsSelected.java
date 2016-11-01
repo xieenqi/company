@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface OnMenuModelsSelected {
-    void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels);
+    void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo);
 }
