@@ -524,9 +524,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                 holder = (Holder) convertView.getTag();
             }
             final AudioViewModel viewModel = lstData_saleActivity_current.get(position);
-            holder.ll_web.removeAllViews();
-            holder.ll_web.addView(new CommonWebView(CustomerDynamicManageActivity.this, webCode));
-            holder.ll_web.setVisibility(View.VISIBLE);
+//            holder.ll_web.removeAllViews();
+//            holder.ll_web.addView(new CommonWebView(CustomerDynamicManageActivity.this, webCode));
+//            holder.ll_web.setVisibility(View.VISIBLE);
             if (viewModel.getIsAnim()) {
                 app.startAnim(holder.tv_calls);
             } else {
