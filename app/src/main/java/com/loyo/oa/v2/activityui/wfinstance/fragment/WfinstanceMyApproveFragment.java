@@ -22,7 +22,7 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinMyApprovePresente
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMyApproveView;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.filterview.DropDownMenu;
+import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -37,7 +37,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
 
     private Button btn_add;
     private ViewStub emptyView;
-    private DropDownMenu mMenu;
+    protected DropDownMenu filterMenu;
     private WfinMyApprovePresenter mPresenter;
     private WflnstanceMySubmitAdapter mAdapter;
     private PullToRefreshExpandableListView expandableListView;
@@ -62,7 +62,7 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     private void initView(View view) {
         expandableListView = (PullToRefreshExpandableListView) view.findViewById(R.id.expandableListView);
         btn_add = (Button) view.findViewById(R.id.btn_add);
-        mMenu = (DropDownMenu) view.findViewById(R.id.drop_menu);
+        filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
@@ -70,8 +70,8 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         expandableListView.setEmptyView(emptyView);
         page = 1;
         isTopAdd = true;
-        mPresenter = new WfinMyApprovePresenterImpl(mMenu,this,getActivity());
-        mPresenter.initDropMenu(FILTER_STATUS);
+        mPresenter = new WfinMyApprovePresenterImpl(filterMenu, this, getActivity());
+        mPresenter.loadFilterOptions();
         initList();
         initAdapter();
         mPresenter.getApproveWfInstancesList(page,isTopAdd);
@@ -200,23 +200,4 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
         page = 1;
         mPresenter.getApproveWfInstancesList(page,isTopAdd);
     }
-
-/*    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == -1) {
-            switch (requestCode) {
-                case ExtraAndResult.REQUEST_CODE:
-                    isTopAdd = true;
-                    page = 1;
-                    mPresenter.getApproveWfInstancesList(page,isTopAdd);
-                    break;
-                case 0x09:
-                    isTopAdd = true;
-                    page = 1;
-                    mPresenter.getApproveWfInstancesList(page,isTopAdd);
-                    break;
-            }
-        }
-    }*/
 }
