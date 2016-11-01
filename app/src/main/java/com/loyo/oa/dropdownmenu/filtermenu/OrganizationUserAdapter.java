@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.filtermenu;
+package com.loyo.oa.dropdownmenu.filtermenu;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;

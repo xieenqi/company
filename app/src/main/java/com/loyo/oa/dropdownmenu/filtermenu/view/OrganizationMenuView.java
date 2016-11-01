@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.filtermenu.view;
+package com.loyo.oa.dropdownmenu.filtermenu.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,9 +10,9 @@ import android.widget.LinearLayout;
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.filtermenu.OrganizationDepartmentAdpater;
-import com.loyo.oa.v2.filtermenu.OrganizationFilterModel;
-import com.loyo.oa.v2.filtermenu.OrganizationUserAdapter;
+import com.loyo.oa.dropdownmenu.filtermenu.OrganizationDepartmentAdpater;
+import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.OrganizationUserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,11 +1,11 @@
-package com.loyo.oa.v2.filtermenu;
+package com.loyo.oa.dropdownmenu.filtermenu;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
-import com.loyo.oa.v2.filtermenu.view.DepartmentMenuCell;
+import com.loyo.oa.dropdownmenu.filtermenu.view.DepartmentMenuCell;
 
 /**
  * Created by EthanGong on 2016/10/31.

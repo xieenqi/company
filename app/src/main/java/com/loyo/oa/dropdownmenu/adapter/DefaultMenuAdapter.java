@@ -10,8 +10,8 @@ import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuListType;
 import com.loyo.oa.dropdownmenu.utils.UIUtil;
 import com.loyo.oa.dropdownmenu.view.SingleListView;
-import com.loyo.oa.v2.filtermenu.OrganizationFilterModel;
-import com.loyo.oa.v2.filtermenu.view.OrganizationMenuView;
+import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.view.OrganizationMenuView;
 
 import java.util.ArrayList;
 import java.util.List;

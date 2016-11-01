@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.filtermenu;
+package com.loyo.oa.dropdownmenu.filtermenu;
 
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuListType;
