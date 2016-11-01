@@ -9,6 +9,8 @@ import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.utils.UIUtil;
 import com.loyo.oa.dropdownmenu.view.SingleListView;
+import com.loyo.oa.v2.filtermenu.OrganizationFilterModel;
+import com.loyo.oa.v2.filtermenu.view.OrganizationMenuView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +63,11 @@ public class DefaultMenuAdapter implements MenuAdapter {
         FilterModel model = data.get(position);
         int height = 50 * model.getChildrenCount() + 10;
 
-        if (height > 300) {
-            height = 300;
+        if (height > 350) {
+            height = 350;
         }
-        else if (height <50) {
-            height = 50;
+        else if (height <150) {
+            height = 150;
         }
 
         return UIUtil.dp(context, height);
@@ -88,6 +90,24 @@ public class DefaultMenuAdapter implements MenuAdapter {
                             idxes.add(index);
                             model.setSelectedIndexes(idxes);
                             DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, model.getSelectedModels());
+                        }
+                    }
+                });
+                result = view;
+            }
+            break;
+            case ORGANIZATION:
+            {
+                final OrganizationMenuView view = new OrganizationMenuView(context);
+                view.setFilterModel((OrganizationFilterModel)model);
+                view.setCallback(new OnMenuItemClick(){
+                    @Override
+                    public void onMenuItemClick(int index) {
+                        if (DefaultMenuAdapter.this.callback != null) {
+                            List<Integer> idxes = new ArrayList<Integer>();
+                            idxes.add(index);
+                            model.setSelectedIndexes(idxes);
+                            DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, view.getSelectedMenuModels());
                         }
                     }
                 });

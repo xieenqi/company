@@ -11,11 +11,11 @@ import java.util.List;
 
 public class FilterModel implements MenuChildren{
 
-    private String defaultTitle;
-    private MenuListType type;
+    protected String defaultTitle;
+    protected MenuListType type;
     private List<MenuModel> chilren = new ArrayList<>();
-    private int defaultSelectedIndex;
-    private List<Integer> selectedIndexes = new ArrayList<>();
+    protected int defaultSelectedIndex;
+    protected List<Integer> selectedIndexes = new ArrayList<>();
 
     public FilterModel(List<MenuModel> children, @NonNull String defaultTitle, MenuListType type) {
         this.defaultTitle = defaultTitle;
