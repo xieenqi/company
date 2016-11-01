@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -17,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -36,7 +39,7 @@ public class BusinessInquiryActivity extends BaseActivity {
     //    private TextView tv_title_1;
     private String url = "https://info.camcard.com/site/sdk?";
     private String sdk = "from_sdk=";
-    private String user = "&user=email_lihuan@360loyo.com";
+    private String user = "&user=mobile_";
     private String search = "&search=";
 
     @Override
@@ -68,8 +71,18 @@ public class BusinessInquiryActivity extends BaseActivity {
 //        img_title_right.setVisibility(View.INVISIBLE);
 //        tv_title_1.setText("工商查询");//from_sdk=loyo&search=
 
-        url = url + sdk + URLEncoder.encode("loyo", "UTF-8") + search + URLEncoder.encode(Keyword, "UTF-8") + user;
+        url = url + sdk + URLEncoder.encode("loyo", "UTF-8") + search + URLEncoder.encode(Keyword, "UTF-8") + user + getMobile();
         initWebSetting();
+    }
+
+    private String getMobile() {
+        if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.mobile)) {
+            TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+            String szImei = TelephonyMgr.getDeviceId();
+            return "1818068" + szImei.substring(szImei.length() - 4, szImei.length());
+        } else {
+            return MainApp.user.mobile;
+        }
     }
 
     private void initWebSetting() {
