@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
- * 【工商查询】 WebView页面
+ * 【工商查询】 WebView页面  此页面功能比价简单 暂不使用MVP模式
  * Created by xeq on 16/10/31.
  */
 

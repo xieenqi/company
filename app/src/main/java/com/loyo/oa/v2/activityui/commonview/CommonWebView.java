@@ -35,6 +35,14 @@ public class CommonWebView extends WebView {
         setting.setJavaScriptEnabled(true);
         setting.setDomStorageEnabled(true);//重要
         setting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);// 自适应屏幕宽
-        this.loadUrl(url);
+        setting.setAllowContentAccess(true);
+        setting.setAppCacheEnabled(true);
+        setting.setDefaultTextEncodingName("UTF-8");
+        String s = "padding:20px";
+        if (url.contains(s)) {
+            url = url.replace(s, "padding:0px");
+        }
+        this.loadDataWithBaseURL("about:blank", url, "text/html",
+                "utf-8", null);
     }
 }

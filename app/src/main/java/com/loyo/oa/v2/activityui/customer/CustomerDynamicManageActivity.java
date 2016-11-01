@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -481,6 +482,8 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         super.onBackPressed();
     }
 
+    private String webCode = "<p style=\"text-indent:37px\"><span style=\"font-size:40px;font-family:方正仿宋简体\">2016</span><span style=\"font-size:40px;font-family:方正仿宋简体\">年6月24日</span><span style=\"font-size:40px;font-family:方正仿宋简体\">上午</span><span style=\"font-size:40px;font-family:方正仿宋简体\">,</span><span style=\"font-size:40px;font-family:方正仿宋简体\">简阳市教科局一行31人在彭忠副局长的带领下到龙泉第七中学就义务教育均衡发展进行参观交流。四川省教育厅技术物资装备管理指导中心实验教学科田馨科长、</span><span style=\"font-size:40px;font-family:方正仿宋简体\">成都市教育技术装备管理中心</span><span style=\"font-size:40px;font-family:方正仿宋简体\">罗虹副主任、电教信息科倪宏科长、设备管理科夏涛副科长、周陶、金红老师到会指导，龙泉驿区教育局相关领导参加了此次活动。</span></p><p style=\"text-indent:37px\"><span style=\"font-size:40px;font-family:方正仿宋简体\">首先是龙泉七中罗登远校长带领现场参观学校的装备管理工作，随后开展了工作交流。会上，龙泉驿区政府教育督导室原主任林松权同志介绍了龙泉驿区接受四川省义务教育均衡发展县检查工作情况，</span><span style=\"font-size:40px;font-family:方正仿宋简体\">四川省教育厅技术物资装备管理指导中心实验教学科田馨科长进行了省</span><span style=\"font-size:40px;font-family:方正仿宋简体\">义务教育均衡发展县检查</span><span style=\"font-size:40px;font-family:方正仿宋简体\">专题培训，并现场答疑，最后，</span><span style=\"font-size:40px;font-family:方正仿宋简体\">成都市教育技术装备管理中心罗虹副主任讲话，并对简阳市今后的迎检准备工作提出具体要求。</span></p><p><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271029920046193019174.png\" title=\"QQ截图20160628112935.png\" alt=\"QQ截图20160628112935.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271030937167978310009.png\" title=\"QQ截图20160628113013.png\" alt=\"QQ截图20160628113013.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271031267888555254636.png\" title=\"QQ截图20160628113027.png\" alt=\"QQ截图20160628113027.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271030562767318666623.png\" title=\"QQ截图20160628112957.png\" alt=\"QQ截图20160628112957.png\"/></p>";
+
     private class SaleActivitiesAdapter extends BaseAdapter {
 
         @Override
@@ -521,9 +524,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                 holder = (Holder) convertView.getTag();
             }
             final AudioViewModel viewModel = lstData_saleActivity_current.get(position);
-          //  holder.ll_web.removeAllViews();
-           // holder.ll_web.addView(new CommonWebView(CustomerDynamicManageActivity.this, "http://lboss.ukuaiqi.com/login"));
-            //holder.ll_web.setVisibility(View.VISIBLE);
+            holder.ll_web.removeAllViews();
+            holder.ll_web.addView(new CommonWebView(CustomerDynamicManageActivity.this, webCode));
+            holder.ll_web.setVisibility(View.VISIBLE);
             if (viewModel.getIsAnim()) {
                 app.startAnim(holder.tv_calls);
             } else {
@@ -533,6 +536,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
             holder.tv_create_time.setText(DateTool.getDiffTime(viewModel.getCreateAt()));
             holder.tv_content.setText(viewModel.getContent());
+//            holder.tv_content.setText(Html.fromHtml(webCode));
 
             /*判断是否有录音*/
             if (null != viewModel.audioUrl && !TextUtils.isEmpty(viewModel.audioUrl)) {
