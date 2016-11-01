@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activityui.clue.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.filtermenu.ClueStatus;
 import com.loyo.oa.v2.filtermenu.ClueStatusFilterModel;
 import com.loyo.oa.v2.filtermenu.OrganizationFilterModel;
 import com.loyo.oa.v2.filtermenu.TimeFilterModel;
@@ -110,6 +110,8 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 
     private void loadFilterOptions() {
 
+        statusKey = ClueStatus.All.getKey();
+
         List<DBDepartment> depts = new ArrayList<>();
         String title = "部门";
         //为超管或权限为全公司 展示全公司成员
@@ -143,7 +145,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
 
                 if (menuIndex == 0) {
-                    Log.v("selectedModels", selectedModels.toString());
+                    // TODO:
                     if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
                         xPath = model.getKey();
                         userId = "";

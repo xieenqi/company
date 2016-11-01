@@ -29,6 +29,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.filtermenu.ClueStatus;
 import com.loyo.oa.v2.filtermenu.ClueStatusFilterModel;
 import com.loyo.oa.v2.filtermenu.TimeFilterModel;
 import com.loyo.oa.v2.point.IClue;
@@ -81,6 +82,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void loadFilterOptions() {
+        statusKey = ClueStatus.All.getKey();
         List<FilterModel> options = new ArrayList<>();
         options.add(TimeFilterModel.getFilterModel());
         options.add(ClueStatusFilterModel.getFilterModel());

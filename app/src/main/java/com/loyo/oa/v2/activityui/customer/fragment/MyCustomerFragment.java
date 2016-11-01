@@ -204,34 +204,6 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
 
         Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
 
-
-/*        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    scrollFlag = true;
-                } else {
-                    scrollFlag = false;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (scrollFlag) {
-                    if (firstVisibleItem > lastVisibleItemPosition) {
-                        LogUtil.dee("上滑");
-                    }
-                    if (firstVisibleItem < lastVisibleItemPosition) {
-                        LogUtil.dee("下滑");
-                    }
-                    if (firstVisibleItem == lastVisibleItemPosition) {
-                        return;
-                    }
-                    lastVisibleItemPosition = firstVisibleItem;
-                }
-            }
-        });*/
-
     }
 
     /**

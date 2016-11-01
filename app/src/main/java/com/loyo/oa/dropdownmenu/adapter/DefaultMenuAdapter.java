@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
+import com.loyo.oa.dropdownmenu.model.MenuListType;
 import com.loyo.oa.dropdownmenu.utils.UIUtil;
 import com.loyo.oa.dropdownmenu.view.SingleListView;
 import com.loyo.oa.v2.filtermenu.OrganizationFilterModel;
@@ -61,13 +62,17 @@ public class DefaultMenuAdapter implements MenuAdapter {
 
     public int getHeight(int position) {
         FilterModel model = data.get(position);
+        if (model.getType() == MenuListType.ORGANIZATION) {
+            return UIUtil.dp(context, 200);
+        }
+
         int height = 50 * model.getChildrenCount() + 10;
 
         if (height > 350) {
             height = 350;
         }
-        else if (height <150) {
-            height = 150;
+        else if (height <50) {
+            height = 50;
         }
 
         return UIUtil.dp(context, height);
