@@ -10,11 +10,13 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.filtermenu.ClueStatus;
+import com.loyo.oa.dropdownmenu.filtermenu.ClueStatusFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
@@ -29,9 +31,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.loyo.oa.dropdownmenu.filtermenu.ClueStatus;
-import com.loyo.oa.dropdownmenu.filtermenu.ClueStatusFilterModel;
-import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -156,20 +155,6 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             default:
                 break;
         }
-    }
-
-    /**
-     * PopupWindow关闭 恢复背景正常颜色
-     */
-    private void closePopupWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_down);
-    }
-
-    /**
-     * PopupWindow打开，背景变暗
-     */
-    private void openPopWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_up);
     }
 
     /**

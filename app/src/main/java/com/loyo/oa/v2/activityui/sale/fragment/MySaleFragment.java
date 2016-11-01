@@ -2,45 +2,45 @@ package com.loyo.oa.v2.activityui.sale.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
+import com.loyo.oa.dropdownmenu.DropDownMenu;
+import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
+import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.filtermenu.SOTimeFilterMenuModel;
+import com.loyo.oa.dropdownmenu.filtermenu.SaleStageMenuModel;
+import com.loyo.oa.dropdownmenu.model.FilterModel;
+import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
-import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterMySaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
-import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.SaleCommPopupView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -54,56 +54,19 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
     private View mView;
     private Button btn_add;
     private Intent mIntent;
-    private LinearLayout screen1;
-    private LinearLayout screen2;
-    private LinearLayout topview;
     private RelativeLayout re_nodata;
     private ViewStub emptyView;
-    private ImageView tagImage1;
-    private ImageView tagImage2;
-    private SaleCommPopupView saleCommPopupView;
-    private WindowManager.LayoutParams windowParams;
     private PullToRefreshListView listView;
     private AdapterMySaleList adapter;
-    private SaleTeamScreen saleTeamScreen;
+    private DropDownMenu filterMenu;
 
-    private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
-    private ArrayList<SaleTeamScreen> stageData = new ArrayList<>();
+
     private ArrayList<SaleStage> mSaleStages;
     private ArrayList<SaleRecord> recordData = new ArrayList<>();
-
-    private String[] sort = {"按最近创建时间", "按照最近更新", "按照最高金额"};
     private String stageId = "";
     private String sortType = "";
-    private int stageIndex = 0, sortIndex = 0;
     private int requestPage = 1;
     private boolean isPull = false;
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what) {
-
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
-                    isPull = false;
-                    stageId = msg.getData().get("data").toString();
-                    stageIndex = (int) msg.getData().get("index");
-                    break;
-
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
-                    isPull = false;
-                    sortType = msg.getData().get("data").toString();
-                    sortIndex = (int) msg.getData().get("index");
-                    break;
-
-                default:
-                    break;
-
-            }
-            getData();
-        }
-    };
 
     @Nullable
     @Override
@@ -111,6 +74,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_my_sale, null);
             initView(mView);
+            loadFilterOptions();
         }
         getData();
         return mView;
@@ -118,30 +82,14 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
     private void initView(View view) {
 
-        for (int i = 0; i < sort.length; i++) {
-            saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(sort[i]);
-            saleTeamScreen.setId(i + "");
-            saleTeamScreen.setIndex(false);
-            sortData.add(saleTeamScreen);
-        }
-
         mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
-        setStageData();
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         btn_add = (Button) view.findViewById(R.id.btn_add);
-        screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
-        screen2 = (LinearLayout) view.findViewById(R.id.salemy_screen2);
-        topview = (LinearLayout) view.findViewById(R.id.saleteam_topview);
         re_nodata = (RelativeLayout) view.findViewById(R.id.re_nodata);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
-        tagImage1 = (ImageView) view.findViewById(R.id.salemy_screen1_iv1);
-        tagImage2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
 
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(click);
-        screen1.setOnClickListener(click);
-        screen2.setOnClickListener(click);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
         listView.setEmptyView(emptyView);
@@ -158,7 +106,35 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
             }
         });
 
+        filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
+
         Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
+    }
+
+    private void loadFilterOptions() {
+        List<FilterModel> options = new ArrayList<>();
+        options.add(SaleStageMenuModel.getStageFilterModel(mSaleStages));
+        options.add(SOTimeFilterMenuModel.getFilterModel());
+        DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
+        filterMenu.setMenuAdapter(adapter);
+        adapter.setCallback(new OnMenuModelsSelected() {
+            @Override
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
+                filterMenu.close();
+                MenuModel model = selectedModels.get(0);
+                String key = model.getKey();
+                String value = model.getValue();
+                filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
+
+                if (menuIndex == 0) { // SaleStage
+                    stageId = key;
+                }
+                else if (menuIndex == 1) { // 排序
+                    sortType = key;
+                }
+                getData();
+            }
+        });
     }
 
 
@@ -174,25 +150,6 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
         isPull = true;
         requestPage++;
         getData();
-    }
-
-    /**
-     * 组装销售阶段筛选数据
-     */
-    public void setStageData() {
-        saleTeamScreen = new SaleTeamScreen();
-        saleTeamScreen.setName("全部阶段");
-        saleTeamScreen.setId("");
-        saleTeamScreen.setIndex(false);
-        stageData.add(saleTeamScreen);
-        for (int i = 0; i < mSaleStages.size(); i++) {
-            saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(mSaleStages.get(i).getName());
-            saleTeamScreen.setId(mSaleStages.get(i).getId());
-            saleTeamScreen.setIndex(false);
-            stageData.add(saleTeamScreen);
-        }
-
     }
 
     /**
@@ -294,33 +251,6 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                     mIntent.setClass(getActivity(), AddMySaleActivity.class);
                     startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                    break;
-
-                //销售阶段
-                case R.id.salemy_screen1:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, stageData, SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, stageIndex);
-                    saleCommPopupView.showAsDropDown(screen1);
-                    openPopWindow(tagImage1);
-                    saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            closePopupWindow(tagImage1);
-                        }
-                    });
-                    break;
-
-                //排序
-                case R.id.salemy_screen2:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
-                    saleCommPopupView.showAsDropDown(screen2);
-                    openPopWindow(tagImage2);
-                    saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            closePopupWindow(tagImage2);
-                        }
-                    });
-
                     break;
 
                 default:
