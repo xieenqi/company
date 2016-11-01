@@ -503,6 +503,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
         @Override
         public View getView(final int position, View convertView, final ViewGroup parent) {
+            final AudioViewModel viewModel = lstData_saleActivity_current.get(position);
             Holder holder;
             if (convertView == null) {
                 holder = new Holder();
@@ -524,7 +525,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            final AudioViewModel viewModel = lstData_saleActivity_current.get(position);
+
             holder.ll_web.removeAllViews();
             holder.ll_web.addView(holder.web);
             holder.ll_web.setVisibility(View.VISIBLE);
