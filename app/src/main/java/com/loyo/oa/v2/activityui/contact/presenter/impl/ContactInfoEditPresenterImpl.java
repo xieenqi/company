@@ -26,6 +26,7 @@ import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
@@ -43,6 +44,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -94,6 +97,44 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
                 HttpErrorCheck.checkError(error);
             }
         });
+    }
+
+    /**
+     * 获取【 部门 】名字数据
+     */
+    @Override
+    public String getDepartments(String shortDeptNames) {
+        String depNames = "";
+        if (!shortDeptNames.contains("|")) {
+            return shortDeptNames;
+        } else {
+            String[] tt = shortDeptNames.split(",");
+            for (String ele : tt) {
+                String[] t = ele.split("\\|");
+                depNames = depNames + t[0];
+            }
+        }
+        return depNames;
+    }
+
+    /**
+     * 获取【 职位 】名字数据
+     */
+    @Override
+    public String getPositions(String shortDeptNames) {
+        String positionNames = "";
+        if (!shortDeptNames.contains("|")) {
+            return positionNames;
+        } else {
+            String[] tt = shortDeptNames.split(",");
+            for (String ele : tt) {
+                if (!ele.contains("|"))
+                    continue;
+                String[] t = ele.split("\\|");
+                positionNames = positionNames + t[1];
+            }
+        }
+        return positionNames;
     }
 
     /**

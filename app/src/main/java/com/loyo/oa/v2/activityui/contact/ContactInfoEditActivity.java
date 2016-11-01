@@ -75,19 +75,19 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     @ViewById
     RoundImageView img_title_user;
     @ViewById
-    ViewGroup layout_birthday;
-    //    @ViewById
-//    ViewGroup layout_mobile;
+    ViewGroup ll_sex;
+    @ViewById
+    TextView tv_sex;
     @ViewById
     TextView tv_mobile;
     @ViewById
     ViewGroup layout_weixin;
     @ViewById
     TextView et_weixin;
+    //    @ViewById
+//    RadioButton sex_famale;
     @ViewById
-    RadioButton sex_famale;
-    @ViewById
-    RadioButton sex_male;
+    ViewGroup layout_birthday;
     @ViewById
     TextView tv_birthday;
     @ViewById
@@ -140,20 +140,19 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     void initViews() {
         setTouchView(-1);
         mPresenter = new ContactInfoEditPresenterImpl(this, mContext, ContactInfoEditActivity.this);
-
         tv_title.setVisibility(View.VISIBLE);
-        tv_title.setText("编辑个人资料");
+        tv_title.setText("个人信息");
         iv_submit.setVisibility(View.VISIBLE);
         layout_back.setOnTouchListener(Global.GetTouch());
         iv_submit.setOnTouchListener(Global.GetTouch());
-        layout_birthday.setOnTouchListener(Global.GetTouch());
+        ll_sex.setOnTouchListener(Global.GetTouch());
         layout_set_avartar.setOnTouchListener(Global.GetTouch());
-//        layout_mobile.setOnTouchListener(Global.GetTouch());
-        //et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
+        layout_weixin.setOnTouchListener(Global.GetTouch());
+        layout_birthday.setOnTouchListener(Global.GetTouch());
         initData();
     }
 
-    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.iv_submit,R.id.layout_weixin})
+    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.ll_sex, R.id.iv_submit, R.id.layout_birthday, R.id.layout_weixin})
     void onClick(final View v) {
         switch (v.getId()) {
 
@@ -189,44 +188,22 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 //            case R.id.layout_mobile:
 //                app.startActivityForResult(this, ResePhoneActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.MSG_SEND,new Bundle());
 //                break;
-
-            default:
+            /* 性别设置 */
+            case R.id.ll_sex:
+                Toast("性别设置");
                 break;
         }
     }
-
-    @CheckedChange({R.id.sex_famale, R.id.sex_male})
-    void onCheckChanged(final CompoundButton compoundButton, final boolean checked) {
-        switch (compoundButton.getId()) {
-            case R.id.sex_famale:
-                if (checked) {
-                    sex = 1;
-                }
-                break;
-            case R.id.sex_male:
-                if (checked) {
-                    sex = 2;
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
 
     /**
      * 初始化数据
      */
     private void initData() {
-
         user = OrganizationManager.shareManager().getUser(userId);
-
         if (null == user) {
             return;
         }
-
         int defaultAvatao;
-
         if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
             if (user.gender == 2) {
                 defaultAvatao = R.drawable.icon_contact_avatar;
@@ -237,18 +214,15 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         } else {
             ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
         }
-
-
         path = user.avatar;
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
         Utils.setContent(name_title_user, MainApp.user.getRealname());
         if (user.gender == 2) {
-            sex_male.setChecked(true);
+            tv_sex.setText("女");
         } else if (user.gender == 1) {
-            sex_famale.setChecked(true);
+            tv_sex.setText("男");
         }
-
         if (!TextUtils.isEmpty(user.birthDay)) {
             int age = Utils.getAge(user.birthDay.substring(0, 4));
             if (age >= 150) {
@@ -257,6 +231,8 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             Utils.setContent(tv_birthday, user.birthDay);
             Utils.setContent(tv_age, Utils.getAge(user.birthDay.substring(0, 4)) + "");
         }
+        tv_departments.setText(mPresenter.getDepartments(user.shortDeptNames));
+        tv_positions.setText(mPresenter.getPositions(user.shortDeptNames));
     }
 
 

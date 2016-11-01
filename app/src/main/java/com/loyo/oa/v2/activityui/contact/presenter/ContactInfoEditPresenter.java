@@ -36,4 +36,19 @@ public interface ContactInfoEditPresenter {
     /*上传头像*/
     void upload(List<String> mSelectPath, String uuid, RoundImageView imageView);
 
+    /**
+     * 获取部门的名字
+     *
+     * @param shortDeptNames
+     * @return
+     */
+    String getDepartments(String shortDeptNames);
+
+    /**
+     * 获取职位的名字
+     *
+     * @param shortDeptNames
+     * @return
+     */
+    String getPositions(String shortDeptNames);
 }
