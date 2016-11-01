@@ -41,7 +41,6 @@ public class WfInstance extends BaseBeans implements Serializable {
     public OrderDetail order;
     public ArrayList<EstimateAdd> paymentRecord;
 
-
     public boolean isViewed() {
         return viewed;
     }

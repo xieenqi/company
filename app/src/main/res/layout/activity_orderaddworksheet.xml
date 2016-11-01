@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:background="@color/title_bg1"
         android:orientation="vertical">
-
         <include layout="@layout/include_common_title_2" />
     </LinearLayout>
 

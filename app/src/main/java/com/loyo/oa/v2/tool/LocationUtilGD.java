@@ -46,8 +46,10 @@ public class LocationUtilGD {
             locationOption.setOnceLocation(false);//false持续定位 true单次定位
             locationOption.setHttpTimeOut(10000);//设置联网超时时间
             locationOption.setNeedAddress(true);
+            locationOption.setGpsFirst(true);//设置是否优先返回GPS定位信息 只有在高精度定位模式下有效
+            locationOption.setMockEnable(true);//设置是否允许模拟位置, 默认为false
             // 设置定位模式为高精度模式
-            locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+            locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             // 设置定位监听
             locationClient.setLocationListener(maMapLocationListener);
             // 设置定位参数

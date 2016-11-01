@@ -12,6 +12,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import java.util.Date;
@@ -108,6 +109,7 @@ public class AttendanceListPresenterImpl implements AttendanceListPresenter {
      * */
     @Override
     public void checkAttendance(HashMap<String,Object> map, final String address) {
+        LogUtil.dee("check:"+MainApp.gson.toJson(map));
         MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord mRecord, final Response response) {

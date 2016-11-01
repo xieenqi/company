@@ -16,6 +16,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
     private int customerType;
     private Bundle mBundle;
+    public static final int CUSTOMERS_SELF = 1, CUSTOMERS_TEAM = 2, CUSTOMERS_PUBLIC = 3;
 
 
     @Override
@@ -44,17 +45,14 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
         params.put("keyWords", strSearch);
 
         switch (customerType) {
-            case 1:
+            case CUSTOMERS_SELF:
                 url = FinalVariables.SEARCH_CUSTOMERS_SELF;
                 break;
-            case 2:
+            case CUSTOMERS_TEAM:
                 url = FinalVariables.SEARCH_CUSTOMERS_TEAM;
                 break;
-            case 3:
+            case CUSTOMERS_PUBLIC:
                 url = FinalVariables.SEARCH_CUSTOMERS_PUBLIC;
-                break;
-            default:
-
                 break;
         }
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, this);

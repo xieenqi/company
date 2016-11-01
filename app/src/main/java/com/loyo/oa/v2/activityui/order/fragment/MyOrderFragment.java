@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -151,10 +150,12 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
 
             //新建
             case R.id.btn_add:
+
                 mBundle = new Bundle();
                 mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
                 startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+
                 break;
 
             //状态选择

@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.CommonWebView;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AudioViewModel;
@@ -156,7 +158,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         if (customer != null) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", paginationX.getPageIndex());
-            map.put("pageSize", isTopAdd ? lstData_saleActivity_current.size() >= 20 ? lstData_saleActivity_current.size() : 20 : 20);
+            map.put("pageSize", isTopAdd ? lstData_saleActivity_current.size() >= 5 ? lstData_saleActivity_current.size() : 5 : 5);
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivity(customer.getId(), map, new RCallback<PaginationX<CustomerFollowUpModel>>() {
                 @Override
                 public void success(final PaginationX<CustomerFollowUpModel> paginationXes, final Response response) {
@@ -480,6 +482,8 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         super.onBackPressed();
     }
 
+    private String webCode = "<p style=\"text-indent:37px\"><span style=\"font-size:40px;font-family:方正仿宋简体\">2016</span><span style=\"font-size:40px;font-family:方正仿宋简体\">年6月24日</span><span style=\"font-size:40px;font-family:方正仿宋简体\">上午</span><span style=\"font-size:40px;font-family:方正仿宋简体\">,</span><span style=\"font-size:40px;font-family:方正仿宋简体\">简阳市教科局一行31人在彭忠副局长的带领下到龙泉第七中学就义务教育均衡发展进行参观交流。四川省教育厅技术物资装备管理指导中心实验教学科田馨科长、</span><span style=\"font-size:40px;font-family:方正仿宋简体\">成都市教育技术装备管理中心</span><span style=\"font-size:40px;font-family:方正仿宋简体\">罗虹副主任、电教信息科倪宏科长、设备管理科夏涛副科长、周陶、金红老师到会指导，龙泉驿区教育局相关领导参加了此次活动。</span></p><p style=\"text-indent:37px\"><span style=\"font-size:40px;font-family:方正仿宋简体\">首先是龙泉七中罗登远校长带领现场参观学校的装备管理工作，随后开展了工作交流。会上，龙泉驿区政府教育督导室原主任林松权同志介绍了龙泉驿区接受四川省义务教育均衡发展县检查工作情况，</span><span style=\"font-size:40px;font-family:方正仿宋简体\">四川省教育厅技术物资装备管理指导中心实验教学科田馨科长进行了省</span><span style=\"font-size:40px;font-family:方正仿宋简体\">义务教育均衡发展县检查</span><span style=\"font-size:40px;font-family:方正仿宋简体\">专题培训，并现场答疑，最后，</span><span style=\"font-size:40px;font-family:方正仿宋简体\">成都市教育技术装备管理中心罗虹副主任讲话，并对简阳市今后的迎检准备工作提出具体要求。</span></p><p><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271029920046193019174.png\" title=\"QQ截图20160628112935.png\" alt=\"QQ截图20160628112935.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271030937167978310009.png\" title=\"QQ截图20160628113013.png\" alt=\"QQ截图20160628113013.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271031267888555254636.png\" title=\"QQ截图20160628113027.png\" alt=\"QQ截图20160628113027.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271030562767318666623.png\" title=\"QQ截图20160628112957.png\" alt=\"QQ截图20160628112957.png\"/></p>";
+
     private class SaleActivitiesAdapter extends BaseAdapter {
 
         @Override
@@ -499,86 +503,96 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
         @Override
         public View getView(final int position, View convertView, final ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
-            }
             final AudioViewModel viewModel = lstData_saleActivity_current.get(position);
-
-            LinearLayout ll_layout_time = ViewHolder.get(convertView, R.id.ll_layout_time);
-            LinearLayout layout_audio = ViewHolder.get(convertView, R.id.layout_audio);
-            ListView lv_listview = ViewHolder.get(convertView, R.id.lv_listview);
-            TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
-            TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
-            TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
-            TextView tv_follow_name = ViewHolder.get(convertView, R.id.tv_follow_name);
-            TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
-            TextView tv_audio_length = ViewHolder.get(convertView, R.id.tv_audio_length);
-            ImageView iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
-            final TextView tv_calls = ViewHolder.get(convertView, R.id.iv_calls);
-
-            if (viewModel.getIsAnim()) {
-                app.startAnim(tv_calls);
+            Holder holder;
+            if (convertView == null) {
+                holder = new Holder();
+                convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
+                holder.ll_layout_time = ViewHolder.get(convertView, R.id.ll_layout_time);
+                holder.layout_audio = ViewHolder.get(convertView, R.id.layout_audio);
+                holder.lv_listview = ViewHolder.get(convertView, R.id.lv_listview);
+                holder.tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
+                holder.tv_content = ViewHolder.get(convertView, R.id.tv_content);
+                holder.tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
+                holder.tv_follow_name = ViewHolder.get(convertView, R.id.tv_follow_name);
+                holder.tv_time = ViewHolder.get(convertView, R.id.tv_time);
+                holder.tv_audio_length = ViewHolder.get(convertView, R.id.tv_audio_length);
+                holder.iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
+                holder.tv_calls = ViewHolder.get(convertView, R.id.iv_calls);
+                holder.ll_web = ViewHolder.get(convertView, R.id.ll_web);//装在webview的容器
+                holder.web = new CommonWebView(CustomerDynamicManageActivity.this, webCode);
+                convertView.setTag(holder);
             } else {
-                app.stopAnim(tv_calls);
+                holder = (Holder) convertView.getTag();
             }
-            viewModel.imageViewWeakReference = new WeakReference<TextView>(tv_calls);
 
-            tv_create_time.setText(DateTool.getDiffTime(viewModel.getCreateAt()));
-            tv_content.setText(viewModel.getContent());
+            holder.ll_web.removeAllViews();
+            holder.ll_web.addView(holder.web);
+            holder.ll_web.setVisibility(View.VISIBLE);
+            if (viewModel.getIsAnim()) {
+                app.startAnim(holder.tv_calls);
+            } else {
+                app.stopAnim(holder.tv_calls);
+            }
+            viewModel.imageViewWeakReference = new WeakReference<TextView>(holder.tv_calls);
+
+            holder.tv_create_time.setText(DateTool.getDiffTime(viewModel.getCreateAt()));
+            holder.tv_content.setText(viewModel.getContent());
+//            holder.tv_content.setText(Html.fromHtml(webCode));
 
             /*判断是否有录音*/
             if (null != viewModel.audioUrl && !TextUtils.isEmpty(viewModel.audioUrl)) {
 
                 long audioLength = viewModel.audioLength;
                 if (audioLength > 0 && audioLength <= 60) {
-                    tv_calls.setText("000");
+                    holder.tv_calls.setText("000");
                 } else if (audioLength > 60 && audioLength <= 300) {
-                    tv_calls.setText("00000");
+                    holder.tv_calls.setText("00000");
                 } else if (audioLength > 300 && audioLength <= 600) {
-                    tv_calls.setText("0000000");
+                    holder.tv_calls.setText("0000000");
                 } else if (audioLength > 600 && audioLength <= 1200) {
-                    tv_calls.setText("000000000");
+                    holder.tv_calls.setText("000000000");
                 } else if (audioLength > 1200 && audioLength <= 1800) {
-                    tv_calls.setText("00000000000");
+                    holder.tv_calls.setText("00000000000");
                 } else if (audioLength > 1800 && audioLength <= 3600) {
-                    tv_calls.setText("00000000000000");
+                    holder.tv_calls.setText("00000000000000");
                 } else if (audioLength > 3600) {
-                    tv_calls.setText("0000000000000000");
+                    holder.tv_calls.setText("0000000000000000");
                 } else {
-                    tv_calls.setText("");
+                    holder.tv_calls.setText("");
                 }
 
-                layout_audio.setVisibility(View.VISIBLE);
-                tv_audio_length.setText(DateTool.stringForTime((int) viewModel.audioLength * 1000));
+                holder.layout_audio.setVisibility(View.VISIBLE);
+                holder.tv_audio_length.setText(DateTool.stringForTime((int) viewModel.audioLength * 1000));
             } else {
-                layout_audio.setVisibility(View.GONE);
+                holder.layout_audio.setVisibility(View.GONE);
             }
 
-            tv_contact_name.setText("联系人：" + viewModel.contactName);
-            tv_follow_name.setText("跟进人：" + viewModel.creatorName + " #" + viewModel.typeName);
+            holder.tv_contact_name.setText("联系人：" + viewModel.contactName);
+            holder.tv_follow_name.setText("跟进人：" + viewModel.creatorName + " #" + viewModel.typeName);
 
             if (null != viewModel.getAttachments() && viewModel.getAttachments().size() != 0) {
-                lv_listview.setVisibility(View.VISIBLE);
+                holder.lv_listview.setVisibility(View.VISIBLE);
                 nestionListAdapter = new DynamicListnestingAdapter(viewModel.getAttachments(), mContext);
-                lv_listview.setAdapter(nestionListAdapter);
+                holder.lv_listview.setAdapter(nestionListAdapter);
             } else {
-                lv_listview.setVisibility(View.GONE);
+                holder.lv_listview.setVisibility(View.GONE);
             }
 
             if (viewModel.getRemindAt() != 0) {
-                ll_layout_time.setVisibility(View.VISIBLE);
-                tv_time.setText(app.df3.format(new Date(viewModel.getRemindAt() * 1000)));
+                holder.ll_layout_time.setVisibility(View.VISIBLE);
+                holder.tv_time.setText(app.df3.format(new Date(viewModel.getRemindAt() * 1000)));
             } else {
-                ll_layout_time.setVisibility(View.GONE);
+                holder.ll_layout_time.setVisibility(View.GONE);
             }
 
             /*提醒时间没有过当前时间变红色*/
             if (viewModel.getRemindAt() > System.currentTimeMillis() / 1000) {
-                tv_time.setTextColor(getResources().getColor(R.color.red1));
-                iv_imgTime.setImageResource(R.drawable.icon_tx2);
+                holder.tv_time.setTextColor(getResources().getColor(R.color.red1));
+                holder.iv_imgTime.setImageResource(R.drawable.icon_tx2);
             } else {
-                tv_time.setTextColor(getResources().getColor(R.color.text99));
-                iv_imgTime.setImageResource(R.drawable.icon_tx1);
+                holder.tv_time.setTextColor(getResources().getColor(R.color.text99));
+                holder.iv_imgTime.setImageResource(R.drawable.icon_tx1);
             }
             if (position == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);
@@ -587,7 +601,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             }
 
             /*播放录音*/
-            layout_audio.setOnClickListener(new View.OnClickListener() {
+            holder.layout_audio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mPosition = position;
@@ -598,5 +612,21 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
             return convertView;
         }
+
+        class Holder {
+            LinearLayout ll_layout_time;
+            LinearLayout layout_audio, ll_web;
+            ListView lv_listview;
+            TextView tv_create_time;
+            TextView tv_content;
+            TextView tv_contact_name;
+            TextView tv_follow_name;
+            TextView tv_time;
+            TextView tv_audio_length;
+            ImageView iv_imgTime;
+            TextView tv_calls;
+            CommonWebView web;
+        }
+
     }
 }

@@ -2,17 +2,14 @@ package com.loyo.oa.v2.activityui.worksheet;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddWorkSheetAttachmentActivity;
-import com.loyo.oa.v2.activityui.order.OrderAttachmentActivity;
 import com.loyo.oa.v2.activityui.order.event.OrderAddWorkSheetFinish;
 import com.loyo.oa.v2.activityui.worksheet.adapter.OrderworksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
@@ -23,9 +20,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-
 import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -38,7 +33,6 @@ public class OrderWorksheetListActivity extends BaseActivity implements View.OnC
 
     private LinearLayout layout_back;
     private TextView tv_title;
-
     private RelativeLayout layout_add;
     private ListView listView_worksheet;
     private OrderWorksheetListModel mOworssheetList;

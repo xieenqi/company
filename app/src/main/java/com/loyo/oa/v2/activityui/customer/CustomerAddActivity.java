@@ -9,12 +9,16 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -27,6 +31,7 @@ import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -38,6 +43,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -78,10 +84,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @ViewById
     EditText edt_contract;
     @ViewById
-    EditText edt_contract_tel;
-    @ViewById
-    EditText edt_contract_telnum;
-    @ViewById
     EditText et_address;
     @ViewById
     TextView tv_labels;
@@ -93,19 +95,53 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     Button btn_add_new_contract;
     @ViewById
     CusGridView gridView_photo;
+    @ViewById
+    TextView tv_gscx;
+
+
+    private TextView tv_phone_name1;
+    private TextView tv_phone_name2;
+    private TextView tv_phone_name3;
+
+    private TextView tv_call_name1;
+    private TextView tv_call_name2;
+    private TextView tv_call_name3;
+
+    private EditText edt_contract_tel1;
+    private EditText edt_contract_tel2;
+    private EditText edt_contract_tel3;
+
+    private EditText edt_contract_telnum1;
+    private EditText edt_contract_telnum2;
+    private EditText edt_contract_telnum3;
+
+    private ImageView iv_phone_insert1;
+    private ImageView iv_phone_insert2;
+    private ImageView iv_phone_insert3;
+
+    private ImageView iv_call_insert1;
+    private ImageView iv_call_insert2;
+    private ImageView iv_call_insert3;
+
+    private LinearLayout ll_phone_layout2;
+    private LinearLayout ll_phone_layout3;
+    private LinearLayout ll_call_layout2;
+    private LinearLayout ll_call_layout3;
 
     private EditText edit_address_details;
     private ImageGridViewAdapter imageGridViewAdapter;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<NewTag> tags;
     private Bundle mBundle;
     private List<String> mSelectPath;
     private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
 
     private String uuid;
     private String tagItemIds;
     private String myAddress;
+    private String contactName = "";
+    private String contactPhone = "";
 
     private String customer_name;
     private String customerAddress;
@@ -139,11 +175,45 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     };
 
-
     @AfterViews
     void initUI() {
+        contactName = getIntent().getStringExtra(ExtraAndResult.EXTRA_NAME);
+        contactPhone = getIntent().getStringExtra(ExtraAndResult.EXTRA_DATA);
+
+        tv_phone_name1 = (TextView) findViewById(R.id.tv_phone_name1);
+        tv_phone_name2 = (TextView) findViewById(R.id.tv_phone_name2);
+        tv_phone_name3 = (TextView) findViewById(R.id.tv_phone_name3);
+
+        tv_call_name1 = (TextView) findViewById(R.id.tv_call_name1);
+        tv_call_name2 = (TextView) findViewById(R.id.tv_call_name2);
+        tv_call_name3 = (TextView) findViewById(R.id.tv_call_name3);
+
+        edt_contract_tel1 = (EditText) findViewById(R.id.edt_contract_tel1);
+        edt_contract_tel2 = (EditText) findViewById(R.id.edt_contract_tel2);
+        edt_contract_tel3 = (EditText) findViewById(R.id.edt_contract_tel3);
+
+        edt_contract_telnum1 = (EditText) findViewById(R.id.edt_contract_telnum1);
+        edt_contract_telnum2 = (EditText) findViewById(R.id.edt_contract_telnum2);
+        edt_contract_telnum3 = (EditText) findViewById(R.id.edt_contract_telnum3);
+
+        iv_phone_insert1 = (ImageView) findViewById(R.id.iv_phone_insert1);
+        iv_phone_insert2 = (ImageView) findViewById(R.id.iv_phone_insert2);
+
+        iv_call_insert1 = (ImageView) findViewById(R.id.iv_call_insert1);
+        iv_call_insert2 = (ImageView) findViewById(R.id.iv_call_insert2);
+
+        ll_phone_layout2 = (LinearLayout) findViewById(R.id.ll_phone_layout2);
+        ll_phone_layout3 = (LinearLayout) findViewById(R.id.ll_phone_layout3);
+        ll_call_layout2 = (LinearLayout) findViewById(R.id.ll_call_layout2);
+        ll_call_layout3 = (LinearLayout) findViewById(R.id.ll_call_layout3);
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
+        iv_phone_insert1.setOnTouchListener(Global.GetTouch());
+        iv_phone_insert2.setOnTouchListener(Global.GetTouch());
+        iv_call_insert1.setOnTouchListener(Global.GetTouch());
+        iv_call_insert2.setOnTouchListener(Global.GetTouch());
+
         edit_address_details = (EditText) findViewById(R.id.edit_address_details);
         super.setTitle("新建客户");
         init_gridView_photo();
@@ -154,8 +224,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             laPosition = app.latitude;
             loPosition = app.longitude;
         }
-        edt_contract_tel.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
-        edt_contract_telnum.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+        edt_contract_tel1.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+        edt_contract_telnum1.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+
+        if (!TextUtils.isEmpty(contactName)) {
+            edt_contract.setText(contactName);
+        }
+        if (!TextUtils.isEmpty(contactPhone)) {
+            edt_contract_tel1.setText(contactPhone.replaceAll(" ", ""));
+        }
     }
 
     LocationUtilGD locationGd;
@@ -193,7 +270,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             for (Contact c : contacts) {
                 if (c.isDefault()) {
                     edt_contract.setText(c.getName());
-                    edt_contract_tel.setText(c.getTel());
+                    edt_contract_tel1.setText(c.getTel());
                 } else {
                     setContract(c);
                 }
@@ -249,9 +326,40 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
-            R.id.layout_customer_label, R.id.img_refresh_address})
+            R.id.layout_customer_label, R.id.img_refresh_address, R.id.iv_phone_insert1,
+            R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx})
     public void onClick(final View v) {
         switch (v.getId()) {
+
+            /*手机添加1*/
+            case R.id.iv_phone_insert1:
+                tv_phone_name1.setText("手机1    ");
+                tv_phone_name2.setText("手机2    ");
+                iv_phone_insert1.setVisibility(View.INVISIBLE);
+                ll_phone_layout2.setVisibility(View.VISIBLE);
+                break;
+
+            /*手机添加2*/
+            case R.id.iv_phone_insert2:
+                tv_phone_name3.setText("手机3    ");
+                iv_phone_insert2.setVisibility(View.INVISIBLE);
+                ll_phone_layout3.setVisibility(View.VISIBLE);
+                break;
+
+            /*电话添加1*/
+            case R.id.iv_call_insert1:
+                tv_call_name1.setText("座机1    ");
+                tv_call_name2.setText("座机2    ");
+                iv_call_insert1.setVisibility(View.INVISIBLE);
+                ll_call_layout2.setVisibility(View.VISIBLE);
+                break;
+
+            /*电话添加2*/
+            case R.id.iv_call_insert2:
+                tv_call_name3.setText("座机3    ");
+                iv_call_insert2.setVisibility(View.INVISIBLE);
+                ll_call_layout3.setVisibility(View.VISIBLE);
+                break;
 
             /*刷新地址*/
             case R.id.img_refresh_address:
@@ -273,6 +381,17 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     Toast("客户名称不能为空");
                 }
                 break;
+             /*工商查询*/
+            case R.id.tv_gscx:
+                if (!edt_name.getText().toString().isEmpty()) {
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("Keyword", edt_name.getText().toString());
+                    app.startActivityForResult((Activity) mContext, BusinessInquiryActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
+
+                } else {
+                    Toast("客户名称不能为空");
+                }
+                break;
 
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
@@ -280,12 +399,20 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             //提交
             case R.id.img_title_right:
+
+                String phone1 = edt_contract_tel1.getText().toString().trim();
+                String phone2 = edt_contract_tel2.getText().toString().trim();
+                String phone3 = edt_contract_tel3.getText().toString().trim();
+                String call1 = edt_contract_telnum1.getText().toString().trim();
+                String call2 = edt_contract_telnum2.getText().toString().trim();
+                String call3 = edt_contract_telnum3.getText().toString().trim();
+
                 uuid = StringUtil.getUUID();
                 customer_name = edt_name.getText().toString().trim();
                 customerAddress = et_address.getText().toString().trim();
                 customerContract = edt_contract.getText().toString().trim();
-                customerContractTel = edt_contract_tel.getText().toString().trim();
-                customerWrietele = edt_contract_telnum.getText().toString().trim();
+                customerContractTel = edt_contract_tel1.getText().toString().trim();
+                customerWrietele = edt_contract_telnum1.getText().toString().trim();
                 cusotmerDetalisAddress = edit_address_details.getText().toString().trim();
 
                 if (customer_name.isEmpty()) {
@@ -369,10 +496,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         edt_contract.setHint("请输入联系人姓名(必填)");
                     } else if (customerJur.label.contains("手机") && customerJur.required) {
                         cusPhone = true;
-                        edt_contract_tel.setHint("限数字,如13912345678(必填)");
+                        edt_contract_tel1.setHint("限数字,如13912345678(必填)");
                     } else if (customerJur.label.contains("座机") && customerJur.required) {
                         cusMobile = true;
-                        edt_contract_telnum.setHint("限数字,如02812345678(必填)");
+                        edt_contract_telnum1.setHint("限数字,如02812345678(必填)");
                     } else if (customerJur.label.contains("定位") && customerJur.required) {
                         cusLocation = true;//定位必填
                     } else if (customerJur.label.contains("客户地址") && customerJur.required) {
@@ -484,7 +611,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             Contact defaultContact = new Contact();
             defaultContact.setName(edt_contract.getText().toString());
-            defaultContact.setTel(edt_contract_tel.getText().toString());
+            defaultContact.setTel(edt_contract_tel1.getText().toString());
             defaultContact.setIsDefault(true);
             contacts.add(0, defaultContact);
             mCustomer.contacts = contacts;

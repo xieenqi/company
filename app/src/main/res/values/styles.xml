@@ -305,4 +305,8 @@
         <item name="android:windowEnterAnimation">@anim/actionsheet_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>
     </style>
+    <style name="popwin_anim_style">
+        <item name="android:windowEnterAnimation">@anim/contactlist_show</item>
+        <item name="android:windowExitAnimation">@anim/contactlist_diss</item>
+    </style>
 </resources>
