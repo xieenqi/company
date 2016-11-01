@@ -50,7 +50,6 @@ public class BusinessInquiryActivity extends BaseActivity {
             initView();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            LogUtil.d("加载一次" + e.toString());
         }
     }
 
@@ -76,6 +75,7 @@ public class BusinessInquiryActivity extends BaseActivity {
     }
 
     private String getMobile() {
+        //用户没有手机号码的时候就拼接一个号码 保证user的唯一性
         if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.mobile)) {
             TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             String szImei = TelephonyMgr.getDeviceId();
@@ -119,6 +119,8 @@ public class BusinessInquiryActivity extends BaseActivity {
             }
 
             @Override
+
+
             public void onPageFinished(WebView view, String url) {
                 LogUtil.d("加载url:" + url);
                 super.onPageFinished(view, url);

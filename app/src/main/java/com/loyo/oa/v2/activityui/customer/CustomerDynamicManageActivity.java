@@ -519,14 +519,15 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                 holder.iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
                 holder.tv_calls = ViewHolder.get(convertView, R.id.iv_calls);
                 holder.ll_web = ViewHolder.get(convertView, R.id.ll_web);//装在webview的容器
+                holder.web = new CommonWebView(CustomerDynamicManageActivity.this, webCode);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
             final AudioViewModel viewModel = lstData_saleActivity_current.get(position);
-//            holder.ll_web.removeAllViews();
-//            holder.ll_web.addView(new CommonWebView(CustomerDynamicManageActivity.this, webCode));
-//            holder.ll_web.setVisibility(View.VISIBLE);
+            holder.ll_web.removeAllViews();
+            holder.ll_web.addView(holder.web);
+            holder.ll_web.setVisibility(View.VISIBLE);
             if (viewModel.getIsAnim()) {
                 app.startAnim(holder.tv_calls);
             } else {
@@ -623,6 +624,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             TextView tv_audio_length;
             ImageView iv_imgTime;
             TextView tv_calls;
+            CommonWebView web;
         }
 
     }
