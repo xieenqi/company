@@ -25,6 +25,8 @@ public class Contact implements Serializable {
     private boolean isDefault;
     public String deptName;
     public ArrayList<ExtraData> extDatas = new ArrayList<>();
+    public ArrayList<String> telGroup = new ArrayList<>();
+    public ArrayList<String> wiretelGroup = new ArrayList<>();
 
     public String getDeptName() {
         return deptName;

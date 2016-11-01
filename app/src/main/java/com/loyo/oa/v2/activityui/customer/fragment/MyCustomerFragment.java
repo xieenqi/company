@@ -424,7 +424,11 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     @Override
     public void intentAutoInsert(PopupWindow popupWindow) {
         popupWindow.dismiss();
-        startActivityForResult(new Intent(getActivity(), MyContactMailList.class), getActivity().RESULT_FIRST_USER);
+        Intent mIntent = new Intent();
+        mIntent.setClass(getActivity(), MyContactMailList.class);
+        mIntent.putExtra(ExtraAndResult.EXTRA_NAME,2);
+        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ,false);
+        startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
     }
 
     /**

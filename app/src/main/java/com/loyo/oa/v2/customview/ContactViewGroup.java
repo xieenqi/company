@@ -21,7 +21,9 @@ import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.RegularCheck;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -39,7 +41,7 @@ public class ContactViewGroup extends LinearLayout {
 
         void onSetDefault(Contact contact);
 
-        void onCallBack(String callNum, String id, String name,int callType);
+        void onCallBack(String callNum, String id, String name, int callType);
 
         void onPhoneError();
     }
@@ -69,24 +71,24 @@ public class ContactViewGroup extends LinearLayout {
 
     /**
      * 手机拨打弹出框
-     * */
-    public void paymentSet(final String phone,final int callType) {
+     */
+    public void paymentSet(final String phone, final int callType) {
 
         boolean checkTag = false;
-        if(callType == 0){
+        if (callType == 0) {
             checkTag = RegularCheck.isYunPhone(phone);
-        }else{
+        } else {
             checkTag = RegularCheck.isYunTell(phone);
         }
 
-        final CallPhonePopView callPhonePopView = new CallPhonePopView(context,mContact.getName(),checkTag);
+        final CallPhonePopView callPhonePopView = new CallPhonePopView(context, mContact.getName(), checkTag);
         callPhonePopView.show();
         callPhonePopView.setCanceledOnTouchOutside(true);
         /*商务电话*/
         callPhonePopView.businessPhone(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactProcessCallback.onCallBack(phone.replaceAll(" +",""), mContact.getId(), mContact.getName().trim().toString(),callType);
+                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), callType);
                 callPhonePopView.dismiss();
             }
         });
@@ -95,13 +97,13 @@ public class ContactViewGroup extends LinearLayout {
             @Override
             public void onClick(View v) {
 
-                if(callType == 0){
-                    if(RegularCheck.isMobilePhone(phone)){
+                if (callType == 0) {
+                    if (RegularCheck.isMobilePhone(phone)) {
                         Utils.call(context, phone);
-                    }else{
+                    } else {
                         contactProcessCallback.onPhoneError();
                     }
-                }else{
+                } else {
                     Utils.call(context, phone);
                 }
 
@@ -118,8 +120,8 @@ public class ContactViewGroup extends LinearLayout {
 
     /**
      * 判断本账号是否有电话
-     * */
-    public void isMobile(String phone,int callType){
+     */
+    public void isMobile(String phone, int callType) {
         if (null == MainApp.user.mobile || TextUtils.isEmpty(MainApp.user.mobile)) {
             final SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(context);
             sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
@@ -133,10 +135,63 @@ public class ContactViewGroup extends LinearLayout {
                     sweetAlertDialogView.sweetAlertDialog.dismiss();
                     MainApp.getMainApp().startActivity((Activity) context, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 }
-            },"提示",context.getString(R.string.app_homeqq_message));
-        }else{
-            paymentSet(phone,callType);
+            }, "提示", context.getString(R.string.app_homeqq_message));
+        } else {
+            paymentSet(phone, callType);
         }
+    }
+
+    /**
+     * 绑定打座机
+     * */
+    private void setWriteOnClick(LinearLayout callLayout, final String telNum){
+        /*拨打座机*/
+        callLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null == mContact.getWiretel() || mContact.getWiretel().isEmpty()) {
+                    contactProcessCallback.onPhoneError();
+                    return;
+                }
+                    /*暂时注销座机号验证
+                    if(!RegularCheck.isPhoneNumberValid(mContact.getWiretel())){
+                        contactProcessCallback.onPhoneError();
+                        return;
+                    }*/
+                isMobile(telNum, 1);
+            }
+        });
+    }
+
+    /**
+     * 绑定打电话,发短信监听
+     */
+    private void setTelOnClick(LinearLayout callLayout, LinearLayout smgLayout, final String telNum) {
+
+        /*拨打手机*/
+        callLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null == telNum || TextUtils.isEmpty(telNum)) {
+                    contactProcessCallback.onPhoneError();
+                    return;
+                }
+                    /*if(!RegularCheck.isMobilePhone(mContact.getTel().replaceAll(" +",""))){
+                        contactProcessCallback.onPhoneError();
+                        return;
+                    }*/
+
+                isMobile(telNum, 0);
+            }
+        });
+
+        /*发送短信*/
+        smgLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.sendSms(context, telNum);
+            }
+        });
     }
 
 
@@ -179,13 +234,46 @@ public class ContactViewGroup extends LinearLayout {
                 }
             }
 
-            ViewGroup call = (ViewGroup) findViewById(R.id.layout_call);
-            ViewGroup callwire = (ViewGroup) findViewById(R.id.layout_call_wiretel);
-            ViewGroup sendsms = (ViewGroup) findViewById(R.id.layout_send_sms);
+            /*手机ui*/
+            LinearLayout layout_phone1 = (LinearLayout) findViewById(R.id.layout_phone1);
+            LinearLayout layout_phone2 = (LinearLayout) findViewById(R.id.layout_phone2);
+            LinearLayout layout_phone3 = (LinearLayout) findViewById(R.id.layout_phone3);
+
+            TextView tv_phone_val1 = (TextView) findViewById(R.id.tv_phone_val1);
+            TextView tv_phone_val2 = (TextView) findViewById(R.id.tv_phone_val2);
+            TextView tv_phone_val3 = (TextView) findViewById(R.id.tv_phone_val3);
+
+            TextView tv_phone_name1 = (TextView) findViewById(R.id.tv_phone_name1);
+            TextView tv_phone_name2 = (TextView) findViewById(R.id.tv_phone_name2);
+            TextView tv_phone_name3 = (TextView) findViewById(R.id.tv_phone_name3);
+
+            LinearLayout layout_send_sms1 = (LinearLayout) findViewById(R.id.layout_send_sms1);
+            LinearLayout layout_send_sms2 = (LinearLayout) findViewById(R.id.layout_send_sms2);
+            LinearLayout layout_send_sms3 = (LinearLayout) findViewById(R.id.layout_send_sms3);
+
+            LinearLayout layout_phone_call1 = (LinearLayout) findViewById(R.id.layout_phone_call1);
+            LinearLayout layout_phone_call2 = (LinearLayout) findViewById(R.id.layout_phone_call2);
+            LinearLayout layout_phone_call3 = (LinearLayout) findViewById(R.id.layout_phone_call3);
+
+            /*座机ui*/
+            LinearLayout layout_wiretel1 = (LinearLayout) findViewById(R.id.layout_wiretel1);
+            LinearLayout layout_wiretel2 = (LinearLayout) findViewById(R.id.layout_wiretel2);
+            LinearLayout layout_wiretel3 = (LinearLayout) findViewById(R.id.layout_wiretel3);
+
+            TextView tv_wiletel_name1 = (TextView) findViewById(R.id.tv_wiletel_name1);
+            TextView tv_wiletel_name2 = (TextView) findViewById(R.id.tv_wiletel_name2);
+            TextView tv_wiletel_name3 = (TextView) findViewById(R.id.tv_wiletel_name3);
+
+            TextView tv_wiletel_val1 = (TextView) findViewById(R.id.tv_wiletel_val1);
+            TextView tv_wiletel_val2 = (TextView) findViewById(R.id.tv_wiletel_val2);
+            TextView tv_wiletel_val3 = (TextView) findViewById(R.id.tv_wiletel_val3);
+
+            LinearLayout layout_call_wiretel1 = (LinearLayout) findViewById(R.id.layout_call_wiretel1);
+            LinearLayout layout_call_wiretel2 = (LinearLayout) findViewById(R.id.layout_call_wiretel2);
+            LinearLayout layout_call_wiretel3 = (LinearLayout) findViewById(R.id.layout_call_wiretel3);
+
 
             TextView tv_name = (TextView) findViewById(R.id.tv_name);
-            TextView tv_tel = (TextView) findViewById(R.id.tv_phone);
-            TextView tv_wiletel = (TextView) findViewById(R.id.tv_wiletel);
             TextView tv_qq = (TextView) findViewById(R.id.tv_qq);
             TextView tv_birthday = (TextView) findViewById(R.id.tv_birthday);
             TextView tv_wx = (TextView) findViewById(R.id.tv_wx);
@@ -193,62 +281,99 @@ public class ContactViewGroup extends LinearLayout {
             TextView tv_memo = (TextView) findViewById(R.id.tv_memo);
             TextView tv_depart = (TextView) findViewById(R.id.tv_depart);
 
+
             tv_name.setText(mContact.getName());
-            tv_tel.setText(mContact.getTel());
-            tv_wiletel.setText(mContact.getWiretel());
+            tv_phone_val1.setText(mContact.getTel());       //兼容老数据
+            tv_wiletel_val1.setText(mContact.getWiretel()); //兼容老数据
             tv_qq.setText(mContact.getQq());
             tv_wx.setText(mContact.getWx());
             tv_email.setText(mContact.getEmail());
             tv_memo.setText(mContact.getMemo());
             tv_birthday.setText(mContact.getBirthStr());
-
             tv_depart.setText(mContact.deptName);
+
+            /*绑定手机号数据*/
+            if(null != mContact.telGroup){
+                switch (mContact.telGroup.size()) {
+
+                    case 1:
+                        tv_phone_val1.setText(mContact.telGroup.get(0));
+                        setTelOnClick(layout_phone_call1, layout_send_sms1, mContact.telGroup.get(0));
+                        break;
+
+                    case 2:
+                        layout_phone2.setVisibility(View.VISIBLE);
+                        tv_phone_name1.setText("手机1");
+                        tv_phone_name2.setText("手机2");
+                        tv_phone_val1.setText(mContact.telGroup.get(0));
+                        tv_phone_val2.setText(mContact.telGroup.get(1));
+                        setTelOnClick(layout_phone_call1, layout_send_sms1, mContact.telGroup.get(0));
+                        setTelOnClick(layout_phone_call2, layout_send_sms2, mContact.telGroup.get(1));
+                        break;
+
+                    case 3:
+                        layout_phone2.setVisibility(View.VISIBLE);
+                        layout_phone3.setVisibility(View.VISIBLE);
+                        tv_phone_name1.setText("手机1");
+                        tv_phone_name2.setText("手机2");
+                        tv_phone_name3.setText("手机3");
+                        tv_phone_val1.setText(mContact.telGroup.get(0));
+                        tv_phone_val2.setText(mContact.telGroup.get(1));
+                        tv_phone_val3.setText(mContact.telGroup.get(2));
+                        setTelOnClick(layout_phone_call1, layout_send_sms1, mContact.telGroup.get(0));
+                        setTelOnClick(layout_phone_call2, layout_send_sms2, mContact.telGroup.get(1));
+                        setTelOnClick(layout_phone_call3, layout_send_sms3, mContact.telGroup.get(2));
+                        break;
+
+                }
+            }
+
+
+             /*绑定座机号数据*/
+            if(null != mContact.wiretelGroup){
+                switch (mContact.wiretelGroup.size()) {
+
+                    case 1:
+                        tv_wiletel_val1.setText(mContact.wiretelGroup.get(0));
+                        setWriteOnClick(layout_call_wiretel1, mContact.wiretelGroup.get(0));
+                        break;
+
+                    case 2:
+                        layout_wiretel2.setVisibility(View.VISIBLE);
+                        tv_wiletel_name1.setText("座机1");
+                        tv_wiletel_name2.setText("座机2");
+                        tv_wiletel_val1.setText(mContact.wiretelGroup.get(0));
+                        tv_wiletel_val2.setText(mContact.wiretelGroup.get(1));
+
+                        setWriteOnClick(layout_call_wiretel1, mContact.wiretelGroup.get(0));
+                        setWriteOnClick(layout_call_wiretel2, mContact.wiretelGroup.get(1));
+                        break;
+
+                    case 3:
+                        layout_wiretel2.setVisibility(View.VISIBLE);
+                        layout_wiretel3.setVisibility(View.VISIBLE);
+                        tv_wiletel_name1.setText("座机1");
+                        tv_wiletel_name2.setText("座机2");
+                        tv_wiletel_name3.setText("座机3");
+                        tv_wiletel_val1.setText(mContact.wiretelGroup.get(0));
+                        tv_wiletel_val2.setText(mContact.wiretelGroup.get(1));
+                        tv_wiletel_val3.setText(mContact.wiretelGroup.get(2));
+
+                        setWriteOnClick(layout_call_wiretel1, mContact.wiretelGroup.get(0));
+                        setWriteOnClick(layout_call_wiretel2, mContact.wiretelGroup.get(1));
+                        setWriteOnClick(layout_call_wiretel3, mContact.wiretelGroup.get(2));
+                        break;
+
+                }
+            }
+
+
             if (mContact.isDefault()) {
                 default_.setImageResource(R.drawable.icon_contact_default_selected);
                 del.setVisibility(INVISIBLE);
             }
 
-            /*拨打手机*/
-            call.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(null == mContact.getTel() || mContact.getTel().isEmpty()){
-                        contactProcessCallback.onPhoneError();
-                        return;
-                    }
-                    /*if(!RegularCheck.isMobilePhone(mContact.getTel().replaceAll(" +",""))){
-                        contactProcessCallback.onPhoneError();
-                        return;
-                    }*/
-                    isMobile(mContact.getTel(),0);
-                }
-            });
-
-            /*拨打座机*/
-            callwire.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(null == mContact.getWiretel() || mContact.getWiretel().isEmpty()){
-                        contactProcessCallback.onPhoneError();
-                        return;
-                    }
-                    /*暂时注销座机号验证
-                    if(!RegularCheck.isPhoneNumberValid(mContact.getWiretel())){
-                        contactProcessCallback.onPhoneError();
-                        return;
-                    }*/
-                    isMobile(mContact.getWiretel(),1);
-                }
-            });
-
-            sendsms.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.sendSms(context, mContact.getTel());
-                }
-            });
-
-            //编辑联系人
+            /*编辑联系人*/
             edit.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {

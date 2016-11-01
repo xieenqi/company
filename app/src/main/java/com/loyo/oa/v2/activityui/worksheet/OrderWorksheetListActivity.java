@@ -115,7 +115,6 @@ public class OrderWorksheetListActivity extends BaseActivity implements View.OnC
         mOworssheetList = (OrderWorksheetListModel) event.bundle.getSerializable(ExtraAndResult.EXTRA_ID);
         boolean isEdit = event.bundle.getBoolean(ExtraAndResult.WELCOM_KEY,false);
         int position = event.bundle.getInt(ExtraAndResult.APP_START);
-        LogUtil.dee("onOrderWorksheetAddFinish:"+position);
         if(isEdit){
             reWorkSheet.set(position,mOworssheetList);
         }else{
