@@ -42,6 +42,7 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.voip.VoipManager;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -181,7 +182,14 @@ public class MainApp extends Application {
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
         GlideManager.getInstance().initWithContext(getApplicationContext());
+        VoipManager.getInstance().init(this);
 
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                VoipManager.getInstance().connectVoipServer();
+            }
+        }, 5000);
     }
 
     private void addActivityLifecycleCallback() {
