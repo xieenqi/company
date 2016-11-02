@@ -45,6 +45,7 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -263,11 +264,11 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         params.put("field", field);
         params.put("order", order);
         params.put("tagsParams", tagsParams);
-        LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
-        RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_SELF).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
+        LogUtil.d("我参与的查询参数：" + MainApp.gson.toJson(params));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getMemberCustomer(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        HttpErrorCheck.checkResponse("客户列表", response);
+                        HttpErrorCheck.checkResponse("我参与的", response);
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
+import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.TeamCustomerFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
@@ -111,7 +112,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private float mRotation = 0;
 
     private Permission permission;
-    private String[] SaleItemStatus = new String[]{"我的客户", "公海客户"};
+    private String[] SaleItemStatus = new String[]{"我负责的","我参与的", "公海客户"};
     private List<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mTags1;
@@ -177,7 +178,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
 
     private void initView() {
 
-        setTitle("我的客户");
+        setTitle("我负责的");
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
@@ -196,7 +197,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         //超级管理员权全公司  没有获取到权限就不显示
         permission = MainApp.rootMap.get("0205"); //客户权限
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
-            SaleItemStatus = new String[]{"我的客户","团队客户", "公海客户"};
+            SaleItemStatus = new String[]{"我负责的","我参与的","团队客户", "公海客户"};
             publicOrTeam = true;
         }
 
@@ -227,11 +228,16 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private void initChildren() {
         for (int i = 0; i < SaleItemStatus.length; i++) {
             BaseFragment fragment = null;
-            if ("我的客户".equals(SaleItemStatus[i])) {
+            if ("我负责的".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
                 b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, MyResponFragment.class.getName(), b);
+            } else if ("我参与的".equals(SaleItemStatus[i])) {
+                Bundle b = new Bundle();
+                b.putSerializable("tag", mTags1);
+                b.putSerializable("permission", permission);
+                fragment = (BaseFragment) Fragment.instantiate(this, MyMemberFragment.class.getName(), b);
             } else if ("团队客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags2);

@@ -46,6 +46,18 @@ public interface ICustomer {
     void query(@QueryMap Map<String, Object> params, Callback<PaginationX<Customer>> cb);
 
     /**
+     * 我负责的客户
+     * */
+    @GET("/customer/own/mobile/simplify/")
+    void getResponCustomer(@QueryMap Map<String, Object> params, Callback<PaginationX<Customer>> cb);
+
+    /**
+     * 我参与的客户
+     * */
+    @GET("/customer/link/mobile/simplify/")
+    void getMemberCustomer(@QueryMap Map<String, Object> params, Callback<PaginationX<Customer>> cb);
+
+    /**
      * 查询附近客户数量
      *
      * @param position
