@@ -18,6 +18,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
@@ -34,6 +35,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
@@ -621,16 +623,20 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     public void success(final Customer customer, final Response response) {
                         HttpErrorCheck.checkResponse("更新客户信息", response);
                         app.isCutomerEdit = true;
-                        Intent intent = new Intent();
                         customer.loc = mLocate;
-                        boolean isCreator;
+                        //Intent intent = new Intent();
+                        /*boolean isCreator;
                         if (!owner.id.equals(MainApp.user.getId())) {
                             isCreator = false;
                         } else {
                             isCreator = true;
                         }
                         intent.putExtra("isCreator", isCreator);
-                        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);
+                        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);*/
+
+                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+                        finish();
+
                     }
 
                     @Override

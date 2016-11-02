@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
@@ -21,6 +22,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.ICustomer;
@@ -374,7 +376,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(mCustomer.getId(), new RCallback<Customer>() {
             @Override
             public void success(final Customer newCustomer, final Response response) {
-                app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                //app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
             }
 
             @Override
@@ -393,7 +397,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(final Customer newCustomer, final Response response) {
                 isPutOcen = true;
-                app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
             }
 
             @Override
@@ -414,7 +419,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*返回*/
             case R.id.img_title_left:
                 if (isPutOcen) {
-                    app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                    AppBus.getInstance().post(new MyCustomerListRushEvent());
+                    finish();
                 } else {
                     onBackPressed();
                 }
@@ -438,7 +444,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer newCustomer, final Response response) {
-                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+                        finish();
                     }
 
                     @Override
@@ -553,7 +560,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (isPutOcen) {
-                app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
             } else {
                 onBackPressed();
             }
@@ -572,7 +580,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     Bundle bundle = data.getExtras();
                     boolean isCreator = bundle.getBoolean("isCreator");
                     if (!isCreator) {
-                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+                        finish();
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();

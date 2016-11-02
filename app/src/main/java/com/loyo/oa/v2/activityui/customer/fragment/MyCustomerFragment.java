@@ -27,6 +27,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.MyContactMailList;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.activityui.customer.presenter.MyCustomerFragPresenter;
@@ -52,6 +53,8 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -407,16 +410,14 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         }
     };
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            //客户详情操作回调
-            case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
-                getData();
-                break;
-        }
+    /**
+     * 刷新列表回调
+     * */
+    @Subscribe
+    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event){
+        getData();
     }
+
 
     /**
      * 通讯录导入客户

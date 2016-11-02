@@ -20,6 +20,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CommCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -39,6 +40,8 @@ import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.ScreenTagPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -317,15 +320,12 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         }
     };
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            //客户详情操作回调
-            case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
-                getData();
-                break;
-        }
+    /**
+     * 刷新列表回调
+     * */
+    @Subscribe
+    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event){
+        getData();
     }
+
 }
