@@ -9,39 +9,26 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.presenter.ContactInfoEditPresenter;
 import com.loyo.oa.v2.activityui.contact.presenter.impl.ContactInfoEditPresenterImpl;
 import com.loyo.oa.v2.activityui.contact.viewcontrol.ContactInfoView;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.activityui.setting.ResePhoneActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
-import com.loyo.oa.v2.db.EntityConvertHelper;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
-import com.loyo.oa.v2.point.IUser;
-import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -190,7 +177,9 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 //                break;
             /* 性别设置 */
             case R.id.ll_sex:
-                Toast("性别设置");
+                Bundle sexBundle = new Bundle();
+                sexBundle.putString("sex", tv_sex.getText().toString());
+                app.startActivityForResult(this, SexSelectActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_SEND, sexBundle);
                 break;
         }
     }

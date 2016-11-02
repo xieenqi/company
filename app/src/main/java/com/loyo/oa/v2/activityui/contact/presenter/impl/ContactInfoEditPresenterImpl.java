@@ -128,10 +128,10 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
         } else {
             String[] tt = shortDeptNames.split(",");
             for (String ele : tt) {
-                if (!ele.contains("|"))
-                    continue;
-                String[] t = ele.split("\\|");
-                positionNames = positionNames + t[1];
+                if (ele.contains("|")) {
+                    String[] t = ele.split("\\|");
+                    positionNames = positionNames + t[1];
+                }
             }
         }
         return positionNames;
