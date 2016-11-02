@@ -176,24 +176,24 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
         mDialog.show();
     }
 
-    /**
-     * 弹出提示框
-     */
-    @Override
-    public void showLeaveDialog(final SweetAlertDialogView sweetAlertDialogView) {
-        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                sweetAlertDialogView.sweetAlertDialog.dismiss();
-            }
-        }, new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                sweetAlertDialogView.sweetAlertDialog.dismiss();
-                crolView.leaveDialogEmbl();
-            }
-        }, "提示", mContext.getString(R.string.app_userinfoedt_message));
-    }
+//    /**
+//     * 弹出提示框
+//     */
+//    @Override
+//    public void showLeaveDialog(final SweetAlertDialogView sweetAlertDialogView) {
+//        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                sweetAlertDialogView.sweetAlertDialog.dismiss();
+//            }
+//        }, new SweetAlertDialog.OnSweetClickListener() {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                sweetAlertDialogView.sweetAlertDialog.dismiss();
+//                crolView.leaveDialogEmbl();
+//            }
+//        }, "提示", mContext.getString(R.string.app_userinfoedt_message));
+//    }
 
     /**
      * 判断数据是否被编辑过

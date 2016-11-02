@@ -23,6 +23,7 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
+import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -49,7 +50,7 @@ import retrofit.http.HEAD;
 @EActivity(R.layout.activity_contactinfo_edit)
 public class ContactInfoEditActivity extends BaseActivity implements ContactInfoView {
 
-    private final int REQUEST_IMAGE = 100;
+    private final int REQUEST_IMAGE = 111;
 
     @ViewById
     ViewGroup layout_back;
@@ -94,9 +95,9 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     private int sex;
     private String path = null;
     private MHandler mHandler = new MHandler(this);
-    private String resultPhone;
+    private String wechat;
     private String birthStr;
-    private int age;
+//    private int age;
 
     private ContactInfoEditPresenter mPresenter;
 
@@ -112,13 +113,13 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             super.handleMessage(msg);
 
             if (msg.what == 0x01) {
-                Utils.setContent(tv_birthday, birthStr);
-                Utils.setContent(tv_age, age + "");
+                updateProfile();
+//                Utils.setContent(tv_age, age + "");
             }
+//            if (msg.what == 0x02) {
+//                tv_mobile.setText(resultPhone);
+//            }
 
-            if (msg.what == 0x02) {
-                tv_mobile.setText(resultPhone);
-            }
         }
     }
 
@@ -135,10 +136,11 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         layout_set_avartar.setOnTouchListener(Global.GetTouch());
         layout_weixin.setOnTouchListener(Global.GetTouch());
         layout_birthday.setOnTouchListener(Global.GetTouch());
+        iv_submit.setVisibility(View.GONE);
         initData();
     }
 
-    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.ll_sex, R.id.iv_submit, R.id.layout_birthday, R.id.layout_weixin})
+    @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.ll_sex, R.id.layout_birthday, R.id.layout_weixin})
     void onClick(final View v) {
         switch (v.getId()) {
 
@@ -146,34 +148,20 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             case R.id.layout_back:
                 onBackPressed();
                 break;
-
             /*设置头像*/
             case R.id.layout_set_avartar:
                 Intent intent = new Intent(this, MultiImageSelectorActivity.class);
                 mPresenter.setHeadImage(ContactInfoEditActivity.this, intent, REQUEST_IMAGE);
                 break;
-
             /*生日设置*/
             case R.id.layout_birthday:
                 mPresenter.pickDate(mHandler);
                 break;
-
-            /*提交*/
-            case R.id.iv_submit:
-                //关闭键盘
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                if (imm.isActive()) {
-//                    imm.hideSoftInputFromWindow(et_weixin.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-//                }
-                updateProfile();
-                break;
             case R.id.layout_weixin:
-                Toast("修改微信");
+                Bundle wechatBundle = new Bundle();
+                wechatBundle.putString("wechat", et_weixin.getText().toString());
+                app.startActivityForResult(this, AlterWechatActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, wechatBundle);
                 break;
-//            /*修改电话*/
-//            case R.id.layout_mobile:
-//                app.startActivityForResult(this, ResePhoneActivity.class,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.MSG_SEND,new Bundle());
-//                break;
             /* 性别设置 */
             case R.id.ll_sex:
                 Bundle sexBundle = new Bundle();
@@ -205,6 +193,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         path = user.avatar;
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
+        wechat = user.weixinId;
         Utils.setContent(name_title_user, MainApp.user.getRealname());
         setSex(user.gender);
         if (!TextUtils.isEmpty(user.birthDay)) {
@@ -213,6 +202,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
                 return;
             }
             Utils.setContent(tv_birthday, user.birthDay);
+            birthStr = user.birthDay;
             Utils.setContent(tv_age, Utils.getAge(user.birthDay.substring(0, 4)) + "");
         }
         tv_departments.setText(mPresenter.getDepartments(user.shortDeptNames));
@@ -220,6 +210,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     }
 
     private void setSex(int sex) {
+        this.sex = sex;
         if (sex == 2) {
             tv_sex.setText("女");
         } else if (sex == 1) {
@@ -231,19 +222,9 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
      * 编辑个人信息
      */
     private void updateProfile() {
-
-//        if (!et_weixin.getText().toString().isEmpty()) {
-//            if (!RegexUtil.regexk(et_weixin.getText().toString(), RegexUtil.StringType.WX)) {
-//                Toast("微信号码不正确");
-//                return;
-//            }
-//        }
-
-        showLoading("正在提交");
-        mPresenter.updateProfile(user.id, tv_mobile.getText().toString(),
-                sex, tv_birthday.getText().toString(),
-                et_weixin.getText().toString(), path);
-
+//        showLoading("正在提交");
+        mPresenter.updateProfile(user.id,
+                tv_mobile.getText().toString(), sex, birthStr, wechat, path);
     }
 
 
@@ -252,10 +233,9 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
      */
     @Override
     public void updateProfileEmbl() {
-        Toast("修改个人信息成功");
-//        Intent mIntent = new Intent();
-//        mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
-//        app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
+        setSex(sex);
+        et_weixin.setText(wechat);
+        Utils.setContent(tv_birthday, birthStr);
         if (user.id != null) {
             user.mobile = tv_mobile.getText().toString();
             user.birthDay = tv_birthday.getText().toString();
@@ -268,7 +248,8 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             it.putExtra("userId", user.id);
             sendBroadcast(it);
         }
-        setSex(sex);
+        Toast("修改个人信息成功");
+        InitDataService_.intent(ContactInfoEditActivity.this).start();
     }
 
     /**
@@ -294,6 +275,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     @Override
     public void setHeadImage(String path) {
         this.path = path;
+        updateProfile();
     }
 
     @Override
@@ -316,11 +298,9 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
      */
     @Override
     public void onBackPressed() {
-        if (!mPresenter.isDataChange(tv_mobile, tv_birthday, et_weixin, user, sex)) {
-            mPresenter.showLeaveDialog(sweetAlertDialogView);
-        } else {
-            app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
-        }
+        Intent mIntent = new Intent();
+        mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
+        app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, mIntent);
     }
 
     /**
@@ -329,7 +309,6 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (null == data) {
             return;
         }
@@ -338,21 +317,16 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             case REQUEST_IMAGE:
                 List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 mPresenter.upload(mSelectPath, img_title_user);
-                updateProfile();
                 break;
+            /* 设置性别 */
             case ExtraAndResult.MSG_SEND:
                 sex = data.getIntExtra("sex", -1);
                 updateProfile();
                 break;
-
+            case ExtraAndResult.REQUEST_CODE:
+                wechat = data.getStringExtra("wechat");
+                updateProfile();
+                break;
         }
-
-//        if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
-//            List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-//            mPresenter.upload(mSelectPath, uuid, img_title_user);
-//        } else if (requestCode == ExtraAndResult.MSG_SEND) {
-//            resultPhone = data.getStringExtra("phone");
-//            mHandler.sendEmptyMessage(0x02);
-//        }
     }
 }

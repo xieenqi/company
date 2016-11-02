@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -22,16 +23,19 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import org.androidannotations.annotations.Click;
+
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
  * 修改手机号
  * Created by yyy on 2016/9/29
- * */
-public class ResePhoneActivity extends BaseActivity implements View.OnClickListener{
+ */
+public class ResePhoneActivity extends BaseActivity implements View.OnClickListener {
 
     private ViewGroup img_title_left;
     private TextView tv_title_1;
@@ -46,13 +50,13 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
         initUI();
     }
 
-    void initUI(){
+    void initUI() {
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
-        tv_title_1     = (TextView) findViewById(R.id.tv_title_1);
-        btn_confirm    = (Button) findViewById(R.id.btn_confirm);
-        btn_get_code   = (Button) findViewById(R.id.btn_get_code);
-        et_account     = (EditText) findViewById(R.id.et_account);
-        et_code        = (EditText) findViewById(R.id.et_code);
+        tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
+        btn_confirm = (Button) findViewById(R.id.btn_confirm);
+        btn_get_code = (Button) findViewById(R.id.btn_get_code);
+        et_account = (EditText) findViewById(R.id.et_account);
+        et_code = (EditText) findViewById(R.id.et_code);
 
         Global.SetTouchView(img_title_left, btn_confirm, btn_get_code);
         et_account.addTextChangedListener(textWatcher);
@@ -139,8 +143,8 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
                 HttpErrorCheck.checkResponse(response);
                 Toast("修改手机号码成功");
                 Intent mIntent = new Intent();
-                mIntent.putExtra("phone",mobile);
-                app.finishActivity(ResePhoneActivity.this,MainApp.ENTER_TYPE_LEFT,RESULT_OK,mIntent);
+                mIntent.putExtra("phone", mobile);
+                app.finishActivity(ResePhoneActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
                 finish();
             }
 
@@ -204,7 +208,7 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             /*返回*/
             case R.id.img_title_left:
                 onBackPressed();

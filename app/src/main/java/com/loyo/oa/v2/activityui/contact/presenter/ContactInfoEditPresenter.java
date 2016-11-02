@@ -24,8 +24,8 @@ public interface ContactInfoEditPresenter {
     /*生日选择控件*/
     void pickDate(Handler mHandler);
 
-    /*弹出提示框*/
-    void showLeaveDialog(SweetAlertDialogView sweetAlertDialogView);
+//    /*弹出提示框*/
+//    void showLeaveDialog(SweetAlertDialogView sweetAlertDialogView);
 
     /*判断数据是否被编辑过*/
     boolean isDataChange(TextView tv_mobile, TextView tv_birthday, TextView et_weixin, DBUser mUser, int sex);
