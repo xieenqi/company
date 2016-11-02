@@ -8,15 +8,10 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.voip.api.IVOIP;
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-import com.loyo.oa.voip.model.ResponseBase;
-import com.loyo.oa.voip.model.VoipToken;
-=======
 import com.loyo.oa.voip.callback.OnRespond;
 import com.loyo.oa.voip.model.ResponseBase;
 import com.loyo.oa.voip.model.VoipToken;
 import com.yzx.api.CallType;
->>>>>>> voip 初始化sdk
 import com.yzx.api.UCSCall;
 import com.yzx.api.UCSCameraType;
 import com.yzx.api.UCSService;
@@ -103,10 +98,6 @@ public class VoipManager implements CallStateListener {
 
             @Override
             public void onLogin(UcsReason reason) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-                Log.v("yzx", "onLogin");
-=======
->>>>>>> voip 初始化sdk
                 if (reason.getReason() == 300107) {
 
                 }
@@ -117,8 +108,6 @@ public class VoipManager implements CallStateListener {
         });
     }
 
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-=======
     private void connect(String token , final OnRespond callback) {
         UCSManager.connect(token, new ILoginListener(){
 
@@ -183,7 +172,6 @@ public class VoipManager implements CallStateListener {
 
     }
 
->>>>>>> voip 初始化sdk
     public void connectVoipServer() {
         Observable.just("connect")
                 .map(new Func1<String, ResponseBase<String>>() {
@@ -231,24 +219,7 @@ public class VoipManager implements CallStateListener {
 
     }
 
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-    public void dialNumber(String phone) {
-        //
-//        if (not connect) {
-//            connectVoipServer();
-//        }
-//        else {
-//            dial();
-//        }
-    }
 
-    public void switchSpeackPhone(boolean on) {
-
-    }
-
-    public void switchMicMute(boolean on) {
-
-=======
     public void dialNumber(final String phone) {
         if (phone == null || phone.length() <= 0) {
             return;
@@ -289,7 +260,6 @@ public class VoipManager implements CallStateListener {
 
     public void switchMicMute(boolean on) {
         UCSCall.setMicMute(on);
->>>>>>> voip 初始化sdk
     }
 
     public void sendDTMF(int dtmfCode) {
@@ -301,10 +271,7 @@ public class VoipManager implements CallStateListener {
     }
 
     public void startCallRinging() {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-=======
         // TODO:
->>>>>>> voip 初始化sdk
         UCSCall.startCallRinging(mContext, null);
     }
 
@@ -313,10 +280,7 @@ public class VoipManager implements CallStateListener {
     }
 
     public void startRecording() {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-=======
         // TODO:
->>>>>>> voip 初始化sdk
         UCSCall.StartRecord(null);
     }
 
@@ -331,31 +295,16 @@ public class VoipManager implements CallStateListener {
      */
     @Override
     public void onDialFailed(String s, UcsReason reason) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-
-=======
         Log.v("yzx", "onDialFailed");
->>>>>>> voip 初始化sdk
     }
 
     @Override
     public void onIncomingCall(String s, String s1, String s2, String s3, String s4) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-
-=======
         Log.v("yzx", "onIncomingCall");
->>>>>>> voip 初始化sdk
     }
 
     @Override
     public void onHangUp(String s, UcsReason reason) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-
-    }
-
-    @Override
-    public void onAlerting(String s) {
-=======
         Log.v("yzx", "onHangUp");
 
     }
@@ -364,19 +313,10 @@ public class VoipManager implements CallStateListener {
     @Override
     public void onAlerting(String s) {
         Log.v("yzx", "onAlerting");
->>>>>>> voip 初始化sdk
-
     }
 
     @Override
     public void onAnswer(String s) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-
-    }
-
-    @Override
-    public void onNetWorkState(int i, String s) {
-=======
         Log.v("yzx", "onAnswer");
 
     }
@@ -390,79 +330,49 @@ public class VoipManager implements CallStateListener {
     @Override
     public void onNetWorkState(int i, String s) {
         Log.v("yzx", "onNetWorkState");
->>>>>>> voip 初始化sdk
-
     }
 
     @Override
     public void onDTMF(int i) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-=======
         Log.v("yzx", "onDTMF");
->>>>>>> voip 初始化sdk
-
     }
 
     @Override
     public void onCameraCapture(String s) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-
-=======
         Log.v("yzx", "onCameraCapture");
->>>>>>> voip 初始化sdk
     }
 
     @Override
     public void singlePass(int i) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-
-=======
         Log.v("yzx", "singlePass");
->>>>>>> voip 初始化sdk
     }
 
     @Override
     public void onRemoteCameraMode(UCSCameraType type) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-=======
         Log.v("yzx", "onRemoteCameraMode");
->>>>>>> voip 初始化sdk
 
     }
 
     @Override
     public void onEncryptStream(byte[] bytes, byte[] bytes1, int i, int[] ints) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-=======
         Log.v("yzx", "onEncryptStream");
->>>>>>> voip 初始化sdk
-
     }
 
     @Override
     public void onDecryptStream(byte[] bytes, byte[] bytes1, int i, int[] ints) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-=======
         Log.v("yzx", "onDecryptStream");
->>>>>>> voip 初始化sdk
 
     }
 
     @Override
     public void initPlayout(int i, int i1, int i2) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-=======
         Log.v("yzx", "initPlayout");
->>>>>>> voip 初始化sdk
 
     }
 
     @Override
     public void initRecording(int i, int i1, int i2) {
-<<<<<<< 897ca90f9f300811cf5d97686e6e8ccf502f2ac6
-=======
         Log.v("yzx", "initRecording");
->>>>>>> voip 初始化sdk
 
     }
 
