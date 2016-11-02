@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -31,6 +32,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <!-- 升级到系统权限 修改手机连接网路状态权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -48,6 +51,9 @@
     <!-- Optional. Required for location feature -->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:name=".application.MainApp"
@@ -862,6 +868,13 @@
                 <category android:name="${applicationId}" />
             </intent-filter>
         </service>
+
+        <service android:name="com.yzxtcp.service.YzxIMCoreService" />
+        <receiver android:name="com.yzxtcp.tools.tcp.receiver.AlarmReceiver" >
+        </receiver>
+        <receiver android:name="com.yzxtcp.tools.tcp.receiver.MsgBackReceiver" >
+        </receiver>
+        <receiver android:name="com.yzx.tools.RtppReceiver" />
 
         <!-- Required SDK核心功能 -->
         <receiver
