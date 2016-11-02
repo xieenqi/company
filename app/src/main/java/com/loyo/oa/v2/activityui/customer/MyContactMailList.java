@@ -12,17 +12,20 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.MyContactInfoListAdapter;
+import com.loyo.oa.v2.activityui.customer.event.ContactMaillistRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.MyContactInfo;
 import com.loyo.oa.v2.activityui.wfinstance.ProcessSelectActivity;
 import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.SideBar;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ContactInfoUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.Serializable;
@@ -51,6 +54,9 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
     private MyContactInfoListAdapter mAdapter;
     private PinyinComparator pinyinComparator;
 
+    private int pageForm = 0;//1:来自联系人 2:来自新建客户
+    private boolean isEdit;  //新建联系人已被编辑
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +74,6 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
                 && PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.WRITE_CONTACTS", "com.loyo.oa.v2")) {
         } else {
-
             final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
             sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
@@ -85,6 +90,30 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
                 }
             },"提示","需要使用通讯录读写权限\n请在”设置”>“应用”>“权限”中配置权限");
             return;
+        }
+
+        pageForm = getIntent().getIntExtra(ExtraAndResult.EXTRA_NAME,0);
+        isEdit   = getIntent().getBooleanExtra(ExtraAndResult.EXTRA_OBJ,false);
+
+        if(pageForm == 0){
+            Toast("参数不完整");
+            finish();
+        }
+
+        if(isEdit){
+            final SweetAlertDialogView sDialog = new SweetAlertDialogView(this);
+            sDialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sDialog.sweetAlertDialog.dismiss();
+                }
+            },"提示","您确定要覆盖已编辑的联系人信息吗?");
         }
 
         pinyinComparator = new PinyinComparator();
@@ -124,10 +153,24 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
         sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Bundle mBundle = new Bundle();
-                mBundle.putString(ExtraAndResult.EXTRA_NAME, contactInfoList.get(position).getName());
-                mBundle.putString(ExtraAndResult.EXTRA_DATA, contactInfoList.get(position).getPhono());
-                app.startActivity(MyContactMailList.this, CustomerAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, mBundle);
+
+                /*来自联系人*/
+                if(pageForm == 1){
+                    ContactMaillistRushEvent event = new ContactMaillistRushEvent();
+                    event.bundle = new Bundle();
+                    event.bundle.putString(ExtraAndResult.EXTRA_NAME, contactInfoList.get(position).getName());
+                    event.bundle.putString(ExtraAndResult.EXTRA_DATA, contactInfoList.get(position).getPhono());
+                    AppBus.getInstance().post(event);
+                    finish();
+                }
+                /*来自新建客户*/
+                else if(pageForm == 2){
+                    Bundle mBundle = new Bundle();
+                    mBundle.putString(ExtraAndResult.EXTRA_NAME, contactInfoList.get(position).getName());
+                    mBundle.putString(ExtraAndResult.EXTRA_DATA, contactInfoList.get(position).getPhono());
+                    app.startActivity(MyContactMailList.this, CustomerAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, mBundle);
+                }
+
             }
         });
     }

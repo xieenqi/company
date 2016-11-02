@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -115,8 +116,13 @@ public class CallPhoneBackActivity extends BaseActivity implements View.OnClickL
         iv_call_gua.setOnClickListener(this);
         iv_call_gua.setOnTouchListener(Global.GetTouch());
 
-        tv_call_name.setText(name);
-        tv_call_title.setText(name.substring(0,1));
+        if(TextUtils.isEmpty(name)){
+            tv_call_name.setText("无姓名");
+            tv_call_title.setText("无");
+        }else{
+            tv_call_name.setText(name);
+            tv_call_title.setText(name.substring(0,1));
+        }
 
         mBroadcastReceiver = new BroadcastReceiverMgr(this);
         IntentFilter intentFilter = new IntentFilter();

@@ -1,17 +1,22 @@
 package com.loyo.oa.v2.activityui.work.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 
+import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
+import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.model.FilterModel;
+import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.WorkReportRecord;
+import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsSearchActivity;
-import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.activityui.work.common.WorkReportCategoryMenuModel;
+import com.loyo.oa.v2.activityui.work.common.WorkReportStatusMenuModel;
+import com.loyo.oa.v2.activityui.work.common.WorkReportTypeMenuModel;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -19,7 +24,6 @@ import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,13 +34,9 @@ import java.util.List;
  */
 public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkReportRecord> {
 
-    private static final String FILTER_SEND_TYPE[] = new String[]{"全部类型", "提交给我的", "我提交的", "抄送给我的"};
-    private static final String FILTER_STATUS[] = new String[]{"全部状态", "待点评", "已点评"};
-    private static final String FILTER_TYPE[] = new String[]{"全部类别", "日报", "周报", "月报"};
-
-    private int sendType = 0;
-    private int type = 0;
-    private int status = 0;
+    private String typeParam = "0";
+    private String statusParam = "0";
+    private String categoryParam = "0";
     public int reports;
     private CommonExpandableListAdapter mAdapter;
 
@@ -82,9 +82,9 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
-        map.put("reportType", type);
-        map.put("sendType", sendType);
-        map.put("isReviewed", status);
+        map.put("reportType", categoryParam);
+        map.put("sendType", typeParam);
+        map.put("isReviewed", statusParam);
 
         LogUtil.dll("客户端发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReportsData(map, this);
@@ -110,50 +110,36 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
     @Override
     public void initTab() {
-        initDropMenu();
+        loadFilterOptions();
     }
 
     /**
      * 初始化下拉菜单
      */
-    private void initDropMenu() {
-
-        mMenu.setVisibility(View.VISIBLE);
-        mMenu.setmMenuCount(3);//Menu的个数
-        mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
-        mMenu.setShowCheck(true);//是否显示展开list的选中项
-        mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
-        mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
-        mMenu.setmMenuListTextSize(14);//Menu展开list的文字大小
-        mMenu.setmMenuListTextColor(Color.BLACK);//Menu展开list的文字颜色
-        mMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
-        mMenu.setmMenuPressedBackColor(getResources().getColor(R.color.white));//Menu按下的背景颜色
-        mMenu.setmCheckIcon(R.drawable.img_check1);//Menu展开list的勾选图片
-        mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
-        mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
-        mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态", "全部类别"});//默认未选择任何过滤的Menu title
-
-        List<String[]> items = new ArrayList<>();
-        items.add(FILTER_SEND_TYPE);
-        items.add(FILTER_STATUS);
-        items.add(FILTER_TYPE);
-
-        mMenu.setmMenuItems(items);
-        mMenu.setMenuSelectedListener(new OnMenuSelectedListener() {
+    private void loadFilterOptions() {
+        List<FilterModel> options = new ArrayList<>();
+        options.add(WorkReportTypeMenuModel.getFilterModel());
+        options.add(WorkReportStatusMenuModel.getFilterModel());
+        options.add(WorkReportCategoryMenuModel.getFilterModel());
+        DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
+        filterMenu.setMenuAdapter(adapter);
+        adapter.setCallback(new OnMenuModelsSelected() {
             @Override
-            //Menu展开的list点击事件  RowIndex：list的索引  ColumnIndex：menu的索引
-            public void onSelected(View listview, int RowIndex, int ColumnIndex) {
-                app.logUtil.e(" 行 : " + RowIndex + " 列 : " + ColumnIndex);
-                switch (ColumnIndex) {
-                    case 0:
-                        sendType = RowIndex;
-                        break;
-                    case 1:
-                        status = RowIndex;
-                        break;
-                    case 2:
-                        type = RowIndex;
-                        break;
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
+                filterMenu.close();
+                MenuModel model = selectedModels.get(0);
+                String key = model.getKey();
+                String value = model.getValue();
+                filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
+
+                if (menuIndex == 0) {
+                    typeParam = key;
+                }
+                else if (menuIndex == 1) {
+                    statusParam = key;
+                }
+                else if (menuIndex == 2) {
+                    categoryParam = key;
                 }
                 onPullDownToRefresh(mExpandableListView);
             }

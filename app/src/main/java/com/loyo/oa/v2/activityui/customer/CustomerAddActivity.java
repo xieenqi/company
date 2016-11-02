@@ -9,17 +9,13 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
@@ -49,17 +45,14 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -162,6 +155,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private boolean cusMobile = false;//座机权限
     private boolean cusLocation = false;//定位权限
     private boolean cusDetialAdress = false;//客户的详细地址
+
+    private ArrayList<String> telGroup;
+    private ArrayList<String> wiretelGroup;
+
 
     private PositionResultItem positionResultItem;
 
@@ -400,13 +397,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             //提交
             case R.id.img_title_right:
 
-                String phone1 = edt_contract_tel1.getText().toString().trim();
-                String phone2 = edt_contract_tel2.getText().toString().trim();
-                String phone3 = edt_contract_tel3.getText().toString().trim();
-                String call1 = edt_contract_telnum1.getText().toString().trim();
-                String call2 = edt_contract_telnum2.getText().toString().trim();
-                String call3 = edt_contract_telnum3.getText().toString().trim();
-
                 uuid = StringUtil.getUUID();
                 customer_name = edt_name.getText().toString().trim();
                 customerAddress = et_address.getText().toString().trim();
@@ -517,6 +507,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
+    public void getTelNum(EditText editText,ArrayList<String> arrayList){
+        if(!TextUtils.isEmpty(editText.getText().toString())){
+            arrayList.add(editText.getText().toString());
+        }
+    }
+
 
     /**
      * 新建客户请求
@@ -539,6 +535,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         HttpAddCustomer locData = new HttpAddCustomer();
         locData.loc.addr = cusotmerDetalisAddress;
 
+        telGroup = new ArrayList<>();
+        wiretelGroup = new ArrayList<>();
+
+        getTelNum(edt_contract_tel1,telGroup);
+        getTelNum(edt_contract_tel2,telGroup);
+        getTelNum(edt_contract_tel3,telGroup);
+        getTelNum(edt_contract_telnum1,wiretelGroup);
+        getTelNum(edt_contract_telnum2,wiretelGroup);
+        getTelNum(edt_contract_telnum3,wiretelGroup);
+
         HashMap<String, Object> map = new HashMap<>();
         if (pickPhots.size() > 0) {
             map.put("attachmentCount", pickPhots.size());
@@ -549,10 +555,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("loc", locData.loc);          //地址详情数据
         map.put("name", customer_name);
         map.put("pname", customerContract);
-        map.put("ptel", customerContractTel);
-        map.put("wiretel", customerWrietele);
+        /*map.put("ptel", customerContractTel);
+        map.put("wiretel", customerWrietele);*/
         map.put("tags", positionData.tags);
+        map.put("telGroup", telGroup);
+        map.put("wiretelGroup", wiretelGroup);
 
+        LogUtil.dee("新建客户map:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
@@ -719,6 +728,4 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 break;
         }
     }
-
-
 }
