@@ -26,6 +26,7 @@ import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.setting.SettingActivity;
 import com.loyo.oa.v2.activityui.setting.SettingPasswordActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -99,7 +100,7 @@ public class MenuFragment extends BaseFragment {
                     Toast("数据更新成功！");
                     isUpdataData = false;
                 }
-                setDiskCacheInfo();
+//                setDiskCacheInfo();
             } else if ("exite".equals(info) && !isExite) {
                 exit();
                 isExite = true;
@@ -287,8 +288,8 @@ public class MenuFragment extends BaseFragment {
                 break;
             //设置
             case R.id.ll_setting:
-//
-//                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                app.startActivity(mActivity, SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+//          、      sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
 //                    @Override
 //                    public void onClick(SweetAlertDialog sweetAlertDialog) {
 //                        cancelDialog();
@@ -426,27 +427,5 @@ public class MenuFragment extends BaseFragment {
         app.startActivity(mActivity, LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }
 
-    /**
-     * 设置缓存信息
-     */
-    private void setDiskCacheInfo() {
-        final File cacheDir = StorageUtils.getOwnCacheDirectory(app, "imageloader/Cache");
-        LogUtil.d("缓存路径：" + cacheDir.getPath());
-        new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                final String length = FileTool.formatFileSize(cacheDir.getPath());
-                handler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        tv_file.setText(length.equals("0B") ? "" : length);
-                        cancelLoading();
-                    }
-                });
-                LogUtil.d("缓存路径文件大小：" + length);
-            }
-        }).start();
-    }
 }

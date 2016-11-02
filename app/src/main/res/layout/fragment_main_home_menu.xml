@@ -120,7 +120,7 @@
             android:layout_height="@dimen/view_h_title"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
