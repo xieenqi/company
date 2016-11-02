@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
-import com.loyo.oa.v2.activityui.customer.fragment.MyCustomerFragment;
+import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.TeamCustomerFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -196,7 +196,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         //超级管理员权全公司  没有获取到权限就不显示
         permission = MainApp.rootMap.get("0205"); //客户权限
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
-            SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
+            SaleItemStatus = new String[]{"我的客户","团队客户", "公海客户"};
             publicOrTeam = true;
         }
 
@@ -231,7 +231,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
                 b.putSerializable("permission", permission);
-                fragment = (BaseFragment) Fragment.instantiate(this, MyCustomerFragment.class.getName(), b);
+                fragment = (BaseFragment) Fragment.instantiate(this, MyResponFragment.class.getName(), b);
             } else if ("团队客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags2);

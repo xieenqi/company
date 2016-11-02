@@ -410,7 +410,7 @@ public class ContactViewGroup extends LinearLayout {
 
 
         //添加动态字段
-        addView(new ContactListExtra(context, mContact.getExtDatas(), leftExtrases, false, R.color.text99, 14));
+        addView(new ContactListExtra(context, mContact.getExtDatas(), leftExtrases, false, 14));
 
         //加载子条目
         parent.addView(this);

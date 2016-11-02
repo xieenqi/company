@@ -25,11 +25,7 @@ import com.loyo.oa.v2.tool.ViewUtil;
 import java.util.HashMap;
 
 /**
-<<<<<<< HEAD
- * 【登录界面】
-=======
  * 【登录界面】MVP重构
->>>>>>> organization-merge
  * Restructure by yyy on 2016/10/8
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener, WaveView.OnWaveCompleteListener,LoginView {

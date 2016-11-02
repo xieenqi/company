@@ -234,7 +234,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         if(null != mContact){
             bindEditData();
         }
-        layout_contact_extra_info.addView(new ContactAddforExtraData(mContext, mContact, mContactLeftExtras, true, R.color.title_bg1, 0));
+        layout_contact_extra_info.addView(new ContactAddforExtraData(mContext, mContact, mContactLeftExtras, true, 0));
     }
 
     /**
