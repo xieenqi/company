@@ -267,7 +267,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             /*通讯录导入*/
             case R.id.img_maillist_contact:
                 boolean isEdit = false;
-                if(!TextUtils.isEmpty(et_name.getText().toString())){
+                if(!TextUtils.isEmpty(et_name.getText().toString())
+                        || !TextUtils.isEmpty(edt_contract_tel1.getText().toString())){
                     isEdit = true;
                 }
                 Intent mIntent = new Intent();

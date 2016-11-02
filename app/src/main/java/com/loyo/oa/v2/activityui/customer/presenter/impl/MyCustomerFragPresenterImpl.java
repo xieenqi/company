@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.customer.presenter.impl;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,9 +41,10 @@ public class MyCustomerFragPresenterImpl implements MyCustomerFragPresenter{
         popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setContentView(mView);
-        popupWindow.setBackgroundDrawable(null);
         popupWindow.setOutsideTouchable(false);
         popupWindow.setFocusable(true);
+        ColorDrawable dw = new ColorDrawable(0x00000000);
+        popupWindow.setBackgroundDrawable(dw);
 
         int[] location = new int[2];
         btn_add.getLocationOnScreen(location);
