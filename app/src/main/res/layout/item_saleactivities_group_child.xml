@@ -31,7 +31,8 @@
             android:lineSpacingMultiplier="1.1"
             android:text=""
             android:textColor="@color/text66"
-            android:textSize="@dimen/text_sp15" />
+            android:textSize="@dimen/text_sp15"
+            android:visibility="gone" />
         <!--  WebView的容器  -->
         <LinearLayout
             android:id="@+id/ll_web"

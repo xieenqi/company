@@ -520,7 +520,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                 holder.iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
                 holder.tv_calls = ViewHolder.get(convertView, R.id.iv_calls);
                 holder.ll_web = ViewHolder.get(convertView, R.id.ll_web);//装在webview的容器
-                holder.web = new CommonWebView(CustomerDynamicManageActivity.this, webCode);
+                holder.web = new CommonWebView(CustomerDynamicManageActivity.this, viewModel.getContent());
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
@@ -537,7 +537,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             viewModel.imageViewWeakReference = new WeakReference<TextView>(holder.tv_calls);
 
             holder.tv_create_time.setText(DateTool.getDiffTime(viewModel.getCreateAt()));
-            holder.tv_content.setText(viewModel.getContent());
+//            holder.tv_content.setText(viewModel.getContent());
 //            holder.tv_content.setText(Html.fromHtml(webCode));
 
             /*判断是否有录音*/
