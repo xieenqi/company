@@ -255,7 +255,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
      * 上传头像
      */
     @Override
-    public void upload(List<String> mSelectPath, String uuid, RoundImageView imageView) {
+    public void upload(List<String> mSelectPath, RoundImageView imageView) {
         StringBuilder sb = new StringBuilder();
         for (String p : mSelectPath) {
             sb.append(p);
@@ -270,9 +270,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
 
             if (newFile != null && newFile.length() > 0) {
                 RequestParams params = new RequestParams();
-                if (uuid == null) {
-                    uuid = StringUtil.getUUID();
-                }
+                String uuid = StringUtil.getUUID();
                 params.put("uuid", uuid);
 
                 if (newFile.exists()) {

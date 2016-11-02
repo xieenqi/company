@@ -92,7 +92,6 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 
 
     private int sex;
-    private String uuid = null;
     private String path = null;
     private MHandler mHandler = new MHandler(this);
     private String resultPhone;
@@ -207,11 +206,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
         Utils.setContent(name_title_user, MainApp.user.getRealname());
-        if (user.gender == 2) {
-            tv_sex.setText("女");
-        } else if (user.gender == 1) {
-            tv_sex.setText("男");
-        }
+        setSex(user.gender);
         if (!TextUtils.isEmpty(user.birthDay)) {
             int age = Utils.getAge(user.birthDay.substring(0, 4));
             if (age >= 150) {
@@ -224,18 +219,25 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         tv_positions.setText(mPresenter.getPositions(user.shortDeptNames));
     }
 
+    private void setSex(int sex) {
+        if (sex == 2) {
+            tv_sex.setText("女");
+        } else if (sex == 1) {
+            tv_sex.setText("男");
+        }
+    }
 
     /**
      * 编辑个人信息
      */
     private void updateProfile() {
 
-        if (!et_weixin.getText().toString().isEmpty()) {
-            if (!RegexUtil.regexk(et_weixin.getText().toString(), RegexUtil.StringType.WX)) {
-                Toast("微信号码不正确");
-                return;
-            }
-        }
+//        if (!et_weixin.getText().toString().isEmpty()) {
+//            if (!RegexUtil.regexk(et_weixin.getText().toString(), RegexUtil.StringType.WX)) {
+//                Toast("微信号码不正确");
+//                return;
+//            }
+//        }
 
         showLoading("正在提交");
         mPresenter.updateProfile(user.id, tv_mobile.getText().toString(),
@@ -251,10 +253,9 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     @Override
     public void updateProfileEmbl() {
         Toast("修改个人信息成功");
-        Intent mIntent = new Intent();
-
-        mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
-        app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
+//        Intent mIntent = new Intent();
+//        mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
+//        app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
         if (user.id != null) {
             user.mobile = tv_mobile.getText().toString();
             user.birthDay = tv_birthday.getText().toString();
@@ -267,6 +268,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             it.putExtra("userId", user.id);
             sendBroadcast(it);
         }
+        setSex(sex);
     }
 
     /**
@@ -331,12 +333,26 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         if (null == data) {
             return;
         }
-        if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
-            List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-            mPresenter.upload(mSelectPath, uuid, img_title_user);
-        } else if (requestCode == ExtraAndResult.MSG_SEND) {
-            resultPhone = data.getStringExtra("phone");
-            mHandler.sendEmptyMessage(0x02);
+        switch (requestCode) {
+            /* 设置头像 */
+            case REQUEST_IMAGE:
+                List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                mPresenter.upload(mSelectPath, img_title_user);
+                updateProfile();
+                break;
+            case ExtraAndResult.MSG_SEND:
+                sex = data.getIntExtra("sex", -1);
+                updateProfile();
+                break;
+
         }
+
+//        if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
+//            List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+//            mPresenter.upload(mSelectPath, uuid, img_title_user);
+//        } else if (requestCode == ExtraAndResult.MSG_SEND) {
+//            resultPhone = data.getStringExtra("phone");
+//            mHandler.sendEmptyMessage(0x02);
+//        }
     }
 }

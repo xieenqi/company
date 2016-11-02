@@ -34,7 +34,7 @@ public interface ContactInfoEditPresenter {
     void setHeadImage(Activity mActivity, Intent mIntent, int REQUEST_IMAGE);
 
     /*上传头像*/
-    void upload(List<String> mSelectPath, String uuid, RoundImageView imageView);
+    void upload(List<String> mSelectPath, RoundImageView imageView);
 
     /**
      * 获取部门的名字

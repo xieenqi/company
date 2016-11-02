@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.contact;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -69,12 +70,17 @@ public class SexSelectActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void sendData(int sex) {
+        Intent intent = new Intent();
         if (sex == 1) {
             iv_man.setImageResource(R.drawable.icon_newchildtask_select_sure);
             iv_woman.setImageResource(R.color.white);
+            intent.putExtra("sex", SEX_MAN);
         } else {
             iv_woman.setImageResource(R.drawable.icon_newchildtask_select_sure);
             iv_man.setImageResource(R.color.white);
+            intent.putExtra("sex", SEX_WOMAN);
         }
+        setResult(RESULT_OK, intent);
+        onBackPressed();
     }
 }
