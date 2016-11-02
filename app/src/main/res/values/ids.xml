@@ -8,6 +8,6 @@
     <item type="id" name="layout_drag" />
     <item type="id" name="bulletin_bg_bmp" />
 
-
-
+    <item name="drop_menu_header" type="id" />
+    <item name="filter_content_view" type="id" />
 </resources>

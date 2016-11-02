@@ -9,43 +9,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-
+import com.loyo.oa.dropdownmenu.DropDownMenu;
+import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
+import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
+import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
+import com.loyo.oa.dropdownmenu.model.FilterModel;
+import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CommCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
-import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
+import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.SaleCommPopupView;
-import com.loyo.oa.v2.customview.ScreenTagPopupView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-
 import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.List;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -55,35 +51,21 @@ import retrofit.client.Response;
  */
 public class CommCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
-    private Intent mIntent;
     private View mView;
     private Button btn_add;
     private ViewStub emptyView;
-    private ImageView tagImage1;
-    private ImageView tagImage2;
-    private LinearLayout screen1;
-    private LinearLayout screen2;
-    private Permission permission;
-    private SaleTeamScreen saleTeamScreen;
     private PullToRefreshListView listView;
-    private SaleCommPopupView saleCommPopupView;
-    private ScreenTagPopupView screenTagPopupView;
-    private WindowManager.LayoutParams windowParams;
     private CommCustomerAdapter adapter;
+    private DropDownMenu filterMenu;
 
-    private String filed = "lastActAt";
+    private String field = "lastActAt";
     private String order = "desc";
-    private String userId = "";
-    private String tagItemIds = "";
-    private String departmentId = "";
+    private String tagsParams = "";
     private int page = 1;
-    private int tagPostion;
     private boolean isPullUp = false;
 
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private ArrayList<Customer> mCustomers = new ArrayList<>();
-    private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
-    private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<Tag> mTags;
 
     private Handler mHandler = new Handler() {
@@ -91,42 +73,6 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
-                //时间筛选
-                case CustomerManagerActivity.CUSTOMER_TIME:
-                    tagPostion = msg.getData().getInt("data");
-                    switch (tagPostion) {
-                        case 0:
-                            filed = "lastActAt";
-                            order = "desc";
-                            break;
-                        case 1:
-                            filed = "lastActAt";
-                            order = "asc";
-                            break;
-                        case 2:
-                            filed = "createdAt";
-                            order = "desc";
-                            break;
-                        case 3:
-                            filed = "createdAt";
-                            order = "asc";
-                            break;
-                    }
-                    getData();
-                    break;
-
-                //标签筛选
-                case CustomerManagerActivity.CUSTOMER_TAG:
-                    tagItemIds = msg.getData().getString("tagid");
-                    getData();
-                    break;
-
-                //标签取消
-                case CustomerManagerActivity.CUSTOMER_CANCEL:
-                    tagItemIds = msg.getData().getString("tagid");
-                    getData();
-                    break;
-
                 //公海挑入
                 case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
                     getData();
@@ -141,6 +87,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_cus, null);
             initView(mView);
+            loadFilterOptions();
         }
         return mView;
     }
@@ -163,33 +110,49 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
 
     public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-        permission = (Permission) getArguments().getSerializable("permission");
-
-        for (int i = 0; i < sort.length; i++) {
-            saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(sort[i]);
-            saleTeamScreen.setIndex(false);
-            sortData.add(saleTeamScreen);
-        }
 
         btn_add = (Button) view.findViewById(R.id.btn_add);
-        screen1 = (LinearLayout) view.findViewById(R.id.cus_screen1);
-        screen2 = (LinearLayout) view.findViewById(R.id.cus_screen2);
-        tagImage1 = (ImageView) view.findViewById(R.id.cus_screen1_iv1);
-        tagImage2 = (ImageView) view.findViewById(R.id.cus_screen1_iv2);
+
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        screen1.setOnClickListener(click);
-        screen2.setOnClickListener(click);
         btn_add.setVisibility(View.GONE);
+
+        filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
         showLoading("");
         getData();
     }
 
+    private void loadFilterOptions() {
+        List<FilterModel> options = new ArrayList<>();
+        options.add(TimeFilterModel.getFilterModel());
+        options.add(TagMenuModel.getTagFilterModel(mTags));
+        DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
+        filterMenu.setMenuAdapter(adapter);
+        adapter.setCallback(new OnMenuModelsSelected() {
+            @Override
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
+                filterMenu.close();
+
+                if (menuIndex == 0) { // TimeFilterModel
+                    MenuModel model = selectedModels.get(0);
+                    String key = model.getKey();
+                    String value = model.getValue();
+                    filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
+                    String[] keys = key.split(" ");
+                    field = keys[0];
+                    order = keys[1];
+                }
+                else if (menuIndex == 1) { // TagFilter
+                    tagsParams = userInfo.toString();
+                }
+                getData();
+            }
+        });
+    }
 
     /**
      * 绑定数据
@@ -227,11 +190,9 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);
-        params.put("field", filed);
+        params.put("field", field);
         params.put("order", order);
-        params.put("tagItemIds", tagItemIds);
-        params.put("deptId", departmentId);
-        params.put("userId", userId);
+        params.put("tagsParams", tagsParams);
         LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_PUBLIC).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
@@ -270,52 +231,10 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         );
     }
 
-
-    /**
-     * PopupWindow关闭 恢复背景正常颜色
-     */
-    private void closePopupWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_down);
-    }
-
-    /**
-     * PopupWindow打开，背景变暗
-     */
-    private void openPopWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_up);
-    }
-
-
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-
-                //时间
-                case R.id.cus_screen1:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
-                    saleCommPopupView.showAsDropDown(screen1);
-                    openPopWindow(tagImage1);
-                    saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            closePopupWindow(tagImage1);
-                        }
-                    });
-                    break;
-
-                //标签
-                case R.id.cus_screen2:
-                    screenTagPopupView = new ScreenTagPopupView(getActivity(), mTags, mHandler);
-                    screenTagPopupView.showAsDropDown(screen2);
-                    openPopWindow(tagImage2);
-                    screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            closePopupWindow(tagImage2);
-                        }
-                    });
-                    break;
             }
         }
     };

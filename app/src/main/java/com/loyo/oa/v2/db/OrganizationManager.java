@@ -459,7 +459,20 @@ public class OrganizationManager {
 
     //
     public List<DBDepartment> allDepartments() {
-        return departmentsCache;
+        //return departmentsCache;
+        return companyDepartments();
+    }
+
+    //
+    public List<DBDepartment> companyDepartments() {
+
+        List<DBDepartment> result = new ArrayList<>();
+        DBDepartment company = getsComany();
+        if (company != null) {
+            result.addAll(company.flatDepartments());
+        }
+
+        return result;
     }
 
     // 更新
