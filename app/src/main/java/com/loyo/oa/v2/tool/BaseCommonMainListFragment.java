@@ -21,7 +21,7 @@ import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.filterview.DropDownMenu;
+import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 
@@ -48,7 +48,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     protected ViewGroup img_title_left;
     protected LayoutInflater mInflater;
     protected TextView tv_title_1;
-    protected DropDownMenu mMenu;
+    protected DropDownMenu filterMenu;
     private ViewStub emptyView;
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
@@ -94,7 +94,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_base_new, container, false);
-            mMenu = (DropDownMenu) mView.findViewById(R.id.drop_menu);
+            filterMenu = (DropDownMenu) mView.findViewById(R.id.drop_down_menu);
             emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
 
             tv_title_1 = (TextView) mView.findViewById(R.id.tv_title_1);

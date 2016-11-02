@@ -4,22 +4,24 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.loyo.oa.dropdownmenu.DropDownMenu;
+import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
+import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
+import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
+import com.loyo.oa.dropdownmenu.model.FilterModel;
+import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
@@ -32,7 +34,6 @@ import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.activityui.customer.presenter.MyCustomerFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.MyCustomerFragPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.MyCustomerFragView;
-import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -40,8 +41,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.SaleCommPopupView;
-import com.loyo.oa.v2.customview.ScreenTagPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ICustomer;
@@ -55,6 +54,7 @@ import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -69,83 +69,23 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     private View mView;
     private Button btn_add;
     private ViewStub emptyView;
-    private ImageView tagImage1;
-    private ImageView tagImage2;
-    private LinearLayout screen1;
-    private LinearLayout screen2;
     private TextView nearTv;
     private ViewGroup nearLayout;
     private NearCount nearCount;
-    //    private Permission permission;
-    private SaleTeamScreen saleTeamScreen;
     private PullToRefreshListView listView;
-    private SaleCommPopupView saleCommPopupView;
-    private ScreenTagPopupView screenTagPopupView;
-    private WindowManager.LayoutParams windowParams;
     private MyCustomerAdapter adapter;
     private MyCustomerFragPresenter mPresenter;
+    private DropDownMenu filterMenu;
 
-    private String filed = "lastActAt";
+    private String field = "lastActAt";
     private String order = "desc";
-    private String userId = "";
-    private String tagItemIds = "";
-    private String departmentId = "";
+    private String tagsParams = "";
     private String position;
     private int page = 1;
-    private int tagPostion;
-    private int lastVisibleItemPosition;
     private boolean isPullUp = false;
-    private boolean scrollFlag;
-
-    private String[] sort = {"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
-    private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private ArrayList<Tag> mTags;
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what) {
-                //时间筛选
-                case CustomerManagerActivity.CUSTOMER_TIME:
-                    tagPostion = msg.getData().getInt("data");
-                    switch (tagPostion) {
-                        case 0:
-                            filed = "lastActAt";
-                            order = "desc";
-                            break;
-                        case 1:
-                            filed = "lastActAt";
-                            order = "asc";
-                            break;
-                        case 2:
-                            filed = "createdAt";
-                            order = "desc";
-                            break;
-                        case 3:
-                            filed = "createdAt";
-                            order = "asc";
-                            break;
-                    }
-                    getData();
-                    break;
-
-                //标签筛选
-                case CustomerManagerActivity.CUSTOMER_TAG:
-                    tagItemIds = msg.getData().getString("tagid");
-                    getData();
-                    break;
-
-                //标签取消
-                case CustomerManagerActivity.CUSTOMER_CANCEL:
-                    tagItemIds = msg.getData().getString("tagid");
-                    getData();
-                    break;
-            }
-        }
-    };
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -154,6 +94,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_cus, null);
             initView(mView);
+            loadFilterOptions();
         }
         return mView;
     }
@@ -175,24 +116,15 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
     }
 
     public void initView(View view) {
-//        permission = (Permission) getArguments().getSerializable("permission");
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
 
-        for (int i = 0; i < sort.length; i++) {
-            saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(sort[i]);
-            saleTeamScreen.setIndex(false);
-            sortData.add(saleTeamScreen);
-        }
 
         btn_add = (Button) view.findViewById(R.id.btn_add);
         nearTv = (TextView) view.findViewById(R.id.tv_near_customers);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
-        screen1 = (LinearLayout) view.findViewById(R.id.cus_screen1);
-        screen2 = (LinearLayout) view.findViewById(R.id.cus_screen2);
+
         nearLayout = (ViewGroup) view.findViewById(R.id.layout_near_customers);
-        tagImage1 = (ImageView) view.findViewById(R.id.cus_screen1_iv1);
-        tagImage2 = (ImageView) view.findViewById(R.id.cus_screen1_iv2);
+
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -200,14 +132,43 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         nearLayout.setOnClickListener(click);
         nearLayout.setOnTouchListener(Global.GetTouch());
 
-        screen1.setOnClickListener(click);
-        screen2.setOnClickListener(click);
         btn_add.setOnClickListener(click);
         btn_add.setOnTouchListener(Global.GetTouch());
+
+        filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
+
         showLoading("");
         getData();
         mPresenter = new MyCustomerFragPresenterImpl(getActivity(), this);
         Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
+    }
+
+    private void loadFilterOptions() {
+        List<FilterModel> options = new ArrayList<>();
+        options.add(TimeFilterModel.getFilterModel());
+        options.add(TagMenuModel.getTagFilterModel(mTags));
+        DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
+        filterMenu.setMenuAdapter(adapter);
+        adapter.setCallback(new OnMenuModelsSelected() {
+            @Override
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
+                filterMenu.close();
+
+                if (menuIndex == 0) { // TimeFilterModel
+                    MenuModel model = selectedModels.get(0);
+                    String key = model.getKey();
+                    String value = model.getValue();
+                    filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
+                    String[] keys = key.split(" ");
+                    field = keys[0];
+                    order = keys[1];
+                }
+                else if (menuIndex == 1) { // TagFilter
+                    tagsParams = userInfo.toString();
+                }
+                getData();
+            }
+        });
     }
 
     /**
@@ -300,11 +261,9 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);
-        params.put("field", filed);
+        params.put("field", field);
         params.put("order", order);
-        params.put("tagItemIds", tagItemIds);
-        params.put("deptId", departmentId);
-        params.put("userId", userId);
+        params.put("tagsParams", tagsParams);
         LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_SELF).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
@@ -343,21 +302,6 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
         );
     }
 
-    /**
-     * PopupWindow关闭 恢复背景正常颜色
-     */
-    private void closePopupWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_down);
-    }
-
-    /**
-     * PopupWindow打开，背景变暗
-     */
-    private void openPopWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_up);
-    }
-
-
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -367,32 +311,6 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
                 case R.id.btn_add:
                     mPresenter.setInsertPopWindiw(btn_add);
                     //showPopupWindow();
-                    break;
-
-                //时间
-                case R.id.cus_screen1:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, CustomerManagerActivity.CUSTOMER_TIME, true, tagPostion);
-                    saleCommPopupView.showAsDropDown(screen1);
-                    openPopWindow(tagImage1);
-                    saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            closePopupWindow(tagImage1);
-                        }
-                    });
-                    break;
-
-                //标签
-                case R.id.cus_screen2:
-                    screenTagPopupView = new ScreenTagPopupView(mActivity, mTags, mHandler);
-                    screenTagPopupView.showAsDropDown(screen2);
-                    openPopWindow(tagImage2);
-                    screenTagPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            closePopupWindow(tagImage2);
-                        }
-                    });
                     break;
 
                 //附近的客户

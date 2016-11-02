@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activityui.wfinstance.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinMySubmitPresenter
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinMySubmitView;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.filterview.DropDownMenu;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -43,7 +41,7 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     private WflnstanceMySubmitAdapter mAdapter;
     private PullToRefreshExpandableListView expandableListView;
     private Button btn_add;
-    private DropDownMenu mMenu;
+    protected com.loyo.oa.dropdownmenu.DropDownMenu filterMenu;
     private ViewStub emptyView;
 
     private int page = 1;
@@ -66,7 +64,7 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     private void initView(View view) {
         expandableListView = (PullToRefreshExpandableListView) view.findViewById(R.id.expandableListView);
         btn_add = (Button) view.findViewById(R.id.btn_add);
-        mMenu = (DropDownMenu) view.findViewById(R.id.drop_menu);
+        filterMenu = (com.loyo.oa.dropdownmenu.DropDownMenu) view.findViewById(R.id.drop_down_menu);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
@@ -74,8 +72,8 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         expandableListView.setEmptyView(emptyView);
         page = 1;
         isTopAdd = true;
-        mPresenter = new WfinMySubmitPresenterImpl(getActivity(),this,mMenu);
-        mPresenter.initDropMenu(FILTER_STATUS);
+        mPresenter = new WfinMySubmitPresenterImpl(getActivity(),this,filterMenu);
+        mPresenter.loadFilterOptions();
         initList();
         initAdapter();
         mPresenter.getApproveWfInstancesList(page,isTopAdd);
