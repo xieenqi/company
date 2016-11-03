@@ -31,7 +31,7 @@ public class CommonImageView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, ele);
+                bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, ele.replace("_thumb", ""));
                 MainApp.getMainApp().startActivityForResult((Activity) context, PreviewImagefromHttp.class,
                         MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
             }

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
@@ -45,9 +47,15 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.xml.sax.XMLReader;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
@@ -232,19 +240,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null != mCustomer.saleActivityInfo) {
             tv_follow_content.setVisibility(View.VISIBLE);
             tv_follow_crecter_type.setVisibility(View.VISIBLE);
-            tv_follow_content.setText(Html.fromHtml(mCustomer.saleActivityInfo.content, new Html.ImageGetter() {
-                @Override
-                public Drawable getDrawable(String source) {
-                    LogUtil.d("加载的文字: " + source);
-                    Bitmap bitmap = ImageLoader.getInstance().loadImageSync(source);
-                    return getResources().getDrawable(R.drawable.bg_mine);
-                }
-            }, new Html.TagHandler() {
-                @Override
-                public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-
-                }
-            }));
+            tv_follow_content.setText(checkContent(mCustomer.saleActivityInfo.content));
             tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
                     mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
         } else {
@@ -269,6 +265,22 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             }
         }
         return false;
+    }
+
+    public String checkContent(String content) {
+        String textContent = "";
+        Document jsoup = Jsoup.parse(content);
+        Elements imgs = jsoup.select("img,p");
+        for (Element img : imgs) {
+            String image = img.attr("src");
+            if (!TextUtils.isEmpty(image)) {
+                textContent = textContent + "  [图片]  ";
+            } else {
+                textContent = textContent + img.text().trim();
+            }
+            LogUtil.d(img.text().trim() + "---过滤的图片:" + img.attr("src"));
+        }
+        return textContent;
     }
 
     /**
