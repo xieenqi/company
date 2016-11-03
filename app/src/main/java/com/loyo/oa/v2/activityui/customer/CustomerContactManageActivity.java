@@ -25,6 +25,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.ContactViewGroup;
+import com.loyo.oa.voip.VoIPCallActivity;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -216,9 +217,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                             switch (callBackCallid.errcode){
                                 case 0:
                                     Bundle mBundle = new Bundle();
-                                    mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
-                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
-                                    app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                                    mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callBackCallid.data.callLogId);
+                                    mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
+                                    app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                                     break;
 
                                 case 50000:
@@ -266,7 +267,11 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         LogUtil.dee("被叫号码:" + callNum);
         LogUtil.dee("contactId:" + contactId);
         LogUtil.dee("contactName:" + contactName);
-        requestClientInfo();
+//        requestClientInfo();
+        Bundle mBundle = new Bundle();
+        mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callNum);
+        mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
+        app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
     }
 
     @Override

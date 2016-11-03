@@ -5,5 +5,7 @@ package com.loyo.oa.voip.callback;
  */
 
 public interface OnRespond {
+    void onPaymentDeny();
+    void onNetworkError();
     void onRespond(Object userInfo);
 }
