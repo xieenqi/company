@@ -29,6 +29,7 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.EntityConvertHelper;
 import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.InitDataService_;
@@ -50,6 +51,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import retrofit.client.Response;
@@ -217,11 +219,16 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
      * 初始化数据
      */
     private void initData() {
-
         user = OrganizationManager.shareManager().getUser(userId);
 
         if (null == user) {
             return;
+        }
+
+        StringBuffer deptBuffer = new StringBuffer();
+        Iterator<DBDepartment> iterator=user.depts.iterator();
+        while(iterator.hasNext()){
+            deptBuffer.append(iterator.next().name+" ");
         }
 
         int defaultAvatao;
@@ -237,8 +244,9 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
         }
 
-
         path = user.avatar;
+        Utils.setContent(tv_departments, TextUtils.isEmpty(deptBuffer.toString()) ? " " :  deptBuffer.toString());
+        Utils.setContent(tv_positions,  user.shortDeptNames);
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
         Utils.setContent(name_title_user, MainApp.user.getRealname());

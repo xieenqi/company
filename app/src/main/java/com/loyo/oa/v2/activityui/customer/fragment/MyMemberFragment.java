@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.customer.fragment;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -45,7 +46,6 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -86,6 +86,22 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private ArrayList<Tag> mTags;
+    private MemberCallback memberCallback;
+
+    public interface MemberCallback {
+        void comeBackHeadPage();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            memberCallback = (MemberCallback) activity;
+        }catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().getClass().getName()
+                    +" must implements interface MyListener");
+        }
+    }
 
     @SuppressLint("InflateParams")
     @Nullable

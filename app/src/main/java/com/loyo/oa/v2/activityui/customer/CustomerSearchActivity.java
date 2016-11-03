@@ -2,7 +2,10 @@ package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
+import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -47,11 +50,11 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
             /*我负责的查询*/
             case 1:
-                url = FinalVariables.SEARCH_CUSTOMERS_SELF;
+                url = FinalVariables.SEARCH_CUSTOMERS_RESPON;
                 break;
             /*我参与的查询*/
             case 2:
-                url = FinalVariables.SEARCH_CUSTOMERS_SELF;
+                url = FinalVariables.SEARCH_CUSTOMERS_MEMBER;
                 break;
             /*团队查询*/
             case 3:

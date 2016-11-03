@@ -444,24 +444,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 startActivity(intent);
             }
         },"提示",getString(R.string.app_userdetalis_message));
-
-/*        showGeneralDialog(true, true, getString(R.string.app_userdetalis_message));
-        //确定
-        generalPopView.setSureOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-                SelectDetUserActivity2.startThisForOnly(CustomerInfoActivity.this, null);
-
-            }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });*/
     }
 
     /**
@@ -679,7 +661,35 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             mManagerNames = new StringBuffer();
             mManagerIds = new StringBuffer();
 
+            /*判断当前负责人用owner对象*/
             if (members != null) {
+                if (cusMembers.depts.size() > 0) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
+                        if (!mCustomer.owner.id.equals(newUser.getId())) {
+                            mManagerNames.append(newUser.getName() + ",");
+                            mManagerIds.append(newUser.getId() + ",");
+                        } else {
+                            Toast("你已经是负责人，不能选自己为参与人!");
+                        }
+                    }
+                }
+                if (cusMembers.users.size() > 0) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                        if (!mCustomer.owner.id.equals(newUser.getId())) {
+                            mManagerNames.append(newUser.getName() + ",");
+                            mManagerIds.append(newUser.getId() + ",");
+                        } else {
+                            Toast("你已经是负责人，不能选自己为参与人!");
+                        }
+                    }
+                }
+                if (!TextUtils.isEmpty(mManagerNames)) {
+                    mManagerNames.deleteCharAt(mManagerNames.length() - 1);
+                }
+            }
+
+
+            /*if (members != null) {
                 if (cusMembers.depts.size() > 0) {
                     for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
                         if (!MainApp.user.id.equals(newUser.getId())) {
@@ -692,6 +702,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 }
                 if (cusMembers.users.size() > 0) {
                     for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                        LogUtil.dee("MainApp.user.id:"+MainApp.user.id);
+                        LogUtil.dee("newUser.getId():"+newUser.getId());
                         if (!MainApp.user.id.equals(newUser.getId())) {
                             mManagerNames.append(newUser.getName() + ",");
                             mManagerIds.append(newUser.getId() + ",");
@@ -703,7 +715,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 if (!TextUtils.isEmpty(mManagerNames)) {
                     mManagerNames.deleteCharAt(mManagerNames.length() - 1);
                 }
-            }
+            }*/
 
             members = Utils.convert2Members(mManagerIds.toString(), mManagerNames.toString());
             if (members.size() != 0) {

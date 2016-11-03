@@ -143,6 +143,14 @@ public final class FinalVariables {
      **/
     public static final String QUERY_CUSTOMERS_PUBLIC = Config_project.API_URL_CUSTOMER() + "/customer/shared";
     /**
+     * 我负责的客户查询
+     **/
+    public static final String SEARCH_CUSTOMERS_RESPON = Config_project.API_URL_CUSTOMER() + "/customer/ownsearch";
+    /**
+     * 我参与的客户查询
+     **/
+    public static final String SEARCH_CUSTOMERS_MEMBER = Config_project.API_URL_CUSTOMER() + "/customer/linksearch";
+    /**
      * 个人客户查询
      **/
     public static final String SEARCH_CUSTOMERS_SELF = Config_project.API_URL_CUSTOMER() + "/customer/selfsearch";

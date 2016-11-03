@@ -268,7 +268,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
         params.put("field", field);
         params.put("order", order);
         params.put("tagsParams", tagsParams);
-        LogUtil.d("我负责的查询参数：" + MainApp.gson.toJson(params));
+        LogUtil.dee("我负责的查询参数：" + MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_RESPON).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {

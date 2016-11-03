@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -20,7 +22,6 @@ import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.TeamCustomerFragment;
-import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.activityui.customer.model.Tag;
@@ -49,7 +50,7 @@ import retrofit.client.Response;
  * 【客户列表】fragment管理类
  * Created by yyy on 16/6/1.
  */
-public class CustomerManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class CustomerManagerActivity extends BaseFragmentActivity implements View.OnClickListener,MyMemberFragment.MemberCallback {
 
     /**
      * 筛选取消
@@ -121,6 +122,19 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     public boolean publicOrTeam;
     private List<BaseFragment> fragments = new ArrayList<>();
     private String[] SaleItemStatus = new String[]{"我负责的","我参与的","公海客户"};
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            if(msg.what == 0x01){
+                try {
+                    fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(0)).commit();
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -341,5 +355,11 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         imageArrow.startAnimation(rotateAnimation);
         mRotation = (mRotation == 0f ? 180f : 0f);
         ll_category.setVisibility(ll_category.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void comeBackHeadPage() {
+        LogUtil.dee("comeBackHeadPage");
+        mHandler.sendEmptyMessage(0x01);
     }
 }
