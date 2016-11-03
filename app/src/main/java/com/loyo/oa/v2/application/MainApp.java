@@ -183,13 +183,6 @@ public class MainApp extends Application {
         JPushInterface.init(this);
         GlideManager.getInstance().initWithContext(getApplicationContext());
         VoIPManager.getInstance().init(this);
-
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                VoIPManager.getInstance().connectVoipServer();
-            }
-        }, 5000);
     }
 
     private void addActivityLifecycleCallback() {
