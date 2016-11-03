@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
 import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -112,13 +114,13 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private float mRotation = 0;
 
     private Permission permission;
-    private String[] SaleItemStatus = new String[]{"我负责的","我参与的", "公海客户"};
-    private List<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mTags1;
     private ArrayList<Tag> mTags2;
     private ArrayList<Tag> mTags3;
     public boolean publicOrTeam;
+    private List<BaseFragment> fragments = new ArrayList<>();
+    private String[] SaleItemStatus = new String[]{"我负责的","我参与的","公海客户"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,7 +211,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     }
 
     void initTitleItem() {
-        CommonCategoryAdapter TitleItemAdapter = new CommonCategoryAdapter(this, Arrays.asList(SaleItemStatus));
+        CustomerCategoryAdapter TitleItemAdapter = new CustomerCategoryAdapter(this, Arrays.asList(SaleItemStatus));
         lv_sale.setAdapter(TitleItemAdapter);
         lv_sale.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -283,33 +285,50 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            /*返回*/
             case R.id.img_title_left:
                 finish();
                 break;
+
             case R.id.ll_category:
                 break;
-            //我的 团队 公海切换
+
+            /*列表切换*/
             case R.id.layout_title_action:
                 if (SaleItemStatus.length != 1) {
                     changeTitleImg();
                 }
                 break;
-            //搜索
+            /*搜索*/
             case R.id.img_title_search_right:
                 int type = 0;
-                if (SaleItemStatus.length == 3) {
-                    type = mIndex + 1;
-                } else if (SaleItemStatus.length == 2) {
-                    if (mIndex == 0) {
-                        type = CustomerSearchActivity.CUSTOMERS_SELF;
-                    } else {
-                        type = CustomerSearchActivity.CUSTOMERS_PUBLIC;
-                    }
+                switch (tv_title_1.getText().toString()){
+
+                    case "我负责的":
+                        type = 1;
+                        break;
+
+                    case "我参与的":
+                        type = 2;
+                        break;
+
+                    case "团队客户":
+                        type = 3;
+                        break;
+
+                    case "公海客户":
+                        type = 4;
+                        break;
+
                 }
+
                 Bundle b = new Bundle();
                 b.putInt(ExtraAndResult.EXTRA_TYPE, type);
                 b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
                 app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                break;
+
+            default:
                 break;
         }
     }

@@ -265,7 +265,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         params.put("order", order);
         params.put("tagsParams", tagsParams);
         LogUtil.d("我参与的查询参数：" + MainApp.gson.toJson(params));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getMemberCustomer(params, new RCallback<PaginationX<Customer>>() {
+        RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_MEMBER).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
                         HttpErrorCheck.checkResponse("我参与的", response);

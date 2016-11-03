@@ -102,7 +102,6 @@
                 android:layout_marginBottom="3dp"
                 android:background="@drawable/bg_btn_circle"
                 android:textColor="@color/white"
-                android:visibility="gone"
                 />
 
         </FrameLayout>
