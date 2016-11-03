@@ -552,7 +552,12 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             viewModel.imageViewWeakReference = new WeakReference<TextView>(holder.tv_calls);
 
             holder.tv_create_time.setText(DateTool.getDiffTime(viewModel.getCreateAt()));
-//            holder.tv_content.setText(viewModel.getContent());
+            if (!viewModel.getContent().contains("<p>")) {
+                holder.tv_content.setVisibility(View.VISIBLE);
+                holder.tv_content.setText(viewModel.getContent());
+            } else {
+                holder.tv_content.setVisibility(View.GONE);
+            }
 //            holder.tv_content.setText(Html.fromHtml(webCode));
 
             /*判断是否有录音*/

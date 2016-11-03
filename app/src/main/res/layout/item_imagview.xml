@@ -4,5 +4,6 @@
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/dimen_2"
     android:paddingBottom="@dimen/dimen_2"
+    android:scaleType="fitXY"
     />
 

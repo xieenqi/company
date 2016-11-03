@@ -240,7 +240,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null != mCustomer.saleActivityInfo) {
             tv_follow_content.setVisibility(View.VISIBLE);
             tv_follow_crecter_type.setVisibility(View.VISIBLE);
-            tv_follow_content.setText(checkContent(mCustomer.saleActivityInfo.content));
+            tv_follow_content.setText(mCustomer.saleActivityInfo.content.contains("<p>") ?
+                    checkContent(mCustomer.saleActivityInfo.content) : mCustomer.saleActivityInfo.content);
             tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
                     mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
         } else {
