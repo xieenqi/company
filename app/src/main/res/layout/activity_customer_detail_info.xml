@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_common_title_edit"/>
+    <include layout="@layout/include_common_title_edit" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,8 +25,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -46,8 +45,7 @@
                         android:layout_marginTop="@dimen/dimen_10"
                         android:singleLine="true"
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp16"
-                        />
+                        android:textSize="@dimen/text_sp16" />
 
                     <TextView
                         android:id="@+id/tv_address"
@@ -58,7 +56,7 @@
                         android:lineSpacingExtra="@dimen/dimen_3"
                         android:singleLine="false"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12"/>
+                        android:textSize="@dimen/text_sp12" />
 
                     <TextView
                         android:id="@+id/tv_tags"
@@ -68,14 +66,13 @@
                         android:lineSpacingExtra="@dimen/dimen_3"
                         android:singleLine="false"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12"/>
+                        android:textSize="@dimen/text_sp12" />
                 </LinearLayout>
 
                 <RelativeLayout
                     android:id="@+id/layout_right"
                     android:layout_width="54dp"
-                    android:layout_height="match_parent"
-                    >
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/img_public"
@@ -83,8 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/dimen_10"
                         android:src="@drawable/icon_customer_pick"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -92,12 +88,11 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
                         android:layout_marginRight="@dimen/dimen_4"
-                        android:src="@drawable/right_arrow"
-                        />
+                        android:src="@drawable/right_arrow" />
                 </RelativeLayout>
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line15"/>
+            <include layout="@layout/include_solid_line15" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -109,8 +104,7 @@
                     android:id="@+id/layout_sale_activity"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_48"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    >
+                    android:layout_marginLeft="@dimen/margin_other_view">
 
                     <TextView
                         android:id="@+id/tv_sale_activity_title"
@@ -118,7 +112,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="跟进动态"/>
+                        android:text="跟进动态" />
 
                     <TextView
                         android:id="@+id/tv_sale_number"
@@ -129,18 +123,18 @@
                         android:layout_toRightOf="@+id/tv_sale_activity_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99"/>
+                        android:textColor="@color/text99" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dimen_4"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </RelativeLayout>
 
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <TextView
                     android:id="@+id/tv_follow_content"
@@ -149,10 +143,10 @@
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginRight="@dimen/margin_other_view"
                     android:layout_marginTop="@dimen/dimen_10"
+                    android:maxLines="3"
                     android:text=""
                     android:textColor="@color/text66"
-                    android:textSize="@dimen/text_sp15"
-                    />
+                    android:textSize="@dimen/text_sp15" />
 
                 <TextView
                     android:id="@+id/tv_follow_crecter_type"
@@ -164,15 +158,13 @@
                     android:paddingBottom="@dimen/dimen_12"
                     android:text=""
                     android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12"
-                    />
+                    android:textSize="@dimen/text_sp12" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:visibility="gone"
-                    >
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -185,7 +177,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="姓名"/>
+                            android:text="姓名" />
 
                         <TextView
                             android:id="@+id/tv_contact_name"
@@ -195,10 +187,10 @@
                             android:layout_marginLeft="@dimen/dimen_40"
                             android:gravity="center"
                             android:text=""
-                            android:textColor="@color/text99"/>
+                            android:textColor="@color/text99" />
                     </LinearLayout>
 
-                    <include layout="@layout/include_solid_line_left"/>
+                    <include layout="@layout/include_solid_line_left" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -216,7 +208,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="手机"/>
+                                android:text="手机" />
 
                             <TextView
                                 android:id="@+id/tv_contact_tel"
@@ -225,7 +217,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="@dimen/dimen_40"
                                 android:gravity="center"
-                                android:textColor="@color/text99"/>
+                                android:textColor="@color/text99" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -246,7 +238,7 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="20dp"
-                                    android:src="@drawable/icon_contacts_send_sms"/>
+                                    android:src="@drawable/icon_contacts_send_sms" />
 
                             </LinearLayout>
 
@@ -255,8 +247,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginBottom="@dimen/dimen_15"
                                 android:layout_marginTop="@dimen/dimen_15"
-                                android:background="@color/lineCC"
-                                />
+                                android:background="@color/lineCC" />
 
                             <LinearLayout
                                 android:id="@+id/layout_call"
@@ -268,17 +259,16 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="20dp"
-                                    android:src="@drawable/icon_contacts_call"/>
+                                    android:src="@drawable/icon_contacts_call" />
                             </LinearLayout>
                         </LinearLayout>
                     </RelativeLayout>
 
-                    <include layout="@layout/include_solid_line_left"/>
+                    <include layout="@layout/include_solid_line_left" />
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="@dimen/dimen_48"
-                        >
+                        android:layout_height="@dimen/dimen_48">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -291,7 +281,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="@dimen/dimen_16"
                                 android:gravity="center"
-                                android:text="座机"/>
+                                android:text="座机" />
 
                             <TextView
                                 android:id="@+id/customer_detail_wiretel"
@@ -300,7 +290,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="@dimen/dimen_40"
                                 android:gravity="center"
-                                android:textColor="@color/text99"/>
+                                android:textColor="@color/text99" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -315,7 +305,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="20dp"
-                                android:src="@drawable/icon_contacts_call"/>
+                                android:src="@drawable/icon_contacts_call" />
                         </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
@@ -342,7 +332,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="联系人"/>
+                        android:text="联系人" />
 
                     <TextView
                         android:id="@+id/tv_contact_Number"
@@ -353,16 +343,16 @@
                         android:layout_toRightOf="@+id/tv_contact"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99"/>
+                        android:textColor="@color/text99" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </RelativeLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
 
                 <RelativeLayout
@@ -377,7 +367,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="拜访签到"/>
+                        android:text="拜访签到" />
 
                     <TextView
                         android:id="@+id/tv_visit_times"
@@ -388,24 +378,23 @@
                         android:layout_toRightOf="@+id/tv_visit_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99"/>
+                        android:textColor="@color/text99" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dimen_4"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </RelativeLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <RelativeLayout
                     android:id="@+id/ll_sale"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_48"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    >
+                    android:layout_marginLeft="@dimen/margin_other_view">
 
                     <TextView
                         android:id="@+id/tv_sale_title"
@@ -413,7 +402,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="销售机会"/>
+                        android:text="销售机会" />
 
                     <TextView
                         android:id="@+id/tv_sale_count"
@@ -424,24 +413,23 @@
                         android:layout_toRightOf="@+id/tv_sale_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99"/>
+                        android:textColor="@color/text99" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dimen_4"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </RelativeLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <RelativeLayout
                     android:id="@+id/ll_order"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_48"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    >
+                    android:layout_marginLeft="@dimen/margin_other_view">
 
                     <TextView
                         android:id="@+id/tv_order_title"
@@ -449,7 +437,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="订单管理"/>
+                        android:text="订单管理" />
 
                     <TextView
                         android:id="@+id/tv_order_count"
@@ -460,17 +448,17 @@
                         android:layout_toRightOf="@+id/tv_order_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99"/>
+                        android:textColor="@color/text99" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dimen_4"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </RelativeLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
 
                 <RelativeLayout
@@ -485,7 +473,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="任务计划"/>
+                        android:text="任务计划" />
 
                     <TextView
                         android:id="@+id/tv_task_count"
@@ -496,17 +484,17 @@
                         android:layout_toRightOf="@+id/tv_task_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99"/>
+                        android:textColor="@color/text99" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dimen_4"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </RelativeLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
+                <include layout="@layout/include_solid_line_left" />
 
                 <RelativeLayout
                     android:id="@+id/layout_attachment"
@@ -520,7 +508,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="附        件"/>
+                        android:text="附        件" />
 
                     <TextView
                         android:id="@+id/tv_attachment_count"
@@ -531,14 +519,14 @@
                         android:layout_toRightOf="@+id/tv_attachment_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99"/>
+                        android:textColor="@color/text99" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dimen_4"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
