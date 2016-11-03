@@ -20,6 +20,9 @@ import com.yzxtcp.UCSManager;
 import com.yzxtcp.data.UcsReason;
 import com.yzxtcp.listener.ILoginListener;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -138,12 +141,16 @@ public class VoIPManager implements CallStateListener {
                         if (token == null) {
                             // 网络
                             Log.v("yzx", "网络");
-                            callback.onNetworkError();
+                            if(callback!=null) {
+                                callback.onNetworkError();
+                            }
                         }
                         else if (token.length() <= 0) {
                             // 余额
                             Log.v("yzx", "余额");
-                            callback.onPaymentDeny();
+                            if (callback != null) {
+                                callback.onPaymentDeny();
+                            }
                         }
                         else {
                             saveToken(token);
@@ -185,7 +192,12 @@ public class VoIPManager implements CallStateListener {
                 public void onRespond(Object userInfo) {
                     UcsReason reason = (UcsReason) userInfo;
                     if (reason.getReason() == 300107) {
-                        _dial(phone);
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                _dial(phone);
+                            }
+                        }, 1000);
                     }
                     if (callback != null) {
                         callback.onRespond(userInfo);

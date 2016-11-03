@@ -433,6 +433,23 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             public void run() {
                 statusView.setText("已挂断");
                 statusView2.setText("已挂断");
+                final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
+                dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dialog.sweetAlertDialog.dismiss();
+                        finish();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dialog.sweetAlertDialog.dismiss();
+                        finish();
+                    }
+                },"提示", "已挂断");
+                if (timer != null) {
+                    timer.cancel();
+                }
             }
         });
     }
