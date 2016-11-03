@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.other.adapter;
+package com.loyo.oa.v2.activityui.customer.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -16,16 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 【公用适配器】 销售机会 签到拜访 订单管理
+ * 【客户管理】title标签选择器
  */
-public class CommonCategoryAdapter extends BaseAdapter {
+public class CustomerCategoryAdapter extends BaseAdapter {
 
 
     private LayoutInflater layoutInflater;
     public List<String> lstData = new ArrayList<>();
     private int selectPosition = -1;
 
-    public CommonCategoryAdapter(final Context context, final List<String> lstData) {
+    public CustomerCategoryAdapter(final Context context, final List<String> lstData) {
         this.lstData = lstData;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -62,7 +62,29 @@ public class CommonCategoryAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(content)) {
             tv.setText(content);
         }
-        if (position == 0) {
+
+        switch (content){
+            case "我负责的":
+                iv.setBackgroundResource(R.drawable.icon_my);
+                break;
+
+            case "我参与的":
+                iv.setBackgroundResource(R.drawable.icon_customer_member);
+                break;
+
+            case "团队客户":
+                iv.setBackgroundResource(R.drawable.icon_team);
+                break;
+
+            case "公海客户":
+                iv.setBackgroundResource(R.drawable.icon_public);
+                break;
+
+            default:
+                break;
+        }
+
+/*        if (position == 0) {
             iv.setBackgroundResource(R.drawable.icon_my);
         } else if (position == 1) {
             if (lstData.get(1).contains("团队")) {
@@ -81,7 +103,7 @@ public class CommonCategoryAdapter extends BaseAdapter {
             } else {
                 iv.setBackgroundResource(R.drawable.icon_public);
             }
-        }
+        }*/
         return convertView;
     }
 

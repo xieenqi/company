@@ -252,7 +252,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             tv_follow_crecter_type.setVisibility(View.GONE);
         }
         tv_contact_Number.setText("(" + mCustomer.contacts.size() + ")");
-//正式启用销售机会 弃用购买意向
+        //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
     }

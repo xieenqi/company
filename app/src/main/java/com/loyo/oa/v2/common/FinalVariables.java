@@ -125,9 +125,15 @@ public final class FinalVariables {
      **/
     public static final String QUERY_CUSTOMERS_COMPANY = Config_project.API_URL_CUSTOMER() + "/customer/winnear";
     /**
-     * 个人客户数据集
+     * 我负责的客户数集
      **/
-    public static final String QUERY_CUSTOMERS_SELF = Config_project.API_URL_CUSTOMER() + "/customer/self";
+    public static final String QUERY_CUSTOMERS_RESPON = Config_project.API_URL_CUSTOMER() + "/customer/own/mobile/simplify";
+    /**
+     * 我参与的客户数集
+     **/
+    public static final String QUERY_CUSTOMERS_MEMBER = Config_project.API_URL_CUSTOMER() + "/customer/link/mobile/simplify";
+
+
     /**
      * 团队客户数据集
      **/

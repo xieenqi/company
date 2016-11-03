@@ -106,7 +106,7 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                     sDialog.sweetAlertDialog.dismiss();
                 }
-            },"提示","您确定要覆盖已编辑的联系人信息吗?");
+            },"提示","您确定要覆盖已填写的联系人信息吗?");
         }
 
         pinyinComparator = new PinyinComparator();
