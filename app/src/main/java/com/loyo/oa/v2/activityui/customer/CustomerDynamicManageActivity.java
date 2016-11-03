@@ -20,6 +20,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.CommonWebView;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.activityui.other.PreviewImagefromHttp;
@@ -629,7 +630,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             for (final String ele : t2) {
                 if (ele.startsWith("http")) {
                     ImageView img = new ImageView(CustomerDynamicManageActivity.this);
-                    LinearLayout.LayoutParams pl = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams pl = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     img.setLayoutParams(pl);
                     img.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -643,13 +644,10 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                     ImageLoader.getInstance().displayImage(ele, img);
                     layout.addView(img);
                 } else {
-                    TextView tex = new TextView(CustomerDynamicManageActivity.this);
-                    tex.setPadding(0, 10, 0, 5);
-                    tex.setText(ele);
+                    CommonTextVew tex = new CommonTextVew(CustomerDynamicManageActivity.this, ele);
                     layout.addView(tex);
                 }
             }
-//            holder.ll_web.addView(holder.web);
             layout.setVisibility(View.VISIBLE);
         }
 
