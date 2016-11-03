@@ -7,10 +7,10 @@ import android.util.Log;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.voip.api.IVOIP;
+import com.loyo.oa.voip.api.IVoIP;
 import com.loyo.oa.voip.callback.OnRespond;
 import com.loyo.oa.voip.model.ResponseBase;
-import com.loyo.oa.voip.model.VoipToken;
+import com.loyo.oa.voip.model.VoIPToken;
 import com.yzx.api.CallType;
 import com.yzx.api.UCSCall;
 import com.yzx.api.UCSCameraType;
@@ -29,12 +29,12 @@ import rx.schedulers.Schedulers;
 /**
  * Created by EthanGong on 2016/11/2.
  */
-public class VoipManager implements CallStateListener {
+public class VoIPManager implements CallStateListener {
 
     static private String TOKEN_KEY = "com.loyo.voip.token";
-    private static VoipManager ourInstance = new VoipManager();
+    private static VoIPManager ourInstance = new VoIPManager();
 
-    public static VoipManager getInstance() {
+    public static VoIPManager getInstance() {
         return ourInstance;
     }
 
@@ -42,10 +42,10 @@ public class VoipManager implements CallStateListener {
     private Context mContext;
     private String cacheToken;
 
-    private VoipManager() {
+    private VoIPManager() {
     }
 
-    public VoipManager init(Context context)
+    public VoIPManager init(Context context)
     {
         mContext = context;
         cacheToken = getCacheToken();
@@ -57,7 +57,7 @@ public class VoipManager implements CallStateListener {
 
     private ResponseBase<String> getPaymentAccess() {
         ResponseBase<String> access = RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IVOIP.class).getPaymentAccess();
+                create(IVoIP.class).getPaymentAccess();
         return access;
     }
 
@@ -79,8 +79,8 @@ public class VoipManager implements CallStateListener {
     }
 
     private String getToken() {
-        ResponseBase<VoipToken> data = RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IVOIP.class).getVoipToken();
+        ResponseBase<VoIPToken> data = RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IVoIP.class).getVoipToken();
 
         if (data != null && data.data != null) {
             return data.data.loginToken;
@@ -90,7 +90,7 @@ public class VoipManager implements CallStateListener {
         }
     }
 
-//    300001	连接失败
+    //    300001	连接失败
 //    300107	连接服务器成功
 //    300108	TCP 连接成功
     private void connect(String token) {

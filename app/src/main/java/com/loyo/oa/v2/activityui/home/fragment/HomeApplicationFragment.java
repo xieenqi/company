@@ -70,7 +70,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.voip.VoipManager;
+import com.loyo.oa.voip.VoIPManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -142,7 +142,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            VoipManager.getInstance().dialNumber("18502818409");
+            VoIPManager.getInstance().dialNumber("18502818409");
             switch (msg.what) {
                 //新建任务
                 case BaseActivity.TASKS_ADD:
