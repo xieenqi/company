@@ -32,14 +32,12 @@
             android:text=""
             android:textColor="@color/text66"
             android:textSize="@dimen/text_sp15"
-            android:visibility="gone" />
+            android:visibility="gone"/>
         <!--  WebView的容器  -->
         <LinearLayout
             android:id="@+id/ll_web"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_other_view"
-            android:layout_marginTop="@dimen/margin_other_view"
             android:orientation="vertical"
             android:visibility="gone" />
 

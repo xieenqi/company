@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -14,15 +15,17 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import uk.co.senab.photoview.PhotoView;
+
 /**
  * 【预览网络图片】
  * Created by yyy on 16/8/26.
  */
-public class PreviewImagefromHttp extends BaseActivity{
+public class PreviewImagefromHttp extends BaseActivity {
 
     private ProgressBar pb_progress;
-    private ImageView   iv_show_httpimage;
-    private ImageView   back_image;
+    private PhotoView iv_show_httpimage;
+    private ImageView back_image;
     private String url;
     private Intent mIntent;
 
@@ -33,13 +36,13 @@ public class PreviewImagefromHttp extends BaseActivity{
         initUi();
     }
 
-    public void initUi(){
+    public void initUi() {
 
         mIntent = getIntent();
         url = mIntent.getStringExtra(ExtraAndResult.EXTRA_OBJ);
 
         pb_progress = (ProgressBar) findViewById(R.id.pb_progress);
-        iv_show_httpimage = (ImageView) findViewById(R.id.iv_show_httpimage);
+        iv_show_httpimage = (PhotoView) findViewById(R.id.iv_show_httpimage);
         back_image = (ImageView) findViewById(R.id.back_image);
 
         back_image.setOnClickListener(new View.OnClickListener() {
