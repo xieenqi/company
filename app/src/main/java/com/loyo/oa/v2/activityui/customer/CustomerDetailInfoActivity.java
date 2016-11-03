@@ -1,7 +1,12 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,15 +34,18 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.xml.sax.XMLReader;
 
 import java.util.Date;
 
@@ -224,7 +232,19 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null != mCustomer.saleActivityInfo) {
             tv_follow_content.setVisibility(View.VISIBLE);
             tv_follow_crecter_type.setVisibility(View.VISIBLE);
-            tv_follow_content.setText(mCustomer.saleActivityInfo.content);
+            tv_follow_content.setText(Html.fromHtml(mCustomer.saleActivityInfo.content, new Html.ImageGetter() {
+                @Override
+                public Drawable getDrawable(String source) {
+                    LogUtil.d("加载的文字: " + source);
+                    Bitmap bitmap = ImageLoader.getInstance().loadImageSync(source);
+                    return getResources().getDrawable(R.drawable.bg_mine);
+                }
+            }, new Html.TagHandler() {
+                @Override
+                public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+
+                }
+            }));
             tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
                     mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
         } else {

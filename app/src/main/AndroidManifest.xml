@@ -777,6 +777,13 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <supports-screens
+            android:anyDensity="true"
+            android:largeScreens="true"
+            android:normalScreens="true"
+            android:resizeable="true"
+            android:smallScreens="true" />
+
         <service
             android:name=".service.InitDataService_"
             android:enabled="true" />

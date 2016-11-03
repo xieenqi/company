@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.customer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,14 +20,18 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.CommonWebView;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
+import com.loyo.oa.v2.activityui.other.PreviewImagefromHttp;
+import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AudioViewModel;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerFollowUpModel;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -41,6 +47,7 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -88,7 +95,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
     private AudioViewModel mViewModel;/*当前播放音频的model*/
     private int mPosition;            /*当前播放音频的下标*/
-
+    int screenWidth;
 
     private Handler mHandler = new Handler() {
 
@@ -146,6 +153,9 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             isMyUser = bundle.getBoolean("isMyUser");
         }
         setTitle("跟进动态");
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        screenWidth = metric.widthPixels;     // 屏幕宽度（像素）
         initUI();
         getData();
     }
@@ -482,7 +492,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         super.onBackPressed();
     }
 
-    private String webCode = "<p style=\"text-indent:37px\"><span style=\"font-size:40px;font-family:方正仿宋简体\">2016</span><span style=\"font-size:40px;font-family:方正仿宋简体\">年6月24日</span><span style=\"font-size:40px;font-family:方正仿宋简体\">上午</span><span style=\"font-size:40px;font-family:方正仿宋简体\">,</span><span style=\"font-size:40px;font-family:方正仿宋简体\">简阳市教科局一行31人在彭忠副局长的带领下到龙泉第七中学就义务教育均衡发展进行参观交流。四川省教育厅技术物资装备管理指导中心实验教学科田馨科长、</span><span style=\"font-size:40px;font-family:方正仿宋简体\">成都市教育技术装备管理中心</span><span style=\"font-size:40px;font-family:方正仿宋简体\">罗虹副主任、电教信息科倪宏科长、设备管理科夏涛副科长、周陶、金红老师到会指导，龙泉驿区教育局相关领导参加了此次活动。</span></p><p style=\"text-indent:37px\"><span style=\"font-size:40px;font-family:方正仿宋简体\">首先是龙泉七中罗登远校长带领现场参观学校的装备管理工作，随后开展了工作交流。会上，龙泉驿区政府教育督导室原主任林松权同志介绍了龙泉驿区接受四川省义务教育均衡发展县检查工作情况，</span><span style=\"font-size:40px;font-family:方正仿宋简体\">四川省教育厅技术物资装备管理指导中心实验教学科田馨科长进行了省</span><span style=\"font-size:40px;font-family:方正仿宋简体\">义务教育均衡发展县检查</span><span style=\"font-size:40px;font-family:方正仿宋简体\">专题培训，并现场答疑，最后，</span><span style=\"font-size:40px;font-family:方正仿宋简体\">成都市教育技术装备管理中心罗虹副主任讲话，并对简阳市今后的迎检准备工作提出具体要求。</span></p><p><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271029920046193019174.png\" title=\"QQ截图20160628112935.png\" alt=\"QQ截图20160628112935.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271030937167978310009.png\" title=\"QQ截图20160628113013.png\" alt=\"QQ截图20160628113013.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271031267888555254636.png\" title=\"QQ截图20160628113027.png\" alt=\"QQ截图20160628113027.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271030562767318666623.png\" title=\"QQ截图20160628112957.png\" alt=\"QQ截图20160628112957.png\"/></p>";
+    private String webCode = "<p style=\"text-indent:37px\"><span style=\"font-size:40px;font-family:方正仿宋简体\">2016</span><span style=\"font-size:40px;font-family:方正仿宋简体\">年6月24日</span><span style=\"font-size:40px;font-family:方正仿宋简体\">上午</span><span style=\"font-size:40px;font-family:方正仿宋简体\">,</span><span style=\"font-size:40px;font-family:方正仿宋简体\">简阳市教科局一fnsdiIQWDKAIUFDC SDDFnvofbdfv dfbdfvsd,feisfdb dfbmdifsfkngsdlv'vdfmisdjfps,fksdnfsdvxvsnfwekge.gf,vdfkvdfekjbckndfop[f[科田馨科长、</span><span style=\"font-size:40px;font-family:方正仿宋简体\">成都市教育技术装备管理中心</span><span style=\"font-size:40px;font-family:方正仿宋简体\">罗虹副主任、电教信息科倪宏科长、设备管理科夏涛副科长、周陶、金红老师到会指导，龙泉驿区教育局相关领导参加了此次活动。</span></p><p style=\"text-indent:37px\"><span style=\"font-size:40px;font-family:方正仿宋简体\">首先是龙泉七中罗登远校长带领现场参观学校的装备管理工作，随后开展了工作交流。会上，龙泉驿区政府教育督导室原主任林松权同志介绍了龙泉驿区接受四川省义务教育均衡发展县检查工作情况，</span><span style=\"font-size:40px;font-family:方正仿宋简体\">四川省教育厅技术物资装备管理指导中心实验教学科田馨科长进行了省</span><span style=\"font-size:40px;font-family:方正仿宋简体\">义务教育均衡发展县检查</span><span style=\"font-size:40px;font-family:方正仿宋简体\">专题培训，并现场答疑，最后，</span><span style=\"font-size:40px;font-family:方正仿宋简体\">成都市教育技术装备管理中心罗虹副主任讲话，并对简阳市今后的迎检准备工作提出具体要求。</span></p><p><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271029920046193019174.png\" title=\"QQ截图20160628112935.png\" alt=\"QQ截图20160628112935.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271030937167978310009.png\" title=\"QQ截图20160628113013.png\" alt=\"QQ截图20160628113013.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271031267888555254636.png\" title=\"QQ截图20160628113027.png\" alt=\"QQ截图20160628113027.png\"/><img src=\"http://www.cdjzs.com/ueditor/net/upload/image/20160628/6360271030562767318666623.png\" title=\"QQ截图20160628112957.png\" alt=\"QQ截图20160628112957.png\"/></p>";
 
     private class SaleActivitiesAdapter extends BaseAdapter {
 
@@ -520,15 +530,13 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                 holder.iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
                 holder.tv_calls = ViewHolder.get(convertView, R.id.iv_calls);
                 holder.ll_web = ViewHolder.get(convertView, R.id.ll_web);//装在webview的容器
-                holder.web = new CommonWebView(CustomerDynamicManageActivity.this, webCode);
+//                holder.web = new CommonWebView(CustomerDynamicManageActivity.this, viewModel.getContent(), screenWidth);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
+            setContent(holder.ll_web, viewModel.getContent());
 
-            holder.ll_web.removeAllViews();
-            holder.ll_web.addView(holder.web);
-            holder.ll_web.setVisibility(View.VISIBLE);
             if (viewModel.getIsAnim()) {
                 app.startAnim(holder.tv_calls);
             } else {
@@ -537,7 +545,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             viewModel.imageViewWeakReference = new WeakReference<TextView>(holder.tv_calls);
 
             holder.tv_create_time.setText(DateTool.getDiffTime(viewModel.getCreateAt()));
-            holder.tv_content.setText(viewModel.getContent());
+//            holder.tv_content.setText(viewModel.getContent());
 //            holder.tv_content.setText(Html.fromHtml(webCode));
 
             /*判断是否有录音*/
@@ -611,6 +619,47 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             });
 
             return convertView;
+        }
+
+        /**
+         * 设置图文混编
+         */
+        public void setContent(LinearLayout layout, String content) {
+            layout.removeAllViews();
+            String[] t2 = checkContent(content);
+            for (final String ele : t2) {
+                if (ele.startsWith("http")) {
+                    ImageView img = new ImageView(CustomerDynamicManageActivity.this);
+                    LinearLayout.LayoutParams pl = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    img.setLayoutParams(pl);
+                    img.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, ele);
+                            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImagefromHttp.class,
+                                    MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+                        }
+                    });
+                    ImageLoader.getInstance().displayImage(ele, img);
+                    layout.addView(img);
+                } else {
+                    CommonTextVew tex = new CommonTextVew(CustomerDynamicManageActivity.this, ele);
+                    layout.addView(tex);
+                }
+            }
+            layout.setVisibility(View.VISIBLE);
+        }
+
+        public String[] checkContent(String content) {
+            String tt = "";
+            String t1 = content.replace("<p>", "");
+            String t2 = t1.replace("</p>", "");
+            String t3 = t2.replace("&nbsp", "");
+            String t4 = t3.replace("\">", ",");
+            String t5 = t4.replace("<img class=\"btn-previewer-content\" src=\"", ",");
+            String t6 = t5.replace("\"", "");
+            return t6.split(",");
         }
 
         class Holder {
