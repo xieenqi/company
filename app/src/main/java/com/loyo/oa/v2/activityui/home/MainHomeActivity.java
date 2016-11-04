@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.Toast;
-
 import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
@@ -38,9 +37,7 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.voip.VoIPManager;
 import com.umeng.analytics.MobclickAgent;
-
 import org.greenrobot.eventbus.Subscribe;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
