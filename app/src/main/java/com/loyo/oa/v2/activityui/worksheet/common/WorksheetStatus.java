@@ -34,7 +34,7 @@ public enum WorksheetStatus implements GroupKey {
             return "其他";
         }
         public String getKey() {
-            return "全部状态";
+            return "-1";
         }
 
         public int getColor() {
@@ -151,10 +151,10 @@ public enum WorksheetStatus implements GroupKey {
      */
     TEMINATED(5) {
         public String getName() {
-            return "5";
+            return "意外终止";
         }
         public String getKey() {
-            return "6";
+            return "5";
         }
 
         public int getColor() {
