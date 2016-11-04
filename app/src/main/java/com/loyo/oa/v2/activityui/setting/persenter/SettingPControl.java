@@ -54,17 +54,18 @@ public class SettingPControl implements SettingPersenter {
     public void diskCacheInfo() {
         final File cacheDir = StorageUtils.getOwnCacheDirectory(MainApp.getMainApp(), "imageloader/Cache");
         LogUtil.d("缓存路径：" + cacheDir.getPath());
+        final Handler handler = new Handler();
         new Thread(new Runnable() {
 
             @Override
             public void run() {
                 final String length = FileTool.formatFileSize(cacheDir.getPath());
-                new Handler().post(new Runnable() {
+                handler.post(new Runnable() {
 
                     @Override
                     public void run() {
-//                        tv_file.setText(length.equals("0B") ? "" : length);
-//                        cancelLoading();
+                        vControl.setCache(length.equals("0B") ? "" : length);
+                        vControl.hideProgress();
                     }
                 });
                 LogUtil.d("缓存路径文件大小：" + length);

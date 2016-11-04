@@ -9,8 +9,12 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.setting.persenter.SettingPControl;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SettingVControl;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 【设置】页面
@@ -65,10 +69,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 onBackPressed();
                 break;
             case R.id.ll_cellphone:
+                MainApp.getMainApp().startActivity(SettingActivity.this, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.ll_setpassword:
                 break;
             case R.id.ll_clean:
+                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dismissSweetAlert();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        showProgress("");
+                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
+                        pControl.diskCacheInfo();
+                        dismissSweetAlert();
+                    }
+                }, "提醒", "确认清除缓存?");
                 break;
             case R.id.ll_update:
                 break;
@@ -79,12 +98,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void showProgress(String message) {
-
+        showLoading("");
     }
 
     @Override
     public void hideProgress() {
-
+        cancelLoading();
     }
 
     @Override
@@ -96,5 +115,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void setCell(String cell) {
         iv_cell_number.setText(cell);
         iv_cell_status.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setCache(String cache) {
+        tv_cache_size.setText(cache);
     }
 }

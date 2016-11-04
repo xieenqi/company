@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.setting;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -23,7 +25,9 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -52,7 +56,7 @@ public class EditUserMobileActivity extends BaseActivity {
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(click);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
-        tv_title_1.setText("设置账号");
+        tv_title_1.setText("绑定手机号");
         bt_verificationCode = (Button) findViewById(R.id.bt_verificationCode);
         bt_verificationCode.setOnClickListener(click);
         btn_complete = (Button) findViewById(R.id.btn_complete);
@@ -113,9 +117,11 @@ public class EditUserMobileActivity extends BaseActivity {
             if (RegexUtil.regexk(editable.toString().trim(), RegexUtil.StringType.MOBILEL)) {
                 bt_verificationCode.setEnabled(true);
                 bt_verificationCode.setBackgroundResource(R.drawable.round_bg_shpe);//getResources().getColor(R.color.title_bg1)
+                bt_verificationCode.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 bt_verificationCode.setEnabled(false);
                 bt_verificationCode.setBackgroundResource(R.drawable.round_bg_shpe2);
+                bt_verificationCode.setTextColor(Color.parseColor("#999999"));
                 if (editable.length() == 11) {
                     Toast("请输入正确的手机号码");
                 }
