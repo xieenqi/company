@@ -346,7 +346,9 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
      * */
     @Subscribe
     public void onMyCustomerListRushEvent(MyCustomerListRushEvent event){
-        getData();
+        LogUtil.dee("onMyCustomerListRushEvent 刷新列表回调");
+        //getData();
+        memberCallback.comeBackHeadPage();
     }
 
 

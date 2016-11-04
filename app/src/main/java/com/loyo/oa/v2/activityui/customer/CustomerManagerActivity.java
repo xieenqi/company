@@ -127,8 +127,10 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         @Override
         public void handleMessage(Message msg){
             if(msg.what == 0x01){
+                LogUtil.dee("0x01收到");
+                LogUtil.dee("fragments size:" + fragments.size());
                 try {
-                    fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(0)).commit();
+                    fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(2)).commit();
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
                 }
@@ -359,7 +361,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
 
     @Override
     public void comeBackHeadPage() {
-        LogUtil.dee("comeBackHeadPage");
+        LogUtil.dee("comeBackHeadPage Manager回调了");
         mHandler.sendEmptyMessage(0x01);
     }
 }
