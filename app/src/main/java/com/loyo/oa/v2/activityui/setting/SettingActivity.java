@@ -1,5 +1,9 @@
 package com.loyo.oa.v2.activityui.setting;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -7,15 +11,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.setting.persenter.SettingPControl;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SettingVControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【设置】页面
@@ -28,12 +43,24 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private TextView tv_title_1, iv_cell_number, tv_cache_size;
     private ImageView iv_cell_status;
     private SettingPControl pControl;
+    /* Broadcasr */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            if ("com.loyo.oa.v2.ORGANIZATION_UPDATED".equals(intent.getAction())) {
+                //TODO 此处主要接受组织架构的跟新 以后其它的更新在规整
+                Toast("更新成功!");
+                cancelLoading();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         initView();
+        registerBroadcastReceiver();
     }
 
     private void initView() {
@@ -71,10 +98,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.ll_cellphone:
                 Bundle bundle = new Bundle();
-                bundle.putInt(ExtraAndResult.SEND_ACTION, EditUserMobileActivity.ACTION_BINDING);
+                bundle.putInt(ExtraAndResult.SEND_ACTION, EditUserMobileActivity.ACTION_RENEWAL);
                 MainApp.getMainApp().startActivity(SettingActivity.this, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 break;
             case R.id.ll_setpassword:
+                app.startActivity(SettingActivity.this, SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.ll_clean:
                 sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
@@ -93,10 +121,57 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }, "提醒", "确认清除缓存?");
                 break;
             case R.id.ll_update:
+                if (Utils.isNetworkAvailable(SettingActivity.this)) {
+                    showLoading("正在更新组织架构，请稍等", false);
+                    rushHomeData();
+                    initService();
+                } else {
+                    Toast("请检查您的网络连接");
+                }
                 break;
             case R.id.btn_exit:
                 break;
         }
+    }
+
+    public void registerBroadcastReceiver() {
+        IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
+        filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
+        registerReceiver(mReceiver, filter);
+    }
+
+    /**
+     * 更新 组织架构
+     */
+    void initService() {
+        /* 更新登录用户信息 */
+        InitDataService_.intent(SettingActivity.this).start();
+        /* 拉取组织架构 */
+        OrganizationService.startActionFetchAll(MainApp.getMainApp());
+    }
+
+    /**
+     * 更新(当首页红点数据异常)
+     */
+    void rushHomeData() {
+        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
+            @Override
+            public void success(final User user, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 
     @Override

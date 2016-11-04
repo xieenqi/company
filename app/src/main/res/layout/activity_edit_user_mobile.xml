@@ -128,11 +128,12 @@
             android:src="@drawable/icon_cellphone_ok" />
 
         <TextView
+            android:id="@+id/tv_renewal_cellnumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_30"
             android:gravity="center"
-            android:text="绑定手机号为 : 15292692235"
+            android:text="绑定手机号为 : "
             android:textColor="@color/text33"
             android:textSize="@dimen/text_sp18" />
 
@@ -146,7 +147,7 @@
             android:textSize="@dimen/text_sp15" />
 
         <Button
-            android:id="@+id/btn_"
+            android:id="@+id/bt_renewal"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_48"
             android:layout_marginLeft="@dimen/margin_other_view"

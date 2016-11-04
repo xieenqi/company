@@ -74,9 +74,8 @@ public class MenuFragment extends BaseFragment {
     private ImageView iv_new_version;
     public static ExitAppCallback callback;
     private Intent mIntentCheckUpdate;
-    private boolean isUpdataData = false;
+//    private boolean isUpdataData = false;
     private boolean isExite = false;
-    Handler handler = new Handler();
     //个人信息 和版本信息
     private BroadcastReceiver userInfoAndVersionInfo = new BroadcastReceiver() {
         @Override
@@ -95,12 +94,11 @@ public class MenuFragment extends BaseFragment {
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
                 }
-                if (isUpdataData) {
-                    cancelLoading();
-                    Toast("数据更新成功！");
-                    isUpdataData = false;
-                }
-//                setDiskCacheInfo();
+//                if (isUpdataData) {
+//                    cancelLoading();
+//                    Toast("数据更新成功！");
+//                    isUpdataData = false;
+//                }
             } else if ("exite".equals(info) && !isExite) {
                 exit();
                 isExite = true;
@@ -238,26 +236,19 @@ public class MenuFragment extends BaseFragment {
                 break;
             //系统消息
             case R.id.ll_system:
-//                app.startActivity(getActivity(), SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+
                 break;
             //意见反馈
             case R.id.ll_feed_back:
                 app.startActivity(getActivity(), FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             //更新数据
-            case R.id.ll__update:
-                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, "all");
-                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
-                isUpdataData = true;
-                if (Utils.isNetworkAvailable(getActivity())) {
-                    //Global.Toast("开始更新");
-                    showLoading("正在更新组织架构，请稍等", false);
-                    rushHomeData();
-                    initService();
-                } else {
-                    Toast("请检查您的网络连接");
-                }
-                break;
+//            case R.id.ll__update:
+//                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, "all");
+//                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
+//                isUpdataData = true;
+
+//                break;
             //检查更新
             case R.id.ll_version:
                 if (PackageManager.PERMISSION_GRANTED ==
@@ -335,33 +326,8 @@ public class MenuFragment extends BaseFragment {
         });
     }
 
-    /**
-     * 更新 组织架构
-     */
-    void initService() {
-        /* 更新登录用户信息 */
-        InitDataService_.intent(getActivity()).start();
-        /* 拉取组织架构 */
-        OrganizationService.startActionFetchAll(MainApp.getMainApp());
-    }
 
-    /**
-     * 更新(当首页红点数据异常)
-     */
-    void rushHomeData() {
-        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
-            @Override
-            public void success(final User user, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
 
     @Override
     public void onResume() {

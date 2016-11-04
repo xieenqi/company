@@ -45,8 +45,8 @@ public class EditUserMobileActivity extends BaseActivity {
     public static final int ACTION_BINDING = 120;//绑定手机号
     public static final int ACTION_RENEWAL = 130;//更换手机号
     private LinearLayout img_title_left, ll_binding, ll_renewal;
-    private TextView tv_title_1;
-    private Button bt_verificationCode, btn_complete;
+    private TextView tv_title_1, tv_renewal_cellnumber;
+    private Button bt_verificationCode, btn_complete, bt_renewal;
     private EditText et_mobile, et_code, et_pwd;
     private CheckBox cb_showHide;
     private String verificatioNumber, pwd, mobile;
@@ -75,6 +75,9 @@ public class EditUserMobileActivity extends BaseActivity {
         et_pwd = (EditText) findViewById(R.id.et_pwd);
         et_code = (EditText) findViewById(R.id.et_code);
         cb_showHide = (CheckBox) findViewById(R.id.cb_showHide);
+        tv_renewal_cellnumber = (TextView) findViewById(R.id.tv_renewal_cellnumber);
+        bt_renewal = (Button) findViewById(R.id.bt_renewal);
+        bt_renewal.setOnClickListener(click);
         cb_showHide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
@@ -82,7 +85,7 @@ public class EditUserMobileActivity extends BaseActivity {
             }
         });
         setTouchView(NO_SCROLL);
-        Global.SetTouchView(img_title_left, bt_verificationCode, btn_complete);
+        Global.SetTouchView(img_title_left, bt_verificationCode, btn_complete, bt_renewal);
 
     }
 
@@ -120,7 +123,7 @@ public class EditUserMobileActivity extends BaseActivity {
                 case R.id.btn_complete:
                     complete();
                     break;
-                default:
+                case R.id.bt_renewal://更换手机号
 
                     break;
 
