@@ -233,6 +233,12 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
         }
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
+        } else {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.RECORD_AUDIO},
+                    1);
+        }
     }
 
 

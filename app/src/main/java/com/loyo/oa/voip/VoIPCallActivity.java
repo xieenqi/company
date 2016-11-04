@@ -1,8 +1,11 @@
 package com.loyo.oa.voip;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -62,6 +65,8 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     private String callee;
     private String phone;
     private long startTimestamp;
+
+    private String dialNumber;
 
     /**/
     private Timer timer;
@@ -267,6 +272,29 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         }
         calleeName.setText(callee);
         calleeName2.setText(callee);
+    }
+
+    private void permissionRequest() {
+
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
+        } else {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.RECORD_AUDIO},
+                    1);
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (permissions[0].equals(Manifest.permission.RECORD_AUDIO)
+                &&grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            //用户同意使用write
+            if (dialNumber != null) {
+                dial(dialNumber);
+            }
+
+        }else{
+            finish();
+        }
     }
 
     private void dial(String number) {

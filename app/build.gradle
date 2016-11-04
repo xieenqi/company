@@ -14,6 +14,10 @@ android {
         exclude 'assets/lineDashTexture.png'
     }
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     //.so文件的资源设置
     sourceSets {
         main {
