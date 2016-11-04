@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
@@ -241,7 +242,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             tv_follow_content.setVisibility(View.VISIBLE);
             tv_follow_crecter_type.setVisibility(View.VISIBLE);
             tv_follow_content.setText(mCustomer.saleActivityInfo.content.contains("<p>") ?
-                    checkContent(mCustomer.saleActivityInfo.content) : mCustomer.saleActivityInfo.content);
+                    CommonHtmlUtils.Instance().checkContent(mCustomer.saleActivityInfo.content) : mCustomer.saleActivityInfo.content);
             tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
                     mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
         } else {
@@ -268,21 +269,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         return false;
     }
 
-    public String checkContent(String content) {
-        String textContent = "";
-        Document jsoup = Jsoup.parse(content);
-        Elements imgs = jsoup.select("img,p");
-        for (Element img : imgs) {
-            String image = img.attr("src");
-            if (!TextUtils.isEmpty(image)) {
-                textContent = textContent + "  [图片]  ";
-            } else {
-                textContent = textContent + img.text().trim();
-            }
-            LogUtil.d(img.text().trim() + "---过滤的图片:" + img.attr("src"));
-        }
-        return textContent;
-    }
+
 
     /**
      * 显示编辑客户弹出框
