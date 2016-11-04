@@ -281,6 +281,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         if (index != mIndex) {
             mIndex = index;
             try {
+                LogUtil.dee("index:"+index);
                 fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(index)).commit();
             } catch (IllegalStateException e) {
                 e.printStackTrace();

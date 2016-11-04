@@ -65,11 +65,11 @@ app/build/**
 
 wrapper/**
 
-# gradle/wrapper/**
+gradle/wrapper/**
 
 .gradle/**
 
-# *.properties
+*.properties
 
 
 app/src/main/.DS_Store
