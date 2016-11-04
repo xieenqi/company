@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.customer;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -23,11 +22,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
-import com.loyo.oa.v2.activityui.commonview.CommonWebView;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
-import com.loyo.oa.v2.activityui.other.PreviewImagefromHttp;
-import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AudioViewModel;
 import com.loyo.oa.v2.beans.Customer;
@@ -50,12 +46,7 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

@@ -15,8 +15,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
-import com.loyo.oa.v2.activityui.commonview.CommonWebView;
-import com.loyo.oa.v2.activityui.customer.CustomerDynamicManageActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.application.MainApp;
@@ -31,7 +29,6 @@ import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -70,6 +67,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
         getIntenData();
         setTitle("跟进动态");
         initUI();
+        showLoading("");
         getData();
     }
 
