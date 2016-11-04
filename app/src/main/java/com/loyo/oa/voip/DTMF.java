@@ -6,18 +6,18 @@ package com.loyo.oa.voip;
 
 public enum  DTMF {
 
-    ZERO(7, "0"),
-    ONE(8, "1"),
-    TWO(9, "2"),
+    ZERO(7,   "0"),
+    ONE(8,    "1"),
+    TWO(9,    "2"),
     THREE(10, "3"),
-    FOUR(11, "4"),
-    FIVE(12, "5"),
-    SIX(13, "6"),
+    FOUR(11,  "4"),
+    FIVE(12,  "5"),
+    SIX(13,   "6"),
     SEVEN(14, "7"),
     EIGHT(15, "8"),
-    NINE(16, "9"),
-    STAR(17, "*"),
-    HASH(18, "#");
+    NINE(16,  "9"),
+    STAR(17,  "*"),
+    HASH(18,  "#");
 
 
 
