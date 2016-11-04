@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.customer;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -20,13 +19,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
-import com.loyo.oa.v2.activityui.commonview.CommonWebView;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
-import com.loyo.oa.v2.activityui.other.PreviewImagefromHttp;
-import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AudioViewModel;
 import com.loyo.oa.v2.beans.Customer;
@@ -49,12 +46,7 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -537,7 +529,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
                 holder.iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
                 holder.tv_calls = ViewHolder.get(convertView, R.id.iv_calls);
                 holder.ll_web = ViewHolder.get(convertView, R.id.ll_web);//装在webview的容器
-//                holder.web = new CommonWebView(CustomerDynamicManageActivity.this, viewModel.getContent(), screenWidth);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
@@ -634,29 +625,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
         }
 
 
-        public List<ImgAndText> checkContent(String content) {
-//            String tt = "";
-//            String t1 = content.replace("<p>", "");
-//            String t2 = t1.replace("</p>", "");
-//            String t3 = t2.replace("&nbsp", "");
-//            String t4 = t3.replace("\">", ",");
-//            String t5 = t4.replace("<img class=\"btn-previewer-content\" src=\"", ",");
-//            String t6 = t5.replace("\"", "");
-            List<ImgAndText> list = new ArrayList<>();
-            Document jsoup = Jsoup.parse(content);
-            Elements imgs = jsoup.select("img,p");
-            for (Element img : imgs) {
-                String image = img.attr("src");
-                if (!TextUtils.isEmpty(image)) {
-                    list.add(new ImgAndText("img", image));
-                } else {
-                    list.add(new ImgAndText("text", img.text().trim()));
-                }
-                LogUtil.d(img.text().trim() + "---过滤的图片:" + img.attr("src"));
-            }
-            return list;
-        }
-
         class Holder {
             LinearLayout ll_layout_time;
             LinearLayout layout_audio, ll_web;
@@ -669,29 +637,14 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             TextView tv_audio_length;
             ImageView iv_imgTime;
             TextView tv_calls;
-            CommonWebView web;
-
             /**
              * 设置图文混编
              */
             public void setContent(LinearLayout layout, String content) {
                 layout.removeAllViews();
-                for (final ImgAndText ele : checkContent(content)) {
+                for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
                     if (ele.type.startsWith("img")) {
                         CommonImageView img = new CommonImageView(CustomerDynamicManageActivity.this, ele.data);
-
-//                    LinearLayout.LayoutParams pl = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                    img.setLayoutParams(pl);
-//                    img.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Bundle bundle = new Bundle();
-//                            bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, ele);
-//                            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImagefromHttp.class,
-//                                    MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
-//                        }
-//                    });
-//                    ImageLoader.getInstance().displayImage(ele, img);
                         layout.addView(img);
                     } else {
                         CommonTextVew tex = new CommonTextVew(CustomerDynamicManageActivity.this, ele.data);

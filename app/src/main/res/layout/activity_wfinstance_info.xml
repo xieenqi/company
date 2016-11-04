@@ -21,10 +21,14 @@
             android:layout_height="wrap_content"
             android:fillViewport="true"
             android:scrollbars="none">
-
+            <!--android:focusable="true"
+             android:focusableInTouchMode="true"
+             如上面代码，我的ScrollView中第一个内容是LinearLayout,下面有一个LinearLayout包裹着的ListView.ListView是长度可变的-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/margin_other_view">
 
