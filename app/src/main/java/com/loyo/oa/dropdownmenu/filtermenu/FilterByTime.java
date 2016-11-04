@@ -6,7 +6,7 @@ package com.loyo.oa.dropdownmenu.filtermenu;
 
 public enum FilterByTime {
     FOLLOW("跟进时间", "lastActAt"),
-    CREATE("创建时间", "createAt");
+    CREATE("创建时间", "createdAt");
 
     public String key;
     public String value;

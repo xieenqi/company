@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 【公用适配器】  客户管理 销售机会 签到拜访 订单管理
+ * 【公用适配器】 销售机会 签到拜访 订单管理
  */
 public class CommonCategoryAdapter extends BaseAdapter {
 

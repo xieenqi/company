@@ -53,7 +53,7 @@
                         android:maxLength="24"
                         android:paddingLeft="14dp"
                         android:singleLine="true"
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/suodesilei" />
 
                     <ImageView
                         android:id="@+id/img_maillist_contact"
@@ -107,7 +107,9 @@
                             android:maxLength="24"
                             android:paddingLeft="14dp"
                             android:singleLine="true"
-                            android:textColor="@color/text99" />
+                            android:textColor="@color/suodesilei"
+                            android:numeric="integer"
+                            />
 
                         <ImageView
                             android:id="@+id/iv_phone_insert1"
@@ -162,7 +164,9 @@
                             android:maxLength="24"
                             android:paddingLeft="14dp"
                             android:singleLine="true"
-                            android:textColor="@color/text99" />
+                            android:textColor="@color/suodesilei"
+                            android:numeric="integer"
+                            />
 
                         <ImageView
                             android:id="@+id/iv_phone_insert2"
@@ -217,7 +221,9 @@
                             android:maxLength="24"
                             android:paddingLeft="14dp"
                             android:singleLine="true"
-                            android:textColor="@color/text99" />
+                            android:textColor="@color/suodesilei"
+                            android:numeric="integer"
+                            />
 
                         <ImageView
                             android:id="@+id/iv_phone_insert3"
@@ -271,7 +277,9 @@
                             android:maxLength="24"
                             android:paddingLeft="14dp"
                             android:singleLine="true"
-                            android:textColor="@color/text99" />
+                            android:textColor="@color/suodesilei"
+                            android:numeric="integer"
+                            />
 
                         <ImageView
                             android:id="@+id/iv_call_insert1"
@@ -326,7 +334,9 @@
                             android:maxLength="24"
                             android:paddingLeft="14dp"
                             android:singleLine="true"
-                            android:textColor="@color/text99" />
+                            android:textColor="@color/suodesilei"
+                            android:numeric="integer"
+                            />
 
                         <ImageView
                             android:id="@+id/iv_call_insert2"
@@ -381,7 +391,9 @@
                             android:maxLength="24"
                             android:paddingLeft="14dp"
                             android:singleLine="true"
-                            android:textColor="@color/text99" />
+                            android:textColor="@color/suodesilei"
+                            android:numeric="integer"
+                            />
 
                         <ImageView
                             android:id="@+id/iv_call_insert3"

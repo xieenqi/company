@@ -9,30 +9,23 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.MyContactInfoListAdapter;
 import com.loyo.oa.v2.activityui.customer.event.ContactMaillistRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.MyContactInfo;
-import com.loyo.oa.v2.activityui.wfinstance.ProcessSelectActivity;
-import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.SideBar;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ContactInfoUtil;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -113,7 +106,7 @@ public class MyContactMailList extends BaseActivity implements View.OnClickListe
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                     sDialog.sweetAlertDialog.dismiss();
                 }
-            },"提示","您确定要覆盖已编辑的联系人信息吗?");
+            },"提示","您确定要覆盖已填写的联系人信息吗?");
         }
 
         pinyinComparator = new PinyinComparator();

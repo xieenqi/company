@@ -8,7 +8,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,10 +21,10 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -36,7 +35,7 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import retrofit.client.Response;
@@ -179,6 +178,13 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         if (null == user) {
             return;
         }
+
+//        StringBuffer deptBuffer = new StringBuffer();
+//        Iterator<DBDepartment> iterator=user.depts.iterator();
+//        while(iterator.hasNext()){
+//            deptBuffer.append(iterator.next().name+" ");
+//        }
+
         int defaultAvatao;
         if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
             if (user.gender == 2) {
@@ -191,6 +197,8 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
         }
         path = user.avatar;
+//        Utils.setContent(tv_departments, TextUtils.isEmpty(deptBuffer.toString()) ? " " :  deptBuffer.toString());
+//        Utils.setContent(tv_positions,  user.shortDeptNames);
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
         wechat = user.weixinId;

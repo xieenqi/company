@@ -16,6 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
+import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
@@ -183,7 +184,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
             ll_track.setVisibility(View.GONE);
         } else {
             ll_track.setVisibility(View.VISIBLE);
-            tv_track_content.setText(data.data.activity.content);
+            tv_track_content.setText(data.data.activity.content.contains("<p>") ?
+                    CommonHtmlUtils.Instance().checkContent(data.data.activity.content) : data.data.activity.content);
             tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.createAt + "") * 1000))
                     + "  " + data.data.activity.creatorName + " # " + data.data.activity.typeName);
         }
@@ -565,7 +567,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 dismissSweetAlert();
                 transferClue(user.getId());
             }
-        },"提示","转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
+        }, "提示", "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
     }
 
     @Override

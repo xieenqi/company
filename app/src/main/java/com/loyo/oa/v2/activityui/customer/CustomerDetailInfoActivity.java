@@ -1,7 +1,13 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +16,10 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
@@ -21,23 +30,33 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.xml.sax.XMLReader;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
@@ -222,7 +241,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null != mCustomer.saleActivityInfo) {
             tv_follow_content.setVisibility(View.VISIBLE);
             tv_follow_crecter_type.setVisibility(View.VISIBLE);
-            tv_follow_content.setText(mCustomer.saleActivityInfo.content);
+            tv_follow_content.setText(mCustomer.saleActivityInfo.content.contains("<p>") ?
+                    CommonHtmlUtils.Instance().checkContent(mCustomer.saleActivityInfo.content) : mCustomer.saleActivityInfo.content);
             tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
                     mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
         } else {
@@ -230,7 +250,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             tv_follow_crecter_type.setVisibility(View.GONE);
         }
         tv_contact_Number.setText("(" + mCustomer.contacts.size() + ")");
-//正式启用销售机会 弃用购买意向
+        //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
     }
@@ -248,6 +268,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         }
         return false;
     }
+
+
 
     /**
      * 显示编辑客户弹出框
@@ -374,7 +396,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(mCustomer.getId(), new RCallback<Customer>() {
             @Override
             public void success(final Customer newCustomer, final Response response) {
-                app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                //app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
             }
 
             @Override
@@ -393,7 +417,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(final Customer newCustomer, final Response response) {
                 isPutOcen = true;
-                app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
             }
 
             @Override
@@ -414,7 +439,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*返回*/
             case R.id.img_title_left:
                 if (isPutOcen) {
-                    app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                    AppBus.getInstance().post(new MyCustomerListRushEvent());
+                    finish();
                 } else {
                     onBackPressed();
                 }
@@ -438,7 +464,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer newCustomer, final Response response) {
-                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+                        finish();
                     }
 
                     @Override
@@ -553,7 +580,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (isPutOcen) {
-                app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
             } else {
                 onBackPressed();
             }
@@ -572,7 +600,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     Bundle bundle = data.getExtras();
                     boolean isCreator = bundle.getBoolean("isCreator");
                     if (!isCreator) {
-                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+                        finish();
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();

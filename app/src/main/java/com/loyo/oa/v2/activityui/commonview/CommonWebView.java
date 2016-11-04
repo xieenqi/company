@@ -6,14 +6,19 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.loyo.oa.v2.application.MainApp;
+import com.nostra13.universalimageloader.utils.StorageUtils;
+
+import java.io.File;
+
 /**
  * Created by xeq on 16/10/31.
  */
 
 public class CommonWebView extends WebView {
-    public CommonWebView(Context context, String url) {
+    public CommonWebView(Context context, String url, int screenWidth) {
         super(context);
-        initView(url);
+        initView(url, screenWidth);
     }
 
     public CommonWebView(Context context, AttributeSet attrs) {
@@ -24,25 +29,27 @@ public class CommonWebView extends WebView {
         super(context, attrs, defStyleAttr);
     }
 
-    private void initView(String url) {
+    private void initView(String url, int screenWidth) {
+        File cacheDir = StorageUtils.getOwnCacheDirectory(MainApp.getMainApp(), "imageloader/Cache");
         this.setInitialScale(39);// 为25%，最小缩放等级
         this.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         WebSettings setting = this.getSettings();
         setting.setCacheMode(WebSettings.LOAD_NO_CACHE);
         setting.setUseWideViewPort(true);
         setting.setLoadWithOverviewMode(true);
-        setting.setDefaultFontSize(45);
+//        setting.setDefaultFixedFontSize(100);
+//        setting.setMinimumFontSize(100);
         setting.setJavaScriptEnabled(true);
         setting.setDomStorageEnabled(true);//重要
         setting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);// 自适应屏幕宽
         setting.setAllowContentAccess(true);
-        setting.setAppCacheEnabled(true);
+        setting.setAppCacheEnabled(true);//缓存可用
+        setting.setAppCachePath(cacheDir.getPath());//缓存路径
         setting.setDefaultTextEncodingName("UTF-8");
-        String s = "padding:20px";
-        if (url.contains(s)) {
-            url = url.replace(s, "padding:0px");
-        }
-        this.loadDataWithBaseURL("about:blank", url, "text/html",
+        setting.setTextZoom(100);
+        String heag = "<html lang='en'> <head> <meta name='viewport' content='minimum-scale=1; maximum-scale=1;  initial-scale=1; user-scalable=no;'> <style > p{  color: #333333;  font-size: 16px; word-break:break-all } img{ max-width: " + screenWidth + "px; } </style></head> <body>";
+        String end = "</body> </html>";
+        this.loadDataWithBaseURL("about:blank", heag + url + end, "text/html",
                 "utf-8", null);
     }
 }

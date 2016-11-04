@@ -49,6 +49,18 @@ public static final int *;
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 
+#==================yzx==========================
+-dontwarn com.yzxtcp.**
+-keep class com.yzxtcp.** {*;}
+-dontwarn com.gl.softphone.**
+-keep class com.gl.softphone.** {*;}
+-dontwarn com.yzx.**
+-keep class com.yzx.** {*;}
+-dontwarn org.bson.**
+-keep class org.bson.** {*;}
+-dontwarn org.webrtc.**
+-keep class org.webrtc.** {*;}
+
 #glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {

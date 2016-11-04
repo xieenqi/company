@@ -234,7 +234,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         if(null != mContact){
             bindEditData();
         }
-        layout_contact_extra_info.addView(new ContactAddforExtraData(mContext, mContact, mContactLeftExtras, true, R.color.title_bg1, 0));
+        layout_contact_extra_info.addView(new ContactAddforExtraData(mContext, mContact, mContactLeftExtras, true, 0));
     }
 
     /**
@@ -267,7 +267,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             /*通讯录导入*/
             case R.id.img_maillist_contact:
                 boolean isEdit = false;
-                if(!TextUtils.isEmpty(et_name.getText().toString())){
+                if(!TextUtils.isEmpty(et_name.getText().toString())
+                        || !TextUtils.isEmpty(edt_contract_tel1.getText().toString())){
                     isEdit = true;
                 }
                 Intent mIntent = new Intent();

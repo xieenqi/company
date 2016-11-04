@@ -2,12 +2,16 @@ package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
+import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
@@ -16,8 +20,6 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
     private int customerType;
     private Bundle mBundle;
-    public static final int CUSTOMERS_SELF = 1, CUSTOMERS_TEAM = 2, CUSTOMERS_PUBLIC = 3;
-
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
     @Override
     public void getData() {
-        String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
+        String url = FinalVariables.SEARCH_CUSTOMERS_SELF; //这里填写我负责的查询 等服务端接口
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("pageIndex", paginationX.getPageIndex());
@@ -45,15 +47,29 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
         params.put("keyWords", strSearch);
 
         switch (customerType) {
-            case CUSTOMERS_SELF:
-                url = FinalVariables.SEARCH_CUSTOMERS_SELF;
+
+            /*我负责的查询*/
+            case 1:
+                url = FinalVariables.SEARCH_CUSTOMERS_RESPON;
                 break;
-            case CUSTOMERS_TEAM:
+            /*我参与的查询*/
+            case 2:
+                url = FinalVariables.SEARCH_CUSTOMERS_MEMBER;
+                break;
+            /*团队查询*/
+            case 3:
                 url = FinalVariables.SEARCH_CUSTOMERS_TEAM;
                 break;
-            case CUSTOMERS_PUBLIC:
+            /*公海查询*/
+            case 4:
                 url = FinalVariables.SEARCH_CUSTOMERS_PUBLIC;
                 break;
+
+            default:
+               Toast("参数异常,请重启App");
+                finish();
+                break;
+
         }
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, this);
     }

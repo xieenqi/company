@@ -96,7 +96,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:textColor="#999999" />
+                android:textColor="@color/suodesilei" />
 
         </LinearLayout>
 
@@ -133,7 +133,8 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
-                    android:textColor="#999999" />
+                    android:textColor="@color/suodesilei"
+                    />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -206,7 +207,8 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
-                    android:textColor="#999999" />
+                    android:textColor="@color/suodesilei"
+                     />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -279,7 +281,8 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
-                    android:textColor="#999999" />
+                    android:textColor="@color/suodesilei"
+                    />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -351,7 +354,8 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
-                    android:textColor="#999999" />
+                    android:textColor="@color/suodesilei"
+                    />
 
                 <LinearLayout
                     android:id="@+id/layout_call_wiretel1"
@@ -403,7 +407,8 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
-                    android:textColor="#999999" />
+                    android:textColor="@color/suodesilei"
+                    />
 
                 <LinearLayout
                     android:id="@+id/layout_call_wiretel2"
@@ -455,7 +460,8 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
-                    android:textColor="#999999" />
+                    android:textColor="@color/suodesilei"
+                    />
 
                 <LinearLayout
                     android:id="@+id/layout_call_wiretel3"
@@ -499,7 +505,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:textColor="#999999" />
+                android:textColor="@color/suodesilei" />
 
         </LinearLayout>
 
@@ -531,7 +537,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:textColor="#999999" />
+                android:textColor="@color/suodesilei"
+                />
 
         </LinearLayout>
 
@@ -563,7 +570,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:textColor="#999999" />
+                android:textColor="@color/suodesilei"
+                />
 
         </LinearLayout>
 
@@ -596,7 +604,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:textColor="#999999" />
+                android:textColor="@color/suodesilei"
+                />
 
         </LinearLayout>
 
@@ -628,7 +637,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:textColor="#999999" />
+                android:textColor="@color/suodesilei"
+                />
 
         </LinearLayout>
 
@@ -662,7 +672,8 @@
                 android:gravity="center_vertical"
                 android:paddingBottom="@dimen/dimen_5"
                 android:paddingTop="@dimen/dimen_5"
-                android:textColor="#999999" />
+                android:textColor="@color/suodesilei"
+                />
 
         </LinearLayout>
 

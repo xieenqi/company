@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/layout_add"
         android:layout_below="@+id/contact_manage_top"
-        android:background="@color/activity_bg"
+        android:background="@color/white"
         >
 
         <LinearLayout

@@ -54,11 +54,11 @@ public class ContactAddforExtraData extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactLeftExtras> extras, boolean edit, int valueColor, int valueSize) {
+    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactLeftExtras> extras, boolean edit,int valueSize) {
         this(context, null, 0);
         this.extras = extras;
         this.mContact = mContact;//为null 不是联系模块
-        bindView(edit, valueColor, valueSize);
+        bindView(edit, valueSize);
     }
 
     public ArrayList<ContactLeftExtras> getExtras() {
@@ -72,7 +72,7 @@ public class ContactAddforExtraData extends LinearLayout {
      * @param valueColor
      * @param valueSize
      */
-    private void bindView(boolean edit, int valueColor, int valueSize) {
+    private void bindView(boolean edit, int valueSize) {
         if (null == extras || extras.isEmpty()) {
             return;
         }
@@ -108,7 +108,6 @@ public class ContactAddforExtraData extends LinearLayout {
                 tv_tag.setTextSize(valueSize);
                 tv_content.setTextSize(valueSize);
             }
-            tv_content.setTextColor(valueColor);
             tv_tag.setText(customerExtra.label);
 
             /**

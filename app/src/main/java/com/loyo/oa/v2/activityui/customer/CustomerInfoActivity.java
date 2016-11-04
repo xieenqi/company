@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.customer;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,7 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -18,6 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
@@ -34,6 +33,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
@@ -44,7 +44,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -52,12 +51,10 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -139,7 +136,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     private ArrayList<Member> members = new ArrayList<>();
     private Members cusMembers = new Members();
     private CustomerRegional regional = new CustomerRegional();
-    //    private Industry industry = new Industry();
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
     private ArrayList<CustomerExtraData> mCustomerExtraDatas;
@@ -448,24 +444,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 startActivity(intent);
             }
         },"提示",getString(R.string.app_userdetalis_message));
-
-/*        showGeneralDialog(true, true, getString(R.string.app_userdetalis_message));
-        //确定
-        generalPopView.setSureOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-                SelectDetUserActivity2.startThisForOnly(CustomerInfoActivity.this, null);
-
-            }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });*/
     }
 
     /**
@@ -621,16 +599,20 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     public void success(final Customer customer, final Response response) {
                         HttpErrorCheck.checkResponse("更新客户信息", response);
                         app.isCutomerEdit = true;
-                        Intent intent = new Intent();
                         customer.loc = mLocate;
-                        boolean isCreator;
+                        //Intent intent = new Intent();
+                        /*boolean isCreator;
                         if (!owner.id.equals(MainApp.user.getId())) {
                             isCreator = false;
                         } else {
                             isCreator = true;
                         }
                         intent.putExtra("isCreator", isCreator);
-                        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);
+                        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);*/
+
+                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+                        finish();
+
                     }
 
                     @Override
@@ -679,7 +661,35 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             mManagerNames = new StringBuffer();
             mManagerIds = new StringBuffer();
 
+            /*判断当前负责人用owner对象*/
             if (members != null) {
+                if (cusMembers.depts.size() > 0) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
+                        if (!mCustomer.owner.id.equals(newUser.getId())) {
+                            mManagerNames.append(newUser.getName() + ",");
+                            mManagerIds.append(newUser.getId() + ",");
+                        } else {
+                            Toast("你已经是负责人，不能选自己为参与人!");
+                        }
+                    }
+                }
+                if (cusMembers.users.size() > 0) {
+                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                        if (!mCustomer.owner.id.equals(newUser.getId())) {
+                            mManagerNames.append(newUser.getName() + ",");
+                            mManagerIds.append(newUser.getId() + ",");
+                        } else {
+                            Toast("你已经是负责人，不能选自己为参与人!");
+                        }
+                    }
+                }
+                if (!TextUtils.isEmpty(mManagerNames)) {
+                    mManagerNames.deleteCharAt(mManagerNames.length() - 1);
+                }
+            }
+
+
+            /*if (members != null) {
                 if (cusMembers.depts.size() > 0) {
                     for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
                         if (!MainApp.user.id.equals(newUser.getId())) {
@@ -692,6 +702,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 }
                 if (cusMembers.users.size() > 0) {
                     for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                        LogUtil.dee("MainApp.user.id:"+MainApp.user.id);
+                        LogUtil.dee("newUser.getId():"+newUser.getId());
                         if (!MainApp.user.id.equals(newUser.getId())) {
                             mManagerNames.append(newUser.getName() + ",");
                             mManagerIds.append(newUser.getId() + ",");
@@ -703,7 +715,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 if (!TextUtils.isEmpty(mManagerNames)) {
                     mManagerNames.deleteCharAt(mManagerNames.length() - 1);
                 }
-            }
+            }*/
 
             members = Utils.convert2Members(mManagerIds.toString(), mManagerNames.toString());
             if (members.size() != 0) {

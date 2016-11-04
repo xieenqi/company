@@ -233,7 +233,7 @@ public class AddMySaleActivity extends BaseActivity {
             tv_product.setText(getIntentionProductName());
             tv_type.setText(mSaleDetails.chanceType);
             tv_source.setText(mSaleDetails.chanceSource);
-            tv_custom.addView(new ContactAddforExtraData(mContext, null, mSaleDetails.extensionDatas, true, R.color.title_bg1, 0));
+            tv_custom.addView(new ContactAddforExtraData(mContext, null, mSaleDetails.extensionDatas, true, 0));
             filedData = mSaleDetails.extensionDatas;
             et_remake.setText(mSaleDetails.memo);
             ll_transport.setVisibility((null == mSaleDetails.getLoseReason() || mSaleDetails.getLoseReason().size() <= 0)
@@ -301,7 +301,7 @@ public class AddMySaleActivity extends BaseActivity {
                         et_remake.setHint("必填,请输入");
                     }
                 }
-                tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
+                tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, 0));
                 getSaleStageData();
             }
 

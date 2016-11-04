@@ -36,6 +36,7 @@ import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.voip.VoIPManager;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -92,6 +93,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Subscribe
     public void onUserChanged(User user) {
+        VoIPManager.getInstance().connectVoipServer(null);
     }
 
     @Override

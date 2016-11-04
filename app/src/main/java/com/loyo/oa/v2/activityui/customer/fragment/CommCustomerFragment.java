@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
-
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -23,6 +22,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CommCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -38,11 +38,10 @@ import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
+import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -240,15 +239,12 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         }
     };
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            //客户详情操作回调
-            case CustomerManagerActivity.CUSTOMER_COMM_RUSH:
-                getData();
-                break;
-        }
+    /**
+     * 刷新列表回调
+     * */
+    @Subscribe
+    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event){
+        getData();
     }
+
 }

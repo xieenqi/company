@@ -20,6 +20,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.HttpAddCustomer;
@@ -30,6 +31,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
@@ -565,7 +567,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse("新建客户",response);
                 //没有附件
                 if (pickPhots.size() == 0) {
                     customerSendSucess(customer);
@@ -588,16 +590,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * @param retCustomer
      */
     public void customerSendSucess(Customer retCustomer) {
-        try {
-            Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-            isSave = false;
-            Intent intent = new Intent();
-            intent.putExtra(Customer.class.getName(), retCustomer);
-            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);
-
-        } catch (Exception e) {
-            Global.ProcException(e);
-        }
+        MyCustomerListRushEvent event = new MyCustomerListRushEvent();
+        AppBus.getInstance().post(event);
+        isSave = false;
+        onBackPressed();
     }
 
     boolean isSave = true;
