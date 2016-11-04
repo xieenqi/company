@@ -65,7 +65,7 @@ app/build/**
 
 wrapper/**
 
-gradle/wrapper/**
+#gradle/wrapper/**
 
 .gradle/**
 
