@@ -67,6 +67,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     private long startTimestamp;
 
     private String dialNumber;
+    private boolean selfHangUp = false;
 
     /**/
     private Timer timer;
@@ -84,7 +85,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         UCSCall.addCallStateListener(this);
         loadData();
         // 拨打
-        dial("18502818409");
+        dialWithPemissionRequest(phone);
     }
 
     @Override
@@ -274,6 +275,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         calleeName2.setText(callee);
     }
 
+
     private void permissionRequest() {
 
         if (PackageManager.PERMISSION_GRANTED ==
@@ -287,14 +289,21 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (permissions[0].equals(Manifest.permission.RECORD_AUDIO)
                 &&grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            //用户同意使用write
             if (dialNumber != null) {
                 dial(dialNumber);
+            }
+            else {
+                finish();
             }
 
         }else{
             finish();
         }
+    }
+
+    public void dialWithPemissionRequest(String number) {
+        dialNumber = number;
+        permissionRequest();
     }
 
     private void dial(String number) {
@@ -416,7 +425,9 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             }
             break;
             case R.id.img_hang_up:{
+                selfHangUp = true;
                 VoIPManager.getInstance().hangUp();
+                finish();
             }
             break;
         }
@@ -424,8 +435,6 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void onDialFailed(String s, final UcsReason reason) {
-        Log.v("yzx", "onDialFailed------------");
-
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -449,12 +458,16 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void onIncomingCall(String s, String s1, String s2, String s3, String s4) {
-        Log.v("yzx", "onIncomingCall------------");
     }
 
     @Override
     public void onHangUp(String s, UcsReason reason) {
-        Log.v("yzx", "onHangUp------------");
+        if (selfHangUp) {
+            if (timer != null) {
+                timer.cancel();
+            }
+            return;
+        }
 
         this.runOnUiThread(new Runnable() {
             @Override
@@ -484,12 +497,18 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void onAlerting(String s) {
-        Log.v("yzx", "onAlerting------------");
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                isAnswering = true;
+                statusView.setText("正在响铃...");
+                statusView2.setText("正在响铃...");
+            }
+        });
     }
 
     @Override
     public void onAnswer(String s) {
-        Log.v("yzx", "onAnswer------------");
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
