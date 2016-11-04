@@ -69,7 +69,7 @@ wrapper/**
 
 .gradle/**
 
-*.properties
+# *.properties
 
 
 app/src/main/.DS_Store
