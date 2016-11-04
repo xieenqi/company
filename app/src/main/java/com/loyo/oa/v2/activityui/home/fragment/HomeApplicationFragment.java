@@ -522,7 +522,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                     cancelDialog();
-                    MainApp.getMainApp().startActivity(getActivity(), EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(ExtraAndResult.SEND_ACTION, EditUserMobileActivity.ACTION_BINDING);
+                    MainApp.getMainApp().startActivity(getActivity(), EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 }
             }, "提示", getString(R.string.app_homeqq_message));
 

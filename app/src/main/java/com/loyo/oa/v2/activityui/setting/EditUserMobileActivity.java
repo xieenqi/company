@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.setting;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IMain;
@@ -27,23 +29,27 @@ import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static android.R.attr.action;
 
 /**
  * 更改 手机号【设置账号】
  * Created xnq 16/1/12./
  */
 public class EditUserMobileActivity extends BaseActivity {
-
-    LinearLayout img_title_left;
-    TextView tv_title_1;
-
-    Button bt_verificationCode, btn_complete;
-    EditText et_mobile, et_code, et_pwd;
-    CheckBox cb_showHide;
-    String verificatioNumber, pwd, mobile;
+    public static final int ACTION_BINDING = 120;//绑定手机号
+    public static final int ACTION_RENEWAL = 130;//更换手机号
+    private LinearLayout img_title_left, ll_binding, ll_renewal;
+    private TextView tv_title_1;
+    private Button bt_verificationCode, btn_complete;
+    private EditText et_mobile, et_code, et_pwd;
+    private CheckBox cb_showHide;
+    private String verificatioNumber, pwd, mobile;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -53,7 +59,10 @@ public class EditUserMobileActivity extends BaseActivity {
     }
 
     void initViews() {
+
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
+        ll_binding = (LinearLayout) findViewById(R.id.ll_binding);
+        ll_renewal = (LinearLayout) findViewById(R.id.ll_renewal);
         img_title_left.setOnClickListener(click);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         tv_title_1.setText("绑定手机号");
@@ -77,12 +86,28 @@ public class EditUserMobileActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int actionOk = getIntent().getIntExtra(ExtraAndResult.SEND_ACTION, 0);
+        activityAction(actionOk);
+    }
+
+    private void activityAction(int action) {
+        if (ACTION_BINDING == action) {
+            ll_binding.setVisibility(View.VISIBLE);
+            showInputKeyboard(et_mobile);
+        } else if (ACTION_RENEWAL == action) {
+            ll_renewal.setVisibility(View.VISIBLE);
+        }
+    }
+
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.img_title_left:
-                    finish();
+                    onBackPressed();
                     break;
                 case R.id.bt_verificationCode:
                     mobile = et_mobile.getText().toString().trim();

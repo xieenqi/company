@@ -24,7 +24,7 @@ public class ExtraAndResult {
     public static final String RESULT_DATA = "result_data";
     public static final String RESULT_OBJ = "result_obj";
 
-    public static final String CC_DEPARTMENT_ID = "Department_id";
+    public static final String SEND_ACTION = "send_action";
     public static final String CC_USER_ID = "User_id";
     public static final String CC_DEPARTMENT_NAME = "Department_name";
     public static final String CC_USER_NAME = "User_name";
@@ -99,7 +99,7 @@ public class ExtraAndResult {
 
     public static final int WORKSHEET_EVENT_TRANSFER = 305;
     public static final int WORKSHEET_EVENT_DISPATCH = 306;
-    public static final int WORKSHEET_EVENT_REDO     = 307;
+    public static final int WORKSHEET_EVENT_REDO = 307;
     public static final int WORKSHEET_EVENT_FINISH = 308;
     public static final int WORKSHEET_EVENT_DETAIL = 309;
 

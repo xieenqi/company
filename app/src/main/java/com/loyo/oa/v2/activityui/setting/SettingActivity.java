@@ -10,6 +10,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.setting.persenter.SettingPControl;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SettingVControl;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -69,7 +70,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 onBackPressed();
                 break;
             case R.id.ll_cellphone:
-                MainApp.getMainApp().startActivity(SettingActivity.this, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                Bundle bundle = new Bundle();
+                bundle.putInt(ExtraAndResult.SEND_ACTION, EditUserMobileActivity.ACTION_BINDING);
+                MainApp.getMainApp().startActivity(SettingActivity.this, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 break;
             case R.id.ll_setpassword:
                 break;

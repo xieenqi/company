@@ -369,7 +369,7 @@
             android:name=".activityui.setting.EditUserMobileActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible" />
+             />
         <activity
             android:name=".activityui.customer.CustomerContractAddActivity"
             android:screenOrientation="portrait"
@@ -890,10 +890,9 @@
         </service>
 
         <service android:name="com.yzxtcp.service.YzxIMCoreService" />
-        <receiver android:name="com.yzxtcp.tools.tcp.receiver.AlarmReceiver" >
-        </receiver>
-        <receiver android:name="com.yzxtcp.tools.tcp.receiver.MsgBackReceiver" >
-        </receiver>
+
+        <receiver android:name="com.yzxtcp.tools.tcp.receiver.AlarmReceiver"></receiver>
+        <receiver android:name="com.yzxtcp.tools.tcp.receiver.MsgBackReceiver"></receiver>
         <receiver android:name="com.yzx.tools.RtppReceiver" />
 
         <!-- Required SDK核心功能 -->
