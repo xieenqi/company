@@ -11,6 +11,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
 
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 /**
@@ -27,13 +28,13 @@ public class AliOSSManager {
     }
 
     public static AliOSSManager getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new AliOSSManager();
         }
         return instance;
     }
 
-    public void initWithContext(Context context){
+    public void initWithContext(Context context) {
 
         OSSCredentialProvider credentialProvider = new OSSFederationCredentialProvider() {
             @Override
@@ -52,8 +53,7 @@ public class AliOSSManager {
 
                     return new OSSFederationToken(ak, sk, token, expiration);
 
-                }
-                else {
+                } else {
                     return null;
                 }
             }
@@ -70,6 +70,9 @@ public class AliOSSManager {
 
 
     public OSS getOss() {
+        if (null == oss) {
+            LogUtil.d(" 《《《《《《《《《《《《《《《《《---------------阿里云OSS为空-------------------》》》》》》》》》》》》》》》》》 ");
+        }
         return oss;
     }
 
