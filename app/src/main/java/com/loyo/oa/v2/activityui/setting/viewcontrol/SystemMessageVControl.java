@@ -7,4 +7,6 @@ import com.loyo.oa.v2.common.BaseView;
  */
 
 public interface SystemMessageVControl extends BaseView {
+
+    void setEmptyView();
 }

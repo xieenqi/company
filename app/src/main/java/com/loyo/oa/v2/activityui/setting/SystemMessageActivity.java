@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.setting.adapter.AdapterSystemMessage;
 import com.loyo.oa.v2.activityui.setting.persenter.SystemMessagePControl;
 import com.loyo.oa.v2.activityui.setting.persenter.SystemMesssagePersenter;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SystemMessageVControl;
@@ -46,8 +47,9 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
         tv_add.setOnClickListener(click);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        lv_list.setEmptyView(emptyView);
+        AdapterSystemMessage adapterSystemMessage = new AdapterSystemMessage(this);
         pControl = new SystemMessagePControl(this);
+        lv_list.setAdapter(adapterSystemMessage);
     }
 
     View.OnClickListener click = new View.OnClickListener() {
@@ -87,5 +89,10 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
     @Override
     public void showMsg(String message) {
         Toast(message);
+    }
+
+    @Override
+    public void setEmptyView() {
+        lv_list.setEmptyView(emptyView);
     }
 }
