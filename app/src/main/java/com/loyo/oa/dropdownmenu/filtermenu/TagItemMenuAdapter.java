@@ -1,7 +1,6 @@
 package com.loyo.oa.dropdownmenu.filtermenu;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
@@ -35,15 +34,19 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
         holder.setSelected(model.getSelected());
     }
 
-//    @Override
-    public void onBindViewHolder(MultiCell holder, int position, Object payloads) {
+    @Override
+    public void onBindViewHolder(MultiCell holder, int position, List<Object> payloads) {
 
-        Log.v("ViewHolder", position +"     "+ payloads.toString());
-        MenuModel model = data.get(position);
-        holder.setIndex(position);
-        holder.setCallback(this);
-        holder.valueView.setText(model.getValue());
-        holder.setSelected(model.getSelected());
+        if (payloads.size() > 0) {
+            MenuModel model = data.get(position);
+            holder.setIndex(position);
+            holder.setCallback(this);
+            holder.valueView.setText(model.getValue());
+            holder.setSelected(model.getSelected(), true);
+        }
+        else {
+            onBindViewHolder(holder, position);
+        }
     }
 
     @Override
@@ -55,7 +58,7 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
     public void onMenuItemClick(int index) {
         MenuModel model = data.get(index);
         model.setSelected(! model.getSelected());
-        notifyItemChanged(index);
+        notifyItemChanged(index, index);
         if (index == 0 && model.getSelected()) {
             selectAll(index);
             return;
@@ -118,13 +121,13 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
         if (data.size() > 0) {
             data.get(0).setSelected(true);
             if (index != 0) {
-                notifyItemChanged(0);
+                notifyItemChanged(0, index);
             }
         }
         for (int i = 1; i < data.size(); i++) {
             if (data.get(i).getSelected() != false &&index!=i) {
                 data.get(i).setSelected(false);
-                notifyItemChanged(i);
+                notifyItemChanged(i, index);
             }
             else {
                 data.get(i).setSelected(false);
@@ -136,7 +139,7 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
         if (data.size() > 0) {
             data.get(0).setSelected(false);
             if (index != 0) {
-                notifyItemChanged(0);
+                notifyItemChanged(0, index);
             }
         }
     }

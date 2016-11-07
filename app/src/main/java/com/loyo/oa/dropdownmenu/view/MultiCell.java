@@ -61,12 +61,25 @@ public class MultiCell extends RecyclerView.ViewHolder {
         if (selected) {
             line.setBackgroundColor(0xFF008DF2);
             valueView.setTextColor(0xFF008DF2);
-            checkBox.setChecked(selected, true);
+            checkBox.setChecked(selected, false);
         }
         else {
             line.setBackgroundColor(0xffe6e6e6);
             valueView.setTextColor(0xff333333);
-            checkBox.setChecked(selected, true);
+            checkBox.setChecked(selected, false);
+        }
+    }
+
+    public void setSelected(boolean selected, boolean anim) {
+        if (selected) {
+            line.setBackgroundColor(0xFF008DF2);
+            valueView.setTextColor(0xFF008DF2);
+            checkBox.setChecked(selected, anim);
+        }
+        else {
+            line.setBackgroundColor(0xffe6e6e6);
+            valueView.setTextColor(0xff333333);
+            checkBox.setChecked(selected, anim);
         }
     }
 }
