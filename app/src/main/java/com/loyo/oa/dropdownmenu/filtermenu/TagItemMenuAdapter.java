@@ -41,15 +41,13 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
 
     @Override
     public void onMenuItemClick(int index) {
-//        if (selectedIndex != index) {
-//            selectedIndex = index;
-//            notifyDataSetChanged();
-////            if (this.callback != null) {
-////                this.callback.onMenuItemClick(index);
-////            }
-//        }
         MenuModel model = data.get(index);
         model.setSelected(! model.getSelected());
+        if (index == 0 && model.getSelected()) {
+            selectAll();
+            notifyDataSetChanged();
+            return;
+        }
 
         if (isAllSelected()) {
             selectAll();
@@ -81,6 +79,7 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
         if (data.size()<=1) {
             return true;
         }
+
         boolean result = data.get(1).getSelected();
         for (int i = 2; i < data.size(); i++) {
             if (result != data.get(i).getSelected()) {
