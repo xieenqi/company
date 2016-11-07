@@ -18,6 +18,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/menu_bottom"
         android:layout_below="@+id/title_top"
         android:scrollbars="none">
 
@@ -65,15 +66,30 @@
                         android:textColor="@color/text99"
                         android:textSize="@dimen/text_sp12" />
 
-                    <TextView
-                        android:id="@+id/tv_tags"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="@dimen/dimen_10"
-                        android:lineSpacingExtra="@dimen/dimen_3"
-                        android:singleLine="false"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_tags"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="@dimen/dimen_3"
+                            android:singleLine="false"
+                            android:text="asdsad"
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp12" />
+
+                        <ImageView
+                            android:layout_marginLeft="@dimen/dimen_10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/icon_edittag"
+                            />
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <RelativeLayout
@@ -126,11 +142,10 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_12"
                         android:layout_toRightOf="@+id/tv_sale_activity_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/text33" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -198,125 +213,7 @@
                     </LinearLayout>
 
                     <include layout="@layout/include_solid_line_left" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_48">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dimen_48"
-                            android:layout_marginLeft="@dimen/margin_other_view"
-                            android:layout_toLeftOf="@+id/layout_action"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/text_item1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:text="手机" />
-
-                            <TextView
-                                android:id="@+id/tv_contact_tel"
-                                style="@style/text_item1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/dimen_40"
-                                android:gravity="center"
-                                android:textColor="@color/text99" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/layout_action"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:id="@+id/layout_send_sms"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:gravity="center_vertical"
-                                android:orientation="vertical">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="20dp"
-                                    android:src="@drawable/icon_contacts_send_sms" />
-
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="0.5dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="@dimen/dimen_15"
-                                android:layout_marginTop="@dimen/dimen_15"
-                                android:background="@color/lineCC" />
-
-                            <LinearLayout
-                                android:id="@+id/layout_call"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:gravity="center_vertical"
-                                android:orientation="vertical">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="20dp"
-                                    android:src="@drawable/icon_contacts_call" />
-                            </LinearLayout>
-                        </LinearLayout>
-                    </RelativeLayout>
-
-                    <include layout="@layout/include_solid_line_left" />
-
-                    <RelativeLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="@dimen/dimen_48">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dimen_48"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/text_item1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/dimen_16"
-                                android:gravity="center"
-                                android:text="座机" />
-
-                            <TextView
-                                android:id="@+id/customer_detail_wiretel"
-                                style="@style/text_item1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/dimen_40"
-                                android:gravity="center"
-                                android:textColor="@color/text99" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/layout_wiretel_call"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="20dp"
-                                android:src="@drawable/icon_contacts_call" />
-                        </LinearLayout>
-                    </RelativeLayout>
                 </LinearLayout>
-
             </LinearLayout>
 
             <LinearLayout
@@ -346,11 +243,10 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_12"
                         android:layout_toRightOf="@+id/tv_contact"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/text33" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -359,8 +255,135 @@
                         android:src="@drawable/right_arrow" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/layout_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_48">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true">
+
+                        <include layout="@layout/include_solid_line_left" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_48"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:layout_toLeftOf="@+id/layout_action"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="手机"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/tv_contact_tel"
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/text99" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/layout_send_sms"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:src="@drawable/icon_contacts_send_sms" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="0.5dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/dimen_15"
+                            android:layout_marginTop="@dimen/dimen_15"
+                            android:background="@color/lineCC" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_call"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:src="@drawable/icon_contacts_call" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
                 <include layout="@layout/include_solid_line_left" />
 
+                <RelativeLayout
+                    android:id="@+id/layout_wirete"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/dimen_48">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_48"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/dimen_16"
+                            android:gravity="center"
+                            android:text="座机"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/customer_detail_wiretel"
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/margin_other_view"
+                            android:gravity="center"
+                            android:textColor="@color/text99" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_wiretel_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:src="@drawable/icon_contacts_call" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <include layout="@layout/include_solid_line15" />
 
                 <RelativeLayout
                     android:id="@+id/layout_visit"
@@ -381,11 +404,10 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_12"
                         android:layout_toRightOf="@+id/tv_visit_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/text33" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -416,11 +438,10 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_12"
                         android:layout_toRightOf="@+id/tv_sale_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/text33" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -451,11 +472,10 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_12"
                         android:layout_toRightOf="@+id/tv_order_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/text33" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -487,11 +507,10 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_12"
                         android:layout_toRightOf="@+id/tv_task_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/text33" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -522,11 +541,10 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_12"
                         android:layout_toRightOf="@+id/tv_attachment_title"
                         android:gravity="center"
                         android:text="(0)"
-                        android:textColor="@color/text99" />
+                        android:textColor="@color/text33" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -540,12 +558,85 @@
     </ScrollView>
 
     <LinearLayout
+        android:id="@+id/menu_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:elevation="5dip"
+        android:orientation="vertical">
 
-        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:background="@color/lineCC" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_gj"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_cusdetails_gj" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5"
+                    android:text="写跟进" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_sign"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_cusdetails_sign" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5"
+                    android:text="拜访" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_cusdetails_rem" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5"
+                    android:text="提醒" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

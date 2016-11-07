@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.customer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,6 +8,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
@@ -15,6 +18,8 @@ import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
+import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
+import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -23,9 +28,12 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.CallPhonePopView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -33,6 +41,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.voip.VoIPCallActivity;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -77,13 +87,23 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     public boolean isPutOcen;
     public boolean isRoot = false;
     private MembersRoot memRoot;
-
+    private Contact mContact;
+    private RelativeLayout layout_wirete,layout_phone;
+    private LinearLayout layout_gj,layout_sign;
 
     @AfterViews
     void initViews() {
         setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
         showLoading("", false);
+
+        layout_wirete = (RelativeLayout) findViewById(R.id.layout_wirete);
+        layout_phone  = (RelativeLayout) findViewById(R.id.layout_phone);
+        layout_gj     = (LinearLayout) findViewById(R.id.layout_gj);
+        layout_sign   = (LinearLayout) findViewById(R.id.layout_sign);
+
+        layout_sign.setOnTouchListener(Global.GetTouch());
+        layout_gj.setOnTouchListener(Global.GetTouch());
     }
 
     @Override
@@ -209,11 +229,26 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             tv_address.setText("地址：" + mCustomer.loc.addr);
         }
         tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
-        Contact contact = Utils.findDeault(mCustomer);
-        if (null != contact) {
-            tv_contact_name.setText(contact.getName());
-            tv_contact_tel.setText(contact.getTel());
-            customer_detail_wiretel.setText(contact.getWiretel());
+        mContact = Utils.findDeault(mCustomer);
+        if (null != mContact) {
+
+            if(null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())){
+                layout_phone.setVisibility(View.GONE);
+            }else{
+                tv_contact_tel.setText(mContact.getTel());
+            }
+
+            if(null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())){
+                layout_wirete.setVisibility(View.GONE);
+            }else{
+                customer_detail_wiretel.setText(mContact.getWiretel());
+            }
+
+            tv_contact_name.setText(mContact.getName());
+
+        }else{
+            layout_phone.setVisibility(View.GONE);
+            layout_wirete.setVisibility(View.GONE);
         }
         tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
         tv_sale_count.setText("(" + mCustomer.counter.getDemand() + ")");
@@ -358,12 +393,28 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call, R.id.ll_sale, R.id.ll_order})
+            R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call,
+            R.id.ll_sale, R.id.ll_order,R.id.layout_gj,R.id.layout_sign})
     void onClick(final View view) {
         Bundle bundle = new Bundle();
         Class<?> _class = null;
         int requestCode = -1;
         switch (view.getId()) {
+
+            /*拜访*/
+            case R.id.layout_sign:
+                Intent mIntent = new Intent(CustomerDetailInfoActivity.this,SignInActivity.class);
+                mIntent.putExtra("data",mCustomer);
+                startActivity(mIntent);
+                break;
+
+            /*跟进*/
+            case R.id.layout_gj:
+                Intent mIntemt = new Intent(CustomerDetailInfoActivity.this,CustomerDynamicAddActivity.class);
+                mIntemt.putExtra(Customer.class.getName(),mCustomer);
+                startActivity(mIntemt);
+                break;
+
             /*返回*/
             case R.id.img_title_left:
                 if (isPutOcen) {
@@ -373,6 +424,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     onBackPressed();
                 }
                 break;
+            /*菜单*/
             case R.id.img_title_right:
                 showEditPopu();
                 break;
@@ -418,6 +470,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     Toast("参数不全");
                 }
                 break;
+            /*发送短信*/
             case R.id.layout_send_sms:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
                     Utils.sendSms(this, mCustomer.contacts.get(0).getTel());
@@ -425,16 +478,18 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     Toast("没有号码");
                 }
                 break;
+            /*拨打手机*/
             case R.id.layout_call:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    Utils.call(this, mCustomer.contacts.get(0).getTel());
+                    isMobile(mCustomer.contacts.get(0).getTel(),0);
                 } else {
                     Toast("没有号码");
                 }
                 break;
+            /*拨打座机*/
             case R.id.layout_wiretel_call:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    Utils.call(this, mCustomer.contacts.get(0).getWiretel());
+                    isMobile(mCustomer.contacts.get(0).getTel(),1);
                 } else {
                     Toast("没有号码");
                 }
@@ -492,6 +547,81 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     }
 
     /**
+     * 判断本账号是否有电话
+     */
+    public void isMobile(String phone, int callType) {
+        if (null == MainApp.user.mobile || TextUtils.isEmpty(MainApp.user.mobile)) {
+            final SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(mContext);
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                    MainApp.getMainApp().startActivity((Activity) mContext, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                }
+            }, "提示", mContext.getString(R.string.app_homeqq_message));
+        } else {
+            paymentSet(phone, callType);
+        }
+    }
+
+    /**
+     * 手机拨打弹出框
+     */
+    public void paymentSet(final String phone, final int callType) {
+
+        boolean checkTag = false;
+        if (callType == 0) {
+            checkTag = RegularCheck.isYunPhone(phone);
+        } else {
+            checkTag = RegularCheck.isYunTell(phone);
+        }
+
+        final CallPhonePopView callPhonePopView = new CallPhonePopView(mContext, mContact.getName(), checkTag);
+        callPhonePopView.show();
+        callPhonePopView.setCanceledOnTouchOutside(true);
+        /*商务电话*/
+        callPhonePopView.businessPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle mBundle = new Bundle();
+                mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,phone.replaceAll(" +", ""));
+                mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, mContact.getName().trim().toString());
+                app.startActivity(CustomerDetailInfoActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                callPhonePopView.dismiss();
+            }
+        });
+        /*普通电话*/
+        callPhonePopView.commonlyPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (callType == 0) {
+                    if (RegularCheck.isMobilePhone(phone)) {
+                        Utils.call(mContext, phone);
+                    } else {
+                        Toast("电话号码格式不正确或为空!");
+                    }
+                } else {
+                    Utils.call(mContext, phone);
+                }
+
+                callPhonePopView.dismiss();
+            }
+        });
+        callPhonePopView.cancelPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPhonePopView.dismiss();
+            }
+        });
+    }
+
+    /**
      * 查看子内容
      *
      * @param b
@@ -535,17 +665,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                break;
-            case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
-            case FinalVariables.REQUEST_PREVIEW_DEMANDS:
-            case ExtraAndResult.REQUEST_CODE:
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS:
-            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
-                break;
-            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS:
-                break;
-            default:
                 break;
         }
 
