@@ -16,8 +16,10 @@ import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
-import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
+import com.loyo.oa.v2.activityui.customer.presenter.CustomerDetailInfoPresenter;
+import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPresenterimpl;
+import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
@@ -64,7 +66,7 @@ import retrofit.client.Response;
  * 时间 : 15/9/24.
  */
 @EActivity(R.layout.activity_customer_detail_info)
-public class CustomerDetailInfoActivity extends BaseActivity {
+public class CustomerDetailInfoActivity extends BaseActivity implements CustomerDetailinfoView{
 
     @ViewById
     ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
@@ -91,6 +93,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     private RelativeLayout layout_wirete,layout_phone;
     private LinearLayout layout_gj,layout_sign;
 
+    private CustomerDetailInfoPresenter mPresenter;
+
     @AfterViews
     void initViews() {
         setTouchView(NO_SCROLL);
@@ -104,59 +108,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         layout_sign.setOnTouchListener(Global.GetTouch());
         layout_gj.setOnTouchListener(Global.GetTouch());
+
+        mPresenter = new CustomerDetailinfoPresenterimpl(mContext,this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getData();
-    }
-
-    /**
-     * 获取数据
-     */
-    private void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse("客户详情-->", response);
-                if (customer == null) {
-                    Toast("获取数据失败");
-                    return;
-                }
-                isLock = customer.lock;
-                mCustomer = customer;
-                getMembersRoot();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                finish();
-            }
-        });
-    }
-
-    /**
-     * 获取参与人权限
-     */
-    void getMembersRoot() {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getMembersRoot(new RCallback<MembersRoot>() {
-                    @Override
-                    public void success(MembersRoot membersRoot, Response response) {
-                        HttpErrorCheck.checkResponse("参与人权限", response);
-                        memRoot = membersRoot;
-                        initData();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+        mPresenter.getData(id);
     }
 
 
@@ -279,56 +238,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     }
 
     /**
-     * 判断是否是参与人
-     */
-    public boolean isMenber(final Customer mCustomer) {
-        if (null != mCustomer) {
-            for (Member element : mCustomer.members) {
-                if (MainApp.user.id.equals(element.getUser().getId())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-
-
-    /**
-     * 显示编辑客户弹出框
-     */
-    private void showEditPopu() {
-        boolean isDelte = false, isPublic = false;
-         /*超级管理员\web控制权限判断*/
-        if (!MainApp.user.isSuperUser()) {
-            Permission perDelete = MainApp.rootMap.get("0405");
-            Permission perOcean = MainApp.rootMap.get("0403");
-            if (perDelete != null && perDelete.enable)
-                isDelte = true;
-            if (perOcean != null && perOcean.enable)
-                isPublic = true;
-        }
-
-        ActionSheetDialog dialog = new ActionSheetDialog(CustomerDetailInfoActivity.this).builder();
-        if (isDelte || MainApp.user.isSuperUser())
-            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    setPopView(true, "你确定要删除客户?");
-                }
-            });
-        if (isPublic || MainApp.user.isSuperUser())
-            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    setPopView(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
-                }
-            });
-        dialog.show();
-
-    }
-
-    /**
      * 提示弹出框
      */
     private void setPopView(final boolean isKind, final String message) {
@@ -343,53 +252,16 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 dismissSweetAlert();
                 if (isKind) {
-                    delete();
+                    //delete();
+                    mPresenter.delete(mCustomer.getId());
                 } else {
-                    toPublic();
+                    //toPublic();
+                    mPresenter.toPublic(mCustomer.getId());
                 }
             }
         }, "提示", message);
     }
 
-
-    /**
-     * 删除客户
-     */
-    private void delete() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(mCustomer.getId(), new RCallback<Customer>() {
-            @Override
-            public void success(final Customer newCustomer, final Response response) {
-                //app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
-                AppBus.getInstance().post(new MyCustomerListRushEvent());
-                finish();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("删除客户失败");
-            }
-        });
-    }
-
-    /**
-     * 丢入公海
-     */
-    private void toPublic() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).toPublic(mCustomer.getId(), new RCallback<Customer>() {
-            @Override
-            public void success(final Customer newCustomer, final Response response) {
-                isPutOcen = true;
-                AppBus.getInstance().post(new MyCustomerListRushEvent());
-                finish();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
@@ -426,14 +298,15 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             /*菜单*/
             case R.id.img_title_right:
-                showEditPopu();
+                //showEditPopu();
+                mPresenter.showEditPopu(CustomerDetailInfoActivity.this);
                 break;
             case R.id.layout_customer_info:
                 bundle.putBoolean("isRoot", isRoot);
                 bundle.putSerializable("Customer", mCustomer);
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 4);
-                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
+                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, mPresenter.isMenber(mCustomer));
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
                 break;
@@ -462,7 +335,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     bundle.putBoolean("isLock", mCustomer.lock);
                     bundle.putBoolean("isMyUser", isMyUser);
                     bundle.putBoolean("isRoot", isRoot);
-                    bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
+                    bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, mPresenter.isMenber(mCustomer));
                     bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
                     _class = CustomerContactManageActivity_.class;
                     requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
@@ -481,7 +354,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*拨打手机*/
             case R.id.layout_call:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    isMobile(mCustomer.contacts.get(0).getTel(),0);
+                    //isMobile(mCustomer.contacts.get(0).getTel(),0);
+                    mPresenter.isMobile(CustomerDetailInfoActivity.this,mCustomer.contacts.get(0).getTel(),0,mContact.getName());
                 } else {
                     Toast("没有号码");
                 }
@@ -489,7 +363,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*拨打座机*/
             case R.id.layout_wiretel_call:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    isMobile(mCustomer.contacts.get(0).getTel(),1);
+                    //isMobile(mCustomer.contacts.get(0).getTel(),1);
+                    mPresenter.isMobile(CustomerDetailInfoActivity.this,mCustomer.contacts.get(0).getTel(),1,mContact.getName());
                 } else {
                     Toast("没有号码");
                 }
@@ -547,81 +422,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     }
 
     /**
-     * 判断本账号是否有电话
-     */
-    public void isMobile(String phone, int callType) {
-        if (null == MainApp.user.mobile || TextUtils.isEmpty(MainApp.user.mobile)) {
-            final SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(mContext);
-            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    sweetAlertDialogView.sweetAlertDialog.dismiss();
-                }
-            }, new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    sweetAlertDialogView.sweetAlertDialog.dismiss();
-                    MainApp.getMainApp().startActivity((Activity) mContext, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-                }
-            }, "提示", mContext.getString(R.string.app_homeqq_message));
-        } else {
-            paymentSet(phone, callType);
-        }
-    }
-
-    /**
-     * 手机拨打弹出框
-     */
-    public void paymentSet(final String phone, final int callType) {
-
-        boolean checkTag = false;
-        if (callType == 0) {
-            checkTag = RegularCheck.isYunPhone(phone);
-        } else {
-            checkTag = RegularCheck.isYunTell(phone);
-        }
-
-        final CallPhonePopView callPhonePopView = new CallPhonePopView(mContext, mContact.getName(), checkTag);
-        callPhonePopView.show();
-        callPhonePopView.setCanceledOnTouchOutside(true);
-        /*商务电话*/
-        callPhonePopView.businessPhone(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle mBundle = new Bundle();
-                mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,phone.replaceAll(" +", ""));
-                mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, mContact.getName().trim().toString());
-                app.startActivity(CustomerDetailInfoActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-                callPhonePopView.dismiss();
-            }
-        });
-        /*普通电话*/
-        callPhonePopView.commonlyPhone(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (callType == 0) {
-                    if (RegularCheck.isMobilePhone(phone)) {
-                        Utils.call(mContext, phone);
-                    } else {
-                        Toast("电话号码格式不正确或为空!");
-                    }
-                } else {
-                    Utils.call(mContext, phone);
-                }
-
-                callPhonePopView.dismiss();
-            }
-        });
-        callPhonePopView.cancelPhone(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callPhonePopView.dismiss();
-            }
-        });
-    }
-
-    /**
      * 查看子内容
      *
      * @param b
@@ -676,5 +476,74 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case FinalVariables.REQUEST_CREATE_TASK:
                 break;
         }
+    }
+
+    /**
+     * 投入公海成功处理
+     * */
+    @Override
+    public void toPublicEmbl() {
+        isPutOcen = true;
+        AppBus.getInstance().post(new MyCustomerListRushEvent());
+        finish();
+    }
+
+    /**
+     * 删除操作成处理
+     * */
+    @Override
+    public void deleteEmbl() {
+        AppBus.getInstance().post(new MyCustomerListRushEvent());
+        finish();
+    }
+
+    /**
+     * 获取参与人权限处理
+     * */
+    @Override
+    public void getMembersRootEmbl(MembersRoot membersRoot) {
+        memRoot = membersRoot;
+        initData();
+    }
+
+    /**
+     * 获取详情数据成功处理
+     * */
+    @Override
+    public void getDataSuccessEmbl(Customer customer) {
+        isLock = customer.lock;
+        mCustomer = customer;
+        mPresenter.getMembersRoot();
+    }
+
+    /**
+     * 获取详情数据失败处理
+     * */
+    @Override
+    public void getDataErrorEmle() {
+        finish();
+    }
+
+    /**
+     * 弹出通用提示框
+     * */
+    @Override
+    public void setPopViewEmbl(boolean mespray,String message) {
+        setPopView(mespray,message);
+    }
+
+    @Override
+    public void showProgress(String message) {
+        showLoading(message);
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        Toast(message);
     }
 }
