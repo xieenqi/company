@@ -20,7 +20,8 @@ public class SubmitStatusMenuModel implements MenuModel {
         List<MenuModel> list = new ArrayList<>();
         list.add(new SubmitStatusMenuModel(SubmitStatus.ALL));
         list.add(new SubmitStatusMenuModel(SubmitStatus.WAIT_APPROVE));
-        list.add(new SubmitStatusMenuModel(SubmitStatus.NOT_APPROVED));
+        list.add(new SubmitStatusMenuModel(SubmitStatus.APPROVING));
+        list.add(new SubmitStatusMenuModel(SubmitStatus.UNAPPROVED));
         list.add(new SubmitStatusMenuModel(SubmitStatus.APPROVED));
 
         FilterModel model = new FilterModel(list, "全部状态", MenuListType.SINGLE_LIST_SINGLE_SEL);

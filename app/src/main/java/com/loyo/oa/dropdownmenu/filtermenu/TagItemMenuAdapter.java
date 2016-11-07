@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
-import com.loyo.oa.dropdownmenu.view.SingleCell;
+import com.loyo.oa.dropdownmenu.view.MultiCell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,19 +14,19 @@ import java.util.List;
  * Created by EthanGong on 2016/11/1.
  */
 
-public class TagItemMenuAdapter extends RecyclerView.Adapter<SingleCell> implements OnMenuItemClick {
+public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implements OnMenuItemClick {
     private List<MenuModel> data = new ArrayList<>();
     public int selectedIndex = 0;
 
     private OnMenuItemClick callback;
 
     @Override
-    public SingleCell onCreateViewHolder(ViewGroup parent, int viewType) {
-        return SingleCell.instance(parent);
+    public MultiCell onCreateViewHolder(ViewGroup parent, int viewType) {
+        return MultiCell.instance(parent);
     }
 
     @Override
-    public void onBindViewHolder(SingleCell holder, int position) {
+    public void onBindViewHolder(MultiCell holder, int position) {
         MenuModel model = data.get(position);
         holder.setIndex(position);
         holder.setCallback(this);
