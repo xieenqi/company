@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.setting.persenter.SettingPControl;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SettingVControl;
@@ -27,6 +28,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
@@ -75,19 +77,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         iv_cell_number = (TextView) findViewById(R.id.iv_cell_number);
         tv_cache_size = (TextView) findViewById(R.id.tv_cache_size);
         iv_cell_status = (ImageView) findViewById(R.id.iv_cell_status);
-        img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
-        ll_cellphone.setOnTouchListener(Global.GetTouch());
         ll_cellphone.setOnClickListener(this);
-        ll_setpassword.setOnTouchListener(Global.GetTouch());
         ll_setpassword.setOnClickListener(this);
-        ll_clean.setOnTouchListener(Global.GetTouch());
         ll_clean.setOnClickListener(this);
-        ll_update.setOnTouchListener(Global.GetTouch());
         ll_update.setOnClickListener(this);
-        btn_exit.setOnTouchListener(Global.GetTouch());
         btn_exit.setOnClickListener(this);
         pControl = new SettingPControl(this);
+        Global.SetTouchView(img_title_left, ll_cellphone, ll_setpassword, ll_clean, ll_update, btn_exit);
     }
 
     @Override
@@ -130,6 +127,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.btn_exit:
+                MenuFragment.callback.onExit(SettingActivity.this);
                 break;
         }
     }
@@ -199,4 +197,5 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void setCache(String cache) {
         tv_cache_size.setText(cache);
     }
+
 }

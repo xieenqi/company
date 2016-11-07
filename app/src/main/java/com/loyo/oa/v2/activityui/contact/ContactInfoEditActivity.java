@@ -129,12 +129,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("个人信息");
         iv_submit.setVisibility(View.VISIBLE);
-        layout_back.setOnTouchListener(Global.GetTouch());
-        iv_submit.setOnTouchListener(Global.GetTouch());
-        ll_sex.setOnTouchListener(Global.GetTouch());
-        layout_set_avartar.setOnTouchListener(Global.GetTouch());
-        layout_weixin.setOnTouchListener(Global.GetTouch());
-        layout_birthday.setOnTouchListener(Global.GetTouch());
+        Global.SetTouchView(layout_back, iv_submit, ll_sex, layout_set_avartar, layout_weixin, layout_birthday);
         iv_submit.setVisibility(View.GONE);
         initData();
     }

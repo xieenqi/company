@@ -273,28 +273,13 @@ public class MenuFragment extends BaseFragment {
                 }
                 break;
             //退出登录
-            case R.id.ll_exit:
-                exit();
-                isExite = false;
-                break;
+//            case R.id.ll_exit:
+//                exit();
+//                isExite = false;
+//                break;
             //设置
             case R.id.ll_setting:
                 app.startActivity(mActivity, SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-//          、      sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-//                    @Override
-//                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                        cancelDialog();
-//                    }
-//                }, new SweetAlertDialog.OnSweetClickListener() {
-//                    @Override
-//                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                        showLoading("");
-//                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-//                        cancelDialog();
-//                        setDiskCacheInfo();
-//                    }
-//                }, "提醒", "确认清除缓存?");
-
                 break;
         }
 
