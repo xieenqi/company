@@ -326,7 +326,12 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
             if (dialNumber != null) {
-                dial(dialNumber);
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dial(dialNumber);
+                    }
+                });
             }
             else {
                 finish();
@@ -342,7 +347,12 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         if (permissions[0].equals(Manifest.permission.RECORD_AUDIO)
                 &&grantResults[0] == PackageManager.PERMISSION_GRANTED){
             if (dialNumber != null) {
-                dial(dialNumber);
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dial(dialNumber);
+                    }
+                });
             }
             else {
                 finish();
