@@ -1,44 +1,84 @@
 package com.loyo.oa.v2.activityui.setting.bean;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
+import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
+import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
+
+import java.lang.reflect.Type;
 
 /**
  * Created by xeq on 16/11/7.
  */
 
 public enum SystemMessageItemType {
-    MSG_WORKREPORT(1) {/*工作报告*/
-
+    /*工作报告*/
+    MSG_WORKREPORT(1) {
         public int getIcon() {
             return R.drawable.icon_sys_custom;
         }
-    },
-    MSG_TASK(2) {/*任务*/
 
-        public int getIcon() {
-            return R.drawable.icon_ws_status2;
+        public Class<?> getItemClass() {
+            return WorkReportsInfoActivity_.class;
         }
     },
-    MSG_PROJECT(5) { /*项目*/
-
+    /*任务*/
+    MSG_TASK(2) {
         public int getIcon() {
             return R.drawable.icon_ws_status2;
         }
-    }, MSG_SALE(8) {/*销售机会*/
 
-        public int getIcon() {
-            return R.drawable.icon_ws_status2;
+        public Class<?> getItemClass() {
+            return TasksInfoActivity_.class;
         }
     },
-    MSG_DISCUSS(14) {/*讨论*/
-
+    /*项目*/
+    MSG_PROJECT(5) {
         public int getIcon() {
             return R.drawable.icon_ws_status2;
         }
-    }, MSG_BULLETIN(19) {/*通知公告*/
 
+        public Class<?> getItemClass() {
+            return WorkReportsInfoActivity_.class;
+        }
+    },
+    /*销售机会*/
+    MSG_SALE(8) {
         public int getIcon() {
             return R.drawable.icon_ws_status2;
+        }
+
+        public Class<?> getItemClass() {
+            return WorkReportsInfoActivity_.class;
+        }
+    },
+    /*讨论*/
+    MSG_DISCUSS(14) {
+        public int getIcon() {
+            return R.drawable.icon_ws_status2;
+        }
+
+        public Class<?> getItemClass() {
+            return WorkReportsInfoActivity_.class;
+        }
+    },
+    /*通知公告*/
+    MSG_BULLETIN(19) {
+        public int getIcon() {
+            return R.drawable.icon_ws_status2;
+        }
+
+        public Class<?> getItemClass() {
+            return BulletinManagerActivity_.class;
         }
     };
 
@@ -56,6 +96,11 @@ public enum SystemMessageItemType {
      * 获取显示图标
      */
     public abstract int getIcon();
+
+    /**
+     * 获取跳转的class对象
+     */
+    public abstract Class<?> getItemClass();
 
 //    LYMsgWorkReport   = 1,           //1.工作汇报
 //    LYMsgTask,                       //2.任务
@@ -86,4 +131,31 @@ public enum SystemMessageItemType {
 //    LYMsgOrderPlan,                  //27.订单计划/回款计划
 //    LYMsgWorkSheet,                  //28.工单
 //    LYMsgWorkSheetEvent,             //29.工单事件
+
+    /**
+     * gson 序列化和反序列化
+     */
+    public static class SystemMessageSerializer implements JsonSerializer<SystemMessageItemType>,
+            JsonDeserializer<SystemMessageItemType> {
+
+        // 对象转为Json时调用,【序列化】
+        @Override
+        public JsonElement serialize(SystemMessageItemType state, Type arg1,
+                                     JsonSerializationContext arg2) {
+            return new JsonPrimitive(state.value);
+        }
+
+        // json转为对象时调用,【反序列化】
+        @Override
+        public SystemMessageItemType deserialize(JsonElement json, Type typeOfT,
+                                                 JsonDeserializationContext context) throws JsonParseException {
+            SystemMessageItemType[] list = SystemMessageItemType.values();
+            for (int i = 0; i < list.length; i++) {
+                if (list[i].value == json.getAsInt()) {
+                    return list[i];
+                }
+            }
+            return SystemMessageItemType.MSG_WORKREPORT;
+        }
+    }
 }

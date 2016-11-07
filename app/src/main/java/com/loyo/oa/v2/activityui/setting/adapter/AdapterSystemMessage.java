@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 import com.loyo.oa.v2.tool.DateTool;
 
@@ -51,7 +52,7 @@ public class AdapterSystemMessage extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder;
-        SystemMessageItem item = data.get(position);
+        final SystemMessageItem item = data.get(position);
         if (null == convertView) {
             holder = new Holder();
             convertView = inflater.inflate(R.layout.item_system_message, null);
@@ -63,6 +64,12 @@ public class AdapterSystemMessage extends BaseAdapter {
             holder = (Holder) convertView.getTag();
         }
         holder.setContent(item);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.Toast("跳转到:"+item.bizzType.getItemClass());
+            }
+        });
         return convertView;
     }
 
