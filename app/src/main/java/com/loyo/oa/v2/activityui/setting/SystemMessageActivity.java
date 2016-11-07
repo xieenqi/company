@@ -8,12 +8,15 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.setting.adapter.AdapterSystemMessage;
+import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
 import com.loyo.oa.v2.activityui.setting.persenter.SystemMessagePControl;
 import com.loyo.oa.v2.activityui.setting.persenter.SystemMesssagePersenter;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SystemMessageVControl;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseActivity;
+
+import java.util.List;
 
 /**
  * 【系统消息】
@@ -27,6 +30,7 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
     private PullToRefreshListView lv_list;
     private ViewStub emptyView;
     private SystemMessagePControl pControl;
+    private AdapterSystemMessage adapterSystemMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +51,9 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
         tv_add.setOnClickListener(click);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        AdapterSystemMessage adapterSystemMessage = new AdapterSystemMessage(this);
-        pControl = new SystemMessagePControl(this);
+        adapterSystemMessage = new AdapterSystemMessage(this);
         lv_list.setAdapter(adapterSystemMessage);
+        pControl = new SystemMessagePControl(this);
     }
 
     View.OnClickListener click = new View.OnClickListener() {
@@ -68,12 +72,12 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-
+        pControl.pullDown();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-
+        pControl.pullUp();
     }
 
     @Override
@@ -94,5 +98,15 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
     @Override
     public void setEmptyView() {
         lv_list.setEmptyView(emptyView);
+    }
+
+    @Override
+    public void getDataComplete() {
+        lv_list.onRefreshComplete();
+    }
+
+    @Override
+    public void bindingView(List<SystemMessageItem> data) {
+        adapterSystemMessage.setData(data);
     }
 }

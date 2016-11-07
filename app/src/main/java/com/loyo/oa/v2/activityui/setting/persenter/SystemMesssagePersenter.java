@@ -8,5 +8,13 @@ import com.loyo.oa.v2.common.base.BasePersenter;
  */
 
 public interface SystemMesssagePersenter extends BasePersenter {
+    /**
+     * 下拉刷新
+     */
+    void pullDown();
 
+    /**
+     * 上拉加载
+     */
+    void pullUp();
 }

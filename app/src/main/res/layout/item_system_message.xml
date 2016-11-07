@@ -8,6 +8,7 @@
     android:paddingTop="@dimen/dimen_15">
 
     <ImageView
+        android:id="@+id/iv_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_sys_custom" />

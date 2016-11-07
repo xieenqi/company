@@ -5,8 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
+import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
+import com.loyo.oa.v2.tool.DateTool;
+
+import java.util.List;
 
 /**
  * Created by xeq on 16/11/7.
@@ -14,15 +21,21 @@ import com.loyo.oa.v2.R;
 
 public class AdapterSystemMessage extends BaseAdapter {
 
-    LayoutInflater inflater;
+    private LayoutInflater inflater;
+    private List<SystemMessageItem> data;
 
     public AdapterSystemMessage(Context context) {
         inflater = LayoutInflater.from(context);
     }
 
+    public void setData(List<SystemMessageItem> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        return 30;
+        return data == null ? 0 : data.size();
     }
 
     @Override
@@ -38,17 +51,31 @@ public class AdapterSystemMessage extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder;
+        SystemMessageItem item = data.get(position);
         if (null == convertView) {
             holder = new Holder();
             convertView = inflater.inflate(R.layout.item_system_message, null);
+            holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
+            holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
+            holder.iv_icon = (ImageView) convertView.findViewById(R.id.iv_icon);
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
         }
+        holder.setContent(item);
         return convertView;
     }
 
     class Holder {
+        TextView tv_title, tv_time;
+        ImageView iv_icon;
 
+        public void setContent(SystemMessageItem item) {
+            tv_title.setText(item.title);
+            tv_time.setText(DateTool.getDiffTime(item.createdAt));
+            if (item.bizzType != null) {
+                iv_icon.setImageResource(item.bizzType.getIcon());
+            }
+        }
     }
 }
