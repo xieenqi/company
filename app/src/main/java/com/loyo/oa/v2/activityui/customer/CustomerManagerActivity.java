@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.customer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -123,21 +124,6 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private List<BaseFragment> fragments = new ArrayList<>();
     private String[] SaleItemStatus = new String[]{"我负责的","我参与的","公海客户"};
 
-    private Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg){
-            if(msg.what == 0x01){
-                LogUtil.dee("0x01收到");
-                LogUtil.dee("fragments size:" + fragments.size());
-                try {
-                    fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(2)).commit();
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,7 +151,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                         }
                         initTitleItem();
                         try {
-//                            permission = MainApp.rootMap.get("0404");
+                            /*permission = MainApp.rootMap.get("0404");*/
                             initChildren();
                         } catch (NullPointerException e) {
                             e.printStackTrace();
@@ -281,7 +267,6 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         if (index != mIndex) {
             mIndex = index;
             try {
-                LogUtil.dee("index:"+index);
                 fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(index)).commit();
             } catch (IllegalStateException e) {
                 e.printStackTrace();
@@ -360,9 +345,23 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         ll_category.setVisibility(ll_category.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
 
+    /**
+     * 重启Activity
+     * */
+    void reStart(){
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+    }
+
+    /**
+     * 我参与界面新建完成,要回到我负责界面,直接重启activity
+     * */
     @Override
     public void comeBackHeadPage() {
-        LogUtil.dee("comeBackHeadPage Manager回调了");
-        mHandler.sendEmptyMessage(0x01);
+        reStart();
     }
 }

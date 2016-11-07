@@ -1,25 +1,18 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
-import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
@@ -35,14 +28,11 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -52,12 +42,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.xml.sax.XMLReader;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -86,7 +71,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @Extra("Id")
     String id;
     @Extra(ExtraAndResult.EXTRA_TYPE)
-    public int customerType;//"1,我的客户", "2,团队客户", "3,公海客户"
+    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户"
     public boolean isLock;
     public boolean isMyUser;
     public boolean isPutOcen;
@@ -164,11 +149,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             return;
         }
 
+        LogUtil.dee("customerType:"+customerType);
+        LogUtil.dee("MainApp.user.isSuperUser():"+MainApp.user.isSuperUser());
+
         /*超级管理员,我的客户,Web权限控制判断*/
-        if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 3) {
+        if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 4) {
             img_public.setVisibility(View.VISIBLE);
         } else {
-            if (customerType == 3) {
+            if (customerType == 4) {
                 Permission perGet = MainApp.rootMap.get("0404");
                 if (perGet != null && perGet.isEnable()) {
                     img_public.setVisibility(View.VISIBLE);
@@ -186,7 +174,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * 本地userid与服务器回传ownerId比较，相等则是自己的客户，islock＝true为自己客户，false在公海中
         * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
         * */
-        isMyUser = (customerType != 3) ? true : false;
+        isMyUser = (customerType != 4) ? true : false;
 
         if (mCustomer.lock) {
             if (null != mCustomer.owner) {
@@ -200,7 +188,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             img_title_right.setVisibility(View.INVISIBLE);
         }
 
-        if (customerType == 2) {//团队客户火力全开 相当于自己的客户
+        if (customerType == 3) {//团队客户火力全开 相当于自己的客户
             img_title_right.setVisibility(View.VISIBLE);
         }
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -452,7 +440,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putBoolean("isRoot", isRoot);
                 bundle.putSerializable("Customer", mCustomer);
                 bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 3);
+                bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 4);
                 bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;

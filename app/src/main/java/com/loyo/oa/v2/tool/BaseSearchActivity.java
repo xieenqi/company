@@ -97,6 +97,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
         headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
 
+        LogUtil.dee("customerType:"+customerType);
         customerType = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
         befromPage = mBundle.getInt("from");
         switchPage(befromPage);

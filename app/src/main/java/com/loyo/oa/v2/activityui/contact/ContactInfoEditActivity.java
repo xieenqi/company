@@ -197,8 +197,35 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
             ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
         }
         path = user.avatar;
+
 //        Utils.setContent(tv_departments, TextUtils.isEmpty(deptBuffer.toString()) ? " " :  deptBuffer.toString());
 //        Utils.setContent(tv_positions,  user.shortDeptNames);
+//
+//        String[] oneSql;
+//        String[] twoSql;
+//        StringBuffer buffer = new StringBuffer();
+//
+//        /*截取职位信息*/
+//        if(null != user.shortDeptNames && !TextUtils.isEmpty(user.shortDeptNames)){
+//            if(user.shortDeptNames.contains(",")){
+//                oneSql = user.shortDeptNames.split(",");
+//                for(int i = 0;i<oneSql.length;i++){
+//                    if(oneSql[i].contains("|")){
+//                        twoSql = oneSql[i].split("\\|");
+//                        for(int k = 0;k<twoSql.length;k++){
+//                        }
+//                        buffer.append(twoSql[1]+" ");
+//                    }
+//                }
+//            }else{
+//                twoSql = user.shortDeptNames.split("\\|");
+//                buffer.append(twoSql[1]+" ");
+//            }
+//        }
+//
+//        path = user.avatar;
+//        Utils.setContent(tv_departments, TextUtils.isEmpty(deptBuffer.toString()) ? " " :  deptBuffer.toString());
+//        Utils.setContent(tv_positions,  buffer.toString());
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
         wechat = user.weixinId;

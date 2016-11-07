@@ -293,7 +293,7 @@ public class ContactViewGroup extends LinearLayout {
             tv_depart.setText(mContact.deptName);
 
             /*绑定手机号数据*/
-            if(null != mContact.telGroup){
+            if(null != mContact.telGroup && mContact.telGroup.size() != 0){
                 switch (mContact.telGroup.size()) {
 
                     case 1:
@@ -326,11 +326,13 @@ public class ContactViewGroup extends LinearLayout {
                         break;
 
                 }
+            }else{
+                setTelOnClick(layout_phone_call1, layout_send_sms1, mContact.getTel());
             }
 
 
              /*绑定座机号数据*/
-            if(null != mContact.wiretelGroup){
+            if(null != mContact.wiretelGroup && mContact.wiretelGroup.size() != 0){
                 switch (mContact.wiretelGroup.size()) {
 
                     case 1:
@@ -365,6 +367,8 @@ public class ContactViewGroup extends LinearLayout {
                         break;
 
                 }
+            }else{
+                setWriteOnClick(layout_call_wiretel1, mContact.getWiretel());
             }
 
 
