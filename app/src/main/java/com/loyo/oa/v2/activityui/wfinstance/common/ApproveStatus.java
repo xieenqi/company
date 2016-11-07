@@ -8,7 +8,7 @@ public enum  ApproveStatus {
 //    private static final String FILTER_STATUS[] = new String[]
 // {"全部状态", "待我审批的", "未到我审批的", "我同意的", "我驳回的"};
 
-    ALL(0, "0", "不限状态"),
+    ALL(0, "0", "全部状态"),
     WAIT_APPROVE(1, "1", "待我审批的"),
     APPROVED_BY_ME(2, "2", "我同意的"),
     REJECTED_BY_ME(3, "3", "我驳回的"),

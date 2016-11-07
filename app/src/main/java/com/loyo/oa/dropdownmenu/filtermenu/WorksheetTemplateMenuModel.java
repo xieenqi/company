@@ -23,7 +23,7 @@ public class WorksheetTemplateMenuModel implements MenuModel {
         for (WorksheetTemplate temp:templates) {
             tempModel.add(new WorksheetTemplateMenuModel(temp));
         }
-        return new FilterModel(tempModel, "类型", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        return new FilterModel(tempModel, "全部类型", MenuListType.SINGLE_LIST_SINGLE_SEL);
     }
 
     public WorksheetTemplateMenuModel(WorksheetTemplate template) {

@@ -21,12 +21,12 @@ public class BizFormMenuModel implements MenuModel {
         List<MenuModel> list = new ArrayList<>();
         BizForm all = new BizForm();
         all.setId("");
-        all.setName("不限类别");
+        all.setName("全部类别");
         list.add(new BizFormMenuModel(all));
         for (BizForm bizForm:bizForms) {
             list.add(new BizFormMenuModel(bizForm));
         }
-        FilterModel model = new FilterModel(list, "不限类别", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list, "全部类别", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 

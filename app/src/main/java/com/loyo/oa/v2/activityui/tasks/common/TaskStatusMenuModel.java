@@ -24,7 +24,7 @@ public class TaskStatusMenuModel implements MenuModel {
         list.add(new TaskStatusMenuModel(TaskStatus.WAIT_APPROVE));
         list.add(new TaskStatusMenuModel(TaskStatus.FINISHED));
 
-        FilterModel model = new FilterModel(list, "不限状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list, "全部状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 

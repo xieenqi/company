@@ -23,7 +23,7 @@ public class ProjectStatusMenuModel implements MenuModel {
         list.add(new ProjectStatusMenuModel(ProjectStatus.IN_PROCESS));
         list.add(new ProjectStatusMenuModel(ProjectStatus.TERMINATED));
 
-        FilterModel model = new FilterModel(list, "不限状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list, "全部状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 
