@@ -1,10 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#90FFFFFF"
+                android:background="#00FFFFFF"
                 android:clipToPadding="true"
                 android:fitsSystemWindows="true"
     >
+    <View
+        android:id="@+id/bg_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
     <GridView
@@ -13,6 +17,7 @@
         android:layout_height="wrap_content"
         android:numColumns="3"
         android:layout_above="@+id/case_bottom_view"
+        android:layoutAnimation="@anim/menu_grid_anim"
         >
     </GridView>
 

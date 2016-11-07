@@ -8,7 +8,7 @@ public enum TaskType {
 //    private static final String[] TYPE_TAG = new String[]{"全部类型", "我分派的", "我负责的", "我参与的"};
 //    private static final String[] STATUS_TAG = new String[]{"全部状态", "未完成", "待审核", "已完成"};
 
-    ALL(0, "0", "全部类型"),
+    ALL(0, "0", "不限类型"),
     ASSIGN_BY_ME(1, "1", "我分派的"),
     IN_CHARGE(2, "2", "我负责的"),
     PARTICIPATE_IN(3, "3", "我参与的");

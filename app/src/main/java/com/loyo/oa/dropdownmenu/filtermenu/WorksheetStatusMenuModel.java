@@ -27,7 +27,7 @@ public class WorksheetStatusMenuModel implements MenuModel {
         list.add(new WorksheetStatusMenuModel(WorksheetStatus.FINISHED));
         list.add(new WorksheetStatusMenuModel(WorksheetStatus.TEMINATED));
 
-        FilterModel model = new FilterModel(list, "全部状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list, "状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 

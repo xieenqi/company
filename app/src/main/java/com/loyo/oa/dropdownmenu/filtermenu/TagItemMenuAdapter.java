@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
-import com.loyo.oa.dropdownmenu.view.SingleCell;
+import com.loyo.oa.dropdownmenu.view.MultiCell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,24 +14,39 @@ import java.util.List;
  * Created by EthanGong on 2016/11/1.
  */
 
-public class TagItemMenuAdapter extends RecyclerView.Adapter<SingleCell> implements OnMenuItemClick {
+public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implements OnMenuItemClick {
     private List<MenuModel> data = new ArrayList<>();
     public int selectedIndex = 0;
 
     private OnMenuItemClick callback;
 
     @Override
-    public SingleCell onCreateViewHolder(ViewGroup parent, int viewType) {
-        return SingleCell.instance(parent);
+    public MultiCell onCreateViewHolder(ViewGroup parent, int viewType) {
+        return MultiCell.instance(parent);
     }
 
     @Override
-    public void onBindViewHolder(SingleCell holder, int position) {
+    public void onBindViewHolder(MultiCell holder, int position) {
         MenuModel model = data.get(position);
         holder.setIndex(position);
         holder.setCallback(this);
         holder.valueView.setText(model.getValue());
         holder.setSelected(model.getSelected());
+    }
+
+    @Override
+    public void onBindViewHolder(MultiCell holder, int position, List<Object> payloads) {
+
+        if (payloads.size() > 0) {
+            MenuModel model = data.get(position);
+            holder.setIndex(position);
+            holder.setCallback(this);
+            holder.valueView.setText(model.getValue());
+            holder.setSelected(model.getSelected(), true);
+        }
+        else {
+            onBindViewHolder(holder, position);
+        }
     }
 
     @Override
@@ -41,24 +56,20 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<SingleCell> impleme
 
     @Override
     public void onMenuItemClick(int index) {
-//        if (selectedIndex != index) {
-//            selectedIndex = index;
-//            notifyDataSetChanged();
-////            if (this.callback != null) {
-////                this.callback.onMenuItemClick(index);
-////            }
-//        }
         MenuModel model = data.get(index);
         model.setSelected(! model.getSelected());
+        notifyItemChanged(index, index);
+        if (index == 0 && model.getSelected()) {
+            selectAll(index);
+            return;
+        }
 
         if (isAllSelected()) {
-            selectAll();
+            selectAll(index);
         }
         else {
-            deSelectAll();
+            deSelectAll(index);
         }
-
-        notifyDataSetChanged();
     }
 
     public void loadData(List<MenuModel> list) {
@@ -81,6 +92,7 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<SingleCell> impleme
         if (data.size()<=1) {
             return true;
         }
+
         boolean result = data.get(1).getSelected();
         for (int i = 2; i < data.size(); i++) {
             if (result != data.get(i).getSelected()) {
@@ -102,6 +114,33 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<SingleCell> impleme
     private void deSelectAll() {
         if (data.size() > 0) {
             data.get(0).setSelected(false);
+        }
+    }
+
+    private void selectAll(int index) {
+        if (data.size() > 0) {
+            data.get(0).setSelected(true);
+            if (index != 0) {
+                notifyItemChanged(0, index);
+            }
+        }
+        for (int i = 1; i < data.size(); i++) {
+            if (data.get(i).getSelected() != false &&index!=i) {
+                data.get(i).setSelected(false);
+                notifyItemChanged(i, index);
+            }
+            else {
+                data.get(i).setSelected(false);
+            }
+        }
+    }
+
+    private void deSelectAll(int index) {
+        if (data.size() > 0) {
+            data.get(0).setSelected(false);
+            if (index != 0) {
+                notifyItemChanged(0, index);
+            }
         }
     }
 }
