@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.setting.SettingActivity;
 import com.loyo.oa.v2.activityui.setting.SettingPasswordActivity_;
+import com.loyo.oa.v2.activityui.setting.SystemMessageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -74,7 +75,6 @@ public class MenuFragment extends BaseFragment {
     private ImageView iv_new_version;
     public static ExitAppCallback callback;
     private Intent mIntentCheckUpdate;
-//    private boolean isUpdataData = false;
     private boolean isExite = false;
     //个人信息 和版本信息
     private BroadcastReceiver userInfoAndVersionInfo = new BroadcastReceiver() {
@@ -94,11 +94,6 @@ public class MenuFragment extends BaseFragment {
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
                 }
-//                if (isUpdataData) {
-//                    cancelLoading();
-//                    Toast("数据更新成功！");
-//                    isUpdataData = false;
-//                }
             } else if ("exite".equals(info) && !isExite) {
                 exit();
                 isExite = true;
@@ -164,7 +159,6 @@ public class MenuFragment extends BaseFragment {
 
     private void initView(View view) {
         ll_head = (LinearLayout) view.findViewById(R.id.ll_head);
-//        ll_user = (LinearLayout) view.findViewById(R.id.ll_user);
         ll_system = (LinearLayout) view.findViewById(R.id.ll_system);
         ll_feed_back = (LinearLayout) view.findViewById(R.id.ll_feed_back);
         ll__update = (LinearLayout) view.findViewById(R.id.ll__update);
@@ -236,19 +230,12 @@ public class MenuFragment extends BaseFragment {
                 break;
             //系统消息
             case R.id.ll_system:
-
+                app.startActivity(getActivity(), SystemMessageActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             //意见反馈
             case R.id.ll_feed_back:
                 app.startActivity(getActivity(), FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
-            //更新数据
-//            case R.id.ll__update:
-//                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, "all");
-//                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
-//                isUpdataData = true;
-
-//                break;
             //检查更新
             case R.id.ll_version:
                 if (PackageManager.PERMISSION_GRANTED ==
@@ -272,11 +259,6 @@ public class MenuFragment extends BaseFragment {
                     }, "提示", "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
                 }
                 break;
-            //退出登录
-//            case R.id.ll_exit:
-//                exit();
-//                isExite = false;
-//                break;
             //设置
             case R.id.ll_setting:
                 app.startActivity(mActivity, SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
@@ -310,8 +292,6 @@ public class MenuFragment extends BaseFragment {
             }
         });
     }
-
-
 
 
     @Override
