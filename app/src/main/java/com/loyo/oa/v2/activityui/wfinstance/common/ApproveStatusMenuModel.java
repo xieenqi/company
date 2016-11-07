@@ -24,7 +24,7 @@ public class ApproveStatusMenuModel implements MenuModel {
         list.add(new ApproveStatusMenuModel(ApproveStatus.APPROVED_BY_ME));
         list.add(new ApproveStatusMenuModel(ApproveStatus.REJECTED_BY_ME));
 
-        FilterModel model = new FilterModel(list, "全部状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list, "不限状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 

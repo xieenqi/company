@@ -38,7 +38,7 @@ public class TagMenuModel implements MenuModel {
             children.add(model);
         }
         if (children.size() >0) {
-            TagItemMenuModel all = new TagItemMenuModel("", "全部");
+            TagItemMenuModel all = new TagItemMenuModel("", "不限");
             children.add(0, all);
         }
     }

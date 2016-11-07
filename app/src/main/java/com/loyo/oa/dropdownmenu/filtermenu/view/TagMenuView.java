@@ -2,6 +2,7 @@ package com.loyo.oa.dropdownmenu.filtermenu.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -63,6 +64,13 @@ public class TagMenuView extends LinearLayout implements View.OnClickListener{
         tagView.setLayoutManager(new LinearLayoutManager(getContext()));
         tagItemView = (RecyclerView)findViewById(R.id.tag_item_view);
         tagItemView.setLayoutManager(new LinearLayoutManager(getContext()));
+        DefaultItemAnimator animator = new DefaultItemAnimator() {
+            @Override
+            public boolean canReuseUpdatedViewHolder(RecyclerView.ViewHolder viewHolder) {
+                return true;
+            }
+        };
+        tagItemView.setItemAnimator(animator);
 
         tagView.setAdapter(tagAdapter);
         tagItemView.setAdapter(tagItemAdapter);

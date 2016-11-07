@@ -1,6 +1,7 @@
 package com.loyo.oa.dropdownmenu.filtermenu;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
@@ -34,6 +35,17 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
         holder.setSelected(model.getSelected());
     }
 
+//    @Override
+    public void onBindViewHolder(MultiCell holder, int position, Object payloads) {
+
+        Log.v("ViewHolder", position +"     "+ payloads.toString());
+        MenuModel model = data.get(position);
+        holder.setIndex(position);
+        holder.setCallback(this);
+        holder.valueView.setText(model.getValue());
+        holder.setSelected(model.getSelected());
+    }
+
     @Override
     public int getItemCount() {
         return data.size();
@@ -43,20 +55,18 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
     public void onMenuItemClick(int index) {
         MenuModel model = data.get(index);
         model.setSelected(! model.getSelected());
+        notifyItemChanged(index);
         if (index == 0 && model.getSelected()) {
-            selectAll();
-            notifyDataSetChanged();
+            selectAll(index);
             return;
         }
 
         if (isAllSelected()) {
-            selectAll();
+            selectAll(index);
         }
         else {
-            deSelectAll();
+            deSelectAll(index);
         }
-
-        notifyDataSetChanged();
     }
 
     public void loadData(List<MenuModel> list) {
@@ -101,6 +111,33 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
     private void deSelectAll() {
         if (data.size() > 0) {
             data.get(0).setSelected(false);
+        }
+    }
+
+    private void selectAll(int index) {
+        if (data.size() > 0) {
+            data.get(0).setSelected(true);
+            if (index != 0) {
+                notifyItemChanged(0);
+            }
+        }
+        for (int i = 1; i < data.size(); i++) {
+            if (data.get(i).getSelected() != false &&index!=i) {
+                data.get(i).setSelected(false);
+                notifyItemChanged(i);
+            }
+            else {
+                data.get(i).setSelected(false);
+            }
+        }
+    }
+
+    private void deSelectAll(int index) {
+        if (data.size() > 0) {
+            data.get(0).setSelected(false);
+            if (index != 0) {
+                notifyItemChanged(0);
+            }
         }
     }
 }

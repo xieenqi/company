@@ -8,7 +8,7 @@ public enum ProjectStatus {
 
 //    private static final String[] FILTER_STATUS_ARRAY = new String[]{"全部状态", "进行中", "已结束"};
 
-    ALL(0, "0", "全部状态"),
+    ALL(0, "0", "不限状态"),
     IN_PROCESS(1, "1", "进行中"),
     TERMINATED(2, "2", "已结束");
 

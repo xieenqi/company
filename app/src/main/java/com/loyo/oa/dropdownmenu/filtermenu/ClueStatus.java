@@ -5,7 +5,7 @@ package com.loyo.oa.dropdownmenu.filtermenu;
  */
 
 public enum ClueStatus {
-    All(0, "0", "全部"),
+    All(0, "0", "不限"),
     NOT_PROCESS(1, "1", "未处理"),
     ALREADY_CONTACT(2, "2", "已联系"),
     CLOSED(3, "3", "关闭");
