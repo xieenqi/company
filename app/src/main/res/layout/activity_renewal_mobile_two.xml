@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/include_common_title" />
+    <include layout="@layout/include_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,6 @@
             android:minHeight="@dimen/dimen_48" />
 
         <include layout="@layout/include_solid_line_left" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,13 +61,10 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_confirm"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_other_view"
-        android:background="@drawable/round_bg_shpe"
-        android:text="确定"
-        android:textColor="@color/white" />
-
+        android:padding="@dimen/margin_other_view"
+        android:text="提交后,请使用该手机号重新登录"
+        android:textColor="@color/text99" />
 </LinearLayout>

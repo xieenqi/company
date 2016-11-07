@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.setting;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -9,12 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -24,46 +25,48 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
-import org.androidannotations.annotations.Click;
-
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
+ * 【更换手机号】 第二步
  * 修改手机号
  * Created by yyy on 2016/9/29
  */
-public class ResePhoneActivity extends BaseActivity implements View.OnClickListener {
+public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClickListener {
 
-    private ViewGroup img_title_left;
-    private TextView tv_title_1;
-    private Button btn_confirm, btn_get_code;
+    private ViewGroup ll_back;
+    private TextView tv_title;
+    private Button btn_get_code;
     private EditText et_account, et_code;
+    private ImageView iv_submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_phone);
+        setContentView(R.layout.activity_renewal_mobile_two);
         setTouchView(NO_SCROLL);
         initUI();
     }
 
     void initUI() {
-        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
-        tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
-        btn_confirm = (Button) findViewById(R.id.btn_confirm);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        iv_submit = (ImageView) findViewById(R.id.iv_submit);
+        tv_title.setText("更换手机号");
+        iv_submit.setImageResource(R.drawable.right_submit1);
+//        btn_confirm = (Button) findViewById(R.id.btn_confirm);
         btn_get_code = (Button) findViewById(R.id.btn_get_code);
         et_account = (EditText) findViewById(R.id.et_account);
         et_code = (EditText) findViewById(R.id.et_code);
 
-        Global.SetTouchView(img_title_left, btn_confirm, btn_get_code);
+        Global.SetTouchView(ll_back, iv_submit, btn_get_code);
         et_account.addTextChangedListener(textWatcher);
-        tv_title_1.setText("修改手机号");
-        img_title_left.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
         btn_get_code.setOnClickListener(this);
-        btn_confirm.setOnClickListener(this);
+        iv_submit.setOnClickListener(this);
     }
 
     void getCode() {
@@ -82,7 +85,7 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
      * @param tel
      */
     private void verifyPhone(final String tel) {
-
+        showLoading("");
         //验证手机号
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMobile.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
@@ -134,6 +137,7 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
             Toast("请填写验证码");
             return;
         }
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("tel", mobile);
         map.put("code", code);
@@ -142,10 +146,11 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
             public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 Toast("修改手机号码成功");
-                Intent mIntent = new Intent();
-                mIntent.putExtra("phone", mobile);
-                app.finishActivity(ResePhoneActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-                finish();
+                MenuFragment.callback.onExit(RenewalMobileTwoActivty.this);
+//                Intent mIntent = new Intent();
+//                mIntent.putExtra("phone", mobile);
+//                app.finishActivity(RenewalMobileTwoActivty.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+//                finish();
             }
 
             @Override
@@ -170,7 +175,7 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
             }
             btn_get_code.setText("重新获取(" + time + ")");
             time--;
-            tv_title_1.postDelayed(this, 1000);
+            tv_title.postDelayed(this, 1000);
         }
     };
 
@@ -189,10 +194,12 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
         public void afterTextChanged(final Editable editable) {
             if (RegexUtil.regexk(editable.toString().trim(), RegexUtil.StringType.MOBILEL)) {
                 btn_get_code.setEnabled(true);
-                btn_get_code.setBackgroundResource(R.drawable.round_bg_shpe);//getResources().getColor(R.color.title_bg1)
+                btn_get_code.setBackgroundResource(R.drawable.round_bg_shpe);
+                btn_get_code.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 btn_get_code.setEnabled(false);
                 btn_get_code.setBackgroundResource(R.drawable.round_bg_shpe2);
+                btn_get_code.setTextColor(Color.parseColor("#999999"));
                 if (editable.length() == 11) {
                     Toast("请输入正确的手机号码");
                 }
@@ -210,7 +217,7 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
 
         switch (v.getId()) {
             /*返回*/
-            case R.id.img_title_left:
+            case R.id.ll_back:
                 onBackPressed();
                 break;
             /*获取验证码*/
@@ -218,7 +225,7 @@ public class ResePhoneActivity extends BaseActivity implements View.OnClickListe
                 getCode();
                 break;
             /*提交*/
-            case R.id.btn_confirm:
+            case R.id.iv_submit:
                 doNext();
                 break;
         }

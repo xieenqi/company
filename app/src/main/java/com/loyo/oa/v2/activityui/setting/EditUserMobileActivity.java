@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -92,16 +93,18 @@ public class EditUserMobileActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        int actionOk = getIntent().getIntExtra(ExtraAndResult.SEND_ACTION, 0);
-        activityAction(actionOk);
+        activityAction();
     }
 
-    private void activityAction(int action) {
+    private void activityAction() {
+        int action = getIntent().getIntExtra(ExtraAndResult.SEND_ACTION, 0);
+        String mobile = getIntent().getStringExtra(ExtraAndResult.EXTRA_DATA);
         if (ACTION_BINDING == action) {
             ll_binding.setVisibility(View.VISIBLE);
             showInputKeyboard(et_mobile);
         } else if (ACTION_RENEWAL == action) {
             ll_renewal.setVisibility(View.VISIBLE);
+            tv_renewal_cellnumber.setText("绑定手机号为 : " + mobile);
         }
     }
 
@@ -124,7 +127,7 @@ public class EditUserMobileActivity extends BaseActivity {
                     complete();
                     break;
                 case R.id.bt_renewal://更换手机号
-
+                    app.startActivity(EditUserMobileActivity.this, RenewalMobileOneActivty.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                     break;
 
             }
@@ -227,7 +230,7 @@ public class EditUserMobileActivity extends BaseActivity {
             public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse("绑定手机号码", response);
                 Toast("绑定成功");
-                finish();
+                onBackPressed();
 //                et_account.removeCallbacks(countRunner);
 //                Bundle bundle = new Bundle();
 //                bundle.putString("tel", mobile);

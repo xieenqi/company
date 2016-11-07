@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -95,7 +96,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.ll_cellphone:
                 Bundle bundle = new Bundle();
-                bundle.putInt(ExtraAndResult.SEND_ACTION, EditUserMobileActivity.ACTION_RENEWAL);
+                if (MainApp.user != null && !TextUtils.isEmpty(MainApp.user.mobile)) {
+                    bundle.putInt(ExtraAndResult.SEND_ACTION, EditUserMobileActivity.ACTION_RENEWAL);
+                    bundle.putString(ExtraAndResult.EXTRA_DATA, MainApp.user.mobile);
+                } else {
+                    bundle.putInt(ExtraAndResult.SEND_ACTION, EditUserMobileActivity.ACTION_BINDING);
+                }
                 MainApp.getMainApp().startActivity(SettingActivity.this, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 break;
             case R.id.ll_setpassword:

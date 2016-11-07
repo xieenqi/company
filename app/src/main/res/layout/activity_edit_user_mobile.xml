@@ -133,7 +133,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_30"
             android:gravity="center"
-            android:text="绑定手机号为 : "
             android:textColor="@color/text33"
             android:textSize="@dimen/text_sp18" />
 

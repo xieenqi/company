@@ -368,8 +368,11 @@
         <activity
             android:name=".activityui.setting.EditUserMobileActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-             />
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activityui.setting.RenewalMobileOneActivty"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activityui.customer.CustomerContractAddActivity"
             android:screenOrientation="portrait"
@@ -793,7 +796,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity
-            android:name=".activityui.setting.ResePhoneActivity"
+            android:name=".activityui.setting.RenewalMobileTwoActivty"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
