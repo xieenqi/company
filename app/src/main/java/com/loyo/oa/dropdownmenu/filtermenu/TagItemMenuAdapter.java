@@ -93,9 +93,8 @@ public class TagItemMenuAdapter extends RecyclerView.Adapter<MultiCell> implemen
             return true;
         }
 
-        boolean result = data.get(1).getSelected();
-        for (int i = 2; i < data.size(); i++) {
-            if (result != data.get(i).getSelected()) {
+        for (int i = 1; i < data.size(); i++) {
+            if (data.get(i).getSelected()) {
                 return false;
             }
         }
