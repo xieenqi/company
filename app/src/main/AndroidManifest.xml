@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -38,6 +37,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
 
     <!-- 激光推送 -->
     <permission
@@ -573,6 +573,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
+            android:name=".activityui.sale.SaleSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activityui.customer.SaleManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -880,10 +884,9 @@
         </service>
 
         <service android:name="com.yzxtcp.service.YzxIMCoreService" />
-        <receiver android:name="com.yzxtcp.tools.tcp.receiver.AlarmReceiver" >
-        </receiver>
-        <receiver android:name="com.yzxtcp.tools.tcp.receiver.MsgBackReceiver" >
-        </receiver>
+
+        <receiver android:name="com.yzxtcp.tools.tcp.receiver.AlarmReceiver"></receiver>
+        <receiver android:name="com.yzxtcp.tools.tcp.receiver.MsgBackReceiver"></receiver>
         <receiver android:name="com.yzx.tools.RtppReceiver" />
 
         <!-- Required SDK核心功能 -->

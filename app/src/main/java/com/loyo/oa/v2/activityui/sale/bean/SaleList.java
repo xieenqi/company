@@ -3,10 +3,10 @@ package com.loyo.oa.v2.activityui.sale.bean;
 import java.util.ArrayList;
 
 /**
- * 我的销售机会列表bean
+ * 【我的】【团队】销售机会列表bean
  * Created by yyy on 16/5/20.
  */
-public class SaleMyList {
+public class SaleList {
 
     public int pageIndex;
     public int pageSize;

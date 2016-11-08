@@ -87,6 +87,12 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         getData();
     }
 
+    public void refresh() {
+        isPullDown = true;
+        page = 1;
+        showLoading("");
+        getData();
+    }
 
     @Nullable
     @Override
@@ -196,7 +202,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                 else if (menuIndex == 2) {
                     typeParam = key;
                 }
-                getData();
+                refresh();
             }
         });
     }

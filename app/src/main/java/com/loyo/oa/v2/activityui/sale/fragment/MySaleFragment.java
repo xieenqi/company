@@ -24,7 +24,7 @@ import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterMySaleList;
-import com.loyo.oa.v2.activityui.sale.bean.SaleMyList;
+import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -132,6 +132,8 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                 else if (menuIndex == 1) { // 排序
                     sortType = key;
                 }
+                requestPage = 1;
+                isPull = false;
                 getData();
             }
         });
@@ -161,9 +163,9 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
         map.put("pageSize", 15);
         map.put("stageId", stageId);
         map.put("sortType", sortType);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleMyList(map, new RCallback<SaleMyList>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleMyList(map, new RCallback<SaleList>() {
             @Override
-            public void success(SaleMyList saleMyLists, Response response) {
+            public void success(SaleList saleMyLists, Response response) {
                 HttpErrorCheck.checkResponse("销售机会 客户列表:", response);
                 if (null == saleMyLists.records || saleMyLists.records.size() == 0) {
                     if (isPull) {

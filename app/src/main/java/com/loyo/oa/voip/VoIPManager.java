@@ -54,7 +54,7 @@ public class VoIPManager implements CallStateListener {
         cacheToken = getCacheToken();
         UCSService.initAction(context);
         UCSService.init(context, true);
-        // UCSCall.addCallStateListener(this);
+        UCSCall.addCallStateListener(this);
         return this;
     }
 
@@ -197,7 +197,7 @@ public class VoIPManager implements CallStateListener {
                             public void run() {
                                 _dial(phone);
                             }
-                        }, 1000);
+                        }, 3000);
                     }
                     if (callback != null) {
                         callback.onRespond(userInfo);
@@ -279,7 +279,6 @@ public class VoIPManager implements CallStateListener {
     @Override
     public void onAnswer(String s) {
         Log.v("yzx", "onAnswer");
-
     }
 
 

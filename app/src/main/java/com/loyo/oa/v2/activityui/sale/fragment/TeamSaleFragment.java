@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeam;
+import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamList;
 import com.loyo.oa.v2.application.MainApp;
@@ -188,6 +189,8 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 else if (menuIndex == 2) { // 排序
                     sortType = key;
                 }
+                requestPage = 1;
+                isPull = false;
                 getRefershData();
             }
         });
@@ -225,9 +228,9 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         map.put("xpath", xPath);
         map.put("userId", userId);
         LogUtil.d("团队机会列表 请求数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleTeamList(map, new RCallback<SaleTeamList>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleTeamList(map, new RCallback<SaleList>() {
             @Override
-            public void success(SaleTeamList saleTeamList, Response response) {
+            public void success(SaleList saleTeamList, Response response) {
                 HttpErrorCheck.checkResponse("客户列表", response);
                 if (null == saleTeamList.records || saleTeamList.records.size() == 0) {
                     if (isPull) {

@@ -19,9 +19,14 @@ public class SaleStageMenuModel implements MenuModel {
 
     public static FilterModel getStageFilterModel(List<SaleStage> stages) {
         List<MenuModel> stageModel = new ArrayList<>();
+        SaleStage all = new SaleStage();
+        all.setName("全部阶段");
+        all.setId("");
+        stageModel.add(new SaleStageMenuModel(all));
         for (SaleStage stage:stages) {
             stageModel.add(new SaleStageMenuModel(stage));
         }
+
         return new FilterModel(stageModel, "销售阶段", MenuListType.SINGLE_LIST_SINGLE_SEL);
     }
 

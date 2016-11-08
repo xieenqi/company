@@ -1,11 +1,18 @@
 package com.loyo.oa.voip;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,6 +38,9 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
 
     static public String CALLEE_NAME_KEY = "com.loyo.voip.callee.name";
     static public String CALLEE_PHONE_KEY = "com.loyo.voip.callee.phone";
+
+    private ImageView iv_1, iv_2, iv_3, iv_4;
+    private Animation anim1, anim2, anim3, anim4;
 
     LinearLayout callingContainer;
     private TextView
@@ -63,8 +73,12 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     private String phone;
     private long startTimestamp;
 
+    private String dialNumber;
+    private boolean selfHangUp = false;
+
     /**/
     private Timer timer;
+    private Handler handler = new Handler();
     SweetAlertDialogView dialog;
 
     @Override
@@ -79,7 +93,8 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         UCSCall.addCallStateListener(this);
         loadData();
         // 拨打
-        dial("18502818409");
+        //dialWithPemissionRequest("15802811007");
+        dialWithPemissionRequest(phone);
     }
 
     @Override
@@ -119,6 +134,15 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     }
 
     private void initUI() {
+
+        iv_1 = (ImageView) findViewById(R.id.iv_1);
+        iv_2 = (ImageView) findViewById(R.id.iv_2);
+        iv_3 = (ImageView) findViewById(R.id.iv_3);
+        iv_4 = (ImageView) findViewById(R.id.iv_4);
+        anim1 = AnimationUtils.loadAnimation(this, R.anim.call_phone_anim);
+        anim2 = AnimationUtils.loadAnimation(this, R.anim.call_phone_anim);
+        anim3 = AnimationUtils.loadAnimation(this, R.anim.call_phone_anim);
+        anim4 = AnimationUtils.loadAnimation(this, R.anim.call_phone_anim);
 
         /**/
         callingContainer = (LinearLayout)findViewById(R.id.calling_container);
@@ -173,6 +197,8 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         Global.SetTouchView(padUp);
 
         initKeyListener();
+
+        startHaloAnimation();
     }
 
     private void initKeyListener() {
@@ -250,6 +276,32 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         });
     }
 
+    private void startHaloAnimation() {
+        iv_1.setVisibility(View.VISIBLE);
+        iv_1.startAnimation(anim1);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                iv_2.setVisibility(View.VISIBLE);
+                iv_2.startAnimation(anim2);
+            }
+        }, 1000);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                iv_3.setVisibility(View.VISIBLE);
+                iv_3.startAnimation(anim3);
+            }
+        }, 2000);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                iv_4.setVisibility(View.VISIBLE);
+                iv_4.startAnimation(anim4);
+            }
+        }, 3000);
+    }
+
     private void sendDTMF(DTMF dtmf) {
         if (!isAnswering) {
             return;
@@ -267,6 +319,54 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         }
         calleeName.setText(callee);
         calleeName2.setText(callee);
+    }
+
+
+    private void permissionRequest() {
+
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
+            if (dialNumber != null) {
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dial(dialNumber);
+                    }
+                });
+            }
+            else {
+                finish();
+            }
+
+        } else {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.RECORD_AUDIO},
+                    1);
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (permissions[0].equals(Manifest.permission.RECORD_AUDIO)
+                &&grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            if (dialNumber != null) {
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dial(dialNumber);
+                    }
+                });
+            }
+            else {
+                finish();
+            }
+
+        }else{
+            finish();
+        }
+    }
+
+    public void dialWithPemissionRequest(String number) {
+        dialNumber = number;
+        permissionRequest();
     }
 
     private void dial(String number) {
@@ -388,7 +488,9 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             }
             break;
             case R.id.img_hang_up:{
+                selfHangUp = true;
                 VoIPManager.getInstance().hangUp();
+                finish();
             }
             break;
         }
@@ -396,8 +498,6 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void onDialFailed(String s, final UcsReason reason) {
-        Log.v("yzx", "onDialFailed------------");
-
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -421,12 +521,16 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void onIncomingCall(String s, String s1, String s2, String s3, String s4) {
-        Log.v("yzx", "onIncomingCall------------");
     }
 
     @Override
     public void onHangUp(String s, UcsReason reason) {
-        Log.v("yzx", "onHangUp------------");
+        if (selfHangUp) {
+            if (timer != null) {
+                timer.cancel();
+            }
+            return;
+        }
 
         this.runOnUiThread(new Runnable() {
             @Override
@@ -456,12 +560,18 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void onAlerting(String s) {
-        Log.v("yzx", "onAlerting------------");
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                isAnswering = true;
+                statusView.setText("正在响铃...");
+                statusView2.setText("正在响铃...");
+            }
+        });
     }
 
     @Override
     public void onAnswer(String s) {
-        Log.v("yzx", "onAnswer------------");
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

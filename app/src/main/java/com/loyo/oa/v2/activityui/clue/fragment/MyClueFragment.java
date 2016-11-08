@@ -104,6 +104,8 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                 else if (menuIndex == 1) { // ClueStatusFilterModel
                     statusKey = key;
                 }
+                isPullDown = true;
+                page = 1;
                 getData();
             }
         });

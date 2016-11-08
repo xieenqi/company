@@ -169,7 +169,7 @@ public enum WorksheetEventStatus implements GroupKey {
     },
 
     /**
-     * 全部类型
+     * 不限状态
      */
     Null(-1) {
         public String getName() {
