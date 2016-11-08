@@ -110,7 +110,8 @@ public class AdapterSystemMessage extends BaseAdapter {
             if (item.bizzType != null) {
                 iv_icon.setImageResource(item.bizzType.getIcon());
             }
-            view_ack.setVisibility(item.viewedAt == 0 ? View.VISIBLE : View.GONE);
+            // TODO 红点后台没有做好 暂时隐藏 20161108
+//            view_ack.setVisibility(item.viewedAt == 0 ? View.VISIBLE : View.GONE);
         }
 
         public void openItem(SystemMessageItem item) {
@@ -127,7 +128,6 @@ public class AdapterSystemMessage extends BaseAdapter {
 
                         @Override
                         public void failure(RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
                         }
                     });
         }
