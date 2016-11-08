@@ -73,6 +73,13 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
         getData();
     }
 
+    public void refresh() {
+        isPullDown = true;
+        page = 1;
+        showLoading("");
+        getData();
+    }
+
 
     @Nullable
     @Override
@@ -153,7 +160,7 @@ public class SelfCreatedWorksheetFragment extends BaseGroupsDataFragment impleme
                 else if (menuIndex == 1) {
                     typeParam = key;
                 }
-                getData();
+                refresh();
             }
         });
     }

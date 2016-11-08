@@ -46,7 +46,6 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -170,6 +169,8 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                 else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
                 }
+                isPullUp = false;
+                page = 1;
                 getData();
             }
         });

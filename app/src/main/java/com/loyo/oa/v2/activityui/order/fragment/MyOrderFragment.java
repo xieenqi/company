@@ -136,6 +136,8 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                         field = "createdAt";
                     }
                 }
+                isPullDown = true;
+                page = 1;
                 getData();
             }
         });

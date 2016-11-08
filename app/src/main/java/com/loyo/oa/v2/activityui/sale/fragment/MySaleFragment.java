@@ -132,6 +132,8 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
                 else if (menuIndex == 1) { // 排序
                     sortType = key;
                 }
+                requestPage = 1;
+                isPull = false;
                 getData();
             }
         });

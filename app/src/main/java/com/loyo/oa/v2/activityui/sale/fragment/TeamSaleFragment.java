@@ -188,6 +188,8 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
                 else if (menuIndex == 2) { // 排序
                     sortType = key;
                 }
+                requestPage = 1;
+                isPull = false;
                 getRefershData();
             }
         });
