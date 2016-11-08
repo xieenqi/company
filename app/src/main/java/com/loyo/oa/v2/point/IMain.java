@@ -15,6 +15,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
@@ -54,11 +55,12 @@ public interface IMain {
     /**
      * 读取系统消息的一条
      */
-    @PUT("/message/read")
-    void readSystemMessageOne();
+    @PUT("/message/read/{id}")
+    void readSystemMessageOne(@Path("id") String id, Callback<Object> o);
 
     /**
      * 读取系统消息的全部
      */
-    void readSystemMessageAll();
+    @PUT("/message/read/all")
+    void readSystemMessageAll(Callback<Object> o);
 }

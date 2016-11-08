@@ -32,7 +32,7 @@ public class SystemMessagePControl implements SystemMesssagePersenter {
 
     public SystemMessagePControl(SystemMessageVControl vControl) {
         this.vControl = vControl;
-        getPageData(page);
+//        getPageData(page);
     }
 
     @Override

@@ -26,10 +26,18 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
+import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by xeq on 16/11/7.
@@ -102,7 +110,7 @@ public class AdapterSystemMessage extends BaseAdapter {
             if (item.bizzType != null) {
                 iv_icon.setImageResource(item.bizzType.getIcon());
             }
-//            view_ack.setVisibility(item.viewedAt == 0 ? View.VISIBLE : View.GONE);
+            view_ack.setVisibility(item.viewedAt == 0 ? View.VISIBLE : View.GONE);
         }
 
         public void openItem(SystemMessageItem item) {
@@ -110,7 +118,18 @@ public class AdapterSystemMessage extends BaseAdapter {
             intent.setClass(context, item.bizzType.getItemClass());
             intent.putExtra(item.bizzType.getExtraName(), item.bizzId);
             context.startActivity(intent);
-            // TODO 红点服务端没有处理好
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
+                    readSystemMessageOne(item.id, new Callback<Object>() {
+                        @Override
+                        public void success(Object o, Response response) {
+                            HttpErrorCheck.checkResponse("读取一条系统消息", response);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
         }
     }
 }

@@ -14,9 +14,16 @@ import com.loyo.oa.v2.activityui.setting.persenter.SystemMesssagePersenter;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SystemMessageVControl;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【系统消息】
@@ -56,6 +63,12 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
         pControl = new SystemMessagePControl(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pControl.getPageData(1);
+    }
+
     View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -64,7 +77,18 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
                     onBackPressed();
                     break;
                 case R.id.tv_add:
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
+                            readSystemMessageAll(new Callback<Object>() {
+                                @Override
+                                public void success(Object o, Response response) {
+                                    pControl.getPageData(1);
+                                }
 
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    Toast("设置不成功");
+                                }
+                            });
                     break;
             }
         }
