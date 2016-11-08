@@ -123,7 +123,9 @@ public interface ICustomer {
     @PUT("/customer/{id}/pick")
     void pickedIn(@Path("id") String id, Callback<Customer> callback);
 
-
+    /**
+     * 客户详情,编辑跟进标签
+     * */
     @PUT("/customer/tag/{id}")
     void setCusLabel(@Path("id") String id, @Body ArrayList<NewTag> map, Callback<Contact> callback);
 

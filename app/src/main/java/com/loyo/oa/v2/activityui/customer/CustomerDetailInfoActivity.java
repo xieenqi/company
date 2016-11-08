@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
+import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerDetailInfoPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPresenterimpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
@@ -54,6 +55,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
 import java.util.Date;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
@@ -95,6 +98,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private LinearLayout layout_gj,layout_sign;
     private ImageView iv_select_tag;
     private CustomerDetailInfoPresenter mPresenter;
+    private ArrayList<NewTag> mTagItems = new ArrayList<>();
 
 
     @AfterViews
@@ -212,11 +216,15 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             layout_phone.setVisibility(View.GONE);
             layout_wirete.setVisibility(View.GONE);
         }
+        mTagItems.clear();
+        mTagItems.addAll(mCustomer.tags);
+
         tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
         tv_sale_count.setText("(" + mCustomer.counter.getDemand() + ")");
         tv_order_count.setText("(" + mCustomer.counter.order + ")");
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
+
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
@@ -235,6 +243,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             tv_follow_crecter_type.setVisibility(View.GONE);
         }
         tv_contact_Number.setText("(" + mCustomer.contacts.size() + ")");
+
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
@@ -278,8 +287,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*选择标签*/
             case R.id.iv_select_tag:
                 mIntent = new Intent(CustomerDetailInfoActivity.this,CustomerLabelCopyActivity.class);
-                mIntent.putExtra("isMem",isMem);
-                mIntent.putExtra("id",mCustomer.id);
+                mIntent.putExtra("isMem", isMem);
+                if (null != mTagItems) {
+                    mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
+                    mIntent.putExtra("customerId", mCustomer.getId());
+                }
                 startActivity(mIntent);
                 break;
 

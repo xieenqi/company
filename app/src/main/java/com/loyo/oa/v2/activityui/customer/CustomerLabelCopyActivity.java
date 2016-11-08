@@ -47,7 +47,6 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
     private String mCustomerId;
     private ArrayList<Tag> tags = new ArrayList<>();
     private boolean isMem;
-    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,6 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         mTagItems = (ArrayList<TagItem>) getIntent().getSerializableExtra("tagitems");
         mCustomerId = getIntent().getStringExtra("customerId");
         isMem = getIntent().getBooleanExtra("isMem",false);
-        id = getIntent().getStringExtra("id");
 
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -193,7 +191,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
      * */
     private void setLabel(){
         showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).setCusLabel(id, convertNewTags(), new RCallback<Contact>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).setCusLabel(mCustomerId, convertNewTags(), new RCallback<Contact>() {
             @Override
             public void success(final Contact contact, final Response response) {
                 HttpErrorCheck.checkResponse(response);
