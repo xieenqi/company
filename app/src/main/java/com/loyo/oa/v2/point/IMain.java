@@ -50,4 +50,15 @@ public interface IMain {
 
     @GET("/message")
     void getSystemMessage(@QueryMap HashMap<String, Object> map, Callback<PaginationX<SystemMessageItem>> callback);
+
+    /**
+     * 读取系统消息的一条
+     */
+    @PUT("/message/read")
+    void readSystemMessageOne();
+
+    /**
+     * 读取系统消息的全部
+     */
+    void readSystemMessageAll();
 }
