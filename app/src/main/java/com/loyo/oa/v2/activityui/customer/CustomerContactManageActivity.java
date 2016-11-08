@@ -271,6 +271,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         Bundle mBundle = new Bundle();
         mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callNum);
         mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
+        mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
+        mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerContact.getId());
         app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
     }
 
