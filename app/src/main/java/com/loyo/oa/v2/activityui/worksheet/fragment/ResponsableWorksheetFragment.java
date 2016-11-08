@@ -183,7 +183,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
                 else if (menuIndex == 1) {
                     typeParam = key;
                 }
-                getData();
+                refresh();
             }
         });
     }

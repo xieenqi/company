@@ -262,41 +262,17 @@ public class MoreWindowCase extends PopupWindow {
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.case_music_more_window, null);
         setContentView(view);
         initBtnUi(view);
-        showAnimation();
         bgView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), blur()));
         setOutsideTouchable(true);
         setFocusable(true);
         showAtLocation(anchor, Gravity.BOTTOM, 0, 0);
+        showAnimation();
     }
 
     /**
      * 弹出动画
      */
     private void showAnimation() {
-
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                ValueAnimator fadeAnim = ObjectAnimator.ofFloat(gridView, "translationY", 600, 0);
-//                fadeAnim.setDuration(300);
-//
-//                KickBackAnimator kickAnimator = new KickBackAnimator();
-//                kickAnimator.setDuration(150);
-//                fadeAnim.setEvaluator(kickAnimator);
-//                fadeAnim.start();
-//            }
-//        }, 50);
-
-//
-
-
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }, 100);
-
         ValueAnimator alphaAnim = ObjectAnimator.ofFloat(bgView, "alpha", 0f, 1f);
         alphaAnim.setDuration(300);
         alphaAnim.start();
@@ -304,19 +280,5 @@ public class MoreWindowCase extends PopupWindow {
         ValueAnimator rotateAnim = ObjectAnimator.ofFloat(closeBtn, "rotation", 45F, 0F);
         rotateAnim.setDuration(300);
         rotateAnim.start();
-
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                ValueAnimator fadeAnim = ObjectAnimator.ofFloat(closeBtn, "r", 300, 0);
-//                fadeAnim.setDuration(300);
-
-
-//                KickBackAnimator kickAnimator = new KickBackAnimator();
-//                kickAnimator.setDuration(150);
-//                fadeAnim.setEvaluator(kickAnimator);
-//                fadeAnim.start();
-            }
-        }, 100);
     }
 }

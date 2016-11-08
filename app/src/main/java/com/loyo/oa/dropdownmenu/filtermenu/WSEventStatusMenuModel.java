@@ -25,7 +25,7 @@ public class WSEventStatusMenuModel implements MenuModel {
         list.add(new WSEventStatusMenuModel(WorksheetEventStatus.UNACTIVATED));
         list.add(new WSEventStatusMenuModel(WorksheetEventStatus.FINISHED));
 
-        FilterModel model = new FilterModel(list, "状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list, "全部状态", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 

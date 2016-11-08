@@ -590,6 +590,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
+            android:name=".activityui.sale.SaleSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activityui.customer.SaleManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -661,6 +665,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activityui.order.OrderSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <!-- 线索 -->
         <activity
             android:name=".activityui.clue.ClueManagerActivity"

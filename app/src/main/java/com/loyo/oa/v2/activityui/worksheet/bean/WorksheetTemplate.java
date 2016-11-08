@@ -5,7 +5,7 @@ public class WorksheetTemplate {
     public static WorksheetTemplate Null;
     static {
         Null = new WorksheetTemplate();
-        Null.name = "不限类型";
+        Null.name = "全部类型";
         Null.enabled = true;
         Null.id = "";
     }

@@ -24,7 +24,7 @@ public class TaskTypeMenuModel implements MenuModel {
         list.add(new TaskTypeMenuModel(TaskType.IN_CHARGE));
         list.add(new TaskTypeMenuModel(TaskType.PARTICIPATE_IN));
 
-        FilterModel model = new FilterModel(list, "不限类型", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list, "全部类型", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 

@@ -2,7 +2,7 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleFild;
-import com.loyo.oa.v2.activityui.sale.bean.SaleMyList;
+import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
@@ -51,13 +51,13 @@ public interface ISale {
      * 获取 我的销售机会列表
      */
     @GET("/chance/self")
-    void getSaleMyList(@QueryMap HashMap<String, Object> map, Callback<SaleMyList> callback);
+    void getSaleMyList(@QueryMap HashMap<String, Object> map, Callback<SaleList> callback);
 
     /**
      * 获取 我的销售机会列表
      */
     @GET("/chance/team")
-    void getSaleTeamList(@QueryMap HashMap<String, Object> map, Callback<SaleTeamList> callback);
+    void getSaleTeamList(@QueryMap HashMap<String, Object> map, Callback<SaleList> callback);
 
     /**
      * 获取 销售机会详情

@@ -93,6 +93,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         UCSCall.addCallStateListener(this);
         loadData();
         // 拨打
+        //dialWithPemissionRequest("15802811007");
         dialWithPemissionRequest(phone);
     }
 

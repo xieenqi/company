@@ -15,16 +15,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.activityui.sale.fragment.MySaleFragment;
@@ -114,7 +117,6 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
-        img_title_search_right.setVisibility(View.INVISIBLE);
 
         //超级管理员 全公司  权限判断
         permission = MainApp.rootMap.get("0215");
@@ -203,7 +205,15 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
                 changeTitleImg();
                 break;
             case R.id.img_title_search_right:
-                Toast("搜索机会");
+                int type;
+                if (mIndex == 0) {
+                    type = SaleSearchActivity.MY_SALE_SEARCH;
+                } else {
+                    type = SaleSearchActivity.TEAM_SALE_SEARCH;
+                }
+                Bundle b = new Bundle();
+                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
+                app.startActivity(this, SaleSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }

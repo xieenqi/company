@@ -155,7 +155,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
                 else if (menuIndex == 1) {
                     typeParam = key;
                 }
-                getData();
+                refresh();
             }
         });
     }
@@ -206,6 +206,13 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
             }
         });
 
+    }
+
+    public void refresh() {
+        isPullDown = true;
+        page = 1;
+        showLoading("");
+        getData();
     }
 
     private void loadData(List<Worksheet> list) {
