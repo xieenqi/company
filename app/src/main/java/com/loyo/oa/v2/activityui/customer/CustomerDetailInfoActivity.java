@@ -92,8 +92,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private Contact mContact;
     private RelativeLayout layout_wirete,layout_phone;
     private LinearLayout layout_gj,layout_sign;
-
+    private ImageView iv_select_tag;
     private CustomerDetailInfoPresenter mPresenter;
+
 
     @AfterViews
     void initViews() {
@@ -105,7 +106,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_phone  = (RelativeLayout) findViewById(R.id.layout_phone);
         layout_gj     = (LinearLayout) findViewById(R.id.layout_gj);
         layout_sign   = (LinearLayout) findViewById(R.id.layout_sign);
+        iv_select_tag   = (ImageView) findViewById(R.id.iv_select_tag);
 
+        iv_select_tag.setOnTouchListener(Global.GetTouch());
         layout_sign.setOnTouchListener(Global.GetTouch());
         layout_gj.setOnTouchListener(Global.GetTouch());
 
@@ -252,10 +255,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 dismissSweetAlert();
                 if (isKind) {
-                    //delete();
                     mPresenter.delete(mCustomer.getId());
                 } else {
-                    //toPublic();
                     mPresenter.toPublic(mCustomer.getId());
                 }
             }
@@ -266,25 +267,32 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
             R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call,
-            R.id.ll_sale, R.id.ll_order,R.id.layout_gj,R.id.layout_sign})
+            R.id.ll_sale, R.id.ll_order,R.id.layout_gj,R.id.layout_sign,R.id.iv_select_tag})
     void onClick(final View view) {
         Bundle bundle = new Bundle();
+        Intent mIntent;
         Class<?> _class = null;
         int requestCode = -1;
         switch (view.getId()) {
 
+            /*选择标签*/
+            case R.id.iv_select_tag:
+                mIntent = new Intent(CustomerDetailInfoActivity.this,CustomerLabelCopyActivity.class);
+                startActivity(mIntent);
+                break;
+
             /*拜访*/
             case R.id.layout_sign:
-                Intent mIntent = new Intent(CustomerDetailInfoActivity.this,SignInActivity.class);
+                mIntent = new Intent(CustomerDetailInfoActivity.this,SignInActivity.class);
                 mIntent.putExtra("data",mCustomer);
                 startActivity(mIntent);
                 break;
 
             /*跟进*/
             case R.id.layout_gj:
-                Intent mIntemt = new Intent(CustomerDetailInfoActivity.this,CustomerDynamicAddActivity.class);
-                mIntemt.putExtra(Customer.class.getName(),mCustomer);
-                startActivity(mIntemt);
+                mIntent = new Intent(CustomerDetailInfoActivity.this,CustomerDynamicAddActivity.class);
+                mIntent.putExtra(Customer.class.getName(),mCustomer);
+                startActivity(mIntent);
                 break;
 
             /*返回*/
@@ -298,9 +306,10 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*菜单*/
             case R.id.img_title_right:
-                //showEditPopu();
                 mPresenter.showEditPopu(CustomerDetailInfoActivity.this);
                 break;
+
+            /*客户信息*/
             case R.id.layout_customer_info:
                 bundle.putBoolean("isRoot", isRoot);
                 bundle.putSerializable("Customer", mCustomer);
