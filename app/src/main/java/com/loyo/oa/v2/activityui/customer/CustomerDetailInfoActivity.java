@@ -288,6 +288,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             case R.id.iv_select_tag:
                 mIntent = new Intent(CustomerDetailInfoActivity.this,CustomerLabelCopyActivity.class);
                 mIntent.putExtra("isMem", isMem);
+                mIntent.putExtra("fromPage",0);
                 if (null != mTagItems) {
                     mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
                     mIntent.putExtra("customerId", mCustomer.getId());

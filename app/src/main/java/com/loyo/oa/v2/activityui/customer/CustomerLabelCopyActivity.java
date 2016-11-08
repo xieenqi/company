@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Item_info_Group;
@@ -29,6 +30,9 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
+import org.androidannotations.annotations.App;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -47,6 +51,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
     private String mCustomerId;
     private ArrayList<Tag> tags = new ArrayList<>();
     private boolean isMem;
+    private int fromPage; /*0:详情 1:信息*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         mTagItems = (ArrayList<TagItem>) getIntent().getSerializableExtra("tagitems");
         mCustomerId = getIntent().getStringExtra("customerId");
         isMem = getIntent().getBooleanExtra("isMem",false);
+        fromPage = getIntent().getIntExtra("fromPage",0);
 
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -156,7 +162,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
 
             /*确认*/
             case R.id.img_title_right:
-                close();
+                setPageResult();
                 break;
         }
 
@@ -228,12 +234,22 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         return tags;
     }
 
-    void close() {
-        Intent intent = new Intent();
-        intent.putExtra("data", convertNewTags());
-        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-
-        setLabel();
+    /**
+     * 设置不同业务的处理方式
+     * */
+    void setPageResult() {
+        /*客户详情*/
+        if(fromPage == 0){
+            setLabel();
+        }
+        /*客户信息*/
+        else{
+            CustomerLabelRushEvent event = new CustomerLabelRushEvent();
+            event.bundle = new Bundle();
+            event.bundle.putSerializable("data",convertNewTags());
+            AppBus.getInstance().post(event);
+            finish();
+        }
     }
 
     BaseExpandableListAdapter adapter = new BaseExpandableListAdapter() {

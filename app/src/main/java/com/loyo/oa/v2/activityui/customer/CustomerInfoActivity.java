@@ -16,6 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
@@ -467,6 +468,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             R.id.img_refresh_address, R.id.img_go_where, R.id.img_del_join_users,
             R.id.layout_customer_responser, R.id.layout_customer_join_users, R.id.layout_customer_district})
     void onClick(final View v) {
+        Intent mIntent;
         switch (v.getId()) {
             case R.id.img_title_left:
                 onBackPressed();
@@ -482,13 +484,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 break;
 
             case R.id.layout_customer_label:
-                Bundle bundle2 = new Bundle();
+
+                mIntent = new Intent(CustomerInfoActivity.this,CustomerLabelCopyActivity.class);
+                mIntent.putExtra("isMem", isMem);
+                mIntent.putExtra("fromPage",1);
+                if (null != mTagItems) {
+                    mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
+                    mIntent.putExtra("customerId", mCustomer.getId());
+                }
+                startActivity(mIntent);
+
+                /*Bundle bundle2 = new Bundle();
                 if (mTagItems != null) {
                     bundle2.putSerializable("tagitems", Utils.convertTagItems(mTagItems));
                     bundle2.putString("customerId", mCustomer.getId());
                     bundle2.putBoolean("isMem", isMem);
                 }
-                app.startActivityForResult(this, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
+                app.startActivityForResult(this, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);*/
                 break;
             /*刷新地理位置*/
             case R.id.img_refresh_address:
@@ -631,6 +643,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         intent.putExtra("isCreator", true);//默认为true
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
+
+    @Subscribe
+    public void onCustomerLabelRushEvent(CustomerLabelRushEvent event){
+        Bundle bundle = event.bundle;
+        mTagItems = (ArrayList<NewTag>) bundle.getSerializable("data");
+        tv_labels.setText(appendTagItem(mTagItems));
+        mCustomer.tags = mTagItems;
+    }
+
 
     /**
      * 选人回调
