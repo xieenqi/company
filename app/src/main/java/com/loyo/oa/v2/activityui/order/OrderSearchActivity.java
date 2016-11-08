@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.sale;
+package com.loyo.oa.v2.activityui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,16 +19,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
-import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.activityui.sale.bean.SaleList;
-import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
-import com.loyo.oa.v2.activityui.sale.bean.SaleTeamList;
+import com.loyo.oa.v2.activityui.order.bean.OrderList;
+import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.ISale;
+import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -43,18 +41,18 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【销售机会搜索】
+ * 【订单搜索】
  */
 
-public class SaleSearchActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback<SaleList> {
+public class OrderSearchActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback<OrderList> {
 
-    public static final int TEAM_SALE_SEARCH = 20;//团队机会搜索
-    public static final int MY_SALE_SEARCH = 30;//我的机会搜索
+    public static final int TEAM_SALE_SEARCH = 20;//团队搜索
+    public static final int MY_SALE_SEARCH = 30;//我的搜索
     private String strSearch;
     private EditText edt_search;
     private ImageView iv_clean;
     private PullToRefreshListView expandableListView_search;
-    private ArrayList<SaleRecord> listData = new ArrayList<>();
+    private ArrayList<OrderListItem> listData = new ArrayList<>();
     private CommonSearchAdapter adapter;
     private LayoutInflater mInflater;
     private ViewStub emptyView;
@@ -136,10 +134,10 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, fromPage == MY_SALE_SEARCH ? false : true);
-                mIntent.putExtra("id", listData.get(position - 1).getId());
-                mIntent.setClass(SaleSearchActivity.this, SaleDetailsActivity.class);
+                mIntent.putExtra(ExtraAndResult.EXTRA_ID, listData.get(position - 1).id);
+                mIntent.setClass(OrderSearchActivity.this, OrderDetailActivity.class);
                 startActivity(mIntent);
-                SaleSearchActivity.this.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                OrderSearchActivity.this.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 hideInputKeyboard(edt_search);
             }
         });
@@ -165,24 +163,24 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
         map.put("keyWords", strSearch);
         if (fromPage == MY_SALE_SEARCH) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(ISale.class).getSaleMyList(map, this);
+                    create(IOrder.class).getOrderMyList(map, this);
         } else if (fromPage == TEAM_SALE_SEARCH) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(ISale.class).getSaleTeamList(map, this);
+                    create(IOrder.class).getOrderTeamList(map, this);
         }
     }
 
     @Override
-    public void success(SaleList saleList, Response response) {
+    public void success(OrderList orderList, Response response) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkResponse("机会搜索列表：", response);
+        HttpErrorCheck.checkResponse("订单搜索列表：", response);
         try {
             if (!isPullDown) {
-                if (saleList.records != null && saleList.records.size() == 0)
+                if (orderList.records != null && orderList.records.size() == 0)
                     Toast("没有更多信息");
-                listData.addAll(saleList.records);
+                listData.addAll(orderList.records);
             } else {
-                listData = saleList.records;
+                listData = orderList.records;
             }
             adapter.setAdapter();
         } catch (NullPointerException e) {
@@ -239,17 +237,19 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
 
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
-            SaleRecord item = listData.get(position);
+            OrderListItem item = listData.get(position);
             Holder holder = null;
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.item_saleteamlist, null);
+                convertView = mInflater.inflate(R.layout.item_order_my_team, null);
                 holder = new Holder();
-                holder.creator = (TextView) convertView.findViewById(R.id.sale_teamlist_creator);
-                holder.state = (TextView) convertView.findViewById(R.id.sale_teamlist_state);
-                holder.guess = (TextView) convertView.findViewById(R.id.sale_teamlist_guess);
-                holder.money = (TextView) convertView.findViewById(R.id.sale_teamlist_money);
-                holder.title = (TextView) convertView.findViewById(R.id.sale_teamlist_title);
-                holder.ll_creator = (LinearLayout) convertView.findViewById(R.id.ll_creator);
+                holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
+                holder.tv_status = (TextView) convertView.findViewById(R.id.tv_status);
+                holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
+                holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+                holder.tv_money = (TextView) convertView.findViewById(R.id.tv_money);
+                holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
+                holder.tv_product = (TextView) convertView.findViewById(R.id.tv_product);
+                holder.ll_responsible = (LinearLayout) convertView.findViewById(R.id.ll_responsible);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
@@ -259,19 +259,18 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
         }
 
         class Holder {
-            TextView creator, state, guess, money, title;
-            LinearLayout ll_creator;
+            TextView tv_title, tv_status, tv_time, tv_name, tv_money, tv_customer, tv_product;
+            LinearLayout ll_responsible;
 
-            public void setContent(SaleRecord item) {
-                title.setText(item.getName());
-                money.setText(Utils.setValueDouble(item.getEstimatedAmount()) + "");
-                String stageName = "初步接洽";
-                if (!item.getStageNmae().isEmpty()) {
-                    stageName = item.getStageNmae();
-                }
-                state.setText(stageName + "(" + item.getProb() + "%)");
-                creator.setText(item.getCreateName());
-                ll_creator.setVisibility(fromPage == MY_SALE_SEARCH ? View.GONE : View.VISIBLE);
+            public void setContent(OrderListItem item) {
+                ll_responsible.setVisibility(fromPage == TEAM_SALE_SEARCH ? View.VISIBLE : View.GONE);
+                tv_title.setText(item.title);
+                OrderCommon.getOrderDetailsStatus(tv_status, item.status);
+                tv_name.setText(item.directorName);
+                tv_money.setText(Utils.setValueDouble(item.dealMoney));
+                tv_customer.setText(item.customerName);
+                tv_product.setText(item.proName);
+                tv_time.setText(DateTool.getDiffTime(Long.valueOf(item.createdAt + "")));
             }
         }
     }

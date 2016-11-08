@@ -43,7 +43,6 @@ import retrofit.client.Response;
 
 /**
  * 【订单详情】页面
- * Created by xeq on 16/8/2.
  */
 public class OrderDetailActivity extends BaseActivity implements View.OnClickListener {
 

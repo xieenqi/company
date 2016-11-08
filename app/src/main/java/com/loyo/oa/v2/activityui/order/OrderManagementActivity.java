@@ -20,6 +20,7 @@ import com.loyo.oa.v2.activityui.order.fragment.TeamOrderFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -73,7 +74,6 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
-        img_title_search_right.setVisibility(View.INVISIBLE);
         //超级管理员\权限判断
         permission = MainApp.rootMap.get("0216");
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
@@ -120,7 +120,15 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
                 changeTitleImg();
                 break;
             case R.id.img_title_search_right:
-                Toast("搜索订单");
+                int type;
+                if (mIndex == 0) {
+                    type = OrderSearchActivity.MY_SALE_SEARCH;
+                } else {
+                    type = OrderSearchActivity.TEAM_SALE_SEARCH;
+                }
+                Bundle b = new Bundle();
+                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
+                app.startActivity(this, OrderSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }
