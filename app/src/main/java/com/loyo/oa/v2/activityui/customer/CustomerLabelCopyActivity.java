@@ -13,17 +13,26 @@ import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Item_info_Group;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.activityui.customer.model.TagItem;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -37,8 +46,8 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
     private ArrayList<TagItem> mTagItems;
     private String mCustomerId;
     private ArrayList<Tag> tags = new ArrayList<>();
-
     private boolean isMem;
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +61,8 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
 
         mTagItems = (ArrayList<TagItem>) getIntent().getSerializableExtra("tagitems");
         mCustomerId = getIntent().getStringExtra("customerId");
-        isMem = getIntent().getBooleanExtra("isMem",true);
+        isMem = getIntent().getBooleanExtra("isMem",false);
+        id = getIntent().getStringExtra("id");
 
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -179,6 +189,25 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
     }
 
     /**
+     * 设置标签
+     * */
+    private void setLabel(){
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).setCusLabel(id, convertNewTags(), new RCallback<Contact>() {
+            @Override
+            public void success(final Contact contact, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                finish();
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+               HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    /**
      * 构建新标签
      *
      * @return
@@ -205,6 +234,8 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
         Intent intent = new Intent();
         intent.putExtra("data", convertNewTags());
         app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+
+        setLabel();
     }
 
     BaseExpandableListAdapter adapter = new BaseExpandableListAdapter() {

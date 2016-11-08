@@ -88,6 +88,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     public boolean isMyUser;
     public boolean isPutOcen;
     public boolean isRoot = false;
+    private boolean isMem = false;
     private MembersRoot memRoot;
     private Contact mContact;
     private RelativeLayout layout_wirete,layout_phone;
@@ -131,9 +132,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             return;
         }
 
-        LogUtil.dee("customerType:"+customerType);
-        LogUtil.dee("MainApp.user.isSuperUser():"+MainApp.user.isSuperUser());
-
         /*超级管理员,我的客户,Web权限控制判断*/
         if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 4) {
             img_public.setVisibility(View.VISIBLE);
@@ -164,10 +162,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     img_title_right.setOnTouchListener(Global.GetTouch());
                 } else {
                     img_title_right.setVisibility(View.INVISIBLE);
+                    isMem = true;
                 }
             }
         } else {
             img_title_right.setVisibility(View.INVISIBLE);
+            isMem = true;
         }
 
         if (customerType == 3) {//团队客户火力全开 相当于自己的客户
@@ -278,6 +278,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*选择标签*/
             case R.id.iv_select_tag:
                 mIntent = new Intent(CustomerDetailInfoActivity.this,CustomerLabelCopyActivity.class);
+                mIntent.putExtra("isMem",isMem);
+                mIntent.putExtra("id",mCustomer.id);
                 startActivity(mIntent);
                 break;
 
