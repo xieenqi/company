@@ -14,38 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
-import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
-import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
-import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
-import com.loyo.oa.v2.activityui.customer.fragment.TeamCustomerFragment;
-import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.activityui.dynamic.fragment.MyDynamicFragment;
 import com.loyo.oa.v2.activityui.dynamic.fragment.TeamDynamicFragment;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【跟进列表】fragment管理类
