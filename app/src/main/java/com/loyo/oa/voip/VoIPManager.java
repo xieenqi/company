@@ -9,6 +9,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.voip.api.IVoIP;
 import com.loyo.oa.voip.callback.OnRespond;
+import com.loyo.oa.voip.model.RequestAccess;
 import com.loyo.oa.voip.model.ResponseBase;
 import com.loyo.oa.voip.model.VoIPToken;
 import com.yzx.api.CallType;
@@ -20,6 +21,7 @@ import com.yzxtcp.UCSManager;
 import com.yzxtcp.data.UcsReason;
 import com.yzxtcp.listener.ILoginListener;
 
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,6 +47,10 @@ public class VoIPManager implements CallStateListener {
     private Context mContext;
     private String cacheToken;
 
+    private String customerId;
+    private String userId;
+    private RequestAccess requestAccess;
+
     private VoIPManager() {
     }
 
@@ -58,9 +64,13 @@ public class VoIPManager implements CallStateListener {
         return this;
     }
 
-    private ResponseBase<String> getPaymentAccess() {
-        ResponseBase<String> access = RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(IVoIP.class).getPaymentAccess();
+    private ResponseBase<RequestAccess> getPaymentAccess() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("customerId", customerId);
+        params.put("contactId", userId);
+        ResponseBase<RequestAccess> access = RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(IVoIP.class).getRequestAccess(params);
+        requestAccess = access.data;
         return access;
     }
 
@@ -110,16 +120,16 @@ public class VoIPManager implements CallStateListener {
 
     public void connectVoipServer(final OnRespond callback) {
         Observable.just("connect")
-                .map(new Func1<String, ResponseBase<String>>() {
+                .map(new Func1<String, ResponseBase<RequestAccess>>() {
                     @Override
-                    public ResponseBase<String> call(String text) {
+                    public ResponseBase<RequestAccess> call(String text) {
                         return getPaymentAccess();
                     }
                 })
                 .subscribeOn(Schedulers.io())
-                .map(new Func1<ResponseBase<String>, String>() {
+                .map(new Func1<ResponseBase<RequestAccess>, String>() {
                     @Override
-                    public String call(ResponseBase<String> access) {
+                    public String call(ResponseBase<RequestAccess> access) {
 
                         if (access == null) {
                             return null;
@@ -161,15 +171,40 @@ public class VoIPManager implements CallStateListener {
 
     }
 
-    public void dialNumber(final String phone, final OnRespond callback) {
+    public void dialNumber(final String phone, final String customerId, final String userId, final OnRespond callback) {
         if (phone == null || phone.length() <= 0) {
             return;
         }
+        this.customerId = customerId;
+        this.userId = userId;
 
         //
         if (UCSService.isConnected() ) {
-            callback.onRespond(new UcsReason(300107));
-            _dial(phone);
+            Observable.just("connect")
+                    .map(new Func1<String, ResponseBase<RequestAccess>>() {
+                        @Override
+                        public ResponseBase<RequestAccess> call(String text) {
+                            return getPaymentAccess();
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<ResponseBase<RequestAccess>>() {
+                        @Override
+                        public void call(ResponseBase<RequestAccess> accessResponseBase) {
+                            if (accessResponseBase.errcode == 0) {
+                                if (callback != null) {
+                                    callback.onRespond(new UcsReason(300107));
+                                }
+                                _dial(phone);
+                            }
+                            else {
+                                if (callback != null) {
+                                    callback.onPaymentDeny();
+                                }
+                            }
+                        }
+                    });
 
         }
         else {
@@ -208,7 +243,11 @@ public class VoIPManager implements CallStateListener {
     }
 
     private void _dial(String phone) {
-        UCSCall.dial(mContext, CallType.DIRECT, phone, "");
+        String userInfo = "";
+        if (requestAccess != null) {
+            userInfo = requestAccess.callLogId;
+        }
+        UCSCall.dial(mContext, CallType.DIRECT, phone, userInfo);
     }
 
     public void hangUp() {
