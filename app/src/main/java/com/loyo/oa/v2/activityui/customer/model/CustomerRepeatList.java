@@ -62,11 +62,7 @@ public class CustomerRepeatList {
 
 
     public class Owner{
-        public String id;
         public String name;
-        public int gender;
-        public String avatar;
-        public ArrayList<UserInfo> depts = new ArrayList<>();
     }
 
 }
