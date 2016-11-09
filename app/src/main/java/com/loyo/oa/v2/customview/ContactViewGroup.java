@@ -3,6 +3,7 @@ package com.loyo.oa.v2.customview;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +22,10 @@ import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.RegularCheck;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -36,12 +38,20 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class ContactViewGroup extends LinearLayout {
 
+    public static final int CallbackPhone    = 0;
+    public static final int NormalPhone = 1;
+    public static final int DirectPhone     = 2;
+
+    @IntDef({CallbackPhone, NormalPhone, DirectPhone})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface CallPhoneType {}
+
     public interface OnContactProcessCallback {
         void onDel(Contact contact);
 
         void onSetDefault(Contact contact);
 
-        void onCallBack(String callNum, String id, String name, int callType);
+        void onCallBack(String callNum, String id, String name, @CallPhoneType int callType, int phoneType);
 
         void onPhoneError();
     }
@@ -72,10 +82,10 @@ public class ContactViewGroup extends LinearLayout {
     /**
      * 手机拨打弹出框
      */
-    public void paymentSet(final String phone, final int callType) {
+    public void paymentSet(final String phone, final int phoneType) {
 
         boolean checkTag = false;
-        if (callType == 0) {
+        if (phoneType == 0) {
             checkTag = RegularCheck.isYunPhone(phone);
         } else {
             checkTag = RegularCheck.isYunTell(phone);
@@ -84,11 +94,19 @@ public class ContactViewGroup extends LinearLayout {
         final CallPhonePopView callPhonePopView = new CallPhonePopView(context, mContact.getName(), checkTag);
         callPhonePopView.show();
         callPhonePopView.setCanceledOnTouchOutside(true);
-        /*商务电话*/
+        /*商务电话-回拨*/
         callPhonePopView.businessPhone(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), callType);
+                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), CallbackPhone, phoneType);
+                callPhonePopView.dismiss();
+            }
+        });
+        /*商务电话-直拨*/
+        callPhonePopView.directPhone(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), DirectPhone, phoneType);
                 callPhonePopView.dismiss();
             }
         });
@@ -97,7 +115,7 @@ public class ContactViewGroup extends LinearLayout {
             @Override
             public void onClick(View v) {
 
-                if (callType == 0) {
+                if (phoneType == 0) {
                     if (RegularCheck.isMobilePhone(phone)) {
                         Utils.call(context, phone);
                     } else {
