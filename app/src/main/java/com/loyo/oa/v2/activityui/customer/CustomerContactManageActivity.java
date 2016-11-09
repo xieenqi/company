@@ -135,39 +135,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         });
     }
 
-    /**
-     * 初始化数据
-     */
-/*    private void initData() {
-        if (null == leftExtrases || null == customerContact || null == customerContact.contacts
-                || customerContact.contacts.isEmpty()) {
-            return;
-        }
-
-        layout_container.removeAllViews();
-        ArrayList<Contact> contacts = customerContact.contacts;
-        LogUtil.dee("contacts:"+MainApp.gson.toJson(customerContact.contacts));
-
-        *//*先绘制默认联系人*//*
-        for (int i = 0; i < contacts.size(); i++) {
-            Contact contact = contacts.get(i);
-            if(contact.isDefault()){
-                ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, leftExtrases, contact, this);
-                contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber, isRoot, isLock);
-            }
-        }
-
-        *//*再绘制非默认联系人*//*
-        for (int i = 0; i < contacts.size(); i++) {
-            Contact contact = contacts.get(i);
-            if(!contact.isDefault()){
-                ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, leftExtrases, contact, this);
-                contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber, isRoot, isLock);
-            }
-        }
-
-        cancelLoading();
-    }*/
 
     /**
      * 初始化数据
