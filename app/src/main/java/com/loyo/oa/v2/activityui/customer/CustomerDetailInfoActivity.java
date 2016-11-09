@@ -290,6 +290,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 }
             });
         dialog.show();
+
     }
 
     /**

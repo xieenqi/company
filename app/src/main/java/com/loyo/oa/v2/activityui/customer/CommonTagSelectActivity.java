@@ -3,12 +3,14 @@ package com.loyo.oa.v2.activityui.customer;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
@@ -19,6 +21,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -48,13 +51,17 @@ public class CommonTagSelectActivity extends BaseActivity {
 
     @Extra("mono")
     SaleStage data;
+    /**
+     * 已选择的数据返回
+     */
     @Extra("data")
     ArrayList<CommonTag> results;
     @Extra
     String title;
     @Extra
     int mode, type, kind;
-
+    @Extra
+    String tagName;//tagName是选择过来的回传值返显
     @ViewById
     RecyclerView rv_reason;
 
@@ -65,14 +72,13 @@ public class CommonTagSelectActivity extends BaseActivity {
 
     private ArrayList<CommonTag> commonTags = new ArrayList<>();
     private RecyclerView.LayoutManager mLayoutManager;
-    private Intent mIntent;
 
     @AfterViews
     void initViews() {
         setTouchView(NO_SCROLL);
         tv_title_1.setText(title);
         img_title_left.setOnTouchListener(Global.GetTouch());
-        img_title_right.setOnTouchListener(Global.GetTouch());
+        img_title_right.setVisibility(View.GONE);
         if (null == results) {
             results = new ArrayList<>();
         }
@@ -88,7 +94,7 @@ public class CommonTagSelectActivity extends BaseActivity {
                     processData(tags);
                 }
             });
-        } else if (type == SELECT_TYPE_SALE_ACTIVE_ACTION) {
+        } else if (type == SELECT_TYPE_SALE_ACTIVE_ACTION) {//跟进方式
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivitytypes(new RCallback<ArrayList<CommonTag>>() {
                 @Override
                 public void success(final ArrayList<CommonTag> tags, final Response response) {
@@ -103,14 +109,16 @@ public class CommonTagSelectActivity extends BaseActivity {
         onBackPressed();
     }
 
-    @Click(R.id.img_title_right)
+    /**
+     * 设置返回结果
+     */
     void backWidthSelect() {
-        mIntent = new Intent();
+        Intent mIntent = new Intent();
         if (results.size() == 0 || null == results) {
             Toast("请选择跟进方式!");
-        } else if(kind == ActionCode.SALE_DETAILS_STATE_EDIT){
+        } else if (kind == ActionCode.SALE_DETAILS_STATE_EDIT) {
             mIntent.putExtra("data", results);
-            mIntent.putExtra("mono",data);
+            mIntent.putExtra("mono", data);
             setResult(ActionCode.SALE_DETAILS_STATE_EDIT, mIntent);
             back();
         } else {
@@ -129,7 +137,9 @@ public class CommonTagSelectActivity extends BaseActivity {
     private void processData(final ArrayList<CommonTag> tags) {
         commonTags.addAll(tags);
         for (int i = 0; i < commonTags.size(); i++) {
-            if (results.contains(commonTags.get(i))) {
+            if (!TextUtils.isEmpty(tagName) && tagName.contains(commonTags.get(i).getName())) {
+                commonTags.get(i).setIsChecked(true);
+            } else if (results.contains(commonTags.get(i))) {//返显输单原因
                 commonTags.get(i).setIsChecked(true);
             }
         }
@@ -183,6 +193,7 @@ public class CommonTagSelectActivity extends BaseActivity {
                 @Override
                 public void onClick(final View view) {
                     holder.cb.toggle();
+                    backWidthSelect();
                 }
             });
 

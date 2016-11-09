@@ -11,20 +11,20 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.voip.VoIPCallActivity;
 
 import org.androidannotations.annotations.AfterViews;
@@ -227,6 +227,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         map.put("customerId", customerContact.getId());
         map.put("contactId", contactId);
         map.put("type", callType);
+        map.put("mobile", callNum);
         LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).requestCallBack(map,
                 new RCallback<CallBackCallid>() {
@@ -237,9 +238,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                             switch (callBackCallid.errcode){
                                 case 0:
                                     Bundle mBundle = new Bundle();
-                                    mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callBackCallid.data.callLogId);
-                                    mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
-                                    app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                                    mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
+                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
+                                    app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                                     break;
 
                                 case 50000:
@@ -277,21 +278,27 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 拨打商务电话回调
      */
     @Override
-    public void onCallBack(String callNum, String contactId, String contactName,int callType) {
+    public void onCallBack(String callNum, String contactId, String contactName, @ContactViewGroup.CallPhoneType int callType, int phoneType) {
         this.callNum = callNum;
         this.contactId = contactId;
         this.contactName = contactName;
-        this.callType = callType;
+        this.callType = phoneType;
         myCall = MainApp.user.mobile;
         LogUtil.dee("我的号码:" + myCall);
         LogUtil.dee("被叫号码:" + callNum);
         LogUtil.dee("contactId:" + contactId);
         LogUtil.dee("contactName:" + contactName);
-//        requestClientInfo();
-        Bundle mBundle = new Bundle();
-        mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callNum);
-        mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
-        app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+//
+        if (callType == ContactViewGroup.CallbackPhone) {
+            requestClientInfo();
+        }else if (callType == ContactViewGroup.DirectPhone)  {
+            Bundle mBundle = new Bundle();
+            mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callNum);
+            mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
+            mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
+            mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerContact.getId());
+            app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+        }
     }
 
     @Override

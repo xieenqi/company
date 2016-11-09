@@ -38,6 +38,8 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
 
     static public String CALLEE_NAME_KEY = "com.loyo.voip.callee.name";
     static public String CALLEE_PHONE_KEY = "com.loyo.voip.callee.phone";
+    static public String CALLEE_CUSTOMER_KEY = "com.loyo.voip.callee.customer";
+    static public String CALLEE_USER_KEY = "com.loyo.voip.callee.user";
 
     private ImageView iv_1, iv_2, iv_3, iv_4;
     private Animation anim1, anim2, anim3, anim4;
@@ -71,6 +73,8 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     private boolean isAnswering;
     private String callee;
     private String phone;
+    private String customerId;
+    private String userId;
     private long startTimestamp;
 
     private String dialNumber;
@@ -88,12 +92,14 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         Intent mIntent = getIntent();
         callee = mIntent.getStringExtra(CALLEE_NAME_KEY);
         phone = mIntent.getStringExtra(CALLEE_PHONE_KEY);
+        customerId = mIntent.getStringExtra(CALLEE_CUSTOMER_KEY);
+        userId = mIntent.getStringExtra(CALLEE_USER_KEY);
         initUI();
 
         UCSCall.addCallStateListener(this);
         loadData();
         // 拨打
-        //dialWithPemissionRequest("15802811007");
+        //dialWithPemissionRequest("18502818409");
         dialWithPemissionRequest(phone);
     }
 
@@ -389,7 +395,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             return;
         }
 
-        VoIPManager.getInstance().dialNumber(number, new OnRespond() {
+        VoIPManager.getInstance().dialNumber(number, customerId, userId, new OnRespond() {
             @Override
             public void onPaymentDeny() {
                 // 余额不足

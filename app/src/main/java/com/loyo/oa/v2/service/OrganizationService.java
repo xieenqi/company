@@ -101,7 +101,7 @@ public class OrganizationService extends IntentService {
 
             @Override
             public void failure(RetrofitError error) {
-
+                _isFetchingOrganziationData = false;
             }
         });
         OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();

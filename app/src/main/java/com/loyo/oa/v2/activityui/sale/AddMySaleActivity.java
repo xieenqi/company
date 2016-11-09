@@ -197,8 +197,9 @@ public class AddMySaleActivity extends BaseActivity {
                     loseBundle.putString("title", "输单原因");
                     loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_MULTIPLE);
                     loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_LOSE_REASON);
+                    loseBundle.putString("tagName", tv_transport.getText().toString());
                     app.startActivityForResult(AddMySaleActivity.this, CommonTagSelectActivity_.class,
-                            0, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
+                            app.ENTER_TYPE_RIGHT, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
                     break;
             }
         }
@@ -411,7 +412,7 @@ public class AddMySaleActivity extends BaseActivity {
                 return;
             }
             if (!(intentionProductData.size() > 0)) {
-                sweetAlertDialogView.alertMessage("提示","赢单提交时请添加意向产品!");
+                sweetAlertDialogView.alertMessage("提示", "赢单提交时请添加意向产品!");
                 return;
             } else {
 
@@ -426,7 +427,7 @@ public class AddMySaleActivity extends BaseActivity {
                         dismissSweetAlert();
                         addSaleOpportunitty();
                     }
-                },"提示","请确认赢单产品的金额和数量是否正确！\n" +
+                }, "提示", "请确认赢单产品的金额和数量是否正确！\n" +
                         "对应客户：" + tv_customer.getText().toString() + "\n销售总金额：¥" + et_money.getText().toString());
 
 /*                final GeneralPopView dailog2 = showGeneralDialog(true, true,

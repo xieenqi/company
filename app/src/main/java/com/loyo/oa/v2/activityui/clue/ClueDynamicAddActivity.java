@@ -65,7 +65,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
     private String clueId;
     private String tagItemIds, contactId, contactName = "无";
     private String content;
-    private String   uuid = StringUtil.getUUID();
+    private String uuid = StringUtil.getUUID();
     private int bizType = 17;
 
     private List<String> mSelectPath;
@@ -174,8 +174,8 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
 
     /**
      * 提交数据
-     * */
-    public void commitDynamic(){
+     */
+    public void commitDynamic() {
 
         if (StringUtil.isEmpty(content)) {
             Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
@@ -195,7 +195,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
         if (contactName != null) {
             map.put("contactName", contactName);
         }
-        if(attachment.size() != 0){
+        if (attachment.size() != 0) {
             map.put("uuid", uuid);
         }
 
@@ -236,7 +236,8 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
                 loseBundle.putString("title", "跟进方式");
                 loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_SINGLE);
                 loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_SALE_ACTIVE_ACTION);
-                app.startActivityForResult(this, CommonTagSelectActivity_.class, 0, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
+                loseBundle.putString("tagName", tv_sale_action.getText().toString());
+                app.startActivityForResult(this, CommonTagSelectActivity_.class, app.ENTER_TYPE_RIGHT, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
                 break;
 
             /*提交数据*/
@@ -258,7 +259,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
             case R.id.layout_image:
                 Intent intent = new Intent(this, MultiImageSelectorActivity.class);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-controller.count()) /*最大可选择图片数量*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
                 this.startActivityForResult(intent, PICTURE);
@@ -273,14 +274,14 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
     protected void onDestroy() {
         super.onDestroy();
         if (null != clueId) {
-            DBManager.Instance().deleteSaleActivity("clue"+clueId);
+            DBManager.Instance().deleteSaleActivity("clue" + clueId);
             if (isSave) {
                 mSaleActivity = new SaleActivity();
                 mSaleActivity.setContent(edt.getText().toString());
                 mSaleActivity.setType(null);
                 mSaleActivity.setCreator(null);
                 mSaleActivity.setAttachments(null);
-                DBManager.Instance().putSaleActivity(MainApp.gson.toJson(mSaleActivity), "clue"+clueId);
+                DBManager.Instance().putSaleActivity(MainApp.gson.toJson(mSaleActivity), "clue" + clueId);
             }
         }
     }
@@ -327,7 +328,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
                 if (null != data) {
                     mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                     for (String path : mSelectPath) {
-                        controller.addUploadTask("file://" + path, null,  uuid);
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
                     controller.reloadGridView();
 
@@ -351,7 +352,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
     public void onAddEvent(UploadController controller) {
         Intent intent = new Intent(this, MultiImageSelectorActivity.class);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-controller.count()) /*最大可选择图片数量*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
         this.startActivityForResult(intent, PICTURE);
@@ -365,7 +366,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
         int newPosistion = index;
 
         for (int i = 0; i < taskList.size(); i++) {
-            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://"+taskList.get(i).getValidatePath());
+            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://" + taskList.get(i).getValidatePath());
             newAttachment.add(attachment);
         }
 
@@ -385,10 +386,9 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
             Toast(count + "个附件上传失败，请重试或者删除");
             return;
         }
-        if (taskList.size() >0) {
+        if (taskList.size() > 0) {
             postAttaData();
-        }
-        else {
+        } else {
             commitDynamic();
         }
     }
