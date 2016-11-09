@@ -290,68 +290,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 }
             });
         dialog.show();
-//
-//
-//        LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
-//        View menuView = mLayoutInflater.inflate(R.layout.popu_child_task_edit_layout, null, false);
-//
-//        Button btn_child_delete_task = (Button) menuView.findViewById(R.id.btn_child_delete_task);
-//        Button btnCancel = (Button) menuView.findViewById(R.id.btn_cancel_edit);
-//        Button btnUpdate = (Button) menuView.findViewById(R.id.btn_child_add_update);
-//
-//        btnUpdate.setText("投入公海");
-//        btn_child_delete_task.setText("删除");
-//
-//
-//        btn_child_delete_task.setOnTouchListener(Global.GetTouch());
-//        btnCancel.setOnTouchListener(Global.GetTouch());
-//        btnUpdate.setOnTouchListener(Global.GetTouch());
-//
-//        final PopupWindow popupWindow = new PopupWindow(menuView, -1, -1, true);
-//        popupWindow.setAnimationStyle(R.style.PopupAnimation);
-//        popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-//        popupWindow.showAtLocation(findViewById(R.id.tv_title_1), Gravity.BOTTOM, 0, 0);
-//
-//        menuView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(final View view, final MotionEvent motionEvent) {
-//                popupWindow.dismiss();
-//                return false;
-//            }
-//        });
-//
-//        PopuOnClickListener listener = new PopuOnClickListener(popupWindow);
-//        btn_child_delete_task.setOnClickListener(listener);
-//        btnCancel.setOnClickListener(listener);
-//        btnUpdate.setOnClickListener(listener);
-
     }
-
-//    /**
-//     * 处理popuwindow里按钮的点击事件
-//     */
-//    private class PopuOnClickListener implements View.OnClickListener {
-//        private PopupWindow mWindow;
-//
-//        PopuOnClickListener(final PopupWindow window) {
-//            mWindow = window;
-//        }
-//
-//        @Override
-//        public void onClick(final View view) {
-//            switch (view.getId()) {
-//                case R.id.btn_child_delete_task:
-//                    setPopView(true, "你确定要删除客户?");
-//                    break;
-//                case R.id.btn_child_add_update:
-//                    setPopView(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
-//                    break;
-//                default:
-//                    break;
-//            }
-//            mWindow.dismiss();
-//        }
-//    }
 
     /**
      * 提示弹出框
