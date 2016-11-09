@@ -293,7 +293,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     }
 
-
     /**
      * 提示弹出框
      */

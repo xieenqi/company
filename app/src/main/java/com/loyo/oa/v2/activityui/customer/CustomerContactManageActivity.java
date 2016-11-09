@@ -135,6 +135,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         });
     }
 
+
     /**
      * 初始化数据
      */
@@ -145,12 +146,29 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         }
 
         layout_container.removeAllViews();
-        ArrayList<Contact> contacts = customerContact.contacts;
-        for (int i = 0; i < contacts.size(); i++) {
-            Contact contact = contacts.get(i);
+        ArrayList<Contact> contactsCopy = new ArrayList<>();
+        contactsCopy.clear();
+
+        /*默认数据放在最前*/
+        for(Contact mContact : customerContact.contacts){
+            if(mContact.isDefault()){
+                contactsCopy.add(mContact);
+                break;
+            }
+        }
+        /*非默认联系人排后*/
+        for(Contact mContact : customerContact.contacts){
+            if(!mContact.isDefault()){
+                contactsCopy.add(mContact);
+            }
+        }
+
+        for (int i = 0; i < contactsCopy.size(); i++) {
+            Contact contact = contactsCopy.get(i);
             ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, leftExtrases, contact, this);
             contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber, isRoot, isLock);
         }
+
         cancelLoading();
     }
 
@@ -174,11 +192,13 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             return;
         }
         switch (requestCode) {
+
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
                 Contact contact = (Contact) data.getSerializableExtra("data");
                 customerContact.contacts.add(contact);
                 initData();
                 break;
+
             case CustomerInfoActivity.REQUEST_CUSTOMER_UPDATE_CONTRACT:
                 Contact contactUpdated = (Contact) data.getSerializableExtra("data");
                 if (contactUpdated == null) {
@@ -194,8 +214,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 }
                 initData();
                 break;
-            default:
 
+            default:
                 break;
         }
     }
@@ -297,11 +317,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 deleteContact(customerContact.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
                     public void success(Contact contact, Response response) {
-                        LogUtil.dll("onDel");
                         for (int i = 0; i < customerContact.contacts.size(); i++) {
                             Contact newContact = customerContact.contacts.get(i);
                             if (newContact.equals(contact)) {
-                                LogUtil.dll("if -- onDel");
                                 customerContact.contacts.remove(i);
                                 initData();
                                 break;
@@ -333,8 +351,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 setDefaultContact(customerContact.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
                     public void success(final Contact _contact, final Response response) {
+                        HttpErrorCheck.checkResponse("设置默认联系人",response);
                         Intent intent = new Intent();
                         CustomerContactManageActivity.this.setResult(Activity.RESULT_OK, intent);//回调刷新界面
+
                         for (int i = 0; i < customerContact.contacts.size(); i++) {
                             Contact newContact = customerContact.contacts.get(i);
                             if (newContact.isDefault()) {
@@ -347,10 +367,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                             if (newContact.equals(contact)) {
                                 newContact.setIsDefault(true);
                                 customerContact.contacts.set(i, newContact);
-                                initData();
                                 break;
                             }
                         }
+                        initData();
                     }
                 });
     }
