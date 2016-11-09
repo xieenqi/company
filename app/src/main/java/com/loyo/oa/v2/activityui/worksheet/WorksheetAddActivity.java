@@ -155,8 +155,8 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
                 step2Fragment.removeAttachmentAt(data.getExtras().getInt("position"));
                 break;
 
-            default:{
-                Log.v("","");
+            default: {
+                Log.v("", "");
                 break;
             }
         }
