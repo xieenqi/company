@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.setting;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewStub;
@@ -61,6 +62,8 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
         adapterSystemMessage = new AdapterSystemMessage(this);
         lv_list.setAdapter(adapterSystemMessage);
         pControl = new SystemMessagePControl(this);
+//        AnimationDrawable mAnimationDrawable = (AnimationDrawable) findViewById(R.id.iv_loading).getBackground();
+//        mAnimationDrawable.start();
     }
 
     @Override
