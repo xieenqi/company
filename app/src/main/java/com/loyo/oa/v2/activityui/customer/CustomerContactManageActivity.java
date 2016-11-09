@@ -8,34 +8,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.ContactViewGroup;
 import com.loyo.oa.voip.VoIPCallActivity;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -135,6 +131,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         });
     }
 
+
     /**
      * 初始化数据
      */
@@ -145,12 +142,29 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         }
 
         layout_container.removeAllViews();
-        ArrayList<Contact> contacts = customerContact.contacts;
-        for (int i = 0; i < contacts.size(); i++) {
-            Contact contact = contacts.get(i);
+        ArrayList<Contact> contactsCopy = new ArrayList<>();
+        contactsCopy.clear();
+
+        /*默认数据放在最前*/
+        for(Contact mContact : customerContact.contacts){
+            if(mContact.isDefault()){
+                contactsCopy.add(mContact);
+                break;
+            }
+        }
+        /*非默认联系人排后*/
+        for(Contact mContact : customerContact.contacts){
+            if(!mContact.isDefault()){
+                contactsCopy.add(mContact);
+            }
+        }
+
+        for (int i = 0; i < contactsCopy.size(); i++) {
+            Contact contact = contactsCopy.get(i);
             ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, leftExtrases, contact, this);
             contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber, isRoot, isLock);
         }
+
         cancelLoading();
     }
 
@@ -174,11 +188,13 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             return;
         }
         switch (requestCode) {
+
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
                 Contact contact = (Contact) data.getSerializableExtra("data");
                 customerContact.contacts.add(contact);
                 initData();
                 break;
+
             case CustomerInfoActivity.REQUEST_CUSTOMER_UPDATE_CONTRACT:
                 Contact contactUpdated = (Contact) data.getSerializableExtra("data");
                 if (contactUpdated == null) {
@@ -194,8 +210,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 }
                 initData();
                 break;
-            default:
 
+            default:
                 break;
         }
     }
@@ -207,6 +223,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         map.put("customerId", customerContact.getId());
         map.put("contactId", contactId);
         map.put("type", callType);
+        map.put("mobile", callNum);
         LogUtil.dee("请求回拨发送数据："+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).requestCallBack(map,
                 new RCallback<CallBackCallid>() {
@@ -217,9 +234,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                             switch (callBackCallid.errcode){
                                 case 0:
                                     Bundle mBundle = new Bundle();
-                                    mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callBackCallid.data.callLogId);
-                                    mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
-                                    app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                                    mBundle.putString(ExtraAndResult.WELCOM_KEY,callBackCallid.data.callLogId);
+                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, contactName);
+                                    app.startActivity(CustomerContactManageActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                                     break;
 
                                 case 50000:
@@ -257,21 +274,27 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 拨打商务电话回调
      */
     @Override
-    public void onCallBack(String callNum, String contactId, String contactName,int callType) {
+    public void onCallBack(String callNum, String contactId, String contactName, @ContactViewGroup.CallPhoneType int callType, int phoneType) {
         this.callNum = callNum;
         this.contactId = contactId;
         this.contactName = contactName;
-        this.callType = callType;
+        this.callType = phoneType;
         myCall = MainApp.user.mobile;
         LogUtil.dee("我的号码:" + myCall);
         LogUtil.dee("被叫号码:" + callNum);
         LogUtil.dee("contactId:" + contactId);
         LogUtil.dee("contactName:" + contactName);
-//        requestClientInfo();
-        Bundle mBundle = new Bundle();
-        mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callNum);
-        mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
-        app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+//
+        if (callType == ContactViewGroup.CallbackPhone) {
+            requestClientInfo();
+        }else if (callType == ContactViewGroup.DirectPhone)  {
+            Bundle mBundle = new Bundle();
+            mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,callNum);
+            mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, contactName);
+            mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
+            mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerContact.getId());
+            app.startActivity(CustomerContactManageActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+        }
     }
 
     @Override
@@ -290,11 +313,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 deleteContact(customerContact.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
                     public void success(Contact contact, Response response) {
-                        LogUtil.dll("onDel");
                         for (int i = 0; i < customerContact.contacts.size(); i++) {
                             Contact newContact = customerContact.contacts.get(i);
                             if (newContact.equals(contact)) {
-                                LogUtil.dll("if -- onDel");
                                 customerContact.contacts.remove(i);
                                 initData();
                                 break;
@@ -326,8 +347,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 setDefaultContact(customerContact.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
                     public void success(final Contact _contact, final Response response) {
+                        HttpErrorCheck.checkResponse("设置默认联系人",response);
                         Intent intent = new Intent();
                         CustomerContactManageActivity.this.setResult(Activity.RESULT_OK, intent);//回调刷新界面
+
                         for (int i = 0; i < customerContact.contacts.size(); i++) {
                             Contact newContact = customerContact.contacts.get(i);
                             if (newContact.isDefault()) {
@@ -340,10 +363,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                             if (newContact.equals(contact)) {
                                 newContact.setIsDefault(true);
                                 customerContact.contacts.set(i, newContact);
-                                initData();
                                 break;
                             }
                         }
+                        initData();
                     }
                 });
     }

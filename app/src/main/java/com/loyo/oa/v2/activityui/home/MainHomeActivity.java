@@ -37,6 +37,7 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.voip.VoIPManager;
 import com.umeng.analytics.MobclickAgent;
+import com.yzx.api.UCSService;
 import org.greenrobot.eventbus.Subscribe;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -90,7 +91,9 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Subscribe
     public void onUserChanged(User user) {
-        VoIPManager.getInstance().connectVoipServer(null);
+        if (! UCSService.isConnected()) {
+            VoIPManager.getInstance().connectVoipServer(null);
+        }
     }
 
     @Override

@@ -181,7 +181,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             map.put("contactId", contactId);
             map.put("contactName", contactName);
         }
-        LogUtil.dee("新建跟进:"+MainApp.gson.toJson(map));
+        LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
             @Override
@@ -275,7 +275,8 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 loseBundle.putString("title", "跟进方式");
                 loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_SINGLE);
                 loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_SALE_ACTIVE_ACTION);
-                app.startActivityForResult(this, CommonTagSelectActivity_.class, 0, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
+                loseBundle.putString("tagName", tv_sale_action.getText().toString());
+                app.startActivityForResult(this, CommonTagSelectActivity_.class, app.ENTER_TYPE_RIGHT, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
                 break;
 
             /*提交*/
@@ -319,7 +320,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             case R.id.layout_image:
                 Intent intent = new Intent(this, MultiImageSelectorActivity.class);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-controller.count()) /*最大可选择图片数量*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
                 this.startActivityForResult(intent, PICTURE);
@@ -412,7 +413,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 if (null != data) {
                     mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                     for (String path : mSelectPath) {
-                        controller.addUploadTask("file://" + path, null,  uuid);
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
                     controller.reloadGridView();
 
@@ -437,7 +438,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     public void onAddEvent(UploadController controller) {
         Intent intent = new Intent(this, MultiImageSelectorActivity.class);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9-controller.count()) /*最大可选择图片数量*/);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
         this.startActivityForResult(intent, PICTURE);
@@ -451,7 +452,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         int newPosistion = index;
 
         for (int i = 0; i < taskList.size(); i++) {
-            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://"+taskList.get(i).getValidatePath());
+            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://" + taskList.get(i).getValidatePath());
             newAttachment.add(attachment);
         }
 
@@ -471,10 +472,9 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             Toast(count + "个附件上传失败，请重试或者删除");
             return;
         }
-        if (taskList.size() >0) {
+        if (taskList.size() > 0) {
             postAttaData();
-        }
-        else {
+        } else {
             commitDynamic();
         }
     }
