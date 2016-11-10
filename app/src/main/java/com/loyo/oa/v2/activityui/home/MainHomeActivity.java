@@ -91,9 +91,14 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     @Subscribe
     public void onUserChanged(User user) {
-        if (! UCSService.isConnected()) {
-            VoIPManager.getInstance().connectVoipServer(null);
-        }
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (! UCSService.isConnected()) {
+                    VoIPManager.getInstance().connectVoipServer(null);
+                }
+            }
+        });
     }
 
     @Override
