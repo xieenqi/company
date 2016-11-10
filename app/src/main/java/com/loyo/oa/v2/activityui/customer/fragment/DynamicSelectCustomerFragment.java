@@ -61,7 +61,7 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
 
     @Override
     public void hideProgress() {
-
+        lv_list.onRefreshComplete();
     }
 
     @Override
