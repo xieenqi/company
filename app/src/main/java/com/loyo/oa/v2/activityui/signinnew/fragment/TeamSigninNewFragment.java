@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.dynamic.fragment;
+package com.loyo.oa.v2.activityui.signinnew.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterTimeModel;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.SigninFilterKindModel;
 import com.loyo.oa.dropdownmenu.filtermenu.SigninFilterSortModel;
 import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
@@ -36,10 +37,10 @@ import java.util.List;
 
 
 /**
- * 【团队跟进】列表
- * Created by yyy on 16/6/1.
+ * 【团队拜访】列表
+ * Created by yyy on 16/11/10.
  */
-public class TeamDynamicFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
+public class TeamSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
     private Button btn_add;
@@ -50,8 +51,8 @@ public class TeamDynamicFragment extends BaseFragment implements PullToRefreshBa
     private DropDownMenu filterMenu;
 
     private String menuTimekey = "";        /*时间*/
-    private String menuChoskey = "";        /*筛选*/
     private String menuGuykey = "";         /*人员*/
+    private String menuSortkey = "";        /*排序*/
 
     private Permission permission;
 
@@ -61,7 +62,7 @@ public class TeamDynamicFragment extends BaseFragment implements PullToRefreshBa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
-            mView = inflater.inflate(R.layout.fragment_dynamic, null);
+            mView = inflater.inflate(R.layout.fragment_new_signin, null);
             initView(mView);
             loadFilterOptions();
         }
@@ -124,7 +125,7 @@ public class TeamDynamicFragment extends BaseFragment implements PullToRefreshBa
 
         List<FilterModel> options = new ArrayList<>();
         options.add(DynamicFilterTimeModel.getFilterModel());     //时间
-        options.add(TagMenuModel.getTagFilterModel(mTags));       //筛选
+        options.add(SigninFilterSortModel.getFilterModel());      //排序
         options.add(new OrganizationFilterModel(depts, title));   //人员
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
@@ -142,10 +143,11 @@ public class TeamDynamicFragment extends BaseFragment implements PullToRefreshBa
                         Toast("key:"+menuTimekey+" value"+model.getValue());
                         break;
 
-                    /*筛选*/
+                    /*排序*/
                     case 1:
-                        menuChoskey = model.getKey();
-                        Toast("key:"+menuChoskey+" value"+model.getValue());
+                        menuSortkey = model.getKey();
+                        filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        Toast("key:"+menuSortkey+" value"+model.getValue());
                         break;
 
                     /*人员*/

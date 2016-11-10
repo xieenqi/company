@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.dynamic;
+package com.loyo.oa.v2.activityui.signinnew;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,11 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
-import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.dynamic.fragment.SelfDynamicFragment;
 import com.loyo.oa.v2.activityui.dynamic.fragment.TeamDynamicFragment;
+import com.loyo.oa.v2.activityui.other.model.Tag;
+import com.loyo.oa.v2.activityui.signinnew.fragment.SelfSigninNewFragment;
+import com.loyo.oa.v2.activityui.signinnew.fragment.TeamSigninNewFragment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
@@ -40,10 +43,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【跟进列表】fragment管理类
+ * 【拜访列表】fragment管理类
  * Created by yyy on 16/11/10
  */
-public class DynamicManagerActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class SigninNewManagerActivity extends BaseFragmentActivity implements View.OnClickListener{
 
 
     private LinearLayout img_title_left, ll_category;
@@ -59,7 +62,7 @@ public class DynamicManagerActivity extends BaseFragmentActivity implements View
     public boolean publicOrTeam;
 
     private List<BaseFragment> fragments = new ArrayList<>();
-    private String[] SaleItemStatus = new String[]{"我的跟进"};
+    private String[] SaleItemStatus = new String[]{"我的拜访"};
 
     private Permission permission;
     private ArrayList<Tag> mTags;
@@ -75,7 +78,7 @@ public class DynamicManagerActivity extends BaseFragmentActivity implements View
     }
 
     private void initView() {
-        setTitle("我的跟进");
+        setTitle("我的拜访");
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
@@ -90,14 +93,14 @@ public class DynamicManagerActivity extends BaseFragmentActivity implements View
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
-
         layout_title_action.setOnTouchListener(Global.GetTouch());
 
-        //超级管理员权全公司  没有获取到权限就不显示
-        permission = MainApp.rootMap.get("0205"); //客户权限 暂时用客户权限做测试
+        imageArrow.setVisibility(View.INVISIBLE);
+        /*超级管理员,Web权限判断*/
+        Permission permission = MainApp.rootMap.get("0228");
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
-            SaleItemStatus = new String[]{"我的跟进","团队跟进"};
-            publicOrTeam = true;
+            SaleItemStatus = new String[]{"我的拜访", "团队拜访"};
+            imageArrow.setVisibility(View.VISIBLE);
         }
 
         rotateAnimation = initArrowAnimation();
@@ -172,16 +175,16 @@ public class DynamicManagerActivity extends BaseFragmentActivity implements View
     private void initChildren() {
         for (int i = 0; i < SaleItemStatus.length; i++) {
             BaseFragment fragment = null;
-            if ("我的跟进".equals(SaleItemStatus[i])) {
+            if ("我的拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
                 b.putSerializable("permission", permission);
-                fragment = (BaseFragment) Fragment.instantiate(this, SelfDynamicFragment.class.getName(), b);
-            } else if ("团队跟进".equals(SaleItemStatus[i])) {
+                fragment = (BaseFragment) Fragment.instantiate(this, SelfSigninNewFragment.class.getName(), b);
+            } else if ("团队拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
                 b.putSerializable("permission", permission);
-                fragment = (BaseFragment) Fragment.instantiate(this, TeamDynamicFragment.class.getName(), b);
+                fragment = (BaseFragment) Fragment.instantiate(this, TeamSigninNewFragment.class.getName(), b);
             }
             fragments.add(fragment);
         }

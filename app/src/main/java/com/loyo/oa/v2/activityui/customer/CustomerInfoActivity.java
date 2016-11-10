@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
+import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
@@ -622,7 +623,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         intent.putExtra("isCreator", isCreator);
                         app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);*/
 
-                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+                        AppBus.getInstance().post(new EditCustomerEvent());
                         finish();
 
                     }

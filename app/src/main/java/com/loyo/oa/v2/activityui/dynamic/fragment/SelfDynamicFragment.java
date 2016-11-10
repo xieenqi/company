@@ -12,7 +12,7 @@ import android.widget.Button;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
-import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterTimeModel;
 import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
@@ -24,7 +24,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -32,10 +31,10 @@ import java.util.List;
 
 
 /**
- * 【我参与的】列表
+ * 【我的跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class MyDynamicFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
+public class SelfDynamicFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
     private Button btn_add;
@@ -45,10 +44,8 @@ public class MyDynamicFragment extends BaseFragment implements PullToRefreshBase
     private DropDownMenu filterMenu;
     private ArrayList<Tag> mTags;
 
-    private String field = "lastActAt";
-    private String order = "desc";
-
-    private String tagsParams = "";
+    private String menuTimeKey = ""; /*时间*/
+    private String menuChosKey = ""; /*筛选*/
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -94,24 +91,30 @@ public class MyDynamicFragment extends BaseFragment implements PullToRefreshBase
      * */
     private void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
-        options.add(DynamicFilterModel.getFilterModel());     //第一个时间参数
-        options.add(TagMenuModel.getTagFilterModel(mTags));   //第二个筛选参数,manager传过来,由后台获取
+        options.add(DynamicFilterTimeModel.getFilterModel());     //时间
+        options.add(TagMenuModel.getTagFilterModel(mTags));       //筛选
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
         adapter.setCallback(new OnMenuModelsSelected() {
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
-                if (menuIndex == 0) {
-                    MenuModel model = selectedModels.get(0);
-                    String key = model.getKey();
-                    String value = model.getValue();
-                    filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-                    Toast("key:"+key+" value"+value);
-                }
-                else if (menuIndex == 1) {
-                    tagsParams = userInfo.toString();
-                    Toast("tagsParams:"+tagsParams);
+                MenuModel model = selectedModels.get(0);
+                switch (menuIndex){
+
+                    /*时间*/
+                    case 0:
+                        menuTimeKey = selectedModels.get(0).getKey();
+                        filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        Toast("key:"+menuTimeKey+" value"+model.getValue());
+                        break;
+
+                    /*筛选*/
+                    case 1:
+                        menuChosKey = model.getKey();
+                        Toast("key:"+menuChosKey+" value"+model.getValue());
+                        break;
+
                 }
                 /*isPullUp = false;
                 page = 1;

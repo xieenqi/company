@@ -12,7 +12,7 @@ import java.util.List;
  * Created by yyy on 2016/10/31.
  */
 
-public class DynamicFilterModel {
+public class DynamicFilterTimeModel {
 
     public static FilterModel getFilterModel() {
 
