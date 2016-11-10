@@ -329,8 +329,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
                 new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
+                new MoreWindowItem("客户拜访", "0228", R.drawable.newmain_post_sign),
                 new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
-                new MoreWindowItem("拜访签到", "0228", R.drawable.newmain_post_sign),
                 new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
     }
 
@@ -523,7 +523,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                     cancelDialog();
-                    MainApp.getMainApp().startActivity(getActivity(), EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(ExtraAndResult.SEND_ACTION, EditUserMobileActivity.ACTION_BINDING);
+                    MainApp.getMainApp().startActivity(getActivity(), EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 }
             }, "提示", getString(R.string.app_homeqq_message));
 

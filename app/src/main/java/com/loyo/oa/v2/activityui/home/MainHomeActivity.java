@@ -236,7 +236,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
         } else {
-            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.RECORD_AUDIO},
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
                     1);
         }
     }
@@ -359,6 +359,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 stopService(new Intent(mContext, CheckUpdateService.class));
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
-        },"提示",getString(R.string.app_exit_message));
+        }, "提示", getString(R.string.app_exit_message));
     }
 }
