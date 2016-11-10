@@ -67,33 +67,6 @@
                 android:smoothScrollbar="true"
                 />
 
-            <FrameLayout
-                android:id="@+id/layout_near_customers"
-                android:layout_width="@dimen/dimen_150"
-                android:layout_height="@dimen/dimen_45"
-                android:layout_gravity="right"
-                android:layout_below="@+id/cus_topview"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_near_customer_count_bg"/>
-
-                <TextView
-                    android:id="@+id/tv_near_customers"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:textColor="@color/title_bg1"
-                    />
-            </FrameLayout>
-
             <Button
                 android:id="@+id/btn_add"
                 android:layout_width="65dp"

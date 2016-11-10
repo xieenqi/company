@@ -3,7 +3,7 @@ package com.loyo.oa.dropdownmenu.filtermenu;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuListType;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
-import com.loyo.oa.v2.activityui.customer.model.Tag;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.customer.model.TagItem;
 
 import java.util.ArrayList;
@@ -15,14 +15,12 @@ import java.util.List;
 
 public class TagMenuModel implements MenuModel {
 
-
-
     public static FilterModel getTagFilterModel(List<Tag> tags) {
         List<MenuModel> tagModel = new ArrayList<>();
         for (Tag tag:tags) {
             tagModel.add(new TagMenuModel(tag));
         }
-        return new FilterModel(tagModel, "标签", MenuListType.TAG);
+        return new FilterModel(tagModel, "筛选", MenuListType.TAG);
     }
 
     private Tag tag;

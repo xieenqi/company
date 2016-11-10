@@ -7,7 +7,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static boolean isRelease = true;                               //是否是正式产品
+    public static boolean isRelease = false;                               //是否是正式产品
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;     //dbug模式
 
@@ -23,7 +23,7 @@ public class Config_project {
 
     //public static String IP = "http://192.168.31.139";
 
-    public static String endpoint = "http://oss-cn-qingdao.aliyuncs.com";        //阿里云Oss
+    public static String endpoint = "http://oss-cn-qingdao.aliyuncs.com";   //阿里云Oss
 
     protected Config_project() {
         throw new UnsupportedOperationException(); // 防止子类调用

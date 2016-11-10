@@ -26,7 +26,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.TeamCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
-import com.loyo.oa.v2.activityui.customer.model.Tag;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -54,8 +54,6 @@ import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-
-import static android.R.attr.key;
 
 /**
  * 【团队客户】列表
@@ -153,9 +151,9 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         }
 
         List<FilterModel> options = new ArrayList<>();
-        options.add(new OrganizationFilterModel(depts, title));
         options.add(TimeFilterModel.getFilterModel());
         options.add(TagMenuModel.getTagFilterModel(mTags));
+        options.add(new OrganizationFilterModel(depts, title));
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
         adapter.setCallback(new OnMenuModelsSelected() {

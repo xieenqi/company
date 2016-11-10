@@ -16,14 +16,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.dynamic.fragment.MyDynamicFragment;
 import com.loyo.oa.v2.activityui.dynamic.fragment.TeamDynamicFragment;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【跟进列表】fragment管理类
@@ -42,9 +56,16 @@ public class DynamicManagerActivity extends BaseFragmentActivity implements View
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
     private float mRotation = 0;
+    public boolean publicOrTeam;
 
     private List<BaseFragment> fragments = new ArrayList<>();
-    private String[] SaleItemStatus = new String[]{"我的跟进","团队跟进"};
+    private String[] SaleItemStatus = new String[]{"我的跟进"};
+
+    private Permission permission;
+    private ArrayList<Tag> mTags;
+    private ArrayList<Tag> mTags1;
+    private ArrayList<Tag> mTags2;
+    private ArrayList<Tag> mTags3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +92,64 @@ public class DynamicManagerActivity extends BaseFragmentActivity implements View
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
         layout_title_action.setOnTouchListener(Global.GetTouch());
+
+        //超级管理员权全公司  没有获取到权限就不显示
+        permission = MainApp.rootMap.get("0205"); //客户权限 暂时用客户权限做测试
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+            SaleItemStatus = new String[]{"我的跟进","团队跟进"};
+            publicOrTeam = true;
+        }
+
         rotateAnimation = initArrowAnimation();
-        initChildren();
-        initTitleItem();
+        getStageData();
+    }
+
+    /**
+     * 获取客户标签 筛选menu
+     */
+    public void getStageData() {
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                GetTags(new RCallback<ArrayList<Tag>>() {
+                    @Override
+                    public void success(ArrayList<Tag> tags, Response response) {
+                        HttpErrorCheck.checkResponse("客户标签：", response);
+                        mTags = tags;
+                        try {
+                            cloneMdata(tags);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        initTitleItem();
+                        try {
+                            initChildren();
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            Toast("没有获取到权限数据，请重新拉去后再试");
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    /**
+     * 深克隆筛选数据
+     */
+    private void cloneMdata(ArrayList<Tag> tags) throws IOException, ClassNotFoundException {
+        mTags1 = new ArrayList<>(tags.size());
+        mTags2 = new ArrayList<>(tags.size());
+        mTags3 = new ArrayList<>(tags.size());
+
+        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
+        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
+        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
     }
 
     void initTitleItem() {
@@ -98,9 +174,13 @@ public class DynamicManagerActivity extends BaseFragmentActivity implements View
             BaseFragment fragment = null;
             if ("我的跟进".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
+                b.putSerializable("tag", mTags1);
+                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, MyDynamicFragment.class.getName(), b);
             } else if ("团队跟进".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
+                b.putSerializable("tag", mTags1);
+                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamDynamicFragment.class.getName(), b);
             }
             fragments.add(fragment);

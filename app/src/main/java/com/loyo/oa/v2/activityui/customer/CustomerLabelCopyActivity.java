@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
@@ -14,27 +13,21 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Item_info_Group;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
-import com.loyo.oa.v2.activityui.customer.model.Tag;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.customer.model.TagItem;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
-import org.androidannotations.annotations.App;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
