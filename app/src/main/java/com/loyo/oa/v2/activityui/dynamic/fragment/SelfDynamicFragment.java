@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.dynamic.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.dynamic.DynamicDetailsActivity;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -132,7 +134,7 @@ public class SelfDynamicFragment extends BaseFragment implements PullToRefreshBa
 
                 //新建跟进
                 case R.id.btn_add:
-
+                startActivity(new Intent(getActivity(),DynamicDetailsActivity.class));
                     break;
             }
         }
