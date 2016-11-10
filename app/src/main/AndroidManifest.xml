@@ -282,6 +282,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
+            android:name=".activityui.customer.DynamicSelectActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
             android:name=".activityui.tasks.TasksManageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

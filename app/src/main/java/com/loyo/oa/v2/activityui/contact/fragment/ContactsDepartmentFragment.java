@@ -38,9 +38,8 @@ import java.util.List;
  * 描述 :【公司的部门】   列表页
  * 作者 : ykb
  * 时间 : 15/8/24.
- *
+ * <p>
  * Update by ethangong 2016/08/04 重构
- *
  */
 
 public class ContactsDepartmentFragment extends BaseFragment {
@@ -61,14 +60,12 @@ public class ContactsDepartmentFragment extends BaseFragment {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             //Bundle b = intent.getExtras();
-            if ( "com.loyo.oa.v2.USER_EDITED".equals( intent.getAction() )) {
+            if ("com.loyo.oa.v2.USER_EDITED".equals(intent.getAction())) {
                 //String userId = b.getString("userId");
                 userGroupExpandableListAdapter.notifyDataSetChanged();
-            }
-            else if ("com.loyo.oa.v2.USER_REFRESH".equals( intent.getAction())) {
+            } else if ("com.loyo.oa.v2.USER_REFRESH".equals(intent.getAction())) {
                 userGroupExpandableListAdapter.notifyDataSetChanged();
-            }
-            else  if ( "com.loyo.oa.v2.ORGANIZATION_UPDATED".equals( intent.getAction() )){
+            } else if ("com.loyo.oa.v2.ORGANIZATION_UPDATED".equals(intent.getAction())) {
                 loadData();
                 userGroupExpandableListAdapter.datasource = datasource;
                 userGroupExpandableListAdapter.notifyDataSetChanged();
@@ -90,7 +87,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         unregisterBroadcastReceiver();
     }
@@ -152,11 +149,10 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
             String key = dept.getSortLetter();
             if (key.equals(previousKey)) {
-                ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)previousMap.get("items");
+                ArrayList<DBDepartment> items = (ArrayList<DBDepartment>) previousMap.get("items");
                 items.add(dept);
                 previousMap.put("items", items);
-            }
-            else {
+            } else {
                 previousKey = key;
                 previousMap = new HashMap<String, Object>();
                 previousMap.put("name", key);
@@ -190,7 +186,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
             @Override
             public void onTouchingLetterChanged(int selectionIndex, String sectionLetter, int state) {
                 int position = userGroupExpandableListAdapter.getNearestPositionForSectionLetter(sectionLetter);
-                if (position!= -1) {
+                if (position != -1) {
                     expandableListView_user.setSelectedGroup(position);
                 }
             }
@@ -202,20 +198,19 @@ public class ContactsDepartmentFragment extends BaseFragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 HashMap<String, Object> group = datasource.get(groupPosition);
-                ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+                ArrayList<DBDepartment> items = (ArrayList<DBDepartment>) group.get("items");
                 Object item = items.get(childPosition);
-                if (item.getClass()==DBDepartment.class) {
-                    DBDepartment dept = (DBDepartment)item;
+                if (item.getClass() == DBDepartment.class) {
+                    DBDepartment dept = (DBDepartment) item;
                     Bundle b = new Bundle();
-                    b.putString("depId", dept.id!=null?dept.id:"");
-                    b.putString("depName", dept.name!=null?dept.name:"");
-                    b.putString("xpath", dept.xpath!=null?dept.xpath:"");
+                    b.putString("depId", dept.id != null ? dept.id : "");
+                    b.putString("depName", dept.name != null ? dept.name : "");
+                    b.putString("xpath", dept.xpath != null ? dept.xpath : "");
                     app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
-                }
-                else if (item.getClass()==DBUser.class) {
+                } else if (item.getClass() == DBUser.class) {
                     DBUser user = (DBUser) item;
                     Bundle b = new Bundle();
-                    b.putSerializable("userId", user.id!=null?user.id:"");
+                    b.putSerializable("userId", user.id != null ? user.id : "");
                     app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 }
                 return true;
@@ -234,7 +229,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
     }
 
-    public void registerBroadcastReceiver(){
+    public void registerBroadcastReceiver() {
         IntentFilter filter = new IntentFilter("com.loyo.oa.v2.USER_EDITED");
         filter.addAction("com.loyo.oa.v2.ORGANIZATION_UPDATED");
         filter.addAction("com.loyo.oa.v2.USER_REFRESH");
@@ -266,7 +261,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
         @Override
         public int getGroupCount() {
-            if(datasource == null) return 0;
+            if (datasource == null) return 0;
 
             return datasource.size();
         }
@@ -274,7 +269,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
         @Override
         public int getChildrenCount(int groupPosition) {
             HashMap<String, Object> group = datasource.get(groupPosition);
-            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>) group.get("items");
             return items.size();
         }
 
@@ -286,7 +281,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
         @Override
         public DBDepartment getChild(int groupPosition, int childPosition) {
             HashMap<String, Object> group = datasource.get(groupPosition);
-            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>) group.get("items");
             return items.get(childPosition);
         }
 
@@ -309,7 +304,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
             HashMap<String, Object> group = datasource.get(groupPosition);
-            String groupName = (String)group.get("name");
+            String groupName = (String) group.get("name");
 
             if (convertView == null)
                 convertView = layoutInflater.inflate(R.layout.item_contact_section, null);
@@ -324,55 +319,51 @@ public class ContactsDepartmentFragment extends BaseFragment {
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
             HashMap<String, Object> group = datasource.get(groupPosition);
-            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>)group.get("items");
+            ArrayList<DBDepartment> items = (ArrayList<DBDepartment>) group.get("items");
             Object item = items.get(childPosition);
 
             if (item.getClass() == DBDepartment.class) {
 
                 DBDepartment dept = (DBDepartment) item;
                 DepartmentViewHolder holder = null;
-                if (convertView == null || convertView.getTag().getClass()!= DepartmentViewHolder.class) {
+                if (convertView == null || convertView.getTag().getClass() != DepartmentViewHolder.class) {
                     holder = new DepartmentViewHolder();
                     convertView = layoutInflater.inflate(R.layout.item_contacts_department_child, null);
                     holder.tv_content = (TextView) convertView.findViewById(R.id.tv_mydept_content);
                     convertView.setTag(holder);
-                }
-                else {
-                    holder = (DepartmentViewHolder)convertView.getTag();
+                } else {
+                    holder = (DepartmentViewHolder) convertView.getTag();
                 }
 
-                holder.tv_content.setText(dept.name + " ( "+ dept.userNum + "人 ) ");
-            }
-            else if (item.getClass() == DBUser.class) {
+                holder.tv_content.setText(dept.name + " ( " + dept.userNum + "人 ) ");
+            } else if (item.getClass() == DBUser.class) {
                 DBUser user = (DBUser) item;
                 UserViewHolder holder = null;
-                if (convertView == null || convertView.getTag().getClass()!= UserViewHolder.class) {
+                if (convertView == null || convertView.getTag().getClass() != UserViewHolder.class) {
                     holder = new UserViewHolder();
                     convertView = layoutInflater.inflate(R.layout.item_contact_user, null);
                     holder.userName = (TextView) convertView.findViewById(R.id.user_name);
                     holder.dept = (TextView) convertView.findViewById(R.id.user_dept);
                     holder.avatarImage = (ImageView) convertView.findViewById(R.id.avatar_view);
                     convertView.setTag(holder);
-                }
-                else {
-                    holder = (UserViewHolder)convertView.getTag();
+                } else {
+                    holder = (UserViewHolder) convertView.getTag();
                 }
 
                 holder.userName.setText(user.name);
                 holder.dept.setText(user.shortDeptNames);
-                if(null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")){
+                if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
                     if (user.gender == 2) {
                         defaultAvatar = R.drawable.icon_contact_avatar;
                     } else {
                         defaultAvatar = R.drawable.img_default_user;
                     }
                     holder.avatarImage.setImageResource(defaultAvatar);
-                }else{
+                } else {
                     ImageLoader.getInstance().displayImage(user.avatar, holder.avatarImage);
                 }
 
             }
-
 
 
             return convertView;
@@ -387,10 +378,10 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
             if (letter == null)
                 return -1;
-            for(int i = 0; i < datasource.size(); i++) {
+            for (int i = 0; i < datasource.size(); i++) {
                 HashMap<String, Object> group = datasource.get(i);
-                String groupName = (String)group.get("name");
-                if(groupName.equals(letter)) {
+                String groupName = (String) group.get("name");
+                if (groupName.equals(letter)) {
                     return i;
                 }
             }
