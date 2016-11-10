@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.setting;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -39,10 +40,14 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_verify_account)
 public class VerifyAccountActivity extends BaseActivity {
-    @ViewById ViewGroup img_title_left;
-    @ViewById TextView tv_title_1;
-    @ViewById Button btn_confirm, btn_get_code;
-    @ViewById EditText et_account, et_code;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    TextView tv_title_1;
+    @ViewById
+    Button btn_confirm, btn_get_code;
+    @ViewById
+    EditText et_account, et_code;
 
     @AfterViews
     void initViews() {
@@ -75,7 +80,7 @@ public class VerifyAccountActivity extends BaseActivity {
     private void verifyPhone(final String tel) {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMain.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
-            public void success(final Object o,final Response response) {
+            public void success(final Object o, final Response response) {
                 et_account.removeCallbacks(countRunner);
                 et_account.post(countRunner);
                 btn_get_code.setEnabled(false);
@@ -162,10 +167,12 @@ public class VerifyAccountActivity extends BaseActivity {
         public void afterTextChanged(final Editable editable) {
             if (RegexUtil.regexk(editable.toString().trim(), RegexUtil.StringType.MOBILEL)) {
                 btn_get_code.setEnabled(true);
-                btn_get_code.setBackgroundResource(R.drawable.round_bg_shpe);//getResources().getColor(R.color.title_bg1)
+                btn_get_code.setBackgroundResource(R.drawable.round_bg_shpe);
+                btn_get_code.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 btn_get_code.setEnabled(false);
                 btn_get_code.setBackgroundResource(R.drawable.round_bg_shpe2);
+                btn_get_code.setTextColor(Color.parseColor("#999999"));
                 if (editable.length() == 11) {
                     Toast("请输入正确的手机号码");
                 }

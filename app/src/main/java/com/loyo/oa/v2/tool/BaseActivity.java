@@ -38,6 +38,8 @@ import com.loyo.oa.v2.db.DBManager;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * activity 基类
@@ -121,7 +123,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     }
 
     @Subscribe
-    public void onEvent(Object object){
+    public void onEvent(Object object) {
 
     }
 
@@ -378,9 +380,23 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     /**
      * 手动 显示软键盘
      */
-    public void showInputKeyboard(EditText view) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
+    public void showInputKeyboard(final EditText view) {
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        final Handler handler = new Handler();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (imm != null) {
+                            view.requestFocus();
+                            imm.showSoftInput(view, 0);
+                        }
+                    }
+                });
+            }
+        }, 100);
     }
 
     /**

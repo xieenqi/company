@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItemType;
 import com.loyo.oa.v2.activityui.worksheet.common.WSRole;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventAction;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
@@ -23,7 +24,8 @@ public class GsonUtils {
                 new WorksheetEventAction.EnumSerializer());
         builder.registerTypeAdapter(WSRole.class,
                 new WSRole.WSRoleSerializer());
-
+        builder.registerTypeAdapter(SystemMessageItemType.class,
+                new SystemMessageItemType.SystemMessageSerializer());
         return builder.create();
     }
 }

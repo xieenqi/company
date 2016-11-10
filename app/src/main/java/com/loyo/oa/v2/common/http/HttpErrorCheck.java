@@ -171,7 +171,6 @@ public class HttpErrorCheck {
             case 2:
                 Toast("请求参数错误");
                 break;
-
         }
     }
 }

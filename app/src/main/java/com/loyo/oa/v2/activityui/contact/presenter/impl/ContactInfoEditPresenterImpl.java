@@ -26,6 +26,7 @@ import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
@@ -43,6 +44,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -56,13 +59,13 @@ import static com.loyo.oa.v2.common.Global.Toast;
  * Created by yyy on 16/10/12.
  */
 
-public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
+public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
 
     private ContactInfoView crolView;
     private Context mContext;
     private Activity mActivity;
 
-    public ContactInfoEditPresenterImpl(ContactInfoView crolView,Context mContext,Activity mActivity){
+    public ContactInfoEditPresenterImpl(ContactInfoView crolView, Context mContext, Activity mActivity) {
         this.crolView = crolView;
         this.mContext = mContext;
         this.mActivity = mActivity;
@@ -71,10 +74,10 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
 
     /**
      * 编辑个人资料
-     * */
+     */
     @Override
-    public void updateProfile(String id,String tel,int sex,String birthDay,String weixinId,String path) {
-        HashMap<String,Object> map = new HashMap<>();
+    public void updateProfile(String id, String tel, int sex, String birthDay, String weixinId, String path) {
+        HashMap<String, Object> map = new HashMap<>();
         map.put("mobile", tel);
         map.put("gender", sex);
         map.put("birthDay", birthDay);
@@ -97,8 +100,46 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
     }
 
     /**
+     * 获取【 部门 】名字数据
+     */
+    @Override
+    public String getDepartments(String shortDeptNames) {
+        String depNames = "";
+        if (!shortDeptNames.contains("|")) {
+            return shortDeptNames;
+        } else {
+            String[] tt = shortDeptNames.split(",");
+            for (String ele : tt) {
+                String[] t = ele.split("\\|");
+                depNames = depNames + t[0];
+            }
+        }
+        return depNames;
+    }
+
+    /**
+     * 获取【 职位 】名字数据
+     */
+    @Override
+    public String getPositions(String shortDeptNames) {
+        String positionNames = "";
+        if (!shortDeptNames.contains("|")) {
+            return positionNames;
+        } else {
+            String[] tt = shortDeptNames.split(",");
+            for (String ele : tt) {
+                if (ele.contains("|")) {
+                    String[] t = ele.split("\\|");
+                    positionNames = positionNames + t[1];
+                }
+            }
+        }
+        return positionNames;
+    }
+
+    /**
      * 生日选择控件
-     * */
+     */
     @Override
     public void pickDate(final Handler mHandler) {
         Calendar cal = Calendar.getInstance();
@@ -117,7 +158,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
                 int age = Utils.getAge(year + "");
                 if (age > 0) {
                     String birthStr = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day);
-                    crolView.setBrithday(mHandler,birthStr);
+                    crolView.setBrithday(mHandler, birthStr);
                 } else {
                     Toast("出生日期不能是未来时间，请重新设置");
                 }
@@ -135,30 +176,30 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
         mDialog.show();
     }
 
-    /**
-     * 弹出提示框
-     * */
-    @Override
-    public void showLeaveDialog(final SweetAlertDialogView sweetAlertDialogView) {
-        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                sweetAlertDialogView.sweetAlertDialog.dismiss();
-            }
-        }, new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                sweetAlertDialogView.sweetAlertDialog.dismiss();
-                crolView.leaveDialogEmbl();
-            }
-        },"提示",mContext.getString(R.string.app_userinfoedt_message));
-    }
+//    /**
+//     * 弹出提示框
+//     */
+//    @Override
+//    public void showLeaveDialog(final SweetAlertDialogView sweetAlertDialogView) {
+//        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                sweetAlertDialogView.sweetAlertDialog.dismiss();
+//            }
+//        }, new SweetAlertDialog.OnSweetClickListener() {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                sweetAlertDialogView.sweetAlertDialog.dismiss();
+//                crolView.leaveDialogEmbl();
+//            }
+//        }, "提示", mContext.getString(R.string.app_userinfoedt_message));
+//    }
 
     /**
      * 判断数据是否被编辑过
-     * */
+     */
     @Override
-    public boolean isDataChange(TextView tv_mobile, TextView tv_birthday, EditText et_weixin, DBUser mUser, int sex) {
+    public boolean isDataChange(TextView tv_mobile, TextView tv_birthday, TextView et_weixin, DBUser mUser, int sex) {
 
         String tel = TextUtils.isEmpty(tv_mobile.getText().toString()) ? null : tv_mobile.getText().toString();
         String birthDay = TextUtils.isEmpty(tv_birthday.getText().toString()) ? null : tv_birthday.getText().toString();
@@ -192,9 +233,9 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
 
     /**
      * 设置头像跳转
-     * */
+     */
     @Override
-    public void setHeadImage(Activity mActivity,Intent mIntent,int REQUEST_IMAGE) {
+    public void setHeadImage(Activity mActivity, Intent mIntent, int REQUEST_IMAGE) {
         // 是否显示拍摄图片
         mIntent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
         // 最大可选择图片数量
@@ -212,9 +253,9 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
 
     /**
      * 上传头像
-     * */
+     */
     @Override
-    public void upload(List<String> mSelectPath, String uuid, RoundImageView imageView) {
+    public void upload(List<String> mSelectPath, RoundImageView imageView) {
         StringBuilder sb = new StringBuilder();
         for (String p : mSelectPath) {
             sb.append(p);
@@ -229,9 +270,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
 
             if (newFile != null && newFile.length() > 0) {
                 RequestParams params = new RequestParams();
-                if (uuid == null) {
-                    uuid = StringUtil.getUUID();
-                }
+                String uuid = StringUtil.getUUID();
                 params.put("uuid", uuid);
 
                 if (newFile.exists()) {
@@ -252,9 +291,10 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter{
 
     /**
      * 上传头像操作
-     * */
+     */
     public class AsyncHandler_Upload_New_Attachments extends BaseAsyncHttpResponseHandler {
         File file;
+
         public void setBitmap(final File imageFile) {
             file = imageFile;
         }
