@@ -520,7 +520,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                         dialog.sweetAlertDialog.dismiss();
                         finish();
                     }
-                },"提示",reason.getMsg()!=null?reason.getMsg():"拨打失败");
+                },"提示","连接异常，不能使用商务电话，请点击重新连接");
             }
         });
     }

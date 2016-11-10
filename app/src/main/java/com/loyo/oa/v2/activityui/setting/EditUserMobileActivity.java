@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.setting;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -13,7 +15,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IMain;
@@ -23,23 +28,29 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static android.R.attr.action;
 
 /**
  * 更改 手机号【设置账号】
  * Created xnq 16/1/12./
  */
 public class EditUserMobileActivity extends BaseActivity {
-
-    LinearLayout img_title_left;
-    TextView tv_title_1;
-
-    Button bt_verificationCode, btn_complete;
-    EditText et_mobile, et_code, et_pwd;
-    CheckBox cb_showHide;
-    String verificatioNumber, pwd, mobile;
+    public static final int ACTION_BINDING = 120;//绑定手机号
+    public static final int ACTION_RENEWAL = 130;//更换手机号
+    private LinearLayout img_title_left, ll_binding, ll_renewal;
+    private TextView tv_title_1, tv_renewal_cellnumber;
+    private Button bt_verificationCode, btn_complete, bt_renewal;
+    private EditText et_mobile, et_code, et_pwd;
+    private CheckBox cb_showHide;
+    private String verificatioNumber, pwd, mobile;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -49,10 +60,13 @@ public class EditUserMobileActivity extends BaseActivity {
     }
 
     void initViews() {
+
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
+        ll_binding = (LinearLayout) findViewById(R.id.ll_binding);
+        ll_renewal = (LinearLayout) findViewById(R.id.ll_renewal);
         img_title_left.setOnClickListener(click);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
-        tv_title_1.setText("设置账号");
+        tv_title_1.setText("绑定手机号");
         bt_verificationCode = (Button) findViewById(R.id.bt_verificationCode);
         bt_verificationCode.setOnClickListener(click);
         btn_complete = (Button) findViewById(R.id.btn_complete);
@@ -62,6 +76,9 @@ public class EditUserMobileActivity extends BaseActivity {
         et_pwd = (EditText) findViewById(R.id.et_pwd);
         et_code = (EditText) findViewById(R.id.et_code);
         cb_showHide = (CheckBox) findViewById(R.id.cb_showHide);
+        tv_renewal_cellnumber = (TextView) findViewById(R.id.tv_renewal_cellnumber);
+        bt_renewal = (Button) findViewById(R.id.bt_renewal);
+        bt_renewal.setOnClickListener(click);
         cb_showHide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
@@ -69,8 +86,26 @@ public class EditUserMobileActivity extends BaseActivity {
             }
         });
         setTouchView(NO_SCROLL);
-        Global.SetTouchView(img_title_left, bt_verificationCode, btn_complete);
+        Global.SetTouchView(img_title_left, bt_verificationCode, btn_complete, bt_renewal);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activityAction();
+    }
+
+    private void activityAction() {
+        int action = getIntent().getIntExtra(ExtraAndResult.SEND_ACTION, 0);
+        String mobile = getIntent().getStringExtra(ExtraAndResult.EXTRA_DATA);
+        if (ACTION_BINDING == action) {
+            ll_binding.setVisibility(View.VISIBLE);
+            showInputKeyboard(et_mobile);
+        } else if (ACTION_RENEWAL == action) {
+            ll_renewal.setVisibility(View.VISIBLE);
+            tv_renewal_cellnumber.setText("绑定手机号为 : " + mobile);
+        }
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -78,7 +113,7 @@ public class EditUserMobileActivity extends BaseActivity {
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.img_title_left:
-                    finish();
+                    onBackPressed();
                     break;
                 case R.id.bt_verificationCode:
                     mobile = et_mobile.getText().toString().trim();
@@ -91,8 +126,8 @@ public class EditUserMobileActivity extends BaseActivity {
                 case R.id.btn_complete:
                     complete();
                     break;
-                default:
-
+                case R.id.bt_renewal://更换手机号
+                    app.startActivity(EditUserMobileActivity.this, RenewalMobileOneActivty.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                     break;
 
             }
@@ -113,9 +148,11 @@ public class EditUserMobileActivity extends BaseActivity {
             if (RegexUtil.regexk(editable.toString().trim(), RegexUtil.StringType.MOBILEL)) {
                 bt_verificationCode.setEnabled(true);
                 bt_verificationCode.setBackgroundResource(R.drawable.round_bg_shpe);//getResources().getColor(R.color.title_bg1)
+                bt_verificationCode.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 bt_verificationCode.setEnabled(false);
                 bt_verificationCode.setBackgroundResource(R.drawable.round_bg_shpe2);
+                bt_verificationCode.setTextColor(Color.parseColor("#999999"));
                 if (editable.length() == 11) {
                     Toast("请输入正确的手机号码");
                 }
@@ -193,7 +230,7 @@ public class EditUserMobileActivity extends BaseActivity {
             public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse("绑定手机号码", response);
                 Toast("绑定成功");
-                finish();
+                onBackPressed();
 //                et_account.removeCallbacks(countRunner);
 //                Bundle bundle = new Bundle();
 //                bundle.putString("tel", mobile);
