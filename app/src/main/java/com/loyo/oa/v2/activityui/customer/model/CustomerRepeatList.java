@@ -1,30 +1,68 @@
 package com.loyo.oa.v2.activityui.customer.model;
 
 
+import com.loyo.oa.v2.beans.UserInfo;
+
+import java.util.ArrayList;
 
 /**
  * Created by yyy on 15/12/9.
  */
 public class CustomerRepeatList {
 
-        String id;
+    public String id;
 
-        String name;
+    public String name;
 
-        public String getName() {
-            return name;
-        }
+    public long createdAt;
 
-        public void setName(String name) {
-            this.name = name;
-        }
+    public boolean lock;
 
-        public String getId() {
-            return id;
-        }
+    public Owner owner;
 
-        public void setId(String id) {
-            this.id = id;
-        }
+    public Owner getmOwner() {
+        return owner;
+    }
+
+    public void setmOwner(Owner owner) {
+        this.owner = owner;
+    }
+
+    public boolean isLock() {
+        return lock;
+    }
+
+    public void setLock(boolean lock) {
+        this.lock = lock;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
+    public class Owner{
+        public String name;
+    }
 
 }

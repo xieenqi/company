@@ -11,6 +11,7 @@ import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
 import com.loyo.oa.v2.activityui.customer.model.Industry;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
+import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.Product;
 import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
@@ -121,6 +122,12 @@ public interface ICustomer {
      */
     @PUT("/customer/{id}/pick")
     void pickedIn(@Path("id") String id, Callback<Customer> callback);
+
+    /**
+     * 客户详情,编辑跟进标签
+     * */
+    @PUT("/customer/tag/{id}")
+    void setCusLabel(@Path("id") String id, @Body ArrayList<NewTag> map, Callback<Contact> callback);
 
     /**
      * 删除客户

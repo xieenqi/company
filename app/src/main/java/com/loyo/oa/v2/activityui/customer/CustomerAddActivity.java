@@ -23,6 +23,9 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
+import com.loyo.oa.v2.activityui.customer.model.ExtraData;
+import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
 import com.loyo.oa.v2.activityui.customer.model.HttpAddCustomer;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -34,6 +37,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CusGridView;
+import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
@@ -47,6 +51,8 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
+import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -122,6 +128,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private LinearLayout ll_phone_layout3;
     private LinearLayout ll_call_layout2;
     private LinearLayout ll_call_layout3;
+    private LinearLayout layout_more;
+    private LinearLayout container;
 
     private EditText edit_address_details;
     private ImageGridViewAdapter imageGridViewAdapter;
@@ -161,7 +169,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<String> telGroup;
     private ArrayList<String> wiretelGroup;
 
-
+    private ArrayList<ContactLeftExtras> mCustomerExtraDatas;
     private PositionResultItem positionResultItem;
 
     private Handler mHandler = new Handler() {
@@ -205,7 +213,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         ll_phone_layout3 = (LinearLayout) findViewById(R.id.ll_phone_layout3);
         ll_call_layout2 = (LinearLayout) findViewById(R.id.ll_call_layout2);
         ll_call_layout3 = (LinearLayout) findViewById(R.id.ll_call_layout3);
+        layout_more     = (LinearLayout) findViewById(R.id.layout_more);
+        container       = (LinearLayout) findViewById(R.id.layout_customer_extra_info);
 
+        layout_more.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         iv_phone_insert1.setOnTouchListener(Global.GetTouch());
@@ -257,6 +268,36 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 LocationUtilGD.sotpLocation();
             }
         });
+    }
+
+
+    /**
+     * 组装动态数据
+     */
+    private void initExtra(final boolean ismy) {
+        if(null == mCustomerExtraDatas || mCustomerExtraDatas.size() == 0){
+            layout_more.setVisibility(View.GONE);
+            return;
+        }
+        ArrayList<ExtraData> extDatas = new ArrayList<>();
+        ExtraData extraData;
+        ExtraProperties properties;
+
+        for(ContactLeftExtras contactLeftExtras : mCustomerExtraDatas){
+            extraData = new ExtraData();
+            properties = new ExtraProperties();
+            if(!contactLeftExtras.isSystem && contactLeftExtras.enabled){
+                properties.setEnabled(contactLeftExtras.enabled);
+                properties.setRequired(contactLeftExtras.required);
+                properties.setLabel(contactLeftExtras.label);
+                properties.setType(contactLeftExtras.type);
+                properties.setIsList(contactLeftExtras.isList);
+                properties.setDefVal(contactLeftExtras.defVal);
+                extraData.setProperties(properties);
+            }
+            extDatas.add(extraData);
+        }
+        container.addView(new CustomerInfoExtraData(mContext, extDatas, ismy, R.color.title_bg1, 0, true, true, false));
     }
 
     void getTempCustomer() {
@@ -326,9 +367,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
             R.id.layout_customer_label, R.id.img_refresh_address, R.id.iv_phone_insert1,
-            R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx})
+            R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx,R.id.layout_more})
     public void onClick(final View v) {
         switch (v.getId()) {
+
+            /*更多信息*/
+            case R.id.layout_more:
+                layout_more.setVisibility(View.GONE);
+                container.setVisibility(View.VISIBLE);
+                break;
 
             /*手机添加1*/
             case R.id.iv_phone_insert1:
@@ -396,7 +443,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
 
-            //提交
+            /*提交*/
             case R.id.img_title_right:
 
                 uuid = StringUtil.getUUID();
@@ -444,6 +491,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 requestCommitTask();
                 break;
 
+            /*选择标签*/
             case R.id.layout_customer_label:
                 Bundle bundle2 = new Bundle();
                 if (tags != null) {
@@ -482,6 +530,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
                 HttpErrorCheck.checkResponse("获取新建客户权限", response);
+                mCustomerExtraDatas = cuslist;
                 for (ContactLeftExtras customerJur : cuslist) {
                     if (customerJur.label.contains("联系人") && customerJur.required) {
                         cusGuys = true;
@@ -499,6 +548,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         edit_address_details.setHint("请输入客户详细地址(必填)");
                     }
                 }
+                initExtra(true);
             }
 
             @Override
