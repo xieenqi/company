@@ -1,4 +1,6 @@
-package com.loyo.oa.v2.activityui.customer.model;
+package com.loyo.oa.v2.activityui.other.model;
+
+import com.loyo.oa.v2.activityui.customer.model.TagItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
