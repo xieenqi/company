@@ -25,6 +25,7 @@ import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
+import com.loyo.oa.v2.activityui.customer.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HomeItem;
 import com.loyo.oa.v2.activityui.home.bean.HttpMainRedDot;
@@ -177,8 +178,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //写跟进
-                case BaseActivity.FOLLOW_ADD:
-                    startActivityForResult(new Intent(getActivity(), CustomerDynamicAddActivity.class), Activity.RESULT_FIRST_USER);
+                case BaseActivity.FOLLOW_ADD://  CustomerDynamicAddActivity
+                    startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //新建订单
