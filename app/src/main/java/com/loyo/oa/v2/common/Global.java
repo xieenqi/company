@@ -297,43 +297,39 @@ public final class Global {
         final long fileMaxSize = 100 * 1024;
 
         if (fileSize >= fileMaxSize) {
-            LogUtil.d("文件大小超限");
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, options);
-            int height = options.outHeight / 3;
-            int width = options.outWidth / 3;
-
-            double scale = Math.sqrt((float) fileSize / fileMaxSize);
-            options.outHeight = (int) (height / scale);
-            options.outWidth = (int) (width / scale);
-            options.inSampleSize = (int) (scale + 0.5);
-            options.inJustDecodeBounds = false;
-            Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-
-            outputFile = getTempFile(context);
-            FileOutputStream fos = null;
-            fos = new FileOutputStream(outputFile);
-
-            if (degree > 0) {
-                bitmap = rotaingImageView(degree, bitmap);
+            try {
+                LogUtil.d("文件大小超限");
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(path, options);
+                int height = options.outHeight / 3;
+                int width = options.outWidth / 3;
+                double scale = Math.sqrt((float) fileSize / fileMaxSize);
+                options.outHeight = (int) (height / scale);
+                options.outWidth = (int) (width / scale);
+                options.inSampleSize = (int) (scale + 0.5);
+                options.inJustDecodeBounds = false;
+                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+                outputFile = getTempFile(context);
+                FileOutputStream fos = null;
+                fos = new FileOutputStream(outputFile);
+                if (degree > 0) {
+                    bitmap = rotaingImageView(degree, bitmap);
+                }
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 60, fos);
+                fos.close();
+                if (!bitmap.isRecycled()) {
+                    bitmap.recycle();
+                }
+            } catch (OutOfMemoryError e) {
+                Global.Toast("图片过大,请清理内存重试");
             }
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, fos);
-
-            fos.close();
-
-            if (!bitmap.isRecycled()) {
-                bitmap.recycle();
-            }
-
         } else {
             LogUtil.d("文件大小未超限");
             File tempFile = outputFile;
             outputFile = getTempFile(context);
             copyFileUsingFileChannels(tempFile, outputFile);
         }
-
         return outputFile;
 
     }

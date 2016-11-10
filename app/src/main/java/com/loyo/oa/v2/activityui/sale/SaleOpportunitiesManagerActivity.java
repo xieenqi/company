@@ -15,16 +15,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.activityui.other.bean.SaleStage;
+import com.loyo.oa.v2.activityui.other.model.SaleStage;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.activityui.sale.fragment.MySaleFragment;
@@ -60,14 +63,14 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     private ImageView imageArrow;
     private RelativeLayout layout_title_action, img_title_search_right;
 
-    private Permission permission;
     private Animation rotateAnimation;//标题动画
-    private String[] SaleItemStatus = new String[]{"我的机会", "团队机会"};
+    private String[] SaleItemStatus = new String[]{"我的机会"};
     private List<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<SaleStage> mSaleStages;
     private float mRotation = 0;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
+    private Permission permission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +106,7 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
         img_title_arrow = (ImageView) findViewById(R.id.img_title_arrow);
-        img_title_arrow.setVisibility(View.VISIBLE);
+        img_title_arrow.setVisibility(View.INVISIBLE);
         lv_sale = (ListView) findViewById(R.id.lv_sale);
         ll_category = (LinearLayout) findViewById(R.id.ll_category);
         ll_category.setOnClickListener(this);
@@ -114,23 +117,18 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
-        img_title_search_right.setVisibility(View.INVISIBLE);
 
-        //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0327");
-                if (!permission.isEnable()) {
-                    SaleItemStatus = new String[]{"我的机会"};
-                    imageArrow.setVisibility(View.INVISIBLE);
-                    layout_title_action.setEnabled(false);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("团队机会权限,code错误:0327");
-            }
+        //超级管理员 全公司  权限判断
+        permission = MainApp.rootMap.get("0215");
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+            SaleItemStatus = new String[]{"我的机会", "团队机会"};
+            imageArrow.setVisibility(View.VISIBLE);
+            layout_title_action.setEnabled(true);
         }
-
+        else {
+            img_title_arrow.setVisibility(View.GONE);
+            layout_title_action.setEnabled(false);
+        }
         getStageData();
     }
 
@@ -161,6 +159,7 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
             } else {
                 Bundle b = new Bundle();
                 b.putSerializable("stage", mSaleStages);
+                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamSaleFragment.class.getName(), b);
             }
             fragments.add(fragment);
@@ -206,7 +205,15 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
                 changeTitleImg();
                 break;
             case R.id.img_title_search_right:
-                Toast("搜索机会");
+                int type;
+                if (mIndex == 0) {
+                    type = SaleSearchActivity.MY_SALE_SEARCH;
+                } else {
+                    type = SaleSearchActivity.TEAM_SALE_SEARCH;
+                }
+                Bundle b = new Bundle();
+                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
+                app.startActivity(this, SaleSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }

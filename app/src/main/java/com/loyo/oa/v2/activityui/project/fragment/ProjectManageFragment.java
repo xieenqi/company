@@ -1,17 +1,21 @@
 package com.loyo.oa.v2.activityui.project.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
+import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
+import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.model.FilterModel;
+import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.project.ProjectAddActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.project.adapter.ProjectExpandableListAdapter;
+import com.loyo.oa.v2.activityui.project.common.ProjectStatusMenuModel;
+import com.loyo.oa.v2.activityui.project.common.ProjectTypeMenuModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.IProject;
@@ -21,7 +25,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,13 +38,9 @@ import java.util.List;
  */
 public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
-    private static final String[] FILTER_TYPE_ARRAY = new String[]{"全部类型", "我负责", "我创建", "我参与"};
-    private static final int[] FILTER_TYPEID_ARRAY = new int[]{0, 3, 2, 1};
-    private static final String[] FILTER_STATUS_ARRAY = new String[]{"全部状态", "进行中", "已结束"};
     private ProjectExpandableListAdapter adapter;
-    private Permission permission;
-    private int type = 0;
-    private int status = 0;
+    private String typeParam = "0";
+    private String statusParam = "0";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,19 +59,12 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         params.put("pageIndex", pageIndex);
         int pageSize = isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20;
         params.put("pageSize", pageSize);
-        params.put("status", status);
-        params.put("type", type);
+        params.put("status", statusParam);
+        params.put("type", typeParam);
         params.put("endAt", System.currentTimeMillis() / 1000);
         params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         LogUtil.d(" 项目管理列表请求： " + MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
-
-        try {
-            permission = (Permission) MainApp.rootMap.get("0401");
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            Toast("项目创建权限,code错误:0401");
-        }
     }
 
     @Override
@@ -83,37 +75,26 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
     /**
      * 初始化下拉菜单
      */
-    private void initDropMenu() {
-
-        mMenu.setVisibility(View.VISIBLE);
-        mMenu.setmMenuCount(2);//Menu的个数
-        mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
-        mMenu.setShowCheck(true);//是否显示展开list的选中项
-        mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
-        mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.text33));//Menu的文字颜色
-        mMenu.setmMenuListTextSize(14);//Menu展开list的文字大小
-        mMenu.setmMenuListTextColor(Color.BLACK);//Menu展开list的文字颜色
-        mMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
-        mMenu.setmMenuPressedBackColor(getResources().getColor(R.color.white));//Menu按下的背景颜色
-        mMenu.setmCheckIcon(R.drawable.img_check1);//Menu展开list的勾选图片
-        mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
-        mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
-        mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态"});//默认未选择任何过滤的Menu title
-
-        List<String[]> items = new ArrayList<>();
-        items.add(FILTER_TYPE_ARRAY);
-        items.add(FILTER_STATUS_ARRAY);
-        mMenu.setmMenuItems(items);
-
-        mMenu.setMenuSelectedListener(new OnMenuSelectedListener() {
+    private void loadFilterOptions() {
+        List<FilterModel> options = new ArrayList<>();
+        options.add(ProjectTypeMenuModel.getFilterModel());
+        options.add(ProjectStatusMenuModel.getFilterModel());
+        DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
+        filterMenu.setMenuAdapter(adapter);
+        adapter.setCallback(new OnMenuModelsSelected() {
             @Override
-            //Menu展开的list点击事件  RowIndex：list的索引  ColumnIndex：menu的索引
-            public void onSelected(View listview, int RowIndex, int ColumnIndex) {
-                app.logUtil.e(" 行 : " + RowIndex + " 列 : " + ColumnIndex);
-                if (ColumnIndex == 0) {
-                    type = FILTER_TYPEID_ARRAY[RowIndex];
-                } else {
-                    status = RowIndex;
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
+                filterMenu.close();
+                MenuModel model = selectedModels.get(0);
+                String key = model.getKey();
+                String value = model.getValue();
+                filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
+
+                if (menuIndex == 0) {
+                    typeParam = key;
+                }
+                else if (menuIndex == 1) {
+                    statusParam = key;
                 }
                 onPullDownToRefresh(mExpandableListView);
             }
@@ -172,7 +153,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
     @Override
     public void initTab() {
-        initDropMenu();
+        loadFilterOptions();
     }
 
     /**

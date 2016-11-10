@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.application;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -12,26 +13,28 @@ import android.os.Message;
 import android.support.multidex.MultiDex;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.Industry;
-import com.loyo.oa.v2.activityui.other.bean.User;
-import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.activityui.customer.model.Department;
+import com.loyo.oa.v2.activityui.customer.model.Industry;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
+import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.other.model.UserGroupData;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ExitActivity;
+import com.loyo.oa.v2.tool.GlideManager;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -39,6 +42,7 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.voip.VoIPManager;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -54,6 +58,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -119,7 +124,7 @@ public class MainApp extends Application {
     public String region;//地区
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
-    public static HashMap<String, Object> rootMap;
+    public static HashMap<String, Permission> rootMap;
 
     public ScaleAnimation animShow;  //显示动画
     public ScaleAnimation animHide;  //隐藏动画
@@ -134,6 +139,9 @@ public class MainApp extends Application {
     static String token;
     public static User user;//InitDataService 在这里负值
     public CellInfo cellInfo;
+
+    /* app是否在前台 */
+    private static boolean isActive;
 
     public static String getToken() {
         if (!StringUtil.isEmpty(token)) {
@@ -158,7 +166,6 @@ public class MainApp extends Application {
             @Override
             public void success(ArrayList<Industry> industries, Response response) {
                 mIndustries = industries;
-
             }
         });
 
@@ -168,12 +175,77 @@ public class MainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        addActivityLifecycleCallback();
         mainApp = this;
         init();
         loadIndustryCodeTable();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+        GlideManager.getInstance().initWithContext(getApplicationContext());
+        VoIPManager.getInstance().init(this);
+    }
 
+    private void addActivityLifecycleCallback() {
+
+        this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                //app 从后台唤醒，进入前台
+                if (!isActive) {
+                    isActive = true;
+                }
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+                if (!isAppOnForeground()) {
+                    isActive = false;
+                }
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
+    }
+
+    public boolean isAppOnForeground() {
+        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = getApplicationContext().getPackageName();
+
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.processName.equals(packageName)
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -289,6 +361,7 @@ public class MainApp extends Application {
         gson = new Gson();
         Utils.openGPS(this);
         DBManager.init(this);
+        OrganizationManager.init(this);
 
         try {
 //            user = DBManager.Instance().getUser();
@@ -301,7 +374,7 @@ public class MainApp extends Application {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                setOriginData();
+                //setOriginData();
             }
         }, 100);
 
@@ -310,9 +383,9 @@ public class MainApp extends Application {
     /**
      * 设置缓存的组织架构数据
      */
-    void setOriginData() {
-        lstDepartment = DBManager.Instance().getOrganization();
-    }
+//    void setOriginData() {
+//        lstDepartment = DBManager.Instance().getOrganization();
+//    }
 
     void init_DisplayImageOptions() {
         options_rounded = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).

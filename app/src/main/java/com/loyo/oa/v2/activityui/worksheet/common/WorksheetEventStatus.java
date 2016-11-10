@@ -34,6 +34,9 @@ public enum WorksheetEventStatus implements GroupKey {
         public String getName() {
             return "其他";
         }
+        public String getKey() {
+            return "全部状态";
+        }
 
         public int getColor() {
             return R.color.ws_status_4;
@@ -59,6 +62,9 @@ public enum WorksheetEventStatus implements GroupKey {
         public String getName() {
             return "待处理";
         }
+        public String getKey() {
+            return "1";
+        }
 
         public int getColor() {
             return R.color.ws_status_2;
@@ -83,6 +89,9 @@ public enum WorksheetEventStatus implements GroupKey {
     UNACTIVATED(2) {
         public String getName() {
             return "未触发";
+        }
+        public String getKey() {
+            return "2";
         }
 
         public int getColor() {
@@ -110,6 +119,9 @@ public enum WorksheetEventStatus implements GroupKey {
         public String getName() {
             return "已处理";
         }
+        public String getKey() {
+            return "3";
+        }
 
         public int getColor() {
             return R.color.ws_status_4;
@@ -135,6 +147,9 @@ public enum WorksheetEventStatus implements GroupKey {
         public String getName() {
             return "意外终止";
         }
+        public String getKey() {
+            return "4";
+        }
 
         public int getColor() {
             return R.color.ws_status_4;
@@ -154,11 +169,14 @@ public enum WorksheetEventStatus implements GroupKey {
     },
 
     /**
-     * 全部类型
+     * 不限状态
      */
     Null(-1) {
         public String getName() {
             return "全部状态";
+        }
+        public String getKey() {
+            return "";
         }
 
         public int getColor() {
@@ -186,6 +204,7 @@ public enum WorksheetEventStatus implements GroupKey {
     }
 
 
+    public abstract String getKey();
     /**
      * 获取显示内容
      */

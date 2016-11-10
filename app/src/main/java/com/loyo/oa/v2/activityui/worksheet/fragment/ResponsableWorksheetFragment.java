@@ -2,25 +2,22 @@ package com.loyo.oa.v2.activityui.worksheet.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
+import com.loyo.oa.dropdownmenu.DropDownMenu;
+import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
+import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.filtermenu.WSEventStatusMenuModel;
+import com.loyo.oa.dropdownmenu.filtermenu.WorksheetTemplateMenuModel;
+import com.loyo.oa.dropdownmenu.model.FilterModel;
+import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
-import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetSubmitActivity;
@@ -28,25 +25,24 @@ import com.loyo.oa.v2.activityui.worksheet.adapter.ResponsableWorksheetsAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
-import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetEventStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.fragment.BaseGroupsDataFragment;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,65 +58,15 @@ import retrofit.client.Response;
  */
 public class ResponsableWorksheetFragment extends BaseGroupsDataFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    private int statusIndex;  /* 工单状态Index */
-    private int typeIndex;    /* 工单类型Index */
-
-    private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
-    private ArrayList<SaleTeamScreen> typeData = new ArrayList<>();
-    private ArrayList<WorksheetEventStatus> statusFilters;
-    private ArrayList<WorksheetTemplate> typeFilters;
-
-    private LinearLayout salemy_screen1, salemy_screen2;
-    private ImageView salemy_screen1_iv1, salemy_screen1_iv2;
-    private TextView tv_tab1, tv_tab2;
     private Button btn_add;
     private ViewStub emptyView;
+    private DropDownMenu filterMenu;
+
+    private String statusParam = "";  /* 工单状态Param */
+    private String typeParam = "";    /* 工单类型Param */
 
     private Intent mIntent;
     private View mView;
-
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-
-                 /*  状态 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
-                {
-
-                    int newIndex =  (int) msg.getData().get("index");
-                    if (statusIndex != newIndex) {
-                        statusIndex = newIndex;
-                        isPullDown = true;
-                        page = 1;
-                        tv_tab1.setText(statusFilters.get(statusIndex).getName());
-                        showLoading("加载中...");
-                        getData();
-                    }
-                }
-                break;
-
-                /* 类型 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
-                {
-
-                    int newIndex =  (int) msg.getData().get("index");
-                    if (typeIndex != newIndex) {
-                        typeIndex = newIndex;
-                        isPullDown = true;
-                        page = 1;
-                        tv_tab2.setText(typeFilters.get(typeIndex).name);
-                        showLoading("加载中...");
-                        getData();
-                    }
-                }
-
-                break;
-            }
-
-        }
-    };
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,8 +109,8 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_self_created_worksheet, null);
             groupsData = new GroupsData();
-            initFilters();
             initView(mView);
+            loadFilterOptions();
         }
         return mView;
     }
@@ -174,17 +120,6 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
-        salemy_screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
-        salemy_screen2 = (LinearLayout) view.findViewById(R.id.salemy_screen2);
-        salemy_screen1.setOnClickListener(this);
-        salemy_screen2.setOnClickListener(this);
-        salemy_screen1_iv1 = (ImageView) view.findViewById(R.id.salemy_screen1_iv1);
-        salemy_screen1_iv2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
-        tv_tab1 = (TextView) view.findViewById(R.id.tv_tab1);
-        tv_tab2 = (TextView) view.findViewById(R.id.tv_tab2);
-
-        tv_tab1.setText(statusFilters.get(statusIndex).getName());
-        tv_tab2.setText(typeFilters.get(typeIndex).name);
 
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
 
@@ -220,45 +155,37 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
         Utils.btnHideForListView(expandableListView,btn_add);
 
+        filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
+
         showLoading("加载中...");
         getData();
     }
 
-    private void initFilters() {
-        statusFilters = new ArrayList<WorksheetEventStatus>();
-        statusFilters.add(WorksheetEventStatus.Null);
-        statusFilters.add(WorksheetEventStatus.WAITPROCESS);
-        statusFilters.add(WorksheetEventStatus.UNACTIVATED);
-        statusFilters.add(WorksheetEventStatus.FINISHED);
-//        statusFilters.add(WorksheetEventStatus.TEMINATED);
+    private void loadFilterOptions() {
+        final ArrayList<WorksheetTemplate> types = WorksheetConfig.getWorksheetTypes(true);
+        List<FilterModel> options = new ArrayList<>();
+        options.add(WSEventStatusMenuModel.getFilterModel());
+        options.add(WorksheetTemplateMenuModel.getFilterModel(types));
+        DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
+        filterMenu.setMenuAdapter(adapter);
+        adapter.setCallback(new OnMenuModelsSelected() {
+            @Override
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
+                filterMenu.close();
+                MenuModel model = selectedModels.get(0);
+                String key = model.getKey();
+                String value = model.getValue();
+                filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
 
-        typeFilters = new ArrayList<WorksheetTemplate>();
-        typeFilters.add(WorksheetTemplate.Null);
-
-        ArrayList<WorksheetTemplate> types = WorksheetConfig.getWorksheetTypes(true);
-        if (types != null) {
-            typeFilters.addAll(types);
-        }
-        setFilterData();
-
-        statusIndex = 0;
-        typeIndex = 0;
-    }
-
-    private void setFilterData() {
-        statusData.clear();
-        for (int i = 0; i < statusFilters.size(); i++) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(statusFilters.get(i).getName());
-            statusData.add(saleTeamScreen);
-        }
-
-        typeData.clear();
-        for (int i = 0; i < typeFilters.size(); i++) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(typeFilters.get(i).name);
-            typeData.add(saleTeamScreen);
-        }
+                if (menuIndex == 0) {
+                    statusParam = key;
+                }
+                else if (menuIndex == 1) {
+                    typeParam = key;
+                }
+                refresh();
+            }
+        });
     }
 
     @Override
@@ -289,13 +216,15 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        if (statusIndex > 0 && statusIndex < statusFilters.size()) {
-            map.put("status", statusFilters.get(statusIndex).code);
-        }
-
-        if (typeIndex > 0 && typeIndex < typeFilters.size()) {
-            map.put("templateId", typeFilters.get(typeIndex).id);
-        }
+        map.put("status", statusParam);
+        map.put("templateId", typeParam);
+//        if (statusIndex > 0 && statusIndex < statusFilters.size()) {
+//            map.put("status", statusFilters.get(statusIndex).code);
+//        }
+//
+//        if (typeIndex > 0 && typeIndex < typeFilters.size()) {
+//            map.put("templateId", typeFilters.get(typeIndex).id);
+//        }
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IWorksheet.class).getResponsableWorksheetList(map, new Callback<WorksheetEventListWrapper>() {
@@ -349,54 +278,8 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
                 break;
-
-            //时间选择
-            case R.id.salemy_screen1: {
-                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
-                        SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
-                saleCommPopupView.showAsDropDown(salemy_screen1);
-                openPopWindow(salemy_screen1_iv1);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv1);
-                    }
-                });
-
-            }
-            break;
-
-            //状态
-            case R.id.salemy_screen2: {
-                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, typeData,
-                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, typeIndex);
-                saleCommPopupView.showAsDropDown(salemy_screen2);
-                openPopWindow(salemy_screen1_iv2);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv2);
-                    }
-                });
-            }
-            break;
         }
     }
-
-    /**
-     * PopupWindow关闭 恢复背景正常颜色
-     */
-    private void closePopupWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_down);
-    }
-
-    /**
-     * PopupWindow打开，背景变暗
-     */
-    private void openPopWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_up);
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

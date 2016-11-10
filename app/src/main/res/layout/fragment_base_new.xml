@@ -8,17 +8,14 @@
 
     <include layout="@layout/include_common_title_search"/>
 
-    <FrameLayout
+    <com.loyo.oa.dropdownmenu.DropDownMenu
+        android:id="@+id/drop_down_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
         <FrameLayout
+            android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dimen_45">
-
-
+            android:layout_height="match_parent">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -84,15 +81,5 @@
             </FrameLayout>
 
         </FrameLayout>
-
-
-        <com.loyo.oa.v2.customview.filterview.DropDownMenu
-            android:id="@+id/drop_menu"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_45"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="invisible"/>
-    </FrameLayout>
+    </com.loyo.oa.dropdownmenu.DropDownMenu>
 </LinearLayout>

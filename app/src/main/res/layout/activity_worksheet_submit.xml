@@ -51,17 +51,20 @@
                 android:background="@drawable/layout_bg1"
                 android:orientation="vertical">
 
-                <com.loyo.oa.v2.customview.CusGridView
-                    android:id="@+id/gridView_photo"
+                <com.loyo.oa.upload.view.ImageUploadGridView
+                    android:id="@+id/image_upload_grid_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_16"
-                    android:layout_marginRight="@dimen/dimen_16"
-                    android:layout_marginTop="@dimen/dimen_16"
-                    android:horizontalSpacing="@dimen/activity_horizontal_margin"
-                    android:listSelector="@android:color/transparent"
+                    android:layout_height="match_parent"
                     android:numColumns="3"
-                    android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+                    android:verticalSpacing="10dp"
+                    android:horizontalSpacing="10dp"
+                    android:stretchMode="columnWidth"
+                    android:gravity="center"
+                    android:listSelector="@android:color/transparent"
+                    android:paddingRight="@dimen/margin_other_view"
+                    android:paddingTop="@dimen/margin_other_view"
+                    android:paddingBottom="@dimen/margin_other_view"
+                    />
 
             </LinearLayout>
 

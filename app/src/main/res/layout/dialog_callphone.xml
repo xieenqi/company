@@ -34,7 +34,7 @@
             android:layout_marginTop="@dimen/dimen_20"
             android:background="@drawable/callback_shape"
             android:gravity="center"
-            android:text="商务电话"
+            android:text="商务电话-回拨"
             android:textSize="@dimen/text_sp16"
             android:textColor="@color/white"
             />
@@ -48,7 +48,35 @@
             android:layout_marginTop="@dimen/dimen_20"
             android:background="@drawable/callback_shape3"
             android:gravity="center"
-            android:text="商务电话(号码格式错误)"
+            android:text="商务电话-回拨(号码格式错误)"
+            android:textSize="@dimen/text_sp16"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/tv_direct"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_48"
+            android:layout_marginLeft="@dimen/dimen_25"
+            android:layout_marginRight="@dimen/dimen_25"
+            android:layout_marginTop="@dimen/dimen_20"
+            android:background="@drawable/callback_shape"
+            android:gravity="center"
+            android:text="商务电话-直拨"
+            android:textSize="@dimen/text_sp16"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/tv_direct_error"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_48"
+            android:layout_marginLeft="@dimen/dimen_25"
+            android:layout_marginRight="@dimen/dimen_25"
+            android:layout_marginTop="@dimen/dimen_20"
+            android:background="@drawable/callback_shape3"
+            android:gravity="center"
+            android:text="商务电话-直拨(号码格式错误)"
             android:textSize="@dimen/text_sp16"
             android:textColor="@color/white"
             />

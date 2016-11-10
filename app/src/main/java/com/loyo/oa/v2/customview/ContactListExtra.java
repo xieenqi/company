@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
-import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
+import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.tool.DateTool;
 import java.util.ArrayList;
 
@@ -31,11 +31,11 @@ public class ContactListExtra extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public ContactListExtra(Context context, ArrayList<ExtraData> extras,ArrayList<ContactLeftExtras> leftExtrases, boolean edit, int valueColor, int valueSize) {
+    public ContactListExtra(Context context, ArrayList<ExtraData> extras,ArrayList<ContactLeftExtras> leftExtrases, boolean edit, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
         this.leftExtrases = leftExtrases;
-        bindView(edit, valueColor, valueSize);
+        bindView(edit, valueSize);
     }
 
     public ArrayList<ExtraData> getExtras() {
@@ -46,10 +46,9 @@ public class ContactListExtra extends LinearLayout {
      * 绑定数据
      *
      * @param edit
-     * @param valueColor
      * @param valueSize
      */
-    private void bindView(boolean edit, int valueColor, int valueSize) {
+    private void bindView(boolean edit, int valueSize) {
         if (null == extras || extras.isEmpty()) {
             return;
         }
@@ -83,7 +82,6 @@ public class ContactListExtra extends LinearLayout {
                     tv_tag.setTextSize(valueSize);
                     tv_content.setTextSize(valueSize);
                 }
-                tv_content.setTextColor(valueColor);
                 if(leftExtrases.get(i).enabled){
                     tv_tag.setText(contactLeftExtras.label);
                 }else{

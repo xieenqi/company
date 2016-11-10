@@ -47,12 +47,18 @@ import rx.android.schedulers.AndroidSchedulers;
 @EActivity(R.layout.activity_customer_task_list)
 public class TaskListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
 
-    @ViewById ViewGroup layout_back;
-    @ViewById ViewGroup layout_add;
-    @ViewById TextView tv_title;
-    @ViewById(R.id.listView_tasks) PullToRefreshExpandableListView lv;
-    @Extra Customer mCustomer;
-    @Extra boolean isMyUser;
+    @ViewById
+    ViewGroup layout_back;
+    @ViewById
+    ViewGroup layout_add;
+    @ViewById
+    TextView tv_title;
+    @ViewById(R.id.listView_tasks)
+    PullToRefreshExpandableListView lv;
+    @Extra
+    Customer mCustomer;
+    @Extra
+    boolean isMyUser;
 
     private PaginationX<TaskRecord> taskPaginationX = new PaginationX<>(20);
     private ArrayList<TaskRecord> tasks = new ArrayList<>();
@@ -81,7 +87,6 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
                 permission = (Permission) MainApp.rootMap.get("0202");
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("发布公告权限,code错误:0402");
             }
         }
     }
@@ -108,7 +113,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     @Click(R.id.layout_add)
     void createNewTask() {
         if (null != permission && !permission.isEnable()) {
-            sweetAlertDialogView.alertIcon(null,"此功能权限已关闭\n请联系管理员开启后再试!");
+            sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
         } else {
             Bundle b = new Bundle();
             b.putString(ExtraAndResult.EXTRA_ID, mCustomer.id);
@@ -135,6 +140,10 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             lv.getRefreshableView().setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
+                    if (null != permission && !permission.isEnable()) {
+                        sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                        return false;
+                    }
                     TaskRecord task = (TaskRecord) adapter.getChild(groupPosition, childPosition);
                     openTaskDetial(task);
                     return false;

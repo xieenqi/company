@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -11,8 +10,7 @@
         android:layout_marginLeft="@dimen/dimen_14"
         android:layout_marginRight="@dimen/dimen_14"
         android:layout_marginTop="@dimen/dimen_10"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/sale_teamlist_title"
@@ -20,8 +18,7 @@
             android:layout_height="wrap_content"
             android:text="成都东软收购机会"
             android:textColor="@color/text33"
-            android:textSize="@dimen/text_sp15"
-            />
+            android:textSize="@dimen/text_sp15" />
 
         <TextView
             android:id="@+id/sale_teamlist_state"
@@ -30,8 +27,7 @@
             android:layout_alignParentRight="true"
             android:text="初步接洽(10%)"
             android:textColor="@color/title_bg1"
-            android:textSize="@dimen/text_sp15"
-            />
+            android:textSize="@dimen/text_sp15" />
 
     </RelativeLayout>
 
@@ -41,14 +37,12 @@
         android:layout_marginLeft="@dimen/dimen_14"
         android:layout_marginTop="@dimen/dimen_4"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_saleteam_dollar"
-            />
+            android:background="@drawable/icon_saleteam_dollar" />
 
         <TextView
             android:id="@+id/sale_teamlist_guess"
@@ -58,8 +52,7 @@
             android:layout_marginLeft="@dimen/dimen_5"
             android:text="预估销售金额:"
             android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp12"
-            />
+            android:textSize="@dimen/text_sp12" />
 
         <TextView
             android:id="@+id/sale_teamlist_money"
@@ -69,27 +62,25 @@
             android:layout_marginLeft="@dimen/dimen_5"
             android:text="2000"
             android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp12"
-            />
+            android:textSize="@dimen/text_sp12" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_creator"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginBottom="@dimen/dimen_5"
         android:layout_marginLeft="@dimen/dimen_14"
         android:layout_marginTop="@dimen/dimen_3"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_saleteam_user"
-            />
+            android:background="@drawable/icon_saleteam_user" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -98,8 +89,7 @@
             android:layout_marginLeft="@dimen/dimen_3"
             android:text="负责人:"
             android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp12"
-            />
+            android:textSize="@dimen/text_sp12" />
 
         <TextView
             android:id="@+id/sale_teamlist_creator"
@@ -109,11 +99,14 @@
             android:layout_marginLeft="@dimen/dimen_5"
             android:text="罗超"
             android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp12"
-            />
+            android:textSize="@dimen/text_sp12" />
 
     </LinearLayout>
 
-    <include layout="@layout/include_solid_line_left"/>
+    <include
+        layout="@layout/include_solid_line_left"
+        android:layout_width="wrap_content"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="@dimen/dimen_5" />
 
 </LinearLayout>

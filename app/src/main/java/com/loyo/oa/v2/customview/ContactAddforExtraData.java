@@ -20,18 +20,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
-import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -56,11 +54,11 @@ public class ContactAddforExtraData extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactLeftExtras> extras, boolean edit, int valueColor, int valueSize) {
+    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactLeftExtras> extras, boolean edit,int valueSize) {
         this(context, null, 0);
         this.extras = extras;
         this.mContact = mContact;//为null 不是联系模块
-        bindView(edit, valueColor, valueSize);
+        bindView(edit, valueSize);
     }
 
     public ArrayList<ContactLeftExtras> getExtras() {
@@ -74,17 +72,28 @@ public class ContactAddforExtraData extends LinearLayout {
      * @param valueColor
      * @param valueSize
      */
-    private void bindView(boolean edit, int valueColor, int valueSize) {
+    private void bindView(boolean edit, int valueSize) {
         if (null == extras || extras.isEmpty()) {
             return;
         }
         LogUtil.dee("ContactLeftExtras:" + MainApp.gson.toJson(extras));
-        for (int i = 0; i < extras.size(); i++) {
+        for (int i = 0; i < extras.size(); i++ ) {
+
             ContactLeftExtras customerExtra = extras.get(i);
             if (null == customerExtra) {
                 continue;
             }
+
             if (!customerExtra.enabled) {
+                continue;
+            }
+
+            /*姓名,手机,座机view已写死,不受动态字段控制视图,所以排除掉*/
+            if(customerExtra.fieldName.equals("name")){
+                continue;
+            }else if(customerExtra.fieldName.equals("wiretel")){
+                continue;
+            }else if(customerExtra.fieldName.equals("tel")){
                 continue;
             }
 
@@ -99,13 +108,44 @@ public class ContactAddforExtraData extends LinearLayout {
                 tv_tag.setTextSize(valueSize);
                 tv_content.setTextSize(valueSize);
             }
-            tv_content.setTextColor(valueColor);
             tv_tag.setText(customerExtra.label);
 
             /**
              * 编辑联系人，数据赋值
              * */
             if (null != mContact) {
+                if (customerExtra.fieldName.equals("name")) {
+                    tv_content.setText(mContact.getName());
+                    customerExtra.val = mContact.getName();
+                } else if (customerExtra.fieldName.equals("birth")) {
+                    tv_content.setText(mContact.getBirthStr());
+                    customerExtra.val = mContact.getBirthStr();
+                } else if (customerExtra.fieldName.equals("wx")) {
+                    tv_content.setText(mContact.getWx());
+                    customerExtra.val = mContact.getWx();
+                } else if (customerExtra.fieldName.equals("qq")) {
+                    tv_content.setText(mContact.getQq());
+                    customerExtra.val = mContact.getQq();
+                } else if (customerExtra.fieldName.equals("email")) {
+                    tv_content.setText(mContact.getEmail());
+                    customerExtra.val = mContact.getEmail();
+                } else if (customerExtra.fieldName.equals("memo")) {
+                    tv_content.setText(mContact.getMemo());
+                    customerExtra.val = mContact.getMemo();
+                } else if (customerExtra.fieldName.equals("dept_name")) {
+                    tv_content.setText(mContact.getDeptName());
+                    customerExtra.val = mContact.getDeptName();
+                } else if (!customerExtra.isSystem) {
+                    for (ExtraData extraData : mContact.getExtDatas()) {
+                        if (customerExtra.label.equals(extraData.getProperties().getLabel())) {
+                            tv_content.setText(extraData.getVal());
+                            customerExtra.val = extraData.getVal();
+                        }
+                    }
+                }
+            }
+
+            /*if (null != mContact) {
                 if (customerExtra.fieldName.equals("name")) {
                     tv_content.setText(mContact.getName());
                     customerExtra.val = mContact.getName();
@@ -141,7 +181,7 @@ public class ContactAddforExtraData extends LinearLayout {
                         }
                     }
                 }
-            }
+            }*/
 
             if (customerExtra.isList) {//改过
                 tv_content.setEnabled(true);
@@ -213,8 +253,6 @@ public class ContactAddforExtraData extends LinearLayout {
                     tv_content.setText(customerExtra.val);
                 }
             } else if ("string".equals(customerExtra.type)) {
-                LogUtil.dll("string");
-                LogUtil.dll("string enable:" + customerExtra.enabled);
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);

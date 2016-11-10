@@ -4,7 +4,7 @@ import android.content.Context;
 import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;

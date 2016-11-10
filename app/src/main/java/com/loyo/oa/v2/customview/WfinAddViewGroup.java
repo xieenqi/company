@@ -149,7 +149,7 @@ public class WfinAddViewGroup extends LinearLayout {
                     value.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     value.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
                 }
-                label.setText(bizFormFields.getName() + "：");
+                label.setText(bizFormFields.getName());
             }
             if (!bizFormFields.isRequired()) {
                 value.setHint("");

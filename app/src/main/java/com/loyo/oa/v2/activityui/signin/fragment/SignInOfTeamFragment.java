@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.adapter.DataSelectAdapter;
-import com.loyo.oa.v2.activityui.attendance.bean.DataSelect;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.signin.LegworksListActivity_;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.bean.PaginationLegWork;
@@ -215,6 +215,10 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                     @Override
                     public void success(PaginationLegWork paginationX, Response response) {
                         HttpErrorCheck.checkResponse("团队客户拜访", response);
+                        if (paginationX == null) {
+                            Toast("服务端错误,没有数据");
+                            return;
+                        }
                         legworkPaginationX = paginationX;
                         if (isTopAdd) {
                             legWorks.clear();

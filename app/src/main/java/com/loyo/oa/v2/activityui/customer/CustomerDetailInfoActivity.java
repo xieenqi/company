@@ -1,24 +1,22 @@
 package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.activityui.customer.bean.Member;
-import com.loyo.oa.v2.activityui.customer.bean.MembersRoot;
+import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
+import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
+import com.loyo.oa.v2.activityui.customer.event.EditCustomerRushEvent;
+import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Member;
+import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -27,23 +25,27 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
+import org.greenrobot.eventbus.Subscribe;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import java.util.Date;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -72,14 +74,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @Extra("Id")
     String id;
     @Extra(ExtraAndResult.EXTRA_TYPE)
-    public int customerType;//"1,我的客户", "2,团队客户", "3,公海客户"
+    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户"
     public boolean isLock;
     public boolean isMyUser;
     public boolean isPutOcen;
+    public boolean isEdit;
     public boolean isRoot = false;
-    public Permission perDelete;
-    public Permission perOcean;
-    public Permission perGet;
     private MembersRoot memRoot;
 
 
@@ -153,19 +153,17 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             return;
         }
 
+        LogUtil.dee("customerType:"+customerType);
+        LogUtil.dee("MainApp.user.isSuperUser():"+MainApp.user.isSuperUser());
+
         /*超级管理员,我的客户,Web权限控制判断*/
-        if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 3) {
+        if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 4) {
             img_public.setVisibility(View.VISIBLE);
         } else {
-            if (customerType == 3) {
-                try {
-                    perGet = (Permission) MainApp.rootMap.get("0404");
-                    if (perGet.isEnable()) {
-                        img_public.setVisibility(View.VISIBLE);
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    Toast("客户挑入权限,code错误");
+            if (customerType == 4) {
+                Permission perGet = MainApp.rootMap.get("0404");
+                if (perGet != null && perGet.isEnable()) {
+                    img_public.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -180,7 +178,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * 本地userid与服务器回传ownerId比较，相等则是自己的客户，islock＝true为自己客户，false在公海中
         * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
         * */
-        isMyUser = (customerType != 3) ? true : false;
+        isMyUser = (customerType != 4) ? true : false;
 
         if (mCustomer.lock) {
             if (null != mCustomer.owner) {
@@ -194,7 +192,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             img_title_right.setVisibility(View.INVISIBLE);
         }
 
-        if (customerType == 2) {//团队客户火力全开 相当于自己的客户
+        if (customerType == 3) {//团队客户火力全开 相当于自己的客户
             img_title_right.setVisibility(View.VISIBLE);
         }
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -235,7 +233,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null != mCustomer.saleActivityInfo) {
             tv_follow_content.setVisibility(View.VISIBLE);
             tv_follow_crecter_type.setVisibility(View.VISIBLE);
-            tv_follow_content.setText(mCustomer.saleActivityInfo.content);
+            tv_follow_content.setText(mCustomer.saleActivityInfo.content.contains("<p>") ?
+                    CommonHtmlUtils.Instance().checkContent(mCustomer.saleActivityInfo.content) : mCustomer.saleActivityInfo.content);
             tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
                     mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
         } else {
@@ -243,7 +242,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             tv_follow_crecter_type.setVisibility(View.GONE);
         }
         tv_contact_Number.setText("(" + mCustomer.contacts.size() + ")");
-//正式启用销售机会 弃用购买意向
+        //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
     }
@@ -262,86 +261,40 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         return false;
     }
 
+
+
     /**
      * 显示编辑客户弹出框
      */
     private void showEditPopu() {
-
-        LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
-        View menuView = mLayoutInflater.inflate(R.layout.popu_child_task_edit_layout, null, false);
-
-        Button btn_child_delete_task = (Button) menuView.findViewById(R.id.btn_child_delete_task);
-        Button btnCancel = (Button) menuView.findViewById(R.id.btn_cancel_edit);
-        Button btnUpdate = (Button) menuView.findViewById(R.id.btn_child_add_update);
-
-        btnUpdate.setText("投入公海");
-        btn_child_delete_task.setText("删除");
-
-        /*超级管理员\web控制权限判断*/
+        boolean isDelte = false, isPublic = false;
+         /*超级管理员\web控制权限判断*/
         if (!MainApp.user.isSuperUser()) {
-            try {
-                perDelete = (Permission) MainApp.rootMap.get("0405");
-                perOcean = (Permission) MainApp.rootMap.get("0403");
-                if (!perDelete.isEnable()) {
-                    btn_child_delete_task.setVisibility(View.GONE);
-                }
-                if (!perOcean.isEnable()) {
-                    btnUpdate.setVisibility(View.GONE);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("客户挑入/删除权限,code错误:0405,0403");
-            }
+            Permission perDelete = MainApp.rootMap.get("0405");
+            Permission perOcean = MainApp.rootMap.get("0403");
+            if (perDelete != null && perDelete.enable)
+                isDelte = true;
+            if (perOcean != null && perOcean.enable)
+                isPublic = true;
         }
 
-        btn_child_delete_task.setOnTouchListener(Global.GetTouch());
-        btnCancel.setOnTouchListener(Global.GetTouch());
-        btnUpdate.setOnTouchListener(Global.GetTouch());
-
-        final PopupWindow popupWindow = new PopupWindow(menuView, -1, -1, true);
-        popupWindow.setAnimationStyle(R.style.PopupAnimation);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-        popupWindow.showAtLocation(findViewById(R.id.tv_title_1), Gravity.BOTTOM, 0, 0);
-
-        menuView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(final View view, final MotionEvent motionEvent) {
-                popupWindow.dismiss();
-                return false;
-            }
-        });
-
-        PopuOnClickListener listener = new PopuOnClickListener(popupWindow);
-        btn_child_delete_task.setOnClickListener(listener);
-        btnCancel.setOnClickListener(listener);
-        btnUpdate.setOnClickListener(listener);
-
-    }
-
-    /**
-     * 处理popuwindow里按钮的点击事件
-     */
-    private class PopuOnClickListener implements View.OnClickListener {
-        private PopupWindow mWindow;
-
-        PopuOnClickListener(final PopupWindow window) {
-            mWindow = window;
-        }
-
-        @Override
-        public void onClick(final View view) {
-            switch (view.getId()) {
-                case R.id.btn_child_delete_task:
+        ActionSheetDialog dialog = new ActionSheetDialog(CustomerDetailInfoActivity.this).builder();
+        if (isDelte || MainApp.user.isSuperUser())
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
                     setPopView(true, "你确定要删除客户?");
-                    break;
-                case R.id.btn_child_add_update:
+                }
+            });
+        if (isPublic || MainApp.user.isSuperUser())
+            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
                     setPopView(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
-                    break;
-                default:
-                    break;
-            }
-            mWindow.dismiss();
-        }
+                }
+            });
+        dialog.show();
+
     }
 
     /**
@@ -365,26 +318,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 }
             }
         }, "提示", message);
-
-/*        showGeneralDialog(true, true, message);
-        //确定
-        generalPopView.setSureOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                if (isKind) {
-                    delete();
-                } else {
-                    toPublic();
-                }
-            }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });*/
     }
 
 
@@ -395,7 +328,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(mCustomer.getId(), new RCallback<Customer>() {
             @Override
             public void success(final Customer newCustomer, final Response response) {
-                app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                //app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
             }
 
             @Override
@@ -414,7 +349,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(final Customer newCustomer, final Response response) {
                 isPutOcen = true;
-                app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
             }
 
             @Override
@@ -435,7 +371,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*返回*/
             case R.id.img_title_left:
                 if (isPutOcen) {
-                    app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                    AppBus.getInstance().post(new MyCustomerListRushEvent());
+                    finish();
                 } else {
                     onBackPressed();
                 }
@@ -447,7 +384,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putBoolean("isRoot", isRoot);
                 bundle.putSerializable("Customer", mCustomer);
                 bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 3);
+                bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 4);
                 bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
@@ -459,7 +396,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer newCustomer, final Response response) {
-                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+                        finish();
                     }
 
                     @Override
@@ -558,6 +496,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     }
 
     /**
+     * 编辑行为确认
+     * */
+    @Subscribe
+    public void onEditCustomerEvent(EditCustomerEvent event){
+        isEdit = true;
+    }
+
+    /**
      * 查看子内容
      *
      * @param b
@@ -574,8 +520,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (isPutOcen) {
-                app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
-            } else {
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
+            } else if(isEdit){
+                AppBus.getInstance().post(new EditCustomerRushEvent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
+            }else{
                 onBackPressed();
             }
             return true;
@@ -593,7 +544,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     Bundle bundle = data.getExtras();
                     boolean isCreator = bundle.getBoolean("isCreator");
                     if (!isCreator) {
-                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, CustomerManagerActivity.CUSTOMER_COMM_RUSH, new Intent());
+                        AppBus.getInstance().post(new MyCustomerListRushEvent());
+                        finish();
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();

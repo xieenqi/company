@@ -1,6 +1,9 @@
 package com.loyo.oa.v2.activityui.customer;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -15,13 +18,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
 import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
-import com.loyo.oa.v2.activityui.customer.fragment.MyCustomerFragment;
+import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
+import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.TeamCustomerFragment;
-import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.customer.model.Tag;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -30,6 +34,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -46,7 +51,7 @@ import retrofit.client.Response;
  * 【客户列表】fragment管理类
  * Created by yyy on 16/6/1.
  */
-public class CustomerManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class CustomerManagerActivity extends BaseFragmentActivity implements View.OnClickListener, MyMemberFragment.MemberCallback {
 
     /**
      * 筛选取消
@@ -81,12 +86,12 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     /**
      * 团队客户
      */
-    public final static int CUSTOMER_TEAM = 2;
+    public final static int CUSTOMER_TEAM = 3;
 
     /**
      * 公海客户
      */
-    public final static int CUSTOMER_COMM = 3;
+    public final static int CUSTOMER_COMM = 4;
 
     /**
      * 个人附近客户
@@ -111,16 +116,13 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private float mRotation = 0;
 
     private Permission permission;
-    private String[] SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
-    private List<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mTags1;
     private ArrayList<Tag> mTags2;
     private ArrayList<Tag> mTags3;
-
-    public Permission perTeam;
-    public Permission perOcean;
     public boolean publicOrTeam;
+    private List<BaseFragment> fragments = new ArrayList<>();
+    private String[] SaleItemStatus = new String[]{"我负责的", "我参与的", "公海客户"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +137,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     public void getStageData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                GetTags(new RCallback<ArrayList<com.loyo.oa.v2.activityui.customer.bean.Tag>>() {
+                GetTags(new RCallback<ArrayList<com.loyo.oa.v2.activityui.customer.model.Tag>>() {
                     @Override
                     public void success(ArrayList<Tag> tags, Response response) {
                         HttpErrorCheck.checkResponse("客户标签：", response);
@@ -148,10 +150,10 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                             e.printStackTrace();
                         }
                         initTitleItem();
-                        try{
-                            permission = (Permission) MainApp.rootMap.get("0404");
+                        try {
+                            /*permission = MainApp.rootMap.get("0404");*/
                             initChildren();
-                        }catch(NullPointerException e){
+                        } catch (NullPointerException e) {
                             e.printStackTrace();
                             Toast("没有获取到权限数据，请重新拉去后再试");
                             finish();
@@ -173,14 +175,14 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         mTags2 = new ArrayList<>(tags.size());
         mTags3 = new ArrayList<>(tags.size());
 
-        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.customer.bean.Tag>) Utils.deepCopyT(mTags);
-        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.customer.bean.Tag>) Utils.deepCopyT(mTags);
-        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.customer.bean.Tag>) Utils.deepCopyT(mTags);
+        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.customer.model.Tag>) Utils.deepCopyT(mTags);
+        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.customer.model.Tag>) Utils.deepCopyT(mTags);
+        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.customer.model.Tag>) Utils.deepCopyT(mTags);
     }
 
     private void initView() {
 
-        setTitle("我的客户");
+        setTitle("我负责的");
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
@@ -196,32 +198,11 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
-
-        //超级管理员权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                perTeam = (Permission) MainApp.rootMap.get("0308"); //团队客户
-                perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
-                if (!perTeam.isEnable() && !perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户"};
-                    imageArrow.setVisibility(View.INVISIBLE);
-                } else if (perTeam.isEnable() && !perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户", "团队客户"};
-                    publicOrTeam = true;
-                    imageArrow.setVisibility(View.VISIBLE);
-                } else if (!perTeam.isEnable() && perOcean.isEnable()) {
-                    SaleItemStatus = new String[]{"我的客户", "公海客户"};
-                    publicOrTeam = false;
-                    imageArrow.setVisibility(View.VISIBLE);
-                } else {
-                    imageArrow.setVisibility(View.VISIBLE);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("团队/公海客户,code错误:0308,0309");
-            }
-        } else {
-            imageArrow.setVisibility(View.VISIBLE);
+        //超级管理员权全公司  没有获取到权限就不显示
+        permission = MainApp.rootMap.get("0205"); //客户权限
+        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+            SaleItemStatus = new String[]{"我负责的", "我参与的", "团队客户", "公海客户"};
+            publicOrTeam = true;
         }
 
         if (SaleItemStatus.length != 1) {
@@ -232,7 +213,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     }
 
     void initTitleItem() {
-        CommonCategoryAdapter TitleItemAdapter = new CommonCategoryAdapter(this, Arrays.asList(SaleItemStatus));
+        CustomerCategoryAdapter TitleItemAdapter = new CustomerCategoryAdapter(this, Arrays.asList(SaleItemStatus));
         lv_sale.setAdapter(TitleItemAdapter);
         lv_sale.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -251,11 +232,16 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private void initChildren() {
         for (int i = 0; i < SaleItemStatus.length; i++) {
             BaseFragment fragment = null;
-            if ("我的客户".equals(SaleItemStatus[i])) {
+            if ("我负责的".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
                 b.putSerializable("permission", permission);
-                fragment = (BaseFragment) Fragment.instantiate(this, MyCustomerFragment.class.getName(), b);
+                fragment = (BaseFragment) Fragment.instantiate(this, MyResponFragment.class.getName(), b);
+            } else if ("我参与的".equals(SaleItemStatus[i])) {
+                Bundle b = new Bundle();
+                b.putSerializable("tag", mTags1);
+                b.putSerializable("permission", permission);
+                fragment = (BaseFragment) Fragment.instantiate(this, MyMemberFragment.class.getName(), b);
             } else if ("团队客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags2);
@@ -301,33 +287,50 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            /*返回*/
             case R.id.img_title_left:
                 finish();
                 break;
+
             case R.id.ll_category:
                 break;
-            //我的 团队 公海切换
+
+            /*列表切换*/
             case R.id.layout_title_action:
                 if (SaleItemStatus.length != 1) {
                     changeTitleImg();
                 }
                 break;
-            //搜索
+            /*搜索*/
             case R.id.img_title_search_right:
-                int type;
-                if (Utils.hasRights()) {
-                    type = mIndex + 1;
-                } else {
-                    if (mIndex == 0) {
+                int type = 0;
+                switch (tv_title_1.getText().toString()) {
+
+                    case "我负责的":
                         type = 1;
-                    } else {
+                        break;
+
+                    case "我参与的":
+                        type = 2;
+                        break;
+
+                    case "团队客户":
                         type = 3;
-                    }
+                        break;
+
+                    case "公海客户":
+                        type = 4;
+                        break;
+
                 }
+
                 Bundle b = new Bundle();
                 b.putInt(ExtraAndResult.EXTRA_TYPE, type);
                 b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
                 app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+                break;
+
+            default:
                 break;
         }
     }
@@ -340,5 +343,25 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         imageArrow.startAnimation(rotateAnimation);
         mRotation = (mRotation == 0f ? 180f : 0f);
         ll_category.setVisibility(ll_category.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
+
+    /**
+     * 重启Activity
+     */
+    void reStart() {
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+    }
+
+    /**
+     * 我参与界面新建完成,要回到我负责界面,直接重启activity
+     */
+    @Override
+    public void comeBackHeadPage() {
+        reStart();
     }
 }

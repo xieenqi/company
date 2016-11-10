@@ -2,54 +2,47 @@ package com.loyo.oa.v2.activityui.worksheet.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
+import com.loyo.oa.dropdownmenu.DropDownMenu;
+import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
+import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.WorksheetStatusMenuModel;
+import com.loyo.oa.dropdownmenu.filtermenu.WorksheetTemplateMenuModel;
+import com.loyo.oa.dropdownmenu.model.FilterModel;
+import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.other.bean.User;
-import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
-import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.TeamWorksheetsAdapter;
-import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
-import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
-import com.loyo.oa.v2.activityui.worksheet.common.WorksheetStatus;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.fragment.BaseGroupsDataFragment;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.SaleCommPopupView;
-import com.loyo.oa.v2.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,95 +60,18 @@ import retrofit.client.Response;
  */
 public class TeamWorksheetFragment extends BaseGroupsDataFragment implements View.OnClickListener {
 
-    private String xpath;     /* 查询部门xpath */
-    private String userId;    /* 查询用户id */
-    private int statusIndex;  /* 工单状态Index */
-    private int typeIndex;    /* 工单类型Index */
+    private String xpath = "";     /* 查询部门xpath */
+    private String userId = "";    /* 查询用户id */
+    private String statusParam = "";  /* 工单状态Param */
+    private String typeParam = "";    /* 工单类型Param */
 
-    private boolean isOk = true, isKind;
-
-    private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
-    private ArrayList<SaleTeamScreen> typeData = new ArrayList<>();
-    private ArrayList<WorksheetStatus> statusFilters;
-    private ArrayList<WorksheetTemplate> typeFilters;
-
-    private List<Department> mDeptSource;  //部门和用户集合
-    private List<Department> newDeptSource = new ArrayList<>();//我的部门
-    private List<SaleTeamScreen> data = new ArrayList<>();
-
-    private LinearLayout salemy_screen0, salemy_screen1, salemy_screen2;
-    private ImageView salemy_screen1_iv0, salemy_screen1_iv1, salemy_screen1_iv2;
-    private TextView tv_tab0, tv_tab1, tv_tab2;
     private Button btn_add;
     private ViewStub emptyView;
+    private View mView;
+    private DropDownMenu filterMenu;
 
     private Intent mIntent;
-    private View mView;
-
-    private ScreenDeptPopupView deptPopupView;
-
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case ExtraAndResult.MSG_SEND: {
-                    deptPopupView = new ScreenDeptPopupView(mActivity, data, mHandler);
-                    break;
-                }
-                /*部门选择回调*/
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG1:
-                    isPullDown = true;
-                    SaleTeamScreen saleTeamScreen = (SaleTeamScreen) msg.getData().getSerializable("data");
-                    tv_tab0.setText(saleTeamScreen.getName());
-                    isKind = msg.getData().getBoolean("kind");
-                    if (isKind) {
-                        userId = "";
-                        xpath = saleTeamScreen.getxPath();
-                    } else {
-                        xpath = "";
-                        userId = saleTeamScreen.getId();
-                    }
-                    page = 1;
-                    LogUtil.dee("isKind:" + isKind);
-                    showLoading("加载中...");
-                    getData();
-                    break;
-
-                 /*  状态 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG2: {
-
-                    int newIndex = (int) msg.getData().get("index");
-                    if (statusIndex != newIndex) {
-                        statusIndex = newIndex;
-                        isPullDown = true;
-                        page = 1;
-                        tv_tab1.setText(statusFilters.get(statusIndex).getName());
-                        showLoading("加载中...");
-                        getData();
-                    }
-                }
-                break;
-
-                /* 类型 */
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG3: {
-
-                    int newIndex = (int) msg.getData().get("index");
-                    if (typeIndex != newIndex) {
-                        typeIndex = newIndex;
-                        isPullDown = true;
-                        page = 1;
-                        tv_tab2.setText(typeFilters.get(typeIndex).name);
-                        showLoading("加载中...");
-                        getData();
-                    }
-                }
-
-                break;
-            }
-
-        }
-    };
+    private Permission permission;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,6 +87,12 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         getData();
     }
 
+    public void refresh() {
+        isPullDown = true;
+        page = 1;
+        showLoading("");
+        getData();
+    }
 
     @Nullable
     @Override
@@ -178,34 +100,18 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_team_worksheet, null);
             groupsData = new GroupsData();
-            initFilters();
+            permission = (Permission) getArguments().getSerializable("permission");
             initView(mView);
+            loadFilterOptions();
         }
         return mView;
     }
 
     private void initView(View view) {
-
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
         btn_add.setVisibility(View.GONE);
-        salemy_screen0 = (LinearLayout) view.findViewById(R.id.salemy_screen0);
-        salemy_screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
-        salemy_screen2 = (LinearLayout) view.findViewById(R.id.salemy_screen2);
-        salemy_screen0.setOnClickListener(this);
-        salemy_screen1.setOnClickListener(this);
-        salemy_screen2.setOnClickListener(this);
-        salemy_screen1_iv0 = (ImageView) view.findViewById(R.id.salemy_screen1_iv0);
-        salemy_screen1_iv1 = (ImageView) view.findViewById(R.id.salemy_screen1_iv1);
-        salemy_screen1_iv2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
-        tv_tab0 = (TextView) view.findViewById(R.id.tv_tab0);
-        tv_tab1 = (TextView) view.findViewById(R.id.tv_tab1);
-        tv_tab2 = (TextView) view.findViewById(R.id.tv_tab2);
-
-        tv_tab1.setText(statusFilters.get(statusIndex).getName());
-        tv_tab2.setText(typeFilters.get(typeIndex).name);
-
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
 
         mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
@@ -238,54 +144,67 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         expand();
 
         Utils.btnHideForListView(expandableListView, btn_add);
+        filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
 
         showLoading("加载中...");
         getData();
     }
 
-    private void initFilters() {
-        statusFilters = new ArrayList<WorksheetStatus>();
-        statusFilters.add(WorksheetStatus.Null);
-        statusFilters.add(WorksheetStatus.WAITASSIGN);
-        statusFilters.add(WorksheetStatus.INPROGRESS);
-        statusFilters.add(WorksheetStatus.WAITAPPROVE);
-        statusFilters.add(WorksheetStatus.FINISHED);
-        statusFilters.add(WorksheetStatus.TEMINATED);
+    private void loadFilterOptions() {
 
-        typeFilters = new ArrayList<WorksheetTemplate>();
-        typeFilters.add(WorksheetTemplate.Null);
-
-        ArrayList<WorksheetTemplate> types = WorksheetConfig.getWorksheetTypes(true);
-        if (types != null) {
-            typeFilters.addAll(types);
+        List<DBDepartment> depts = new ArrayList<>();
+        String title = "部门";
+        //为超管或权限为全公司 展示全公司成员
+        if (permission != null && permission.dataRange == Permission.COMPANY) {
+            depts.addAll(OrganizationManager.shareManager().allDepartments());
+            title = "全公司";
         }
-        setFilterData();
+        //权限为部门 展示我的部门
+        else if (permission != null && permission.dataRange == Permission.TEAM) {
+            depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
+            title = "本部门";
+        }
+        else {
+            title = "我";
+            depts.add(OrganizationFilterModel.selfDepartment());
+        }
 
-        statusIndex = 0;
-        typeIndex = 0;
-    }
-
-    private void setFilterData() {
-        mDeptSource = Common.getLstDepartment();
-        new Thread(new Runnable() {
+        final ArrayList<WorksheetTemplate> types = WorksheetConfig.getWorksheetTypes(true);
+        List<FilterModel> options = new ArrayList<>();
+        options.add(new OrganizationFilterModel(depts, title));
+        options.add(WorksheetStatusMenuModel.getFilterModel());
+        options.add(WorksheetTemplateMenuModel.getFilterModel(types));
+        DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
+        filterMenu.setMenuAdapter(adapter);
+        adapter.setCallback(new OnMenuModelsSelected() {
             @Override
-            public void run() {
-                wersi();
-            }
-        }).start();
-        statusData.clear();
-        for (int i = 0; i < statusFilters.size(); i++) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(statusFilters.get(i).getName());
-            statusData.add(saleTeamScreen);
-        }
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
+                filterMenu.close();
+                MenuModel model = selectedModels.get(0);
+                String key = model.getKey();
+                String value = model.getValue();
+                filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
 
-        typeData.clear();
-        for (int i = 0; i < typeFilters.size(); i++) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(typeFilters.get(i).name);
-            typeData.add(saleTeamScreen);
-        }
+                if (menuIndex == 0) {
+                    // TODO:
+                    if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
+                        xpath = model.getKey();
+                        userId = "";
+                    }
+                    else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
+                        xpath = "";
+                        userId = model.getKey();
+                    }
+                }
+                else if (menuIndex == 1) {
+                    statusParam = key;
+                }
+                else if (menuIndex == 2) {
+                    typeParam = key;
+                }
+                refresh();
+            }
+        });
     }
 
     @Override
@@ -309,13 +228,8 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        if (statusIndex > 0 && statusIndex < statusFilters.size()) {
-            map.put("status", statusFilters.get(statusIndex).code);
-        }
-
-        if (typeIndex > 0 && typeIndex < typeFilters.size()) {
-            map.put("templateId", typeFilters.get(typeIndex).id);
-        }
+        map.put("status", statusParam);
+        map.put("templateId", typeParam);
 
         if (xpath != null && xpath.length() > 0) {
             map.put("xpath", xpath);
@@ -370,127 +284,8 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
                 break;
-
-            // 选人
-            case R.id.salemy_screen0: {
-                if (deptPopupView != null) {
-                    deptPopupView.showAsDropDown(salemy_screen0);
-                    openPopWindow(salemy_screen1_iv0);
-                    deptPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            closePopupWindow(salemy_screen1_iv0);
-                        }
-                    });
-                }
-            }
-            break;
-
-            //时间选择
-            case R.id.salemy_screen1: {
-                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
-                        SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
-                saleCommPopupView.showAsDropDown(salemy_screen1);
-                openPopWindow(salemy_screen1_iv1);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv1);
-                    }
-                });
-
-            }
-            break;
-
-            //状态
-            case R.id.salemy_screen2: {
-                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, typeData,
-                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, typeIndex);
-                saleCommPopupView.showAsDropDown(salemy_screen2);
-                openPopWindow(salemy_screen1_iv2);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv2);
-                    }
-                });
-            }
-            break;
         }
     }
-
-    public void wersi() {
-        try {
-            //为超管或权限为全公司 展示全公司成员
-            if (MainApp.user.isSuperUser() || MainApp.user.role.getDataRange() == Role.ALL) {
-                setUser(mDeptSource);
-            }
-            //权限为部门 展示我的部门
-            else if (MainApp.user.role.getDataRange() == Role.DEPT_AND_CHILD) {
-                deptSort();
-            }
-            //权限为个人 展示自己
-            else if (MainApp.user.role.getDataRange() == Role.SELF) {
-                data.clear();
-                SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-                saleTeamScreen.setId(MainApp.user.getId());
-                saleTeamScreen.setName(MainApp.user.name);
-                saleTeamScreen.setxPath(MainApp.user.depts.get(0).getShortDept().getXpath());
-                data.add(saleTeamScreen);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } finally { /** 子线程读数据，主线程加载数据 */
-            Message msg = new Message();
-            msg.what = ExtraAndResult.MSG_SEND;
-            mHandler.sendMessage(msg);
-        }
-    }
-
-    /**
-     * 过滤出我的部门
-     */
-    private void deptSort() {
-        newDeptSource.clear();
-        User user = MainApp.user;
-        for (Department department : mDeptSource) {
-            for (int i = 0; i < user.getDepts().size(); i++) {
-                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
-                    newDeptSource.add(department);
-                }
-            }
-        }
-        setUser(newDeptSource);
-    }
-
-    /**
-     * 组装部门格式
-     */
-    private void setUser(List<Department> values) {
-        data.clear();
-        for (Department department : values) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setId(department.getId());
-            saleTeamScreen.setName(department.getName());
-            saleTeamScreen.setxPath(department.getXpath());
-            data.add(saleTeamScreen);
-        }
-    }
-
-    /**
-     * PopupWindow关闭 恢复背景正常颜色
-     */
-    private void closePopupWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_down);
-    }
-
-    /**
-     * PopupWindow打开，背景变暗
-     */
-    private void openPopWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_up);
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

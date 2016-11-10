@@ -13,6 +13,8 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 
+import org.greenrobot.eventbus.Subscribe;
+
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {
 
     protected MainApp app = MainApp.getMainApp();
@@ -36,6 +38,10 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         AppBus.getInstance().unregister(this);
     }
 
+    @Subscribe
+    public void onEvent(Object object){
+
+    }
 
     @Override
     public void onAttach(Activity activity) {

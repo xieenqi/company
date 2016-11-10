@@ -21,10 +21,11 @@ import android.os.Handler;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.FeedbackActivity_;
+import com.loyo.oa.v2.activityui.commonview.bean.NewUser;
 import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.setting.SettingPasswordActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -33,9 +34,11 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.service.OrganizationService;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.FileTool;
@@ -87,7 +90,6 @@ public class MenuFragment extends BaseFragment {
                 if (null != user) {
                     if (null != user.avatar && null != riv_head) {
                         ImageLoader.getInstance().displayImage(MainApp.user.avatar, riv_head);
-//                        riv_head.setGrayImg();
                     }
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
@@ -131,7 +133,6 @@ public class MenuFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        onInit();
     }
 
     private HomeApplicationFragment mHomeApplicationFragment;
@@ -276,21 +277,6 @@ public class MenuFragment extends BaseFragment {
                             Utils.doSeting(getActivity());
                         }
                     }, "提示", "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
-
-/*                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
-                    generalPopView.setSureOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            generalPopView.dismiss();
-                            Utils.doSeting(getActivity());
-                        }
-                    });
-                    generalPopView.setCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            generalPopView.dismiss();
-                        }
-                    });*/
                 }
                 break;
             //退出登录
@@ -326,15 +312,16 @@ public class MenuFragment extends BaseFragment {
      */
     void updateUserinfo() {
         showLoading("");
-        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
+        RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<NewUser>() {
             @Override
-            public void success(final User user, final Response response) {
+            public void success(final NewUser user, final Response response) {
                 HttpErrorCheck.checkResponse("获取个人资料修改", response);
-                String json = MainApp.gson.toJson(user);
-                MainApp.user = user;
+                String json = MainApp.gson.toJson(user.data);
+                MainApp.user = user.data;
                 DBManager.Instance().putUser(json);
                 Bundle b = new Bundle();
-                b.putSerializable("user", MainApp.user);
+                String userId = MainApp.user.id;
+                b.putSerializable("userId", userId != null ? userId : "");
                 app.startActivity(getActivity(), ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
 
@@ -350,7 +337,10 @@ public class MenuFragment extends BaseFragment {
      * 更新 组织架构
      */
     void initService() {
+        /* 更新登录用户信息 */
         InitDataService_.intent(getActivity()).start();
+        /* 拉取组织架构 */
+        OrganizationService.startActionFetchAll(MainApp.getMainApp());
     }
 
     /**
@@ -428,6 +418,8 @@ public class MenuFragment extends BaseFragment {
         InitDataService_.intent(app).stop();//避免后台多次调用接口 没有token 导致accst_token无效 的问题
         MainApp.user = null;
         ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
+        /* 清空组织架构 */
+        OrganizationManager.clearOrganizationData();
         SharedUtil.clearInfo(app);//清楚本地登录状态 即缓存信息
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(mActivity, LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);

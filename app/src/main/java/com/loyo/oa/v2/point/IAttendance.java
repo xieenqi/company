@@ -1,10 +1,10 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activityui.attendance.HttpAttendanceDetial;
-import com.loyo.oa.v2.activityui.attendance.HttpAttendanceList;
-import com.loyo.oa.v2.activityui.attendance.bean.AttendanceList;
-import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
-import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
+import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceDetial;
+import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceList;
+import com.loyo.oa.v2.activityui.attendance.model.AttendanceList;
+import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import java.util.HashMap;
 import retrofit.Callback;
 import retrofit.http.Body;

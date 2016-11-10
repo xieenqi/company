@@ -33,6 +33,9 @@ public enum WorksheetStatus implements GroupKey {
         public String getName() {
             return "其他";
         }
+        public String getKey() {
+            return "-1";
+        }
 
         public int getColor() {
             return R.color.ws_status_5;
@@ -53,6 +56,9 @@ public enum WorksheetStatus implements GroupKey {
     WAITASSIGN(1) {
         public String getName() {
             return "待分派";
+        }
+        public String getKey() {
+            return "1";
         }
 
         public int getColor() {
@@ -75,6 +81,9 @@ public enum WorksheetStatus implements GroupKey {
         public String getName() {
             return "进行中";
         }
+        public String getKey() {
+            return "2";
+        }
 
         public int getColor() {
             return R.color.ws_status_2;
@@ -95,6 +104,9 @@ public enum WorksheetStatus implements GroupKey {
     WAITAPPROVE(3) {
         public String getName() {
             return "待审核";
+        }
+        public String getKey() {
+            return "3";
         }
 
         public int getColor() {
@@ -117,6 +129,9 @@ public enum WorksheetStatus implements GroupKey {
         public String getName() {
             return "已完成";
         }
+        public String getKey() {
+            return "4";
+        }
 
         public int getColor() {
             return R.color.ws_status_4;
@@ -137,6 +152,9 @@ public enum WorksheetStatus implements GroupKey {
     TEMINATED(5) {
         public String getName() {
             return "意外终止";
+        }
+        public String getKey() {
+            return "5";
         }
 
         public int getColor() {
@@ -159,6 +177,9 @@ public enum WorksheetStatus implements GroupKey {
         public String getName() {
             return "全部状态";
         }
+        public String getKey() {
+            return "";
+        }
 
         public int getColor() {
             return R.color.ws_status_5;
@@ -180,6 +201,10 @@ public enum WorksheetStatus implements GroupKey {
     }
 
 
+    /**
+     * 获取显示内容
+     */
+    public abstract String getKey();
     /**
      * 获取显示内容
      */

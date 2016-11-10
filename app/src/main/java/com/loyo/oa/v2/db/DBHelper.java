@@ -16,11 +16,11 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.db.bean.SomeConfig;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TrackRule;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -253,7 +253,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public ArrayList<Department> getOrganization() {
-        Type type = new TypeToken<ArrayList<Department>>() {
+               Type type = new TypeToken<ArrayList<Department>>() {
         }.getType();
         String str = getStr("organization");
 

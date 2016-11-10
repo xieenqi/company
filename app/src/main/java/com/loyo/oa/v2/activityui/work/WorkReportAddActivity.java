@@ -20,27 +20,34 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
-import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
-import com.loyo.oa.v2.activityui.work.bean.HttpDefaultComment;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
+import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.work.adapter.workReportAddgridViewAdapter;
+import com.loyo.oa.v2.activityui.work.bean.HttpDefaultComment;
+import com.loyo.oa.v2.activityui.work.bean.Reviewer;
+import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.beans.WorkReport;
-import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.CountTextWatcher;
+import com.loyo.oa.v2.customview.CusGridView;
+import com.loyo.oa.v2.customview.SingleRowWheelView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWorkReport;
@@ -55,9 +62,6 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WeeksDialog;
-import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.customview.CusGridView;
-import com.loyo.oa.v2.customview.SingleRowWheelView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
@@ -65,6 +69,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -92,13 +97,13 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 动态数据UI更新
-     * */
+     */
     public static final int UPDATE_SUCCESS = 0x01;
 
     /**
      * 周报数据回调
-     * */
-    public static final int WEEK_RESULT    = 0x02;
+     */
+    public static final int WEEK_RESULT = 0x02;
 
     @ViewById
     SwitchView crm_switch;
@@ -179,7 +184,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private Handler mHandler = new Handler() {
         public void handleMessage(final Message msg) {
 
-            switch (msg.what){
+            switch (msg.what) {
 
                 //刷新动态数据UI
                 case UPDATE_SUCCESS:
@@ -198,7 +203,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 case WEEK_RESULT:
                     beginAt = weeksDialog.GetBeginandEndAt()[0];
                     endAt = weeksDialog.GetBeginandEndAt()[1];
-                    openDynamic(beginAt/1000+"",endAt/1000+"");
+                    openDynamic(beginAt / 1000 + "", endAt / 1000 + "");
                     break;
             }
         }
@@ -223,7 +228,7 @@ public class WorkReportAddActivity extends BaseActivity {
         rb3 = (RadioButton) findViewById(R.id.rb3);
 
         if (weeksDialog == null) {
-            weeksDialog = new WeeksDialog(tv_time,mHandler);
+            weeksDialog = new WeeksDialog(tv_time, mHandler);
         }
 
         /**动态统计开关*/
@@ -313,7 +318,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 .defaultComment(new RCallback<HttpDefaultComment>() {
                     @Override
                     public void success(final HttpDefaultComment reviewer, final Response response) {
-                        HttpErrorCheck.checkResponse("报告默认点评人：",response);
+                        HttpErrorCheck.checkResponse("报告默认点评人：", response);
                         mReviewer = new Reviewer();
                         if (reviewer.reviewer != null) {
                             mReviewer.user = reviewer.reviewer.user;
@@ -386,44 +391,41 @@ public class WorkReportAddActivity extends BaseActivity {
      * @param b
      */
     private void crmSwitch(final boolean b) {
-        long beginTime,endTime;
+        long beginTime, endTime;
         if (b) {
             switch (mSelectType) {
                 //本日
                 case WorkReport.DAY:
-                    if(tv_time.getText().toString().contains("补签")){
-                        beginTime = beginAt/1000;
-                        endTime   = endAt/1000;
-                    }else{
-                        beginTime = DateTool.getCurrentMoringMillis()/1000;
-                        endTime = DateTool.getNextMoringMillis()/1000;
+                    if (tv_time.getText().toString().contains("补签")) {
+                        beginTime = beginAt / 1000;
+                        endTime = endAt / 1000;
+                    } else {
+                        beginTime = DateTool.getCurrentMoringMillis() / 1000;
+                        endTime = DateTool.getNextMoringMillis() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
                 //本周
                 case WorkReport.WEEK:
-                    if(tv_time.getText().toString().contains("补签")){
-                        beginTime = weeksDialog.GetBeginandEndAt()[0]/1000;
-                        endTime = weeksDialog.GetBeginandEndAt()[1]/1000;
-                    }else{
-                        beginTime = DateTool.getBeginAt_ofWeek()/1000;
-                        endTime = DateTool.getEndAt_ofWeek()/1000;
+                    if (tv_time.getText().toString().contains("补签")) {
+                        beginTime = weeksDialog.GetBeginandEndAt()[0] / 1000;
+                        endTime = weeksDialog.GetBeginandEndAt()[1] / 1000;
+                    } else {
+                        beginTime = DateTool.getBeginAt_ofWeek() / 1000;
+                        endTime = DateTool.getEndAt_ofWeek() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
                 //本月
                 case WorkReport.MONTH:
-                    if(tv_time.getText().toString().contains("补签")){
-                        beginTime = beginAt/1000;
-                        endTime   = endAt/1000;
-                    }else{
-                        beginTime = DateTool.getBeginAt_ofWeek()/1000;
-                        endTime = DateTool.getEndAt_ofWeek()/1000;
+                    if (tv_time.getText().toString().contains("补签")) {
+                        beginTime = beginAt / 1000;
+                        endTime = endAt / 1000;
+                    } else {
+                        beginTime = DateTool.getBeginAt_ofMonthMills() / 1000;
+                        endTime = DateTool.getEndAt_ofMonth() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
-                    break;
-
-                default:
                     break;
             }
         }
@@ -554,13 +556,40 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*点评人*/
             case R.id.layout_reviewer:
-                SelectDetUserActivity2.startThisForOnly(WorkReportAddActivity.this, null);
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                SelectDetUserActivity2.startThisForOnly(WorkReportAddActivity.this, null);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            {
+                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer.user);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
                 break;
 
             /*抄送人*/
             case R.id.layout_toUser:
-                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
+//                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this,
+//                        joinUserId == null ? null : joinUserId.toString(), true);
+            {
+                StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
                 break;
 
             case R.id.layout_del:
@@ -753,7 +782,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
                         tv_time.setText(currentValue + "(补签)");
                         retroIndex = 0;
-                        openDynamic(beginAt/1000+"",endAt/1000+"");
+                        openDynamic(beginAt / 1000 + "", endAt / 1000 + "");
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -908,6 +937,50 @@ public class WorkReportAddActivity extends BaseActivity {
         }
     }
 
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+
+        if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            NewUser user = Compat.convertStaffCollectionToNewUser(collection);
+            if (user == null){
+                return;
+            }
+            mReviewer = new Reviewer(user);
+            tv_reviewer.setText(user.getRealname());
+        }
+        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            members = Compat.convertStaffCollectionToMembers(collection);
+            joinName = new StringBuffer();
+            joinUserId = new StringBuffer();
+            if (members==null ||( members.users.size() == 0 && members.depts.size() == 0)) {
+                tv_toUser.setText("无抄送人");
+                joinUserId.reverse();
+            } else {
+                if (null != members.depts) {
+                    for (NewUser newUser : members.depts) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (null != members.users) {
+                    for (NewUser newUser : members.users) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (!TextUtils.isEmpty(joinName)) {
+                    joinName.deleteCharAt(joinName.length() - 1);
+                }
+                tv_toUser.setText(joinName.toString());
+            }
+        }
+    }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {

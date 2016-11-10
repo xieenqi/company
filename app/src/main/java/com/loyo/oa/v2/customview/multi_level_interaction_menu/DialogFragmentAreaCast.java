@@ -23,9 +23,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.bean.City;
-import com.loyo.oa.v2.activityui.customer.bean.County;
-import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
+import com.loyo.oa.v2.activityui.customer.model.City;
+import com.loyo.oa.v2.activityui.customer.model.County;
+import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.tool.OnMenuSelectCallback;
 

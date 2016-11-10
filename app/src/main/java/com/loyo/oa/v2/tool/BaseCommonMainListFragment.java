@@ -21,7 +21,7 @@ import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.filterview.DropDownMenu;
+import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 
@@ -48,9 +48,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     protected ViewGroup img_title_left;
     protected LayoutInflater mInflater;
     protected TextView tv_title_1;
-    protected DropDownMenu mMenu;
+    protected DropDownMenu filterMenu;
     private ViewStub emptyView;
-    private Permission permission;
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
     protected PaginationX<T> pagination = new PaginationX<T>(20);
@@ -71,12 +70,12 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         GetData();
     }
 
-    private Runnable UiRunner = new Runnable() {
-        @Override
-        public void run() {
-            btn_add.setVisibility(View.INVISIBLE);
-        }
-    };
+//    private Runnable UiRunner = new Runnable() {
+//        @Override
+//        public void run() {
+//            btn_add.setVisibility(View.INVISIBLE);
+//        }
+//    };
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -95,7 +94,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_base_new, container, false);
-            mMenu = (DropDownMenu) mView.findViewById(R.id.drop_menu);
+            filterMenu = (DropDownMenu) mView.findViewById(R.id.drop_down_menu);
             emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
 
             tv_title_1 = (TextView) mView.findViewById(R.id.tv_title_1);
@@ -110,19 +109,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                     addNewItem();
                 }
             });
-
-            if (null != MainApp.user && !MainApp.user.isSuperUser()) {
-                try {
-                    permission = (Permission) MainApp.rootMap.get("0401");
-                    if (!permission.isEnable() && MainApp.permissionPage == 1) {
-                        btn_add.setVisibility(View.INVISIBLE);
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    Toast("创建项目权限,code错误");
-                }
-            }
-
             img_title_left = (ViewGroup) mView.findViewById(R.id.img_title_left);
             img_title_left.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -147,6 +133,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
             initTab();
             init();
         }
+
         return mView;
     }
 
@@ -178,9 +165,16 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                 return false;
             }
         });
+        btn_add.setVisibility(View.INVISIBLE);
+        Permission permission = MainApp.rootMap.get("0401");
+        if (permission != null && permission.isEnable() && MainApp.permissionPage == 1) {
+            btn_add.setVisibility(View.VISIBLE);
+            Utils.btnHideForListView(expandableListView, btn_add);
+        } else if (MainApp.permissionPage != 1) {
+            Utils.btnHideForListView(expandableListView, btn_add);
+            btn_add.setVisibility(View.VISIBLE);
+        }
 
-
-        Utils.btnHideForListView(expandableListView, btn_add);
 
     }
 

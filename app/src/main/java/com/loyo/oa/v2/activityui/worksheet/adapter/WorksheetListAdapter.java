@@ -1,9 +1,11 @@
 package com.loyo.oa.v2.activityui.worksheet.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -17,12 +19,14 @@ import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 public class WorksheetListAdapter extends BaseGroupsDataAdapter {
 
     private boolean fromSelfCreated;
+    private boolean fromOrder;  //来自订单
 
-    public WorksheetListAdapter(final Context context, final GroupsData data,final boolean selfC) {
+    public WorksheetListAdapter(final Context context, final GroupsData data,final boolean selfC,boolean fromOrder) {
         super();
         fromSelfCreated = selfC;
         mContext = context;
         groupsData = data;
+        this.fromOrder = fromOrder;
     }
 
     @Override
@@ -37,6 +41,8 @@ public class WorksheetListAdapter extends BaseGroupsDataAdapter {
             holder.tv_creator_name = (TextView) convertView.findViewById(R.id.tv_creator_name);
             holder.tv_order = (TextView) convertView.findViewById(R.id.tv_order);
             holder.tv_creator_show = (TextView) convertView.findViewById(R.id.tv_creator_show);
+            holder.ll_order = (LinearLayout) convertView.findViewById(R.id.ll_order);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -56,18 +62,33 @@ public class WorksheetListAdapter extends BaseGroupsDataAdapter {
         TextView tv_creator_name; // 分派者姓名
         TextView tv_order;        // 订单
         TextView tv_creator_show; // 分派人\创建人
+        LinearLayout ll_order;    // 所属订单Ll
 
         public void loadData(Worksheet ws) {
-            tv_content.setText(ws.title);
-            tv_order.setText(ws.orderName);
-            tv_progress.setText("完成度( "+ws.finishCount + "/" + ws.totalCount + " )");
-            if(fromSelfCreated){
+
+            if(fromOrder){
                 tv_creator_show.setText("分派人: ");
                 tv_creator_name.setText(ws.dispatcherName);
+                ll_order.setVisibility(View.GONE);
             }else{
-                tv_creator_show.setText("创建人: ");
-                tv_creator_name.setText(ws.creatorName);
+                ll_order.setVisibility(View.VISIBLE);
+                if(fromSelfCreated){
+                    tv_creator_show.setText("分派人: ");
+                    tv_creator_name.setText(ws.dispatcherName);
+                }else{
+                    tv_creator_show.setText("创建人: ");
+                    tv_creator_name.setText(ws.creatorName);
+                }
             }
+
+            tv_content.setText(ws.title);
+            if(TextUtils.isEmpty(ws.orderName)){
+                tv_order.setText("-");
+            }else {
+                tv_order.setText(ws.orderName);
+            }
+
+            tv_progress.setText("完成度( "+ws.finishCount + "/" + ws.totalCount + " )");
         }
     }
 }

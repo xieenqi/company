@@ -3,33 +3,32 @@ package com.loyo.oa.v2.activityui.order.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 
+import com.loyo.oa.dropdownmenu.DropDownMenu;
+import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
+import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.filtermenu.CommonSortType;
+import com.loyo.oa.dropdownmenu.filtermenu.CommonSortTypeMenuModel;
+import com.loyo.oa.dropdownmenu.filtermenu.OrderStatusMenuModel;
+import com.loyo.oa.dropdownmenu.model.FilterModel;
+import com.loyo.oa.dropdownmenu.model.MenuListType;
+import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.MyOrderAdapter;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
-import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
-import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.SaleCommPopupView;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IOrder;
@@ -53,41 +52,18 @@ import retrofit.client.Response;
 public class MyOrderFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private Button btn_add;
-    private String[] status = {"全部状态", "待审核", "未通过", "进行中", "已完成", "意外终止"};
-    private String[] sort = {"按照创建时间", "按照最高金额"};
-    private LinearLayout salemy_screen1, salemy_screen2;
-    private ImageView salemy_screen1_iv1, salemy_screen1_iv2;
-    private int statusIndex, sortIndex;
-    private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
-    private ArrayList<SaleTeamScreen> statusData = new ArrayList<>();
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private MyOrderAdapter adapter;
+    private DropDownMenu filterMenu;
+    private String statusType = "0";
+    private String field = "";
+
     private int page = 1;
     private boolean isPullDown = true;
     private Bundle mBundle;
 
     private List<OrderListItem> listData = new ArrayList<>();
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG2:
-                    isPullDown = true;
-                    statusIndex = (int) msg.getData().get("index");
-                    page = 1;
-                    break;
-
-                case TeamSaleFragment.SALETEAM_SCREEN_TAG3:
-                    isPullDown = true;
-                    sortIndex = (int) msg.getData().get("index");
-                    page = 1;
-                    break;
-            }
-            getData();
-        }
-    };
 
     @Nullable
     @Override
@@ -96,21 +72,15 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_my_order, null);
             initView(mView);
+            loadFilterOptions();
         }
         return mView;
     }
 
     private void initView(View view) {
-        setFilterData();
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
-        salemy_screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
-        salemy_screen2 = (LinearLayout) view.findViewById(R.id.salemy_screen2);
-        salemy_screen1.setOnClickListener(this);
-        salemy_screen2.setOnClickListener(this);
-        salemy_screen1_iv1 = (ImageView) view.findViewById(R.id.salemy_screen1_iv1);
-        salemy_screen1_iv2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
@@ -128,21 +98,49 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         });
         adapter = new MyOrderAdapter(app);
         lv_list.setAdapter(adapter);
+        filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
+
         getData();
         Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
     }
 
-    private void setFilterData() {
-        for (int i = 0; i < sort.length; i++) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(sort[i]);
-            sortData.add(saleTeamScreen);
-        }
-        for (int i = 0; i < status.length; i++) {
-            SaleTeamScreen saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName(status[i]);
-            statusData.add(saleTeamScreen);
-        }
+    private void loadFilterOptions() {
+        List<FilterModel> options = new ArrayList<>();
+        options.add(OrderStatusMenuModel.getFilterModel());
+
+        List<MenuModel> sortModel = new ArrayList<>();
+        sortModel.add(new CommonSortTypeMenuModel(CommonSortType.CREATE));
+        sortModel.add(new CommonSortTypeMenuModel(CommonSortType.AMOUNT));
+        options.add(new FilterModel(sortModel, "排序", MenuListType.SINGLE_LIST_SINGLE_SEL));
+
+        DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
+        filterMenu.setMenuAdapter(adapter);
+        adapter.setCallback(new OnMenuModelsSelected() {
+            @Override
+            public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
+                filterMenu.close();
+                MenuModel model = selectedModels.get(0);
+                String key = model.getKey();
+                String value = model.getValue();
+                filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
+
+                if (menuIndex == 0) { //
+                    statusType = key;
+                }
+                else if (menuIndex == 1) { //
+                    CommonSortType type = ((CommonSortTypeMenuModel)model).type;
+                    if (type == CommonSortType.AMOUNT) {
+                        field = "dealMoney";
+                    }
+                    else if (type == CommonSortType.CREATE) {
+                        field = "createdAt";
+                    }
+                }
+                isPullDown = true;
+                page = 1;
+                getData();
+            }
+        });
     }
 
     @Override
@@ -151,62 +149,22 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
 
             //新建
             case R.id.btn_add:
+
                 mBundle = new Bundle();
                 mBundle.putInt("fromPage", OrderDetailActivity.ORDER_ADD);
                 startActivityForResult(new Intent(getActivity(), OrderAddActivity.class), getActivity().RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                break;
 
-            //状态选择
-            case R.id.salemy_screen1:
-                SaleCommPopupView saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, statusData,
-                        SaleOpportunitiesManagerActivity.SCREEN_STAGE, true, statusIndex);
-                saleCommPopupView.showAsDropDown(salemy_screen1);
-                openPopWindow(salemy_screen1_iv1);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv1);
-                    }
-                });
-                break;
-
-            //排序
-            case R.id.salemy_screen2:
-                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData,
-                        SaleOpportunitiesManagerActivity.SCREEN_SORT, false, sortIndex);
-                saleCommPopupView.showAsDropDown(salemy_screen2);
-                openPopWindow(salemy_screen1_iv2);
-                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        closePopupWindow(salemy_screen1_iv2);
-                    }
-                });
                 break;
         }
-    }
-
-    /**
-     * PopupWindow关闭 恢复背景正常颜色
-     */
-    private void closePopupWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_down);
-    }
-
-    /**
-     * PopupWindow打开，背景变暗
-     */
-    private void openPopWindow(ImageView view) {
-        view.setBackgroundResource(R.drawable.arrow_up);
     }
 
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
-        map.put("status", statusIndex);
-        map.put("filed", sortIndex == 1 ? "dealMoney" : "createdAt");
+        map.put("status", statusType);
+        map.put("filed", field);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IOrder.class).getOrderMyList(map, new Callback<OrderList>() {
             @Override

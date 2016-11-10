@@ -19,15 +19,17 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
@@ -36,10 +38,13 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -57,6 +62,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -155,7 +161,7 @@ public class TasksInfoActivity extends BaseActivity {
     public ArrayList<User> aboutDepts = new ArrayList<>();
     public ArrayList<User> childTaskUsers2 = new ArrayList<>();
 
-    public ArrayList<Department> deptSource = Common.getLstDepartment();
+//    public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
     public LinearLayout item_tasks_sorece;
@@ -313,20 +319,23 @@ public class TasksInfoActivity extends BaseActivity {
                 }
                 tv_toUsers.setText("参与人: " + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
+
+                // 获取部门（包括子部门）的用户
+                List<DBUser> deptsUsers = new ArrayList<DBUser>();
                 if (null != mTask.members.depts) {
-                    for (NewUser newUser : mTask.members.depts) {
-                        Common.getAllUsersByDeptId(newUser.getId(), childTaskUsers2);
+                    for (NewUser dept : mTask.members.depts) {
+                        deptsUsers.addAll(OrganizationManager.shareManager().entireUsersOfDepartment(dept.getId()));
                     }
                 }
 
-                for (User user : childTaskUsers2) {
+                for (DBUser user : deptsUsers) {
                     childTastUsers.add(user.toShortUser());
                 }
-
-                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
-                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
-
-                getAboutUser();
+//
+//                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
+//                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
+//
+//                getAboutUser();
 
             } else {
                 tv_toUsers.setText("没有参与人");
@@ -535,8 +544,14 @@ public class TasksInfoActivity extends BaseActivity {
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
 
-        tv_discussion_count.setText("(" + mTask.getBizExtData().getDiscussCount() + ")");
-        tv_attachment_count.setText("(" + mTask.getBizExtData().getAttachmentCount() + ")");
+        if (mTask.getBizExtData() != null){
+            tv_discussion_count.setText("(" + mTask.getBizExtData().getDiscussCount() + ")");
+            tv_attachment_count.setText("(" + mTask.getBizExtData().getAttachmentCount() + ")");
+        }
+        else { // Added By Ethan 2016-10-22 Android-任务管理：任务中数据为空，点击任务APP崩溃  ID： 1000408
+            tv_discussion_count.setText("(0)");
+            tv_attachment_count.setText("(0)");
+        }
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
@@ -996,27 +1011,61 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
 
+//    /**
+//     * 参与人当中的部门，拆分成员工
+//     */
+//    void getAboutUser() {
+//
+//        requestDepts.addAll(mTask.members.depts);
+//
+//        for (Department department : deptSource) {
+//            for (NewUser newUser : requestDepts) {
+//                try {
+//                    if (department.getId().equals(newUser.getId())) {
+//                        aboutDepts.addAll(department.getUsers());
+//                    }
+//                } catch (NullPointerException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//
+//        for (User user : aboutDepts) {
+//            childTastUsers.add(user.toShortUser());
+//        }
+//    }
+
     /**
-     * 参与人当中的部门，拆分成员工
+     * 选人回调
      */
-    void getAboutUser() {
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
 
-        requestDepts.addAll(mTask.members.depts);
-
-        for (Department department : deptSource) {
-            for (NewUser newUser : requestDepts) {
-                try {
-                    if (department.getId().equals(newUser.getId())) {
-                        aboutDepts.addAll(department.getUsers());
+        if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            StaffMemberCollection collection = event.data;
+            member = Compat.convertStaffCollectionToMembers(collection);
+            if (null == member || (member.users.size()==0 && member.depts.size()==0)) {
+                tv_toUsers.setText("无参与人");
+            } else {
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (null != member.depts) {
+                    for (NewUser newUser : member.depts) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
                     }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
                 }
+                if (null != member.users) {
+                    for (NewUser newUser : member.users) {
+                        joinName.append(newUser.getName() + ",");
+                        joinUserId.append(newUser.getId() + ",");
+                    }
+                }
+                if (!TextUtils.isEmpty(joinName)) {
+                    joinName.deleteCharAt(joinName.length() - 1);
+                }
+                editJoiner();
             }
-        }
-
-        for (User user : aboutDepts) {
-            childTastUsers.add(user.toShortUser());
         }
     }
 
@@ -1080,7 +1129,21 @@ public class TasksInfoActivity extends BaseActivity {
                         bundle.putBoolean("type", IsCreator());
                         app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
                     } else {
-                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
+//                        SelectDetUserActivity2.startThisForAllSelect(this,
+//                                joinUserId == null ? null : joinUserId.toString(), true);
+                        {
+                            StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                            if (collection != null) {
+                                bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                            }
+                            bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                            Intent intent = new Intent();
+                            intent.setClass(this, ContactPickerActivity.class);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
                     }
                     isUpdate = true;
                  /*删除回调*/
@@ -1102,7 +1165,21 @@ public class TasksInfoActivity extends BaseActivity {
                     startActivity(intent);
                  /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
-                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
+//                    SelectDetUserActivity2.startThisForAllSelect(this,
+//                            joinUserId == null ? null : joinUserId.toString(), true);
+                    {
+                        StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                        if (collection != null) {
+                            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                        }
+                        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                        Intent intent = new Intent();
+                        intent.setClass(this, ContactPickerActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                     isUpdate = true;
                 }
                 break;

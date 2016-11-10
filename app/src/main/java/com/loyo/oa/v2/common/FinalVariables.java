@@ -125,9 +125,15 @@ public final class FinalVariables {
      **/
     public static final String QUERY_CUSTOMERS_COMPANY = Config_project.API_URL_CUSTOMER() + "/customer/winnear";
     /**
-     * 个人客户数据集
+     * 我负责的客户数集
      **/
-    public static final String QUERY_CUSTOMERS_SELF = Config_project.API_URL_CUSTOMER() + "/customer/self";
+    public static final String QUERY_CUSTOMERS_RESPON = Config_project.API_URL_CUSTOMER() + "/customer/own/mobile/simplify";
+    /**
+     * 我参与的客户数集
+     **/
+    public static final String QUERY_CUSTOMERS_MEMBER = Config_project.API_URL_CUSTOMER() + "/customer/link/mobile/simplify";
+
+
     /**
      * 团队客户数据集
      **/
@@ -136,6 +142,14 @@ public final class FinalVariables {
      * 公海客户数据集
      **/
     public static final String QUERY_CUSTOMERS_PUBLIC = Config_project.API_URL_CUSTOMER() + "/customer/shared";
+    /**
+     * 我负责的客户查询
+     **/
+    public static final String SEARCH_CUSTOMERS_RESPON = Config_project.API_URL_CUSTOMER() + "/customer/ownsearch";
+    /**
+     * 我参与的客户查询
+     **/
+    public static final String SEARCH_CUSTOMERS_MEMBER = Config_project.API_URL_CUSTOMER() + "/customer/linksearch";
     /**
      * 个人客户查询
      **/
@@ -184,5 +198,8 @@ public final class FinalVariables {
 
     public static final String ACTION_DATA_CHANGE = "com.loyo.oa.v2.ACTION_DATA_CHANGE";
     public static final String ACTION_DATA_CUSTOMER = "com.loyo.oa.v2.ACTION_DATA_CUSTOMER";
+
+    public static final String PICK_RESPONSIBLE_USER_REQUEST = "com.loyo.oa.pickcontact.PICK_RESPONSIBLE_USER_REQUEST";
+    public static final String PICK_INVOLVE_USER_REQUEST = "com.loyo.oa.pickcontact.PICK_INVOLVE_USER_REQUEST";
 
 }

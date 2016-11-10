@@ -31,7 +31,15 @@
             android:lineSpacingMultiplier="1.1"
             android:text=""
             android:textColor="@color/text66"
-            android:textSize="@dimen/text_sp15" />
+            android:textSize="@dimen/text_sp15"
+            android:visibility="gone"/>
+        <!--  WebView的容器  -->
+        <LinearLayout
+            android:id="@+id/ll_web"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/layout_audio"
@@ -45,16 +53,14 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/icon_audio_phone"
-                />
+                android:background="@drawable/icon_audio_phone" />
 
             <TextView
                 android:id="@+id/iv_calls"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimen_33"
                 android:background="@drawable/animation_calls"
-                android:textColor="#3FD3AA"
-                />
+                android:textColor="#3FD3AA" />
 
             <TextView
                 android:id="@+id/tv_audio_length"

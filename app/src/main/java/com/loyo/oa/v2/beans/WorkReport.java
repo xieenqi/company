@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.discuss.bean.DiscussCounter;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.work.bean.Reviewer;
 import com.loyo.oa.v2.activityui.work.bean.WorkReportDyn;
 

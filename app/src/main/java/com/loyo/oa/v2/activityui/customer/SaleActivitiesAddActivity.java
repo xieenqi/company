@@ -13,7 +13,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -107,26 +107,28 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
         ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
-        if(null!=mCustomer){
-            getDefaultContact( mCustomer.contacts);
+        if (null != mCustomer) {
+            getDefaultContact(mCustomer.contacts);
         }
     }
 
     /**
      * 获取客户的默认联系人
+     *
      * @param data
      */
-    private void getDefaultContact(ArrayList<Contact> data){
-    for(Contact ele:data){
-        if(!ele.isDefault()){
-            continue;
-        }else {
-            contactId=ele.getId();
-            contactName=ele.getName();
-            tv_contact_name.setText(contactName);
+    private void getDefaultContact(ArrayList<Contact> data) {
+        for (Contact ele : data) {
+            if (!ele.isDefault()) {
+                continue;
+            } else {
+                contactId = ele.getId();
+                contactName = ele.getName();
+                tv_contact_name.setText(contactName);
+            }
         }
     }
-}
+
     /**
      * 选择下次跟进时间
      */
@@ -160,7 +162,8 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 loseBundle.putString("title", "跟进方式");
                 loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_SINGLE);
                 loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_SALE_ACTIVE_ACTION);
-                app.startActivityForResult(this, CommonTagSelectActivity_.class, 0, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
+                loseBundle.putString("tagName", tv_sale_action.getText().toString());
+                app.startActivityForResult(this, CommonTagSelectActivity_.class, app.ENTER_TYPE_RIGHT, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
                 break;
 
             case R.id.img_title_right:
@@ -280,8 +283,8 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 String customerName = "无";
                 if (null != customer) {
                     mCustomer = customer;
-                    customerName=customer.name;
-                    getDefaultContact( mCustomer.contacts);
+                    customerName = customer.name;
+                    getDefaultContact(mCustomer.contacts);
                 }
                 tv_customer.setText(customerName);
                 ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);

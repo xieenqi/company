@@ -19,10 +19,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.activityui.attendance.ValidateInfo;
-import com.loyo.oa.v2.activityui.attendance.bean.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
+import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
+import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
@@ -32,7 +32,7 @@ import com.loyo.oa.v2.activityui.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.activityui.home.cusview.MoreWindowCase;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
@@ -204,9 +204,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // TODO: 建立单独的获取配置Service
-        /* 获取配置数据 */
-        WorksheetConfig.fetchWorksheetTypes();
     }
 
     @Override
@@ -266,6 +263,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         }
         LogUtil.d("用户获取的token：---> " + app.getToken());
         updateUser();
+
         startTrack();
         return mView;
     }
@@ -307,13 +305,13 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 组装首页Item数据
      */
     void updateUser() {
-
-        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", "com.loyo.oa.v2.activityui.other.BulletinManagerActivity_", "0", 0),
+//产品确定 除了讨论模块其它都受权限控制 20161019
+        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", "com.loyo.oa.v2.activityui.other.BulletinManagerActivity_", "0200", 0),
                 new HomeItem(R.drawable.newmain_discuss, "我的讨论", "com.loyo.oa.v2.activityui.discuss.MyDiscussActivity", "0", 0),
                 new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity", "0213", 0),
                 new HomeItem(R.drawable.newmain_clue, "销售线索", "com.loyo.oa.v2.activityui.clue.ClueManagerActivity", "0217", 1),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
-                new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signin.SignInManagerActivity_", "0206", 1),
+                new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signin.SignInManagerActivity_", "0228", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
                 new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0216", 1),//新加订单
                 new HomeItem(R.drawable.newmain_worksheet, "工单管理", "com.loyo.oa.v2.activityui.worksheet.WorksheetManageActivity", "0218"/* 测试是始终显示 */, 1),//新加工单
@@ -321,7 +319,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_", "0202", 2),
                 new HomeItem(R.drawable.newmain_report, "工作报告", "com.loyo.oa.v2.activityui.work.WorkReportsManageActivity", "0203", 2),
                 new HomeItem(R.drawable.newmain_wfin, "审批流程", "com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity", "0204", 2),
-                new HomeItem(R.drawable.newmain_attent, "考勤管理", "com.loyo.oa.v2.activityui.attendance.AttendanceActivity_", "0211", 2)));
+                new HomeItem(R.drawable.newmain_attent, "考勤管理", "com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_", "0211", 2)));
 
 
         caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务", "0202", R.drawable.newmain_post_task),
@@ -331,10 +329,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
                 new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
                 new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
-                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign),
+                new MoreWindowItem("拜访签到", "0228", R.drawable.newmain_post_sign),
                 new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow)));
-
-
     }
 
     /**
@@ -410,7 +406,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 //已打卡完毕 跳转考勤列表
                 else {
                     Toast.makeText(getActivity(), "您今天已经打卡完毕", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getActivity(), AttendanceActivity_.class);
+                    Intent intent = new Intent(getActivity(), AttendanceManagerActivity_.class);
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }
@@ -565,6 +561,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                         super.failure(error);
                     }
                 });
+        // TODO: 建立单独的获取配置Service  目前初始化数据在首页加载完成在加载
+        /* 获取配置数据 */
+        WorksheetConfig.fetchWorksheetTypes();
     }
 
     //获取轨迹，并设置AlarmManager
@@ -581,8 +580,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         updateUser();
         //超级管理员判断
         if (null != MainApp.user && !MainApp.user.isSuperUser()) {
-            if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
-                    0 == MainApp.user.newpermission.size()) {
+            if (null == MainApp.user || null == MainApp.user.permissionGroup) {
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
@@ -600,33 +598,36 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 return;
             }
 
-            ArrayList<Permission> suitesNew = new ArrayList<>();
-            suitesNew.clear();
-            suitesNew.addAll(MainApp.user.newpermission);
-
-            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
-            for (Permission permission : suitesNew) {
-                if (!TextUtils.isEmpty(permission.code)) {
-                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
-                    mappedPermission.put(permission.code, permission);
-                }
-            }
-
-            for (int i = 0; i < items.size(); i++) {
+//            ArrayList<Permission> suitesNew = new ArrayList<>();
+//            suitesNew.clear();
+//            suitesNew.addAll(MainApp.user.newpermission);
+//
+//            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
+//            for (Permission permission : suitesNew) {
+//                if (!TextUtils.isEmpty(permission.code)) {
+//                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+//                    mappedPermission.put(permission.code, permission);
+//                }
+//            }
+            Map<String, Permission> mappedPermission = MainApp.rootMap;
+            int itemsLength = items.size();
+            for (int i = 0; i < itemsLength; i++) {
                 String code = items.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {
                     items.remove(i);
                     i--;
+                    itemsLength--;
                 }
             }
-
-            for (int i = 0; i < caseItems.size(); i++) {
+            int caseItemsLength = caseItems.size();
+            for (int i = 0; i < caseItemsLength; i++) {
                 String code = caseItems.get(i).code;
                 Permission p = mappedPermission.get(code);
                 if ((p == null || p.enable == false) && code != "0") {
                     caseItems.remove(i);
                     i--;
+                    caseItemsLength--;
                 }
             }
         }
@@ -667,7 +668,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      */
     private ValidateItem availableValidateItem() {
         ValidateItem validateItem = null;
-        for (int i = 0; i < validateInfo.getValids().size(); i++) {
+        int validsLength = validateInfo.getValids().size();
+        for (int i = 0; i < validsLength; i++) {
             validateItem = validateInfo.getValids().get(i);
             if (validateItem.isEnable() && !validateItem.ischecked()) {
                 break;
@@ -730,23 +732,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 intentValue();
             }
         }, "提示", getString(R.string.app_attanceworry_message));
-
-/*        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
-        //确认
-        generalPopView.setSureOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-                intentValue();
-            }
-        });
-        //取消
-        generalPopView.setCancelOnclick(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                generalPopView.dismiss();
-            }
-        });*/
     }
 
     /**
@@ -760,6 +745,9 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
+        intent.putExtra("lateMin", attendanceRecords.getLateMin());
+        intent.putExtra("earlyMin", attendanceRecords.getEarlyMin());
+
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
 
@@ -832,7 +820,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
             @Override
             public void success(final User user, final Response response) {
-                HttpErrorCheck.checkResponse(response);
                 requestNumber();
             }
 

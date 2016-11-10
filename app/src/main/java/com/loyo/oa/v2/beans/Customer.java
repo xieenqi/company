@@ -1,14 +1,14 @@
 package com.loyo.oa.v2.beans;
 
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.activityui.customer.bean.Counter;
-import com.loyo.oa.v2.activityui.customer.bean.CustomerRegional;
-import com.loyo.oa.v2.activityui.customer.bean.ExtraData;
-import com.loyo.oa.v2.activityui.customer.bean.Industry;
-import com.loyo.oa.v2.activityui.customer.bean.Locate;
-import com.loyo.oa.v2.activityui.customer.bean.Member;
-import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Counter;
+import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
+import com.loyo.oa.v2.activityui.customer.model.ExtraData;
+import com.loyo.oa.v2.activityui.customer.model.Industry;
+import com.loyo.oa.v2.activityui.customer.model.Locate;
+import com.loyo.oa.v2.activityui.customer.model.Member;
+import com.loyo.oa.v2.activityui.customer.model.NewTag;
+import com.loyo.oa.v2.activityui.other.model.User;
 
 import java.util.ArrayList;
 

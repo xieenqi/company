@@ -46,12 +46,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.customer.bean.Contact;
-import com.loyo.oa.v2.activityui.customer.bean.Member;
-import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.activityui.customer.bean.Role;
-import com.loyo.oa.v2.activityui.customer.bean.TagItem;
-import com.loyo.oa.v2.activityui.other.bean.CellInfo;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Member;
+import com.loyo.oa.v2.activityui.customer.model.NewTag;
+import com.loyo.oa.v2.activityui.customer.model.Role;
+import com.loyo.oa.v2.activityui.customer.model.TagItem;
+import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NewUser;
@@ -810,23 +810,23 @@ public class Utils {
         return false;
     }
 
-    /**
-     * 是否有权限
-     *
-     * @return
-     */
-    public static boolean hasRights() {
-        if (MainApp.user == null) {
-            return false;
-        }
-        Role role = MainApp.user.role;
-        if (null != role) {
-            if (role.getDataRange() != Role.SELF) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    /**
+//     * 是否有权限
+//     *
+//     * @return
+//     */
+//    public static boolean hasRights() {
+//        if (MainApp.user == null) {
+//            return false;
+//        }
+//        Role role = MainApp.user.role;
+//        if (null != role) {
+//            if (role.getDataRange() != Role.SELF) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * 改变文字颜色

@@ -7,11 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
+import com.loyo.oa.v2.activityui.commonview.CommonImageView;
+import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
+import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
@@ -24,7 +29,6 @@ import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -63,6 +67,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
         getIntenData();
         setTitle("跟进动态");
         initUI();
+        showLoading("");
         getData();
     }
 
@@ -222,31 +227,52 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
 
         @Override
         public View getView(final int i, View convertView, final ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
-            }
-
-            ListView lv_listview = ViewHolder.get(convertView, R.id.lv_listview);
-            TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
-            TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
-            TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
-            TextView tv_follow_name = ViewHolder.get(convertView, R.id.tv_follow_name);
-            TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
-            ImageView iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
+            Holder holder;
             SaleActivity saleActivity = lstData_saleActivity_current.get(i);
-
-            tv_create_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt()));
-            tv_content.setText(saleActivity.getContent());
-            tv_contact_name.setText("联系人：" + saleActivity.contactName);
-            tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
+            if (convertView == null) {
+                holder = new Holder();
+                convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
+                holder.ll_layout_time = ViewHolder.get(convertView, R.id.ll_layout_time);
+                holder.layout_audio = ViewHolder.get(convertView, R.id.layout_audio);
+                holder.lv_listview = ViewHolder.get(convertView, R.id.lv_listview);
+                holder.tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
+                holder.tv_content = ViewHolder.get(convertView, R.id.tv_content);
+                holder.tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
+                holder.tv_follow_name = ViewHolder.get(convertView, R.id.tv_follow_name);
+                holder.tv_time = ViewHolder.get(convertView, R.id.tv_time);
+                holder.tv_audio_length = ViewHolder.get(convertView, R.id.tv_audio_length);
+                holder.iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
+                holder.tv_calls = ViewHolder.get(convertView, R.id.iv_calls);
+                holder.ll_web = ViewHolder.get(convertView, R.id.ll_web);//装在webview的容器
+                convertView.setTag(holder);
+            } else {
+                holder = (Holder) convertView.getTag();
+            }
+            holder.setContent(holder.ll_web, saleActivity.getContent());
+//            ListView lv_listview = ViewHolder.get(convertView, R.id.lv_listview);
+//            TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
+//            TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
+//            TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
+//            TextView tv_follow_name = ViewHolder.get(convertView, R.id.tv_follow_name);
+//            TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
+//            ImageView iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
+            holder.tv_create_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt()));
+            if (!saleActivity.getContent().contains("<p>")) {
+                holder.tv_content.setVisibility(View.VISIBLE);
+                holder.tv_content.setText(saleActivity.getContent());
+            } else {
+                holder.tv_content.setVisibility(View.GONE);
+            }
+            holder.tv_contact_name.setText("联系人：" + saleActivity.contactName);
+            holder.tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
 
             if (null != saleActivity.getAttachments() && saleActivity.getAttachments().size() != 0) {
-                lv_listview.setVisibility(View.VISIBLE);
+                holder.lv_listview.setVisibility(View.VISIBLE);
                 nestionListAdapter = new DynamicListnestingAdapter(saleActivity.getAttachments(), mContext);
-                lv_listview.setAdapter(nestionListAdapter);
+                holder.lv_listview.setAdapter(nestionListAdapter);
                 nestionListAdapter.refreshData();
             } else {
-                lv_listview.setVisibility(View.GONE);
+                holder.lv_listview.setVisibility(View.GONE);
             }
 
             if (i == lstData_saleActivity_current.size() - 1) {
@@ -255,6 +281,37 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
                 convertView.setBackgroundColor(getResources().getColor(R.color.white));
             }
             return convertView;
+        }
+
+    }
+
+    class Holder {
+        LinearLayout ll_layout_time;
+        LinearLayout layout_audio, ll_web;
+        ListView lv_listview;
+        TextView tv_create_time;
+        TextView tv_content;
+        TextView tv_contact_name;
+        TextView tv_follow_name;
+        TextView tv_time;
+        TextView tv_audio_length;
+        ImageView iv_imgTime;
+        TextView tv_calls;
+        /**
+         * 设置图文混编
+         */
+        public void setContent(LinearLayout layout, String content) {
+            layout.removeAllViews();
+            for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
+                if (ele.type.startsWith("img")) {
+                    CommonImageView img = new CommonImageView(ClueDynamicManagerActivity.this, ele.data);
+                    layout.addView(img);
+                } else {
+                    CommonTextVew tex = new CommonTextVew(ClueDynamicManagerActivity.this, ele.data);
+                    layout.addView(tex);
+                }
+            }
+            layout.setVisibility(View.VISIBLE);
         }
     }
 }

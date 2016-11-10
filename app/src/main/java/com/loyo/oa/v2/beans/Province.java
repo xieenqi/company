@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.beans;
 
-import com.loyo.oa.v2.activityui.customer.bean.City;
+import com.loyo.oa.v2.activityui.customer.model.City;
 
 import java.util.ArrayList;
 

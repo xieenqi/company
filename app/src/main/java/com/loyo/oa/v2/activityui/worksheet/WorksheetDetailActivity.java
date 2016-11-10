@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
@@ -28,6 +30,7 @@ import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IWorksheet;
@@ -35,12 +38,10 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.squareup.otto.Subscribe;
-
+import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -51,6 +52,7 @@ import retrofit.client.Response;
  * Created by xeq on 16/8/27.
  */
 public class WorksheetDetailActivity extends BaseActivity implements View.OnClickListener {
+    private static String PICK_USER_SESSION = "com.loyo.WorksheetDetailActivity.PICK_USER_SESSION";
     private LinearLayout img_title_left;
     private LinearLayout ll_worksheet_info;
     private LinearLayout ll_events, ll_wran;
@@ -67,33 +69,47 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
             switch (msg.what) {
 
                 case ExtraAndResult.WORKSHEET_EVENT_DETAIL://到事件详情
+                {
                     Bundle bundle = new Bundle();
                     WSRole role = getRoleforEvent((WorksheetEventsSupporter) msg.obj);
                     ArrayList<WorksheetEventAction> actions = actionsForRole((WorksheetEventsSupporter) msg.obj, role);
                     bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, (WorksheetEventsSupporter) msg.obj);
                     bundle.putSerializable(ExtraAndResult.EXTRA_DATA, (WorksheetDetail) detail);
                     bundle.putString(ExtraAndResult.EXTRA_ID2, detail.id);
-                    app.startActivityForResult(WorksheetDetailActivity.this, EventDetialActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
-                    break;
+                    app.startActivityForResult(WorksheetDetailActivity.this, EventDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, bundle);
+
+                }
+                break;
                 case ExtraAndResult.WORKSHEET_EVENT_TRANSFER://设置负责人
                 case ExtraAndResult.WORKSHEET_EVENT_DISPATCH://设置负责人
                     eventId = (String) msg.obj;
-                    SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
-                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                {
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                    bundle.putSerializable(ContactPickerActivity.SESSION_KEY, WorksheetDetailActivity.PICK_USER_SESSION);
+                    Intent intent = new Intent();
+                    intent.setClass(WorksheetDetailActivity.this, ContactPickerActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
                     break;
                 case ExtraAndResult.WORKSHEET_EVENT_REDO://事件重做
+                {
                     eventId = (String) msg.obj;
                     Bundle mBundle = new Bundle();
                     mBundle.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
                     mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x01 /*提交完成:0x02,打回重做0x01*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                }
                     break;
                 case ExtraAndResult.WORKSHEET_EVENT_FINISH://事件提交完成
+                {
                     eventId = (String) msg.obj;
                     Bundle bd = new Bundle();
                     bd.putString(ExtraAndResult.CC_USER_ID, eventId /*事件id*/);
                     bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bd);
+                }
                     break;
             }
         }
@@ -174,14 +190,23 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 onBackPressed();
                 break;
             case R.id.ll_worksheet_info://进入事件信息
+            {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(ExtraAndResult.CC_USER_ID, detail.id);
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
+            }
                 break;
             case R.id.tv_setting://批量设置
                 eventId = "";
-                SelectDetUserActivity2.startThisForOnly(WorksheetDetailActivity.this, null);
-                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+            {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+                bundle.putSerializable(ContactPickerActivity.SESSION_KEY, WorksheetDetailActivity.PICK_USER_SESSION);
+                Intent intent = new Intent();
+                intent.setClass(WorksheetDetailActivity.this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
                 break;
             case R.id.bt_confirm://提交完成
                 stopWorksheet(4);
@@ -332,6 +357,22 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                         HttpErrorCheck.checkError(error);
                     }
                 });
+    }
+
+    /**
+     * 选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+        if (WorksheetDetailActivity.PICK_USER_SESSION.equals(event.session)) {
+            StaffMemberCollection collection = event.data;
+            NewUser u = Compat.convertStaffCollectionToNewUser(collection);
+            if (!TextUtils.isEmpty(eventId)) {
+                setEventPersonal(u.getId());
+            } else {
+                setAllEventPersonal(u.getId());
+            }
+        }
     }
 
     @Override

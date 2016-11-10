@@ -11,27 +11,23 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.bean.Item_info_Group;
-import com.loyo.oa.v2.activityui.customer.bean.NewTag;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
-import com.loyo.oa.v2.activityui.customer.bean.TagItem;
+import com.loyo.oa.v2.activityui.customer.model.Item_info_Group;
+import com.loyo.oa.v2.activityui.customer.model.NewTag;
+import com.loyo.oa.v2.activityui.customer.model.Tag;
+import com.loyo.oa.v2.activityui.customer.model.TagItem;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
-
 import retrofit.client.Response;
 
 /**

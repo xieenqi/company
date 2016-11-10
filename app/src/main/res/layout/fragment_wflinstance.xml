@@ -6,18 +6,14 @@
               android:background="@color/activity_bg"
               android:orientation="vertical">
 <!-- 我提交的 我审批的  -->
-
-    <FrameLayout
+    <com.loyo.oa.dropdownmenu.DropDownMenu
+        android:id="@+id/drop_down_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
         <FrameLayout
+            android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dimen_45">
-
-
+            android:layout_height="match_parent">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -84,14 +80,5 @@
 
         </FrameLayout>
 
-
-        <com.loyo.oa.v2.customview.filterview.DropDownMenu
-            android:id="@+id/drop_menu"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_45"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="invisible"/>
-    </FrameLayout>
+    </com.loyo.oa.dropdownmenu.DropDownMenu>
 </LinearLayout>

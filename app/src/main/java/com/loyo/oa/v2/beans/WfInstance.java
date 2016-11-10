@@ -3,7 +3,7 @@ package com.loyo.oa.v2.beans;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
-import com.loyo.oa.v2.activityui.other.bean.User;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;

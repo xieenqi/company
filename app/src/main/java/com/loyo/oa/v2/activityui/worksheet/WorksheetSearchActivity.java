@@ -15,20 +15,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 import com.loyo.oa.v2.activityui.worksheet.adapter.ResponsableWorksheetsAdapter;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEvent;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
-import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetListType;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventChangeEvent;
+import com.loyo.oa.v2.activityui.worksheet.event.WorksheetEventFinishAction;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.common.GroupsData;
+import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
@@ -36,7 +35,8 @@ import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -136,7 +136,7 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
 
         ExpandableListView innerListView = expandableListView.getRefreshableView();
         if (searchType != WorksheetListType.RESPONSABLE) {
-            adapter = new WorksheetListAdapter(this, groupsData,false);
+            adapter = new WorksheetListAdapter(this, groupsData,false,false);
         }
         else {
             adapter = new ResponsableWorksheetsAdapter(this, groupsData, WorksheetEventFinishAction.FROM_SEARCH_LIST);
