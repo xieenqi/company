@@ -151,9 +151,9 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         }
 
         List<FilterModel> options = new ArrayList<>();
+        options.add(new OrganizationFilterModel(depts, title));
         options.add(TimeFilterModel.getFilterModel());
         options.add(TagMenuModel.getTagFilterModel(mTags));
-        options.add(new OrganizationFilterModel(depts, title));
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
         adapter.setCallback(new OnMenuModelsSelected() {

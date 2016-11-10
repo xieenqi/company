@@ -760,6 +760,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
 
+        <activity
+            android:name=".activityui.signinnew.SigninNewManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+
         <!-- 其它 -->
         <activity
             android:name=".activityui.other.PreviewImageAddActivity"
