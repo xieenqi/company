@@ -40,7 +40,7 @@ import retrofit.client.Response;
  * 客户管理，查重
  * Created by yyy on 15/12/9.
  */
-public class CustomerRepeat extends BaseActivity {
+public class CustomerRepeat extends BaseActivity implements CustomerRepeatAdapter.PickInOnCallBack{
 
     private LinearLayout ll_showonly;
     private RelativeLayout img_title_left;
@@ -51,19 +51,6 @@ public class CustomerRepeat extends BaseActivity {
     private Intent mIntent;
     private CustomerRepeatAdapter adapter;
     private boolean isOk;
-
-//    private Handler mHandler = new Handler() {
-//
-//        @Override
-//        public void handleMessage(final Message msg) {
-//            if (msg.what == 0x01) {
-//                SpannableString searchInfo = new SpannableString(edt_search.getText().toString());
-//                searchInfo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_bg1)),
-//                        0, edt_search.getText().toString().length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-//                tv_customer_onlyname.setText("不存在该客户,点击 “" + searchInfo + "” ,创建该客户");
-//            }
-//        }
-//    };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -104,7 +91,7 @@ public class CustomerRepeat extends BaseActivity {
             }
         });
         ll_showonly.setOnClickListener(onClickListener);
-//        tv_serach.setOnClickListener(onClickListener);
+//      tv_serach.setOnClickListener(onClickListener);
         img_title_left.setOnClickListener(onClickListener);
         //自动搜索
         edt_search.addTextChangedListener(new TextWatcher() {
@@ -147,12 +134,6 @@ public class CustomerRepeat extends BaseActivity {
                     intent.putExtra("name", edt_search.getText().toString());
                     app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     break;
-//                case R.id.tv_serach:
-//                    if (edt_search.getText().toString().isEmpty()) {
-//                        Toast("搜索内容不能为空");
-//                    }
-//                    serachRepate(edt_search.getText().toString());
-//                    break;
                 default:
                     break;
             }
@@ -177,7 +158,6 @@ public class CustomerRepeat extends BaseActivity {
             @Override
             public void success(final PaginationX<CustomerRepeatList> customerRepeatList, final Response response) {
                 HttpErrorCheck.checkResponse("查重客户：", response);
-                LogUtil.dll("success result:" + MainApp.gson.toJson(customerRepeatList));
                 setViewdata(customerRepeatList);
             }
 
@@ -218,9 +198,13 @@ public class CustomerRepeat extends BaseActivity {
             ll_showonly.setVisibility(View.GONE);
         }
 
-        LogUtil.dll("re:" + isOk);
-        adapter = new CustomerRepeatAdapter(customerRepeatList, CustomerRepeat.this);
+        adapter = new CustomerRepeatAdapter(customerRepeatList, CustomerRepeat.this,this);
         lv_list.setAdapter(adapter);
 
+    }
+
+    @Override
+    public void pickEmbl() {
+        serachRepate(edt_search.getText().toString().trim());
     }
 }
