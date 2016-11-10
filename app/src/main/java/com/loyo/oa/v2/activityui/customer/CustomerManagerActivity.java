@@ -51,7 +51,7 @@ import retrofit.client.Response;
  * 【客户列表】fragment管理类
  * Created by yyy on 16/6/1.
  */
-public class CustomerManagerActivity extends BaseFragmentActivity implements View.OnClickListener,MyMemberFragment.MemberCallback {
+public class CustomerManagerActivity extends BaseFragmentActivity implements View.OnClickListener, MyMemberFragment.MemberCallback {
 
     /**
      * 筛选取消
@@ -86,12 +86,12 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     /**
      * 团队客户
      */
-    public final static int CUSTOMER_TEAM = 2;
+    public final static int CUSTOMER_TEAM = 3;
 
     /**
      * 公海客户
      */
-    public final static int CUSTOMER_COMM = 3;
+    public final static int CUSTOMER_COMM = 4;
 
     /**
      * 个人附近客户
@@ -122,7 +122,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private ArrayList<Tag> mTags3;
     public boolean publicOrTeam;
     private List<BaseFragment> fragments = new ArrayList<>();
-    private String[] SaleItemStatus = new String[]{"我负责的","我参与的","公海客户"};
+    private String[] SaleItemStatus = new String[]{"我负责的", "我参与的", "公海客户"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,7 +201,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         //超级管理员权全公司  没有获取到权限就不显示
         permission = MainApp.rootMap.get("0205"); //客户权限
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
-            SaleItemStatus = new String[]{"我负责的","我参与的","团队客户", "公海客户"};
+            SaleItemStatus = new String[]{"我负责的", "我参与的", "团队客户", "公海客户"};
             publicOrTeam = true;
         }
 
@@ -304,7 +304,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
             /*搜索*/
             case R.id.img_title_search_right:
                 int type = 0;
-                switch (tv_title_1.getText().toString()){
+                switch (tv_title_1.getText().toString()) {
 
                     case "我负责的":
                         type = 1;
@@ -347,8 +347,8 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
 
     /**
      * 重启Activity
-     * */
-    void reStart(){
+     */
+    void reStart() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -359,7 +359,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
 
     /**
      * 我参与界面新建完成,要回到我负责界面,直接重启activity
-     * */
+     */
     @Override
     public void comeBackHeadPage() {
         reStart();
