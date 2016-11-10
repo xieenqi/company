@@ -46,10 +46,9 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     private DropDownMenu filterMenu;
     private ArrayList<Tag> mTags;
 
-    private String field = "lastActAt";
-    private String order = "desc";
-
-    private String tagsParams = "";
+    private String menuTimekey = "";        /*时间*/
+    private String menuKindkey = "";        /*类型*/
+    private String menuSortkey = "";        /*排序*/
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -104,17 +103,32 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
-                if (menuIndex == 0) {
-                    MenuModel model = selectedModels.get(0);
-                    String key = model.getKey();
-                    String value = model.getValue();
-                    filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-                    Toast("key:"+key+" value"+value);
+                MenuModel model = selectedModels.get(0);
+                switch (menuIndex){
+
+                    /*时间*/
+                    case 0:
+                        menuTimekey = selectedModels.get(0).getKey();
+                        filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        Toast("key:"+menuTimekey+" value"+model.getValue());
+                        break;
+
+                    /*类型*/
+                    case 1:
+                        menuKindkey = model.getKey();
+                        filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        Toast("key:"+menuKindkey+" value"+model.getValue());
+                        break;
+
+                    /*排序*/
+                    case 2:
+                        menuSortkey = model.getKey();
+                        filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        Toast("key:"+menuSortkey+" value"+model.getValue());
+                        break;
+
                 }
-                else if (menuIndex == 1) {
-                    tagsParams = userInfo.toString();
-                    Toast("tagsParams:"+tagsParams);
-                }
+
                 /*isPullUp = false;
                 page = 1;
                 getData();*/

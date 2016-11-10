@@ -44,10 +44,8 @@ public class SelfDynamicFragment extends BaseFragment implements PullToRefreshBa
     private DropDownMenu filterMenu;
     private ArrayList<Tag> mTags;
 
-    private String field = "lastActAt";
-    private String order = "desc";
-
-    private String tagsParams = "";
+    private String menuTimeKey = ""; /*时间*/
+    private String menuChosKey = ""; /*筛选*/
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -93,24 +91,30 @@ public class SelfDynamicFragment extends BaseFragment implements PullToRefreshBa
      * */
     private void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
-        options.add(DynamicFilterTimeModel.getFilterModel());     //第一个时间参数
-        options.add(TagMenuModel.getTagFilterModel(mTags));   //第二个筛选参数,manager传过来,由后台获取
+        options.add(DynamicFilterTimeModel.getFilterModel());     //时间
+        options.add(TagMenuModel.getTagFilterModel(mTags));       //筛选
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
         adapter.setCallback(new OnMenuModelsSelected() {
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
-                if (menuIndex == 0) {
-                    MenuModel model = selectedModels.get(0);
-                    String key = model.getKey();
-                    String value = model.getValue();
-                    filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-                    Toast("key:"+key+" value"+value);
-                }
-                else if (menuIndex == 1) {
-                    tagsParams = userInfo.toString();
-                    Toast("tagsParams:"+tagsParams);
+                MenuModel model = selectedModels.get(0);
+                switch (menuIndex){
+
+                    /*时间*/
+                    case 0:
+                        menuTimeKey = selectedModels.get(0).getKey();
+                        filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        Toast("key:"+menuTimeKey+" value"+model.getValue());
+                        break;
+
+                    /*筛选*/
+                    case 1:
+                        menuChosKey = model.getKey();
+                        Toast("key:"+menuChosKey+" value"+model.getValue());
+                        break;
+
                 }
                 /*isPullUp = false;
                 page = 1;

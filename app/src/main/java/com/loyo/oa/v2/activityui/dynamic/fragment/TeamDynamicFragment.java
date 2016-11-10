@@ -14,6 +14,7 @@ import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterTimeModel;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.SigninFilterSortModel;
 import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
@@ -48,9 +49,9 @@ public class TeamDynamicFragment extends BaseFragment implements PullToRefreshBa
     private ArrayList<Tag> mTags;
     private DropDownMenu filterMenu;
 
-    private String field = "";
-    private String order = "";
-    private String tagsParams = "";
+    private String menuTimekey = "";        /*时间*/
+    private String menuChoskey = "";        /*筛选*/
+    private String menuGuykey = "";         /*人员*/
 
     private Permission permission;
 
@@ -106,39 +107,56 @@ public class TeamDynamicFragment extends BaseFragment implements PullToRefreshBa
         //为超管或权限为全公司 展示全公司成员
         if (permission != null && permission.dataRange == Permission.COMPANY) {
             depts.addAll(OrganizationManager.shareManager().allDepartments());
-            title = "全公司";
+            //title = "全公司";
+            title = "人员";
         }
         //权限为部门 展示我的部门
         else if (permission != null && permission.dataRange == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
-            title = "本部门";
+            //title = "本部门";
+            title = "人员";
         }
         else {
-            title = "我";
+            //title = "我";
+            title = "人员";
             depts.add(OrganizationFilterModel.selfDepartment());
         }
 
         List<FilterModel> options = new ArrayList<>();
-        options.add(DynamicFilterTimeModel.getFilterModel());       //时间
-        options.add(TagMenuModel.getTagFilterModel(mTags));         //筛选
-        options.add(new OrganizationFilterModel(depts, title));     //人员
+        options.add(DynamicFilterTimeModel.getFilterModel());     //时间
+        options.add(TagMenuModel.getTagFilterModel(mTags));       //筛选
+        options.add(new OrganizationFilterModel(depts, title));   //人员
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
         adapter.setCallback(new OnMenuModelsSelected() {
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
-                if (menuIndex == 0) {
-                    MenuModel model = selectedModels.get(0);
-                    String key = model.getKey();
-                    String value = model.getValue();
-                    filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-                    Toast("key:"+key+" value"+value);
+                MenuModel model = selectedModels.get(0);
+                switch (menuIndex){
+
+                    /*时间*/
+                    case 0:
+                        menuTimekey = selectedModels.get(0).getKey();
+                        filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        Toast("key:"+menuTimekey+" value"+model.getValue());
+                        break;
+
+                    /*筛选*/
+                    case 1:
+                        menuChoskey = model.getKey();
+                        Toast("key:"+menuChoskey+" value"+model.getValue());
+                        break;
+
+                    /*人员*/
+                    case 2:
+                        menuGuykey = model.getKey();
+                        filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                        Toast("key:"+menuGuykey+" value"+model.getValue());
+                        break;
+
                 }
-                else if (menuIndex == 1) {
-                    tagsParams = userInfo.toString();
-                    Toast("tagsParams:"+tagsParams);
-                }
+
                 /*isPullUp = false;
                 page = 1;
                 getData();*/

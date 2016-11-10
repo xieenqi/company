@@ -21,7 +21,7 @@ public class SigninFilterSortModel {
         list.add(new MenuFilterByTimeModel(SigninFilterBySort.SORT2));
         list.add(new MenuFilterByTimeModel(SigninFilterBySort.SORT3));
 
-        FilterModel model = new FilterModel(list, "类型", MenuListType.SINGLE_LIST_SINGLE_SEL);
+        FilterModel model = new FilterModel(list, "排序", MenuListType.SINGLE_LIST_SINGLE_SEL);
         return model;
     }
 

@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
+import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
+import com.loyo.oa.v2.activityui.customer.event.EditCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
@@ -43,6 +45,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
+import org.greenrobot.eventbus.Subscribe;
 import java.util.Date;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
@@ -76,6 +79,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     public boolean isLock;
     public boolean isMyUser;
     public boolean isPutOcen;
+    public boolean isEdit;
     public boolean isRoot = false;
     private boolean isMem = false;
     private MembersRoot memRoot;
@@ -430,6 +434,14 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     }
 
     /**
+     * 编辑行为确认
+     * */
+    @Subscribe
+    public void onEditCustomerEvent(EditCustomerEvent event){
+        isEdit = true;
+    }
+
+    /**
      * 查看子内容
      *
      * @param b
@@ -448,7 +460,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             if (isPutOcen) {
                 AppBus.getInstance().post(new MyCustomerListRushEvent());
                 finish();
-            } else {
+            } else if(isEdit){
+                AppBus.getInstance().post(new EditCustomerRushEvent());
+                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                finish();
+            }else{
                 onBackPressed();
             }
             return true;

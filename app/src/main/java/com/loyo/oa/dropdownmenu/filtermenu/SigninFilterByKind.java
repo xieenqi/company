@@ -8,8 +8,8 @@ package com.loyo.oa.dropdownmenu.filtermenu;
 public enum SigninFilterByKind {
 
     ALL("全部","one"),
-    SELF("我创建的","one"),
-    CALLME("@我的","one");
+    SELF("我创建的","tweo"),
+    CALLME("@我的","three");
 
 
     public String key;
