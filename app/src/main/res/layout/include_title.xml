@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/view_h_title"
-                android:background="@color/title_bg1"
-                android:gravity="center_vertical">
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/view_h_title"
+    android:background="@color/title_bg1"
+    android:gravity="center_vertical">
 
     <LinearLayout
         android:id="@+id/ll_back"
@@ -20,7 +20,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/margin_other_view"
             android:scaleType="fitCenter"
-            android:src="@drawable/back_left1"/>
+            android:src="@drawable/back_left1" />
 
     </LinearLayout>
 
@@ -35,8 +35,7 @@
         android:singleLine="true"
         android:text=""
         android:textColor="@color/white"
-        android:textSize="@dimen/text_sp18"
-        />
+        android:textSize="@dimen/text_sp18" />
 
     <TextView
         android:id="@+id/tv_add"
@@ -48,8 +47,7 @@
         android:gravity="center_vertical"
         android:text=""
         android:textColor="@color/white"
-        android:textSize="@dimen/text_sp16"
-        />
+        android:textSize="@dimen/text_sp16" />
 
     <ImageView
         android:id="@+id/iv_submit"
@@ -58,7 +56,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/margin_other_view"
         android:gravity="center_vertical"
-        android:scaleType="fitCenter"
-        />
+        android:scaleType="fitCenter" />
 
 </RelativeLayout>

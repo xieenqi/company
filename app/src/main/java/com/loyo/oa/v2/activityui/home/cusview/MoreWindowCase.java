@@ -245,7 +245,7 @@ public class MoreWindowCase extends PopupWindow {
                         dismiss();
                         break;
 
-                    case "拜访签到":
+                    case "客户拜访":
                         mHandler.sendEmptyMessage(BaseActivity.SIGNIN_ADD);
                         dismiss();
                         break;

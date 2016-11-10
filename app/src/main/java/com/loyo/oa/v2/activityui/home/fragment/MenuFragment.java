@@ -26,7 +26,9 @@ import com.loyo.oa.v2.activityui.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.setting.SettingActivity;
 import com.loyo.oa.v2.activityui.setting.SettingPasswordActivity_;
+import com.loyo.oa.v2.activityui.setting.SystemMessageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -67,15 +69,13 @@ public class MenuFragment extends BaseFragment {
     private GestureDetector gesture; //手势识别
     private float minDistance = 120;//手势滑动最小距离
     private float minVelocity = 200;//手势滑动最小速度
-    private LinearLayout ll_user, ll_pwd, ll_feed_back, ll__update, ll_version, ll_exit, ll_clean;
+    private LinearLayout ll_system, ll_feed_back, ll__update, ll_version, ll_exit, ll_setting, ll_head;
     private RoundImageView riv_head;
     private TextView tv_name, tv_member, tv_version_info, tv_file;
     private ImageView iv_new_version;
     public static ExitAppCallback callback;
     private Intent mIntentCheckUpdate;
-    private boolean isUpdataData = false;
     private boolean isExite = false;
-    Handler handler = new Handler();
     //个人信息 和版本信息
     private BroadcastReceiver userInfoAndVersionInfo = new BroadcastReceiver() {
         @Override
@@ -94,12 +94,6 @@ public class MenuFragment extends BaseFragment {
                     tv_name.setText(user.getRealname());
                     tv_member.setText(user.depts.get(0).getShortDept().getName() + " | " + user.depts.get(0).getTitle());
                 }
-                if (isUpdataData) {
-                    cancelLoading();
-                    Toast("数据更新成功！");
-                    isUpdataData = false;
-                }
-                setDiskCacheInfo();
             } else if ("exite".equals(info) && !isExite) {
                 exit();
                 isExite = true;
@@ -164,26 +158,26 @@ public class MenuFragment extends BaseFragment {
     }
 
     private void initView(View view) {
-        ll_user = (LinearLayout) view.findViewById(R.id.ll_user);
-        ll_pwd = (LinearLayout) view.findViewById(R.id.ll_pwd);
+        ll_head = (LinearLayout) view.findViewById(R.id.ll_head);
+        ll_system = (LinearLayout) view.findViewById(R.id.ll_system);
         ll_feed_back = (LinearLayout) view.findViewById(R.id.ll_feed_back);
         ll__update = (LinearLayout) view.findViewById(R.id.ll__update);
         ll_version = (LinearLayout) view.findViewById(R.id.ll_version);
         ll_exit = (LinearLayout) view.findViewById(R.id.ll_exit);
-        ll_clean = (LinearLayout) view.findViewById(R.id.ll_clean);
+        ll_setting = (LinearLayout) view.findViewById(R.id.ll_setting);
         riv_head = (RoundImageView) view.findViewById(R.id.riv_head);
         tv_name = (TextView) view.findViewById(R.id.tv_name);
         tv_member = (TextView) view.findViewById(R.id.tv_member);
         tv_version_info = (TextView) view.findViewById(R.id.tv_version_info);
         iv_new_version = (ImageView) view.findViewById(R.id.iv_new_version);
         tv_file = (TextView) view.findViewById(R.id.tv_file);
-        ll_user.setOnTouchListener(touch);
-        ll_pwd.setOnTouchListener(touch);
+        ll_head.setOnTouchListener(touch);
+        ll_system.setOnTouchListener(touch);
         ll_feed_back.setOnTouchListener(touch);
         ll__update.setOnTouchListener(touch);
         ll_version.setOnTouchListener(touch);
         ll_exit.setOnTouchListener(touch);
-        ll_clean.setOnTouchListener(touch);
+        ll_setting.setOnTouchListener(touch);
         try {
             PackageInfo pi = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
             tv_version_info.setText("(当前v" + pi.versionName + ")");
@@ -231,30 +225,16 @@ public class MenuFragment extends BaseFragment {
     private void onClickView(View v) {
         switch (v.getId()) {
             //个人资料
-            case R.id.ll_user:
+            case R.id.ll_head:
                 updateUserinfo();
                 break;
-            //修改密码
-            case R.id.ll_pwd:
-                app.startActivity(getActivity(), SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+            //系统消息
+            case R.id.ll_system:
+                app.startActivity(getActivity(), SystemMessageActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             //意见反馈
             case R.id.ll_feed_back:
                 app.startActivity(getActivity(), FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-                break;
-            //更新数据
-            case R.id.ll__update:
-                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.IS_ORGANIZATION_UPDATE, "all");
-                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, "run");
-                isUpdataData = true;
-                if (Utils.isNetworkAvailable(getActivity())) {
-                    //Global.Toast("开始更新");
-                    showLoading("正在更新组织架构，请稍等", false);
-                    rushHomeData();
-                    initService();
-                } else {
-                    Toast("请检查您的网络连接");
-                }
                 break;
             //检查更新
             case R.id.ll_version:
@@ -279,29 +259,9 @@ public class MenuFragment extends BaseFragment {
                     }, "提示", "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
                 }
                 break;
-            //退出登录
-            case R.id.ll_exit:
-                exit();
-                isExite = false;
-                break;
-            //清除缓存
-            case R.id.ll_clean:
-
-                sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        cancelDialog();
-                    }
-                }, new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        showLoading("");
-                        ImageLoader.getInstance().clearDiskCache();//清除本地磁盘缓存
-                        cancelDialog();
-                        setDiskCacheInfo();
-                    }
-                }, "提醒", "确认清除缓存?");
-
+            //设置
+            case R.id.ll_setting:
+                app.startActivity(mActivity, SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
         }
 
@@ -333,33 +293,6 @@ public class MenuFragment extends BaseFragment {
         });
     }
 
-    /**
-     * 更新 组织架构
-     */
-    void initService() {
-        /* 更新登录用户信息 */
-        InitDataService_.intent(getActivity()).start();
-        /* 拉取组织架构 */
-        OrganizationService.startActionFetchAll(MainApp.getMainApp());
-    }
-
-    /**
-     * 更新(当首页红点数据异常)
-     */
-    void rushHomeData() {
-        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
-            @Override
-            public void success(final User user, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
 
     @Override
     public void onResume() {
@@ -425,27 +358,5 @@ public class MenuFragment extends BaseFragment {
         app.startActivity(mActivity, LoginActivity.class, MainApp.ENTER_TYPE_RIGHT, true, null);
     }
 
-    /**
-     * 设置缓存信息
-     */
-    private void setDiskCacheInfo() {
-        final File cacheDir = StorageUtils.getOwnCacheDirectory(app, "imageloader/Cache");
-        LogUtil.d("缓存路径：" + cacheDir.getPath());
-        new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                final String length = FileTool.formatFileSize(cacheDir.getPath());
-                handler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        tv_file.setText(length.equals("0B") ? "" : length);
-                        cancelLoading();
-                    }
-                });
-                LogUtil.d("缓存路径文件大小：" + length);
-            }
-        }).start();
-    }
 }
