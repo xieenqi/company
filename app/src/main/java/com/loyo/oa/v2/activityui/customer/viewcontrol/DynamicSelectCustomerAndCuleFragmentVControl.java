@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.customer.viewcontrol;
 
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.BaseView;
 
@@ -11,7 +12,9 @@ import java.util.ArrayList;
  */
 
 public interface DynamicSelectCustomerAndCuleFragmentVControl extends BaseView {
-    void bindData(ArrayList<Customer> mCustomers);
+    void bindCustomerData(ArrayList<Customer> mCustomers);
+
+    void bindClueData(ArrayList<ClueListItem> mClues);
 
     void getDataComplete();
 }

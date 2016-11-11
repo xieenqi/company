@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
@@ -102,7 +103,7 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
      * 绑定数据
      */
     @Override
-    public void bindData(ArrayList<Customer> mCustomers) {
+    public void bindCustomerData(ArrayList<Customer> mCustomers) {
         adapter.setData(mCustomers);
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -116,6 +117,11 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
 //                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
+    }
+
+    @Override
+    public void bindClueData(ArrayList<ClueListItem> mClues) {
+
     }
 
     @Override

@@ -58,8 +58,7 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
 
     private int fromPage;
     private int page = 1;
-    private boolean isPullDown = true;
-
+    private boolean isPullDown = true, isSelect;//是否加载第一页数据供选择
     private Intent mIntent;
 
 
@@ -76,6 +75,7 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
     void initView() {
         mBundle = getIntent().getExtras();
         fromPage = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
+        isSelect = mBundle.getBoolean("isSelect", false);
         mInflater = LayoutInflater.from(this);
         emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
@@ -134,12 +134,18 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
-                mIntent.putExtra(ExtraAndResult.EXTRA_ID, listData.get(position - 1).id);
-                startActivity(mIntent);
+                if (!isSelect) {//查看详情
+                    mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
+                    mIntent.putExtra(ExtraAndResult.EXTRA_ID, listData.get(position - 1).id);
+                    startActivity(mIntent);
+                } else {//选择线索
+                    Toast("线索选择!");
+                }
                 hideInputKeyboard(edt_search);
             }
         });
+        if (isSelect)
+            doSearch();
     }
 
     /**
