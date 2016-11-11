@@ -9,6 +9,7 @@
     <RelativeLayout
         android:id="@+id/dialog"
         android:layout_width="120dp"
+        android:visibility="gone"
         android:layout_height="120dp">
 
 

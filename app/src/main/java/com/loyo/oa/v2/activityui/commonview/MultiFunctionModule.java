@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.io.File;
 
@@ -58,10 +59,10 @@ public class MultiFunctionModule extends LinearLayout {
         ll_location = (LinearLayout) view.findViewById(R.id.ll_location);
         ll_at = (LinearLayout) view.findViewById(R.id.ll_at);
         ll_action_record = (ImageView) view.findViewById(R.id.ll_action_record);
+        ll_action_record.setOnTouchListener(mOnVoiceRecTouchListener);
         dialog = (RelativeLayout) view.findViewById(R.id.dialog);
         this.removeAllViews();
         this.addView(view);
-        ll_action_record.setOnTouchListener(mOnVoiceRecTouchListener);
         initRecord(context);
     }
 
@@ -111,6 +112,7 @@ public class MultiFunctionModule extends LinearLayout {
 //            }
 
 
+            LogUtil.d("y值"+event.getY());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     dialog.setVisibility(VISIBLE);
@@ -119,9 +121,9 @@ public class MultiFunctionModule extends LinearLayout {
 //                    if (mChattingFooterLinstener != null) {
 //                        mChattingFooterLinstener.OnVoiceRcdInitReuqest();
 //                    }
-                    voice.setStart(true);
-                    voice.setAUDIO_ROOTPATH("");
-                    voice.startRecorder();
+//                    voice.setStart(true);
+//                    voice.setAUDIO_ROOTPATH("");
+//                    voice.startRecorder();
 
 //                    bt_voice.setBackgroundDrawable(ResourceHelper.getDrawableById(ct, R.drawable.rectangle_white));
 //                    bt_voice.setText(R.string.chatfooter_releasetofinish);
@@ -132,7 +134,7 @@ public class MultiFunctionModule extends LinearLayout {
 
                 case MotionEvent.ACTION_MOVE:
                     dialog.setVisibility(VISIBLE);
-                    if (event.getX() <= 0.0F || event.getY() <= -60 || event.getX() >= ll_action_record.getWidth()) {
+                    if (event.getX() <= 0.0F || event.getY() <= -100 || event.getX() >= ll_action_record.getWidth()) {
 //                        tv_voiceMsg.setText("放弃 录音");
 //                        iv_end.setVisibility(View.VISIBLE);
 //                        ll_start.setVisibility(View.GONE);
@@ -157,9 +159,9 @@ public class MultiFunctionModule extends LinearLayout {
 //                    iv_end.setVisibility(View.GONE);
 //                    ll_start.setVisibility(View.VISIBLE);
 
-                    if (voice.isStart()) {
-                        voice.stopRecorder();
-                    }
+//                    if (voice.isStart()) {
+//                        voice.stopRecorder();
+//                    }
                     dialog.setVisibility(GONE);
 
 //                    stop();
@@ -168,7 +170,7 @@ public class MultiFunctionModule extends LinearLayout {
                     break;
             }
 
-            return false;
+            return true;
         }
     };
 
@@ -183,6 +185,5 @@ public class MultiFunctionModule extends LinearLayout {
         long availableBlocks = stat.getAvailableBlocks();
         return (availableBlocks * blockSize) / 1024 / 1024;//  MIB单位
     }
-
 
 }
