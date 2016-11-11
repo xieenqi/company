@@ -12,6 +12,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -26,7 +27,9 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
     public static final int SELECT_CUSTOMER = 101;
     public static final int SELECT_CULE = 102;
     private DynamicSelectCustomerAndCuleFragmentVControl vControl;
-    private int type;
+    private int type, pageCus = 1;
+    private boolean isPullCus;
+    private ArrayList<Customer> mCustomers = new ArrayList<>();
 
     public DynamicSelectCustomerAndCuleFragmentPCersener(DynamicSelectCustomerAndCuleFragmentVControl vControl, int type) {
         this.type = type;
@@ -52,15 +55,36 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
 
     }
 
+    /**
+     * 获取我的客户的数据
+     */
     private void getCustomerData() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", 1);
+        params.put("pageIndex", pageCus);
         params.put("pageSize", 15);
         LogUtil.d("我的客户查询参数：" + MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_MY).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
-                    public void success(PaginationX<Customer> customerPaginationX, Response response) {
+                    public void success(PaginationX<Customer> result, Response response) {
                         HttpErrorCheck.checkResponse("我的客户", response);
+                        if (null == result.records || result.records.size() == 0) {
+                            if (isPullCus) {
+                                vControl.showMsg("没有更多数据了!");
+                            } else {
+                                mCustomers.clear();
+//                                vControl.setEmptyView();
+                            }
+                            vControl.getDataComplete();
+                        } else {
+                            if (isPullCus) {
+                                mCustomers.addAll(result.records);
+                            } else {
+                                mCustomers.clear();
+                                mCustomers = result.records;
+                            }
+                        }
+                        vControl.getDataComplete();
+                        vControl.bindData(mCustomers);
                     }
 
                     @Override
@@ -71,8 +95,34 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
         );
     }
 
+    /**
+     * 获取我的 线索 的数据
+     */
     private void getCuleData() {
 
     }
 
+    @Override
+    public void pullDownCus() {
+        isPullCus = false;
+        pageCus = 1;
+        getPageData(pageCus);
+    }
+
+    @Override
+    public void pullUpCus() {
+        isPullCus = true;
+        pageCus++;
+        getPageData(pageCus);
+    }
+
+    @Override
+    public void pullDownCule() {
+
+    }
+
+    @Override
+    public void pullUpCule() {
+
+    }
 }

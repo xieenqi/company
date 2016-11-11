@@ -7,4 +7,12 @@ import com.loyo.oa.v2.common.base.BasePersenter;
  */
 
 public interface DynamicSelectCustomerAndCuleFragmentPersener extends BasePersenter {
+
+    void pullDownCus();
+
+    void pullUpCus();
+
+    void pullDownCule();
+
+    void pullUpCule();
 }

@@ -1,6 +1,9 @@
 package com.loyo.oa.v2.activityui.customer.viewcontrol;
 
+import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.BaseView;
+
+import java.util.ArrayList;
 
 /**
  * 跟进对象 选择客户 和 选择线索 公用的一个 viewControl
@@ -8,4 +11,9 @@ import com.loyo.oa.v2.common.BaseView;
  */
 
 public interface DynamicSelectCustomerAndCuleFragmentVControl extends BaseView {
+    void bindData(ArrayList<Customer> mCustomers);
+
+    void getDataComplete();
 }
+
+

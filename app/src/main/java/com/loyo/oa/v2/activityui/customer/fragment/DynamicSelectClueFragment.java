@@ -10,9 +10,12 @@ import android.widget.LinearLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.DynamicSelectCustomerAndCuleFragmentPCersener;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
+import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseFragment;
+
+import java.util.ArrayList;
 
 /**
  * 写跟进 选择 【线索】
@@ -69,5 +72,15 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
     @Override
     public void showMsg(String message) {
         Toast(message);
+    }
+
+    @Override
+    public void bindData(ArrayList<Customer> mCustomers) {
+
+    }
+
+    @Override
+    public void getDataComplete() {
+
     }
 }
