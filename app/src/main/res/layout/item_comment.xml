@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/dimen_10"
+        android:layout_marginRight="@dimen/dimen_10"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="张国荣:"
+            android:textColor="@color/title_bg1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_5"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/iv_calls"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_33"
+                android:background="@drawable/animation_calls"
+                android:textColor="#3FD3AA" />
+
+            <TextView
+                android:id="@+id/tv_audio_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:text="00:00"
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp12" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
