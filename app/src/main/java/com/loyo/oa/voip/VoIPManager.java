@@ -1,14 +1,13 @@
 package com.loyo.oa.voip;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.voip.api.IVoIP;
 import com.loyo.oa.voip.callback.OnRespond;
+import com.loyo.oa.voip.exception.PermissionException;
 import com.loyo.oa.voip.model.RequestAccess;
 import com.loyo.oa.voip.model.ResponseBase;
 import com.loyo.oa.voip.model.VoIPToken;
@@ -45,6 +44,7 @@ public class VoIPManager implements CallStateListener {
 
 
     private Context mContext;
+    private boolean isInitialized = false;
     private String cacheToken;
 
     private String customerId;
@@ -57,11 +57,28 @@ public class VoIPManager implements CallStateListener {
     public VoIPManager init(Context context)
     {
         mContext = context;
-        cacheToken = getCacheToken();
-        UCSService.initAction(context);
-        UCSService.init(context, true);
-        UCSCall.addCallStateListener(this);
+        cacheToken = "";
+                //getCacheToken();
+        /** Fix samsung crash */
+//        UCSService.initAction(context);
+//        UCSService.init(context, true);
+//        UCSCall.addCallStateListener(this);
         return this;
+    }
+
+    public void initUCSIfNeeded() throws PermissionException {
+        if (isInitialized) {
+            return;
+        }
+        try {
+            UCSService.initAction(mContext);
+            UCSService.init(mContext, true);
+            UCSCall.addCallStateListener(this);
+            isInitialized = true;
+        }
+        catch (Exception e) {
+            throw new PermissionException();
+        }
     }
 
     private ResponseBase<RequestAccess> getPaymentAccess() {
@@ -74,20 +91,20 @@ public class VoIPManager implements CallStateListener {
         return access;
     }
 
-    private String getCacheToken() {
-
-        SharedPreferences base_share = mContext.getSharedPreferences(FinalVariables.BASE_SHARE, Context.MODE_PRIVATE);
-        return base_share.getString(TOKEN_KEY, null);
-    }
-
+//    private String getCacheToken() {
+//
+//        SharedPreferences base_share = mContext.getSharedPreferences(FinalVariables.BASE_SHARE, Context.MODE_PRIVATE);
+//        return base_share.getString(TOKEN_KEY, null);
+//    }
+//
     private void saveToken(String token) {
         if (token != null && ! token.equals(cacheToken)) {
             cacheToken = token;
             // save
-            SharedPreferences base_share = mContext.getSharedPreferences(FinalVariables.BASE_SHARE, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = base_share.edit();
-            editor.putString(TOKEN_KEY, token);
-            editor.apply();
+//            SharedPreferences base_share = mContext.getSharedPreferences(FinalVariables.BASE_SHARE, Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = base_share.edit();
+//            editor.putString(TOKEN_KEY, token);
+//            editor.apply();
         }
     }
 

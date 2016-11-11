@@ -29,6 +29,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.MyContactMailList;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.event.EditCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.Tag;
@@ -344,15 +345,20 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
     };
 
     /**
-     * 刷新列表回调
+     * 新建回调 重启Manager
      * */
     @Subscribe
     public void onMyCustomerListRushEvent(MyCustomerListRushEvent event){
-        LogUtil.dee("onMyCustomerListRushEvent 刷新列表回调");
-        //getData();
         memberCallback.comeBackHeadPage();
     }
 
+    /**
+     * 编辑回调 刷新列表
+     * */
+    @Subscribe
+    public void onEditCustomerRushEvent(EditCustomerRushEvent event){
+       getData();
+    }
 
     /**
      * 通讯录导入客户

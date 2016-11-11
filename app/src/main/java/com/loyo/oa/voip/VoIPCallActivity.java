@@ -20,6 +20,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.voip.callback.OnRespond;
+import com.loyo.oa.voip.exception.PermissionException;
 import com.yzx.api.UCSCall;
 import com.yzx.api.UCSCameraType;
 import com.yzx.listenerInterface.CallStateListener;
@@ -328,7 +329,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     }
 
 
-    private void permissionRequest() {
+    private void recordAudioPermissionRequest() {
 
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
@@ -341,11 +342,63 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                 });
             }
             else {
-                finish();
+                final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
+                dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dialog.sweetAlertDialog.dismiss();
+                        finish();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dialog.sweetAlertDialog.dismiss();
+                        finish();
+                    }
+                },"提示","电话号码不正确");
+                return;
             }
 
         } else {
             ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.RECORD_AUDIO},
+                    1);
+        }
+    }
+
+    private void phoneCallPermissionRequest() {
+
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.CALL_PHONE", "com.loyo.oa.v2")) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        VoIPManager.getInstance().initUCSIfNeeded();
+                    }
+                    catch (PermissionException e) {
+
+                        final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
+                        dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                dialog.sweetAlertDialog.dismiss();
+                                finish();
+                            }
+                        }, new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                dialog.sweetAlertDialog.dismiss();
+                                finish();
+                            }
+                        },"提示","无相关权限，使用此功能前请前往设置开启权限");
+                        return;
+                    }
+                    recordAudioPermissionRequest();
+                }
+            });
+
+        } else {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.CALL_PHONE},
                     1);
         }
     }
@@ -362,17 +415,75 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                 });
             }
             else {
-                finish();
+                final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
+                dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dialog.sweetAlertDialog.dismiss();
+                        finish();
+                    }
+                }, new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        dialog.sweetAlertDialog.dismiss();
+                        finish();
+                    }
+                },"提示","无录音权限，使用此功能前请前往设置开启权限");
+                return;
             }
 
-        }else{
-            finish();
+        }else if (permissions[0].equals(Manifest.permission.CALL_PHONE)
+                &&grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        VoIPManager.getInstance().initUCSIfNeeded();
+                    }
+                    catch (PermissionException e) {
+
+                        final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
+                        dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                dialog.sweetAlertDialog.dismiss();
+                                finish();
+                            }
+                        }, new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                dialog.sweetAlertDialog.dismiss();
+                                finish();
+                            }
+                        },"提示","无相关权限，使用此功能前请前往设置开启权限");
+                        return;
+                    }
+                    recordAudioPermissionRequest();
+                }
+            });
+        }
+        else {
+            final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
+            dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            },"提示","无拨打电话权限，使用此功能前请前往设置开启权限");
+            return;
         }
     }
 
     public void dialWithPemissionRequest(String number) {
         dialNumber = number;
-        permissionRequest();
+        phoneCallPermissionRequest();
     }
 
     private void dial(String number) {
