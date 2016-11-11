@@ -18,7 +18,6 @@ import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
