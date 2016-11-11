@@ -37,6 +37,7 @@ public class MultiFunctionModule extends LinearLayout {
     public MultiFunctionModule(Context context) {
         super(context);
         this.context = context;
+        this.setBackgroundColor(Color.parseColor("#00000000"));
         initView(context);
     }
 
