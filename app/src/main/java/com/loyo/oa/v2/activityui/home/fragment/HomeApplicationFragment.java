@@ -178,8 +178,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //写跟进
-                case BaseActivity.FOLLOW_ADD://  CustomerDynamicAddActivity
-                    startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
+                case BaseActivity.FOLLOW_ADD://   DynamicSelectActivity
+                    startActivityForResult(new Intent(getActivity(), CustomerDynamicAddActivity.class), Activity.RESULT_FIRST_USER);
                     getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
                 //新建订单

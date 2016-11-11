@@ -15,6 +15,7 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
@@ -64,7 +65,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout layout_image;
+    private LinearLayout layout_image, ll_root;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name;
     private Customer mCustomer;
@@ -105,47 +106,36 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     void initUI() {
         super.setTitle("写跟进");
         edt = (EditText) findViewById(R.id.edt);
-        layout_image = (LinearLayout) findViewById(R.id.layout_image);
-        layout_image.setOnClickListener(this);
-        layout_image.setOnTouchListener(Global.GetTouch());
+//        layout_image = (LinearLayout) findViewById(R.id.layout_image);
         tv_remain_time = (TextView) findViewById(R.id.tv_remain_time);
         tv_sale_action = (TextView) findViewById(R.id.tv_sale_action);
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
-
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
-        img_title_left.setOnClickListener(this);
-        img_title_left.setOnTouchListener(touch);
-
         layout_sale_action = (ViewGroup) findViewById(R.id.layout_sale_action);
-        layout_sale_action.setOnClickListener(this);
-        layout_sale_action.setOnTouchListener(touch);
-
         layout_remain_time = (ViewGroup) findViewById(R.id.layout_remain_time);
-        layout_remain_time.setOnClickListener(this);
-        layout_remain_time.setOnTouchListener(touch);
-
-
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
-        img_title_right.setOnClickListener(this);
-        img_title_right.setOnTouchListener(touch);
-
         ll_customer = (LinearLayout) findViewById(R.id.ll_customer);
-        ll_customer.setOnClickListener(this);
-        ll_customer.setOnTouchListener(touch);
         tv_customer = (TextView) findViewById(R.id.tv_customer);
-
         ll_contactItem = (LinearLayout) findViewById(R.id.ll_contactItem);
         ll_contact = (LinearLayout) findViewById(R.id.ll_contact);
+        ll_root = (LinearLayout) findViewById(R.id.ll_root);
+//        layout_image.setOnClickListener(this);
+        img_title_left.setOnClickListener(this);
+        layout_sale_action.setOnClickListener(this);
+        layout_remain_time.setOnClickListener(this);
+        img_title_right.setOnClickListener(this);
+        ll_customer.setOnClickListener(this);
         ll_contact.setOnClickListener(this);
-        ll_contact.setOnTouchListener(touch);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
         ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
+        Global.SetTouchView(img_title_left, layout_sale_action, layout_remain_time, img_title_right, ll_customer, ll_contact);
         if (null != mCustomer) {
             getDefaultContact(mCustomer.contacts);
         }
         controller.loadView(gridView);
+        ll_root.addView(new MultiFunctionModule(this));
     }
 
     private void buildAttachment() {
