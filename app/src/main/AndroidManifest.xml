@@ -823,6 +823,18 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <activity
+            android:launchMode="singleTop"
+            android:theme="@style/PhotoPickerTheme"
+            android:name="com.loyo.oa.photo.PhotoPickerActivity"
+            />
+
+        <activity
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:name="com.loyo.oa.photo.PhotoPagerActivity"
+            />
+
         <supports-screens
             android:anyDensity="true"
             android:largeScreens="true"

@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import com.bumptech.glide.Glide;
 import com.loyo.oa.upload.view.ImageAddCell;
 import com.loyo.oa.upload.view.ImageCell;
+import com.loyo.oa.v2.R;
 
 import java.util.ArrayList;
 
@@ -77,7 +78,14 @@ public class UploadImageAdapter extends BaseAdapter implements ImageCell.ImageCe
         cell.index = i;
         cell.callback = this;
 
-        Glide.with(mContext).load(taskList.get(i).getValidatePath()).into(cell.imageView);
+        Glide.with(mContext)
+                .load(taskList.get(i).getValidatePath())
+                .centerCrop()
+                .dontAnimate()
+                .override(100, 100)
+                .placeholder(R.drawable.default_error)
+                .error(R.drawable.default_error)
+                .into(cell.imageView);
         return cell;
     }
 

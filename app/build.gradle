@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
+
 def AAVersion = '4.1.0'
 def outputPath = 'D:\\jenkins\\workspace\\loyo-android-v2\\app\\build\\apk'
 
 android {
     useLibrary 'org.apache.http.legacy'
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     packagingOptions {
@@ -22,6 +23,7 @@ android {
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
+            res.srcDirs = ['src/main/res', 'src/main/res-photo-picker', 'src/main/res-smooth-checkbox']
         }
     }
     signingConfigs {
@@ -93,11 +95,21 @@ android {
 //        }
 //    }
 
+    ext {
+        supportLibVersion = "24.2.1"
+    }
+
     dependencies {
         compile 'com.android.support:multidex:1.0.1'
         compile fileTree(include: ['*.jar'], dir: 'libs')
-        compile 'com.android.support:appcompat-v7:23.1.1'
-        compile 'com.android.support:recyclerview-v7:23.1.1'
+        compile "com.android.support:support-v4:$supportLibVersion"
+        compile "com.android.support:appcompat-v7:$supportLibVersion"
+        compile "com.android.support:recyclerview-v7:$supportLibVersion"
+        compile "com.android.support:design:$supportLibVersion"
+        compile "com.android.support:support-annotations:$supportLibVersion"
+
+        compile "org.androidannotations:androidannotations-api:$AAVersion"
+
         compile 'com.google.code.gson:gson:2.3'
         compile 'com.squareup.retrofit:retrofit:1.9.0'
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
@@ -107,10 +119,10 @@ android {
         compile 'io.reactivex:rxjava:1.0.14'
         compile 'io.reactivex:rxandroid:1.0.1'
         compile 'com.yalantis:contextmenu:1.0.4'
-        compile "org.androidannotations:androidannotations-api:$AAVersion"
+
         compile 'org.greenrobot:eventbus:3.0.0'
         compile 'com.github.bumptech.glide:glide:3.7.0'
-        compile 'com.android.support:support-v4:23.1.1'
+
         compile 'com.github.instacart.truetime-android:library:1.5'
         compile 'org.jsoup:jsoup:1.10.1'//解析HTML
 

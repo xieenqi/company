@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+  <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                     android:layout_width="match_parent"
+                                     android:layout_height="?attr/actionBarSize"
+                                     android:minHeight="?attr/actionBarSize"
+                                     android:theme="?attr/actionBarTheme"
+                                     app:popupTheme="?attr/actionBarPopupTheme"
+                                     android:background="?attr/colorPrimary"
+                                     android:id="@+id/toolbar">
+    <LinearLayout
+        android:id="@+id/album_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+      <TextView
+          android:id="@+id/album_switcher_title_view"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:textColor="#ffffffff"
+          android:gravity="center"
+          android:enabled="true"
+          android:textSize="18dp"
+          android:text="图片"
+          android:background="#00ff0000"/>
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="5dp"
+          android:layout_marginTop="2dp"
+          android:layout_gravity="center_vertical"
+          android:background="@drawable/album_arrow_down"/>
+    </LinearLayout>
+
+  </android.support.v7.widget.Toolbar>
+
+  <FrameLayout
+      android:id="@+id/container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+
+</LinearLayout>

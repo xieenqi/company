@@ -90,6 +90,7 @@
                 android:stretchMode="columnWidth"
                 android:gravity="center"
                 android:listSelector="@android:color/transparent"
+                android:paddingLeft="@dimen/margin_other_view"
                 android:paddingRight="@dimen/margin_other_view"
                 android:paddingTop="@dimen/margin_other_view"
                 android:paddingBottom="@dimen/margin_other_view"

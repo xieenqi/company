@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
+import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetOrder;
@@ -15,10 +17,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.fragment.WorksheetAddStep1Fragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.WorksheetAddStep2Fragment;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -143,16 +142,19 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
                 break;
 
             /*相册选择 回调*/
-            case MainApp.PICTURE:
-                if (null != data) {
-                    List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                    step2Fragment.addPhoto(mSelectPath);
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
+                    List<String> photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    step2Fragment.addPhoto(photos);
                 }
                 break;
 
            /*附件删除回调*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                step2Fragment.removeAttachmentAt(data.getExtras().getInt("position"));
+            case PhotoPreview.REQUEST_CODE:
+                int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                if (data != null && index >= 0) {
+                    step2Fragment.removeAttachmentAt(index);
+                }
                 break;
 
             default: {
