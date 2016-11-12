@@ -16,7 +16,7 @@
         <include layout="@layout/include_item_title" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_status"
-            android:layout_below="@+id/ll_head"
+            android:layout_marginBottom="50dp"
             android:layout_weight="1"
             android:scrollbars="none">
 
@@ -276,7 +276,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="vertical" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <!--<LinearLayout-->
     <!--android:id="@+id/layout_status"-->

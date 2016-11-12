@@ -42,7 +42,7 @@ public class RecordUtils {
     /**
      * 初始化录音
      */
-    public void initRecord() {
+    public void initStaratRecord() {
         recorder = new MediaRecorder();
 //		recorder.setAudioChannels(numChannels);
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);// 设置麦克风
@@ -66,7 +66,8 @@ public class RecordUtils {
         recorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
         /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default */
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
+        recorder.setMaxDuration(60*1000);
+        startRecord();
     }
 
     /**
@@ -93,6 +94,7 @@ public class RecordUtils {
             recorder.stop();
             recorder.reset();
             recorder.release();
+            recorder = null;//这个必须有不然录音设备释放不成功
             endTime = System.currentTimeMillis();
         }
     }

@@ -109,7 +109,7 @@ public class MultiFunctionModule extends LinearLayout {
         voice = RecordUtils.getInstance(context);
         final File cache = StorageUtils.getOwnCacheDirectory(MainApp.getMainApp(), "imageloader/Cache");
         voice.setAUDIO_ROOTPATH(cache.getPath());
-        voice.initRecord();
+
     }
 
     private View.OnTouchListener mOnVoiceRecTouchListener
@@ -131,7 +131,7 @@ public class MultiFunctionModule extends LinearLayout {
                     v.setAlpha(0.6f);
                     dialog.setVisibility(VISIBLE);
                     mVoiceButtonTouched = true;
-                    voice.startRecord();
+                    voice.initStaratRecord();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     dialog.setVisibility(VISIBLE);
