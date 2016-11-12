@@ -1,29 +1,30 @@
-package com.loyo.oa.v2.activityui.dynamic.adapter;
+package com.loyo.oa.v2.activityui.followup.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.ImageView;
 import com.loyo.oa.v2.R;
 
 /**
- * 【跟进拜访】详情列表评论 公用Adapter
- * Created by yyy on 16/11/11.
+ * 【跟进拜访】详情和列表 图片适配器
+ * Created by yyy on 16/11/12.
  */
 
-public class ListOrDetailsCommentAdapter extends BaseAdapter{
+public class ListOrDetailsGridViewAdapter extends BaseAdapter{
 
     private Context mContext;
 
-    public  ListOrDetailsCommentAdapter(Context mContext){
+    public ListOrDetailsGridViewAdapter(Context mContext){
         this.mContext = mContext;
     }
 
+
     @Override
     public int getCount() {
-        return 5;
+        return 10;
     }
 
     @Override
@@ -41,27 +42,18 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter{
         ViewHolder holder = null;
         if(null == convertView){
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_comment,null);
-            holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-            holder.iv_calls = (TextView) convertView.findViewById(R.id.iv_calls);
-            holder.tv_audio_length = (TextView) convertView.findViewById(R.id.tv_audio_length);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_gridview_dl,null);
+            holder.iv_image = (ImageView) convertView.findViewById(R.id.iv_image);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tv_name.setText("刘德华:");
-        holder.iv_calls.setText("00000000");
-
         return convertView;
     }
 
-
     class ViewHolder{
-        TextView tv_name;
-        TextView iv_calls;
-        TextView tv_audio_length;
+        ImageView iv_image;
     }
-
 
 }

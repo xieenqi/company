@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.dynamic;
+package com.loyo.oa.v2.activityui.followup;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
 import com.loyo.oa.v2.activityui.other.model.Tag;
-import com.loyo.oa.v2.activityui.dynamic.fragment.SelfDynamicFragment;
-import com.loyo.oa.v2.activityui.dynamic.fragment.TeamDynamicFragment;
+import com.loyo.oa.v2.activityui.followup.fragment.SelfFollowUpFragment;
+import com.loyo.oa.v2.activityui.followup.fragment.TeamFollowUpFragment;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
@@ -43,7 +43,7 @@ import retrofit.client.Response;
  * 【跟进列表】fragment管理类
  * Created by yyy on 16/11/10
  */
-public class DynamicManagerActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class FollowUpManagerActivity extends BaseFragmentActivity implements View.OnClickListener{
 
 
     private LinearLayout img_title_left, ll_category;
@@ -176,12 +176,12 @@ public class DynamicManagerActivity extends BaseFragmentActivity implements View
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
                 b.putSerializable("permission", permission);
-                fragment = (BaseFragment) Fragment.instantiate(this, SelfDynamicFragment.class.getName(), b);
+                fragment = (BaseFragment) Fragment.instantiate(this, SelfFollowUpFragment.class.getName(), b);
             } else if ("团队跟进".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
                 b.putSerializable("permission", permission);
-                fragment = (BaseFragment) Fragment.instantiate(this, TeamDynamicFragment.class.getName(), b);
+                fragment = (BaseFragment) Fragment.instantiate(this, TeamFollowUpFragment.class.getName(), b);
             }
             fragments.add(fragment);
         }

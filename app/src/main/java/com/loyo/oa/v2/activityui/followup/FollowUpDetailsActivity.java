@@ -1,10 +1,11 @@
-package com.loyo.oa.v2.activityui.dynamic;
+package com.loyo.oa.v2.activityui.followup;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,7 +17,10 @@ import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
-import com.loyo.oa.v2.activityui.dynamic.adapter.ListOrDetailsCommentAdapter;
+import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
+import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
+import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
+import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.AnimationCommon;
@@ -28,7 +32,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
  * Created by yyy on 16/11/10.
  */
 
-public class DynamicDetailsActivity extends BaseActivity implements View.OnClickListener {
+public class FollowUpDetailsActivity extends BaseActivity implements View.OnClickListener {
 
 
     private ScrollView layout_scrollview;
@@ -39,10 +43,13 @@ public class DynamicDetailsActivity extends BaseActivity implements View.OnClick
     private RoundImageView iv_heading;     /* 头像 */
 
     private CustomerListView lv_comment;
+    private CustomerListView lv_options;
+    private CusGridView gv_image;
 
     private LinearLayout layout_voice;
     private LinearLayout layout_touch;
     private LinearLayout ll_web;
+    private LinearLayout layout_enclosure;
     private EditText edit_comment;
     private ImageView iv_voice;
     private TextView tv_send_message;
@@ -52,7 +59,9 @@ public class DynamicDetailsActivity extends BaseActivity implements View.OnClick
     private float mCurPosX;
     private float mCurPosY;
 
-    private ListOrDetailsCommentAdapter mAdapter;  /* 评论区Adapter */
+    private ListOrDetailsCommentAdapter commentAdapter;  /* 评论区Adapter */
+    private ListOrDetailsGridViewAdapter imageAdapter;   /* 图片9宫格Adapter */
+    private ListOrDetailsOptionsAdapter  optionAdapter;  /* 附件列表Adapter */
 
 
     private Handler mHandler = new Handler() {
@@ -76,10 +85,13 @@ public class DynamicDetailsActivity extends BaseActivity implements View.OnClick
     }
 
     private void initUI() {
-        mAdapter = new ListOrDetailsCommentAdapter(mContext);
+        commentAdapter = new ListOrDetailsCommentAdapter(mContext);
+        optionAdapter = new ListOrDetailsOptionsAdapter(mContext);
+        imageAdapter = new ListOrDetailsGridViewAdapter(mContext);
 
         layout_voice = (LinearLayout) findViewById(R.id.layout_voice);
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
+        layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
         ll_web = (LinearLayout) findViewById(R.id.ll_web);
         edit_comment = (EditText) findViewById(R.id.edit_comment);
         tv_send_message = (TextView) findViewById(R.id.tv_send_message);
@@ -90,6 +102,8 @@ public class DynamicDetailsActivity extends BaseActivity implements View.OnClick
         iv_heading = (RoundImageView) findViewById(R.id.iv_heading);
         layout_scrollview = (ScrollView) findViewById(R.id.layout_scrollview);
         lv_comment = (CustomerListView) findViewById(R.id.lv_comment);
+        lv_options = (CustomerListView) findViewById(R.id.lv_options);
+        gv_image = (CusGridView) findViewById(R.id.layout_gridview);
 
         iv_voice.setOnClickListener(this);
         tv_send_message.setOnClickListener(this);
@@ -129,9 +143,18 @@ public class DynamicDetailsActivity extends BaseActivity implements View.OnClick
             }
         });
 
-        lv_comment.setAdapter(mAdapter);
-        setContent(ll_web," ");
+        lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast("长按监听");
+                return false;
+            }
+        });
 
+        lv_comment.setAdapter(commentAdapter);
+        lv_options.setAdapter(optionAdapter);
+        gv_image.setAdapter(imageAdapter);
+        setContent(ll_web," ");
     }
 
     /**
@@ -141,10 +164,10 @@ public class DynamicDetailsActivity extends BaseActivity implements View.OnClick
         layout.removeAllViews();
         for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
             if (ele.type.startsWith("img")) {
-                CommonImageView img = new CommonImageView(DynamicDetailsActivity.this, ele.data);
+                CommonImageView img = new CommonImageView(FollowUpDetailsActivity.this, ele.data);
                 layout.addView(img);
             } else {
-                CommonTextVew tex = new CommonTextVew(DynamicDetailsActivity.this, ele.data);
+                CommonTextVew tex = new CommonTextVew(FollowUpDetailsActivity.this, ele.data);
                 layout.addView(tex);
             }
         }
