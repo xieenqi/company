@@ -24,7 +24,7 @@ public class RecordUtils {
     private Context context;
     MediaRecorder recorder;
     MediaPlayer play;
-    String AUDIO_ROOTPATH, outPath, fileName;
+    String AUDIO_ROOTPATH, outPath, fileName;//录音存放路径、输出路径、输出文件名字
     boolean isStart;
     long startTime, endTime;
 
@@ -37,6 +37,83 @@ public class RecordUtils {
         }
         mInstance.setContext(context);
         return mInstance;
+    }
+
+    /**
+     * 初始化录音
+     */
+    public void initRecord() {
+        recorder = new MediaRecorder();
+//		recorder.setAudioChannels(numChannels);
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);// 设置麦克风
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Global.Toast("储存卡不可用");
+            return;
+        }
+        File ff = new File(AUDIO_ROOTPATH);
+        if (!ff.exists()) {
+            ff.mkdirs();
+        }
+        fileName = getDate() + ".amr";
+        outPath = AUDIO_ROOTPATH + File.separator + fileName;
+        recorder.setOutputFile(outPath);
+         /*
+             * ②设置输出文件的格式：THREE_GPP/MPEG-4/RAW_AMR/Default
+			 * THREE_GPP(3gp格式，H263视频
+			 * /ARM音频编码)、MPEG-4、RAW_AMR(只支持音频且音频编码要求为AMR_NB)
+			 * recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+			 */
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
+        /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default */
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+    }
+
+    /**
+     * 开始录音
+     */
+    public void startRecord() {
+        try {
+            isStart = true;
+            recorder.prepare();
+            recorder.start();
+            startTime = System.currentTimeMillis();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopRecord() {
+        if (recorder != null && isStart) {
+            isStart = false;
+            recorder.stop();
+            recorder.reset();
+            recorder.release();
+            endTime = System.currentTimeMillis();
+        }
+    }
+
+
+    public boolean isStart() {
+        return isStart;
+    }
+
+    public void setStart(boolean isStart) {
+        this.isStart = isStart;
+    }
+
+    public void releasaeFile(String Path) {
+        if (Path == null) {
+            return;
+        }
+        File f = new File(Path);
+        if (f.exists()) {
+            f.delete();
+        }
     }
 
     public void setContext(Context context) {
@@ -129,73 +206,6 @@ public class RecordUtils {
     public String getDate() {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
         return format.format(new Date());
-    }
-
-    public void startRecorder() {
-        recorder = new MediaRecorder();
-//		recorder.setAudioChannels(numChannels);
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);// 设置麦克风
-        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            Global.Toast("储存卡不可用");
-            return;
-        }
-        File ff = new File(AUDIO_ROOTPATH);
-        if (!ff.exists()) {
-            ff.mkdirs();
-        }
-        fileName = getDate() + ".amr";
-        outPath = AUDIO_ROOTPATH + File.separator + fileName;
-        recorder.setOutputFile(outPath);
-         /*
-             * ②设置输出文件的格式：THREE_GPP/MPEG-4/RAW_AMR/Default
-			 * THREE_GPP(3gp格式，H263视频
-			 * /ARM音频编码)、MPEG-4、RAW_AMR(只支持音频且音频编码要求为AMR_NB)
-			 * recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-			 */
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
-        /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default */
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        try {
-            isStart = true;
-            recorder.prepare();
-            recorder.start();
-            startTime = System.currentTimeMillis();
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void stopRecorder() {
-        if (recorder != null && isStart) {
-            isStart = false;
-            recorder.stop();
-            recorder.reset();
-            recorder.release();
-            endTime = System.currentTimeMillis();
-        }
-    }
-
-
-    public boolean isStart() {
-        return isStart;
-    }
-
-    public void setStart(boolean isStart) {
-        this.isStart = isStart;
-    }
-
-    public void releasaeFile(String Path) {
-        if (Path == null) {
-            return;
-        }
-        File f = new File(Path);
-        if (f.exists()) {
-            f.delete();
-        }
     }
 
 

@@ -135,7 +135,36 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             getDefaultContact(mCustomer.contacts);
         }
         controller.loadView(gridView);
-        ll_root.addView(new MultiFunctionModule(this));
+        initMultiFunctionModule();
+    }
+
+    /**
+     * 初始化底部多功能部件
+     */
+    private void initMultiFunctionModule() {
+        final MultiFunctionModule mfmodule = new MultiFunctionModule(this);
+        ll_root.addView(mfmodule);
+        mfmodule.setRecordClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((boolean) v.getTag()) {
+                    showInputKeyboard(edt);
+                    mfmodule.setIsRecording(false);
+                    v.setTag(false);
+                } else {
+                    hideInputKeyboard(edt);
+                    mfmodule.setIsRecording(true);
+                    v.setTag(true);
+                }
+
+            }
+        });
+        edt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mfmodule.setIsRecording(false);
+            }
+        });
     }
 
     private void buildAttachment() {
