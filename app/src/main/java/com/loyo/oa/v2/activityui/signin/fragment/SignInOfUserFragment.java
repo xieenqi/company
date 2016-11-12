@@ -268,8 +268,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        workPaginationX.setPageIndex(1);
         isTopAdd = true;
+        workPaginationX.setPageIndex(1);
         getData();
     }
 

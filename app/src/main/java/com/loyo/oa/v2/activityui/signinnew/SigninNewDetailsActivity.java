@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.followup;
+package com.loyo.oa.v2.activityui.signinnew;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,11 +28,11 @@ import com.loyo.oa.v2.tool.BaseActivity;
 
 
 /**
- * 【跟进详情】
+ * 【拜访详情】
  * Created by yyy on 16/11/10.
  */
 
-public class FollowUpDetailsActivity extends BaseActivity implements View.OnClickListener {
+public class SigninNewDetailsActivity extends BaseActivity implements View.OnClickListener {
 
 
     private ScrollView layout_scrollview;
@@ -80,7 +80,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_followup_details);
+        setContentView(R.layout.activity_signinnew_details);
         initUI();
     }
 
@@ -110,7 +110,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         edit_comment.setOnClickListener(this);
 
         tv_title.setVisibility(View.VISIBLE);
-        tv_title.setText("跟进详情");
+        tv_title.setText("拜访详情");
 
         layout_touch.setOnTouchListener(new View.OnTouchListener() {
 
@@ -164,10 +164,10 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         layout.removeAllViews();
         for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
             if (ele.type.startsWith("img")) {
-                CommonImageView img = new CommonImageView(FollowUpDetailsActivity.this, ele.data);
+                CommonImageView img = new CommonImageView(SigninNewDetailsActivity.this, ele.data);
                 layout.addView(img);
             } else {
-                CommonTextVew tex = new CommonTextVew(FollowUpDetailsActivity.this, ele.data);
+                CommonTextVew tex = new CommonTextVew(SigninNewDetailsActivity.this, ele.data);
                 layout.addView(tex);
             }
         }

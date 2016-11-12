@@ -134,7 +134,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
                 //新建跟进
                 case R.id.btn_add:
-                startActivity(new Intent(getActivity(),FollowUpDetailsActivity.class));
                     break;
             }
         }

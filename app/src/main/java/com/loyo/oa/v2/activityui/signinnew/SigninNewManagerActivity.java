@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
+import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
+import com.loyo.oa.v2.activityui.followup.FollowUpManagerActivity;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.fragment.SelfSigninNewFragment;
 import com.loyo.oa.v2.activityui.signinnew.fragment.TeamSigninNewFragment;
@@ -234,7 +236,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
                 break;
             /*搜索*/
             case R.id.img_title_search_right:
-
+                startActivity(new Intent(SigninNewManagerActivity.this,SigninNewDetailsActivity.class));
                 break;
 
             default:
