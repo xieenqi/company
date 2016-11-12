@@ -342,6 +342,10 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
                             noCacheContainer.setVisibility(View.VISIBLE);
                         }
                     }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable e) {
+                    }
                 });
     }
 

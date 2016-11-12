@@ -184,6 +184,10 @@ public class VoIPManager implements CallStateListener {
                             connect(token, callback);
                         }
                     }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable e) {
+                    }
                 });
 
     }
