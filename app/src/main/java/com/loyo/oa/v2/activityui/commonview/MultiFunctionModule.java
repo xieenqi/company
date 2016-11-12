@@ -109,7 +109,12 @@ public class MultiFunctionModule extends LinearLayout {
         voice = RecordUtils.getInstance(context);
         final File cache = StorageUtils.getOwnCacheDirectory(MainApp.getMainApp(), "imageloader/Cache");
         voice.setAUDIO_ROOTPATH(cache.getPath());
-
+        voice.setCallbackMicStatus(new RecordUtils.CallbackMicStatus() {
+            @Override
+            public void setMicData(double db) {
+                refreshRecordIcon(db);
+            }
+        });
     }
 
     private View.OnTouchListener mOnVoiceRecTouchListener
@@ -189,6 +194,21 @@ public class MultiFunctionModule extends LinearLayout {
         long blockSize = stat.getBlockSize();
         long availableBlocks = stat.getAvailableBlocks();
         return (availableBlocks * blockSize) / 1024 / 1024;//  MIB单位
+    }
+
+    private void refreshRecordIcon(double db) {
+        if(db<20){
+            iv_record.setImageResource(R.drawable.icon_record_ok1);
+        }else if(db>20&&db<40){
+            iv_record.setImageResource(R.drawable.icon_record_ok2);
+        }else if(db>40&&db<60){
+            iv_record.setImageResource(R.drawable.icon_record_ok3);
+        }else if(db>60&&db<80){
+            iv_record.setImageResource(R.drawable.icon_record_ok4);
+        }else if(db>80){
+            iv_record.setImageResource(R.drawable.icon_record_ok5);
+        }
+
     }
 
     /**

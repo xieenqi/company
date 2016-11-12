@@ -5,14 +5,18 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.os.Handler;
 
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 
 /**
  * Created by xeq on 16/11/11.
@@ -27,6 +31,8 @@ public class RecordUtils {
     private String AUDIO_ROOTPATH, outPath, fileName;//录音存放路径、输出路径、输出文件名字
     private boolean isStart;
     private long startTime, endTime;
+    Handler handler = new Handler();
+    CallbackMicStatus callbackMicStatus;
 
     private RecordUtils() {
     }
@@ -66,7 +72,7 @@ public class RecordUtils {
         recorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
         /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default */
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        recorder.setMaxDuration(60*1000);
+        recorder.setMaxDuration(60 * 1000);
         startRecord();
     }
 
@@ -86,6 +92,18 @@ public class RecordUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateMicStatus();
+                    }
+                });
+            }
+        }, 300, 300);
     }
 
     public void stopRecord() {
@@ -155,6 +173,10 @@ public class RecordUtils {
         this.endTime = endTime;
     }
 
+    public void setCallbackMicStatus(CallbackMicStatus callbackMicStatus) {
+        this.callbackMicStatus = callbackMicStatus;
+    }
+
     public void voicePlay(String playPath) {
         clean_play();
         play = new MediaPlayer();
@@ -211,7 +233,25 @@ public class RecordUtils {
     }
 
 
-//    public static void main(String[] args) {
-//        actionRecordClick
-//    }
+    /**
+     * 更新话筒状态
+     */
+    private int BASE = 1;
+    private  double SPACE;// 分貝值
+
+    private void updateMicStatus() {
+        if (recorder != null) {
+            double ratio = (double) recorder.getMaxAmplitude() / BASE;
+            double db = 0;// 分贝
+            if (ratio > 1)
+                db = 20 * Math.log10(ratio);
+            LogUtil.d("分贝值：" + db);
+            callbackMicStatus.setMicData(db);
+//            mHandler.postDelayed(mUpdateMicStatusTimer, SPACE);
+        }
+    }
+
+    interface CallbackMicStatus {
+        void setMicData(double db);
+    }
 }
