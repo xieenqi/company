@@ -15,6 +15,7 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
 import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
@@ -65,7 +66,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout layout_image, ll_root;
+    private LinearLayout layout_image, ll_root, ll_record;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name;
     private Customer mCustomer;
@@ -120,6 +121,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         ll_contactItem = (LinearLayout) findViewById(R.id.ll_contactItem);
         ll_contact = (LinearLayout) findViewById(R.id.ll_contact);
         ll_root = (LinearLayout) findViewById(R.id.ll_root);
+        ll_record = (LinearLayout) findViewById(R.id.ll_record);
 //        layout_image.setOnClickListener(this);
         img_title_left.setOnClickListener(this);
         layout_sale_action.setOnClickListener(this);
@@ -135,7 +137,40 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             getDefaultContact(mCustomer.contacts);
         }
         controller.loadView(gridView);
-        ll_root.addView(new MultiFunctionModule(this));
+        initMultiFunctionModule();
+
+        for (int i = 0; i < 3; i++) {
+            ll_record.addView(new CommonRecordItem(this));
+        }
+    }
+
+    /**
+     * 初始化底部多功能部件
+     */
+    private void initMultiFunctionModule() {
+        final MultiFunctionModule mfmodule = new MultiFunctionModule(this);
+        ll_root.addView(mfmodule);
+        mfmodule.setRecordClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((boolean) v.getTag()) {
+                    showInputKeyboard(edt);
+                    mfmodule.setIsRecording(false);
+                    v.setTag(false);
+                } else {
+                    hideInputKeyboard(edt);
+                    mfmodule.setIsRecording(true);
+                    v.setTag(true);
+                }
+
+            }
+        });
+        edt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mfmodule.setIsRecording(false);
+            }
+        });
     }
 
     private void buildAttachment() {

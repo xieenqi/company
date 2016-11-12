@@ -1,22 +1,22 @@
 package com.loyo.oa.v2.activityui.commonview;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Environment;
 import android.os.StatFs;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
 
@@ -28,12 +28,12 @@ import java.io.File;
 public class MultiFunctionModule extends LinearLayout {
 
     private Context context;
-    private LinearLayout ll_record_keyboard, ll_picture, ll_location, ll_at;
-    private ImageView ll_action_record;
+    private LinearLayout ll_record_keyboard, ll_picture, ll_location, ll_at, dialog, ll_record;
+    private ImageView ll_action_record, iv_record, iv_record_keyboard;
+    private TextView tv_record_action, tv_record_number;
     static long currentTimeMillis = 0;
     private static boolean mVoiceButtonTouched;
     private RecordUtils voice;
-    private RelativeLayout dialog;
 
     public MultiFunctionModule(Context context) {
         super(context);
@@ -60,14 +60,34 @@ public class MultiFunctionModule extends LinearLayout {
         ll_at = (LinearLayout) view.findViewById(R.id.ll_at);
         ll_action_record = (ImageView) view.findViewById(R.id.ll_action_record);
         ll_action_record.setOnTouchListener(mOnVoiceRecTouchListener);
-        dialog = (RelativeLayout) view.findViewById(R.id.dialog);
+        dialog = (LinearLayout) view.findViewById(R.id.dialog);
+        iv_record = (ImageView) view.findViewById(R.id.iv_record);
+        tv_record_action = (TextView) view.findViewById(R.id.tv_record_action);
+        tv_record_number = (TextView) view.findViewById(R.id.tv_record_number);
+        ll_record = (LinearLayout) view.findViewById(R.id.ll_record);
+        iv_record_keyboard = (ImageView) view.findViewById(R.id.iv_record_keyboard);
+        iv_record_keyboard.setImageResource(R.drawable.icon_record);
         this.removeAllViews();
         this.addView(view);
         initRecord(context);
+        ll_at.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voice.voicePlay(voice.getOutPath());
+            }
+        });
     }
 
+    /**
+     * 设置是否需要录音
+     */
+    public void setIsRecording(boolean isRecording) {
+        ll_record.setVisibility(isRecording ? VISIBLE : GONE);
+        iv_record_keyboard.setImageResource(isRecording ? R.drawable.icon_keyboard : R.drawable.icon_record);
+    }
 
     public void setRecordClick(OnClickListener recordClick) {
+        ll_record_keyboard.setTag(false);//默认是键盘
         ll_record_keyboard.setOnClickListener(recordClick);
     }
 
@@ -88,6 +108,9 @@ public class MultiFunctionModule extends LinearLayout {
 
     private void initRecord(Context context) {
         voice = RecordUtils.getInstance(context);
+        final File cache = StorageUtils.getOwnCacheDirectory(MainApp.getMainApp(), "imageloader/Cache");
+        voice.setAUDIO_ROOTPATH(cache.getPath());
+        voice.initRecord();
     }
 
     private View.OnTouchListener mOnVoiceRecTouchListener
@@ -95,7 +118,6 @@ public class MultiFunctionModule extends LinearLayout {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
             if (getAvailaleSize() < 10) {
                 Global.Toast("储存不足");
                 return false;
@@ -110,48 +132,24 @@ public class MultiFunctionModule extends LinearLayout {
 //            if (mChattingFooterLinstener != null) {
 //                mChattingFooterLinstener.OnVoiceRcdStartRequest();
 //            }
-
-
-            LogUtil.d("y值"+event.getY());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     dialog.setVisibility(VISIBLE);
                     mVoiceButtonTouched = true;
-                    //mVoiceRecord.setEnabled(false);
-//                    if (mChattingFooterLinstener != null) {
-//                        mChattingFooterLinstener.OnVoiceRcdInitReuqest();
-//                    }
-//                    voice.setStart(true);
-//                    voice.setAUDIO_ROOTPATH("");
-//                    voice.startRecorder();
-
-//                    bt_voice.setBackgroundDrawable(ResourceHelper.getDrawableById(ct, R.drawable.rectangle_white));
-//                    bt_voice.setText(R.string.chatfooter_releasetofinish);
-//                    bt_voice.setTextColor(ct.getResources().getColor(R.color.black_text));
-                    dialog.setBackgroundColor(Color.parseColor("#4ec469"));
-//                    start();
+                    voice.startRecord();
                     break;
-
                 case MotionEvent.ACTION_MOVE:
                     dialog.setVisibility(VISIBLE);
                     if (event.getX() <= 0.0F || event.getY() <= -100 || event.getX() >= ll_action_record.getWidth()) {
-//                        tv_voiceMsg.setText("放弃 录音");
-//                        iv_end.setVisibility(View.VISIBLE);
-//                        ll_start.setVisibility(View.GONE);
 //                        stop();//停止动画
-                        dialog.setBackgroundColor(Color.parseColor("#fdb485"));
-                        Global.Toast("停止动画");
+                        cancleRecord();
+                        voice.stopRecord();
                     } else {
 //                        start();//开始动画
-//                        tv_voiceMsg.setText("手指上滑，取消录音");
-//                        iv_end.setVisibility(View.GONE);
-//                        ll_start.setVisibility(View.VISIBLE);
-                        dialog.setBackgroundColor(Color.parseColor("#4ec469"));
-                        Global.Toast("开始动画");
+                        recordOngoing();
 //					mVoiceRcdHitCancelView.setVisibility(View.GONE);
 //					mVoiceHintAnimArea.setVisibility(View.VISIBLE);
                     }
-
                     break;
                 case MotionEvent.ACTION_UP:
 //                    resetVoiceRecordingButton();
@@ -159,9 +157,9 @@ public class MultiFunctionModule extends LinearLayout {
 //                    iv_end.setVisibility(View.GONE);
 //                    ll_start.setVisibility(View.VISIBLE);
 
-//                    if (voice.isStart()) {
-//                        voice.stopRecorder();
-//                    }
+                    if (voice.isStart()) {
+                        voice.stopRecord();
+                    }
                     dialog.setVisibility(GONE);
 
 //                    stop();
@@ -169,10 +167,29 @@ public class MultiFunctionModule extends LinearLayout {
 //                    callback.onComplete(voice.getFormat(voice.getEndTime() - voice.getStartTime()));
                     break;
             }
-
             return true;
         }
     };
+
+    /**
+     * 取消录音
+     */
+    private void cancleRecord() {
+        iv_record.setImageResource(R.drawable.icon_record_no);
+        tv_record_action.setText("松开手指取消语音");
+        tv_record_action.setTextColor(Color.parseColor("#f5625a"));
+        tv_record_number.setTextColor(Color.parseColor("#f5625a"));
+    }
+
+    /**
+     * 录音 进行中
+     */
+    private void recordOngoing() {
+        iv_record.setImageResource(R.drawable.icon_record_ok1);
+        tv_record_action.setText("滑动至此处可取消录音");
+        tv_record_action.setTextColor(Color.parseColor("#ffffff"));
+        tv_record_number.setTextColor(Color.parseColor("#ffffff"));
+    }
 
     /**
      * 获取储存大小
