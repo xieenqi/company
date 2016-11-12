@@ -6,33 +6,34 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="165dp"
-        android:layout_height="107dp"
+        android:layout_width="175dp"
+        android:layout_height="117dp"
         android:background="@drawable/icon_pop_contactlist"
-        android:gravity="center"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/dimen_10"
-        android:paddingRight="@dimen/dimen_10">
+        android:gravity="center_horizontal"
+        android:paddingLeft="@dimen/dimen_20"
+        android:paddingRight="@dimen/dimen_20">
 
         <LinearLayout
             android:id="@+id/ll_handinsert"
-            android:layout_marginBottom="@dimen/dimen_5"
             android:layout_width="match_parent"
             android:layout_height="0dip"
-            android:layout_weight="0.5"
-            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/dimen_10"
+            android:layout_weight="0.8"
+            android:gravity="bottom|center_horizontal"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_26"
+                android:layout_marginLeft="@dimen/dimen_18"
                 android:layout_marginRight="@dimen/dimen_15"
                 android:background="@drawable/icon_contactlist_hand" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="手动新建"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -44,23 +45,24 @@
 
         <LinearLayout
             android:id="@+id/ll_autoinsert"
-            android:layout_marginTop="@dimen/dimen_5"
             android:layout_width="match_parent"
             android:layout_height="0dip"
-            android:layout_weight="0.5"
-            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_weight="1"
+            android:gravity="top|center_horizontal"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_26"
+                android:layout_marginLeft="@dimen/dimen_18"
                 android:layout_marginRight="@dimen/dimen_15"
                 android:background="@drawable/icon_contactlist_lind" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="通讯录导入"
                 android:textSize="14sp" />
         </LinearLayout>

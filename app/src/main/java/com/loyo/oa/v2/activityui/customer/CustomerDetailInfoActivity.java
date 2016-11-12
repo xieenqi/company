@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -39,13 +40,18 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-import java.util.ArrayList;
 import org.greenrobot.eventbus.Subscribe;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import java.util.ArrayList;
 import java.util.Date;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
@@ -58,7 +64,7 @@ import retrofit.client.Response;
  * 时间 : 15/9/24.
  */
 @EActivity(R.layout.activity_customer_detail_info)
-public class CustomerDetailInfoActivity extends BaseActivity implements CustomerDetailinfoView{
+public class CustomerDetailInfoActivity extends BaseActivity implements CustomerDetailinfoView {
 
     @ViewById
     ViewGroup img_title_left, img_title_right, layout_customer_info, layout_contact, layout_send_sms,
@@ -84,8 +90,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private boolean isMem = false;
     private MembersRoot memRoot;
     private Contact mContact;
-    private RelativeLayout layout_wirete,layout_phone;
-    private LinearLayout layout_gj,layout_sign;
+    private RelativeLayout layout_wirete, layout_phone;
+    private LinearLayout layout_gj, layout_sign;
     private ImageView iv_select_tag;
     private CustomerDetailInfoPresenter mPresenter;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
@@ -98,16 +104,16 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         showLoading("", false);
 
         layout_wirete = (RelativeLayout) findViewById(R.id.layout_wirete);
-        layout_phone  = (RelativeLayout) findViewById(R.id.layout_phone);
-        layout_gj     = (LinearLayout) findViewById(R.id.layout_gj);
-        layout_sign   = (LinearLayout) findViewById(R.id.layout_sign);
-        iv_select_tag   = (ImageView) findViewById(R.id.iv_select_tag);
+        layout_phone = (RelativeLayout) findViewById(R.id.layout_phone);
+        layout_gj = (LinearLayout) findViewById(R.id.layout_gj);
+        layout_sign = (LinearLayout) findViewById(R.id.layout_sign);
+        iv_select_tag = (ImageView) findViewById(R.id.iv_select_tag);
 
         iv_select_tag.setOnTouchListener(Global.GetTouch());
         layout_sign.setOnTouchListener(Global.GetTouch());
         layout_gj.setOnTouchListener(Global.GetTouch());
 
-        mPresenter = new CustomerDetailinfoPresenterimpl(mContext,this);
+        mPresenter = new CustomerDetailinfoPresenterimpl(mContext, this);
     }
 
     @Override
@@ -188,21 +194,21 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         mContact = Utils.findDeault(mCustomer);
         if (null != mContact) {
 
-            if(null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())){
+            if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
                 layout_phone.setVisibility(View.GONE);
-            }else{
+            } else {
                 tv_contact_tel.setText(mContact.getTel());
             }
 
-            if(null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())){
+            if (null == mContact.getWiretel() || TextUtils.isEmpty(mContact.getWiretel())) {
                 layout_wirete.setVisibility(View.GONE);
-            }else{
+            } else {
                 customer_detail_wiretel.setText(mContact.getWiretel());
             }
 
             tv_contact_name.setText(mContact.getName());
 
-        }else{
+        } else {
             layout_phone.setVisibility(View.GONE);
             layout_wirete.setVisibility(View.GONE);
         }
@@ -266,7 +272,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
             R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call,
-            R.id.ll_sale, R.id.ll_order,R.id.layout_gj,R.id.layout_sign,R.id.iv_select_tag})
+            R.id.ll_sale, R.id.ll_order, R.id.layout_gj, R.id.layout_sign, R.id.iv_select_tag})
     void onClick(final View view) {
         Bundle bundle = new Bundle();
         Intent mIntent;
@@ -276,9 +282,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
             /*选择标签*/
             case R.id.iv_select_tag:
-                mIntent = new Intent(CustomerDetailInfoActivity.this,CustomerLabelCopyActivity.class);
+                mIntent = new Intent(CustomerDetailInfoActivity.this, CustomerLabelCopyActivity.class);
                 mIntent.putExtra("isMem", isMem);
-                mIntent.putExtra("fromPage",0);
+                mIntent.putExtra("fromPage", 0);
                 if (null != mTagItems) {
                     mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
                     mIntent.putExtra("customerId", mCustomer.getId());
@@ -288,15 +294,15 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
             /*拜访*/
             case R.id.layout_sign:
-                mIntent = new Intent(CustomerDetailInfoActivity.this,SignInActivity.class);
-                mIntent.putExtra("data",mCustomer);
+                mIntent = new Intent(CustomerDetailInfoActivity.this, SignInActivity.class);
+                mIntent.putExtra("data", mCustomer);
                 startActivity(mIntent);
                 break;
 
             /*跟进*/
             case R.id.layout_gj:
-                mIntent = new Intent(CustomerDetailInfoActivity.this,CustomerDynamicAddActivity.class);
-                mIntent.putExtra(Customer.class.getName(),mCustomer);
+                mIntent = new Intent(CustomerDetailInfoActivity.this, CustomerDynamicAddActivity.class);
+                mIntent.putExtra(Customer.class.getName(), mCustomer);
                 startActivity(mIntent);
                 break;
 
@@ -368,7 +374,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*拨打手机*/
             case R.id.layout_call:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    mPresenter.isMobile(CustomerDetailInfoActivity.this,mCustomer.contacts.get(0).getTel(),0,mContact.getName());
+                    mPresenter.isMobile(CustomerDetailInfoActivity.this, mCustomer.contacts.get(0).getTel(), 0, mContact.getName());
                 } else {
                     Toast("没有号码");
                 }
@@ -376,7 +382,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*拨打座机*/
             case R.id.layout_wiretel_call:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    mPresenter.isMobile(CustomerDetailInfoActivity.this,mCustomer.contacts.get(0).getTel(),1,mContact.getName());
+                    mPresenter.isMobile(CustomerDetailInfoActivity.this, mCustomer.contacts.get(0).getTel(), 1, mContact.getName());
                 } else {
                     Toast("没有号码");
                 }
@@ -435,9 +441,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     /**
      * 编辑行为确认
-     * */
+     */
     @Subscribe
-    public void onEditCustomerEvent(EditCustomerEvent event){
+    public void onEditCustomerEvent(EditCustomerEvent event) {
         isEdit = true;
     }
 
@@ -460,11 +466,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             if (isPutOcen) {
                 AppBus.getInstance().post(new MyCustomerListRushEvent());
                 finish();
-            } else if(isEdit){
+            } else if (isEdit) {
                 AppBus.getInstance().post(new EditCustomerRushEvent());
                 AppBus.getInstance().post(new MyCustomerListRushEvent());
                 finish();
-            }else{
+            } else {
                 onBackPressed();
             }
             return true;
@@ -504,7 +510,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     /**
      * 投入公海成功处理
-     * */
+     */
     @Override
     public void toPublicEmbl() {
         isPutOcen = true;
@@ -514,7 +520,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     /**
      * 删除操作成处理
-     * */
+     */
     @Override
     public void deleteEmbl() {
         AppBus.getInstance().post(new MyCustomerListRushEvent());
@@ -523,7 +529,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     /**
      * 获取参与人权限处理
-     * */
+     */
     @Override
     public void getMembersRootEmbl(MembersRoot membersRoot) {
         memRoot = membersRoot;
@@ -532,7 +538,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     /**
      * 获取详情数据成功处理
-     * */
+     */
     @Override
     public void getDataSuccessEmbl(Customer customer) {
         isLock = customer.lock;
@@ -542,7 +548,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     /**
      * 获取详情数据失败处理
-     * */
+     */
     @Override
     public void getDataErrorEmle() {
         finish();
@@ -550,10 +556,10 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     /**
      * 弹出通用提示框
-     * */
+     */
     @Override
-    public void setPopViewEmbl(boolean mespray,String message) {
-        setPopView(mespray,message);
+    public void setPopViewEmbl(boolean mespray, String message) {
+        setPopView(mespray, message);
     }
 
     @Override
