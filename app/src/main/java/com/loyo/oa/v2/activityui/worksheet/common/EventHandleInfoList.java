@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
@@ -17,10 +16,6 @@ import com.loyo.oa.v2.activityui.worksheet.bean.EventHandleInfoItem;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 事件 详情  处理信息列表

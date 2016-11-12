@@ -17,8 +17,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
-import com.loyo.oa.v2.activityui.dynamic.fragment.SelfDynamicFragment;
-import com.loyo.oa.v2.activityui.dynamic.fragment.TeamDynamicFragment;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.fragment.SelfSigninNewFragment;
 import com.loyo.oa.v2.activityui.signinnew.fragment.TeamSigninNewFragment;

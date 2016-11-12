@@ -772,7 +772,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".activityui.dynamic.DynamicDetailsActivity"
+            android:name=".activityui.followup.FollowUpDetailsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -841,7 +841,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".activityui.dynamic.DynamicManagerActivity"
+            android:name=".activityui.followup.FollowUpManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -1011,7 +1011,11 @@
             android:value="56f0a2a367e58e2176002ad6" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="ukuaiqi" />
+            android:value="ukuaiqi" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
     </application>
 </manifest>

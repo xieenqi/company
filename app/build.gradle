@@ -156,6 +156,7 @@ dependencies {
     compile project(path: ':library:sweetDialog')
     compile project(path: ':LibraryModule')
     compile project(':library:circularprogressbutton')
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
 
 apt {
