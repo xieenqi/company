@@ -97,12 +97,12 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
         headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
 
-        LogUtil.dee("customerType:"+customerType);
+        LogUtil.dee("customerType:" + customerType);
         customerType = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
         befromPage = mBundle.getInt("from");
         switchPage(befromPage);
         if (befromPage == SIGNIN_ADD || befromPage == TASKS_ADD || befromPage == TASKS_ADD_CUSTOMER ||
-                befromPage == WFIN_ADD || befromPage == WORK_ADD) {
+                befromPage == WFIN_ADD || befromPage == WORK_ADD || befromPage == DYNAMIC_MANAGE) {
             getData();
         }
 
@@ -224,9 +224,12 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         break;
                     //线索管理
                     case CLUE_MANAGE:
-                        mIntent = new Intent(getApplicationContext(),ClueDetailActivity.class);
+                        mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
                         mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
                         startActivity(mIntent);
+                        break;
+                    case DYNAMIC_MANAGE:
+                        Toast("客户新建跟进动态");
                         break;
                 }
                 hideInputKeyboard(edt_search);
@@ -440,9 +443,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             else if (o instanceof TaskRecord) {
                 TaskRecord task = (TaskRecord) o;
                 try {
-                    if(task.planendAt == 0){
+                    if (task.planendAt == 0) {
                         time.setText("任务截止时间: 无");
-                    }else{
+                    } else {
                         time.setText("任务截止时间: " + MainApp.getMainApp().df3.format(new Date(task.planendAt * 1000)) + "");
                     }
                 } catch (Exception e) {
@@ -512,15 +515,13 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 } else {
                     content.setVisibility(View.GONE);
                 }*/
-            }
-
-            else if(o instanceof ClueListItem){
+            } else if (o instanceof ClueListItem) {
 
                 ClueListItem clueListItem = (ClueListItem) o;
-                if(clueListItem.lastActAt == 0){
+                if (clueListItem.lastActAt == 0) {
                     time.setText("--");
-                }else{
-                    time.setText("跟进时间：" + DateTool.timet(clueListItem.lastActAt+"","yyyy-MM-dd"));
+                } else {
+                    time.setText("跟进时间：" + DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd"));
                 }
                 title.setText(clueListItem.name);
                 content.setText("公司名称" + clueListItem.companyName);

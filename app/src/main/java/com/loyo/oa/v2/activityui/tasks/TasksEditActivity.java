@@ -542,6 +542,7 @@ public class TasksEditActivity extends BaseActivity {
             case R.id.layout_mycustomer:
                 Bundle bundle3 = new Bundle();
                 bundle3.putInt("from", TASKS_ADD_CUSTOMER);
+                bundle3.putInt(ExtraAndResult.EXTRA_TYPE, 1);
                 app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, bundle3);
                 break;
 

@@ -18,14 +18,9 @@ import java.util.HashMap;
 
 public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
-    //private int customerType;
-    private Bundle mBundle;
-
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBundle = getIntent().getExtras();
-        //customerType = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
     }
 
     @Override
@@ -66,7 +61,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
                 break;
 
             default:
-               Toast("参数异常,请重启App");
+                Toast("参数异常,请重启App");
                 finish();
                 break;
 

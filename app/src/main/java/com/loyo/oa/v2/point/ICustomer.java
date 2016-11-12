@@ -125,7 +125,7 @@ public interface ICustomer {
 
     /**
      * 客户详情,编辑跟进标签
-     * */
+     */
     @PUT("/customer/tag/{id}")
     void setCusLabel(@Path("id") String id, @Body ArrayList<NewTag> map, Callback<Contact> callback);
 
@@ -274,42 +274,42 @@ public interface ICustomer {
      */
     @GET("/order/cus/{id}")
     void getCutomerOrder(@Path("id") String id, @QueryMap HashMap<String, Object> map, Callback<PaginationX<OrderListItem>> callback);
+//
+//    /**
+//     * 查询Client信息
+//     * */
+//    @GET("/Accounts/{accountSid}/ClientsByMobile")
+//    void getClientInfo(@Path("accountSid") String sid,@Query("sig") String sig,@QueryMap HashMap<String,Object> map,Callback<CallClientInfo> callback);
 
-    /**
-     * 查询Client信息
-     * */
-    @GET("/Accounts/{accountSid}/ClientsByMobile")
-    void getClientInfo(@Path("accountSid") String sid,@Query("sig") String sig,@QueryMap HashMap<String,Object> map,Callback<CallClientInfo> callback);
+//    /**
+//     * 请求Client绑定
+//     * */
+//    @POST("/Accounts/{accountSid}/Clients")
+//    void getClient(@Path("accountSid") String sid,@Query("sig") String sig,@Body HashMap<String,Object> map,Callback<CallUserResp> callback);
 
-    /**
-     * 请求Client绑定
-     * */
-    @POST("/Accounts/{accountSid}/Clients")
-    void getClient(@Path("accountSid") String sid,@Query("sig") String sig,@Body HashMap<String,Object> map,Callback<CallUserResp> callback);
+//    /**
+//     * 回拨
+//     * */
+//    @POST("/Accounts/{accountSid}/Calls/callBack")
+//    void getCallBack(@Path("accountSid") String sid,@Query("sig") String sig,@Body HashMap<String,Object> map,Callback<CallBackResp> callback);
 
-    /**
-     * 回拨
-     * */
-    @POST("/Accounts/{accountSid}/Calls/callBack")
-    void getCallBack(@Path("accountSid") String sid,@Query("sig") String sig,@Body HashMap<String,Object> map,Callback<CallBackResp> callback);
-
-    /**
-     * 通知我们的服务器 回拨成功
-     * */
-    @POST("/ipvoice/")
-    void toastOurServer(@Body HashMap<String,Object> map,Callback<CallBackCallid>callback);
+//    /**
+//     * 通知我们的服务器 回拨成功
+//     * */
+//    @POST("/ipvoice/")
+//    void toastOurServer(@Body HashMap<String,Object> map,Callback<CallBackCallid>callback);
 
     /**
      * 通知服务器请求回拨
-     * */
+     */
     @POST("/ipvoice/request")
-    void requestCallBack(@Body HashMap<String,Object> map,Callback<CallBackCallid>callback);
+    void requestCallBack(@Body HashMap<String, Object> map, Callback<CallBackCallid> callback);
 
     /**
      * 通知服务器取消回拨
-     * */
+     */
     @GET("/ipvoice/callCancel/{callLogId}")
-    void cancelCallBack(@Path("callLogId")String id,Callback<CallBackCallid>callback);
+    void cancelCallBack(@Path("callLogId") String id, Callback<CallBackCallid> callback);
 
 
 }
