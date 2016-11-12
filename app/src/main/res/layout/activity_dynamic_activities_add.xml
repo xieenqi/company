@@ -79,8 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/margin_other_view">
+                    android:orientation="vertical">
 
                     <EditText
                         android:id="@+id/edt"
@@ -92,9 +91,15 @@
                         android:hint="请填写跟进内容"
                         android:minHeight="100dp"
                         android:paddingBottom="@dimen/dimen_10"
-                        android:paddingLeft="0dp"
+                        android:paddingLeft="@dimen/margin_other_view"
                         android:paddingRight="@dimen/dimen_14"
                         android:paddingTop="@dimen/dimen_10" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_record"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
 
                     <LinearLayout
                         android:id="@+id/layout_photo"
@@ -111,9 +116,7 @@
                             android:horizontalSpacing="10dp"
                             android:listSelector="@android:color/transparent"
                             android:numColumns="3"
-                            android:paddingBottom="@dimen/margin_other_view"
-                            android:paddingRight="@dimen/margin_other_view"
-                            android:paddingTop="@dimen/margin_other_view"
+                            android:padding="@dimen/margin_other_view"
                             android:stretchMode="columnWidth"
                             android:verticalSpacing="10dp" />
 
