@@ -21,12 +21,12 @@ import com.loyo.oa.v2.common.Global;
 public class RecordUtils {
 
     private static RecordUtils mInstance;
+    private static MediaRecorder recorder;
     private Context context;
-    MediaRecorder recorder;
-    MediaPlayer play;
-    String AUDIO_ROOTPATH, outPath, fileName;//录音存放路径、输出路径、输出文件名字
-    boolean isStart;
-    long startTime, endTime;
+    private MediaPlayer play;
+    private String AUDIO_ROOTPATH, outPath, fileName;//录音存放路径、输出路径、输出文件名字
+    private boolean isStart;
+    private long startTime, endTime;
 
     private RecordUtils() {
     }

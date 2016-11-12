@@ -34,6 +34,7 @@ public class MultiFunctionModule extends LinearLayout {
     static long currentTimeMillis = 0;
     private static boolean mVoiceButtonTouched;
     private RecordUtils voice;
+    private RecordComplete callbackComplete;
 
     public MultiFunctionModule(Context context) {
         super(context);
@@ -70,12 +71,7 @@ public class MultiFunctionModule extends LinearLayout {
         this.removeAllViews();
         this.addView(view);
         initRecord(context);
-        ll_at.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                voice.voicePlay(voice.getOutPath());
-            }
-        });
+        Global.SetTouchView(ll_record_keyboard, ll_picture, ll_location, ll_at);
     }
 
     /**
@@ -105,6 +101,9 @@ public class MultiFunctionModule extends LinearLayout {
         ll_at.setOnClickListener(atClick);
     }
 
+    public void setRecordComplete(RecordComplete callbackComplete) {
+        this.callbackComplete = callbackComplete;
+    }
 
     private void initRecord(Context context) {
         voice = RecordUtils.getInstance(context);
@@ -124,16 +123,12 @@ public class MultiFunctionModule extends LinearLayout {
             }
             long time = System.currentTimeMillis() - currentTimeMillis;
             if (time <= 300) {
-//				LogUtil.d(LogUtil.getLogUtilsTag(CCPChattingFooter2.class), "Invalid click ");
                 currentTimeMillis = System.currentTimeMillis();
                 return false;
             }
-
-//            if (mChattingFooterLinstener != null) {
-//                mChattingFooterLinstener.OnVoiceRcdStartRequest();
-//            }
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    v.setAlpha(0.6f);
                     dialog.setVisibility(VISIBLE);
                     mVoiceButtonTouched = true;
                     voice.startRecord();
@@ -141,30 +136,23 @@ public class MultiFunctionModule extends LinearLayout {
                 case MotionEvent.ACTION_MOVE:
                     dialog.setVisibility(VISIBLE);
                     if (event.getX() <= 0.0F || event.getY() <= -100 || event.getX() >= ll_action_record.getWidth()) {
-//                        stop();//停止动画
+                        //停止动画
                         cancleRecord();
                         voice.stopRecord();
+                        v.setAlpha(1f);
                     } else {
-//                        start();//开始动画
+                        // 开始动画
                         recordOngoing();
-//					mVoiceRcdHitCancelView.setVisibility(View.GONE);
-//					mVoiceHintAnimArea.setVisibility(View.VISIBLE);
+                        v.setAlpha(0.6f);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-//                    resetVoiceRecordingButton();
-//                    tv_voiceMsg.setVisibility(View.INVISIBLE);
-//                    iv_end.setVisibility(View.GONE);
-//                    ll_start.setVisibility(View.VISIBLE);
-
+                    v.setAlpha(1f);
                     if (voice.isStart()) {
                         voice.stopRecord();
                     }
                     dialog.setVisibility(GONE);
-
-//                    stop();
-//完成录音
-//                    callback.onComplete(voice.getFormat(voice.getEndTime() - voice.getStartTime()));
+                    callbackComplete.recordComplete(voice.getOutPath(), voice.getFormat(voice.getEndTime() - voice.getStartTime()));
                     break;
             }
             return true;
@@ -203,4 +191,10 @@ public class MultiFunctionModule extends LinearLayout {
         return (availableBlocks * blockSize) / 1024 / 1024;//  MIB单位
     }
 
+    /**
+     * 录音完成的回调
+     */
+    public interface RecordComplete {
+        void recordComplete(String recordPath, String tiem);
+    }
 }

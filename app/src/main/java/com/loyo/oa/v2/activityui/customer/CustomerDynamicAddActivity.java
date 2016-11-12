@@ -139,9 +139,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         controller.loadView(gridView);
         initMultiFunctionModule();
 
-        for (int i = 0; i < 3; i++) {
-            ll_record.addView(new CommonRecordItem(this));
-        }
+
     }
 
     /**
@@ -169,6 +167,12 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             @Override
             public void onClick(View v) {
                 mfmodule.setIsRecording(false);
+            }
+        });
+        mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
+            @Override
+            public void recordComplete(String recordPath, String tiem) {
+                ll_record.addView(new CommonRecordItem(CustomerDynamicAddActivity.this, recordPath, tiem));
             }
         });
     }
