@@ -776,7 +776,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
+        <activity
+            android:name=".activityui.signinnew.SigninNewDetailsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <!-- 其它 -->
         <activity

@@ -7,9 +7,9 @@ package com.loyo.oa.dropdownmenu.filtermenu;
 
 public enum SigninFilterByKind {
 
-    ALL("全部","one"),
-    SELF("我创建的","tweo"),
-    CALLME("@我的","three");
+    ALL("全部","0"),
+    SELF("我创建的","1"),
+    CALLME("@我的","2");
 
 
     public String key;

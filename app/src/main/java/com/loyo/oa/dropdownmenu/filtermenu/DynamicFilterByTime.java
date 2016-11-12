@@ -7,13 +7,13 @@ package com.loyo.oa.dropdownmenu.filtermenu;
 
 public enum DynamicFilterByTime {
 
-    UNLIMITED("不限","one"),
-    TODAY("今天","one"),
-    YESTERDAY("昨天","one"),
-    TOWEEK("本周","one"),
-    LASTWEEK("上周","one"),
-    TOMONTH("本月","one"),
-    LASTMONTH("上月","one");
+    UNLIMITED("不限","0"),
+    TODAY("今天","1"),
+    YESTERDAY("昨天","2"),
+    TOWEEK("本周","3"),
+    LASTWEEK("上周","4"),
+    TOMONTH("本月","5"),
+    LASTMONTH("上月","6");
 
     public String key;
     public String value;

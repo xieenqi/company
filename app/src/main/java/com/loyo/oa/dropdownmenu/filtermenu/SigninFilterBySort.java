@@ -7,9 +7,9 @@ package com.loyo.oa.dropdownmenu.filtermenu;
 
 public enum SigninFilterBySort {
 
-    SORT1("按时间倒序","one"),
-    SORT2("按偏差距离由大到小","one"),
-    SORT3("按偏差距离有小到大","one");
+    SORT1("按时间倒序","0"),
+    SORT2("按偏差距离由大到小","1"),
+    SORT3("按偏差距离有小到大","2");
 
 
     public String key;

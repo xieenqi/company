@@ -233,7 +233,7 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
                 break;
             /*搜索*/
             case R.id.img_title_search_right:
-
+                startActivity(new Intent(FollowUpManagerActivity.this,FollowUpDetailsActivity.class));
                 break;
 
             default:

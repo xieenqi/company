@@ -178,29 +178,57 @@
 
             <LinearLayout
                 android:id="@+id/layout_enclosure"
-                android:layout_marginLeft="59dp"
-                android:layout_marginRight="14dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
                 android:orientation="vertical">
 
             </LinearLayout>
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_options"
-                android:layout_marginLeft="59dp"
-                android:layout_marginRight="14dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
                 android:divider="#00000000"
                 android:dividerHeight="3dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_addressimg" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="四川省成都市人民北路金牛万达B座"
+                    android:textColor="@color/title_bg1" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
+                android:text="\@张杰,罗超,谢啦"
+                android:textColor="@color/text99" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginTop="@dimen/dimen_10">
-
                 <include layout="@layout/include_solid_line" />
             </LinearLayout>
 
@@ -257,6 +285,61 @@
                     android:textColor="@color/text99" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginTop="@dimen/dimen_8"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_signin_location" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:text="客户定位: "
+                    android:textColor="@color/text99" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="无"
+                    android:textColor="@color/text99" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginTop="@dimen/dimen_8"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_signin_pc" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:text="偏差: "
+                    android:textColor="@color/text99" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未知"
+                    android:textColor="@color/red" />
+
+            </LinearLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
