@@ -32,7 +32,7 @@ public class MultiFunctionModule extends LinearLayout {
     private ImageView ll_action_record, iv_record, iv_record_keyboard;
     private TextView tv_record_action, tv_record_number;
     static long currentTimeMillis = 0;
-    private static boolean mVoiceButtonTouched;
+    private boolean isRecordCancle;
     private RecordUtils voice;
     private RecordComplete callbackComplete;
 
@@ -135,7 +135,6 @@ public class MultiFunctionModule extends LinearLayout {
                 case MotionEvent.ACTION_DOWN:
                     v.setAlpha(0.6f);
                     dialog.setVisibility(VISIBLE);
-                    mVoiceButtonTouched = true;
                     voice.initStaratRecord();
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -145,10 +144,12 @@ public class MultiFunctionModule extends LinearLayout {
                         cancleRecord();
                         voice.stopRecord();
                         v.setAlpha(1f);
+                        isRecordCancle = true;
                     } else {
                         // 开始动画
                         recordOngoing();
                         v.setAlpha(0.6f);
+                        isRecordCancle = false;
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -157,7 +158,9 @@ public class MultiFunctionModule extends LinearLayout {
                         voice.stopRecord();
                     }
                     dialog.setVisibility(GONE);
-                    callbackComplete.recordComplete(voice.getOutPath(), voice.getFormat(voice.getEndTime() - voice.getStartTime()));
+                    if (!isRecordCancle) {
+                        callbackComplete.recordComplete(voice.getOutPath(), voice.getFormat(voice.getEndTime() - voice.getStartTime()));
+                    }
                     break;
             }
             return true;
@@ -197,15 +200,15 @@ public class MultiFunctionModule extends LinearLayout {
     }
 
     private void refreshRecordIcon(double db) {
-        if(db<20){
+        if (db < 20) {
             iv_record.setImageResource(R.drawable.icon_record_ok1);
-        }else if(db>20&&db<40){
+        } else if (db > 20 && db < 40) {
             iv_record.setImageResource(R.drawable.icon_record_ok2);
-        }else if(db>40&&db<60){
+        } else if (db > 40 && db < 60) {
             iv_record.setImageResource(R.drawable.icon_record_ok3);
-        }else if(db>60&&db<80){
+        } else if (db > 60 && db < 80) {
             iv_record.setImageResource(R.drawable.icon_record_ok4);
-        }else if(db>80){
+        } else if (db > 80) {
             iv_record.setImageResource(R.drawable.icon_record_ok5);
         }
 

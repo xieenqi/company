@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     private Context context;
     private String path, time;
     private TextView tv_record_length, tv_record_number;
+    private ImageView iv_delete;
 
     public CommonRecordItem(Context context, String path, String time) {
         super(context);
@@ -41,7 +43,8 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
         view.setLayoutParams(pl);
         tv_record_length = (TextView) view.findViewById(R.id.tv_record_length);
         tv_record_number = (TextView) view.findViewById(R.id.tv_record_number);
-
+        iv_delete = (ImageView) view.findViewById(R.id.iv_delete);
+        iv_delete.setOnClickListener(this);
         tv_record_length.setOnClickListener(this);
         this.removeAllViews();
         this.addView(view);
@@ -70,7 +73,13 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_record_length:
-                RecordUtils.getInstance(context).voicePlay(path);
+                RecordUtils rs = RecordUtils.getInstance(context);
+                rs.clean_play();
+                rs.voicePlay(path);
+                break;
+            case R.id.iv_delete:
+                LinearLayout parentView = (LinearLayout) CommonRecordItem.this.getParent();
+                parentView.removeView(CommonRecordItem.this);
                 break;
         }
     }

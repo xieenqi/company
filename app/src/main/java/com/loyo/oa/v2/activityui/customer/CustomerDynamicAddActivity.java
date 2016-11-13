@@ -148,6 +148,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     private void initMultiFunctionModule() {
         final MultiFunctionModule mfmodule = new MultiFunctionModule(this);
         ll_root.addView(mfmodule);
+        /*录音*/
         mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,10 +170,23 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 mfmodule.setIsRecording(false);
             }
         });
+        /*录音完成回调*/
         mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
             @Override
             public void recordComplete(String recordPath, String tiem) {
                 ll_record.addView(new CommonRecordItem(CustomerDynamicAddActivity.this, recordPath, tiem));
+            }
+        });
+        /*图片处理*/
+        mfmodule.setPictureClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CustomerDynamicAddActivity.this, MultiImageSelectorActivity.class);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
+                CustomerDynamicAddActivity.this.startActivityForResult(intent, PICTURE);
             }
         });
     }

@@ -36,6 +36,7 @@
         android:src="@drawable/icon_record_item_refresh" />
 
     <ImageView
+        android:id="@+id/iv_delete"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:padding="@dimen/dimen_5"

@@ -237,7 +237,6 @@ public class RecordUtils {
      * 更新话筒状态
      */
     private int BASE = 1;
-    private  double SPACE;// 分貝值
 
     private void updateMicStatus() {
         if (recorder != null) {
@@ -247,7 +246,6 @@ public class RecordUtils {
                 db = 20 * Math.log10(ratio);
             LogUtil.d("分贝值：" + db);
             callbackMicStatus.setMicData(db);
-//            mHandler.postDelayed(mUpdateMicStatusTimer, SPACE);
         }
     }
 
