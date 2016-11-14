@@ -3,7 +3,7 @@ package com.loyo.oa.v2.activityui.other.presenter;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.ImageInfo;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ public interface BulletinAddPresenter {
     void requestBulletinAdd(String title,String content,String uuid);
 
     /*上传附件*/
-    void uploadAttachement(SweetAlertDialogView sweetAlertDialogView,ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots,String title,String content,String uuid);
+    void uploadAttachement(SweetAlertDialogView sweetAlertDialogView, ArrayList<ImageInfo> pickPhots, String title, String content, String uuid);
 
 
 }

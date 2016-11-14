@@ -35,10 +35,10 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.GlideManager;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -484,7 +484,7 @@ public class MainApp extends Application {
     /**
      * 跳转相册，公用方法
      */
-    public void startSelectImage(Activity mActivity, ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
+    public void startSelectImage(Activity mActivity, ArrayList<ImageInfo> pickPhots) {
 //        Intent intent = new Intent(mActivity, MultiImageSelectorActivity.class);
 //        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
 //        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - pickPhots.size()) /*最大可选择图片数量*/);

@@ -52,10 +52,10 @@ import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -168,9 +168,9 @@ public class TasksAddActivity extends BaseActivity {
     private StringBuffer joinName;
     private StringBuffer joinUserId;
     private String uuid = StringUtil.getUUID();
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private List<String> mSelectPath;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
+    private ArrayList<ImageInfo> pickPhotsResult;
 
     @AfterViews
     void initUI() {
@@ -661,7 +661,7 @@ public class TasksAddActivity extends BaseActivity {
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
-            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+            for (ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
@@ -735,7 +735,7 @@ public class TasksAddActivity extends BaseActivity {
                     pickPhotsResult = new ArrayList<>();
                     mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                        pickPhotsResult.add(new ImageInfo("file://" + path));
                     }
                     pickPhots.addAll(pickPhotsResult);
                     init_gridView_photo();

@@ -2,7 +2,7 @@ package com.loyo.oa.v2.activityui.wfinstance.viewcontrol;
 
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.BaseView;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.ImageInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ public interface WfinAddView extends BaseView{
     void requestAddWfinSuccessEmbl(WfInstance wfInstance);
 
     /*上传附件成功处理*/
-    void uploadSuccessEmbl(ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots);
+    void uploadSuccessEmbl(ArrayList<ImageInfo> pickPhots);
 
 
 }

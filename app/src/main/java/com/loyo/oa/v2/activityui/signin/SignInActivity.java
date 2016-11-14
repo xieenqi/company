@@ -32,11 +32,11 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
@@ -327,8 +327,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
             case MainApp.GET_IMG:
                 try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
+                    for (ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = null;
                         newFile = Global.scal(this, uri);

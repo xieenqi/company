@@ -26,9 +26,9 @@ import com.loyo.oa.v2.point.IFeedback;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -195,8 +195,8 @@ public class FeedbackActivity extends BaseActivity {
         switch (requestCode) {
             case MainApp.GET_IMG://上传附件
                 try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
+                    for (ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(this, uri);
                         if (newFile != null && newFile.length() > 0) {

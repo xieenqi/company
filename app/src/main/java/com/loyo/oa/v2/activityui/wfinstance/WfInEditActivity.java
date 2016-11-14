@@ -10,17 +10,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.event.WfinRushEvent;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinEditPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinEditPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinEditView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
-import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -28,15 +29,15 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
+import com.loyo.oa.v2.customview.CountTextWatcher;
+import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
-import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.customview.CusGridView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -253,10 +254,10 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
             //上传附件回调
             case MainApp.GET_IMG:
                 try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
+                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
                     uploadSize = 0;
                     uploadNum = pickPhots.size();
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                    for (ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(this, uri);
 

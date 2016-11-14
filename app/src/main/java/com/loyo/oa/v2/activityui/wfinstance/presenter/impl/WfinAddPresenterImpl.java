@@ -2,13 +2,11 @@ package com.loyo.oa.v2.activityui.wfinstance.presenter.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfInstanceAdd;
@@ -18,13 +16,13 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -37,6 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -78,7 +77,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
      * 新建审批验证
      * */
     @Override
-    public void addWfinVeri(String deptId,ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
+    public void addWfinVeri(String deptId,ArrayList<ImageInfo> pickPhots) {
         if (submitData.isEmpty()) {
             crolView.showMsg("请输入审批内容");
             return;
@@ -162,7 +161,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
      * 新建审批请求
      * */
     @Override
-    public void requestAddWfin(String title,String deptId,ArrayList<HashMap<String, Object>> workflowValues,String mTemplateId,String projectId,String uuid,String memo,ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
+    public void requestAddWfin(String title,String deptId,ArrayList<HashMap<String, Object>> workflowValues,String mTemplateId,String projectId,String uuid,String memo,ArrayList<ImageInfo> pickPhots) {
         bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizformId", mBizForm.getId());              //表单Id
@@ -245,12 +244,12 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
      * 上传附件
      * */
     @Override
-    public void newUploadAttachement(String uuid, int bizType, final ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
+    public void newUploadAttachement(String uuid, int bizType, final ArrayList<ImageInfo> pickPhots) {
         crolView.showProgress("");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
-            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+            for (ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(mActivity, uri);
                 if (newFile != null && newFile.length() > 0) {

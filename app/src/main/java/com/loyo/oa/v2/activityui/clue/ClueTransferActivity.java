@@ -40,6 +40,7 @@ import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -98,12 +99,12 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
 
     private LocationUtilGD locationGd;
     private ImageGridViewAdapter imageGridViewAdapter;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<NewTag> tags;
     private ArrayList<ContactLeftExtras> mCusList;
     private List<String> mSelectPath;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
+    private ArrayList<ImageInfo> pickPhotsResult;
 
     private int bizType = 0x01;
     private int uploadSize;
@@ -294,7 +295,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
-            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+            for (ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
@@ -561,7 +562,7 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                     pickPhotsResult = new ArrayList<>();
                     mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                        pickPhotsResult.add(new ImageInfo("file://" + path));
                     }
                     pickPhots.addAll(pickPhotsResult);
                     init_gridView_photo();

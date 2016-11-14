@@ -20,7 +20,7 @@ import com.loyo.oa.v2.activityui.worksheet.fragment.WorksheetAddStep2Fragment;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.ImageInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
     private int mIndex = -1;
     private List<BaseFragment> fragments = new ArrayList<>();
 
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
 
     public WorksheetTemplate selectedType;
     public WorksheetOrder selectedOrder;

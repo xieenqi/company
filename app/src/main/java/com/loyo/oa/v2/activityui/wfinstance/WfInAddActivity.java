@@ -31,6 +31,7 @@ import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 
@@ -77,9 +78,9 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
 
     private BizForm mBizForm;
     private List<String> mSelectPath;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
+    private ArrayList<ImageInfo> pickPhotsResult;
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,7 +235,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
                     pickPhotsResult = new ArrayList<>();
                     mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                        pickPhotsResult.add(new ImageInfo("file://" + path));
                     }
                     pickPhots.addAll(pickPhotsResult);
                     init_gridView_photo();
@@ -349,7 +350,7 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
      * 附件上传成功处理
      */
     @Override
-    public void uploadSuccessEmbl(ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
+    public void uploadSuccessEmbl(ArrayList<ImageInfo> pickPhots) {
         mPresenter.addWfinVeri(deptId, pickPhots);
     }
 }

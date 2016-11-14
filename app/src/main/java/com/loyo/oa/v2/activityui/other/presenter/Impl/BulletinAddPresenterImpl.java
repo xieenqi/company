@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.other.presenter.Impl;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
@@ -17,13 +18,15 @@ import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -161,7 +164,7 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
      * */
     @Override
     public void uploadAttachement(SweetAlertDialogView sweetAlertDialogView,
-                                  final ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots, final String title,
+                                  final ArrayList<ImageInfo> pickPhots, final String title,
                                   final String content, final String uuid) {
 
         sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
@@ -178,7 +181,7 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
                     uploadSize = 0;
                     uploadNum = pickPhots.size();
                     LogUtil.dee("pickPhots:" + MainApp.gson.toJson(pickPhots));
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                    for (ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(mContext, uri);
                         if (newFile != null && newFile.length() > 0) {

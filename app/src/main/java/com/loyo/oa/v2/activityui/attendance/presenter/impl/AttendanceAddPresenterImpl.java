@@ -10,6 +10,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
@@ -22,16 +23,18 @@ import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -173,9 +176,9 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
      * 上传附件
      * */
     @Override
-    public void uploadAttachments(final String uuid, ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
+    public void uploadAttachments(final String uuid, ArrayList<ImageInfo> pickPhots) {
         try {
-            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+            for (ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(mActivity, uri);
                 if (newFile != null && newFile.length() > 0) {

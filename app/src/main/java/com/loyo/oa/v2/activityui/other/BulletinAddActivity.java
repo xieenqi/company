@@ -24,6 +24,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 
@@ -60,10 +61,10 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     private String uuid = StringUtil.getUUID();
     private ImageGridViewAdapter mGridViewAdapter;
     private ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
 
     private List<String> mSelectPath;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
+    private ArrayList<ImageInfo> pickPhotsResult;
     private BulletinAddPresenter mBulletinAddPresenter;
 
     @AfterViews
@@ -127,7 +128,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
             pickPhotsResult = new ArrayList<>();
             mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
             for (String path : mSelectPath) {
-                pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                pickPhotsResult.add(new ImageInfo("file://" + path));
             }
             pickPhots.addAll(pickPhotsResult);
             init_gridView_photo();

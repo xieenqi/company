@@ -35,11 +35,11 @@ public class UploadImgUtil {
         int failed_rid = 0;
         int started_rid = 0;
         int def_rid = 0;
-        ArrayList<SelectPicPopupWindow.ImageInfo> attachments;
+        ArrayList<ImageInfo> attachments;
         int postion;
         boolean isEdit;
 
-        public ImageLoadingListener_ClickShowImg(ImageView imageView, int _postion, ArrayList<SelectPicPopupWindow.ImageInfo> _attachments, int def_rid, boolean isEdit) {
+        public ImageLoadingListener_ClickShowImg(ImageView imageView, int _postion, ArrayList<ImageInfo> _attachments, int def_rid, boolean isEdit) {
             this(imageView, def_rid, def_rid, def_rid, def_rid, isEdit);
             attachments = _attachments;
             postion = _postion;
@@ -108,13 +108,13 @@ public class UploadImgUtil {
 
 
     public static class OnClickListener_showImg implements OnClickListener {
-        ArrayList<SelectPicPopupWindow.ImageInfo> attachments;
+        ArrayList<ImageInfo> attachments;
         Context mContext;
         int position;
         boolean isEdit;
 
 
-        public OnClickListener_showImg(Context context, ArrayList<SelectPicPopupWindow.ImageInfo> _attachments, int _postion, boolean _isEdit) {
+        public OnClickListener_showImg(Context context, ArrayList<ImageInfo> _attachments, int _postion, boolean _isEdit) {
             attachments = _attachments;
             position = _postion;
             isEdit = _isEdit;
@@ -127,11 +127,11 @@ public class UploadImgUtil {
                 return;
             }
 
-            ArrayList<SelectPicPopupWindow.ImageInfo> newAttachment = new ArrayList<>();
+            ArrayList<ImageInfo> newAttachment = new ArrayList<>();
             int newPosistion = 0;
 
             for (int i = 0; i < attachments.size(); i++) {
-                SelectPicPopupWindow.ImageInfo attachment = attachments.get(i);
+                ImageInfo attachment = attachments.get(i);
                 newAttachment.add(attachment);
             }
             for (int i = 0; i < newAttachment.size(); i++) {

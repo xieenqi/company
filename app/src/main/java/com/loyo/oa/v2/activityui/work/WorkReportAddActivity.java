@@ -54,10 +54,10 @@ import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -167,8 +167,8 @@ public class WorkReportAddActivity extends BaseActivity {
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
     private List<String> mSelectPath;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhotsResult;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
+    private ArrayList<ImageInfo> pickPhotsResult;
+    private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
     private Members members = new Members();
@@ -498,7 +498,7 @@ public class WorkReportAddActivity extends BaseActivity {
             lstData_Attachment = new ArrayList<>();
         }
         for (Attachment attachment : lstData_Attachment) {
-            pickPhots.add(new SelectPicPopupWindow.ImageInfo(attachment.url));
+            pickPhots.add(new ImageInfo(attachment.url));
         }
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
@@ -877,7 +877,7 @@ public class WorkReportAddActivity extends BaseActivity {
             uploadSize = 0;
             uploadNum = pickPhots.size();
             LogUtil.dee("pickPhots siez:" + pickPhots.size());
-            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+            for (ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
@@ -1007,7 +1007,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     pickPhotsResult = new ArrayList<>();
                     mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
+                        pickPhotsResult.add(new ImageInfo("file://" + path));
                     }
                     pickPhots.addAll(pickPhotsResult);
                     init_gridView_photo();

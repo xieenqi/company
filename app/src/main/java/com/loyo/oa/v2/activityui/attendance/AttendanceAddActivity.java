@@ -14,20 +14,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.presenter.AttendanceAddPresenter;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceAddPresenterImpl;
 import com.loyo.oa.v2.activityui.attendance.viewcontrol.AttendanceAddView;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
@@ -302,7 +302,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         if (null == data) {
             return;
         }
-        mPresenter.uploadAttachments(uuid, (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
+        mPresenter.uploadAttachments(uuid, (ArrayList<ImageInfo>) data.getSerializableExtra("data"));
     }
 
     /**

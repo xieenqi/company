@@ -11,16 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.customview.HackyViewPager;
+import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import uk.co.senab.photoview.PhotoView;
 
@@ -30,7 +33,7 @@ import uk.co.senab.photoview.PhotoView;
 public class PreviewImageAddActivity extends BaseActivity {
 
     private ViewPager mViewPager;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> mNewAttachments = null;
+    private ArrayList<ImageInfo> mNewAttachments = null;
     private ImageView delete;
     private ImageView back_image;
     private TextView show_tv;
@@ -77,10 +80,10 @@ public class PreviewImageAddActivity extends BaseActivity {
         });
 
         if (getIntent().hasExtra("data")) {
-            ArrayList<SelectPicPopupWindow.ImageInfo> attachments = (ArrayList<SelectPicPopupWindow.ImageInfo>) getIntent().getSerializableExtra("data");
+            ArrayList<ImageInfo> attachments = (ArrayList<ImageInfo>) getIntent().getSerializableExtra("data");
             int position = getIntent().getIntExtra("position", 0);
 
-            for (SelectPicPopupWindow.ImageInfo imageInfo : attachments) {
+            for (ImageInfo imageInfo : attachments) {
                 if (mNewAttachments == null) {
                     mNewAttachments = new ArrayList<>();
                 }
@@ -174,7 +177,7 @@ public class PreviewImageAddActivity extends BaseActivity {
         public View instantiateItem(final ViewGroup container, final int position) {
             File imgFile = null;
             PhotoView photoView = new PhotoView(container.getContext());
-            SelectPicPopupWindow.ImageInfo imageInfo = mNewAttachments.get(position);
+            ImageInfo imageInfo = mNewAttachments.get(position);
             Uri uri = Uri.parse(imageInfo.path);
             try {
                 imgFile = Global.scal(mContext, uri);

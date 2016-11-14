@@ -15,13 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,15 +122,6 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         }
     }
 
-    /*本地展示调用，记得前面加文件路径 "file://" */
-    public static class ImageInfo implements Serializable {
-        public String path;
-
-        public ImageInfo(String path) {
-            this.path = path;
-        }
-    }
-
     public void onClick(View v) {
         switch (v.getId()) {
 
@@ -149,17 +139,11 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
             /*从相册选*/
             case R.id.btn_pick_photo:
                 //dealPermisson();
-
-                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                // 是否显示拍摄图片
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-                // 最大可选择图片数量
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, imgSize);
-                // 选择模式
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                startActivityForResult(intent, MainApp.PICTURE);
-
+                PhotoPicker.builder()
+                        .setPhotoCount(imgSize)
+                        .setShowCamera(true)
+                        .setPreviewEnabled(false)
+                        .start(this);
                 break;
 
             case R.id.btn_cancel:
@@ -265,11 +249,10 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                     setResult(RESULT_OK, mIntent);
                 }
                 break;
-
-            //相册选择回调
-            case MainApp.PICTURE:
-                if (null != data) {
-                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            /*相册选择 回调*/
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
+                    mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
                         pickArray.add(new ImageInfo("file://" + path));
                     }

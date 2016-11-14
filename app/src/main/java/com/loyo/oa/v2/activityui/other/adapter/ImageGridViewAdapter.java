@@ -10,12 +10,15 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.UploadImgUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 
 
@@ -27,13 +30,13 @@ public class ImageGridViewAdapter extends BaseAdapter {
 
     private Activity mActivity;
     private LayoutInflater layoutInflater;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots;
+    private ArrayList<ImageInfo> pickPhots;
 
     private int fromPage;
     private boolean mIsAdd;
     private boolean localpic = false; //是否可以选择相册
 
-    public ImageGridViewAdapter(final Activity mActivity,final boolean mIsAdd,final boolean localpic,final int fromPage, ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
+    public ImageGridViewAdapter(final Activity mActivity,final boolean mIsAdd,final boolean localpic,final int fromPage, ArrayList<ImageInfo> pickPhots) {
         if(null == pickPhots){
            pickPhots = new ArrayList<>();
        }

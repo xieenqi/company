@@ -9,30 +9,34 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentRightActivity_;
-import com.loyo.oa.v2.activityui.project.HttpProject;
-import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.beans.Project;
+import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.project.HttpProject;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
-import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -285,13 +289,13 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
              * */
             case MainApp.GET_IMG:
                 try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
+                    ArrayList<ImageInfo> pickPhots = (ArrayList<ImageInfo>) data.getSerializableExtra("data");
                     if (pickPhots == null) {
                         return;
                     }
                     uploadSize = 0;
                     uploadNum  = pickPhots.size();
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                    for (ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(getActivity(), uri);
                         if (newFile != null && newFile.length() > 0) {
