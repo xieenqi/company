@@ -16,19 +16,21 @@ import java.security.MessageDigest;
 
 public class UploadTask {
 
-    public static final int WAITING    = 0;
-    public static final int QUEUED     = 1;
+    public static final int WAITING = 0;
+    public static final int QUEUED = 1;
     public static final int PROCESSING = 2;
-    public static final int UPLOADING  = 3;
-    public static final int UPLOADED   = 4;
-    public static final int FAILED     = 5;
-    public static final int CANCEL     = 6;
+    public static final int UPLOADING = 3;
+    public static final int UPLOADED = 4;
+    public static final int FAILED = 5;
+    public static final int CANCEL = 6;
 
     @IntDef({WAITING, QUEUED, PROCESSING, UPLOADING, UPLOADED, FAILED, CANCEL})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface UploadTaskStatus {}
+    public @interface UploadTaskStatus {
+    }
 
-    @UploadTaskStatus int status = WAITING;
+    @UploadTaskStatus
+    int status = WAITING;
     double progress;
     String md5;
     String UUID;
@@ -38,7 +40,8 @@ public class UploadTask {
     public long size;
     WeakReference<OSSAsyncTask> taskRef;
 
-
+    public UploadTask() {
+    }
 
     public UploadTask(String filePath, String UUID) {
         this.filePath = filePath;
@@ -50,7 +53,7 @@ public class UploadTask {
         this.originPath = originPath;
         this.filePath = filePath;
         this.UUID = UUID;
-        this.md5 = getMD5(filePath!=null?filePath:originPath);
+        this.md5 = getMD5(filePath != null ? filePath : originPath);
     }
 
     public void setFilePath(String filePath) {
@@ -88,12 +91,12 @@ public class UploadTask {
     }
 
     public String getValidatePath() {
-        return filePath!=null?filePath:originPath;
+        return filePath != null ? filePath : originPath;
     }
 
     public String getKey() {
-        if ( ! TextUtils.isEmpty(name) ) {
-            return UUID +"/" + name;
+        if (!TextUtils.isEmpty(name)) {
+            return UUID + "/" + name;
         }
 
         String path = getValidatePath();
@@ -102,7 +105,7 @@ public class UploadTask {
             extension = "";
         }
 
-        return UUID +"/" + md5+"." + extension;
+        return UUID + "/" + md5 + "." + extension;
     }
 
     public int getStatus() {
@@ -114,11 +117,10 @@ public class UploadTask {
     }
 
     private String getMD5(String val) {
-        MessageDigest md5 ;
+        MessageDigest md5;
         try {
             md5 = MessageDigest.getInstance("MD5");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
         md5.update(val.getBytes());
@@ -126,9 +128,9 @@ public class UploadTask {
         return getString(m);
     }
 
-    private String getString(byte[] b){
+    private String getString(byte[] b) {
         StringBuffer sb = new StringBuffer();
-        for(int i = 0; i < b.length; i ++){
+        for (int i = 0; i < b.length; i++) {
             sb.append(b[i]);
         }
         return sb.toString();

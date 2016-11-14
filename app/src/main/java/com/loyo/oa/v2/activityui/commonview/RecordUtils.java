@@ -10,11 +10,13 @@ import java.util.TimerTask;
 
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Handler;
 
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
 
@@ -74,6 +76,7 @@ public class RecordUtils {
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         recorder.setMaxDuration(60 * 1000);
         startRecord();
+        LogUtil.d("本地录音文件名:  " + fileName);
     }
 
     /**
@@ -177,7 +180,7 @@ public class RecordUtils {
         this.callbackMicStatus = callbackMicStatus;
     }
 
-    public void voicePlay(String playPath) {
+    public MediaPlayer voicePlay(String playPath) {
         clean_play();
         play = new MediaPlayer();
         try {
@@ -185,7 +188,7 @@ public class RecordUtils {
             play.prepare();
             play.start();
             play.prepareAsync();
-            play.setOnCompletionListener(Completion);
+//            play.setOnCompletionListener(Completion);
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -196,7 +199,7 @@ public class RecordUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return play;
     }
 
     private MediaPlayer.OnCompletionListener Completion = new
@@ -251,5 +254,16 @@ public class RecordUtils {
 
     interface CallbackMicStatus {
         void setMicData(double db);
+    }
+
+    /**
+     * 用户是否配置 录音权限     * @return
+     */
+    public static boolean permissionRecord() {
+        if (PackageManager.PERMISSION_GRANTED ==
+                MainApp.getMainApp().getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
+            return true;
+        }
+        return false;
     }
 }
