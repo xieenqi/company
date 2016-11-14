@@ -1,10 +1,13 @@
 package com.loyo.oa.v2.tool;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity;
@@ -97,8 +100,17 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     }
 
     /**
-     * 关闭SweetAlertDialog
-     * */
+     * 关闭软键盘
+     */
+    public void hideInputKeyboard(EditText et) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
+
+
+        /**
+         * 关闭SweetAlertDialog
+         * */
     public void cancelDialog(){
         sweetAlertDialogView.sweetAlertDialog.dismiss();
     }

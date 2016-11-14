@@ -59,8 +59,8 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     private float mCurPosX;
     private float mCurPosY;
 
-    private ListOrDetailsCommentAdapter commentAdapter;  /* 评论区Adapter */
-    private ListOrDetailsGridViewAdapter imageAdapter;   /* 图片9宫格Adapter */
+    //private ListOrDetailsCommentAdapter commentAdapter;  /* 评论区Adapter */
+    //private ListOrDetailsGridViewAdapter imageAdapter;   /* 图片9宫格Adapter */
     private ListOrDetailsOptionsAdapter  optionAdapter;  /* 附件列表Adapter */
 
 
@@ -85,9 +85,9 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     }
 
     private void initUI() {
-        commentAdapter = new ListOrDetailsCommentAdapter(mContext);
+        //commentAdapter = new ListOrDetailsCommentAdapter(mContext);
         optionAdapter = new ListOrDetailsOptionsAdapter(mContext);
-        imageAdapter = new ListOrDetailsGridViewAdapter(mContext);
+        //imageAdapter =  new ListOrDetailsGridViewAdapter(mContext);
 
         layout_voice = (LinearLayout) findViewById(R.id.layout_voice);
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
@@ -151,9 +151,9 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
             }
         });
 
-        lv_comment.setAdapter(commentAdapter);
+        //lv_comment.setAdapter(commentAdapter);
         lv_options.setAdapter(optionAdapter);
-        gv_image.setAdapter(imageAdapter);
+        //gv_image.setAdapter(imageAdapter);
         setContent(ll_web," ");
     }
 

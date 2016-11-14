@@ -7,6 +7,7 @@
         android:id="@+id/layout_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dimen_10"
         android:layout_above="@+id/layout_bottom_menu"
         android:layout_below="@+id/contact_manage_top"
         android:scrollbars="none">
@@ -59,125 +60,29 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="@color/text33"
+                android:visibility="gone"
                 />
 
-            <LinearLayout
-                android:id="@+id/layout_audio1"
+            <com.loyo.oa.v2.customview.CustomerListView
+                android:id="@+id/lv_audio"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="59dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="59dp"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/icon_voice_phone" />
-
-                <TextView
-                    android:id="@+id/iv_calls1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_33"
-                    android:background="@drawable/animation_calls"
-                    android:textColor="#3FD3AA" />
-
-                <TextView
-                    android:id="@+id/tv_audio_length1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
-                    android:text="00:00"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_audio2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="59dp"
-                android:layout_marginTop="@dimen/dimen_4"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/icon_voice_phone" />
-
-                <TextView
-                    android:id="@+id/iv_calls2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_33"
-                    android:background="@drawable/animation_calls"
-                    android:textColor="#3FD3AA" />
-
-                <TextView
-                    android:id="@+id/tv_audio_length2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
-                    android:text="00:00"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_audio3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="59dp"
-                android:layout_marginTop="@dimen/dimen_4"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/icon_voice_phone" />
-
-                <TextView
-                    android:id="@+id/iv_calls3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_33"
-                    android:background="@drawable/animation_calls"
-                    android:textColor="#3FD3AA" />
-
-                <TextView
-                    android:id="@+id/tv_audio_length3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
-                    android:text="00:00"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12" />
-
-            </LinearLayout>
+                android:divider="#00000000"
+                android:listSelector="@android:color/transparent"
+                android:dividerHeight="3dp" />
 
             <com.loyo.oa.v2.customview.CusGridView
                 android:id="@+id/layout_gridview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_15"
                 android:layout_marginLeft="59dp"
-                android:layout_marginTop="@dimen/dimen_15"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="3"
                 android:verticalSpacing="15dp" />
-
-            <LinearLayout
-                android:id="@+id/layout_enclosure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="59dp"
-                android:layout_marginRight="14dp"
-                android:orientation="vertical">
-
-            </LinearLayout>
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_options"
@@ -191,10 +96,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -204,9 +109,12 @@
 
                 <TextView
                     android:id="@+id/tv_address"
+                    android:layout_marginLeft="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="四川省成都市人民北路金牛万达B座"
+                    android:text=""
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textColor="@color/title_bg1" />
             </LinearLayout>
 
@@ -214,6 +122,7 @@
                 android:id="@+id/tv_toast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
                 android:text=""
@@ -382,13 +291,15 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/layout_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:background="@drawable/bg_comment"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
                 <com.loyo.oa.v2.customview.CustomerListView
                     android:id="@+id/lv_comment"
                     android:layout_width="match_parent"

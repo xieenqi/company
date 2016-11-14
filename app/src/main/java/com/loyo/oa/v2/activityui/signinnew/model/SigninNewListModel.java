@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.signinnew.model;
 
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -24,16 +26,14 @@ public class SigninNewListModel implements Serializable {
     public String memo;           //内容
     public String atNameAndDepts; //内容
     public float offsetDistance;  //偏差距离
-    public ArrayList<AudioModel> audioInfo = new ArrayList<>();
+    public ArrayList<AudioModel>  audioInfo;  //语音录音
+    public ArrayList<Attachment> attachments; //附件
+    public ArrayList<CommentModel> comments;  //评论内容
+
 
     public class Creator {
         public String id;
         public String name;
         public String avatar;
-    }
-
-    public class AudioModel {
-        public String url;
-        public int length;
     }
 }
