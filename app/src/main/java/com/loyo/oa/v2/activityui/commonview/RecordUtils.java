@@ -177,7 +177,7 @@ public class RecordUtils {
         this.callbackMicStatus = callbackMicStatus;
     }
 
-    public void voicePlay(String playPath) {
+    public MediaPlayer voicePlay(String playPath) {
         clean_play();
         play = new MediaPlayer();
         try {
@@ -185,7 +185,7 @@ public class RecordUtils {
             play.prepare();
             play.start();
             play.prepareAsync();
-            play.setOnCompletionListener(Completion);
+//            play.setOnCompletionListener(Completion);
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -196,7 +196,7 @@ public class RecordUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return play;
     }
 
     private MediaPlayer.OnCompletionListener Completion = new

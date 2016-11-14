@@ -29,11 +29,28 @@
         android:text="53'"
         android:textColor="@color/text99" />
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="30dp"
         android:layout_height="match_parent"
-        android:padding="@dimen/dimen_5"
-        android:src="@drawable/icon_record_item_refresh" />
+        android:gravity="center"
+        android:padding="@dimen/dimen_5">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_record_item_refresh"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/pb_progress"
+            style="?android:attr/progressBarStyleSmallTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/iv_delete"

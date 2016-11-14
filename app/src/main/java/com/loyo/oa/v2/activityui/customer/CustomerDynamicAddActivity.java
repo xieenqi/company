@@ -174,7 +174,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
             @Override
             public void recordComplete(String recordPath, String tiem) {
-                ll_record.addView(new CommonRecordItem(CustomerDynamicAddActivity.this, recordPath, tiem));
+                ll_record.addView(new CommonRecordItem(CustomerDynamicAddActivity.this, recordPath, tiem, uuid));
             }
         });
         /*图片处理*/
