@@ -155,12 +155,14 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
                 mListAttachment = attachments;
                 attachmentCount = attachments.size();
                 bindAttachment();
+                controller.removeAllTask();
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
+                controller.removeAllTask();
                 finish();
             }
         });

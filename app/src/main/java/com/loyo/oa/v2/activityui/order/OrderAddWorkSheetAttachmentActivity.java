@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.upload.UploadController;
 import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
@@ -18,7 +19,6 @@ import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -125,11 +125,13 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
                     public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
                         HttpErrorCheck.checkResponse("上传附件信息", response);
                         getAttachments();
+                        controller.removeAllTask();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
+                        controller.removeAllTask();
                     }
                 });
     }
@@ -200,13 +202,11 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
 
             //上传
             case R.id.tv_upload:
-
-                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍照图片*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9/*最大可选择图片数量*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI /*选择模式*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                startActivityForResult(intent, MainApp.PICTURE);
+                PhotoPicker.builder()
+                        .setPhotoCount(9)
+                        .setShowCamera(true)
+                        .setPreviewEnabled(false)
+                        .start(this);
 
                 break;
 
@@ -230,13 +230,12 @@ public class OrderAddWorkSheetAttachmentActivity extends BaseActivity implements
         }
 
         switch (requestCode) {
-
-            //相册选择回调
-            case MainApp.PICTURE:
-                if (null != data) {
-                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            /*相册选择 回调*/
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
+                    mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
-                        controller.addUploadTask("file://" + path, null,  uuid);
+                        controller.addUploadTask("file://" + path, null, uuid);
                     }
                     if (mSelectPath.size() > 0) {
                         showLoading("");
