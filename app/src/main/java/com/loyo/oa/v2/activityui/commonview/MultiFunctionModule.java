@@ -160,6 +160,9 @@ public class MultiFunctionModule extends LinearLayout {
                     dialog.setVisibility(GONE);
                     if (!isRecordCancle) {
                         callbackComplete.recordComplete(voice.getOutPath(), voice.getFormat(voice.getEndTime() - voice.getStartTime()));
+                        //恢复默认录音状态是键盘
+                        ll_record_keyboard.setTag(false);
+                        setIsRecording(false);
                     }
                     break;
             }

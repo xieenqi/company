@@ -31,6 +31,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -157,6 +158,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
         iv_uploading_fial.setVisibility(GONE);
         pb_progress.setVisibility(VISIBLE);
         final UploadTask task = new UploadTask(path, uuid);
+        task.name = new File(path).getName();
         // 构造上传请求
         PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(),
                 task.getKey(), path);

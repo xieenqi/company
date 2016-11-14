@@ -7,9 +7,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMember;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.upload.UploadController;
 import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
@@ -21,17 +26,21 @@ import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
+import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.Location;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
@@ -48,6 +57,8 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,12 +80,13 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout layout_image, ll_root, ll_record, ll_location;
+    private LinearLayout layout_image, ll_root, ll_record, ll_location, ll_at;
     private EditText edt;
-    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text;
+    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text, tv_at_text;
     private Customer mCustomer;
     private String tagItemIds, contactId, contactName = "无";
     private LinearLayout ll_customer, ll_contact, ll_contactItem;
+    private ImageView iv_location_delete, iv_at_delete;
 
     private String content;
     private String uuid = StringUtil.getUUID();
@@ -82,8 +94,11 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
 
     private List<String> mSelectPath;
     private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
-    private ArrayList<Record> audioInfo = new ArrayList<>();
-
+    private ArrayList<Record> audioInfo = new ArrayList<>();//录音数据
+    private Location location;//添加的定位信息数据
+    private List<String> atDepts = new ArrayList<>();//@的部门
+    private List<String> atUserIds = new ArrayList<>();//@的人员
+    private StaffMemberCollection collection;//选人返回的数据
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -111,7 +126,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     void initUI() {
         super.setTitle("写跟进");
         edt = (EditText) findViewById(R.id.edt);
-        ll_location = (LinearLayout) findViewById(R.id.layout_image);
+        ll_location = (LinearLayout) findViewById(R.id.ll_location);
         tv_remain_time = (TextView) findViewById(R.id.tv_remain_time);
         tv_sale_action = (TextView) findViewById(R.id.tv_sale_action);
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
@@ -127,12 +142,18 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         ll_root = (LinearLayout) findViewById(R.id.ll_root);
         ll_record = (LinearLayout) findViewById(R.id.ll_record);
         tv_location_text = (TextView) findViewById(R.id.tv_location_text);
+        iv_location_delete = (ImageView) findViewById(R.id.iv_location_delete);
+        iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
+        ll_at = (LinearLayout) findViewById(R.id.ll_at);
+        tv_at_text = (TextView) findViewById(R.id.tv_at_text);
         img_title_left.setOnClickListener(this);
         layout_sale_action.setOnClickListener(this);
         layout_remain_time.setOnClickListener(this);
         img_title_right.setOnClickListener(this);
         ll_customer.setOnClickListener(this);
         ll_contact.setOnClickListener(this);
+        iv_location_delete.setOnClickListener(this);
+        iv_at_delete.setOnClickListener(this);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
         ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
@@ -142,8 +163,6 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         }
         controller.loadView(gridView);
         initMultiFunctionModule();
-
-
     }
 
     /**
@@ -207,6 +226,22 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 app.startActivityForResult(CustomerDynamicAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
             }
         });
+        /*@相关人员*/
+        mfmodule.setAtClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(CustomerDynamicAddActivity.this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     private void buildAttachment() {
@@ -243,6 +278,10 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             map.put("contactName", contactName);
         }
         map.put("audioInfo", audioInfo);//上传录音相关
+        map.put("location", location);//添加定位相关
+        map.put("atDepts", atDepts);
+        map.put("atUserIds", atUserIds);
+
         LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
@@ -377,17 +416,18 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 app.startActivityForResult(CustomerDynamicAddActivity.this, FollowContactSelectActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                 break;
-
-            /*选择图片*/
-            case R.id.layout_image:
-                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                this.startActivityForResult(intent, PICTURE);
+            /*清除选择的定位信息*/
+            case R.id.iv_location_delete:
+                ll_location.setVisibility(View.GONE);
+                location = null;
                 break;
-
+            /*清除  @ 的相关人员*/
+            case R.id.iv_at_delete:
+                ll_at.setVisibility(View.GONE);
+                atDepts.clear();
+                atUserIds.clear();
+                collection = null;
+                break;
         }
     }
 
@@ -492,13 +532,44 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 PositionResultItem positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
                 if (null != positionResultItem) {
                     ll_location.setVisibility(View.VISIBLE);
-//                    laPosition = positionResultItem.laPosition;
-//                    loPosition = positionResultItem.loPosition;
                     tv_location_text.setText(positionResultItem.address);
-//                    edit_address_details.setText(positionResultItem.address);
+                    List<Double> loc = new ArrayList<>();
+                    loc.add(positionResultItem.laPosition);
+                    loc.add(positionResultItem.loPosition);
+                    location = new Location(loc, positionResultItem.address);
                 }
                 break;
+        }
+    }
 
+    /**
+     * @相关人员选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+        atDepts.clear();
+        atUserIds.clear();
+        if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            String atText = "";
+            collection = event.data;
+            if (collection.depts.size() > 0) {
+                for (StaffMember ele : collection.depts) {
+                    atDepts.add(ele.id);
+                    atText += ele.name + ",";
+                }
+            }
+            if (collection.users.size() > 0) {
+                for (StaffMember ele : collection.users) {
+                    atUserIds.add(ele.id);
+                    atText += ele.name + ",";
+                }
+            }
+            if (!TextUtils.isEmpty(atText)) {
+                ll_at.setVisibility(View.VISIBLE);
+                tv_at_text.setText("@" + atText);
+            } else {
+                ll_at.setVisibility(View.GONE);
+            }
         }
     }
 

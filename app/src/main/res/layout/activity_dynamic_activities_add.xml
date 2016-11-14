@@ -22,13 +22,6 @@
         android:orientation="vertical">
 
 
-        <LinearLayout
-            android:id="@+id/ll_root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical" />
-
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
@@ -137,7 +130,8 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingLeft="@dimen/margin_other_view"
-                        android:paddingRight="9dp">
+                        android:paddingRight="9dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/tv_location_text"
@@ -150,7 +144,6 @@
                             android:paddingLeft="@dimen/dimen_8"
                             android:paddingRight="@dimen/dimen_8"
                             android:paddingTop="@dimen/dimen_2"
-                            android:text="四川省成都市金牛万达广场12-45号"
                             android:textColor="@color/title_bg1" />
 
                         <View
@@ -159,7 +152,7 @@
                             android:layout_weight="1" />
 
                         <ImageView
-                            android:id="@+id/iv_delete"
+                            android:id="@+id/iv_location_delete"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:padding="@dimen/dimen_5"
@@ -169,14 +162,17 @@
                     </LinearLayout>
                     <!--添加@ 的人员-->
                     <LinearLayout
+                        android:id="@+id/ll_at"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_40"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingLeft="@dimen/margin_other_view"
-                        android:paddingRight="9dp">
+                        android:paddingRight="9dp"
+                        android:visibility="gone">
 
                         <TextView
+                            android:id="@+id/tv_at_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/ellipse_gray"
@@ -185,7 +181,6 @@
                             android:paddingLeft="@dimen/dimen_8"
                             android:paddingRight="@dimen/dimen_8"
                             android:paddingTop="@dimen/dimen_2"
-                            android:text=" @四川省成都达广场12-45号"
                             android:textColor="@color/text66" />
 
                         <View
@@ -194,6 +189,7 @@
                             android:layout_weight="1" />
 
                         <ImageView
+                            android:id="@+id/iv_at_delete"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:padding="@dimen/dimen_5"
@@ -349,6 +345,14 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/ll_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical" />
+
     </RelativeLayout>
 
     <!--<LinearLayout-->
