@@ -23,6 +23,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
+import com.loyo.oa.v2.activityui.commonview.RecordUtils;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
@@ -175,14 +176,18 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((boolean) v.getTag()) {
-                    showInputKeyboard(edt);
-                    mfmodule.setIsRecording(false);
-                    v.setTag(false);
+                if (RecordUtils.permissionRecord()) {
+                    if ((boolean) v.getTag()) {
+                        showInputKeyboard(edt);
+                        mfmodule.setIsRecording(false);
+                        v.setTag(false);
+                    } else {
+                        hideInputKeyboard(edt);
+                        mfmodule.setIsRecording(true);
+                        v.setTag(true);
+                    }
                 } else {
-                    hideInputKeyboard(edt);
-                    mfmodule.setIsRecording(true);
-                    v.setTag(true);
+                    Toast("你没有配置录音权限");
                 }
 
             }
