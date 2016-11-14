@@ -74,6 +74,7 @@ public class RecordUtils {
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         recorder.setMaxDuration(60 * 1000);
         startRecord();
+        LogUtil.d("本地录音文件名:  " + fileName);
     }
 
     /**

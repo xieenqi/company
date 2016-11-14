@@ -22,12 +22,20 @@
         android:orientation="vertical">
 
 
+        <LinearLayout
+            android:id="@+id/ll_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical" />
+
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/layout_status"
-            android:layout_marginBottom="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_weight="1"
             android:scrollbars="none">
 
@@ -119,6 +127,77 @@
                             android:padding="@dimen/margin_other_view"
                             android:stretchMode="columnWidth"
                             android:verticalSpacing="10dp" />
+
+                    </LinearLayout>
+                    <!--添加的位置-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_40"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="9dp">
+
+                        <TextView
+                            android:id="@+id/tv_record_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ellipse_gray"
+                            android:drawableLeft="@drawable/icon_location_text"
+                            android:gravity="center_vertical"
+                            android:paddingBottom="@dimen/dimen_2"
+                            android:paddingLeft="@dimen/dimen_8"
+                            android:paddingRight="@dimen/dimen_8"
+                            android:paddingTop="@dimen/dimen_2"
+                            android:text="四川省成都市金牛万达广场12-45号"
+                            android:textColor="@color/title_bg1" />
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <ImageView
+                            android:id="@+id/iv_delete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/dimen_5"
+                            android:src="@drawable/icon_record_item_delete" />
+
+
+                    </LinearLayout>
+                    <!--添加的位置-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_40"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:paddingRight="9dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ellipse_gray"
+                            android:gravity="center_vertical"
+                            android:paddingBottom="@dimen/dimen_2"
+                            android:paddingLeft="@dimen/dimen_8"
+                            android:paddingRight="@dimen/dimen_8"
+                            android:paddingTop="@dimen/dimen_2"
+                            android:text=" @四川省成都市金牛万达广场12-45号"
+                            android:textColor="@color/text66" />
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/dimen_5"
+                            android:src="@drawable/icon_record_item_delete" />
+
 
                     </LinearLayout>
 
@@ -269,13 +348,6 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-
-        <LinearLayout
-            android:id="@+id/ll_root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical" />
     </RelativeLayout>
 
     <!--<LinearLayout-->
