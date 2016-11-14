@@ -44,6 +44,10 @@ public class MyCustomerAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public Customer getItemData(int position) {
+        return mCustomers.get(position);
+    }
+
     @Override
     public int getCount() {
         return null == mCustomers ? 0 : mCustomers.size();

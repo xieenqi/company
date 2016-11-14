@@ -11,7 +11,9 @@ import android.widget.LinearLayout;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
@@ -108,13 +110,9 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Toast("bienbb跟进");
-//                Intent intent = new Intent();
-//                intent.putExtra("Id", mCustomers.get(position - 1).getId());
-//                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
-//                intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-//                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
-//                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                Intent mIntent = new Intent(mActivity, CustomerDynamicAddActivity.class);
+                mIntent.putExtra(Customer.class.getName(), adapter.getItemData(position));
+                startActivity(mIntent);
             }
         });
     }

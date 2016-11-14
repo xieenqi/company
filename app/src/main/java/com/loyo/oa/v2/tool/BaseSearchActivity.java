@@ -24,6 +24,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.beans.WorkReportRecord;
@@ -229,7 +230,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         startActivity(mIntent);
                         break;
                     case DYNAMIC_MANAGE:
-                        Toast("客户新建跟进动态");
+                        mIntent = new Intent(getApplicationContext(), CustomerDynamicAddActivity.class);
+                        mIntent.putExtra(Customer.class.getName(), (Customer) (lstData.get(position - 2)));
+                        startActivity(mIntent);
                         break;
                 }
                 hideInputKeyboard(edt_search);

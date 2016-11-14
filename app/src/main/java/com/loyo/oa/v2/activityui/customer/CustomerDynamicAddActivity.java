@@ -105,16 +105,18 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dynamic_activities_add);
+        getIntentData();
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+        initUI();
+        getTempSaleActivity();
+    }
 
+    private void getIntentData() {
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
             mCustomer = (Customer) bundle.getSerializable(Customer.class.getName());
         }
-        controller = new UploadController(this, 9);
-        controller.setObserver(this);
-
-        initUI();
-        getTempSaleActivity();
     }
 
     void getTempSaleActivity() {
@@ -131,7 +133,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         tv_remain_time = (TextView) findViewById(R.id.tv_remain_time);
         tv_sale_action = (TextView) findViewById(R.id.tv_sale_action);
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
-        ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
+//        ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_sale_action = (ViewGroup) findViewById(R.id.layout_sale_action);
         layout_remain_time = (ViewGroup) findViewById(R.id.layout_remain_time);
@@ -156,11 +158,12 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         iv_location_delete.setOnClickListener(this);
         iv_at_delete.setOnClickListener(this);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
-        ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
+//        ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
         ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
         Global.SetTouchView(img_title_left, layout_sale_action, layout_remain_time, img_title_right, ll_customer, ll_contact);
         if (null != mCustomer) {
             getDefaultContact(mCustomer.contacts);
+            tv_customer.setText(mCustomer.name);
         }
         controller.loadView(gridView);
         initMultiFunctionModule();
