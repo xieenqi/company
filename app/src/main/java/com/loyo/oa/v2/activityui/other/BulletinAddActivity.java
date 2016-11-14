@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
@@ -17,13 +18,11 @@ import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
 import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.customview.CusGridView;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -122,12 +121,11 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     /**
      * 相册选择 回调
      */
-    @OnActivityResult(MainApp.PICTURE)
+    @OnActivityResult(PhotoPicker.REQUEST_CODE)
     void onPhotoResult(final Intent data) {
-
-        if (null != data) {
+        if (data != null) {
             pickPhotsResult = new ArrayList<>();
-            mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
             for (String path : mSelectPath) {
                 pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
             }

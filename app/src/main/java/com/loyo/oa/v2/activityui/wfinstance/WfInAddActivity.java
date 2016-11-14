@@ -10,15 +10,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
+import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
+import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
+import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinAddPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.presenter.impl.WfinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinAddView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.wfinstance.bean.BizForm;
-import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -26,13 +27,12 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
+import com.loyo.oa.v2.customview.CountTextWatcher;
+import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.customview.CusGridView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -229,10 +229,10 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
         switch (requestCode) {
 
             /*相册选择 回调*/
-            case MainApp.PICTURE:
-                if (null != data) {
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
                     pickPhotsResult = new ArrayList<>();
-                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
                         pickPhotsResult.add(new SelectPicPopupWindow.ImageInfo("file://" + path));
                     }

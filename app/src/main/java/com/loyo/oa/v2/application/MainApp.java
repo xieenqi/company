@@ -16,6 +16,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.customer.model.Industry;
@@ -27,7 +28,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
@@ -485,12 +485,17 @@ public class MainApp extends Application {
      * 跳转相册，公用方法
      */
     public void startSelectImage(Activity mActivity, ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots) {
-        Intent intent = new Intent(mActivity, MultiImageSelectorActivity.class);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - pickPhots.size()) /*最大可选择图片数量*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-        mActivity.startActivityForResult(intent, PICTURE);
+//        Intent intent = new Intent(mActivity, MultiImageSelectorActivity.class);
+//        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
+//        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - pickPhots.size()) /*最大可选择图片数量*/);
+//        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
+//        intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
+//        mActivity.startActivityForResult(intent, PICTURE);
+        PhotoPicker.builder()
+                .setPhotoCount((9 - pickPhots.size()))
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(mActivity);
     }
 
     /**
