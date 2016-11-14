@@ -149,7 +149,7 @@ public class WorksheetAddActivity extends BaseFragmentActivity implements View.O
                 }
                 break;
 
-           /*附件删除回调*/
+            /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
                 int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
                 if (data != null && index >= 0) {

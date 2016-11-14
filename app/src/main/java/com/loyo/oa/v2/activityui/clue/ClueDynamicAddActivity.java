@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.clue;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +9,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
 import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
@@ -17,17 +18,14 @@ import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
-import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IClue;
@@ -35,7 +33,6 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -47,8 +44,6 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-
-import static com.loyo.oa.v2.application.MainApp.PICTURE;
 
 /**
  * 【新建跟进动态】销售线索
@@ -257,12 +252,12 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
 
             /*选择图片*/
             case R.id.layout_image:
-                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                this.startActivityForResult(intent, PICTURE);
+                PhotoPicker.builder()
+                        .setPhotoCount(9 - controller.count())
+                        .setShowCamera(true)
+                        .setPreviewEnabled(false)
+                        .start(this);
+
                 break;
         }
     }
@@ -324,22 +319,29 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
                 break;
 
             /*相册选择 回调*/
-            case PICTURE:
-                if (null != data) {
-                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
+                    mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for (String path : mSelectPath) {
                         controller.addUploadTask("file://" + path, null, uuid);
                     }
                     controller.reloadGridView();
-
                 }
                 break;
+            /*附件删除回调*/
+            case PhotoPreview.REQUEST_CODE:
+                if (data == null) {
+                    break;
+                }
+                else {
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        controller.removeTaskAt(index);
+                        controller.reloadGridView();
+                    }
+                    break;
+                }
 
-           /*附件删除回调*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                controller.removeTaskAt(data.getExtras().getInt("position"));
-                controller.reloadGridView();
-                break;
         }
     }
 
@@ -350,32 +352,31 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onAddEvent(UploadController controller) {
-        Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-        this.startActivityForResult(intent, PICTURE);
+        PhotoPicker.builder()
+                .setPhotoCount(9 - controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
     }
 
     @Override
     public void onItemSelected(UploadController controller, int index) {
-
         ArrayList<UploadTask> taskList = controller.getTaskList();
-        ArrayList<SelectPicPopupWindow.ImageInfo> newAttachment = new ArrayList<>();
-        int newPosistion = index;
+        ArrayList<String> selectedPhotos = new ArrayList<>();
 
         for (int i = 0; i < taskList.size(); i++) {
-            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://" + taskList.get(i).getValidatePath());
-            newAttachment.add(attachment);
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
         }
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("data", newAttachment);
-        bundle.putInt("position", newPosistion);
-        bundle.putBoolean("isEdit", true);
-        MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageAddActivity.class,
-                MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
     }
 
     @Override
