@@ -16,7 +16,9 @@ import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
+import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
+import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
@@ -25,6 +27,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -66,9 +69,9 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout layout_image, ll_root, ll_record;
+    private LinearLayout layout_image, ll_root, ll_record, ll_location;
     private EditText edt;
-    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name;
+    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text;
     private Customer mCustomer;
     private String tagItemIds, contactId, contactName = "无";
     private LinearLayout ll_customer, ll_contact, ll_contactItem;
@@ -79,6 +82,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
 
     private List<String> mSelectPath;
     private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
+    private ArrayList<Record> audioInfo = new ArrayList<>();
 
 
     @Override
@@ -107,7 +111,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     void initUI() {
         super.setTitle("写跟进");
         edt = (EditText) findViewById(R.id.edt);
-//        layout_image = (LinearLayout) findViewById(R.id.layout_image);
+        ll_location = (LinearLayout) findViewById(R.id.layout_image);
         tv_remain_time = (TextView) findViewById(R.id.tv_remain_time);
         tv_sale_action = (TextView) findViewById(R.id.tv_sale_action);
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
@@ -122,7 +126,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         ll_contact = (LinearLayout) findViewById(R.id.ll_contact);
         ll_root = (LinearLayout) findViewById(R.id.ll_root);
         ll_record = (LinearLayout) findViewById(R.id.ll_record);
-//        layout_image.setOnClickListener(this);
+        tv_location_text = (TextView) findViewById(R.id.tv_location_text);
         img_title_left.setOnClickListener(this);
         layout_sale_action.setOnClickListener(this);
         layout_remain_time.setOnClickListener(this);
@@ -174,7 +178,12 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
             @Override
             public void recordComplete(String recordPath, String tiem) {
-                ll_record.addView(new CommonRecordItem(CustomerDynamicAddActivity.this, recordPath, tiem, uuid));
+                ll_record.addView(new CommonRecordItem(CustomerDynamicAddActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
+                    @Override
+                    public void Success(Record record) {//上传录音完成回调
+                        audioInfo.add(record);
+                    }
+                }));
             }
         });
         /*图片处理*/
@@ -187,6 +196,15 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
                 CustomerDynamicAddActivity.this.startActivityForResult(intent, PICTURE);
+            }
+        });
+        /*添加地址处理*/
+        mfmodule.setLocationClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle mBundle = new Bundle();
+                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+                app.startActivityForResult(CustomerDynamicAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
             }
         });
     }
@@ -224,6 +242,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             map.put("contactId", contactId);
             map.put("contactName", contactName);
         }
+        map.put("audioInfo", audioInfo);//上传录音相关
         LogUtil.dee("新建跟进:" + MainApp.gson.toJson(map));
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
@@ -467,6 +486,17 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 controller.removeTaskAt(data.getExtras().getInt("position"));
                 controller.reloadGridView();
+                break;
+            /*添加地址回调*/
+            case MapModifyView.SERACH_MAP:
+                PositionResultItem positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
+                if (null != positionResultItem) {
+                    ll_location.setVisibility(View.VISIBLE);
+//                    laPosition = positionResultItem.laPosition;
+//                    loPosition = positionResultItem.loPosition;
+                    tv_location_text.setText(positionResultItem.address);
+//                    edit_address_details.setText(positionResultItem.address);
+                }
                 break;
 
         }

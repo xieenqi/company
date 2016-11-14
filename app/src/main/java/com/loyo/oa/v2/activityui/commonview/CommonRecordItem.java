@@ -22,6 +22,7 @@ import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
+import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
@@ -47,18 +48,20 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     private Context context;
     private String path, time;
     private TextView tv_record_length, tv_record_number;
-    private ImageView iv_delete;
+    private ImageView iv_delete, iv_uploading_fial;
     private String uuid;
     private ProgressBar pb_progress;
     private AnimationDrawable mAnimationDrawable;
+    private RecordUploadingCallback recordUploadingCallback;
 
 
-    public CommonRecordItem(Context context, String path, String time, String uuid) {
+    public CommonRecordItem(Context context, String path, String time, String uuid, RecordUploadingCallback recordUploadingCallback) {
         super(context);
         this.context = context;
         this.path = path;
         this.time = time;
         this.uuid = uuid;
+        this.recordUploadingCallback = recordUploadingCallback;
         initView();
     }
 
@@ -78,8 +81,10 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
         tv_record_number = (TextView) view.findViewById(R.id.tv_record_number);
         iv_delete = (ImageView) view.findViewById(R.id.iv_delete);
         pb_progress = (ProgressBar) view.findViewById(R.id.pb_progress);
+        iv_uploading_fial = (ImageView) view.findViewById(R.id.iv_uploading_fial);
         iv_delete.setOnClickListener(this);
         tv_record_length.setOnClickListener(this);
+        iv_uploading_fial.setOnClickListener(this);
         this.removeAllViews();
         this.addView(view);
         setRecordLength();
@@ -127,14 +132,20 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
                 LinearLayout parentView = (LinearLayout) CommonRecordItem.this.getParent();
                 parentView.removeView(CommonRecordItem.this);
                 break;
+            case R.id.iv_uploading_fial:
+                uploadingRecord();
+                break;
         }
     }
 
+    /**
+     * 清理 其它录音在播放状态的动画
+     */
     private void cleanOtherRecordAnimation() {
         LinearLayout parentView = (LinearLayout) CommonRecordItem.this.getParent();
-
         for (int i = 0; i < parentView.getChildCount(); i++) {
-            AnimationDrawable animatiob = ((AnimationDrawable) ((LinearLayout) ((LinearLayout) parentView.getChildAt(i)).getChildAt(0)).getChildAt(1).getTag());
+            AnimationDrawable animatiob = ((AnimationDrawable) ((LinearLayout) ((LinearLayout) parentView.
+                    getChildAt(i)).getChildAt(0)).getChildAt(1).getTag());
             if (animatiob != null) {
                 animatiob.stop();
                 animatiob.selectDrawable(0);
@@ -143,6 +154,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     }
 
     private void uploadingRecord() {
+        iv_uploading_fial.setVisibility(GONE);
         pb_progress.setVisibility(VISIBLE);
         final UploadTask task = new UploadTask(path, uuid);
         // 构造上传请求
@@ -153,8 +165,8 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
             public void onProgress(PutObjectRequest putObjectRequest, long l, long l1) {
                 LogUtil.d(l1 + "上传进度: " + l);
                 if (l == l1) {
-                    LogUtil.d("获取的录音地址: " + getUrl(task.getKey()));
                     pb_progress.setVisibility(GONE);
+                    recordUploadingCallback.Success(new Record(task.getKey(), Integer.parseInt(time)));
                 }
             }
         });
@@ -163,21 +175,17 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
         } catch (ClientException e) {
             e.printStackTrace();
             Global.Toast("连接异常");
+            pb_progress.setVisibility(GONE);
+            iv_uploading_fial.setVisibility(VISIBLE);
         } catch (ServiceException e) {
             e.printStackTrace();
             Global.Toast("录音服务端异常");
+            pb_progress.setVisibility(GONE);
+            iv_uploading_fial.setVisibility(VISIBLE);
         }
-
     }
 
-    public String getUrl(String key) {
-        // 设置URL过期时间为10年  3600l* 1000*24*365*10
-        Date expiration = new Date(new Date().getTime() + 3600l * 1000 * 24 * 365 * 10);
-        // 生成URL
-        String url = AliOSSManager.getInstance().getOss().presignPublicObjectURL("bcis", key);
-        if (url != null) {
-            return url.toString();
-        }
-        return null;
+    public interface RecordUploadingCallback {
+        void Success(Record record);
     }
 }

@@ -131,6 +131,7 @@
                     </LinearLayout>
                     <!--添加的位置-->
                     <LinearLayout
+                        android:id="@+id/ll_location"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_40"
                         android:gravity="center_vertical"
@@ -139,7 +140,7 @@
                         android:paddingRight="9dp">
 
                         <TextView
-                            android:id="@+id/tv_record_number"
+                            android:id="@+id/tv_location_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/ellipse_gray"
@@ -166,7 +167,7 @@
 
 
                     </LinearLayout>
-                    <!--添加的位置-->
+                    <!--添加@ 的人员-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_40"
@@ -184,7 +185,7 @@
                             android:paddingLeft="@dimen/dimen_8"
                             android:paddingRight="@dimen/dimen_8"
                             android:paddingTop="@dimen/dimen_2"
-                            android:text=" @四川省成都市金牛万达广场12-45号"
+                            android:text=" @四川省成都达广场12-45号"
                             android:textColor="@color/text66" />
 
                         <View

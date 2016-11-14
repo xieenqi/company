@@ -37,6 +37,7 @@
 
 
         <ImageView
+            android:id="@+id/iv_uploading_fial"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
