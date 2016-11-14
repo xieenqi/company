@@ -13,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
@@ -25,7 +25,6 @@ import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -180,16 +179,20 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         holder.img_attachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-
-                LogUtil.dee("点击的:"+position);
-                LogUtil.dee("点击的Size:"+mAttachments.size());
-
                 if (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("data", mAttachments);
-                    bundle.putSerializable("position", position);
-                    bundle.putBoolean("isEdit", false);
-                    MainApp.getMainApp().startActivity((Activity) mContext, PreviewImageListActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
+                    ArrayList<String> selectedPhotos = new ArrayList<>();
+
+                    for (int i = 0; i < mAttachments.size(); i++) {
+                        String path = mAttachments.get(i).getUrl();
+                        if (path !=null) {
+                            selectedPhotos.add(path);
+                        }
+                    }
+                    PhotoPreview.builder()
+                            .setPhotos(selectedPhotos)
+                            .setCurrentItem(position)
+                            .setShowDeleteButton(true)
+                            .start((Activity) mContext);
 
                 } else if (attachment.getAttachmentType() == Attachment.AttachmentType.OFFICE) {
                     //预览文件
