@@ -330,17 +330,14 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
                 break;
             /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
-                if (data == null) {
-                    break;
-                }
-                else {
+                if (data != null){
                     int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
                     if (index >= 0) {
                         controller.removeTaskAt(index);
                         controller.reloadGridView();
                     }
-                    break;
                 }
+                break;
 
         }
     }
