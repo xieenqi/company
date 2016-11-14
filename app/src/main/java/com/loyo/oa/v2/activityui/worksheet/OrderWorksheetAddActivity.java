@@ -9,28 +9,25 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
 import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
-import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.bean.OrderWorksheetListModel;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.event.OrderWorksheetAddFinish;
 import com.loyo.oa.v2.activityui.worksheet.presenter.OrderWorksheetAddPresenter;
 import com.loyo.oa.v2.activityui.worksheet.presenter.impl.OrderWorksheetAddPresenterImpl;
 import com.loyo.oa.v2.activityui.worksheet.viewcontrol.OrderWorksheetAddView;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
@@ -224,12 +221,11 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
      */
     @Override
     public void onAddEvent(UploadController controller) {
-        Intent intent = new Intent(OrderWorksheetAddActivity.this, MultiImageSelectorActivity.class);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-        startActivityForResult(intent, MainApp.PICTURE);
+        PhotoPicker.builder()
+                .setPhotoCount(9 - controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
     }
 
     /**
@@ -238,20 +234,21 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
     @Override
     public void onItemSelected(UploadController controller, int index) {
         ArrayList<UploadTask> taskList = controller.getTaskList();
-        ArrayList<SelectPicPopupWindow.ImageInfo> newAttachment = new ArrayList<>();
-        int newPosistion = index;
+        ArrayList<String> selectedPhotos = new ArrayList<>();
 
         for (int i = 0; i < taskList.size(); i++) {
-            SelectPicPopupWindow.ImageInfo attachment = new SelectPicPopupWindow.ImageInfo("file://" + taskList.get(i).getValidatePath());
-            newAttachment.add(attachment);
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
         }
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("data", newAttachment);
-        bundle.putInt("position", newPosistion);
-        bundle.putBoolean("isEdit", true);
-        MainApp.getMainApp().startActivityForResult(OrderWorksheetAddActivity.this, PreviewImageAddActivity.class,
-                MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
     }
 
     @Override
@@ -277,18 +274,21 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
         }
 
         switch (requestCode) {
-
             /*相册选择 回调*/
-            case MainApp.PICTURE:
-                if (null != data) {
-                    List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     mPresenter.addPhoto(mSelectPath, controller, uuid);
                 }
                 break;
-
             /*附件删除回调*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                mPresenter.removeAttachmentAt(data.getExtras().getInt("position"), controller);
+            case PhotoPreview.REQUEST_CODE:
+                if (data != null){
+                    int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                    if (index >= 0) {
+                        mPresenter.removeAttachmentAt(index, controller);
+                    }
+                }
                 break;
 
             default:
