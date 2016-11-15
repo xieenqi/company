@@ -382,17 +382,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 break;
             /*选择客户回调*/
             case BaseSearchActivity.REQUEST_SEARCH:
-                Customer customer = (Customer) data.getSerializableExtra("data");
-                if (null != customer) {
-                    customerId = customer.getId();
-                    customerName = customer.name;
-                    customerAddress = customer.loc.addr;
-                    tv_customer_address.setVisibility(View.VISIBLE);
-                }
+                customerId = data.getStringExtra("id");
+                customerName = data.getStringExtra("name");
+                customerAddress = data.getStringExtra("address");
+//                customerAddress = customer.loc.addr;
+                tv_customer_address.setVisibility(View.VISIBLE);
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
-                tv_customer_address.setText(customerAddress);
-                break;
-            default:
+                tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
                 break;
         }
     }

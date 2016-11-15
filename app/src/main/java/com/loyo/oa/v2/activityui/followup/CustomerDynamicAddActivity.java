@@ -282,8 +282,8 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         }
         if (!TextUtils.isEmpty(contactId)) {
             map.put("contactId", contactId);
-            map.put("contactName", contactName);
         }
+        map.put("contactName", contactName);
         map.put("audioInfo", audioInfo);//上传录音相关
         map.put("location", location);//添加定位相关
         map.put("atDepts", atDepts);

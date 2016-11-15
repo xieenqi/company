@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.signin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,7 +51,13 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                SigninSelectCustomer item = adapter.getItemData(position);
+                Intent intent = new Intent();
+                intent.putExtra("id", item.id);
+                intent.putExtra("name", item.name);
+                intent.putExtra("address", item.loc.addr);
+                setResult(RESULT_OK, intent);
+                onBackPressed();
             }
         });
         startLocation();

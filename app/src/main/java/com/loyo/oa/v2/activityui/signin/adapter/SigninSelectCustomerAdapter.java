@@ -32,6 +32,10 @@ public class SigninSelectCustomerAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public SigninSelectCustomer getItemData(int position) {
+        return data.get(position);
+    }
+
     @Override
     public int getCount() {
         return data == null ? 0 : data.size();
@@ -60,7 +64,7 @@ public class SigninSelectCustomerAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-        holder.setContent(data.get(position));
+        holder.setContent(getItemData(position));
         return convertView;
     }
 
