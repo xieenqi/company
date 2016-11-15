@@ -99,7 +99,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(followUpListModel.creator.avatar, holder.iv_heading);
         holder.tv_name.setText(followUpListModel.creator.name);
         holder.tv_address.setText(TextUtils.isEmpty(followUpListModel.location.addr) ? "无地址信息" : followUpListModel.location.addr);
-        holder.tv_contact.setText(followUpListModel.contactName);
+        holder.tv_contact.setText(TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
         holder.tv_customer.setText(followUpListModel.customerName);
         holder.tv_create_time.setText(DateTool.timet(followUpListModel.createAt + "", "yyyy-MM-dd hh:mm"));
 

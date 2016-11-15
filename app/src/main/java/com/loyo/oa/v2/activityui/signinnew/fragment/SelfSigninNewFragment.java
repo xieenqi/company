@@ -88,7 +88,6 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
     private SigninNewListAdapter mAdapter;
 
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -106,7 +105,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
-            mView = inflater.inflate(R.layout.fragment_new_signin, null);
+            mView = inflater.inflate(R.layout.fragment_newsignin_self, null);
             initView(mView);
             loadFilterOptions();
         }
@@ -236,6 +235,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         map.put("timeType", Integer.parseInt(menuTimekey));
         map.put("queryType", Integer.parseInt(menuKindkey));
         map.put("orderType", Integer.parseInt(menuSortkey));
+        map.put("split",true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 20 ? listModel.size() : 20 : 20);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));

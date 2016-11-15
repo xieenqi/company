@@ -5,6 +5,8 @@ import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
+
+import java.util.HashMap;
 import java.util.Map;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -45,11 +47,16 @@ public interface ISigninNeworFollowUp {
     @DELETE("/comment/{id}")
     void deleteComment(@Path("id") String id, Callback<Object> callback);
 
-
     /**
      * 我的团队,跟进数据
      * */
     @GET("/saleactivity/mobile/sale/")
     void selfFollowUp(@QueryMap Map<String, Object> params, Callback<BaseBeanT<PaginationX<FollowUpListModel>>> cb);
+
+    /**
+     * 拜访详情数据
+     */
+    @GET("/visit/detail/{id}/")
+    void getSigninDetails(@Path("id") String id, @QueryMap HashMap<String,Object> map, Callback<BaseBeanT<SigninNewListModel>> cb);
 
 }

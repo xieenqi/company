@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     >
     <com.loyo.oa.dropdownmenu.DropDownMenu
         android:id="@+id/drop_down_menu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_bottom_menu">
         <FrameLayout
             android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
@@ -78,4 +78,13 @@
 
         </FrameLayout>
     </com.loyo.oa.dropdownmenu.DropDownMenu>
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_bottom_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <include layout="@layout/customerview_list_voicemenu" />
+    </LinearLayout>
+</RelativeLayout>

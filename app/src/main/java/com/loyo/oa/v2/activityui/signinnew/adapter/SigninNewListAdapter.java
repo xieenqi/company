@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
+import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
@@ -45,9 +46,10 @@ public class SigninNewListAdapter extends BaseAdapter {
     private ArrayList<SigninNewListModel> listModel;
     private SigninNewListView viewCrol;
 
-    private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格附件 */
+    private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格图片 */
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
+    private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
 
     public SigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, SigninNewListView viewCrol) {
         this.mContext = mContext;
@@ -90,6 +92,7 @@ public class SigninNewListAdapter extends BaseAdapter {
             holder.iv_comment = (ImageView) convertView.findViewById(R.id.iv_comment);
             holder.layout_gridview = (CusGridView) convertView.findViewById(R.id.layout_gridview);
             holder.lv_comment = (CustomerListView) convertView.findViewById(R.id.lv_comment);
+            holder.lv_options = (CustomerListView) convertView.findViewById(R.id.lv_options);
             holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
             convertView.setTag(holder);
@@ -129,9 +132,15 @@ public class SigninNewListAdapter extends BaseAdapter {
             holder.lv_audio.setAdapter(audioAdapter);
         }
 
+        /** 文件列表 数据绑定 */
+        if(null != signinNewListModel.attachments && signinNewListModel.attachments.size() > 0){
+            optionAdapter = new ListOrDetailsOptionsAdapter(mContext,signinNewListModel.attachments);
+            holder.lv_options.setAdapter(optionAdapter);
+        }
+
         /** 绑定图片与GridView监听 */
-        if (null != signinNewListModel.attachments && signinNewListModel.attachments.size() > 0) {
-            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, signinNewListModel.attachments);
+        if (null != signinNewListModel.imageAttachments && signinNewListModel.imageAttachments.size() > 0) {
+            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, signinNewListModel.imageAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
 
             /*图片预览*/
@@ -139,7 +148,7 @@ public class SigninNewListAdapter extends BaseAdapter {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("data", signinNewListModel.attachments);
+                    bundle.putSerializable("data", signinNewListModel.imageAttachments);
                     bundle.putInt("position", position);
                     bundle.putBoolean("isEdit", false);
                     MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
@@ -174,6 +183,9 @@ public class SigninNewListAdapter extends BaseAdapter {
                 viewCrol.commentEmbl(position);
             }
         });
+
+
+
         return convertView;
     }
 
@@ -192,6 +204,7 @@ public class SigninNewListAdapter extends BaseAdapter {
         LinearLayout layout_comment;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
+        CustomerListView lv_options; /*文件区*/
         GridView layout_gridview;    /*图片9宫格区*/
         ImageView iv_comment;        /*评论按钮*/
     }

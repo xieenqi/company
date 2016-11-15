@@ -26,8 +26,9 @@ public class SigninNewListModel implements Serializable {
     public String memo;           //内容
     public String atNameAndDepts; //内容
     public float offsetDistance;  //偏差距离
-    public ArrayList<AudioModel>  audioInfo;  //语音录音
-    public ArrayList<Attachment> attachments; //附件
+    public ArrayList<AudioModel>  audioInfo;       //语音录音
+    public ArrayList<Attachment> attachments;      //文件
+    public ArrayList<Attachment> imageAttachments; //图片
     public ArrayList<CommentModel> comments;  //评论内容
 
 

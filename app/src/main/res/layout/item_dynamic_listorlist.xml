@@ -46,6 +46,8 @@
                 android:text="xxxx.jpg"
                 android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp12"
+                android:singleLine="true"
+                android:ellipsize="end"
                 />
 
             <TextView

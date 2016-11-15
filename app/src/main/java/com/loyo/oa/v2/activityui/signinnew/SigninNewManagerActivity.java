@@ -234,7 +234,9 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
                 break;
             /*搜索*/
             case R.id.img_title_search_right:
-                startActivity(new Intent(SigninNewManagerActivity.this,SigninNewDetailsActivity.class));
+                Intent mIntent = new Intent(SigninNewManagerActivity.this,SigninNewDetailsActivity.class);
+                mIntent.putExtra("id","5825828535d8605ee0510690");
+                startActivity(mIntent);
                 break;
 
             default:

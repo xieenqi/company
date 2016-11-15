@@ -42,7 +42,7 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/app_launcher" />
+                    android:src="@drawable/app_launcher" />
 
                 <TextView
                     android:id="@+id/tv_name"
@@ -57,7 +57,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimen_5"
-                    android:text="# 短信" />
+                    android:text="# 短信"
+                    android:visibility="gone"
+                    />
 
             </LinearLayout>
 
@@ -210,6 +212,7 @@
                     android:background="@drawable/icon_addressimg" />
 
                 <TextView
+                    android:id="@+id/tv_position"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="四川省成都市人民北路金牛万达B座"
@@ -217,6 +220,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_toast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
@@ -252,6 +256,7 @@
                     android:textColor="@color/text99" />
 
                 <TextView
+                    android:id="@+id/tv_customer_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="贾斯丁比伯"
@@ -279,6 +284,7 @@
                     android:textColor="@color/text99" />
 
                 <TextView
+                    android:id="@+id/tv_contact_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="张总"
@@ -306,6 +312,7 @@
                     android:textColor="@color/text99" />
 
                 <TextView
+                    android:id="@+id/tv_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="无"
@@ -333,6 +340,7 @@
                     android:textColor="@color/text99" />
 
                 <TextView
+                    android:id="@+id/tv_pc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="未知"
@@ -367,6 +375,7 @@
                         android:textColor="@color/text99" />
 
                     <TextView
+                        android:id="@+id/tv_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="02-13"
@@ -374,6 +383,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -381,12 +391,15 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/layout_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:background="@drawable/bg_comment"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
 
                 <com.loyo.oa.v2.customview.CustomerListView
                     android:id="@+id/lv_comment"
