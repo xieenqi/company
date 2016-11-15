@@ -44,11 +44,10 @@ import retrofit.client.Response;
  * 新建拜访 [客户选择]
  * Created by yyy on 15/12/24.
  */
-public class SigninSelectCustomer extends BaseActivity implements PullToRefreshListView.OnRefreshListener2 {
+public class SigninSelectCustomer extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, View.OnClickListener {
 
     protected String strSearch;
     protected EditText edt_search;
-    protected ImageView iv_clean;
     protected View vs_nodata;
     protected PullToRefreshListView expandableListView_search;
     protected ArrayList<Customer> lstData = new ArrayList<>();
@@ -69,20 +68,10 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         initView();
     }
 
-
     public void initView() {
-
         vs_nodata = findViewById(R.id.vs_nodata);
-        //附近客户数据有问题，先屏蔽，默认展示我的所有客户，1-17
-        //getNearCustomersInfo();
-        findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onBackPressed();
-            }
-        });
-//        tv_search = (TextView) findViewById(R.id.tv_search);
-//        tv_search.setText("取消");
+        findViewById(R.id.img_title_left).setOnClickListener(this);
+        findViewById(R.id.iv_clean).setOnClickListener(this);
         edt_search = (EditText) findViewById(R.id.edt_search);
         edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -93,13 +82,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 return false;
             }
         });
-        iv_clean = (ImageView) findViewById(R.id.iv_clean);
-        iv_clean.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edt_search.setText("");
-            }
-        });
+
         edt_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
@@ -113,29 +96,14 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
             @Override
             public void afterTextChanged(final Editable editable) {
-//                if (edt_search.length() == 0) {
-//                    tv_search.setText("取消");
-//                } else {
-//                    tv_search.setText("搜索");
-//                }
             }
         });
         edt_search.requestFocus();
-
-        /*搜索操作*/
-//        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(final View v) {
-//                doSearch();
-//            }
-//        });
-
         expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
-        expandableListView_search.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        expandableListView_search.setMode(PullToRefreshBase.Mode.BOTH);
         expandableListView_search.setOnRefreshListener(this);
         adapter = new CommonSearchAdapter();
         expandableListView_search.setAdapter(adapter);
-
         /**列表监听器*/
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -146,34 +114,16 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         getAllData();
     }
 
-
-    /**
-     * 获取附近客户数据
-     */
-    private void getNearCustomersInfo() {
-        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
-            @Override
-            public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
-                LogUtil.dll("附近");
-                position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
-                String url = FinalVariables.QUERY_NEAR_CUSTOMERS_SELF;
-                HashMap<String, Object> params = new HashMap<>();
-                params.put("pageIndex", paginationX.getPageIndex());
-                params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
-                params.put("position", position);
-                kalo = 0;
-                dataRequestvoid(url, params);
-                LocationUtilGD.sotpLocation();
-                UMengTools.sendLocationInfo(address, longitude, latitude);
-            }
-
-            @Override
-            public void OnLocationGDFailed() {
-                Toast("获取附近客户信息失败！");
-                LocationUtilGD.sotpLocation();
-            }
-
-        });
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.img_title_left:
+                onBackPressed();
+                break;
+            case R.id.iv_clean:
+                edt_search.setText("");
+                break;
+        }
     }
 
     /**
@@ -209,13 +159,11 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
      * 请求体
      */
     void dataRequestvoid(final String url, final HashMap<String, Object> params) {
-//        Utils.dialogShow(mContext, "请稍候");
         showLoading("请稍后");
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new Callback<PaginationX<Customer>>() {
             @Override
             public void success(final PaginationX<Customer> customerPaginationX, final Response response) {
-//                Utils.dialogDismiss();
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse("拜访搜索选择客户:", response);
                 expandableListView_search.onRefreshComplete();
                 InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -253,7 +201,6 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 expandableListView_search.onRefreshComplete();
-//                Utils.dialogDismiss();
             }
         });
     }
@@ -273,22 +220,14 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = true;
         paginationX.setPageIndex(1);
-        if (kalo == 0) {
-            getNearCustomersInfo();
-        } else {
-            getAllData();
-        }
+        getAllData();
     }
 
     @Override
     public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = false;
         paginationX.setPageIndex(paginationX.getPageIndex() + 1);
-        if (kalo == 0) {
-            getNearCustomersInfo();
-        } else {
-            getAllData();
-        }
+        getAllData();
     }
 
     void showNoData() {
