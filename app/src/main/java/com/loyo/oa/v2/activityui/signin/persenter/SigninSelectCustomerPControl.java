@@ -38,6 +38,7 @@ public class SigninSelectCustomerPControl implements SigninSelectCustomerPersent
     public void oneGetNearCustomer(double longitude, double latitude) {
         this.longitude = longitude;
         this.latitude = latitude;
+        vControl.showProgress("");
         getPageData(page);
     }
 

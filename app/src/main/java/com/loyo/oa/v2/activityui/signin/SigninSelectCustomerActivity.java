@@ -70,7 +70,7 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 onBackPressed();
                 break;
             case R.id.ll_search:
-                Toast("sousuo");
+                Toast("等待开借口呢");
                 break;
 
         }
@@ -105,7 +105,7 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
 
     @Override
     public void showProgress(String message) {
-
+        showLoading("");
     }
 
     @Override

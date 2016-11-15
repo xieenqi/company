@@ -13,19 +13,26 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
+import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
+import com.loyo.oa.v2.activityui.commonview.RecordUtils;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
+import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -51,6 +58,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static com.loyo.oa.v2.application.MainApp.PICTURE;
+
 /**
  * 【 拜访签到 】 页面
  */
@@ -61,7 +70,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private TextView wordcount;
     private TextView tv_customer_address;
     private EditText edt_memo;
-    private ViewGroup img_title_left, img_title_right;
+    private ViewGroup img_title_left, img_title_right, ll_root;
     private GridView gridView_photo;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
@@ -115,6 +124,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         wordcount = (TextView) findViewById(R.id.wordcount);
         edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
+        ll_root = (ViewGroup) findViewById(R.id.ll_root);
 
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
         if (null == mCustomer) {
@@ -130,6 +140,90 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
         init_gridView_photo();
         startLocation();
+        initMultiFunctionModule();
+    }
+
+    /**
+     * 初始化底部多功能部件
+     */
+    private void initMultiFunctionModule() {
+        final MultiFunctionModule mfmodule = new MultiFunctionModule(this);
+        ll_root.addView(mfmodule);
+        /*录音*/
+        mfmodule.setRecordClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (RecordUtils.permissionRecord()) {
+                    if ((boolean) v.getTag()) {
+                        showInputKeyboard(edt_memo);
+                        mfmodule.setIsRecording(false);
+                        v.setTag(false);
+                    } else {
+                        hideInputKeyboard(edt_memo);
+                        mfmodule.setIsRecording(true);
+                        v.setTag(true);
+                    }
+                } else {
+                    Toast("你没有配置录音权限");
+                }
+
+            }
+        });
+        edt_memo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mfmodule.setIsRecording(false);
+            }
+        });
+        /*录音完成回调*/
+        mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
+            @Override
+            public void recordComplete(String recordPath, String tiem) {
+//                ll_record.addView(new CommonRecordItem(DynamicAddActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
+//                    @Override
+//                    public void Success(Record record) {//上传录音完成回调
+//                        audioInfo.add(record);
+//                    }
+//                }));
+            }
+        });
+//        /*图片处理*/
+//        mfmodule.setPictureClick(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(DynamicAddActivity.this, MultiImageSelectorActivity.class);
+//                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
+//                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
+//                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
+//                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
+//                DynamicAddActivity.this.startActivityForResult(intent, PICTURE);
+//            }
+//        });
+//        /*添加地址处理*/
+//        mfmodule.setLocationClick(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Bundle mBundle = new Bundle();
+//                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+//                app.startActivityForResult(DynamicAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+//            }
+//        });
+//        /*@相关人员*/
+//        mfmodule.setAtClick(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Bundle bundle = new Bundle();
+//                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+//                if (collection != null) {
+//                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+//                }
+//                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+//                Intent intent = new Intent();
+//                intent.setClass(DynamicAddActivity.this, ContactPickerActivity.class);
+//                intent.putExtras(bundle);
+//                startActivity(intent);
+//            }
+//        });
     }
 
     /**

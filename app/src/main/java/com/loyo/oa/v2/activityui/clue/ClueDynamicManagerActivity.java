@@ -12,11 +12,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
@@ -146,6 +148,14 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
                 bundle.putString(ExtraAndResult.EXTRA_ID, clueId);
                 bundle.putString(ExtraAndResult.EXTRA_NAME, name);
                 app.startActivityForResult(this, ClueDynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                // TODO 线索详情写跟进
+//                Intent intent = new Intent();
+//                intent.putExtra(ClueListItem.class.getName(), adapter.getItemData(position));
+//                intent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
+//                intent.setClass(mActivity, DynamicAddActivity.class);
+//                startActivity(intent);
+//                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+//                mActivity.finish();
                 break;
 
             default:
@@ -297,6 +307,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
         TextView tv_audio_length;
         ImageView iv_imgTime;
         TextView tv_calls;
+
         /**
          * 设置图文混编
          */
