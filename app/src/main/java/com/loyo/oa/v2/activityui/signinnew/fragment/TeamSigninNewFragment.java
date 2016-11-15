@@ -109,7 +109,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
-            mView = inflater.inflate(R.layout.fragment_new_signin, null);
+            mView = inflater.inflate(R.layout.fragment_newsignin_team, null);
             initView(mView);
             loadFilterOptions();
         }
@@ -161,8 +161,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         btn_add.setOnClickListener(click);
         btn_add.setOnTouchListener(Global.GetTouch());
 
-        Utils.btnSpcHideForListView(getActivity(),listView.getRefreshableView(),
-                btn_add,
+        Utils.btnSpcHideForListViewTeam(getActivity(),listView.getRefreshableView(),
                 layout_bottom_menu,
                 layout_voice,edit_comment);
     }
@@ -306,6 +305,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         map.put("xpath",departmentId);
         map.put("userId",userId);
         map.put("orderType", Integer.parseInt(menuSortkey));
+        map.put("split",true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 20 ? listModel.size() : 20 : 20);
         LogUtil.dee("团队拜访,发送数据:"+ MainApp.gson.toJson(map));
@@ -347,7 +347,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
                     layout_keyboard.setVisibility(View.VISIBLE);
                     layout_voicemenu.setVisibility(View.GONE);
                     hideInputKeyboard(edit_comment);
-                    new Handler().postDelayed(new Runnable() {
+                    new Handler().postDelayed( new Runnable() {
                         public void run() {
                             mHandler.sendEmptyMessage(0x01);
                         }

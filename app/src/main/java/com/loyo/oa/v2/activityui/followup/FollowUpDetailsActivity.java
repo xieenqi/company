@@ -86,7 +86,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     private void initUI() {
         //commentAdapter = new ListOrDetailsCommentAdapter(mContext);
-        optionAdapter = new ListOrDetailsOptionsAdapter(mContext);
+        //optionAdapter = new ListOrDetailsOptionsAdapter(mContext);
         //imageAdapter =  new ListOrDetailsGridViewAdapter(mContext);
 
         layout_voice = (LinearLayout) findViewById(R.id.layout_voice);
