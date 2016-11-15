@@ -4,7 +4,7 @@ import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninSelectCustomerVControl;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ISigninNew;
+import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -54,7 +54,7 @@ public class SigninSelectCustomerPControl implements SigninSelectCustomerPersent
         params.put("x", longitude);
         params.put("y", latitude);
         params.put("dis", dis);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNew.class).
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).
                 getSiginiNearCustomer(params, new Callback<BaseBeanT<ArrayList<SigninSelectCustomer>>>() {
                     @Override
                     public void success(BaseBeanT<ArrayList<SigninSelectCustomer>> result, Response response) {
