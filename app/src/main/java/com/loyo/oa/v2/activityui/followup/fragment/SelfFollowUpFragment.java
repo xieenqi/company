@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.followup.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
-
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -20,12 +21,10 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
+import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.other.model.Tag;
-import com.loyo.oa.v2.activityui.signinnew.adapter.SigninNewListAdapter;
-import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -38,11 +37,9 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -115,7 +112,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 加载顶部菜单
-     * */
+     */
     private void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
         options.add(DynamicFilterTimeModel.getFilterModel());     //时间
@@ -127,19 +124,19 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
                 MenuModel model = selectedModels.get(0);
-                switch (menuIndex){
+                switch (menuIndex) {
 
                     /*时间*/
                     case 0:
                         menuTimeKey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:"+menuTimeKey+" value"+model.getValue());
+                        Toast("key:" + menuTimeKey + " value" + model.getValue());
                         break;
 
                     /*筛选*/
                     case 1:
                         menuChosKey = model.getKey();
-                        Toast("key:"+menuChosKey+" value"+model.getValue());
+                        Toast("key:" + menuChosKey + " value" + model.getValue());
                         break;
 
                 }
@@ -210,6 +207,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
                 //新建跟进
                 case R.id.btn_add:
+                    startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
             }
         }

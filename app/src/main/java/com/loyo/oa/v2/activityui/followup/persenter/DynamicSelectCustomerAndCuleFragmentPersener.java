@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.customer.presenter;
+package com.loyo.oa.v2.activityui.followup.persenter;
 
 import com.loyo.oa.v2.common.base.BasePersenter;
 

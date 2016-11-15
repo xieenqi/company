@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.customer;
+package com.loyo.oa.v2.activityui.followup;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CommonPageAdapter;
-import com.loyo.oa.v2.activityui.customer.fragment.DynamicSelectClueFragment;
-import com.loyo.oa.v2.activityui.customer.fragment.DynamicSelectCustomerFragment;
+import com.loyo.oa.v2.activityui.followup.fragment.DynamicSelectClueFragment;
+import com.loyo.oa.v2.activityui.followup.fragment.DynamicSelectCustomerFragment;
 import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 

@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.customer;
+package com.loyo.oa.v2.activityui.followup;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,23 +25,23 @@ import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.commonview.RecordUtils;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
+import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
+import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
-import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
-import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
+import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Location;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
@@ -57,7 +57,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -81,7 +80,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout layout_image, ll_root, ll_record, ll_location, ll_at;
+    private LinearLayout ll_root, ll_record, ll_location, ll_at;
     private EditText edt;
     private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text, tv_at_text;
     private Customer mCustomer;
@@ -105,16 +104,18 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dynamic_activities_add);
+        getIntentData();
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
+        initUI();
+        getTempSaleActivity();
+    }
 
+    private void getIntentData() {
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
             mCustomer = (Customer) bundle.getSerializable(Customer.class.getName());
         }
-        controller = new UploadController(this, 9);
-        controller.setObserver(this);
-
-        initUI();
-        getTempSaleActivity();
     }
 
     void getTempSaleActivity() {
@@ -131,7 +132,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         tv_remain_time = (TextView) findViewById(R.id.tv_remain_time);
         tv_sale_action = (TextView) findViewById(R.id.tv_sale_action);
         gridView = (ImageUploadGridView) findViewById(R.id.image_upload_grid_view);
-        ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
+//        ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_sale_action = (ViewGroup) findViewById(R.id.layout_sale_action);
         layout_remain_time = (ViewGroup) findViewById(R.id.layout_remain_time);
@@ -156,11 +157,12 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         iv_location_delete.setOnClickListener(this);
         iv_at_delete.setOnClickListener(this);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
-        ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
+//        ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
         ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
         Global.SetTouchView(img_title_left, layout_sale_action, layout_remain_time, img_title_right, ll_customer, ll_contact);
         if (null != mCustomer) {
             getDefaultContact(mCustomer.contacts);
+            tv_customer.setText(mCustomer.name);
         }
         controller.loadView(gridView);
         initMultiFunctionModule();
@@ -409,7 +411,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             /*选择客户*/
             case R.id.ll_customer:
                 Bundle b = new Bundle();
-                app.startActivityForResult(CustomerDynamicAddActivity.this, SigninSelectCustomer.class,
+                app.startActivityForResult(CustomerDynamicAddActivity.this, SigninSelectCustomerSearch.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 
