@@ -30,6 +30,9 @@ import org.androidannotations.annotations.ViewById;
  */
 @EActivity(R.layout.activity_crop_image)
 public class CropImageActivity extends BaseActivity {
+
+    public static int REQUEST_CROP_IMAGE = 123;
+
     @ViewById
     ClipSquareImageView clipSquareIV;
 
@@ -92,7 +95,8 @@ public class CropImageActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra("imgPath", imgPath);
                 cancelLoading();
-                app.finishActivity(this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+                this.setResult(RESULT_OK, intent);
+                finish();
                 break;
         }
     }

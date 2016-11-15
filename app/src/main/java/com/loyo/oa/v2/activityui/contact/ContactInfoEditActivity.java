@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.contact;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.contact.presenter.ContactInfoEditPresenter;
 import com.loyo.oa.v2.activityui.contact.presenter.impl.ContactInfoEditPresenterImpl;
@@ -19,9 +19,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.OrganizationManager;
-import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -35,11 +33,7 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.lang.ref.WeakReference;
-import java.util.Iterator;
 import java.util.List;
-
-import retrofit.client.Response;
-import retrofit.http.HEAD;
 
 /**
  * 【编辑个人信息】
@@ -144,8 +138,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
                 break;
             /*设置头像*/
             case R.id.layout_set_avartar:
-                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                mPresenter.setHeadImage(ContactInfoEditActivity.this, intent, REQUEST_IMAGE);
+                mPresenter.setHeadImage(ContactInfoEditActivity.this, null, 0);
                 break;
             /*生日设置*/
             case R.id.layout_birthday:
@@ -344,9 +337,13 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
         }
         switch (requestCode) {
             /* 设置头像 */
-            case REQUEST_IMAGE:
-                List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                mPresenter.upload(mSelectPath, img_title_user);
+            case PhotoPicker.REQUEST_CODE:
+                if (data != null) {
+                    List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    if (mSelectPath.size() >0) {
+                        mPresenter.upload(mSelectPath, img_title_user);
+                    }
+                }
                 break;
             /* 设置性别 */
             case ExtraAndResult.MSG_SEND:

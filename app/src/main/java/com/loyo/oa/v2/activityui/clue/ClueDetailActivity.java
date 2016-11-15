@@ -17,12 +17,12 @@ import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
@@ -578,7 +578,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         }
 
         switch (requestCode) {
-            case SelectDetUserActivity2.REQUEST_ONLY:
+            case FinalVariables.REQUEST_ONLY:
                 final NewUser u = (NewUser) data.getSerializableExtra("data");
 
                 sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {

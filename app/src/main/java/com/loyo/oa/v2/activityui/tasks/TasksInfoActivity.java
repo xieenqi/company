@@ -25,7 +25,6 @@ import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
@@ -1078,7 +1077,7 @@ public class TasksInfoActivity extends BaseActivity {
         switch (requestCode) {
 
             /*选择完参与人后，回调*/
-            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
+            case FinalVariables.REQUEST_ALL_SELECT:
                 member = (Members) data.getSerializableExtra("data");
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();
@@ -1129,8 +1128,6 @@ public class TasksInfoActivity extends BaseActivity {
                         bundle.putBoolean("type", IsCreator());
                         app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
                     } else {
-//                        SelectDetUserActivity2.startThisForAllSelect(this,
-//                                joinUserId == null ? null : joinUserId.toString(), true);
                         {
                             StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
                             Bundle bundle = new Bundle();
@@ -1165,8 +1162,6 @@ public class TasksInfoActivity extends BaseActivity {
                     startActivity(intent);
                  /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
-//                    SelectDetUserActivity2.startThisForAllSelect(this,
-//                            joinUserId == null ? null : joinUserId.toString(), true);
                     {
                         StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
                         Bundle bundle = new Bundle();

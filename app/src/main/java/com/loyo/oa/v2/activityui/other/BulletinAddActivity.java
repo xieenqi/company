@@ -13,7 +13,6 @@ import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
 import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinAddPresenterImpl;
@@ -25,7 +24,6 @@ import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -164,7 +162,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         mBulletinAddPresenter.dealDepartmentResult(members);
     }
 
-    @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
+    @OnActivityResult(FinalVariables.REQUEST_ALL_SELECT)
     void onDepartmentUserResult(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK || data == null) {
             return;

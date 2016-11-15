@@ -26,7 +26,6 @@ import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.project.ProjectSearchActivity;
@@ -556,8 +555,6 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*点评人*/
             case R.id.layout_reviewer:
-//                SelectDetUserActivity2.startThisForOnly(WorkReportAddActivity.this, null);
-//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             {
                 StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer.user);
                 Bundle bundle = new Bundle();
@@ -575,8 +572,6 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*抄送人*/
             case R.id.layout_toUser:
-//                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this,
-//                        joinUserId == null ? null : joinUserId.toString(), true);
             {
                 StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
                 Bundle bundle = new Bundle();
@@ -1025,7 +1020,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
 
             //用户单选, 点评人
-            case SelectDetUserActivity2.REQUEST_ONLY:
+            case FinalVariables.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 mReviewer = new Reviewer(u);
                 mReviewer.user = u;
@@ -1033,7 +1028,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
 
             //用户选择, 抄送人
-            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
+            case FinalVariables.REQUEST_ALL_SELECT:
                 members = (Members) data.getSerializableExtra("data");
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();

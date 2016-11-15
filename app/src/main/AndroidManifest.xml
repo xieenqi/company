@@ -553,7 +553,6 @@
             android:name=".activityui.wfinstance.WfInEditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".activityui.commonview.SelectDetUserActivity2" />
         <activity
             android:name=".activityui.discuss.MyDiscussActivity"
             android:launchMode="singleTop"
@@ -785,12 +784,6 @@
             android:name=".activityui.other.PreviewImagefromHttp"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".customview.multi_image_selector.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".customview.multi_image_selector.CropImageActivity_"
             android:launchMode="singleTop"

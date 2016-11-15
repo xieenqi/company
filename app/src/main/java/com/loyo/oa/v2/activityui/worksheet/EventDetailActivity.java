@@ -12,7 +12,6 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.worksheet.bean.EventDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetDetail;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetEventsSupporter;
@@ -80,8 +79,6 @@ public class EventDetailActivity extends BaseActivity implements View.OnClickLis
                 switch (aciton1) {
                     case Transfer:
                     case Dispatch:
-//                        SelectDetUserActivity2.startThisForOnly(EventDetailActivity.this, null);
-//                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
                         bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
@@ -107,8 +104,6 @@ public class EventDetailActivity extends BaseActivity implements View.OnClickLis
                 switch (aciton2) {
                     case Transfer:
                     case Dispatch:
-//                        SelectDetUserActivity2.startThisForOnly(EventDetailActivity.this, null);
-//                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
                         bundle.putSerializable(ContactPickerActivity.SESSION_KEY, EventDetailActivity.PICK_USER_SESSION);
@@ -337,7 +332,7 @@ public class EventDetailActivity extends BaseActivity implements View.OnClickLis
         }
         switch (requestCode) {
              /*用户单选, 负责人*/
-            case SelectDetUserActivity2.REQUEST_ONLY:
+            case FinalVariables.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 setEventPersonal(u.getId());
                 break;

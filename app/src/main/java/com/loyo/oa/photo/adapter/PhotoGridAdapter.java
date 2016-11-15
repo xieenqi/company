@@ -142,8 +142,15 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
           int pos = holder.getAdapterPosition();
           boolean isEnable = true;
 
+          if (onItemCheckListener != null &&
+                  onItemCheckListener.onSingleSelectCheck(pos, photo, isChecked,
+                          getSelectedPhotos().size())) {
+            // 单选命中
+            return;
+          }
+
           if (onItemCheckListener != null) {
-            isEnable = onItemCheckListener.OnItemCheck(pos, photo, isChecked,
+            isEnable = onItemCheckListener.onItemCheck(pos, photo, isChecked,
                 getSelectedPhotos().size());
           }
           if (isEnable) {

@@ -61,6 +61,9 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
 
   private int SCROLL_THRESHOLD = 30;
   int column;
+  private boolean singleMode  = false;
+  private boolean cropEnabled = false;
+
   //目录弹出框的一次最多显示的目录数目
   public static int COUNT_MAX = 6;
   private final static String EXTRA_CAMERA = "camera";
@@ -68,15 +71,20 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
   private final static String EXTRA_COUNT = "count";
   private final static String EXTRA_GIF = "gif";
   private final static String EXTRA_ORIGIN = "origin";
+  private final static String EXTRA_SINGLE = "single";
+  private final static String EXTRA_CROP = "crop";
   private ListPopupWindow listPopupWindow;
   private RequestManager mGlideRequestManager;
 
   public static PhotoPickerFragment newInstance(boolean showCamera, boolean showGif,
-      boolean previewEnable, int column, int maxCount, ArrayList<String> originalPhotos) {
+      boolean previewEnable, boolean singleMode, boolean cropEnabled,
+      int column, int maxCount, ArrayList<String> originalPhotos) {
     Bundle args = new Bundle();
     args.putBoolean(EXTRA_CAMERA, showCamera);
     args.putBoolean(EXTRA_GIF, showGif);
     args.putBoolean(EXTRA_PREVIEW_ENABLED, previewEnable);
+    args.putBoolean(EXTRA_SINGLE, singleMode);
+    args.putBoolean(EXTRA_CROP, cropEnabled);
     args.putInt(EXTRA_COLUMN, column);
     args.putInt(EXTRA_COUNT, maxCount);
     args.putStringArrayList(EXTRA_ORIGIN, originalPhotos);
@@ -98,6 +106,8 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     column = getArguments().getInt(EXTRA_COLUMN, DEFAULT_COLUMN_NUMBER);
     boolean showCamera = getArguments().getBoolean(EXTRA_CAMERA, true);
     boolean previewEnable = getArguments().getBoolean(EXTRA_PREVIEW_ENABLED, true);
+    singleMode = getArguments().getBoolean(EXTRA_SINGLE, false);
+    cropEnabled = getArguments().getBoolean(EXTRA_CROP, false);
 
     photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, directories, originalPhotos, column);
     photoGridAdapter.setShowCamera(showCamera);

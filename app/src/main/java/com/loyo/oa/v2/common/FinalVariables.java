@@ -202,4 +202,8 @@ public final class FinalVariables {
     public static final String PICK_RESPONSIBLE_USER_REQUEST = "com.loyo.oa.pickcontact.PICK_RESPONSIBLE_USER_REQUEST";
     public static final String PICK_INVOLVE_USER_REQUEST = "com.loyo.oa.pickcontact.PICK_INVOLVE_USER_REQUEST";
 
+    public static final int REQUEST_ONLY = 0x00100;
+    public static final int REQUEST_MULTI_SELECT = 0x00101;
+    public static final int REQUEST_ALL_SELECT = 0x00102;
+
 }

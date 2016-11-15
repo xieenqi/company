@@ -485,12 +485,6 @@ public class MainApp extends Application {
      * 跳转相册，公用方法
      */
     public void startSelectImage(Activity mActivity, ArrayList<ImageInfo> pickPhots) {
-//        Intent intent = new Intent(mActivity, MultiImageSelectorActivity.class);
-//        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
-//        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - pickPhots.size()) /*最大可选择图片数量*/);
-//        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
-//        intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-//        mActivity.startActivityForResult(intent, PICTURE);
         PhotoPicker.builder()
                 .setPhotoCount((9 - pickPhots.size()))
                 .setShowCamera(true)

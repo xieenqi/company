@@ -22,7 +22,6 @@ import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
 import com.loyo.oa.v2.activityui.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activityui.other.CommonAdapter;
@@ -474,8 +473,6 @@ public class TasksEditActivity extends BaseActivity {
 
             /*编辑负责人*/
             case R.id.layout_responsiblePerson:
-//                SelectDetUserActivity2.startThisForOnly(TasksEditActivity.this, null);
-//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             {
                 StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
                 Bundle bundle = new Bundle();
@@ -493,8 +490,6 @@ public class TasksEditActivity extends BaseActivity {
 
             /*编辑参与人*/
             case R.id.tv_toUsers:
-//                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
-//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             {
                 StaffMemberCollection collection = Compat.convertMembersToStaffCollection(member);
                 Bundle bundle = new Bundle();
@@ -770,13 +765,13 @@ public class TasksEditActivity extends BaseActivity {
                 break;
 
             //用户单选, 负责人
-            case SelectDetUserActivity2.REQUEST_ONLY:
+            case FinalVariables.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 newUser = u;
                 tv_responsiblePerson.setText(newUser.getName());
                 break;
             //用户选择, 参与人
-            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
+            case FinalVariables.REQUEST_ALL_SELECT:
                 member = (Members) data.getSerializableExtra("data");
                 if (null == member) {
                     tv_toUsers.setText("无参与人");

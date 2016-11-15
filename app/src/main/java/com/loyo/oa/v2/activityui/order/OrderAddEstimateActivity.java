@@ -19,7 +19,6 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
@@ -408,8 +407,6 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
             //收款人
             case R.id.ll_priecer:
-//                SelectDetUserActivity2.startThisForOnly(OrderAddEstimateActivity.this, null);
-//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
@@ -514,7 +511,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         switch (requestCode) {
 
             //用户单选, 负责人
-            case SelectDetUserActivity2.REQUEST_ONLY:
+            case FinalVariables.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 newUser = u;
                 tv_priceer.setText(newUser.getName());

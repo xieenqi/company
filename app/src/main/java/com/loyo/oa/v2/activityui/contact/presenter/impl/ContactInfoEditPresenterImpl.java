@@ -12,7 +12,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.loopj.android.http.RequestParams;
-import com.loyo.oa.v2.R;
+import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.contact.presenter.ContactInfoEditPresenter;
 import com.loyo.oa.v2.activityui.contact.viewcontrol.ContactInfoView;
@@ -23,7 +23,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
@@ -230,19 +229,13 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
      */
     @Override
     public void setHeadImage(Activity mActivity, Intent mIntent, int REQUEST_IMAGE) {
-        // 是否显示拍摄图片
-        mIntent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-        // 最大可选择图片数量
-        mIntent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 1);
-        // 选择模式
-        mIntent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_SINGLE);
-        mIntent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, true);
-        // 默认选择
-        //                if (mSelectPath != null && mSelectPath.size() > 0) {
-        //                    intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
-        //                }
-        mActivity.startActivityForResult(mIntent, REQUEST_IMAGE);
-        mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+        PhotoPicker.builder()
+                .setPhotoCount(1)
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .setSingleModeEnabled(true)
+                .setCropEnabled(true)
+                .start(mActivity);
     }
 
     /**

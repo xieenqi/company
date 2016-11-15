@@ -619,10 +619,6 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
          * 当用户输入'@'是跳转选择艾特用户的界面
          */
         private void toSelectUserByHait() {
-//            Bundle bundle = new Bundle();
-//            bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-//            app.startActivityForResult(DiscussDetialActivity.this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
-//                    ExtraAndResult.REQUEST_CODE, bundle);
             Bundle bundle = new Bundle();
             bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
             Intent intent = new Intent();

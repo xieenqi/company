@@ -96,21 +96,12 @@ public class HaitHelper {
             bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
 
             if (null == mFragment) {
-//                MainApp.getMainApp().startActivityForResult((Activity) et_scanner.getContext(),
-//                        SelectDetUserActivity2.class,
-//                        MainApp.ENTER_TYPE_RIGHT,
-//                        ExtraAndResult.REQUEST_CODE,
-//                        bundle);
-
                 Intent intent = new Intent();
                 intent.setClass((Activity) et_scanner.getContext(), ContactPickerActivity.class);
                 intent.putExtras(bundle);
                 ((Activity) et_scanner.getContext()).startActivity(intent);
 
             } else {
-//                mFragment.startActivityForResult(new Intent(mFragment.getActivity(),
-//                                SelectDetUserActivity2.class).putExtras(bundle),
-//                        ExtraAndResult.REQUEST_CODE);
                 Intent intent = new Intent();
                 intent.setClass(mFragment.getActivity(), ContactPickerActivity.class);
                 intent.putExtras(bundle);

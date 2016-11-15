@@ -19,6 +19,7 @@ import com.loyo.oa.photo.event.OnPhotoClickedListener;
 import com.loyo.oa.photo.fragment.ImagePagerFragment;
 import com.loyo.oa.photo.fragment.PhotoPickerFragment;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.customview.multi_image_selector.CropImageActivity_;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +27,14 @@ import java.util.List;
 import static android.widget.Toast.LENGTH_LONG;
 import static com.loyo.oa.photo.PhotoPicker.DEFAULT_COLUMN_NUMBER;
 import static com.loyo.oa.photo.PhotoPicker.DEFAULT_MAX_COUNT;
+import static com.loyo.oa.photo.PhotoPicker.EXTRA_CROP_ENABLED;
 import static com.loyo.oa.photo.PhotoPicker.EXTRA_GRID_COLUMN;
 import static com.loyo.oa.photo.PhotoPicker.EXTRA_MAX_COUNT;
 import static com.loyo.oa.photo.PhotoPicker.EXTRA_ORIGINAL_PHOTOS;
 import static com.loyo.oa.photo.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.loyo.oa.photo.PhotoPicker.EXTRA_SHOW_CAMERA;
 import static com.loyo.oa.photo.PhotoPicker.EXTRA_SHOW_GIF;
+import static com.loyo.oa.photo.PhotoPicker.EXTRA_SINGLE_MODE;
 import static com.loyo.oa.photo.PhotoPicker.KEY_SELECTED_PHOTOS;
 
 /**
@@ -51,7 +54,10 @@ public class PhotoPickerActivity extends AppCompatActivity {
   /** to prevent multiple calls to inflate menu */
   private boolean menuIsInflated = false;
 
-  private boolean showGif = false;
+  private boolean showGif     = false;
+  private boolean singleMode  = false;
+  private boolean cropEnabled = false;
+
   private int columnNumber = DEFAULT_COLUMN_NUMBER;
   private ArrayList<String> originalPhotos = null;
 
@@ -60,8 +66,10 @@ public class PhotoPickerActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     boolean showCamera      = getIntent().getBooleanExtra(EXTRA_SHOW_CAMERA, true);
-    boolean showGif         = getIntent().getBooleanExtra(EXTRA_SHOW_GIF, false);
     boolean previewEnabled  = getIntent().getBooleanExtra(EXTRA_PREVIEW_ENABLED, true);
+    this.showGif         = getIntent().getBooleanExtra(EXTRA_SHOW_GIF, false);
+    this.singleMode      = getIntent().getBooleanExtra(EXTRA_SINGLE_MODE, false);
+    this.cropEnabled     = getIntent().getBooleanExtra(EXTRA_CROP_ENABLED, false);
 
     setShowGif(showGif);
 
@@ -75,7 +83,10 @@ public class PhotoPickerActivity extends AppCompatActivity {
     pickerFragment = (PhotoPickerFragment) getSupportFragmentManager().findFragmentByTag("tag");
     if (pickerFragment == null) {
       pickerFragment = PhotoPickerFragment
-          .newInstance(showCamera, showGif, previewEnabled, columnNumber, maxCount, originalPhotos);
+          .newInstance(showCamera, showGif,
+                  previewEnabled, singleMode, cropEnabled,
+                  columnNumber, maxCount, originalPhotos);
+
       getSupportFragmentManager()
           .beginTransaction()
           .replace(R.id.container, pickerFragment, "tag")
@@ -84,7 +95,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
     }
 
     pickerFragment.getPhotoGridAdapter().setOnItemCheckListener(new OnItemCheckListener() {
-      @Override public boolean OnItemCheck(int position, Photo photo, final boolean isCheck, int selectedItemCount) {
+      @Override public boolean onItemCheck(int position, Photo photo, final boolean isCheck, int selectedItemCount) {
 
         int total = selectedItemCount + (isCheck ? -1 : 1);
 
@@ -106,6 +117,26 @@ public class PhotoPickerActivity extends AppCompatActivity {
         }
         menuDoneItem.setTitle(getString(R.string.__picker_done_with_count, total, maxCount));
         return true;
+      }
+
+      @Override
+      public boolean onSingleSelectCheck(int position, Photo photo, boolean isCheck, int selectedItemCount) {
+        if (singleMode) {
+          List<String> photos = pickerFragment.getPhotoGridAdapter().getSelectedPhotos();
+          photos.clear();
+          photos.add(photo.getPath());
+          pickerFragment.getPhotoGridAdapter().notifyDataSetChanged();
+          if (cropEnabled) {
+            goToCrop(photo.getPath());
+          }
+          else {
+            finishWithResult();
+          }
+          return true;
+        }
+        else {
+          return false;
+        }
       }
     });
 
@@ -198,15 +229,19 @@ public class PhotoPickerActivity extends AppCompatActivity {
     }
 
     if (item.getItemId() == R.id.done) {
-      Intent intent = new Intent();
-      ArrayList<String> selectedPhotos = pickerFragment.getPhotoGridAdapter().getSelectedPhotoPaths();
-      intent.putStringArrayListExtra(KEY_SELECTED_PHOTOS, selectedPhotos);
-      setResult(RESULT_OK, intent);
-      finish();
+      finishWithResult();
       return true;
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void finishWithResult() {
+    Intent intent = new Intent();
+    ArrayList<String> selectedPhotos = pickerFragment.getPhotoGridAdapter().getSelectedPhotoPaths();
+    intent.putStringArrayListExtra(KEY_SELECTED_PHOTOS, selectedPhotos);
+    setResult(RESULT_OK, intent);
+    finish();
   }
 
   public PhotoPickerActivity getActivity() {
@@ -219,5 +254,33 @@ public class PhotoPickerActivity extends AppCompatActivity {
 
   public void setShowGif(boolean showGif) {
     this.showGif = showGif;
+  }
+
+
+
+
+  /** Copy from MultiSelector TODO:
+   * 裁剪图片
+   */
+  private void goToCrop(String imgPath) {
+
+    Intent intent = new Intent();
+    intent.setClass(this, CropImageActivity_.class);
+    Bundle b = new Bundle();
+    b.putString("imgPath", imgPath);
+    intent.putExtras(b);
+
+    this.startActivityForResult(intent, CropImageActivity_.REQUEST_CROP_IMAGE);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == CropImageActivity_.REQUEST_CROP_IMAGE && resultCode == RESULT_OK) {
+      List<String> photos = pickerFragment.getPhotoGridAdapter().getSelectedPhotos();
+      photos.clear();
+      photos.add(data.getStringExtra("imgPath"));
+      finishWithResult();
+    }
   }
 }

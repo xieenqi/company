@@ -9,16 +9,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
-import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
-import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
@@ -46,6 +45,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -53,10 +53,12 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -531,9 +533,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             /*选参与人*/
             case R.id.layout_customer_join_users:
             {
-//                SelectDetUserActivity2.startThisForMulitSelect(CustomerInfoActivity.this,
-//                        mManagerIds == null ? null : mManagerIds.toString(), false);
-
                 Members selectedMembers = new Members();
                 for (Member m:members){
                     selectedMembers.users.add(m.getUser());
@@ -778,7 +777,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             /**
              * 负责人回调
              * */
-            case SelectDetUserActivity2.REQUEST_ONLY:
+            case FinalVariables.REQUEST_ONLY:
                 NewUser nu = (NewUser) data.getSerializableExtra("data");
                 owner.id = nu.getId();
                 owner.name = nu.getName();
@@ -789,7 +788,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             /**
              * 参与人回调
              * */
-            case SelectDetUserActivity2.REQUEST_MULTI_SELECT:
+            case FinalVariables.REQUEST_MULTI_SELECT:
 
                 cusMembers = (Members) data.getSerializableExtra("data");
                 mManagerNames = new StringBuffer();

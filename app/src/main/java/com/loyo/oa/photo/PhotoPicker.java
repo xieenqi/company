@@ -29,6 +29,9 @@ public class PhotoPicker {
   public final static String EXTRA_ORIGINAL_PHOTOS = "ORIGINAL_PHOTOS";
   public final static String EXTRA_PREVIEW_ENABLED = "PREVIEW_ENABLED";
 
+  public final static String EXTRA_SINGLE_MODE     = "SINGLE_MODE";
+  public final static String EXTRA_CROP_ENABLED    = "CROP_ENABLED";
+
   public static PhotoPickerBuilder builder() {
     return new PhotoPickerBuilder();
   }
@@ -126,6 +129,16 @@ public class PhotoPicker {
 
     public PhotoPickerBuilder setPreviewEnabled(boolean previewEnabled) {
       mPickerOptionsBundle.putBoolean(EXTRA_PREVIEW_ENABLED, previewEnabled);
+      return this;
+    }
+
+    public PhotoPickerBuilder setSingleModeEnabled(boolean singleModeEnabled) {
+      mPickerOptionsBundle.putBoolean(EXTRA_SINGLE_MODE, singleModeEnabled);
+      return this;
+    }
+
+    public PhotoPickerBuilder setCropEnabled(boolean cropEnabled) {
+      mPickerOptionsBundle.putBoolean(EXTRA_CROP_ENABLED, cropEnabled);
       return this;
     }
   }
