@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.signinnew.adapter;
+package com.loyo.oa.v2.activityui.followup.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,21 +15,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
-import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
-import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
+import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
+import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -39,17 +37,17 @@ import java.util.ArrayList;
  * Created by yyy on 16/11/12.
  */
 
-public class SigninNewListAdapter extends BaseAdapter {
+public class FollowUpListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<SigninNewListModel> listModel;
-    private SigninNewListView viewCrol;
+    private ArrayList<FollowUpListModel> listModel;
+    private FollowUpListView viewCrol;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格附件 */
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
 
-    public SigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, SigninNewListView viewCrol) {
+    public FollowUpListAdapter(Context mContext, ArrayList<FollowUpListModel> listModel, FollowUpListView viewCrol) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
@@ -73,17 +71,15 @@ public class SigninNewListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        final SigninNewListModel signinNewListModel = listModel.get(position);
+        final FollowUpListModel followUpListModel = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sgninnew_selflist, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_followup_list, null);
             holder.iv_heading = (RoundImageView) convertView.findViewById(R.id.iv_heading);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-            holder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
             holder.tv_contact = (TextView) convertView.findViewById(R.id.tv_contact);
-            holder.tv_position = (TextView) convertView.findViewById(R.id.tv_position);
-            holder.tv_offset = (TextView) convertView.findViewById(R.id.tv_offset);
             holder.tv_create_time = (TextView) convertView.findViewById(R.id.tv_create_time);
+            holder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
             holder.tv_toast = (TextView) convertView.findViewById(R.id.tv_toast);
             holder.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
             holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
@@ -92,6 +88,7 @@ public class SigninNewListAdapter extends BaseAdapter {
             holder.lv_comment = (CustomerListView) convertView.findViewById(R.id.lv_comment);
             holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
+            holder.ll_web = (LinearLayout) convertView.findViewById(R.id.ll_web);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -99,39 +96,30 @@ public class SigninNewListAdapter extends BaseAdapter {
 
         holder.iv_comment.setOnTouchListener(Global.GetTouch());
 
-        ImageLoader.getInstance().displayImage(signinNewListModel.creator.avatar, holder.iv_heading);
-        holder.tv_name.setText(signinNewListModel.creator.name);
-        holder.tv_address.setText(signinNewListModel.address);
-        holder.tv_contact.setText(signinNewListModel.contactName);
-        holder.tv_position.setText(signinNewListModel.position);
-        holder.tv_offset.setText(signinNewListModel.offsetDistance + "");
-        holder.tv_customer.setText(signinNewListModel.customerName);
-        holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "yyyy-MM-dd hh:mm"));
+        ImageLoader.getInstance().displayImage(followUpListModel.creator.avatar, holder.iv_heading);
+        holder.tv_name.setText(followUpListModel.creator.name);
+        holder.tv_address.setText(TextUtils.isEmpty(followUpListModel.location.addr) ? "无地址信息" : followUpListModel.location.addr);
+        holder.tv_contact.setText(followUpListModel.contactName);
+        holder.tv_customer.setText(followUpListModel.customerName);
+        holder.tv_create_time.setText(DateTool.timet(followUpListModel.createAt + "", "yyyy-MM-dd hh:mm"));
 
-        /** 备注内容 */
-        if(null != signinNewListModel.memo && !TextUtils.isEmpty(signinNewListModel.memo)){
-            holder.tv_memo.setVisibility(View.VISIBLE);
-            holder.tv_memo.setText(signinNewListModel.memo);
-        }else{
-            holder.tv_memo.setVisibility(View.GONE);
-        }
 
         /** @的相关人员 */
-        if(null != signinNewListModel.atNameAndDepts){
-            holder.tv_toast.setText("@" + signinNewListModel.atNameAndDepts);
+        if(null != followUpListModel.atNameAndDepts){
+            holder.tv_toast.setText("@" + followUpListModel.atNameAndDepts);
         }else{
             holder.tv_toast.setVisibility(View.GONE);
         }
 
         /** 录音语音 */
-        if(null != signinNewListModel.audioInfo){
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,signinNewListModel.audioInfo);
+        if(null != followUpListModel.audioInfo){
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext,followUpListModel.audioInfo);
             holder.lv_audio.setAdapter(audioAdapter);
         }
 
         /** 绑定图片与GridView监听 */
-        if (null != signinNewListModel.attachments && signinNewListModel.attachments.size() > 0) {
-            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, signinNewListModel.attachments);
+        if (null != followUpListModel.imgAttachments && followUpListModel.imgAttachments.size() > 0) {
+            gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, followUpListModel.imgAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
 
             /*图片预览*/
@@ -139,7 +127,7 @@ public class SigninNewListAdapter extends BaseAdapter {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("data", signinNewListModel.attachments);
+                    bundle.putSerializable("data", followUpListModel.imgAttachments);
                     bundle.putInt("position", position);
                     bundle.putBoolean("isEdit", false);
                     MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
@@ -149,16 +137,16 @@ public class SigninNewListAdapter extends BaseAdapter {
         }
 
         /** 绑定评论数据 */
-        if (null != signinNewListModel.comments && signinNewListModel.comments.size() > 0) {
+        if (null != followUpListModel.comments && followUpListModel.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, signinNewListModel.comments);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
             holder.lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    viewCrol.deleteCommentEmbl(signinNewListModel.comments.get(position).id);
+                    viewCrol.deleteCommentEmbl(followUpListModel.comments.get(position).id);
                     return false;
                 }
             });
@@ -167,7 +155,7 @@ public class SigninNewListAdapter extends BaseAdapter {
             holder.layout_comment.setVisibility(View.GONE);
         }
 
-        /** 打开评论 */
+        /** 评论发送 */
         holder.iv_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,12 +171,11 @@ public class SigninNewListAdapter extends BaseAdapter {
         TextView tv_address;     /*地址*/
         TextView tv_customer;    /*客户名字*/
         TextView tv_contact;     /*联系人*/
-        TextView tv_position;    /*客户定位*/
-        TextView tv_offset;      /*偏差*/
         TextView tv_create_time; /*创建时间*/
         TextView tv_toast;       /*通知人员*/
         TextView tv_memo;        /*内容*/
 
+        LinearLayout ll_web;
         LinearLayout layout_comment;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/

@@ -1,19 +1,15 @@
 package com.loyo.oa.v2.activityui.signinnew.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,7 +37,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.ISigninNew;
+import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -184,7 +180,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
      * 评论删除
      * */
     private void deleteComment(String id){
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNew.class).deleteComment(id, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -210,7 +206,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         map.put("bizzType", 1);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
         LogUtil.dee("评论参数:"+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNew.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -243,7 +239,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 20 ? listModel.size() : 20 : 20);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNew.class).selfSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).selfSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
                 HttpErrorCheck.checkResponse("我的拜访", response);

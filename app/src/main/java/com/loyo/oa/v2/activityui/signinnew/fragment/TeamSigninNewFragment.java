@@ -39,7 +39,7 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
-import com.loyo.oa.v2.point.ISigninNew;
+import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -249,7 +249,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
      * 评论删除
      * */
     private void deleteComment(String id){
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNew.class).deleteComment(id, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -275,7 +275,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         map.put("bizzType", 1);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
         LogUtil.dee("评论参数:"+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNew.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -309,7 +309,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 20 ? listModel.size() : 20 : 20);
         LogUtil.dee("团队拜访,发送数据:"+ MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNew.class).teamSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).teamSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
                 HttpErrorCheck.checkResponse("团队拜访", response);

@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.point;
 
 
+import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -14,10 +15,11 @@ import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
 /**
+ * 【拜访和跟进公用】
  * Created by yyy on 16/11/12.
  */
 
-public interface ISigninNew {
+public interface ISigninNeworFollowUp {
 
     /**
      * 我的拜访数据
@@ -43,5 +45,11 @@ public interface ISigninNew {
     @DELETE("/comment/{id}")
     void deleteComment(@Path("id") String id, Callback<Object> callback);
 
+
+    /**
+     * 我的团队,跟进数据
+     * */
+    @GET("/saleactivity/mobile/sale/")
+    void selfFollowUp(@QueryMap Map<String, Object> params, Callback<BaseBeanT<PaginationX<FollowUpListModel>>> cb);
 
 }
