@@ -38,6 +38,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
   public final static int ITEM_TYPE_CAMERA = 100;
   public final static int ITEM_TYPE_PHOTO  = 101;
   private final static int COL_NUMBER_DEFAULT = 3;
+  private final static int WIDTH_THREDHOLD = 200;
 
   private boolean hasCamera = true;
   private boolean previewEnable = true;
@@ -67,6 +68,9 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
     wm.getDefaultDisplay().getMetrics(metrics);
     int widthPixels = metrics.widthPixels;
     imageSize = widthPixels / columnNumber;
+    if (imageSize > WIDTH_THREDHOLD) {
+      imageSize = WIDTH_THREDHOLD;
+    }
   }
 
   @Override public int getItemViewType(int position) {
@@ -113,8 +117,8 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
                 .load(new File(photo.getPath()).getAbsolutePath())
                 .centerCrop()
                 .dontAnimate()
-                //.thumbnail(0.1f)
-                .override(/*imageSize*/100, /*imageSize*/100)
+                .thumbnail(0.3f)
+                .override(imageSize, imageSize)
                 .placeholder(R.drawable.__picker_ic_default_error)
                 .error(R.drawable.__picker_ic_default_error)
                 .into(holder.ivPhoto);
