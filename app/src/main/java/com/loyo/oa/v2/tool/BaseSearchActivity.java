@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.activityui.followup.CustomerDynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.beans.WorkReportRecord;
@@ -228,8 +228,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
+                    // 跟进对象 客户 到新建跟进动态
                     case DYNAMIC_MANAGE:
-                        mIntent = new Intent(getApplicationContext(), CustomerDynamicAddActivity.class);
+                        mIntent = new Intent(getApplicationContext(), DynamicAddActivity.class);
+                        mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                         mIntent.putExtra(Customer.class.getName(), (Customer) (lstData.get(position - 2)));
                         startActivity(mIntent);
                         break;

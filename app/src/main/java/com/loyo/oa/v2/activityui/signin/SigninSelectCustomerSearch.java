@@ -236,8 +236,11 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
 
 
     protected void returnData(final int position) {
+        Customer item = lstData.get(position);
         Intent intent = new Intent();
-        intent.putExtra("data", lstData.get(position));
+        intent.putExtra("id", item.id);
+        intent.putExtra("name", item.name);
+        intent.putExtra("address", item.loc.addr);
         setResult(RESULT_OK, intent);
         onBackPressed();
     }
