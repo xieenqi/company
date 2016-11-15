@@ -178,12 +178,7 @@ public interface ICustomer {
     @GET("/saleactivitytype/")
     void getSaleactivitytypes(Callback<ArrayList<CommonTag>> cb);
 
-    /**
-     * customerId		"客户id"	string	form<BR/>
-     * content		"动态内容"	string	form<BR/>
-     * remindAt		"提醒时间"	int64	form<BR/>
-     * typeId		"动态类型id"	string	form<BR/>
-     *
+    /*客户 写跟进
      * @param map
      * @param cb
      */

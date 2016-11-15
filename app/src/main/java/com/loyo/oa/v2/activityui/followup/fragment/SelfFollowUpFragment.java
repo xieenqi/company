@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.followup.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.beans.Customer;
@@ -90,7 +92,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 加载顶部菜单
-     * */
+     */
     private void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
         options.add(DynamicFilterTimeModel.getFilterModel());     //时间
@@ -102,19 +104,19 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
                 MenuModel model = selectedModels.get(0);
-                switch (menuIndex){
+                switch (menuIndex) {
 
                     /*时间*/
                     case 0:
                         menuTimeKey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:"+menuTimeKey+" value"+model.getValue());
+                        Toast("key:" + menuTimeKey + " value" + model.getValue());
                         break;
 
                     /*筛选*/
                     case 1:
                         menuChosKey = model.getKey();
-                        Toast("key:"+menuChosKey+" value"+model.getValue());
+                        Toast("key:" + menuChosKey + " value" + model.getValue());
                         break;
 
                 }
@@ -134,6 +136,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
                 //新建跟进
                 case R.id.btn_add:
+                    startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
+                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     break;
             }
         }

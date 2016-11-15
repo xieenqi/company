@@ -77,7 +77,7 @@ public interface IClue {
 
 
     /**
-     * 新建跟进
+     *  线索写 新建跟进
      * @param map
      * @param cb
      */
