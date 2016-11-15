@@ -1,5 +1,6 @@
 package com.loyo.oa.photo.fragment;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.ACTIVITY_SERVICE;
 import static com.loyo.oa.photo.PhotoPicker.DEFAULT_COLUMN_NUMBER;
 import static com.loyo.oa.photo.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.loyo.oa.photo.PhotoPicker.EXTRA_SHOW_GIF;
@@ -184,8 +186,8 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
       @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        // Log.d(">>> Picker >>>", "dy = " + dy);
-        if (Math.abs(dy) > SCROLL_THRESHOLD) {
+
+        if (Math.abs(dy) > SCROLL_THRESHOLD && isInLowMemory()) {
           mGlideRequestManager.pauseRequests();
         } else {
           resumeRequestsIfNotDestroyed();
@@ -199,6 +201,17 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     });
 
     return rootView;
+  }
+
+  private boolean isInLowMemory() {
+
+    if (!AndroidLifecycleUtils.canLoadImage(this)) {
+      return true;
+    }
+    final ActivityManager activityManager = (ActivityManager) this.getActivity().getSystemService(ACTIVITY_SERVICE);
+    ActivityManager.MemoryInfo info = new ActivityManager.MemoryInfo();
+    activityManager.getMemoryInfo(info);
+    return info.lowMemory;
   }
 
   private void openCamera() {
