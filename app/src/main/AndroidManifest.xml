@@ -425,7 +425,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
-            android:name=".activityui.followup.CustomerDynamicAddActivity"
+            android:name=".activityui.followup.DynamicAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />

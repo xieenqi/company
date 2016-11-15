@@ -20,6 +20,9 @@ import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
+import com.loyo.oa.v2.activityui.clue.ClueTypeEnum;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
@@ -75,23 +78,22 @@ import static com.loyo.oa.v2.application.MainApp.PICTURE;
  * <p/>
  * Create by yyy on 16/08/24
  */
-public class CustomerDynamicAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
+public class DynamicAddActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
 
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private ImageUploadGridView gridView;
     UploadController controller;
-    private LinearLayout ll_root, ll_record, ll_location, ll_at;
+    private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue;
     private EditText edt;
-    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text, tv_at_text;
+    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text, tv_at_text, tv_clue_company, tv_clue_name;
     private Customer mCustomer;
+    private ClueListItem mClue;
     private String tagItemIds, contactId, contactName = "无";
-    private LinearLayout ll_customer, ll_contact, ll_contactItem;
+    private LinearLayout ll_customer, ll_contact;
     private ImageView iv_location_delete, iv_at_delete;
-
     private String content;
     private String uuid = StringUtil.getUUID();
     private int bizType = 17;
-
     private List<String> mSelectPath;
     private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
     private ArrayList<Record> audioInfo = new ArrayList<>();//录音数据
@@ -99,6 +101,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     private List<String> atDepts = new ArrayList<>();//@的部门
     private List<String> atUserIds = new ArrayList<>();//@的人员
     private StaffMemberCollection collection;//选人返回的数据
+    private boolean isCustom;//是否是客户写跟进 否则就是是线索写跟进
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -115,6 +118,14 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
             mCustomer = (Customer) bundle.getSerializable(Customer.class.getName());
+            mClue = (ClueListItem) bundle.getSerializable(ClueListItem.class.getName());
+            int action = bundle.getInt(ExtraAndResult.DYNAMIC_ADD_ACTION, 0);
+            if (action == ExtraAndResult.DYNAMIC_ADD_CULE) {
+                isCustom = false;
+                contactName = mClue.responsorName;
+            } else {
+                isCustom = true;
+            }
         }
     }
 
@@ -137,10 +148,16 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         layout_sale_action = (ViewGroup) findViewById(R.id.layout_sale_action);
         layout_remain_time = (ViewGroup) findViewById(R.id.layout_remain_time);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
+        //客户
         ll_customer = (LinearLayout) findViewById(R.id.ll_customer);
-        tv_customer = (TextView) findViewById(R.id.tv_customer);
-        ll_contactItem = (LinearLayout) findViewById(R.id.ll_contactItem);
         ll_contact = (LinearLayout) findViewById(R.id.ll_contact);
+        tv_customer = (TextView) findViewById(R.id.tv_customer);
+        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
+        //线索
+        ll_clue_company = (LinearLayout) findViewById(R.id.ll_clue_company);
+        ll_clue = (LinearLayout) findViewById(R.id.ll_clue);
+        tv_clue_company = (TextView) findViewById(R.id.tv_clue_company);
+        tv_clue_name = (TextView) findViewById(R.id.tv_clue_name);
         ll_root = (LinearLayout) findViewById(R.id.ll_root);
         ll_record = (LinearLayout) findViewById(R.id.ll_record);
         tv_location_text = (TextView) findViewById(R.id.tv_location_text);
@@ -156,13 +173,18 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         ll_contact.setOnClickListener(this);
         iv_location_delete.setOnClickListener(this);
         iv_at_delete.setOnClickListener(this);
-        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
-//        ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
-        ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
+        ll_clue_company.setOnClickListener(this);
+        ll_customer.setVisibility(isCustom ? View.VISIBLE : View.GONE);
+        ll_contact.setVisibility(isCustom ? View.VISIBLE : View.GONE);
+        ll_clue_company.setVisibility(isCustom ? View.GONE : View.VISIBLE);
+        ll_clue.setVisibility(isCustom ? View.GONE : View.VISIBLE);
         Global.SetTouchView(img_title_left, layout_sale_action, layout_remain_time, img_title_right, ll_customer, ll_contact);
-        if (null != mCustomer) {
+        if (null != mCustomer && isCustom) {
             getDefaultContact(mCustomer.contacts);
             tv_customer.setText(mCustomer.name);
+        } else if (null != mClue && !isCustom) {
+            tv_clue_company.setText(mClue.companyName);
+            tv_clue_name.setText(mClue.responsorName);
         }
         controller.loadView(gridView);
         initMultiFunctionModule();
@@ -204,7 +226,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
             @Override
             public void recordComplete(String recordPath, String tiem) {
-                ll_record.addView(new CommonRecordItem(CustomerDynamicAddActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
+                ll_record.addView(new CommonRecordItem(DynamicAddActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
                     @Override
                     public void Success(Record record) {//上传录音完成回调
                         audioInfo.add(record);
@@ -216,12 +238,12 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
         mfmodule.setPictureClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CustomerDynamicAddActivity.this, MultiImageSelectorActivity.class);
+                Intent intent = new Intent(DynamicAddActivity.this, MultiImageSelectorActivity.class);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true /*是否显示拍摄图片*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                CustomerDynamicAddActivity.this.startActivityForResult(intent, PICTURE);
+                DynamicAddActivity.this.startActivityForResult(intent, PICTURE);
             }
         });
         /*添加地址处理*/
@@ -230,7 +252,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             public void onClick(View v) {
                 Bundle mBundle = new Bundle();
                 mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
-                app.startActivityForResult(CustomerDynamicAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+                app.startActivityForResult(DynamicAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
             }
         });
         /*@相关人员*/
@@ -244,7 +266,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 }
                 bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
                 Intent intent = new Intent();
-                intent.setClass(CustomerDynamicAddActivity.this, ContactPickerActivity.class);
+                intent.setClass(DynamicAddActivity.this, ContactPickerActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -267,11 +289,23 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
     }
 
     /**
-     * 提交新建跟进
+     * 提交新建跟进线索:
+     * company_id
+     * sealslead_id
+     * contact_name (姓名)
+     * <p>
+     * 跟进：
+     * company_id
+     * customer_id
+     * contact_name (联系人)
      */
     public void commitDynamic() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("customerId", mCustomer.getId());
+        if (isCustom) {
+            map.put("customerId", mCustomer.getId());
+        } else {
+            map.put("sealsleadId", mClue.id);
+        }
         map.put("content", content);
         map.put("typeId", tagItemIds);
         if (attachment.size() != 0) {
@@ -295,7 +329,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             @Override
             public void success(final SaleActivity saleActivity, final Response response) {
                 HttpErrorCheck.checkResponse("新建跟进动态", response);
-                app.finishActivity(CustomerDynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
             }
 
             @Override
@@ -397,9 +431,16 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 } else if (TextUtils.isEmpty(tagItemIds)) {
                     Toast("请选择跟进方式");
                     return;
-                } else if (null == mCustomer || TextUtils.isEmpty(mCustomer.getId())) {
-                    Toast("请选择跟进客户");
-                    return;
+                } else if (isCustom) {
+                    if (null == mCustomer || TextUtils.isEmpty(mCustomer.getId())) {
+                        Toast("请选择跟进客户");
+                        return;
+                    }
+                } else if (!isCustom) {
+                    if (null == mClue || TextUtils.isEmpty(mClue.id)) {
+                        Toast("请选择跟进线索");
+                        return;
+                    }
                 }
 
                 showLoading("");
@@ -411,7 +452,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
             /*选择客户*/
             case R.id.ll_customer:
                 Bundle b = new Bundle();
-                app.startActivityForResult(CustomerDynamicAddActivity.this, SigninSelectCustomerSearch.class,
+                app.startActivityForResult(DynamicAddActivity.this, SigninSelectCustomerSearch.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
 
@@ -420,7 +461,7 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 Bundle bContact = new Bundle();
                 bContact.putSerializable(ExtraAndResult.EXTRA_DATA, mCustomer.contacts);
                 bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
-                app.startActivityForResult(CustomerDynamicAddActivity.this, FollowContactSelectActivity.class,
+                app.startActivityForResult(DynamicAddActivity.this, FollowContactSelectActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                 break;
             /*清除选择的定位信息*/
@@ -434,6 +475,16 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                 atDepts.clear();
                 atUserIds.clear();
                 collection = null;
+                break;
+            /*线索写跟进选择线索*/
+            case R.id.ll_clue_company:
+                Bundle bCule = new Bundle();
+                bCule.putInt(ExtraAndResult.EXTRA_TYPE, ClueTypeEnum.myCule.getType());
+                bCule.putBoolean("isSelect", true);
+                bCule.putBoolean("isResult", true);
+                app.startActivityForResult(DynamicAddActivity.this, ClueSearchActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, bCule);
+//                app.startActivity(DynamicAddActivity.this, ClueSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bCule);
                 break;
         }
     }
@@ -504,7 +555,8 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                     getDefaultContact(mCustomer.contacts);
                 }
                 tv_customer.setText(customerName);
-                ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
+                ll_contact.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
+//                ll_customer.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
                 break;
 
            /* 选择客户联系人 回调*/
@@ -545,6 +597,12 @@ public class CustomerDynamicAddActivity extends BaseActivity implements View.OnC
                     loc.add(positionResultItem.loPosition);
                     location = new Location(loc, positionResultItem.address);
                 }
+                break;
+            case ExtraAndResult.REQUEST_EDIT:
+                mClue = (ClueListItem) data.getSerializableExtra(ClueListItem.class.getName());
+                contactName = mClue.responsorName;
+                tv_clue_company.setText(mClue.companyName);
+                tv_clue_name.setText(mClue.responsorName);
                 break;
         }
     }

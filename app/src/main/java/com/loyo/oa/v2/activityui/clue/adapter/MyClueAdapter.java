@@ -35,6 +35,10 @@ public class MyClueAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public ClueListItem getItemData(int postion) {
+        return mData.get(postion);
+    }
+
     @Override
     public int getCount() {
         return null == mData ? 0 : mData.size();
@@ -63,7 +67,7 @@ public class MyClueAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-        ClueListItem clueListItem = mData.get(position);
+        ClueListItem clueListItem = getItemData(position);
         holder.setContentView(clueListItem);
         return convertView;
     }

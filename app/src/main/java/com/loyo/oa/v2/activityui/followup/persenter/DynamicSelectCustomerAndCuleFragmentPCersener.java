@@ -64,6 +64,7 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
      * 获取我的客户的数据
      */
     private void getCustomerData() {
+        vControl.showProgress("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", pageCus);
         params.put("pageSize", 15);

@@ -23,7 +23,7 @@ import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerDetailInfoPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPresenterimpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
-import com.loyo.oa.v2.activityui.followup.CustomerDynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
 import com.loyo.oa.v2.application.MainApp;
@@ -47,8 +47,11 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -299,8 +302,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
             /*跟进*/
             case R.id.layout_gj:
-                mIntent = new Intent(CustomerDetailInfoActivity.this, CustomerDynamicAddActivity.class);
+                mIntent = new Intent(CustomerDetailInfoActivity.this, DynamicAddActivity.class);
                 mIntent.putExtra(Customer.class.getName(), mCustomer);
+                mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 startActivity(mIntent);
                 break;
 

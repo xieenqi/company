@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.followup.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.activityui.clue.ClueTypeEnum;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.followup.persenter.DynamicSelectCustomerAndCuleFragmentPCersener;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
 import com.loyo.oa.v2.application.MainApp;
@@ -106,13 +108,13 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Toast("线索跟进");
-//                Intent intent = new Intent();
-//                intent.putExtra("Id", mCustomers.get(position - 1).getId());
-//                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
-//                intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-//                startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
-//                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                Intent intent = new Intent();
+                intent.putExtra(ClueListItem.class.getName(), adapter.getItemData(position));
+                intent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
+                intent.setClass(mActivity, DynamicAddActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                mActivity.finish();
             }
         });
     }

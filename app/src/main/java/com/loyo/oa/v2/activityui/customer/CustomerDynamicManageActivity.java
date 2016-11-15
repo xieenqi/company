@@ -28,13 +28,14 @@ import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
-import com.loyo.oa.v2.activityui.followup.CustomerDynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AudioViewModel;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerFollowUpModel;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -394,7 +395,8 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             case R.id.layout_add:
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Customer.class.getName(), customer);
-                app.startActivityForResult(this, CustomerDynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
 
             default:
