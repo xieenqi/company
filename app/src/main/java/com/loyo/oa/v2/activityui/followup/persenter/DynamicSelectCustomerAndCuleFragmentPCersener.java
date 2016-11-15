@@ -1,9 +1,8 @@
-package com.loyo.oa.v2.activityui.customer.presenter.impl;
+package com.loyo.oa.v2.activityui.followup.persenter;
 
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.activityui.customer.presenter.DynamicSelectCustomerAndCuleFragmentPersener;
-import com.loyo.oa.v2.activityui.customer.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;

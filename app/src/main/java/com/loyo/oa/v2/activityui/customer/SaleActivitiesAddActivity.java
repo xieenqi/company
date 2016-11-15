@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
+import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
@@ -210,7 +210,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
 //选择客户
             case R.id.ll_customer:
                 Bundle b = new Bundle();
-                app.startActivityForResult(SaleActivitiesAddActivity.this, SigninSelectCustomer.class,
+                app.startActivityForResult(SaleActivitiesAddActivity.this, SigninSelectCustomerSearch.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                 break;
             //选择联系人

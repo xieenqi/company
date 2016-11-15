@@ -22,9 +22,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
-import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.activityui.customer.CustomerDynamicAddActivity;
+import com.loyo.oa.v2.activityui.followup.CustomerDynamicAddActivity;
 import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.beans.WorkReportRecord;

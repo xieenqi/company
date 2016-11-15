@@ -44,7 +44,7 @@ import retrofit.client.Response;
  * 新建拜访 [客户选择]
  * Created by yyy on 15/12/24.
  */
-public class SigninSelectCustomer extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, View.OnClickListener {
+public class SigninSelectCustomerSearch extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, View.OnClickListener {
 
     protected String strSearch;
     protected EditText edt_search;

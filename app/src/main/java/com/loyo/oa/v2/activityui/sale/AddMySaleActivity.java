@@ -23,7 +23,7 @@ import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
-import com.loyo.oa.v2.activityui.signin.SigninSelectCustomer;
+import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
@@ -155,7 +155,7 @@ public class AddMySaleActivity extends BaseActivity {
                     break;
                 case R.id.ll_customer://选择客户
                     Bundle b = new Bundle();
-                    app.startActivityForResult(AddMySaleActivity.this, SigninSelectCustomer.class,
+                    app.startActivityForResult(AddMySaleActivity.this, SigninSelectCustomerSearch.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
                 case R.id.ll_stage://选择销售阶段

@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.customer.viewcontrol;
+package com.loyo.oa.v2.activityui.followup.viewcontrol;
 
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.beans.Customer;
