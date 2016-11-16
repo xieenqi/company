@@ -28,6 +28,7 @@ import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
@@ -55,7 +56,7 @@ import java.util.List;
  * 【我的跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,FollowUpListView,View.OnClickListener {
+public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,FollowUpListView,View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack {
 
     private View mView;
     private Button btn_add;
@@ -65,14 +66,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private ArrayList<Tag> mTags;
 
     private LinearLayout layout_bottom_menu;
-    private LinearLayout layout_voice;
-    private LinearLayout layout_voicemenu;
-    private LinearLayout layout_keyboard;
 
-    private EditText edit_comment;
-    private ImageView iv_voice;
-    private ImageView iv_keyboard;
-    private TextView tv_send_message;
 
     private String menuTimeKey = ""; /*时间*/
     private String menuChosKey = ""; /*筛选*/
@@ -85,17 +79,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private FollowUpListAdapter mAdapter;
     private FollowUpFragPresenter mPresenter;
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 0x01) {
-                layout_voice.setAnimation(AnimationCommon.inFromBottomAnimation(150));
-                layout_voice.setVisibility(View.VISIBLE);
-            } else if (msg.what == 0x02) {
-                layout_voice.setVisibility(View.GONE);
-            }
-        }
-    };
+    private MsgAudiomMenu msgAudiomMenu;
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -118,56 +102,20 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
 
         layout_bottom_menu = (LinearLayout) view.findViewById(R.id.layout_bottom_menu);
-        layout_voice = (LinearLayout) view.findViewById(R.id.layout_voice);
-        layout_keyboard = (LinearLayout) view.findViewById(R.id.layout_keyboard);
-        layout_voicemenu = (LinearLayout) view.findViewById(R.id.layout_voicemenu);
-
-        edit_comment = (EditText) view.findViewById(R.id.edit_comment);
-        iv_voice = (ImageView) view.findViewById(R.id.iv_voice);
-        iv_keyboard = (ImageView) view.findViewById(R.id.iv_keyboard);
-        tv_send_message = (TextView) view.findViewById(R.id.tv_send_message);
-
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
-
-        tv_send_message.setOnClickListener(this);
-        tv_send_message.setOnTouchListener(Global.GetTouch());
-        iv_keyboard.setOnClickListener(this);
-        iv_keyboard.setOnTouchListener(Global.GetTouch());
-        iv_voice.setOnClickListener(this);
-        iv_voice.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
+
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(),this);
+        layout_bottom_menu.addView(msgAudiomMenu);
 
         Utils.btnSpcHideForListView(getActivity(),listView.getRefreshableView(),
                 btn_add,
                 layout_bottom_menu,
-                layout_voice,edit_comment);
-
-        edit_comment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!TextUtils.isEmpty(s)){
-                    tv_send_message.setTextColor(getResources().getColor(R.color.white));
-                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_green);
-                }else{
-                    tv_send_message.setTextColor(getResources().getColor(R.color.text99));
-                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_white);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+                msgAudiomMenu.getVoiceLayout(),msgAudiomMenu.getEditComment());
     }
 
     /**
@@ -222,10 +170,10 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     /**
      * 发送语音
      * */
-    private void requestComment(){
+    private void requestComment(String content){
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizzId", listModel.get(commentPosition).id);
-        map.put("title", edit_comment.getText().toString());
+        map.put("title", content);
         map.put("commentType",1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
@@ -268,20 +216,23 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     /**
-     * 评论回调
+     * 点击评论回调
      */
     @Override
     public void commentEmbl(int position) {
         commentPosition = position;
-        Utils.autoKeyBoard(getActivity(),edit_comment);
+/*        Utils.autoKeyBoard(getActivity(),edit_comment);
         layout_voicemenu.setVisibility(View.VISIBLE);
         layout_bottom_menu.setVisibility(View.VISIBLE);
         btn_add.setVisibility(View.GONE);
-        layout_keyboard.setVisibility(View.GONE);
+        layout_keyboard.setVisibility(View.GONE);*/
+        layout_bottom_menu.setVisibility(View.VISIBLE);
+        btn_add.setVisibility(View.GONE);
+        msgAudiomMenu.commentEmbl();
     }
 
     /**
-     * 评论删除
+     * 长按评论删除
      * */
     @Override
     public void deleteCommentEmbl(final String id) {
@@ -308,10 +259,12 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * */
     @Override
     public void commentSuccessEmbl() {
-        hideInputKeyboard(edit_comment);
+        /*hideInputKeyboard(edit_comment);
         edit_comment.setText("");
         layout_bottom_menu.setVisibility(View.GONE);
-        layout_voice.setVisibility(View.GONE);
+        layout_voice.setVisibility(View.GONE);*/
+        layout_bottom_menu.setVisibility(View.GONE);
+        msgAudiomMenu.commentSuccessEmbl();
         getData(false);
     }
 
@@ -347,36 +300,18 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                 startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
-
-            /*切换录音*/
-            case R.id.iv_voice:
-                layout_keyboard.setVisibility(View.VISIBLE);
-                layout_voicemenu.setVisibility(View.GONE);
-                hideInputKeyboard(edit_comment);
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        mHandler.sendEmptyMessage(0x01);
-                    }
-                }, 100);
-
-                break;
-
-            /*切换软键盘*/
-            case R.id.iv_keyboard:
-                layout_keyboard.setVisibility(View.GONE);
-                layout_voice.setVisibility(View.GONE);
-                layout_voicemenu.setVisibility(View.VISIBLE);
-                Utils.autoKeyBoard(getActivity(),edit_comment);
-                break;
-
-            /*发送评论*/
-            case R.id.tv_send_message:
-                if(TextUtils.isEmpty(edit_comment.getText().toString())){
-                    Toast("请输入评论内容!");
-                    return;
-                }
-                requestComment();
-                break;
         }
+    }
+
+    /**
+     * 回调发送评论
+     * */
+    @Override
+    public void sendMsg(EditText editText) {
+        if (TextUtils.isEmpty(editText.getText().toString())) {
+            Toast("请输入评论内容!");
+            return;
+        }
+        requestComment(editText.getText().toString());
     }
 }
