@@ -2,7 +2,9 @@ package com.loyo.oa.upload;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -158,6 +160,12 @@ public class UploadController implements ImageCell.ImageCellCallback{
         if (gridView != null) {
             gridView.setLayoutManager( new GridLayoutManager(context, 3));
             gridView.setAdapter(adapter);
+            gridView.setItemAnimator(new DefaultItemAnimator() {
+                @Override
+                public boolean canReuseUpdatedViewHolder(RecyclerView.ViewHolder viewHolder) {
+                    return true;
+                }
+            });
         }
     }
 
@@ -204,7 +212,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
                 if (index == -1) {
                     return;
                 }
-                adapter.notifyItemChanged(index);
+                adapter.notifyItemChanged(index, index);
             }
         });
     }
@@ -228,7 +236,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
                 if (index == -1) {
                     return;
                 }
-                adapter.notifyItemChanged(index);
+                adapter.notifyItemChanged(index, index);
             }
         });
     }
@@ -251,7 +259,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
                 if (index == -1) {
                     return;
                 }
-                adapter.notifyItemChanged(index);
+                adapter.notifyItemChanged(index, index);
             }
         });
     }

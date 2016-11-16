@@ -10,6 +10,7 @@ import com.loyo.oa.upload.view.ImageCell;
 import com.loyo.oa.v2.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by EthanGong on 16/10/10.
@@ -58,6 +59,19 @@ public class UploadImageAdapter extends RecyclerView.Adapter<ImageCell> implemen
                 .placeholder(R.drawable.default_error)
                 .error(R.drawable.default_error)
                 .into(cell.imageView);
+    }
+
+    @Override
+    public void onBindViewHolder(ImageCell cell, int position, List<Object> payloads) {
+
+        if (payloads.size() > 0) {
+            UploadTask task = taskList.get(position);
+            int p = (int)(task.progress*100);
+            cell.setProgress(p);
+        }
+        else {
+            onBindViewHolder(cell, position);
+        }
     }
 
     @Override
