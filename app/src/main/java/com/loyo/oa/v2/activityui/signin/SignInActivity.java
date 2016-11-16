@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
@@ -31,6 +33,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
+import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -72,7 +75,7 @@ import static com.loyo.oa.v2.application.MainApp.PICTURE;
  */
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address, tv_at_text;
+    private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address, tv_at_text, tv_distance_deviation;
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at;
     private GridView gridView_photo;
@@ -127,6 +130,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         ll_record = (ViewGroup) findViewById(R.id.ll_record);
         ll_at = (ViewGroup) findViewById(R.id.ll_at);
         tv_at_text = (TextView) findViewById(R.id.tv_at_text);
+        tv_distance_deviation = (TextView) findViewById(R.id.tv_distance_deviation);
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
         if (null == mCustomer) {
             layout_customer_name.setOnTouchListener(Global.GetTouch());
@@ -336,7 +340,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("atDepts", atDepts);
         map.put("atUserIds", atUserIds);
 
-
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
@@ -506,13 +509,26 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             case BaseSearchActivity.REQUEST_SEARCH:
                 customerId = data.getStringExtra("id");
                 customerName = data.getStringExtra("name");
-                customerAddress = data.getStringExtra("address");
+                Location loc = (Location) data.getSerializableExtra("loc");
+                customerAddress = loc.addr;
 //                customerAddress = customer.loc.addr;
                 tv_customer_address.setVisibility(View.VISIBLE);
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
+                if (loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
+                    tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
+                } else {
+                    tv_distance_deviation.setText("未知");
+                }
+
                 break;
         }
+    }
+
+    private String getDeviationDistance(double la, double lo) {
+        LatLng ll = new LatLng(laPosition, loPosition);
+        LatLng llCustomer = new LatLng(la, lo);
+        return Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer));
     }
 
     @Override
