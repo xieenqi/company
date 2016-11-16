@@ -55,7 +55,7 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 Intent intent = new Intent();
                 intent.putExtra("id", item.id);
                 intent.putExtra("name", item.name);
-                intent.putExtra("loc", item.loc);
+                intent.putExtra("loc", item.position);
                 setResult(RESULT_OK, intent);
                 onBackPressed();
             }

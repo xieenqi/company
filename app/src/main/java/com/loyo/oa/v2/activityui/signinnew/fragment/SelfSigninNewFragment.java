@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.signinnew.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +30,7 @@ import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.model.Tag;
+import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signinnew.adapter.SigninNewListAdapter;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.presenter.SigninListFragPresenter;
@@ -55,7 +58,7 @@ import java.util.List;
  * 【我的拜访】列表
  * Created by yyy on 16/11/10.
  */
-public class SelfSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView,View.OnClickListener{
+public class SelfSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener {
 
     private ArrayList<Tag> mTags;
     private DropDownMenu filterMenu;
@@ -164,10 +167,10 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
 
-        Utils.btnSpcHideForListView(getActivity(),listView.getRefreshableView(),
+        Utils.btnSpcHideForListView(getActivity(), listView.getRefreshableView(),
                 btn_add,
                 layout_bottom_menu,
-                layout_voice,edit_comment);
+                layout_voice, edit_comment);
 
         edit_comment.addTextChangedListener(new TextWatcher() {
             @Override
@@ -177,10 +180,10 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!TextUtils.isEmpty(s)){
+                if (!TextUtils.isEmpty(s)) {
                     tv_send_message.setTextColor(getResources().getColor(R.color.white));
                     tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_green);
-                }else{
+                } else {
                     tv_send_message.setTextColor(getResources().getColor(R.color.text99));
                     tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_white);
                 }
@@ -196,15 +199,15 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
     /**
      * 评论操作
-     * */
-    private void requestComment(String content){
+     */
+    private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizzId", listModel.get(commentPosition).id);
         map.put("title", content);
-        map.put("commentType",1); //1文本 2语音
+        map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
-        LogUtil.dee("评论参数:"+MainApp.gson.toJson(map));
+        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
 
@@ -212,14 +215,14 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
      * 获取Self列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if(!isPullOrDown){
+        if (!isPullOrDown) {
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("timeType", Integer.parseInt(menuTimekey));
         map.put("queryType", Integer.parseInt(menuKindkey));
         map.put("orderType", Integer.parseInt(menuSortkey));
-        map.put("split",true);
+        map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
@@ -275,7 +278,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public void commentEmbl(int position) {
         commentPosition = position;
-        Utils.autoKeyBoard(getActivity(),edit_comment);
+        Utils.autoKeyBoard(getActivity(), edit_comment);
         layout_voicemenu.setVisibility(View.VISIBLE);
         layout_bottom_menu.setVisibility(View.VISIBLE);
         btn_add.setVisibility(View.GONE);
@@ -284,16 +287,16 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
     /**
      * 评论删除
-     * */
+     */
     @Override
     public void deleteCommentEmbl(final String id) {
         ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
-            dialog.addSheetItem("删除评论", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    mPresenter.deleteComment(id);
-                }
-            });
+        dialog.addSheetItem("删除评论", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                mPresenter.deleteComment(id);
+            }
+        });
         dialog.show();
     }
 
@@ -304,7 +307,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
     /**
      * 评论成功操作
-     * */
+     */
     @Override
     public void commentSuccessEmbl() {
         hideInputKeyboard(edit_comment);
@@ -316,7 +319,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
     /**
      * 获取列表数据成功
-     * */
+     */
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
         listView.onRefreshComplete();
@@ -330,7 +333,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
     /**
      * 获取数据失败
-     * */
+     */
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
@@ -343,7 +346,8 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
             //新建跟进
             case R.id.btn_add:
-
+                startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
                 /*切换录音*/
@@ -364,12 +368,12 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
                 layout_keyboard.setVisibility(View.GONE);
                 layout_voice.setVisibility(View.GONE);
                 layout_voicemenu.setVisibility(View.VISIBLE);
-                Utils.autoKeyBoard(getActivity(),edit_comment);
+                Utils.autoKeyBoard(getActivity(), edit_comment);
                 break;
 
                 /*发送评论*/
             case R.id.tv_send_message:
-                if(TextUtils.isEmpty(edit_comment.getText().toString())){
+                if (TextUtils.isEmpty(edit_comment.getText().toString())) {
                     Toast("请输入评论内容!");
                     return;
                 }
