@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.Record;
@@ -58,6 +59,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -85,6 +87,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private PositionResultItem positionResultItem;
     private int pcitureNumber;//记录上传了多少张图
     private StaffMemberCollection collection;//选人返回的数据
+    private ArrayList<Record> audioInfo = new ArrayList<>();//录音数据
+    private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
+    private List<String> atUserIds = new ArrayList<>();//@的人员
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -161,7 +166,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         v.setTag(true);
                     }
                 } else {
-                    Toast("你没有配置录音权限");
+                    Toast("你没有配置录音或者储存权限");
                 }
 
             }
@@ -179,7 +184,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 ll_record.addView(new CommonRecordItem(SignInActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
                     @Override
                     public void Success(Record record) {//上传录音完成回调
-//                        audioInfo.add(record);
+                        audioInfo.add(record);
                     }
                 }));
             }
@@ -327,6 +332,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("position", customerAddress);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
+        map.put("audioInfo", audioInfo);
+        map.put("atDepts", atDepts);
+        map.put("atUserIds", atUserIds);
 
 
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
@@ -365,20 +373,20 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
-//        atDepts.clear();
-//        atUserIds.clear();
+        atDepts.clear();
+        atUserIds.clear();
         if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             String atText = "";
             collection = event.data;
             if (collection.depts.size() > 0) {
                 for (StaffMember ele : collection.depts) {
-//                    atDepts.add(ele.id);
+                    atDepts.add(new CommonIdName(ele.id, ele.name));
                     atText += ele.name + ",";
                 }
             }
             if (collection.users.size() > 0) {
                 for (StaffMember ele : collection.users) {
-//                    atUserIds.add(ele.id);
+                    atUserIds.add(ele.id);
                     atText += ele.name + ",";
                 }
             }

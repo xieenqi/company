@@ -260,8 +260,8 @@ public class RecordUtils {
      * 用户是否配置 录音权限     * @return
      */
     public static boolean permissionRecord() {
-        if (PackageManager.PERMISSION_GRANTED ==
-                MainApp.getMainApp().getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")) {
+        if (PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")
+                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
             return true;
         }
         return false;
