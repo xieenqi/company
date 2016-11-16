@@ -18,12 +18,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
+import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -50,15 +54,16 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
     protected EditText edt_search;
     protected View vs_nodata;
     protected PullToRefreshListView expandableListView_search;
-    protected ArrayList<Customer> lstData = new ArrayList<>();
+    protected ArrayList<SigninSelectCustomer> lstData = new ArrayList<>();
     protected CommonSearchAdapter adapter;
-    protected PaginationX paginationX = new PaginationX(20);
+    //    protected PaginationX paginationX = new PaginationX(20);
     public Customer customer;
     public String position;
     private DecimalFormat df = new DecimalFormat("0.0");
     public Context mContext;
     public int kalo = 0;
     public boolean isTopAdd = true;
+    private int page = 1;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -134,14 +139,14 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
             @Override
             public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
                 position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
-                String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
+                String url = Config_project.API_URL_STATISTICS();
                 HashMap<String, Object> params = new HashMap<>();
                 kalo = 1;
-                params.put("pageIndex", paginationX.getPageIndex());
+                params.put("pageIndex", page);
                 params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
                 params.put("keyWords", strSearch);
-                params.put("order", "desc");
-                params.put("position", position);
+//                params.put("order", "desc");
+//                params.put("position", position);
                 dataRequestvoid(url, params);
                 LocationUtilGD.sotpLocation();
                 UMengTools.sendLocationInfo(address, longitude, latitude);
@@ -160,9 +165,9 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
      */
     void dataRequestvoid(final String url, final HashMap<String, Object> params) {
         showLoading("请稍后");
-        RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new Callback<PaginationX<Customer>>() {
+        RestAdapterFactory.getInstance().build(url).create(ISigninNeworFollowUp.class).signinSearchCutomer(params, new Callback<BaseBeanT<ArrayList<SigninSelectCustomer>>>() {
             @Override
-            public void success(final PaginationX<Customer> customerPaginationX, final Response response) {
+            public void success(final BaseBeanT<ArrayList<SigninSelectCustomer>> customerPaginationX, final Response response) {
                 HttpErrorCheck.checkResponse("拜访搜索选择客户:", response);
                 expandableListView_search.onRefreshComplete();
                 InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -177,8 +182,8 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
                     return;
                 }
 
-                paginationX = customerPaginationX;
-                ArrayList<Customer> lstDataTemp = paginationX.getRecords();
+//                paginationX = customerPaginationX;
+                ArrayList<SigninSelectCustomer> lstDataTemp = customerPaginationX.data;
 
                 if (lstDataTemp == null || lstDataTemp.size() == 0) {
                     if (isTopAdd) {
@@ -219,14 +224,14 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
     @Override
     public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = true;
-        paginationX.setPageIndex(1);
+        page = 1;
         getAllData();
     }
 
     @Override
     public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = false;
-        paginationX.setPageIndex(paginationX.getPageIndex() + 1);
+        page++;
         getAllData();
     }
 
@@ -236,11 +241,11 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
 
 
     protected void returnData(final int position) {
-        Customer item = lstData.get(position);
+        SigninSelectCustomer item = lstData.get(position);
         Intent intent = new Intent();
         intent.putExtra("id", item.id);
         intent.putExtra("name", item.name);
-        intent.putExtra("address", item.loc.addr);
+        intent.putExtra("address", item.position.addr);
         setResult(RESULT_OK, intent);
         onBackPressed();
     }
@@ -274,7 +279,7 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_listview_common, null, false);
             }
 
-            Customer customer = lstData.get(i);
+            SigninSelectCustomer customer = lstData.get(i);
             TextView title = ViewHolder.get(convertView, R.id.tv_title);
             TextView content = ViewHolder.get(convertView, R.id.tv_content);
             TextView time = ViewHolder.get(convertView, R.id.tv_time);
@@ -285,24 +290,25 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
 
             time.setVisibility(View.VISIBLE);
             title.setText(customer.name);
-            time.setText(customer.distance != null ? "距离: " + customer.distance : "距离: 无");
 
-            if (null != customer.distance) {
-                String distance;
-                if (customer.distance.contains("km")) {
-                    time.setText("距离:" + df.format(Double.parseDouble(customer.distance.replace("km", ""))) + "km");
-                } else if (customer.distance.contains("m")) {
-                    double disa = Float.parseFloat(customer.distance.replace("m", ""));
-                    if (disa <= 100) {
-                        distance = "<0.1km";
-                    } else {
-                        distance = df.format(disa / 1000) + "km";
-                    }
-                    time.setText("距离:" + distance);
-                }
-            } else {
-                time.setText("距离:无");
-            }
+//            time.setText(customer.distance != null ? "距离: " + customer.distance : "距离: 无");
+//
+//            if (null != customer.distance) {
+//                String distance;
+//                if (customer.distance.contains("km")) {
+//                    time.setText("距离:" + df.format(Double.parseDouble(customer.distance.replace("km", ""))) + "km");
+//                } else if (customer.distance.contains("m")) {
+//                    double disa = Float.parseFloat(customer.distance.replace("m", ""));
+//                    if (disa <= 100) {
+//                        distance = "<0.1km";
+//                    } else {
+//                        distance = df.format(disa / 1000) + "km";
+//                    }
+//                    time.setText("距离:" + distance);
+//                }
+//            } else {
+//                time.setText("距离:无");
+//            }
 
             return convertView;
         }
