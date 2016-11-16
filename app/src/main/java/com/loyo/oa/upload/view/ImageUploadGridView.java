@@ -1,15 +1,15 @@
 package com.loyo.oa.upload.view;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.GridView;
 
 /**
  * Created by EthanGong on 16/9/22.
  */
 
-public class ImageUploadGridView extends GridView {
+public class ImageUploadGridView extends RecyclerView {
 
     public ImageUploadGridView(Context context) {
         super(context);

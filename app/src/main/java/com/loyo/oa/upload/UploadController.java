@@ -2,9 +2,9 @@ package com.loyo.oa.upload;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
@@ -14,6 +14,8 @@ import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.loyo.oa.upload.alioss.AliOSSManager;
+import com.loyo.oa.upload.explosion.ExplosionField;
+import com.loyo.oa.upload.explosion.ExplosionListener;
 import com.loyo.oa.upload.view.ImageCell;
 import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.common.Global;
@@ -42,6 +44,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
     public UploadImageAdapter adapter;
     private ImageUploadGridView gridView;
     private WeakReference<UploadControllerCallback> observer;
+    private ExplosionField explosionManager;
 
     public int maxSize;
 
@@ -50,6 +53,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
         this.context = context;
         this.adapter = new UploadImageAdapter(context, taskList, maxSize);
         this.adapter.callback = this;
+        explosionManager = new ExplosionField(context);
     }
 
 
@@ -71,9 +75,41 @@ public class UploadController implements ImageCell.ImageCellCallback{
         taskList.add(task);
     }
 
-    public void removeTaskAt(int index) {
+    private ImageCell getViewHolderAt(int index) {
+        GridLayoutManager lm = (GridLayoutManager)gridView.getLayoutManager();
+        int firstItemPosition = lm.findFirstVisibleItemPosition();
+        if (index - firstItemPosition >= 0) {
+            View view = gridView.getChildAt(index - firstItemPosition);
+            if (null != gridView.getChildViewHolder(view)){
+                ImageCell cell = (ImageCell)gridView.getChildViewHolder(view);
+                return cell;
+            }
+        }
+        return null;
+    }
+
+    public void removeTaskAt(final int index) {
         if (index >=0 && index < taskList.size()) {
-            taskList.remove(index);
+            final ImageCell cell = getViewHolderAt(index);
+            if (cell != null) {
+                explosionManager.explode(cell.itemView, new ExplosionListener() {
+                    @Override
+                    public void beforeExplosion() {
+                        cell.itemView.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void afterExplosion() {
+                        cell.itemView.setVisibility(View.INVISIBLE);
+                        taskList.remove(index);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+            else {
+                taskList.remove(index);
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -120,21 +156,8 @@ public class UploadController implements ImageCell.ImageCellCallback{
     public void loadView(ImageUploadGridView view) {
         gridView = view;
         if (gridView != null) {
+            gridView.setLayoutManager( new GridLayoutManager(context, 3));
             gridView.setAdapter(adapter);
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    UploadControllerCallback observer = getObserver();
-                    if (null != observer) {
-                        if (position == taskList.size()) {
-                            observer.onAddEvent(UploadController.this);
-
-                        }else {
-                            observer.onItemSelected(UploadController.this, position);
-                        }
-                    }
-                }
-            });
         }
     }
 
@@ -181,17 +204,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
                 if (index == -1) {
                     return;
                 }
-
-                int visible = gridView.getFirstVisiblePosition();
-                View child = gridView.getChildAt(index - visible);
-                if (child != null && child.getClass() == ImageCell.class) {
-                    ImageCell cell = (ImageCell)child;
-                    int p = (int)(progress*100);
-                    if (p >99) {
-                        p = 99;
-                    }
-                    cell.setProgress(p);
-                }
+                adapter.notifyItemChanged(index);
             }
         });
     }
@@ -215,14 +228,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
                 if (index == -1) {
                     return;
                 }
-
-                int visible = gridView.getFirstVisiblePosition();
-                View child = gridView.getChildAt(index - visible);
-                if (child != null && child.getClass() == ImageCell.class) {
-                    ImageCell cell = (ImageCell)child;
-                    int p = (int)(progress*100);
-                    cell.setProgress(p);
-                }
+                adapter.notifyItemChanged(index);
             }
         });
     }
@@ -245,14 +251,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
                 if (index == -1) {
                     return;
                 }
-
-                int visible = gridView.getFirstVisiblePosition();
-                View child = gridView.getChildAt(index - visible);
-                if (child != null && child.getClass() == ImageCell.class) {
-                    ImageCell cell = (ImageCell)child;
-                    int p = (int)(progress*100);
-                    cell.setProgress(p);
-                }
+                adapter.notifyItemChanged(index);
             }
         });
     }
@@ -392,6 +391,19 @@ public class UploadController implements ImageCell.ImageCellCallback{
                     observer.onRetryEvent(UploadController.this, taskList.get(index));
                 }
             });
+        }
+    }
+
+    @Override
+    public void onItemClickAtIndex(int index) {
+        UploadControllerCallback observer = getObserver();
+        if (null != observer) {
+            if (index == taskList.size()) {
+                observer.onAddEvent(UploadController.this);
+
+            }else {
+                observer.onItemSelected(UploadController.this, index);
+            }
         }
     }
 }
