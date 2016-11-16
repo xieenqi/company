@@ -47,6 +47,7 @@ import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,7 @@ import java.util.List;
  * 【我的跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,FollowUpListView,View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack {
+public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack {
 
     private View mView;
     private Button btn_add;
@@ -66,7 +67,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private ArrayList<Tag> mTags;
 
     private LinearLayout layout_bottom_menu;
-
 
     private String menuTimeKey = ""; /*时间*/
     private String menuChosKey = ""; /*筛选*/
@@ -95,7 +95,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-        mPresenter = new FollowUpFragPresenterImpl(this,getActivity());
+        mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
 
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
@@ -109,13 +109,12 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(),this);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        Utils.btnSpcHideForListView(getActivity(),listView.getRefreshableView(),
+        Utils.btnSpcHideForListViewTest(getActivity(),listView.getRefreshableView(),
                 btn_add,
-                layout_bottom_menu,
-                msgAudiomMenu.getVoiceLayout(),msgAudiomMenu.getEditComment());
+                layout_bottom_menu,msgAudiomMenu.getEditComment());
     }
 
     /**
@@ -169,15 +168,15 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 发送语音
-     * */
-    private void requestComment(String content){
+     */
+    private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizzId", listModel.get(commentPosition).id);
         map.put("title", content);
-        map.put("commentType",1); //1文本 2语音
+        map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
-        LogUtil.dee("评论参数:"+ MainApp.gson.toJson(map));
+        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
 
@@ -185,7 +184,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 获取Self列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if(!isPullOrDown){
+        if (!isPullOrDown) {
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
@@ -193,8 +192,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("xpath", "");
         map.put("timeType", 5);//时间查询
         map.put("method", 0); //跟进类型0:全部 1:线索 2:客户
-        map.put("typeId","");
-        map.put("split",true);
+        map.put("typeId", "");
+        map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
@@ -221,11 +220,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void commentEmbl(int position) {
         commentPosition = position;
-/*        Utils.autoKeyBoard(getActivity(),edit_comment);
-        layout_voicemenu.setVisibility(View.VISIBLE);
-        layout_bottom_menu.setVisibility(View.VISIBLE);
-        btn_add.setVisibility(View.GONE);
-        layout_keyboard.setVisibility(View.GONE);*/
         layout_bottom_menu.setVisibility(View.VISIBLE);
         btn_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
@@ -233,7 +227,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 长按评论删除
-     * */
+     */
     @Override
     public void deleteCommentEmbl(final String id) {
         ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
@@ -248,7 +242,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 刷新列表数据
-     * */
+     */
     @Override
     public void rushListData(boolean shw) {
         getData(shw);
@@ -256,13 +250,9 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 评论成功操作
-     * */
+     */
     @Override
     public void commentSuccessEmbl() {
-        /*hideInputKeyboard(edit_comment);
-        edit_comment.setText("");
-        layout_bottom_menu.setVisibility(View.GONE);
-        layout_voice.setVisibility(View.GONE);*/
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
         getData(false);
@@ -270,7 +260,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 获取列表数据成功
-     * */
+     */
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
         listView.onRefreshComplete();
@@ -284,7 +274,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 获取列表数据失败
-     * */
+     */
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
@@ -305,7 +295,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 回调发送评论
-     * */
+     */
     @Override
     public void sendMsg(EditText editText) {
         if (TextUtils.isEmpty(editText.getText().toString())) {
