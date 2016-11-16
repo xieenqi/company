@@ -2,6 +2,7 @@ package com.loyo.oa.upload.explosion;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -90,12 +91,29 @@ public class ExplosionField extends View{
             }
 
             @Override
+            public void onAnimationCancel(Animator animation) {
+                explosionAnimators.remove(animation);
+                animation = null;
+                if (listener != null) {
+                    listener.afterExplosion();
+                }
+            }
+
+            @Override
             public void onAnimationEnd(Animator animation) {
 
                 explosionAnimators.remove(animation);
                 animation = null;
                 if (listener != null) {
                     listener.afterExplosion();
+                }
+            }
+        });
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (listener != null) {
+                    listener.inExplosion(animation.getAnimatedFraction());
                 }
             }
         });

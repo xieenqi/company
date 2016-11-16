@@ -95,6 +95,8 @@ public class UploadController implements ImageCell.ImageCellCallback{
             final ImageCell cell = getViewHolderAt(index);
             if (cell != null) {
                 explosionManager.explode(cell.itemView, new ExplosionListener() {
+
+                    private boolean removed = false;
                     @Override
                     public void beforeExplosion() {
                         cell.itemView.setVisibility(View.INVISIBLE);
@@ -102,9 +104,16 @@ public class UploadController implements ImageCell.ImageCellCallback{
 
                     @Override
                     public void afterExplosion() {
-                        cell.itemView.setVisibility(View.INVISIBLE);
-                        taskList.remove(index);
-                        adapter.notifyDataSetChanged();
+                        cell.itemView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void inExplosion(float value) {
+                        if (!removed && value>=0.3){
+                            taskList.remove(index);
+                            adapter.notifyDataSetChanged();
+                            removed = true;
+                        }
                     }
                 });
             }

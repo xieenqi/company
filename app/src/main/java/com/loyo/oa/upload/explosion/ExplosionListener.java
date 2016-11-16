@@ -6,5 +6,6 @@ package com.loyo.oa.upload.explosion;
 
 public interface ExplosionListener {
     void beforeExplosion();
+    void inExplosion(float value);
     void afterExplosion();
 }
