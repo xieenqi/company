@@ -70,12 +70,16 @@
             <TextView
                 android:id="@+id/tv_send_message"
                 android:layout_width="0dip"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="0.15"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.17"
                 android:gravity="center"
                 android:text="发送"
-                android:textColor="@color/title_bg1" />
+                android:textColor="@color/text99"
+                android:background="@drawable/comment_sendmsg_white"
+                />
         </LinearLayout>
 
         <LinearLayout

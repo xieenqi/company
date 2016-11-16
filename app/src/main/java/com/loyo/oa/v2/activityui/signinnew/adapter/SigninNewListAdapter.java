@@ -128,18 +128,25 @@ public class SigninNewListAdapter extends BaseAdapter {
 
         /** 录音语音 */
         if(null != signinNewListModel.audioInfo){
+            holder.lv_audio.setVisibility(View.VISIBLE);
             audioAdapter = new ListOrDetailsAudioAdapter(mContext,signinNewListModel.audioInfo);
             holder.lv_audio.setAdapter(audioAdapter);
+        }else{
+            holder.lv_audio.setVisibility(View.GONE);
         }
 
         /** 文件列表 数据绑定 */
         if(null != signinNewListModel.attachments && signinNewListModel.attachments.size() > 0){
+            holder.lv_options.setVisibility(View.VISIBLE);
             optionAdapter = new ListOrDetailsOptionsAdapter(mContext,signinNewListModel.attachments);
             holder.lv_options.setAdapter(optionAdapter);
+        }else{
+            holder.lv_options.setVisibility(View.GONE);
         }
 
         /** 绑定图片与GridView监听 */
         if (null != signinNewListModel.imageAttachments && signinNewListModel.imageAttachments.size() > 0) {
+            holder.layout_gridview.setVisibility(View.VISIBLE);
             gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, signinNewListModel.imageAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
 
@@ -155,6 +162,8 @@ public class SigninNewListAdapter extends BaseAdapter {
                             MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
                 }
             });
+        }else{
+            holder.layout_gridview.setVisibility(View.GONE);
         }
 
         /** 绑定评论数据 */
@@ -183,9 +192,6 @@ public class SigninNewListAdapter extends BaseAdapter {
                 viewCrol.commentEmbl(position);
             }
         });
-
-
-
         return convertView;
     }
 

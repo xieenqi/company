@@ -71,7 +71,9 @@
                 android:layout_height="wrap_content"
                 android:divider="#00000000"
                 android:listSelector="@android:color/transparent"
-                android:dividerHeight="3dp" />
+                android:dividerHeight="3dp"
+                android:visibility="gone"
+                />
 
             <com.loyo.oa.v2.customview.CusGridView
                 android:id="@+id/layout_gridview"
@@ -82,7 +84,9 @@
                 android:gravity="center"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="3"
-                android:verticalSpacing="15dp" />
+                android:verticalSpacing="15dp"
+                android:visibility="gone"
+                />
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_options"
@@ -91,7 +95,8 @@
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
                 android:divider="#00000000"
-                android:dividerHeight="3dp" />
+                android:dividerHeight="3dp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -187,7 +192,7 @@
                     android:id="@+id/tv_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="张总"
+                    android:text=""
                     android:textColor="@color/text99" />
 
             </LinearLayout>
@@ -215,7 +220,7 @@
                     android:id="@+id/tv_position"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="无"
+                    android:text=""
                     android:textColor="@color/text99" />
 
             </LinearLayout>
@@ -243,7 +248,7 @@
                     android:id="@+id/tv_offset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="未知"
+                    android:text=""
                     android:textColor="@color/red" />
 
             </LinearLayout>
@@ -278,7 +283,7 @@
                         android:id="@+id/tv_create_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="02-13"
+                        android:text=""
                         android:textColor="@color/text99" />
                 </LinearLayout>
 

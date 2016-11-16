@@ -47,7 +47,7 @@ public interface ISigninNeworFollowUp {
      */
     @DELETE("/comment/{id}")
     void deleteComment(@Path("id") String id, Callback<Object> callback);
-    
+
     @GET("/customer/nearme")
     void getSiginiNearCustomer(@QueryMap Map<String, Object> params, Callback<BaseBeanT<ArrayList<SigninSelectCustomer>>> cb);
 
@@ -62,5 +62,11 @@ public interface ISigninNeworFollowUp {
      */
     @GET("/visit/detail/{id}/")
     void getSigninDetails(@Path("id") String id, @QueryMap HashMap<String,Object> map, Callback<BaseBeanT<SigninNewListModel>> cb);
+
+    /**
+     * 跟进详情数据
+     */
+    @GET("/saleactivity/detail/")
+    void getFollowUpDetails(@QueryMap HashMap<String,Object> map, Callback<BaseBeanT<FollowUpListModel>> cb);
 
 }
