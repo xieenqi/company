@@ -33,14 +33,21 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 带侧滑的【主界面】
@@ -246,6 +253,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
      */
     public void intentJpushInfo() {
         if (null != MainApp.jpushData) {
+            refreshSystemMessageRed(MainApp.jpushData.pusherCognate);
             Intent intent = new Intent();
             if ("discuss".equals(MainApp.jpushData.operationType)) {
                 intent.setClass(MainHomeActivity.this, HaitMyActivity.class);//推送讨论
@@ -313,6 +321,23 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         }
     }
 
+    /**
+     * 调用接口回传给服务器跟新系统消息的红点状态
+     */
+    private void refreshSystemMessageRed(String pusherCognate) {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(IMain.class).
+                refreshSystemMessageRed(pusherCognate, new Callback<Object>() {
+                    @Override
+                    public void success(Object o, Response response) {
+                        LogUtil.d("系统消息跟新成功!!!");
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+    }
 
     @Override
     protected void onRestart() {

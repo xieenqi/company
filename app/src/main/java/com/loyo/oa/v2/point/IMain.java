@@ -63,4 +63,10 @@ public interface IMain {
      */
     @PUT("/message/read/all")
     void readSystemMessageAll(Callback<Object> o);
+
+    /**
+     * 调用接口回传给服务器跟新系统消息的红点状态
+     */
+    @PUT("/message/read/pusher/{id}")
+    void refreshSystemMessageRed(@Path("id") String id, Callback<Object> o);
 }
