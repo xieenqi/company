@@ -19,6 +19,8 @@ import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.followup.fragment.SelfFollowUpFragment;
 import com.loyo.oa.v2.activityui.followup.fragment.TeamFollowUpFragment;
+import com.loyo.oa.v2.activityui.signinnew.SigninNewDetailsActivity;
+import com.loyo.oa.v2.activityui.signinnew.SigninNewManagerActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
@@ -233,7 +235,9 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
                 break;
             /*搜索*/
             case R.id.img_title_search_right:
-                startActivity(new Intent(FollowUpManagerActivity.this,FollowUpDetailsActivity.class));
+                Intent mIntent = new Intent(FollowUpManagerActivity.this,FollowUpDetailsActivity.class);
+                mIntent.putExtra("id","582acdaa608e4f0942000004");
+                startActivity(mIntent);
                 break;
 
             default:

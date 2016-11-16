@@ -70,101 +70,15 @@
                 android:orientation="vertical"
                 android:visibility="gone" />
 
-            <LinearLayout
-                android:id="@+id/layout_audio1"
+            <com.loyo.oa.v2.customview.CustomerListView
+                android:id="@+id/lv_audio"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="59dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="59dp"
-                android:layout_marginTop="@dimen/dimen_4"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/icon_voice_phone" />
-
-                <TextView
-                    android:id="@+id/iv_calls1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_33"
-                    android:background="@drawable/animation_calls"
-                    android:textColor="#3FD3AA" />
-
-                <TextView
-                    android:id="@+id/tv_audio_length1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
-                    android:text="00:00"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_audio2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="59dp"
-                android:layout_marginTop="@dimen/dimen_4"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/icon_voice_phone" />
-
-                <TextView
-                    android:id="@+id/iv_calls2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_33"
-                    android:background="@drawable/animation_calls"
-                    android:textColor="#3FD3AA" />
-
-                <TextView
-                    android:id="@+id/tv_audio_length2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
-                    android:text="00:00"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_audio3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="59dp"
-                android:layout_marginTop="@dimen/dimen_4"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/icon_voice_phone" />
-
-                <TextView
-                    android:id="@+id/iv_calls3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_33"
-                    android:background="@drawable/animation_calls"
-                    android:textColor="#3FD3AA" />
-
-                <TextView
-                    android:id="@+id/tv_audio_length3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
-                    android:text="00:00"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12" />
-
-            </LinearLayout>
+                android:divider="#00000000"
+                android:listSelector="@android:color/transparent"
+                android:dividerHeight="3dp" />
 
             <com.loyo.oa.v2.customview.CusGridView
                 android:id="@+id/layout_gridview"
@@ -215,7 +129,7 @@
                     android:id="@+id/tv_position"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="四川省成都市人民北路金牛万达B座"
+                    android:text=""
                     android:textColor="@color/title_bg1" />
             </LinearLayout>
 
@@ -225,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
-                android:text="\@张杰,罗超,谢啦"
+                android:text=""
                 android:textColor="@color/text99" />
 
             <LinearLayout
@@ -259,7 +173,7 @@
                     android:id="@+id/tv_customer_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="贾斯丁比伯"
+                    android:text=""
                     android:textColor="@color/title_bg1" />
 
             </LinearLayout>
@@ -287,7 +201,7 @@
                     android:id="@+id/tv_contact_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="张总"
+                    android:text=""
                     android:textColor="@color/text99" />
 
             </LinearLayout>
@@ -315,7 +229,7 @@
                     android:id="@+id/tv_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="无"
+                    android:text=""
                     android:textColor="@color/text99" />
 
             </LinearLayout>
@@ -343,7 +257,7 @@
                     android:id="@+id/tv_pc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="未知"
+                    android:text=""
                     android:textColor="@color/red" />
 
             </LinearLayout>
@@ -378,7 +292,7 @@
                         android:id="@+id/tv_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="02-13"
+                        android:text=""
                         android:textColor="@color/text99" />
                 </LinearLayout>
 
@@ -416,72 +330,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1.5dp"
-            android:background="@color/lineCC" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_45"
-            android:layout_above="@+id/layout_voice"
-            android:background="#F5F4F5"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/iv_voice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dimen_10"
-                android:background="@drawable/icon_macphone" />
-
-            <RelativeLayout
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/dimen_10"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/edit_comment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@null"
-                    android:hint="请输入评价内容"
-                    android:textSize="@dimen/text_sp16" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/edit_comment"
-                    android:layout_marginTop="@dimen/dimen_5"
-                    android:orientation="horizontal">
-
-                    <include layout="@layout/include_solid_line" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/tv_send_message"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.15"
-                android:gravity="center"
-                android:text="发送"
-                android:textColor="@color/title_bg1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_voice"
-            android:layout_width="match_parent"
-            android:layout_height="270dp"
-            android:background="@color/title_bg1"
-            android:orientation="horizontal"
-            android:visibility="gone" />
+        android:orientation="vertical"
+        android:visibility="visible">
+        <include layout="@layout/customerview_list_voicemenu" />
     </LinearLayout>
 </RelativeLayout>

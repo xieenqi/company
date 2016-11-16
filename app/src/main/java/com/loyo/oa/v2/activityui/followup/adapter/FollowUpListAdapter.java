@@ -46,6 +46,7 @@ public class FollowUpListAdapter extends BaseAdapter {
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格附件 */
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
+    private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
 
     public FollowUpListAdapter(Context mContext, ArrayList<FollowUpListModel> listModel, FollowUpListView viewCrol) {
         this.mContext = mContext;
@@ -87,6 +88,7 @@ public class FollowUpListAdapter extends BaseAdapter {
             holder.layout_gridview = (CusGridView) convertView.findViewById(R.id.layout_gridview);
             holder.lv_comment = (CustomerListView) convertView.findViewById(R.id.lv_comment);
             holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
+            holder.lv_options = (CustomerListView) convertView.findViewById(R.id.lv_options);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
             holder.ll_web = (LinearLayout) convertView.findViewById(R.id.ll_web);
             convertView.setTag(holder);
@@ -113,12 +115,22 @@ public class FollowUpListAdapter extends BaseAdapter {
 
         /** 录音语音 */
         if(null != followUpListModel.audioInfo){
+            holder.lv_audio.setVisibility(View.VISIBLE);
             audioAdapter = new ListOrDetailsAudioAdapter(mContext,followUpListModel.audioInfo);
             holder.lv_audio.setAdapter(audioAdapter);
+        }else{
+            holder.lv_audio.setVisibility(View.GONE);
+        }
+
+        /** 文件列表 数据绑定 */
+        if(null != followUpListModel.attachments && followUpListModel.attachments.size() > 0){
+            optionAdapter = new ListOrDetailsOptionsAdapter(mContext,followUpListModel.attachments);
+            holder.lv_options.setAdapter(optionAdapter);
         }
 
         /** 绑定图片与GridView监听 */
         if (null != followUpListModel.imgAttachments && followUpListModel.imgAttachments.size() > 0) {
+            holder.layout_gridview.setVisibility(View.VISIBLE);
             gridViewAdapter = new ListOrDetailsGridViewAdapter(mContext, followUpListModel.imgAttachments);
             holder.layout_gridview.setAdapter(gridViewAdapter);
 
@@ -134,6 +146,8 @@ public class FollowUpListAdapter extends BaseAdapter {
                             MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
                 }
             });
+        }else{
+            holder.layout_gridview.setVisibility(View.GONE);
         }
 
         /** 绑定评论数据 */
@@ -179,6 +193,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         LinearLayout layout_comment;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
+        CustomerListView lv_options; /*文件列表区*/
         GridView layout_gridview;    /*图片9宫格区*/
         ImageView iv_comment;        /*评论按钮*/
     }

@@ -6,5 +6,5 @@ package com.loyo.oa.v2.activityui.signinnew.model;
 
 public class AudioModel {
     public String url;
-    public int length;
+    public long length;
 }

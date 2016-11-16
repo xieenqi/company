@@ -3,7 +3,9 @@ package com.loyo.oa.v2.activityui.signinnew;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +23,7 @@ import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
+import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -70,6 +73,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     private CustomerListView lv_comment;
     private CustomerListView lv_options;
+    private CustomerListView lv_audio;
     private CusGridView gv_image;
 
     private LinearLayout layout_voice;
@@ -77,13 +81,13 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private LinearLayout ll_web;
     private LinearLayout layout_enclosure;
     private LinearLayout layout_comment;
-    private LinearLayout layout_bottom_menu;
-    private LinearLayout layout_voicemenu;
     private LinearLayout layout_keyboard;
+    private LinearLayout layout_voicemenu;
     private LinearLayout layout_back;
     private EditText edit_comment;
     private ImageView iv_voice;
     private ImageView iv_comment;
+    private ImageView iv_keyboard;
     private TextView tv_send_message;
 
     private float mPosX;
@@ -97,6 +101,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private ListOrDetailsCommentAdapter commentAdapter;  /* 评论区Adapter */
     private ListOrDetailsGridViewAdapter imageAdapter;   /* 图片9宫格Adapter */
     private ListOrDetailsOptionsAdapter  optionAdapter;  /* 文件列表Adapter */
+    private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
 
 
     private Handler mHandler = new Handler() {
@@ -124,6 +129,13 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
      * */
     private void bindAdapter(){
 
+        /*录音语音*/
+        if(null != mSigninDelModel.audioInfo){
+            lv_audio.setVisibility(View.VISIBLE);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext,mSigninDelModel.audioInfo);
+            lv_audio.setAdapter(audioAdapter);
+        }
+
         /*评论数据绑定*/
         if(null == commentAdapter){
             commentAdapter = new ListOrDetailsCommentAdapter(mContext,mSigninDelModel.comments);
@@ -146,8 +158,9 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         if (null != mSigninDelModel.imageAttachments && mSigninDelModel.imageAttachments.size() > 0) {
             if(null == imageAdapter){
                 if (null != mSigninDelModel.imageAttachments && mSigninDelModel.imageAttachments.size() > 0)
+                    gv_image.setVisibility(View.VISIBLE);
                     imageAdapter = new ListOrDetailsGridViewAdapter(mContext,mSigninDelModel.imageAttachments);
-                gv_image.setAdapter(imageAdapter);
+                    gv_image.setAdapter(imageAdapter);
             }else{
                 imageAdapter.notifyDataSetChanged();
             }
@@ -161,10 +174,9 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
-        layout_bottom_menu = (LinearLayout) findViewById(R.id.layout_bottom_menu);
-        layout_voicemenu = (LinearLayout) findViewById(R.id.layout_voicemenu);
         layout_keyboard = (LinearLayout) findViewById(R.id.layout_keyboard);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
+        layout_voicemenu = (LinearLayout) findViewById(R.id.layout_voicemenu);
 
         ll_web = (LinearLayout) findViewById(R.id.ll_web);
         edit_comment = (EditText) findViewById(R.id.edit_comment);
@@ -181,10 +193,12 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         tv_time = (TextView) findViewById(R.id.tv_time);
         iv_voice = (ImageView) findViewById(R.id.iv_voice);
         iv_comment = (ImageView) findViewById(R.id.iv_comment);
+        iv_keyboard = (ImageView) findViewById(R.id.iv_keyboard);
         iv_heading = (RoundImageView) findViewById(R.id.iv_heading);
         layout_scrollview = (ScrollView) findViewById(R.id.layout_scrollview);
         lv_comment = (CustomerListView) findViewById(R.id.lv_comment);
         lv_options = (CustomerListView) findViewById(R.id.lv_options);
+        lv_audio = (CustomerListView) findViewById(R.id.lv_audio);
         gv_image = (CusGridView) findViewById(R.id.layout_gridview);
 
         iv_voice.setOnClickListener(this);
@@ -192,6 +206,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         edit_comment.setOnClickListener(this);
         iv_comment.setOnClickListener(this);
         layout_back.setOnClickListener(this);
+        iv_keyboard.setOnClickListener(this);
 
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访详情");
@@ -227,11 +242,26 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
             }
         });
 
-        lv_comment.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        edit_comment.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast("长按监听");
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!TextUtils.isEmpty(s)){
+                    tv_send_message.setTextColor(getResources().getColor(R.color.white));
+                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_green);
+                }else{
+                    tv_send_message.setTextColor(getResources().getColor(R.color.text99));
+                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_white);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -399,7 +429,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
                 layout_keyboard.setVisibility(View.GONE);
                 layout_voice.setVisibility(View.GONE);
                 layout_voicemenu.setVisibility(View.VISIBLE);
-                Utils.autoKeyBoard(mContext,edit_comment);
+                Utils.autoKeyBoard(SigninNewDetailsActivity.this,edit_comment);
                 break;
 
             /*发送评论*/
@@ -414,8 +444,6 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
             /*打开评论*/
             case R.id.iv_comment:
                 Utils.autoKeyBoard(mContext,edit_comment);
-                layout_voicemenu.setVisibility(View.VISIBLE);
-                layout_keyboard.setVisibility(View.GONE);
                 break;
         }
     }

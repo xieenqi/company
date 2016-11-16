@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,8 @@ import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
+import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
+import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.other.model.Tag;
@@ -35,30 +39,23 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
  * 【我的跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,FollowUpListView {
+public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,FollowUpListView,View.OnClickListener {
 
     private View mView;
     private Button btn_add;
@@ -86,6 +83,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private PaginationX<FollowUpListModel> mPagination = new PaginationX<>(20);
 
     private FollowUpListAdapter mAdapter;
+    private FollowUpFragPresenter mPresenter;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -111,22 +109,10 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         return mView;
     }
 
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        mPagination.setPageIndex(1);
-        getData(true);
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(true);
-    }
-
     public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+        mPresenter = new FollowUpFragPresenterImpl(this,getActivity());
+
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
@@ -146,19 +132,42 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        tv_send_message.setOnClickListener(click);
+        tv_send_message.setOnClickListener(this);
         tv_send_message.setOnTouchListener(Global.GetTouch());
-        iv_keyboard.setOnClickListener(click);
+        iv_keyboard.setOnClickListener(this);
         iv_keyboard.setOnTouchListener(Global.GetTouch());
-        iv_voice.setOnClickListener(click);
+        iv_voice.setOnClickListener(this);
         iv_voice.setOnTouchListener(Global.GetTouch());
-        btn_add.setOnClickListener(click);
+        btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
 
         Utils.btnSpcHideForListView(getActivity(),listView.getRefreshableView(),
                 btn_add,
                 layout_bottom_menu,
                 layout_voice,edit_comment);
+
+        edit_comment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!TextUtils.isEmpty(s)){
+                    tv_send_message.setTextColor(getResources().getColor(R.color.white));
+                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_green);
+                }else{
+                    tv_send_message.setTextColor(getResources().getColor(R.color.text99));
+                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_white);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     /**
@@ -198,55 +207,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     /**
-     * 评论删除
-     * */
-    private void deleteComment(String id){
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
-            @Override
-            public void success(Object object, Response response) {
-                HttpErrorCheck.checkResponse("评论", response);
-                getData(false);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
-    }
-
-    /**
-     * 评论操作
-     * */
-    private void requestComment(String content){
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
-        map.put("title", content);
-        map.put("commentType",1); //1文本 2语音
-        map.put("bizzType", 2);   //1拜访 2跟进
-        //map.put("audioInfo", "");//语音信息
-        LogUtil.dee("评论参数:"+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
-            @Override
-            public void success(Object object, Response response) {
-                HttpErrorCheck.checkResponse("评论", response);
-                hideInputKeyboard(edit_comment);
-                edit_comment.setText("");
-                layout_bottom_menu.setVisibility(View.GONE);
-                layout_voice.setVisibility(View.GONE);
-                getData(false);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
-    }
-
-    /**
      * 数据绑定
      */
     public void bindData() {
@@ -256,6 +216,21 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         } else {
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+
+    /**
+     * 发送语音
+     * */
+    private void requestComment(){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("title", edit_comment.getText().toString());
+        map.put("commentType",1); //1文本 2语音
+        map.put("bizzType", 2);   //1拜访 2跟进
+        //map.put("audioInfo", "");//语音信息
+        LogUtil.dee("评论参数:"+ MainApp.gson.toJson(map));
+        mPresenter.requestComment(map);
     }
 
     /**
@@ -273,75 +248,24 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("typeId","");
         map.put("split",true);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? listModel.size() >= 20 ? listModel.size() : 20 : 20);
+        map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).selfFollowUp(map, new RCallback<BaseBeanT<PaginationX<FollowUpListModel>>>() {
-            @Override
-            public void success(BaseBeanT<PaginationX<FollowUpListModel>> paginationX, Response response) {
-                HttpErrorCheck.checkResponse("我的拜访", response);
-                listView.onRefreshComplete();
-                if (isTopAdd) {
-                    listModel.clear();
-                }
-                mPagination = paginationX.data;
-                listModel.addAll(paginationX.data.getRecords());
-                bindData();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                listView.onRefreshComplete();
-                super.failure(error);
-            }
-        });
+        mPresenter.getListData(map);
     }
 
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        isTopAdd = true;
+        mPagination.setPageIndex(1);
+        getData(true);
+    }
 
-    private View.OnClickListener click = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            switch (v.getId()) {
-
-                //新建跟进
-                case R.id.btn_add:
-                    startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
-                    getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                    break;
-
-                /*切换录音*/
-                case R.id.iv_voice:
-                    layout_keyboard.setVisibility(View.VISIBLE);
-                    layout_voicemenu.setVisibility(View.GONE);
-                    hideInputKeyboard(edit_comment);
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            mHandler.sendEmptyMessage(0x01);
-                        }
-                    }, 100);
-
-                    break;
-
-                /*切换软键盘*/
-                case R.id.iv_keyboard:
-                    layout_keyboard.setVisibility(View.GONE);
-                    layout_voice.setVisibility(View.GONE);
-                    layout_voicemenu.setVisibility(View.VISIBLE);
-                    Utils.autoKeyBoard(getActivity(),edit_comment);
-                    break;
-
-                /*发送评论*/
-                case R.id.tv_send_message:
-                    if(TextUtils.isEmpty(edit_comment.getText().toString())){
-                        Toast("请输入评论内容!");
-                        return;
-                    }
-                    requestComment(edit_comment.getText().toString());
-                    break;
-            }
-        }
-    };
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        isTopAdd = false;
+        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
+        getData(true);
+    }
 
     /**
      * 评论回调
@@ -365,9 +289,94 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         dialog.addSheetItem("删除评论", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                deleteComment(id);
+                mPresenter.deleteComment(id);
             }
         });
         dialog.show();
+    }
+
+    /**
+     * 刷新列表数据
+     * */
+    @Override
+    public void rushListData(boolean shw) {
+        getData(shw);
+    }
+
+    /**
+     * 评论成功操作
+     * */
+    @Override
+    public void commentSuccessEmbl() {
+        hideInputKeyboard(edit_comment);
+        edit_comment.setText("");
+        layout_bottom_menu.setVisibility(View.GONE);
+        layout_voice.setVisibility(View.GONE);
+        getData(false);
+    }
+
+    /**
+     * 获取列表数据成功
+     * */
+    @Override
+    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
+        listView.onRefreshComplete();
+        if (isTopAdd) {
+            listModel.clear();
+        }
+        mPagination = paginationX.data;
+        listModel.addAll(paginationX.data.getRecords());
+        bindData();
+    }
+
+    /**
+     * 获取列表数据失败
+     * */
+    @Override
+    public void getListDataErrorEmbl() {
+        listView.onRefreshComplete();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+            //新建跟进
+            case R.id.btn_add:
+                startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                break;
+
+            /*切换录音*/
+            case R.id.iv_voice:
+                layout_keyboard.setVisibility(View.VISIBLE);
+                layout_voicemenu.setVisibility(View.GONE);
+                hideInputKeyboard(edit_comment);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        mHandler.sendEmptyMessage(0x01);
+                    }
+                }, 100);
+
+                break;
+
+            /*切换软键盘*/
+            case R.id.iv_keyboard:
+                layout_keyboard.setVisibility(View.GONE);
+                layout_voice.setVisibility(View.GONE);
+                layout_voicemenu.setVisibility(View.VISIBLE);
+                Utils.autoKeyBoard(getActivity(),edit_comment);
+                break;
+
+            /*发送评论*/
+            case R.id.tv_send_message:
+                if(TextUtils.isEmpty(edit_comment.getText().toString())){
+                    Toast("请输入评论内容!");
+                    return;
+                }
+                requestComment();
+                break;
+        }
     }
 }
