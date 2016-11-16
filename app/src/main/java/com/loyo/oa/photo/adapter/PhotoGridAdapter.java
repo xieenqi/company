@@ -51,13 +51,16 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
     this.photoDirectories = photoDirectories;
     this.glide = requestManager;
     inflater = LayoutInflater.from(context);
+      setHasStableIds(true);
     setColumnNumber(context, columnNumber);
+
   }
 
   public PhotoGridAdapter(Context context, RequestManager requestManager,  List<PhotoDirectory> photoDirectories, ArrayList<String> orginalPhotos, int colNum) {
     this(context, requestManager, photoDirectories);
     setColumnNumber(context, colNum);
     selectedPhotos = new ArrayList<>();
+      setHasStableIds(true);
     if (orginalPhotos != null) selectedPhotos.addAll(orginalPhotos);
   }
 
@@ -180,6 +183,23 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
     return photosCount;
   }
 
+  @Override public long getItemId(int position) {
+
+    if (getItemViewType(position) == ITEM_TYPE_PHOTO) {
+      List<Photo> photos = getCurrentPhotos();
+      final Photo photo;
+
+      if (showCamera()) {
+        photo = photos.get(position - 1);
+      } else {
+        photo = photos.get(position);
+      }
+      return photo.getPath().hashCode();
+    }
+    else {
+      return "Camera".hashCode();
+    }
+  }
 
   public static class PhotoViewHolder extends RecyclerView.ViewHolder {
     private ImageView ivPhoto;
