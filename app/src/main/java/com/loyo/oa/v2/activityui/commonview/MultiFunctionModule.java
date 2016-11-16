@@ -132,6 +132,7 @@ public class MultiFunctionModule extends LinearLayout {
     }
 
     private View.OnTouchListener mOnVoiceRecTouchListener
+
             = new View.OnTouchListener() {
 
         @Override
@@ -140,11 +141,11 @@ public class MultiFunctionModule extends LinearLayout {
                 Global.Toast("储存不足");
                 return false;
             }
-            long time = System.currentTimeMillis() - currentTimeMillis;
-            if (time <= 300) {
-                currentTimeMillis = System.currentTimeMillis();
-                return false;
-            }
+//            long time = System.currentTimeMillis() - currentTimeMillis;
+//            if (time <= 300) {
+//                currentTimeMillis = System.currentTimeMillis();
+//                return false;
+//            }
             recordingTime();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:

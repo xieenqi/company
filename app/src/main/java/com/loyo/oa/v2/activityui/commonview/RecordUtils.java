@@ -35,6 +35,8 @@ public class RecordUtils {
     private long startTime, endTime;
     Handler handler = new Handler();
     CallbackMicStatus callbackMicStatus;
+    Timer timer;
+    TimerTask task;
 
     private RecordUtils() {
     }
@@ -95,8 +97,8 @@ public class RecordUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        timer = new Timer();
+        task = new TimerTask() {
             @Override
             public void run() {
                 handler.post(new Runnable() {
@@ -106,18 +108,30 @@ public class RecordUtils {
                     }
                 });
             }
-        }, 300, 300);
+        };
+        timer.schedule(task, 500, 500);
     }
 
     public void stopRecord() {
-        if (recorder != null && isStart) {
-            isStart = false;
-            recorder.stop();
-            recorder.reset();
-            recorder.release();
-            recorder = null;//这个必须有不然录音设备释放不成功
-            endTime = System.currentTimeMillis();
+        try {
+            if (recorder != null && isStart) {
+                timer.cancel();
+                task.cancel();
+                isStart = false;
+                recorder.setOnErrorListener(null);
+                recorder.setOnInfoListener(null);
+                recorder.setPreviewDisplay(null);
+                recorder.stop();
+                recorder.reset();
+                recorder.release();
+                recorder = null;//这个必须有不然录音设备释放不成功
+                endTime = System.currentTimeMillis();
+
+            }
+        } catch (IllegalStateException e) {
+            LogUtil.d("录音停止异常 可能没有权限");
         }
+
     }
 
 

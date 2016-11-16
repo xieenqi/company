@@ -333,7 +333,7 @@
                         android:gravity="center_vertical"
                         android:minWidth="@dimen/dimen_100"
                         android:paddingRight="@dimen/dimen_4"
-                        android:text="下次跟进提醒"
+                        android:text="下次跟进时间"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp15" />
 
