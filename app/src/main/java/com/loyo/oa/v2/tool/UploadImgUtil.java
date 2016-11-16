@@ -7,15 +7,14 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.FinalVariables;
+
+import com.loyo.oa.photo.PhotoPreview;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
 import java.util.ArrayList;
 
 
@@ -126,27 +125,21 @@ public class UploadImgUtil {
             if (ListUtil.IsEmpty(attachments)) {
                 return;
             }
-
-            ArrayList<ImageInfo> newAttachment = new ArrayList<>();
-            int newPosistion = 0;
+            ArrayList<String> selectedPhotos = new ArrayList<>();
 
             for (int i = 0; i < attachments.size(); i++) {
-                ImageInfo attachment = attachments.get(i);
-                newAttachment.add(attachment);
-            }
-            for (int i = 0; i < newAttachment.size(); i++) {
-                if (newAttachment.get(i).equals(attachments.get(position))) {
-                    newPosistion = i;
+                String path = attachments.get(i).path;
+                if (path.startsWith("file://"));
+                {
+                    path = path.replace("file://", "");
                 }
-                LogUtil.d("yula预览的图片：" + newAttachment.get(i).path);
+                selectedPhotos.add(path);
             }
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("data", newAttachment);
-            bundle.putInt("position", newPosistion);
-            bundle.putBoolean("isEdit", isEdit);
-            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageAddActivity.class,
-                    MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+            PhotoPreview.builder()
+                    .setPhotos(selectedPhotos)
+                    .setCurrentItem(position)
+                    .setShowDeleteButton(true)
+                    .start((Activity) mContext);
 
         }
     }

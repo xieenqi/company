@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
@@ -32,7 +33,6 @@ import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
@@ -45,7 +45,6 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 
@@ -570,9 +569,12 @@ public class ClueTransferActivity extends BaseActivity implements View.OnClickLi
                 break;
 
             /*删除附件回调*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                pickPhots.remove(data.getExtras().getInt("position"));
-                init_gridView_photo();
+            case PhotoPreview.REQUEST_CODE:
+                int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                if (index >= 0) {
+                    pickPhots.remove(index);
+                    init_gridView_photo();
+                }
                 break;
 
             default:

@@ -19,6 +19,7 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.SwitchView;
@@ -737,9 +738,12 @@ public class TasksAddActivity extends BaseActivity {
                 break;
 
             /*附件删除回调*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                pickPhots.remove(data.getExtras().getInt("position"));
-                init_gridView_photo();
+            case PhotoPreview.REQUEST_CODE:
+                int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                if (index >= 0) {
+                    pickPhots.remove(index);
+                    init_gridView_photo();
+                }
                 break;
 
             /*用户单选, 负责人*/

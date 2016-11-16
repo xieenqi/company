@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Department;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -24,7 +25,6 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.CountTextWatcher;
@@ -32,7 +32,6 @@ import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ImageInfo;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
@@ -242,10 +241,13 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
                 }
                 break;
 
-           /*附件删除回调*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                pickPhots.remove(data.getExtras().getInt("position"));
-                init_gridView_photo();
+            /*附件删除回调*/
+            case PhotoPreview.REQUEST_CODE:
+                int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+                if (index >= 0) {
+                    pickPhots.remove(index);
+                    init_gridView_photo();
+                }
                 break;
 
             /*选择部门回调*/

@@ -11,6 +11,7 @@ import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
@@ -137,11 +138,14 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     /**
      * 相册删除 回调
      */
-    @OnActivityResult(FinalVariables.REQUEST_DEAL_ATTACHMENT)
+    @OnActivityResult(PhotoPreview.REQUEST_CODE)
     void onDeletePhotoResult(final Intent data) {
         if (data != null) {
-            pickPhots.remove(data.getExtras().getInt("position"));
-            init_gridView_photo();
+            int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
+            if (index >= 0) {
+                pickPhots.remove(index);
+                init_gridView_photo();
+            }
         }
     }
 
