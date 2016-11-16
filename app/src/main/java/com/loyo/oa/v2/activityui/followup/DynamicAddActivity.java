@@ -195,7 +195,6 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
      */
     private void initMultiFunctionModule() {
         final MultiFunctionModule mfmodule = new MultiFunctionModule(this);
-        ll_root.addView(mfmodule);
         /*录音*/
         mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
@@ -243,7 +242,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                DynamicAddActivity.this.startActivityForResult(intent, PICTURE);
+                startActivityForResult(intent, PICTURE);
             }
         });
         /*添加地址处理*/
@@ -271,6 +270,8 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 startActivity(intent);
             }
         });
+        mfmodule.setEnableModle(true, true, true, true);
+        ll_root.addView(mfmodule);
     }
 
     private void buildAttachment() {

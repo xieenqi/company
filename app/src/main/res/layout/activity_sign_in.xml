@@ -176,6 +176,12 @@
                     </RelativeLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_record"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -193,6 +199,8 @@
 
                     </LinearLayout>
                 </LinearLayout>
+                <!--添加@ 的人员-->
+                <include layout="@layout/include_at" />
             </LinearLayout>
         </ScrollView>
 

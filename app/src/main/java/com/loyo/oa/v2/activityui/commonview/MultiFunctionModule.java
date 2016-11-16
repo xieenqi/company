@@ -75,6 +75,16 @@ public class MultiFunctionModule extends LinearLayout {
     }
 
     /**
+     * 设置启用的模块
+     */
+    public void setEnableModle(boolean record, boolean picture, boolean location, boolean at) {
+        ll_record_keyboard.setVisibility(record ? VISIBLE : GONE);
+        ll_picture.setVisibility(picture ? VISIBLE : GONE);
+        ll_location.setVisibility(location ? VISIBLE : GONE);
+        ll_at.setVisibility(at ? VISIBLE : GONE);
+    }
+
+    /**
      * 设置是否需要录音
      */
     public void setIsRecording(boolean isRecording) {
