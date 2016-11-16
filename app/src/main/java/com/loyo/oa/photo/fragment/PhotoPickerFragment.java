@@ -17,7 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -65,6 +69,9 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
   int column;
   private boolean singleMode  = false;
   private boolean cropEnabled = false;
+  private View contentView;
+  private RecyclerView mRecyclerView;
+  private boolean isPushed;
 
   //目录弹出框的一次最多显示的目录数目
   public static int COUNT_MAX = 6;
@@ -137,6 +144,10 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
 
+    if (contentView != null) {
+      return contentView;
+    }
+
     final View rootView = inflater.inflate(R.layout.__picker_fragment_photo_picker, container, false);
 
     listAdapter  = new PopupDirectoryListAdapter(mGlideRequestManager, directories);
@@ -147,6 +158,7 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setAdapter(photoGridAdapter);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
+    mRecyclerView = recyclerView;
 
     //final Button btSwitchDirectory = (Button) rootView.findViewById(R.id.button);
 
@@ -156,6 +168,12 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     listPopupWindow.setAdapter(listAdapter);
     listPopupWindow.setModal(true);
     listPopupWindow.setDropDownGravity(Gravity.BOTTOM);
+    listPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+      @Override
+      public void onDismiss() {
+        popFrom();
+      }
+    });
 
 
 
@@ -199,6 +217,8 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
         }
       }
     });
+
+    contentView = rootView;
 
     return rootView;
   }
@@ -316,8 +336,8 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     listPopupWindow.setAnchorView(anchor);
     listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        popFrom();
         listPopupWindow.dismiss();
-
         PhotoDirectory directory = directories.get(position);
 
         textView.setText(directory.getName());
@@ -328,10 +348,38 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
     });
 
     if (listPopupWindow.isShowing()) {
+      popFrom();
       listPopupWindow.dismiss();
     } else if (!getActivity().isFinishing()) {
       adjustHeight();
       listPopupWindow.show();
+      pushTo();
     }
+  }
+
+  public void pushTo() {
+    if ( isPushed ) {
+      return;
+    }
+    isPushed = true;
+    final ScaleAnimation animation =new ScaleAnimation(1.0f, 0.95f, 1.0f, 0.95f,
+            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+    animation.setInterpolator(new AccelerateDecelerateInterpolator());
+    animation.setDuration(300);
+    animation.setFillAfter(true);
+    mRecyclerView.startAnimation(animation);
+  }
+
+  public void popFrom() {
+    if ( !isPushed ) {
+      return;
+    }
+    isPushed = false;
+    final ScaleAnimation animation =new ScaleAnimation(0.95f, 1.0f, 0.95f, 1.0f,
+            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+    animation.setInterpolator(new AccelerateDecelerateInterpolator());
+    animation.setDuration(300);
+    animation.setFillAfter(true);
+    mRecyclerView.startAnimation(animation);
   }
 }
