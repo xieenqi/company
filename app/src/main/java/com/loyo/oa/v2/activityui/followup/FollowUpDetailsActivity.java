@@ -1,11 +1,7 @@
 package com.loyo.oa.v2.activityui.followup;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -22,7 +18,6 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
-import com.loyo.oa.v2.activityui.signinnew.SigninNewDetailsActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -31,14 +26,12 @@ import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.point.ISigninNeworFollowUp;
-import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.HashMap;
 import retrofit.RetrofitError;
@@ -50,7 +43,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class FollowUpDetailsActivity extends BaseActivity implements View.OnClickListener {
+public class FollowUpDetailsActivity extends BaseActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack {
 
 
     private ScrollView layout_scrollview;
@@ -68,20 +61,13 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     private CustomerListView lv_options;
     private CusGridView gv_image;
 
-    private LinearLayout layout_voice;
     private LinearLayout layout_touch;
     private LinearLayout ll_web;
     private LinearLayout layout_enclosure;
     private LinearLayout layout_comment;
-    private LinearLayout layout_keyboard;
-    private LinearLayout layout_voicemenu;
     private LinearLayout layout_back;
-
-    private EditText edit_comment;
-    private ImageView iv_voice;
+    private LinearLayout layout_bottom_menu;
     private ImageView iv_comment;
-    private ImageView iv_keyboard;
-    private TextView tv_send_message;
 
     private float mPosX;
     private float mPosY;
@@ -91,22 +77,10 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     private ListOrDetailsCommentAdapter commentAdapter;  /* 评论区Adapter */
     private ListOrDetailsGridViewAdapter imageAdapter;   /* 图片9宫格Adapter */
-    private ListOrDetailsOptionsAdapter  optionAdapter;  /* 附件列表Adapter */
+    private ListOrDetailsOptionsAdapter optionAdapter;   /* 附件列表Adapter */
 
     private FollowUpListModel mFollowUpDelModel;
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 0x01) {
-                layout_voice.setAnimation(AnimationCommon.inFromBottomAnimation(150));
-                layout_voice.setVisibility(View.VISIBLE);
-            } else if (msg.what == 0x02) {
-                layout_voice.setVisibility(View.GONE);
-            }
-        }
-    };
-
+    private MsgAudiomMenu msgAudiomMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,14 +91,14 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     /**
      * 适配器绑定
-     * */
-    private void bindAdapter(){
+     */
+    private void bindAdapter() {
 
         /*评论数据绑定*/
-        if(null == commentAdapter){
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext,mFollowUpDelModel.comments);
+        if (null == commentAdapter) {
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments);
             lv_comment.setAdapter(commentAdapter);
-        }else{
+        } else {
             commentAdapter.notifyDataSetChanged();
         }
 
@@ -140,12 +114,12 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
         /*gridView数据绑定*/
         if (null != mFollowUpDelModel.imgAttachments && mFollowUpDelModel.imgAttachments.size() > 0) {
-            if(null == imageAdapter){
+            if (null == imageAdapter) {
                 if (null != mFollowUpDelModel.imgAttachments && mFollowUpDelModel.imgAttachments.size() > 0)
                     gv_image.setVisibility(View.VISIBLE);
-                    imageAdapter = new ListOrDetailsGridViewAdapter(mContext,mFollowUpDelModel.imgAttachments);
+                imageAdapter = new ListOrDetailsGridViewAdapter(mContext, mFollowUpDelModel.imgAttachments);
                 gv_image.setAdapter(imageAdapter);
-            }else{
+            } else {
                 gv_image.setVisibility(View.GONE);
                 imageAdapter.notifyDataSetChanged();
             }
@@ -154,16 +128,12 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     private void initUI() {
         id = getIntent().getStringExtra("id");
-        layout_voice = (LinearLayout) findViewById(R.id.layout_voice);
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
-        layout_keyboard = (LinearLayout) findViewById(R.id.layout_keyboard);
-        layout_voicemenu = (LinearLayout) findViewById(R.id.layout_voicemenu);
+        layout_bottom_menu = (LinearLayout) findViewById(R.id.layout_bottom_menu);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
         ll_web = (LinearLayout) findViewById(R.id.ll_web);
-        edit_comment = (EditText) findViewById(R.id.edit_comment);
-        tv_send_message = (TextView) findViewById(R.id.tv_send_message);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_contact = (TextView) findViewById(R.id.tv_contact);
         tv_name = (TextView) findViewById(R.id.tv_name);
@@ -171,63 +141,35 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         tv_kind = (TextView) findViewById(R.id.tv_kind);
         tv_customername = (TextView) findViewById(R.id.tv_customername);
         tv_toast = (TextView) findViewById(R.id.tv_toast);
-        iv_voice = (ImageView) findViewById(R.id.iv_voice);
         iv_comment = (ImageView) findViewById(R.id.iv_comment);
-        iv_keyboard = (ImageView) findViewById(R.id.iv_keyboard);
         iv_heading = (RoundImageView) findViewById(R.id.iv_heading);
         layout_scrollview = (ScrollView) findViewById(R.id.layout_scrollview);
         lv_comment = (CustomerListView) findViewById(R.id.lv_comment);
         lv_options = (CustomerListView) findViewById(R.id.lv_options);
         gv_image = (CusGridView) findViewById(R.id.layout_gridview);
-
-        iv_voice.setOnClickListener(this);
-        tv_send_message.setOnClickListener(this);
-        edit_comment.setOnClickListener(this);
-        iv_keyboard.setOnClickListener(this);
         layout_back.setOnClickListener(this);
 
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("跟进详情");
 
-        edit_comment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!TextUtils.isEmpty(s)){
-                    tv_send_message.setTextColor(getResources().getColor(R.color.white));
-                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_green);
-                }else{
-                    tv_send_message.setTextColor(getResources().getColor(R.color.text99));
-                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_white);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this);
+        layout_bottom_menu.addView(msgAudiomMenu);
         requestDetails();
     }
 
-    private void bindData(){
-        setContent(ll_web," ");
+    private void bindData() {
+        setContent(ll_web, " ");
         bindAdapter();
 
-        if(TextUtils.isEmpty(mFollowUpDelModel.creator.avatar)){
-            ImageLoader.getInstance().displayImage(mFollowUpDelModel.creator.avatar,iv_heading);
+        if (TextUtils.isEmpty(mFollowUpDelModel.creator.avatar)) {
+            ImageLoader.getInstance().displayImage(mFollowUpDelModel.creator.avatar, iv_heading);
         }
 
         tv_name.setText(mFollowUpDelModel.creator.name);
         tv_contact.setText(mFollowUpDelModel.contactName);
         tv_toast.setText(mFollowUpDelModel.atNameAndDepts);
         tv_customername.setText(mFollowUpDelModel.customerName);
-        tv_time.setText(DateTool.timet(mFollowUpDelModel.createAt+"","yyyy-MM-dd hh:mm:ss"));
+        tv_time.setText(DateTool.timet(mFollowUpDelModel.createAt + "", "yyyy-MM-dd hh:mm:ss"));
 
         /** 绑定评论数据 */
         if (null != mFollowUpDelModel.comments && mFollowUpDelModel.comments.size() > 0) {
@@ -259,8 +201,8 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     /**
      * 评论删除
-     * */
-    private void deleteComment(String id){
+     */
+    private void deleteComment(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
@@ -278,12 +220,12 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     /**
      * 获取详情数据
-     * */
-    private void requestDetails(){
+     */
+    private void requestDetails() {
         showLoading("");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("id",id);
-        map.put("split",true);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("split", true);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getFollowUpDetails(map, new RCallback<BaseBeanT<FollowUpListModel>>() {
             @Override
             public void success(BaseBeanT<FollowUpListModel> followuplistmodel, Response response) {
@@ -303,22 +245,20 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     /**
      * 评论操作
-     * */
-    private void requestComment(String content){
+     */
+    private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizzId", id);
         map.put("title", content);
-        map.put("commentType",1); //1文本 2语音
+        map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
-        LogUtil.dee("评论参数:"+ MainApp.gson.toJson(map));
+        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
-                hideInputKeyboard(edit_comment);
-                edit_comment.setText("");
-                layout_voice.setVisibility(View.GONE);
+                msgAudiomMenu.closeMenu();
                 requestDetails();
             }
 
@@ -357,40 +297,18 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
                 finish();
                 break;
 
-            /*切换录音*/
-            case R.id.iv_voice:
-                layout_keyboard.setVisibility(View.VISIBLE);
-                layout_voicemenu.setVisibility(View.GONE);
-                hideInputKeyboard(edit_comment);
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        mHandler.sendEmptyMessage(0x01);
-                    }
-                }, 100);
-                break;
-
-            /*切换软键盘*/
-            case R.id.iv_keyboard:
-                layout_keyboard.setVisibility(View.GONE);
-                layout_voice.setVisibility(View.GONE);
-                layout_voicemenu.setVisibility(View.VISIBLE);
-                Utils.autoKeyBoard(FollowUpDetailsActivity.this,edit_comment);
-                break;
-
-            /*发送评论*/
-            case R.id.tv_send_message:
-                if(TextUtils.isEmpty(edit_comment.getText().toString())){
-                    Toast("请输入评论内容!");
-                    return;
-                }
-                requestComment(edit_comment.getText().toString());
-                break;
-
-            /*打开评论*/
-            case R.id.iv_comment:
-                Utils.autoKeyBoard(mContext,edit_comment);
-                break;
-
         }
+    }
+
+    /**
+     * 回调发送评论
+     * */
+    @Override
+    public void sendMsg(EditText editText) {
+        if (TextUtils.isEmpty(editText.getText().toString())) {
+            Toast("请输入评论内容!");
+            return;
+        }
+        requestComment(editText.getText().toString());
     }
 }

@@ -246,6 +246,6 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:visibility="visible">
-        <include layout="@layout/customerview_list_voicemenu" />
+        <!--<include layout="@layout/customerview_list_voicemenu" />-->
     </LinearLayout>
 </RelativeLayout>
