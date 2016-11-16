@@ -18,8 +18,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
 
         <ScrollView
@@ -124,42 +123,7 @@
 
                     </LinearLayout>
                     <!--添加@ 的人员-->
-                    <LinearLayout
-                        android:id="@+id/ll_at"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_40"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="@dimen/margin_other_view"
-                        android:paddingRight="9dp"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:id="@+id/tv_at_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/ellipse_gray"
-                            android:gravity="center_vertical"
-                            android:paddingBottom="@dimen/dimen_2"
-                            android:paddingLeft="@dimen/dimen_8"
-                            android:paddingRight="@dimen/dimen_8"
-                            android:paddingTop="@dimen/dimen_2"
-                            android:textColor="@color/text66" />
-
-                        <View
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:id="@+id/iv_at_delete"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:padding="@dimen/dimen_5"
-                            android:src="@drawable/icon_record_item_delete" />
-
-
-                    </LinearLayout>
+                    <include layout="@layout/include_at" />
 
                     <View
                         style="@style/view_split"
@@ -369,7 +333,7 @@
                         android:gravity="center_vertical"
                         android:minWidth="@dimen/dimen_100"
                         android:paddingRight="@dimen/dimen_4"
-                        android:text="下次跟进提醒"
+                        android:text="下次跟进时间"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp15" />
 

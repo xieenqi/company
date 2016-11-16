@@ -13,19 +13,33 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
+import com.loyo.oa.contactpicker.ContactPickerActivity;
+import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
+import com.loyo.oa.contactpicker.model.result.StaffMember;
+import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.commonview.CommonRecordItem;
 import com.loyo.oa.v2.activityui.commonview.MapModifyView;
+import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
+import com.loyo.oa.v2.activityui.commonview.RecordUtils;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
+import com.loyo.oa.v2.beans.Location;
+import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -41,43 +55,44 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
 import com.loyo.oa.v2.tool.Utils;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static com.loyo.oa.v2.application.MainApp.PICTURE;
 
 /**
  * 【 拜访签到 】 页面
  */
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_customer_name, tv_reset_address;
-    private TextView tv_address;
-    private TextView wordcount;
-    private TextView tv_customer_address;
+    private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address, tv_at_text, tv_distance_deviation;
     private EditText edt_memo;
-    private ViewGroup img_title_left, img_title_right;
+    private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at;
     private GridView gridView_photo;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-    private String uuid = StringUtil.getUUID();
-    private String mAddress;
-    private String customerId = "";
-    private String customerName;
-    private String customerAddress;
+    private String uuid = StringUtil.getUUID(), mAddress, customerId = "", customerName, customerAddress;
     private SignInGridViewAdapter signInGridViewAdapter;
     private double laPosition, loPosition;
     boolean mLocationFlag = false;  //是否定位完成的标记
     private Customer mCustomer;
     private Animation animation;
     private boolean isPicture = false;
-    private Intent mIntent;
-    private Bundle mBundle;
     private PositionResultItem positionResultItem;
+    private int pcitureNumber;//记录上传了多少张图
+    private StaffMemberCollection collection;//选人返回的数据
+    private ArrayList<Record> audioInfo = new ArrayList<>();//录音数据
+    private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
+    private List<String> atUserIds = new ArrayList<>();//@的人员
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -99,23 +114,23 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     void initUI() {
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
         tv_customer_address = (TextView) findViewById(R.id.tv_customer_address);
-
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(Global.GetTouch());
-
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_right.setOnClickListener(this);
         img_title_right.setOnTouchListener(Global.GetTouch());
-
         tv_reset_address = (TextView) findViewById(R.id.tv_reset_address);
         tv_reset_address.setOnTouchListener(Global.GetTouch());
         tv_reset_address.setOnClickListener(this);
-
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         wordcount = (TextView) findViewById(R.id.wordcount);
         edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
-
+        ll_root = (ViewGroup) findViewById(R.id.ll_root);
+        ll_record = (ViewGroup) findViewById(R.id.ll_record);
+        ll_at = (ViewGroup) findViewById(R.id.ll_at);
+        tv_at_text = (TextView) findViewById(R.id.tv_at_text);
+        tv_distance_deviation = (TextView) findViewById(R.id.tv_distance_deviation);
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
         if (null == mCustomer) {
             layout_customer_name.setOnTouchListener(Global.GetTouch());
@@ -130,6 +145,81 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
         init_gridView_photo();
         startLocation();
+        initMultiFunctionModule();
+    }
+
+    /**
+     * 初始化底部多功能部件
+     */
+    private void initMultiFunctionModule() {
+        final MultiFunctionModule mfmodule = new MultiFunctionModule(this);
+        ll_root.addView(mfmodule);
+        mfmodule.setEnableModle(true, true, false, true);
+        /*录音*/
+        mfmodule.setRecordClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (RecordUtils.permissionRecord()) {
+                    if ((boolean) v.getTag()) {
+                        showInputKeyboard(edt_memo);
+                        mfmodule.setIsRecording(false);
+                        v.setTag(false);
+                    } else {
+                        hideInputKeyboard(edt_memo);
+                        mfmodule.setIsRecording(true);
+                        v.setTag(true);
+                    }
+                } else {
+                    Toast("你没有配置录音或者储存权限");
+                }
+
+            }
+        });
+        edt_memo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mfmodule.setIsRecording(false);
+            }
+        });
+        /*录音完成回调*/
+        mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
+            @Override
+            public void recordComplete(String recordPath, String tiem) {
+                ll_record.addView(new CommonRecordItem(SignInActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
+                    @Override
+                    public void Success(Record record) {//上传录音完成回调
+                        audioInfo.add(record);
+                    }
+                }));
+            }
+        });
+        /*图片处理*/
+        mfmodule.setPictureClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignInActivity.this, SelectPicPopupWindow.class);
+                intent.putExtra("localpic", false);//是否可以选择相册
+                intent.putExtra("imgsize", 9 - pcitureNumber);//还可以选多少张图片
+                intent.putExtra("addpg", true);
+                startActivityForResult(intent, MainApp.GET_IMG);
+            }
+        });
+        /*@相关人员*/
+        mfmodule.setAtClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
+                if (collection != null) {
+                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+                }
+                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_INVOLVE_USER_REQUEST);
+                Intent intent = new Intent();
+                intent.setClass(SignInActivity.this, ContactPickerActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -211,7 +301,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
             /*地址更新*/
             case R.id.tv_reset_address:
-                mBundle = new Bundle();
+                Bundle mBundle = new Bundle();
                 mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
                 app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
@@ -246,7 +336,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("position", customerAddress);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
-
+        map.put("audioInfo", audioInfo);
+        map.put("atDepts", atDepts);
+        map.put("atUserIds", atUserIds);
 
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
@@ -277,6 +369,37 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 HttpErrorCheck.checkError(error);
             }
         });
+    }
+
+    /**
+     * @相关人员选人回调
+     */
+    @Subscribe
+    public void onContactPicked(ContactPickedEvent event) {
+        atDepts.clear();
+        atUserIds.clear();
+        if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+            String atText = "";
+            collection = event.data;
+            if (collection.depts.size() > 0) {
+                for (StaffMember ele : collection.depts) {
+                    atDepts.add(new CommonIdName(ele.id, ele.name));
+                    atText += ele.name + ",";
+                }
+            }
+            if (collection.users.size() > 0) {
+                for (StaffMember ele : collection.users) {
+                    atUserIds.add(ele.id);
+                    atText += ele.name + ",";
+                }
+            }
+            if (!TextUtils.isEmpty(atText)) {
+                ll_at.setVisibility(View.VISIBLE);
+                tv_at_text.setText("@" + atText);
+            } else {
+                ll_at.setVisibility(View.GONE);
+            }
+        }
     }
 
     /**
@@ -340,6 +463,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                                     @Override
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
+                                        pcitureNumber++;
                                     }
 
                                     @Override
@@ -368,6 +492,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                             Toast("删除附件成功!");
                             lstData_Attachment.remove(delAttachment);
                             init_gridView_photo();
+                            pcitureNumber--;
                         }
 
                         @Override
@@ -384,13 +509,26 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             case BaseSearchActivity.REQUEST_SEARCH:
                 customerId = data.getStringExtra("id");
                 customerName = data.getStringExtra("name");
-                customerAddress = data.getStringExtra("address");
+                Location loc = (Location) data.getSerializableExtra("loc");
+                customerAddress = loc.addr;
 //                customerAddress = customer.loc.addr;
                 tv_customer_address.setVisibility(View.VISIBLE);
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
+                if (loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
+                    tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
+                } else {
+                    tv_distance_deviation.setText("未知");
+                }
+
                 break;
         }
+    }
+
+    private String getDeviationDistance(double la, double lo) {
+        LatLng ll = new LatLng(laPosition, loPosition);
+        LatLng llCustomer = new LatLng(la, lo);
+        return Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer));
     }
 
     @Override

@@ -111,7 +111,7 @@ public class AdapterSystemMessage extends BaseAdapter {
                 iv_icon.setImageResource(item.bizzType.getIcon());
             }
             // TODO 红点后台没有做好 暂时隐藏 20161108
-//            view_ack.setVisibility(item.viewedAt == 0 ? View.VISIBLE : View.GONE);
+            view_ack.setVisibility(item.viewedAt == 0 ? View.VISIBLE : View.GONE);
         }
 
         public void openItem(SystemMessageItem item) {

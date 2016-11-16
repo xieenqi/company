@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.commonview;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StatFs;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 多功能模块【录音】【图片】【地址】【@】
@@ -31,10 +34,11 @@ public class MultiFunctionModule extends LinearLayout {
     private LinearLayout ll_record_keyboard, ll_picture, ll_location, ll_at, dialog, ll_record;
     private ImageView ll_action_record, iv_record, iv_record_keyboard;
     private TextView tv_record_action, tv_record_number;
-    static long currentTimeMillis = 0;
+    static long currentTimeMillis = 0, recordTime;
     private boolean isRecordCancle;
     private RecordUtils voice;
     private RecordComplete callbackComplete;
+    Handler handler = new Handler();
 
     public MultiFunctionModule(Context context) {
         super(context);
@@ -72,6 +76,16 @@ public class MultiFunctionModule extends LinearLayout {
         this.addView(view);
         initRecord(context);
         Global.SetTouchView(ll_record_keyboard, ll_picture, ll_location, ll_at);
+    }
+
+    /**
+     * 设置启用的模块
+     */
+    public void setEnableModle(boolean record, boolean picture, boolean location, boolean at) {
+        ll_record_keyboard.setVisibility(record ? VISIBLE : GONE);
+        ll_picture.setVisibility(picture ? VISIBLE : GONE);
+        ll_location.setVisibility(location ? VISIBLE : GONE);
+        ll_at.setVisibility(at ? VISIBLE : GONE);
     }
 
     /**
@@ -118,6 +132,7 @@ public class MultiFunctionModule extends LinearLayout {
     }
 
     private View.OnTouchListener mOnVoiceRecTouchListener
+
             = new View.OnTouchListener() {
 
         @Override
@@ -126,11 +141,12 @@ public class MultiFunctionModule extends LinearLayout {
                 Global.Toast("储存不足");
                 return false;
             }
-            long time = System.currentTimeMillis() - currentTimeMillis;
-            if (time <= 300) {
-                currentTimeMillis = System.currentTimeMillis();
-                return false;
-            }
+//            long time = System.currentTimeMillis() - currentTimeMillis;
+//            if (time <= 300) {
+//                currentTimeMillis = System.currentTimeMillis();
+//                return false;
+//            }
+            recordingTime();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.setAlpha(0.6f);
@@ -169,6 +185,23 @@ public class MultiFunctionModule extends LinearLayout {
             return true;
         }
     };
+
+    private void recordingTime() {
+//        Timer timer = new Timer();
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run() {
+//                recordTime++;
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        tv_record_number.setText("" + recordTime);
+//                    }
+//                });
+//            }
+//        };
+//        timer.schedule(task, 1000, 1000);
+    }
 
     /**
      * 取消录音

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.beans;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * Created by xeq on 16/11/14.
  */
 
-public class Location {
+public class Location implements Serializable {
     public String addr;
     public List<Double> loc;
 

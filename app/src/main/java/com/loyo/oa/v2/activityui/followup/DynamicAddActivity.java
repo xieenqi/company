@@ -38,6 +38,7 @@ import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
+import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
@@ -98,7 +99,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
     private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
     private ArrayList<Record> audioInfo = new ArrayList<>();//录音数据
     private Location location;//添加的定位信息数据
-    private List<String> atDepts = new ArrayList<>();//@的部门
+    private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
     private List<String> atUserIds = new ArrayList<>();//@的人员
     private StaffMemberCollection collection;//选人返回的数据
     private boolean isCustom;//是否是客户写跟进 否则就是是线索写跟进
@@ -195,7 +196,6 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
      */
     private void initMultiFunctionModule() {
         final MultiFunctionModule mfmodule = new MultiFunctionModule(this);
-        ll_root.addView(mfmodule);
         /*录音*/
         mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
@@ -211,7 +211,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                         v.setTag(true);
                     }
                 } else {
-                    Toast("你没有配置录音权限");
+                    Toast("你没有配置录音或者储存权限");
                 }
 
             }
@@ -243,7 +243,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, (9 - controller.count()) /*最大可选择图片数量*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI  /*选择模式*/);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
-                DynamicAddActivity.this.startActivityForResult(intent, PICTURE);
+                startActivityForResult(intent, PICTURE);
             }
         });
         /*添加地址处理*/
@@ -271,6 +271,8 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 startActivity(intent);
             }
         });
+        mfmodule.setEnableModle(true, true, true, true);
+        ll_root.addView(mfmodule);
     }
 
     private void buildAttachment() {
@@ -619,7 +621,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             collection = event.data;
             if (collection.depts.size() > 0) {
                 for (StaffMember ele : collection.depts) {
-                    atDepts.add(ele.id);
+                    atDepts.add(new CommonIdName(ele.id, ele.name));
                     atText += ele.name + ",";
                 }
             }
