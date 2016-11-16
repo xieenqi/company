@@ -160,6 +160,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
         final UploadTask task = new UploadTask(path, uuid);
         task.name = new File(path).getName();
         // 构造上传请求
+        LogUtil.d("录音key:  " + task.getKey());
         PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(),
                 task.getKey(), path);
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
