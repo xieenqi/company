@@ -73,7 +73,7 @@ public class SigninSelectCustomerAdapter extends BaseAdapter {
 
         public void setContent(SigninSelectCustomer item) {
             tv_name.setText(item.name);
-            tv_location.setText(item.loc.addr);
+            tv_location.setText(item.position.addr);
             tv_distance.setText(item.distance + "米");
         }
     }

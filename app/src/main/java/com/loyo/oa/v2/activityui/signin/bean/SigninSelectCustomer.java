@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class SigninSelectCustomer implements Serializable {
     public String id;
     public String name;
-    public Location loc;
+    public Location position;
     public ArrayList<Contact> contacts = new ArrayList<>();
     public double distance;
 }

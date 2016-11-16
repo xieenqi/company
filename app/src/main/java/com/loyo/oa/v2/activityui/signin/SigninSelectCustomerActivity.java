@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.signin;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -55,7 +56,7 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 Intent intent = new Intent();
                 intent.putExtra("id", item.id);
                 intent.putExtra("name", item.name);
-                intent.putExtra("loc", item.loc);
+                intent.putExtra("loc", item.position);
                 setResult(RESULT_OK, intent);
                 onBackPressed();
             }
@@ -71,6 +72,8 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 break;
             case R.id.ll_search:
                 Toast("等待开借口呢");
+//                startActivityForResult(new Intent(this, SigninSelectCustomerSearch.class), Activity.RESULT_FIRST_USER);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
         }

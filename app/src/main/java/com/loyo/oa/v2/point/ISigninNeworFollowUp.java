@@ -6,9 +6,11 @@ import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
+
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -61,12 +63,17 @@ public interface ISigninNeworFollowUp {
      * 拜访详情数据
      */
     @GET("/visit/detail/{id}/")
-    void getSigninDetails(@Path("id") String id, @QueryMap HashMap<String,Object> map, Callback<BaseBeanT<SigninNewListModel>> cb);
+    void getSigninDetails(@Path("id") String id, @QueryMap HashMap<String, Object> map, Callback<BaseBeanT<SigninNewListModel>> cb);
 
     /**
      * 跟进详情数据
      */
     @GET("/saleactivity/detail/")
-    void getFollowUpDetails(@QueryMap HashMap<String,Object> map, Callback<BaseBeanT<FollowUpListModel>> cb);
+    void getFollowUpDetails(@QueryMap HashMap<String, Object> map, Callback<BaseBeanT<FollowUpListModel>> cb);
 
+    /**
+     * 拜访搜索客户
+     */
+    @GET("/customer/mobile/search/simplify")
+    void signinSearchCutomer(@QueryMap HashMap<String, Object> map, Callback<BaseBeanT<ArrayList<SigninSelectCustomer>>> cb);
 }

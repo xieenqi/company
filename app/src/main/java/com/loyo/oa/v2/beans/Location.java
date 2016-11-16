@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public class Location implements Serializable {
-    public String addr;
+    public String addr = "";
     public List<Double> loc;
 
     public Location(List<Double> loc, String addr) {
