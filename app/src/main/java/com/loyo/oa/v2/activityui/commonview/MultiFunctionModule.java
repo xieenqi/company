@@ -96,9 +96,10 @@ public class MultiFunctionModule extends LinearLayout {
         iv_record_keyboard.setImageResource(isRecording ? R.drawable.icon_keyboard : R.drawable.icon_record);
     }
 
-    public void setRecordClick(OnClickListener recordClick) {
+    public LinearLayout setRecordClick(OnClickListener recordClick) {
         ll_record_keyboard.setTag(false);//默认是键盘
         ll_record_keyboard.setOnClickListener(recordClick);
+        return ll_record_keyboard;
     }
 
 
