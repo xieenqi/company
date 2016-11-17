@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
@@ -30,7 +31,6 @@ import java.util.TimerTask;
 
 public class MultiFunctionModule extends LinearLayout {
 
-    private Context context;
     private LinearLayout ll_record_keyboard, ll_picture, ll_location, ll_at, dialog, ll_record;
     private ImageView ll_action_record, iv_record, iv_record_keyboard;
     private TextView tv_record_action, tv_record_number;
@@ -44,7 +44,6 @@ public class MultiFunctionModule extends LinearLayout {
 
     public MultiFunctionModule(Context context) {
         super(context);
-        this.context = context;
         this.setBackgroundColor(Color.parseColor("#00000000"));
         initView(context);
     }
@@ -94,7 +93,23 @@ public class MultiFunctionModule extends LinearLayout {
      * 设置是否需要录音
      */
     public void setIsRecording(boolean isRecording) {
-        ll_record.setVisibility(isRecording ? VISIBLE : GONE);
+        if (isRecording) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+//                            ll_record.setAnimation(AnimationCommon.inFromBottomAnimation(80));
+                            ll_record.setVisibility(VISIBLE);
+                        }
+                    });
+                }
+            }, 300);
+        } else {
+            ll_record.setAnimation(AnimationCommon.inFromTopeAnimation(80));
+            ll_record.setVisibility(GONE);
+        }
         iv_record_keyboard.setImageResource(isRecording ? R.drawable.icon_keyboard : R.drawable.icon_record);
     }
 
@@ -172,10 +187,6 @@ public class MultiFunctionModule extends LinearLayout {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    v.setAlpha(1f);
-                    if (voice.isStart()) {
-                        voice.stopRecord();
-                    }
                     dialog.setVisibility(GONE);
                     if (!isRecordCancle) {
                         callbackComplete.recordComplete(voice.getOutPath(), voice.getFormat(voice.getEndTime() - voice.getStartTime()));
@@ -183,6 +194,10 @@ public class MultiFunctionModule extends LinearLayout {
                         ll_record_keyboard.setTag(false);
                         setIsRecording(false);
                         cancleRecordingTime();
+                    }
+                    v.setAlpha(1f);
+                    if (voice.isStart()) {
+                        voice.stopRecord();
                     }
                     break;
             }

@@ -294,11 +294,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     private void clueActivity() {
         Intent intent = new Intent();
         intent.putExtra(ExtraAndResult.EXTRA_ID, data.data.sales.id);
-        String name = data.data.sales.name;
+        String name = data.data.sales.companyName;
         if (TextUtils.isEmpty(name)) {
             name = "";
         }
         intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
+        intent.putExtra(ExtraAndResult.RESULT_NAME, data.data.sales.responsorName);
         intent.putExtra(ExtraAndResult.EXTRA_ADD, isAdd);
         intent.setClass(this, ClueDynamicManagerActivity.class);
         startActivityForResult(intent, this.RESULT_FIRST_USER);

@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1.5dp"
-        android:background="@color/lineCC" />
 
     <LinearLayout
         android:id="@+id/layout_keyboard"
@@ -16,17 +11,11 @@
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone" />
-    <!--<ImageView-->
-    <!--android:id="@+id/iv_keyboard"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="@drawable/icon_keyboard"-->
-    <!--/>-->
 
     <LinearLayout
         android:id="@+id/layout_voicemenu"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_45"
+        android:layout_height="@dimen/dimen_48"
         android:layout_above="@+id/layout_voice"
         android:background="#F5F4F5"
         android:orientation="horizontal">
@@ -80,11 +69,4 @@
             android:textColor="@color/text99" />
     </LinearLayout>
 
-    <!--<LinearLayout-->
-    <!--android:id="@+id/layout_voice"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="270dp"-->
-    <!--android:background="@color/title_bg1"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:visibility="gone" />-->
-</LinearLayout>
+</RelativeLayout>

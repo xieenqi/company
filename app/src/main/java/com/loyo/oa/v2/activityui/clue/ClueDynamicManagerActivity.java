@@ -56,7 +56,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
     private ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
     private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
     private String clueId;
-    private String name;
+    private String name, responsorName;
     private SaleActivity mSaleActivity;
     private boolean isChanged;
     private boolean isTopAdd = true;
@@ -73,10 +73,11 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
         getData();
     }
 
-    private void getIntenData() {
+    private void getIntenData() {//intent.putExtra(ExtraAndResult.RESULT_NAME, data.data.sales.responsorName);
         Intent intent = getIntent();
         clueId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
         name = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+        responsorName = intent.getStringExtra(ExtraAndResult.RESULT_NAME);
         isMyUser = intent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
         if (TextUtils.isEmpty(clueId)) {
             onBackPressed();
@@ -144,18 +145,14 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
 
             /*新建线索*/
             case R.id.layout_add:
+                ClueListItem item = new ClueListItem();
+                item.id = clueId;
+                item.companyName = name;
+                item.responsorName = responsorName;
                 Bundle bundle = new Bundle();
-                bundle.putString(ExtraAndResult.EXTRA_ID, clueId);
-                bundle.putString(ExtraAndResult.EXTRA_NAME, name);
-                app.startActivityForResult(this, ClueDynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
-                // TODO 线索详情写跟进
-//                Intent intent = new Intent();
-//                intent.putExtra(ClueListItem.class.getName(), adapter.getItemData(position));
-//                intent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
-//                intent.setClass(mActivity, DynamicAddActivity.class);
-//                startActivity(intent);
-//                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-//                mActivity.finish();
+                bundle.putSerializable(ClueListItem.class.getName(), item);
+                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
+                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
 
             default:
