@@ -163,6 +163,32 @@ public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener 
 
     }
 
+    public EditText getEditComment(){
+        return edit_comment;
+    }
+
+    public LinearLayout getVoiceLayout(){
+        return layout_voice;
+    }
+
+    /**
+     * 评论成功操作
+     * */
+    public void commentSuccessEmbl(){
+        hideInputKeyboard(edit_comment);
+        edit_comment.setText("");
+        //layout_voice.setVisibility(View.GONE);
+    }
+
+    /**
+     * 列表里点击评论操作
+     * */
+    public void commentEmbl(){
+        Utils.autoKeyBoard(mContext,edit_comment);
+        layout_voicemenu.setVisibility(View.VISIBLE);
+        layout_keyboard.setVisibility(View.GONE);
+    }
+
     /**
      * 收起Menu
      */

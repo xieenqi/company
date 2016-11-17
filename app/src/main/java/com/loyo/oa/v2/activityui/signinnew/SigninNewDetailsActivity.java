@@ -20,6 +20,7 @@ import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
+import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
@@ -54,7 +55,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class SigninNewDetailsActivity extends BaseActivity implements View.OnClickListener {
+public class SigninNewDetailsActivity extends BaseActivity implements View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack {
 
 
     private ScrollView layout_scrollview;
@@ -76,19 +77,13 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private CustomerListView lv_audio;
     private CusGridView gv_image;
 
-    private LinearLayout layout_voice;
     private LinearLayout layout_touch;
     private LinearLayout ll_web;
     private LinearLayout layout_enclosure;
+    private LinearLayout layout_bottom_menu;
     private LinearLayout layout_comment;
-    private LinearLayout layout_keyboard;
-    private LinearLayout layout_voicemenu;
     private LinearLayout layout_back;
-    private EditText edit_comment;
-    private ImageView iv_voice;
     private ImageView iv_comment;
-    private ImageView iv_keyboard;
-    private TextView tv_send_message;
 
     private float mPosX;
     private float mPosY;
@@ -103,18 +98,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private ListOrDetailsOptionsAdapter  optionAdapter;  /* 文件列表Adapter */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
 
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 0x01) {
-                layout_voice.setAnimation(AnimationCommon.inFromBottomAnimation(150));
-                layout_voice.setVisibility(View.VISIBLE);
-            } else if (msg.what == 0x02) {
-                layout_voice.setVisibility(View.GONE);
-            }
-        }
-    };
+    private MsgAudiomMenu msgAudiomMenu;
 
 
     @Override
@@ -170,17 +154,13 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private void initUI() {
         id = getIntent().getStringExtra("id");
 
-        layout_voice = (LinearLayout) findViewById(R.id.layout_voice);
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
-        layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
-        layout_keyboard = (LinearLayout) findViewById(R.id.layout_keyboard);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
-        layout_voicemenu = (LinearLayout) findViewById(R.id.layout_voicemenu);
 
         ll_web = (LinearLayout) findViewById(R.id.ll_web);
-        edit_comment = (EditText) findViewById(R.id.edit_comment);
-        tv_send_message = (TextView) findViewById(R.id.tv_send_message);
+        layout_bottom_menu = (LinearLayout) findViewById(R.id.layout_bottom_menu);
+        layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_position = (TextView) findViewById(R.id.tv_position);
@@ -191,9 +171,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_time = (TextView) findViewById(R.id.tv_time);
-        iv_voice = (ImageView) findViewById(R.id.iv_voice);
         iv_comment = (ImageView) findViewById(R.id.iv_comment);
-        iv_keyboard = (ImageView) findViewById(R.id.iv_keyboard);
         iv_heading = (RoundImageView) findViewById(R.id.iv_heading);
         layout_scrollview = (ScrollView) findViewById(R.id.layout_scrollview);
         lv_comment = (CustomerListView) findViewById(R.id.lv_comment);
@@ -201,69 +179,14 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         lv_audio = (CustomerListView) findViewById(R.id.lv_audio);
         gv_image = (CusGridView) findViewById(R.id.layout_gridview);
 
-        iv_voice.setOnClickListener(this);
-        tv_send_message.setOnClickListener(this);
-        edit_comment.setOnClickListener(this);
         iv_comment.setOnClickListener(this);
         layout_back.setOnClickListener(this);
-        iv_keyboard.setOnClickListener(this);
 
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访详情");
 
-        layout_touch.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    /* 按下 */
-                    case MotionEvent.ACTION_DOWN:
-                        mPosX = event.getX();
-                        mPosY = event.getY();
-                        hideInputKeyboard(edit_comment);
-                        layout_voice.setVisibility(View.GONE);
-                        break;
-                    /* 移动 */
-                    case MotionEvent.ACTION_MOVE:
-                        mCurPosX = event.getX();
-                        mCurPosY = event.getY();
-                        break;
-                    /* 离开 */
-                    case MotionEvent.ACTION_UP:
-                        //向下滑動
-                        if (mCurPosY - mPosY > 0 && (Math.abs(mCurPosY - mPosY) > 25)) {
-                        }
-                        //向上滑动
-                        else if (mCurPosY - mPosY < 0 && (Math.abs(mCurPosY - mPosY) > 25)) {
-                        }
-                        break;
-                }
-                return true;
-            }
-        });
-
-        edit_comment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!TextUtils.isEmpty(s)){
-                    tv_send_message.setTextColor(getResources().getColor(R.color.white));
-                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_green);
-                }else{
-                    tv_send_message.setTextColor(getResources().getColor(R.color.text99));
-                    tv_send_message.setBackgroundResource(R.drawable.comment_sendmsg_white);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this);
+        layout_bottom_menu.addView(msgAudiomMenu);
 
         requestDetails();
     }
@@ -302,9 +225,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
-                hideInputKeyboard(edit_comment);
-                edit_comment.setText("");
-                layout_voice.setVisibility(View.GONE);
+                msgAudiomMenu.closeMenu();
                 requestDetails();
             }
 
@@ -411,40 +332,18 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
                 finish();
                 break;
 
-            /*切换录音*/
-            case R.id.iv_voice:
-                layout_keyboard.setVisibility(View.VISIBLE);
-                layout_voicemenu.setVisibility(View.GONE);
-                hideInputKeyboard(edit_comment);
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        mHandler.sendEmptyMessage(0x01);
-                    }
-                }, 100);
-
-                break;
-
-            /*切换软键盘*/
-            case R.id.iv_keyboard:
-                layout_keyboard.setVisibility(View.GONE);
-                layout_voice.setVisibility(View.GONE);
-                layout_voicemenu.setVisibility(View.VISIBLE);
-                Utils.autoKeyBoard(SigninNewDetailsActivity.this,edit_comment);
-                break;
-
-            /*发送评论*/
-            case R.id.tv_send_message:
-                if(TextUtils.isEmpty(edit_comment.getText().toString())){
-                    Toast("请输入评论内容!");
-                    return;
-                }
-                requestComment(edit_comment.getText().toString());
-                break;
-
-            /*打开评论*/
-            case R.id.iv_comment:
-                Utils.autoKeyBoard(mContext,edit_comment);
-                break;
         }
+    }
+
+    /**
+     * 回调发送评论
+     * */
+    @Override
+    public void sendMsg(EditText editText) {
+        if (TextUtils.isEmpty(editText.getText().toString())) {
+            Toast("请输入评论内容!");
+            return;
+        }
+        requestComment(editText.getText().toString());
     }
 }
