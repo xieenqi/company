@@ -77,16 +77,18 @@
                     android:background="@color/activity_bg" />
 
                 <LinearLayout
+                    android:id="@+id/layout_customer_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:gravity="center"
+                    android:minHeight="@dimen/dimen_48"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dimen_7"
+                    android:paddingTop="@dimen/dimen_7">
 
                     <LinearLayout
-                        android:id="@+id/layout_customer_name"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dimen_7"
-                        android:layout_marginTop="@dimen/dimen_7"
                         android:background="@drawable/layout_bg1"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
@@ -125,7 +127,6 @@
                         android:id="@+id/tv_customer_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dimen_7"
                         android:layout_marginLeft="@dimen/margin_other_view"
                         android:layout_marginRight="@dimen/margin_other_view"
                         android:layout_marginTop="@dimen/dimen_3"

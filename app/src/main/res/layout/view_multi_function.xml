@@ -43,6 +43,8 @@
 
     </LinearLayout>
 
+    <include layout="@layout/include_solid_line" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_45"
