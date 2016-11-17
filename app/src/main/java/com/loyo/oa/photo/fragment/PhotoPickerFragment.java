@@ -255,9 +255,11 @@ public class PhotoPickerFragment extends Fragment implements OnAlbumSelectListen
       if (directories.size() > 0) {
         String path = captureManager.getCurrentPhotoPath();
         PhotoDirectory directory = directories.get(INDEX_ALL_PHOTOS);
-        directory.getPhotos().add(INDEX_ALL_PHOTOS, new Photo(path.hashCode(), path));
+        Photo photo = new Photo(path.hashCode(), path);
+        directory.getPhotos().add(INDEX_ALL_PHOTOS, photo);
         directory.setCoverPath(path);
         photoGridAdapter.notifyDataSetChanged();
+        photoGridAdapter.attemptSelectAtIndex(INDEX_ALL_PHOTOS + 1, photo);
       }
     }
   }

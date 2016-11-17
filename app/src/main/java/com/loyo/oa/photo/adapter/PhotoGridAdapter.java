@@ -173,6 +173,27 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
     }
   }
 
+  public void attemptSelectAtIndex(int index, Photo photo) {
+    int pos = index;
+    boolean isEnable = true;
+
+    if (onItemCheckListener != null &&
+            onItemCheckListener.onSingleSelectCheck(pos, photo, false,
+                    getSelectedPhotos().size())) {
+      // 单选命中
+      return;
+    }
+
+    if (onItemCheckListener != null) {
+      isEnable = onItemCheckListener.onItemCheck(pos, photo, false,
+              getSelectedPhotos().size());
+    }
+    if (isEnable) {
+      toggleSelection(photo);
+      notifyItemChanged(pos);
+    }
+  }
+
 
   @Override public int getItemCount() {
     int photosCount =

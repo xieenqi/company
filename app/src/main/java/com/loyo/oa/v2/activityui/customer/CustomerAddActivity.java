@@ -620,6 +620,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             public void success(final Customer customer, final Response response) {
                 HttpErrorCheck.checkResponse("新建客户",response);
                 //没有附件
+                if (customer == null || customer.id == null) {
+                    return;
+                }
                 if (pickPhots.size() == 0) {
                     customerSendSucess(customer);
                 } else {

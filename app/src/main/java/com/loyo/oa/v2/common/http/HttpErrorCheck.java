@@ -2,6 +2,7 @@ package com.loyo.oa.v2.common.http;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -171,6 +172,20 @@ public class HttpErrorCheck {
             case 2:
                 Toast("请求参数错误");
                 break;
+            default:
+            {
+                String msg;
+                if (!TextUtils.isEmpty(data.errmsg)) {
+                    msg = data.errmsg;
+                }
+                else {
+                    msg = "服务器出错";
+                }
+                if (data.errcode != 0) {
+                    Toast(msg);
+                }
+            }
         }
+
     }
 }

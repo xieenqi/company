@@ -191,7 +191,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     PhotoPreview.builder()
                             .setPhotos(selectedPhotos)
                             .setCurrentItem(position)
-                            .setShowDeleteButton(true)
+                            .setShowDeleteButton(false)
                             .start((Activity) mContext);
 
                 } else if (attachment.getAttachmentType() == Attachment.AttachmentType.OFFICE) {
