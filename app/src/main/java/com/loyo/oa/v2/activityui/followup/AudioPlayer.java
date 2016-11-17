@@ -6,13 +6,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.CustomerDynamicManageActivity;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.tool.Player;
-
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,12 +24,7 @@ public class AudioPlayer extends LinearLayout{
     private Context mContext;
     private TextView lastView;
     private TextView nowsView;
-
-    public interface AnimControlCb{
-        void startAnim();
-        void stopAnim();
-    }
-
+    private int touch = 0;
 
     public AudioPlayer(Context context) {
         super(context);
@@ -48,16 +39,16 @@ public class AudioPlayer extends LinearLayout{
         player = new Player(musicProgress);
     }
 
-
     /**
      * 线程池播放Player
      */
-    public void threadPool(final String url) {
+    public void threadPool(final AudioModel audioModel) {
+        touch++;
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         cachedThreadPool.execute(new Runnable() {
             @Override
             public void run() {
-                player.playUrl(url);
+                player.playUrl(audioModel.url);
             }
         });
     }

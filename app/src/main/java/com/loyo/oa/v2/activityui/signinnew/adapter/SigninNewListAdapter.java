@@ -172,7 +172,7 @@ public class SigninNewListAdapter extends BaseAdapter {
         /** 绑定评论数据 */
         if (null != signinNewListModel.comments && signinNewListModel.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, signinNewListModel.comments);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, signinNewListModel.comments,audioPlayCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/

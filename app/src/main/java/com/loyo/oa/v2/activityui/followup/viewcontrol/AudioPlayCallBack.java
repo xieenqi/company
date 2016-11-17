@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.followup.viewcontrol;
 
 
+import android.widget.TextView;
+
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 
 /**
@@ -9,6 +11,6 @@ import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 
 public interface AudioPlayCallBack {
 
-    void playVoice(AudioModel audioModel);
+    void playVoice(AudioModel audioModel, TextView textView);
 
 }

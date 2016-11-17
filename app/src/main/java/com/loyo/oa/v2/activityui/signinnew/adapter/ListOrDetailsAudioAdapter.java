@@ -14,7 +14,6 @@ import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -23,9 +22,8 @@ import java.util.ArrayList;
  * Created by yyy on 16/11/14.
  */
 
-public class ListOrDetailsAudioAdapter extends BaseAdapter implements AudioPlayer.AnimControlCb {
+public class ListOrDetailsAudioAdapter extends BaseAdapter {
 
-    private TextView lastView,nowsView;
     private Context mContext;
     private ArrayList<AudioModel> audioInfo;
     private AudioPlayCallBack audioPlayCallBack;
@@ -53,39 +51,40 @@ public class ListOrDetailsAudioAdapter extends BaseAdapter implements AudioPlaye
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         ViewHolder holder = null;
         final AudioModel audioModel = audioInfo.get(position);
+
         if(null == convertView){
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sigfollw_audio,null);
-            holder.tv_calls = (TextView) convertView.findViewById(R.id.iv_calls);
             holder.tv_audio_length = (TextView) convertView.findViewById(R.id.tv_audio_length);
             holder.layout_audio = (LinearLayout) convertView.findViewById(R.id.layout_audio);
             convertView.setTag(holder);
-
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
 
+        final TextView tv_calls = (TextView) convertView.findViewById(R.id.iv_calls);
         /*判断是否有录音*/
         if (null != audioModel.url && !TextUtils.isEmpty(audioModel.url)) {
             long audioLength = audioModel.length;
             if (audioLength > 0 && audioLength <= 60) {
-                holder.tv_calls.setText("000");
+                tv_calls.setText("000");
             } else if (audioLength > 60 && audioLength <= 300) {
-                holder.tv_calls.setText("00000");
+                tv_calls.setText("00000");
             } else if (audioLength > 300 && audioLength <= 600) {
-                holder.tv_calls.setText("0000000");
+                tv_calls.setText("0000000");
             } else if (audioLength > 600 && audioLength <= 1200) {
-                holder.tv_calls.setText("000000000");
+                tv_calls.setText("000000000");
             } else if (audioLength > 1200 && audioLength <= 1800) {
-                holder.tv_calls.setText("00000000000");
+                tv_calls.setText("00000000000");
             } else if (audioLength > 1800 && audioLength <= 3600) {
-                holder.tv_calls.setText("00000000000000");
+                tv_calls.setText("00000000000000");
             } else if (audioLength > 3600) {
-                holder.tv_calls.setText("0000000000000000");
+                tv_calls.setText("0000000000000000");
             } else {
-                holder.tv_calls.setText("");
+                tv_calls.setText("");
             }
             holder.layout_audio.setVisibility(View.VISIBLE);
             holder.tv_audio_length.setText(DateTool.stringForTime((int) audioModel.length * 1000));
@@ -94,28 +93,17 @@ public class ListOrDetailsAudioAdapter extends BaseAdapter implements AudioPlaye
         }
 
         /*点击播放录音*/
-        holder.tv_calls.setOnClickListener(new View.OnClickListener() {
+        tv_calls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                audioPlayCallBack.playVoice(audioModel);
+                audioPlayCallBack.playVoice(audioModel,tv_calls);
             }
         });
 
         return convertView;
     }
 
-    @Override
-    public void startAnim() {
-
-    }
-
-    @Override
-    public void stopAnim() {
-
-    }
-
     class ViewHolder {
-        TextView tv_calls;        //录音播放
         TextView tv_audio_length; //录音长度
         LinearLayout layout_audio;
     }

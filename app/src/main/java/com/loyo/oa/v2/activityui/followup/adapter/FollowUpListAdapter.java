@@ -156,7 +156,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         /** 绑定评论数据 */
         if (null != followUpListModel.comments && followUpListModel.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments,audioCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/

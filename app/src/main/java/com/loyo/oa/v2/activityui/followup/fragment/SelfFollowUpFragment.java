@@ -68,6 +68,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private View mView;
     private Button btn_add;
     private ViewStub emptyView;
+    private TextView lastView;
     private DropDownMenu filterMenu;
     private PullToRefreshListView listView;
     private LinearLayout layout_bottom_menu;
@@ -76,6 +77,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private String menuTimeKey = ""; /*时间*/
     private String menuChosKey = ""; /*筛选*/
     private boolean isTopAdd;
+    private int playVoiceSize = 0;
     private int commentPosition;
 
     private ArrayList<FollowUpListModel> listModel = new ArrayList<>();
@@ -307,7 +309,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
               }
            }
        }
-        LogUtil.dee("allAudio:"+MainApp.gson.toJson(allAudio));
         bindData();
     }
 
@@ -350,8 +351,14 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     @Override
-    public void playVoice(AudioModel audioModel) {
+    public void playVoice(AudioModel audioModel,TextView textView) {
+        if(playVoiceSize > 0){
+            MainApp.getMainApp().stopAnim(lastView);
+        }
+        MainApp.getMainApp().startAnim(textView);
         audioPlayer.audioStart();
-        audioPlayer.threadPool(audioModel.url);
+        audioPlayer.threadPool(audioModel);
+        lastView = textView;
+        playVoiceSize++;
     }
 }

@@ -19,6 +19,8 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
+import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Record;
@@ -48,7 +50,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class FollowUpDetailsActivity extends BaseActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack {
+public class FollowUpDetailsActivity extends BaseActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack {
 
 
     private ScrollView layout_scrollview;
@@ -102,7 +104,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
         /*评论数据绑定*/
         if (null == commentAdapter) {
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments,this);
             lv_comment.setAdapter(commentAdapter);
         } else {
             commentAdapter.notifyDataSetChanged();
@@ -180,7 +182,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         /** 绑定评论数据 */
         if (null != mFollowUpDelModel.comments && mFollowUpDelModel.comments.size() > 0) {
             layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments,this);
             lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -345,6 +347,10 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     }
 
     @Override
+
+    public void playVoice(AudioModel audioModel, TextView textView) {
+
+    }
     public void sebdRecordInfo(Record record) {
         requestComment(record);
     }
