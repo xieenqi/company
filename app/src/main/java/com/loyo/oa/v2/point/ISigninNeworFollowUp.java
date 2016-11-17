@@ -75,5 +75,5 @@ public interface ISigninNeworFollowUp {
      * 拜访搜索客户
      */
     @GET("/customer/mobile/search/simplify")
-    void signinSearchCutomer(@QueryMap HashMap<String, Object> map, Callback<BaseBeanT<ArrayList<SigninSelectCustomer>>> cb);
+    void signinSearchCutomer(@QueryMap HashMap<String, Object> map, Callback<BaseBeanT<PaginationX<SigninSelectCustomer>>> cb);
 }

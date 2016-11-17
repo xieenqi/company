@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.signin;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -510,15 +511,18 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 customerId = data.getStringExtra("id");
                 customerName = data.getStringExtra("name");
                 Location loc = (Location) data.getSerializableExtra("loc");
-                customerAddress = loc.addr;
-//                customerAddress = customer.loc.addr;
+                if (loc != null) {
+                    customerAddress = loc.addr;
+                }
                 tv_customer_address.setVisibility(View.VISIBLE);
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-                if (loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
+                if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
                     tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
+                    tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
                 } else {
                     tv_distance_deviation.setText("未知");
+                    tv_distance_deviation.setTextColor(Color.parseColor("#f5625a"));
                 }
 
                 break;

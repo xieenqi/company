@@ -71,9 +71,8 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 onBackPressed();
                 break;
             case R.id.ll_search:
-                Toast("等待开借口呢");
-//                startActivityForResult(new Intent(this, SigninSelectCustomerSearch.class), Activity.RESULT_FIRST_USER);
-//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                startActivityForResult(new Intent(this, SigninSelectCustomerSearch.class), Activity.RESULT_FIRST_USER);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
         }
@@ -94,6 +93,25 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 LocationUtilGD.sotpLocation();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+            case Activity.RESULT_FIRST_USER:
+                Intent intent = new Intent();
+                intent.putExtra("id", data.getStringExtra("id"));
+                intent.putExtra("name", data.getStringExtra("name"));
+                intent.putExtra("loc", data.getSerializableExtra("loc"));
+                setResult(RESULT_OK, intent);
+                onBackPressed();
+                break;
+        }
+
     }
 
     @Override
