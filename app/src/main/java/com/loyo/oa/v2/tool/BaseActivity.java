@@ -397,7 +397,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
                     }
                 });
             }
-        }, 100);
+        }, 300);
     }
 
     /**

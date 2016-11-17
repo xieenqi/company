@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.followup;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -12,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.sdk.android.oss.ClientException;
@@ -39,7 +41,7 @@ import java.util.TimerTask;
  * Created by yyy on 16/11/16.
  */
 
-public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener {
+public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListener {
 
     private Context mContext;
 
@@ -129,7 +131,7 @@ public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener 
         keyboardView = mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LinearLayout parent = (LinearLayout) v.getParent().getParent().getParent().getParent();
+                LinearLayout parent = (LinearLayout) v.getParent().getParent().getParent().getParent().getParent();
                 if (RecordUtils.permissionRecord()) {
                     if ((boolean) v.getTag()) {
                         showInputKeyboard(edit_comment);
@@ -141,8 +143,8 @@ public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener 
                         hideInputKeyboard(edit_comment);
                         mfmodule.setIsRecording(true);
                         v.setTag(true);
-                        layout_voicemenu.setVisibility(View.GONE);
                         parent.setVisibility(View.VISIBLE);
+                        layout_voicemenu.setVisibility(View.GONE);
                     }
                 } else {
                     Global.Toast("你没有配置录音或者储存权限");
@@ -154,9 +156,9 @@ public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener 
         mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
             @Override
             public void recordComplete(String recordPath, String tiem) {
-                uplodingRecord(recordPath, tiem, UUID);
                 layout_voicemenu.setVisibility(View.VISIBLE);
                 ((LinearLayout) keyboardView.getParent().getParent().getParent().getParent()).setVisibility(View.GONE);
+                uplodingRecord(recordPath, tiem, UUID);
             }
         });
     }
