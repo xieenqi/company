@@ -127,7 +127,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
         /*评论数据绑定*/
         if(null == commentAdapter){
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext,mSigninDelModel.comments);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext,mSigninDelModel.comments,this);
             lv_comment.setAdapter(commentAdapter);
         }else{
             commentAdapter.notifyDataSetChanged();
@@ -261,7 +261,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         /** 绑定评论数据 */
         if (null != mSigninDelModel.comments && mSigninDelModel.comments.size() > 0) {
             layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mSigninDelModel.comments);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mSigninDelModel.comments,this);
             lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -353,7 +353,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
-    public void playVoice(AudioModel audioModel) {
+    public void playVoice(AudioModel audioModel,TextView textView) {
 
     }
 }

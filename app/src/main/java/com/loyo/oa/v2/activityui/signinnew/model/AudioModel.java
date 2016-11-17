@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.signinnew.model;
 
+
+
 /**
  * Created by yyy on 16/11/14.
  */
@@ -7,5 +9,4 @@ package com.loyo.oa.v2.activityui.signinnew.model;
 public class AudioModel {
     public String url;
     public long length;
-    public boolean isAnim = false;
 }

@@ -342,7 +342,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     @Override
-    public void playVoice(AudioModel audioModel) {
+    public void playVoice(AudioModel audioModel,TextView textView) {
 
     }
 }

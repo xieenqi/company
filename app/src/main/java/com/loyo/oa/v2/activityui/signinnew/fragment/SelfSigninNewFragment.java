@@ -317,7 +317,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     }
 
     @Override
-    public void playVoice(AudioModel audioModel) {
+    public void playVoice(AudioModel audioModel,TextView textView) {
 
     }
 }
