@@ -14,13 +14,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.sdk.android.oss.ClientException;
+import com.alibaba.sdk.android.oss.ServiceException;
+import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
+import com.alibaba.sdk.android.oss.model.PutObjectRequest;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.commonview.RecordUtils;
+import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.AnimationCommon;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,9 +49,12 @@ public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener 
     private EditText edit_comment;
     private TextView tv_send_message;
     private MsgAudioMenuCallBack callBack;
+    private String UUID;
 
     public interface MsgAudioMenuCallBack {
         void sendMsg(EditText editText);
+
+        void sebdRecordInfo(Record record);
     }
 
 
@@ -57,10 +70,11 @@ public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener 
         }
     };
 
-    public MsgAudiomMenu(Context context, MsgAudioMenuCallBack callBack) {
+    public MsgAudiomMenu(Context context, MsgAudioMenuCallBack callBack, String UUID) {
         super(context);
         this.callBack = callBack;
         this.mContext = context;
+        this.UUID = UUID;
         initView();
         this.addView(mView);
     }
@@ -136,24 +150,42 @@ public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener 
 
             }
         });
-//        edit_comment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mfmodule.setIsRecording(false);
-//            }
-//        });
         /*录音完成回调*/
         mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
             @Override
             public void recordComplete(String recordPath, String tiem) {
-//                ll_record.addView(new CommonRecordItem(SignInActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
-//                    @Override
-//                    public void Success(Record record) {//上传录音完成回调
-//                        audioInfo.add(record);
-//                    }
-//                }));
+                uplodingRecord(recordPath, tiem, UUID);
+                layout_voicemenu.setVisibility(View.VISIBLE);
+                ((LinearLayout) keyboardView.getParent().getParent().getParent().getParent()).setVisibility(View.GONE);
             }
         });
+    }
+
+    private void uplodingRecord(String path, final String tiem, String uuid) {
+        final UploadTask task = new UploadTask(path, uuid);
+        task.name = new File(path).getName();
+        // 构造上传请求
+        LogUtil.d("录音 列表 key:  " + task.getKey());
+        PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(),
+                task.getKey(), path);
+        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+            @Override
+            public void onProgress(PutObjectRequest putObjectRequest, long l, long l1) {
+                LogUtil.d(l1 + "上传进度: " + l);
+                if (l == l1) {
+                    callBack.sebdRecordInfo(new Record(task.getKey(), Integer.parseInt(tiem)));
+                }
+            }
+        });
+        try {
+            AliOSSManager.getInstance().getOss().putObject(put);
+        } catch (ClientException e) {
+            e.printStackTrace();
+            Global.Toast("连接异常");
+        } catch (ServiceException e) {
+            e.printStackTrace();
+            Global.Toast("录音服务端异常");
+        }
     }
 
     /**
@@ -163,18 +195,18 @@ public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener 
 
     }
 
-    public EditText getEditComment(){
+    public EditText getEditComment() {
         return edit_comment;
     }
 
-    public LinearLayout getVoiceLayout(){
+    public LinearLayout getVoiceLayout() {
         return layout_voice;
     }
 
     /**
      * 评论成功操作
-     * */
-    public void commentSuccessEmbl(){
+     */
+    public void commentSuccessEmbl() {
         hideInputKeyboard(edit_comment);
         edit_comment.setText("");
         //layout_voice.setVisibility(View.GONE);
@@ -182,9 +214,9 @@ public class MsgAudiomMenu extends LinearLayout implements View.OnClickListener 
 
     /**
      * 列表里点击评论操作
-     * */
-    public void commentEmbl(){
-        Utils.autoKeyBoard(mContext,edit_comment);
+     */
+    public void commentEmbl() {
+        Utils.autoKeyBoard(mContext, edit_comment);
         layout_voicemenu.setVisibility(View.VISIBLE);
         layout_keyboard.setVisibility(View.GONE);
     }

@@ -34,11 +34,13 @@ public class MultiFunctionModule extends LinearLayout {
     private LinearLayout ll_record_keyboard, ll_picture, ll_location, ll_at, dialog, ll_record;
     private ImageView ll_action_record, iv_record, iv_record_keyboard;
     private TextView tv_record_action, tv_record_number;
-    static long currentTimeMillis = 0, recordTime;
+    private long recordTime;
     private boolean isRecordCancle;
     private RecordUtils voice;
     private RecordComplete callbackComplete;
     Handler handler = new Handler();
+    Timer timer;
+    TimerTask task;
 
     public MultiFunctionModule(Context context) {
         super(context);
@@ -133,7 +135,6 @@ public class MultiFunctionModule extends LinearLayout {
     }
 
     private View.OnTouchListener mOnVoiceRecTouchListener
-
             = new View.OnTouchListener() {
 
         @Override
@@ -142,12 +143,9 @@ public class MultiFunctionModule extends LinearLayout {
                 Global.Toast("储存不足");
                 return false;
             }
-//            long time = System.currentTimeMillis() - currentTimeMillis;
-//            if (time <= 300) {
-//                currentTimeMillis = System.currentTimeMillis();
-//                return false;
-//            }
-            recordingTime();
+            if (recordTime == 0 && voice.getStartTime() != 0) {
+                stratRecordingTime();
+            }
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.setAlpha(0.6f);
@@ -158,12 +156,16 @@ public class MultiFunctionModule extends LinearLayout {
                     dialog.setVisibility(VISIBLE);
                     if (event.getX() <= 0.0F || event.getY() <= -100 || event.getX() >= ll_action_record.getWidth()) {
                         //停止动画
+                        puaseRecordingTime();
                         cancleRecord();
                         voice.stopRecord();
                         v.setAlpha(1f);
                         isRecordCancle = true;
                     } else {
                         // 开始动画
+                        if (isRecordCancle || (recordTime == 0 && voice.getStartTime() != 0)) {
+                            stratRecordingTime();
+                        }
                         recordOngoing();
                         v.setAlpha(0.6f);
                         isRecordCancle = false;
@@ -180,6 +182,7 @@ public class MultiFunctionModule extends LinearLayout {
                         //恢复默认录音状态是键盘
                         ll_record_keyboard.setTag(false);
                         setIsRecording(false);
+                        cancleRecordingTime();
                     }
                     break;
             }
@@ -187,21 +190,46 @@ public class MultiFunctionModule extends LinearLayout {
         }
     };
 
-    private void recordingTime() {
-//        Timer timer = new Timer();
-//        TimerTask task = new TimerTask() {
-//            @Override
-//            public void run() {
-//                recordTime++;
-//                handler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        tv_record_number.setText("" + recordTime);
-//                    }
-//                });
-//            }
-//        };
-//        timer.schedule(task, 1000, 1000);
+    /*录音时间开始*/
+    private void stratRecordingTime() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        timer = new Timer();
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                recordTime++;
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv_record_number.setText(recordTime + "'");
+                    }
+                });
+            }
+        };
+        timer.schedule(task, 1000, 1000);
+    }
+
+    /*录音时间 暂停*/
+    private void puaseRecordingTime() {
+        task.cancel();
+        timer.cancel();
+    }
+
+    /*录音时间  重新开始*/
+    private void reStratRecordingTime() {
+        task.run();
+        LogUtil.d("记录的时间: " + timer.purge());
+    }
+
+    /*录音时间  取消*/
+    private void cancleRecordingTime() {
+        timer.cancel();
+        recordTime = 0;
+        task.cancel();
+        task = null;
     }
 
     /**
