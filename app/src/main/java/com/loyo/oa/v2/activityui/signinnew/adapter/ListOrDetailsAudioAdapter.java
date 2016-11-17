@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.followup.AudioPlayer;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -20,14 +23,17 @@ import java.util.ArrayList;
  * Created by yyy on 16/11/14.
  */
 
-public class ListOrDetailsAudioAdapter extends BaseAdapter{
+public class ListOrDetailsAudioAdapter extends BaseAdapter implements AudioPlayer.AnimControlCb {
 
+    private TextView lastView,nowsView;
     private Context mContext;
     private ArrayList<AudioModel> audioInfo;
+    private AudioPlayCallBack audioPlayCallBack;
 
-    public ListOrDetailsAudioAdapter(Context mContext,ArrayList<AudioModel> audioInfo){
+    public ListOrDetailsAudioAdapter(Context mContext,ArrayList<AudioModel> audioInfo,AudioPlayCallBack audioPlayCallBack){
         this.mContext = mContext;
         this.audioInfo = audioInfo;
+        this.audioPlayCallBack = audioPlayCallBack;
     }
 
     @Override
@@ -48,7 +54,7 @@ public class ListOrDetailsAudioAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        AudioModel audioModel = audioInfo.get(position);
+        final AudioModel audioModel = audioInfo.get(position);
         if(null == convertView){
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sigfollw_audio,null);
@@ -87,13 +93,30 @@ public class ListOrDetailsAudioAdapter extends BaseAdapter{
             holder.layout_audio.setVisibility(View.GONE);
         }
 
+        /*点击播放录音*/
+        holder.tv_calls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audioPlayCallBack.playVoice(audioModel);
+            }
+        });
+
         return convertView;
+    }
+
+    @Override
+    public void startAnim() {
+
+    }
+
+    @Override
+    public void stopAnim() {
+
     }
 
     class ViewHolder {
         TextView tv_calls;        //录音播放
         TextView tv_audio_length; //录音长度
         LinearLayout layout_audio;
-
     }
 }

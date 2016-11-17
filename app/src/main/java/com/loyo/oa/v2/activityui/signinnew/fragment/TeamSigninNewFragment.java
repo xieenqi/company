@@ -27,8 +27,10 @@ import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.adapter.SigninNewListAdapter;
+import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.presenter.SigninListFragPresenter;
 import com.loyo.oa.v2.activityui.signinnew.presenter.impl.SigninListFragPresenterImpl;
@@ -63,7 +65,7 @@ import retrofit.client.Response;
  * 【团队拜访】列表
  * Created by yyy on 16/11/10.
  */
-public class TeamSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,SigninNewListView,View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack {
+public class TeamSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,SigninNewListView,View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack {
 
     private ArrayList<Tag> mTags;
     private String menuTimekey = "0";        /*时间*/
@@ -212,7 +214,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
      * */
     public void bindData(){
         if(null == mAdapter){
-            mAdapter = new SigninNewListAdapter(getActivity(),listModel,this);
+            mAdapter = new SigninNewListAdapter(getActivity(),listModel,this,this);
             listView.setAdapter(mAdapter);
         }else{
             mAdapter.notifyDataSetChanged();
@@ -341,5 +343,10 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
             return;
         }
         requestComment(editText.getText().toString());
+    }
+
+    @Override
+    public void playVoice(AudioModel audioModel) {
+
     }
 }

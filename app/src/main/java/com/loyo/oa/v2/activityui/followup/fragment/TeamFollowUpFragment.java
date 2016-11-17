@@ -32,8 +32,10 @@ import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.model.Tag;
+import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -58,7 +60,7 @@ import java.util.List;
  * 【团队跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,FollowUpListView,View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack {
+public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,FollowUpListView,View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack {
 
     private View mView;
     private Button btn_add;
@@ -207,7 +209,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new FollowUpListAdapter(getActivity(), listModel, this);
+            mAdapter = new FollowUpListAdapter(getActivity(), listModel,this,this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -337,5 +339,10 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             return;
         }
         requestComment(editText.getText().toString());
+    }
+
+    @Override
+    public void playVoice(AudioModel audioModel) {
+
     }
 }

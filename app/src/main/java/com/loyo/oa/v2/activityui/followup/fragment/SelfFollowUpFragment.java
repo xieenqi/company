@@ -28,14 +28,18 @@ import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.other.model.Tag;
+import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signinnew.model.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -57,17 +61,16 @@ import java.util.List;
  * 【我的跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack {
+public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack {
 
     private View mView;
     private Button btn_add;
     private ViewStub emptyView;
-    private PullToRefreshListView listView;
     private DropDownMenu filterMenu;
-    private ArrayList<Tag> mTags;
-
+    private PullToRefreshListView listView;
     private LinearLayout layout_bottom_menu;
 
+    private ArrayList<Tag> mTags;
     private String menuTimeKey = ""; /*时间*/
     private String menuChosKey = ""; /*筛选*/
     private boolean isTopAdd;
@@ -75,11 +78,12 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private ArrayList<FollowUpListModel> listModel = new ArrayList<>();
     private PaginationX<FollowUpListModel> mPagination = new PaginationX<>(20);
+    private ArrayList<AudioModel> allAudio = new ArrayList<>();
 
     private FollowUpListAdapter mAdapter;
     private FollowUpFragPresenter mPresenter;
-
     private MsgAudiomMenu msgAudiomMenu;
+    private AudioPlayer audioPlayer;
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -93,9 +97,16 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         return mView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        audioPlayer.killPlayer();
+    }
+
     public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
+        audioPlayer = new AudioPlayer(getActivity());
 
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
@@ -158,7 +169,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new FollowUpListAdapter(getActivity(), listModel, this);
+            mAdapter = new FollowUpListAdapter(getActivity(), listModel, this,this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -269,6 +280,20 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
+
+       for(FollowUpListModel model : listModel){
+           if(null != model.audioInfo){
+               allAudio.addAll(model.audioInfo);
+           }
+           if(null != model.comments){
+              for(CommentModel commentModel : model.comments){
+                  if(null != commentModel.audioInfo){
+                      allAudio.add(commentModel.audioInfo);
+                  }
+              }
+           }
+       }
+        LogUtil.dee("allAudio:"+MainApp.gson.toJson(allAudio));
         bindData();
     }
 
@@ -280,18 +305,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         listView.onRefreshComplete();
     }
 
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-
-            //新建跟进
-            case R.id.btn_add:
-                startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
-                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                break;
-        }
-    }
 
     /**
      * 回调发送评论
@@ -303,5 +316,23 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
             return;
         }
         requestComment(editText.getText().toString());
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            //新建跟进
+            case R.id.btn_add:
+                startActivityForResult(new Intent(getActivity(), DynamicSelectActivity.class), Activity.RESULT_FIRST_USER);
+                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                break;
+        }
+    }
+
+    @Override
+    public void playVoice(AudioModel audioModel) {
+        audioPlayer.audioStart();
+        audioPlayer.threadPool(audioModel.url);
     }
 }
