@@ -20,6 +20,7 @@ import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
+import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
@@ -109,11 +110,25 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private String uuid = StringUtil.getUUID();
 
 
+    /*录音播放相关*/
+    private LinearLayout layout_bottom_voice;
+    private int playVoiceSize = 0;
+    private AudioPlayer audioPlayer;
+    private TextView lastView;
+    private String lastUrl = "";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signinnew_details);
         initUI();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        audioPlayer.killPlayer();
     }
 
     /**
@@ -129,7 +144,6 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         }
 
         /*评论数据绑定*/
-
         if(null == commentAdapter){
             commentAdapter = new ListOrDetailsCommentAdapter(mContext,mSigninDelModel.comments,this);
             lv_comment.setAdapter(commentAdapter);
@@ -162,10 +176,12 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     private void initUI() {
         id = getIntent().getStringExtra("id");
+        audioPlayer = new AudioPlayer(mContext);
 
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
+        layout_bottom_voice = (LinearLayout) findViewById(R.id.layout_bottom_voice);
 
         ll_web = (LinearLayout) findViewById(R.id.ll_web);
         layout_bottom_menu = (LinearLayout) findViewById(R.id.layout_bottom_menu);
@@ -381,14 +397,45 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         requestComment(editText.getText().toString());
     }
 
-    @Override
-
-    public void playVoice(AudioModel audioModel,TextView textView) {
-
-    }
 
     public void sebdRecordInfo(Record record) {
         requestComment(record);
     }
+
+    /**
+     * 列表播放语音回调
+     * */
+    @Override
+    public void playVoice(AudioModel audioModel,TextView textView) {
+
+        if(TextUtils.isEmpty(audioModel.url)){
+            Toast("无录音资源!");
+            return;
+        }
+
+        layout_bottom_voice.setVisibility(View.VISIBLE);
+        layout_bottom_voice.removeAllViews();
+        layout_bottom_voice.addView(audioPlayer);
+
+        /*关闭上一条TextView动画*/
+        if(playVoiceSize > 0){
+            if(null != lastView)
+                MainApp.getMainApp().stopAnim(lastView);
+        }
+
+        /*点击同一条则暂停播放*/
+        if(lastView == textView){
+            MainApp.getMainApp().stopAnim(textView);
+            audioPlayer.audioPause(textView);
+            lastView = null;
+        }else{
+            audioPlayer.audioStart(textView);
+            audioPlayer.threadPool(audioModel,textView);
+            lastUrl = audioModel.url;
+            lastView = textView;
+        }
+        playVoiceSize++;
+    }
+
 
 }

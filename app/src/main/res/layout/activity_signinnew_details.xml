@@ -332,6 +332,15 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:visibility="visible">
-        <!--<include layout="@layout/customerview_list_voicemenu" />-->
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_bottom_voice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+    </LinearLayout>
+
 </RelativeLayout>

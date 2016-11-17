@@ -4,19 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -48,7 +43,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -68,7 +62,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private View mView;
     private Button btn_add;
     private ViewStub emptyView;
-    private TextView lastView;
     private DropDownMenu filterMenu;
     private PullToRefreshListView listView;
     private LinearLayout layout_bottom_menu;
@@ -77,7 +70,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private String menuTimeKey = ""; /*时间*/
     private String menuChosKey = ""; /*筛选*/
     private boolean isTopAdd;
-    private int playVoiceSize = 0;
     private int commentPosition;
 
     private ArrayList<FollowUpListModel> listModel = new ArrayList<>();
@@ -87,8 +79,15 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private FollowUpListAdapter mAdapter;
     private FollowUpFragPresenter mPresenter;
     private MsgAudiomMenu msgAudiomMenu;
-    private AudioPlayer audioPlayer;
     private String uuid = StringUtil.getUUID();
+
+    /*录音播放相关*/
+    private LinearLayout layout_bottom_voice;
+    private int playVoiceSize = 0;
+    private AudioPlayer audioPlayer;
+    private TextView lastView;
+    private String lastUrl = "";
+
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -118,6 +117,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
 
         layout_bottom_menu = (LinearLayout) view.findViewById(R.id.layout_bottom_menu);
+        layout_bottom_voice = (LinearLayout) view.findViewById(R.id.layout_bottom_voice);
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -215,7 +215,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userId", "");//我的传id,团队则空着
+        map.put("userId", MainApp.user.id);//我的传id,团队则空着
         map.put("xpath", "");
         map.put("timeType", 5);//时间查询
         map.put("method", 0); //跟进类型0:全部 1:线索 2:客户
@@ -246,6 +246,10 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     @Override
     public void commentEmbl(int position) {
+
+        layout_bottom_voice.setVisibility(View.GONE);
+        layout_bottom_voice.removeAllViews();
+
         commentPosition = position;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         btn_add.setVisibility(View.GONE);
@@ -350,15 +354,37 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         }
     }
 
+    /**
+     * 列表播放语音回调
+     * */
     @Override
     public void playVoice(AudioModel audioModel,TextView textView) {
+        if(TextUtils.isEmpty(audioModel.url)){
+            Toast("无录音资源!");
+            return;
+        }
+
+        layout_bottom_voice.setVisibility(View.VISIBLE);
+        layout_bottom_voice.removeAllViews();
+        layout_bottom_voice.addView(audioPlayer);
+        /*关闭上一条TextView动画*/
         if(playVoiceSize > 0){
+            if(null != lastView)
             MainApp.getMainApp().stopAnim(lastView);
         }
-        MainApp.getMainApp().startAnim(textView);
-        audioPlayer.audioStart();
-        audioPlayer.threadPool(audioModel);
-        lastView = textView;
+
+        /*点击同一条则暂停播放*/
+        if(lastView == textView){
+            MainApp.getMainApp().stopAnim(textView);
+            audioPlayer.audioPause(textView);
+            lastView = null;
+        }else{
+            audioPlayer.audioStart(textView);
+            audioPlayer.threadPool(audioModel,textView);
+            lastUrl = audioModel.url;
+            lastView = textView;
+        }
+
         playVoiceSize++;
     }
 }

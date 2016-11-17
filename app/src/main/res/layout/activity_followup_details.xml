@@ -68,6 +68,16 @@
                 android:orientation="vertical"
                 android:visibility="gone" />
 
+            <com.loyo.oa.v2.customview.CustomerListView
+                android:id="@+id/lv_audio"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="59dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="#00000000"
+                android:listSelector="@android:color/transparent"
+                android:dividerHeight="3dp" />
+
             <com.loyo.oa.v2.customview.CusGridView
                 android:id="@+id/layout_gridview"
                 android:layout_width="match_parent"
@@ -246,6 +256,15 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:visibility="visible">
-        <!--<include layout="@layout/customerview_list_voicemenu" />-->
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_bottom_voice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+    </LinearLayout>
+
 </RelativeLayout>

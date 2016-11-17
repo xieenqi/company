@@ -2,19 +2,14 @@ package com.loyo.oa.v2.activityui.signinnew.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,14 +22,15 @@ import com.loyo.oa.dropdownmenu.filtermenu.SigninFilterSortModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.adapter.SigninNewListAdapter;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
-import com.loyo.oa.v2.activityui.signinnew.presenter.SigninListFragPresenter;
-import com.loyo.oa.v2.activityui.signinnew.presenter.impl.SigninListFragPresenterImpl;
+import com.loyo.oa.v2.activityui.signinnew.presenter.TeamSigninListFragPresenter;
+import com.loyo.oa.v2.activityui.signinnew.presenter.impl.TeamSigninListFragPresenterImpl;
 import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -42,28 +38,19 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
-import com.loyo.oa.v2.point.ISigninNeworFollowUp;
-import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -92,9 +79,16 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     private PaginationX<SigninNewListModel> mPagination = new PaginationX<>(20);
     private ArrayList<SigninNewListModel> listModel = new ArrayList<>();
     private SigninNewListAdapter mAdapter;
-    private SigninListFragPresenter mPresenter;
+    private TeamSigninListFragPresenter mPresenter;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
+
+    /*录音播放相关*/
+    private LinearLayout layout_bottom_voice;
+    private int playVoiceSize = 0;
+    private AudioPlayer audioPlayer;
+    private TextView lastView;
+    private String lastUrl = "";
 
 
     @SuppressLint("InflateParams")
@@ -107,6 +101,12 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
             loadFilterOptions();
         }
         return mView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        audioPlayer.killPlayer();
     }
 
     @Override
@@ -126,12 +126,14 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
         permission = (Permission) getArguments().getSerializable("permission");
-        mPresenter = new SigninListFragPresenterImpl(this);
+        mPresenter = new TeamSigninListFragPresenterImpl(this);
+        audioPlayer = new AudioPlayer(getActivity());
 
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
         layout_bottom_menu = (LinearLayout) view.findViewById(R.id.layout_bottom_menu);
+        layout_bottom_voice = (LinearLayout) view.findViewById(R.id.layout_bottom_voice);
 
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         listView.setEmptyView(emptyView);
@@ -360,14 +362,44 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         requestComment(editText.getText().toString());
     }
 
-    @Override
-
-    public void playVoice(AudioModel audioModel,TextView textView) {
-
-    }
 
     public void sebdRecordInfo(Record record) {
         requestComment(record);
     }
+
+    /**
+     * 列表播放语音回调
+     * */
+    @Override
+    public void playVoice(AudioModel audioModel,TextView textView) {
+        if(TextUtils.isEmpty(audioModel.url)){
+            Toast("无录音资源!");
+            return;
+        }
+
+        layout_bottom_voice.setVisibility(View.VISIBLE);
+        layout_bottom_voice.removeAllViews();
+        layout_bottom_voice.addView(audioPlayer);
+        /*关闭上一条TextView动画*/
+        if(playVoiceSize > 0){
+            if(null != lastView)
+                MainApp.getMainApp().stopAnim(lastView);
+        }
+
+        /*点击同一条则暂停播放*/
+        if(lastView == textView){
+            MainApp.getMainApp().stopAnim(textView);
+            audioPlayer.audioPause(textView);
+            lastView = null;
+        }else{
+            audioPlayer.audioStart(textView);
+            audioPlayer.threadPool(audioModel,textView);
+            lastUrl = audioModel.url;
+            lastView = textView;
+        }
+
+        playVoiceSize++;
+    }
+
 
 }

@@ -236,7 +236,7 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
             /*搜索*/
             case R.id.img_title_search_right:
                 Intent mIntent = new Intent(FollowUpManagerActivity.this,FollowUpDetailsActivity.class);
-                mIntent.putExtra("id","582acdaa608e4f0942000004");
+                mIntent.putExtra("id","582d8ea0608e4f1e39000007");
                 startActivity(mIntent);
                 break;
 

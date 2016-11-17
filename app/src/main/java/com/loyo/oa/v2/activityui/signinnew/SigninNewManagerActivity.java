@@ -235,7 +235,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
             /*搜索*/
             case R.id.img_title_search_right:
                 Intent mIntent = new Intent(SigninNewManagerActivity.this,SigninNewDetailsActivity.class);
-                mIntent.putExtra("id","5825828535d8605ee0510690");
+                mIntent.putExtra("id","582d777c608e4f615d000166");
                 startActivity(mIntent);
                 break;
 

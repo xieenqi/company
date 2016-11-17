@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_audioplayer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_100"
+        android:background="@drawable/bg_audio_control"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_45">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/layout_last"
+                    android:layout_width="@dimen/dimen_70"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_audio_left" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/dimen_70"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/layout_audio_pauseorplay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_audio_pause" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_next"
+                    android:layout_width="@dimen/dimen_70"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_audio_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/layout_audio_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="22dp"
+                android:background="@drawable/icon_audio_close" />
+
+        </RelativeLayout>
+
+        <ProgressBar
+            android:id="@+id/layout_progressbar"
+            android:layout_width="@dimen/dimen_30"
+            android:layout_height="@dimen/dimen_30"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/layout_audio_contral"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_other_view"
+            android:paddingRight="@dimen/margin_other_view"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+              >
+                <SeekBar
+                    android:id="@+id/music_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:maxHeight="3dp"
+                    android:progressDrawable="@drawable/dynamic_audio_seekbar"
+                    android:thumb="@drawable/icon_audio_tag" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10"
+                android:layout_marginTop="@dimen/dimen_10"
+                >
+
+                <TextView
+                    android:id="@+id/tv_audio_starttime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_4"
+                    android:gravity="center"
+                    android:text="00:00:00"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_sp12" />
+
+
+                <TextView
+                    android:id="@+id/tv_audio_endtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dimen_4"
+                    android:gravity="center"
+                    android:text="00:00:00"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_sp12" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

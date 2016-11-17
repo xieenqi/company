@@ -20,6 +20,7 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
+import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -66,6 +67,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     private CustomerListView lv_comment;
     private CustomerListView lv_options;
+    private CustomerListView lv_audio;
     private CusGridView gv_image;
 
     private LinearLayout layout_touch;
@@ -85,10 +87,18 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     private ListOrDetailsCommentAdapter commentAdapter;  /* 评论区Adapter */
     private ListOrDetailsGridViewAdapter imageAdapter;   /* 图片9宫格Adapter */
     private ListOrDetailsOptionsAdapter optionAdapter;   /* 附件列表Adapter */
+    private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
 
     private FollowUpListModel mFollowUpDelModel;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
+
+    /*录音播放相关*/
+    private LinearLayout layout_bottom_voice;
+    private int playVoiceSize = 0;
+    private AudioPlayer audioPlayer;
+    private TextView lastView;
+    private String lastUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,17 +107,34 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         initUI();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        audioPlayer.killPlayer();
+    }
+
     /**
      * 适配器绑定
      */
     private void bindAdapter() {
 
+        /*录音语音*/
+        if (null != mFollowUpDelModel.audioInfo) {
+            lv_audio.setVisibility(View.VISIBLE);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext, mFollowUpDelModel.audioInfo, this);
+            lv_audio.setAdapter(audioAdapter);
+        }
+
         /*评论数据绑定*/
-        if (null == commentAdapter) {
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments,this);
-            lv_comment.setAdapter(commentAdapter);
-        } else {
-            commentAdapter.notifyDataSetChanged();
+        if(null != mFollowUpDelModel.comments && mFollowUpDelModel.comments.size() > 0){
+            if (null == commentAdapter) {
+                commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments,this);
+                lv_comment.setAdapter(commentAdapter);
+            } else {
+                commentAdapter.notifyDataSetChanged();
+            }
+        }else{
+
         }
 
         /*文件数据绑定*/
@@ -136,10 +163,13 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     private void initUI() {
         id = getIntent().getStringExtra("id");
+        audioPlayer = new AudioPlayer(mContext);
+
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
         layout_bottom_menu = (LinearLayout) findViewById(R.id.layout_bottom_menu);
+        layout_bottom_voice = (LinearLayout) findViewById(R.id.layout_bottom_voice);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
         ll_web = (LinearLayout) findViewById(R.id.ll_web);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -154,6 +184,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         layout_scrollview = (ScrollView) findViewById(R.id.layout_scrollview);
         lv_comment = (CustomerListView) findViewById(R.id.lv_comment);
         lv_options = (CustomerListView) findViewById(R.id.lv_options);
+        lv_audio = (CustomerListView) findViewById(R.id.lv_audio);
         gv_image = (CusGridView) findViewById(R.id.layout_gridview);
         layout_back.setOnClickListener(this);
 
@@ -346,12 +377,42 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         requestComment(editText.getText().toString());
     }
 
-    @Override
-
-    public void playVoice(AudioModel audioModel, TextView textView) {
-
-    }
     public void sebdRecordInfo(Record record) {
         requestComment(record);
+    }
+
+    /**
+     * 列表播放语音回调
+     * */
+    @Override
+    public void playVoice(AudioModel audioModel,TextView textView) {
+
+        if(TextUtils.isEmpty(audioModel.url)){
+            Toast("无录音资源!");
+            return;
+        }
+
+        layout_bottom_voice.setVisibility(View.VISIBLE);
+        layout_bottom_voice.removeAllViews();
+        layout_bottom_voice.addView(audioPlayer);
+
+        /*关闭上一条TextView动画*/
+        if(playVoiceSize > 0){
+            if(null != lastView)
+                MainApp.getMainApp().stopAnim(lastView);
+        }
+
+        /*点击同一条则暂停播放*/
+        if(lastView == textView){
+            MainApp.getMainApp().stopAnim(textView);
+            audioPlayer.audioPause(textView);
+            lastView = null;
+        }else{
+            audioPlayer.audioStart(textView);
+            audioPlayer.threadPool(audioModel,textView);
+            lastUrl = audioModel.url;
+            lastView = textView;
+        }
+        playVoiceSize++;
     }
 }

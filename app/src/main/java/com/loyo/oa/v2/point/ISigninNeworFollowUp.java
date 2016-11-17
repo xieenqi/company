@@ -57,7 +57,7 @@ public interface ISigninNeworFollowUp {
      * 我的团队,跟进数据
      */
     @GET("/saleactivity/mobile/sale/")
-    void selfFollowUp(@QueryMap Map<String, Object> params, Callback<BaseBeanT<PaginationX<FollowUpListModel>>> cb);
+    void followUp(@QueryMap Map<String, Object> params, Callback<BaseBeanT<PaginationX<FollowUpListModel>>> cb);
 
     /**
      * 拜访详情数据

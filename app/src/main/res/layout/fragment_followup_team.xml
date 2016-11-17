@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
     <com.loyo.oa.dropdownmenu.DropDownMenu
         android:id="@+id/drop_down_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_bottom_menu">
+
         <FrameLayout
             android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
@@ -31,14 +32,14 @@
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_marginBottom="22dp"
-                        android:src="@drawable/img_nodata"/>
+                        android:src="@drawable/img_nodata" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="没有相关数据"
                         android:textColor="#878787"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 
@@ -49,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inflatedId="@+id/layout_nodata"
-                android:layout="@layout/item_layout_nodata"/>
+                android:layout="@layout/item_layout_nodata" />
 
             <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
                 android:id="@+id/lv_list"
@@ -63,8 +64,7 @@
                 android:footerDividersEnabled="true"
                 android:headerDividersEnabled="true"
                 android:scrollbars="none"
-                android:smoothScrollbar="true"
-                />
+                android:smoothScrollbar="true" />
 
             <Button
                 android:id="@+id/btn_add"
@@ -74,17 +74,24 @@
                 android:layout_marginBottom="3dp"
                 android:background="@drawable/bg_btn_circle"
                 android:textColor="@color/white"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
         </FrameLayout>
     </com.loyo.oa.dropdownmenu.DropDownMenu>
+
     <LinearLayout
         android:id="@+id/layout_bottom_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
-        android:visibility="gone">
-    </LinearLayout>
+        android:visibility="gone"></LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_bottom_voice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="gone" />
 </RelativeLayout>

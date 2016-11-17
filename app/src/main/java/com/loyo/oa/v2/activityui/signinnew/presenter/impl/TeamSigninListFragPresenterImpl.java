@@ -1,22 +1,16 @@
-package com.loyo.oa.v2.activityui.followup.persenter.impl;
+package com.loyo.oa.v2.activityui.signinnew.presenter.impl;
 
-import android.content.Context;
-
-import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
-import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
-import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
+import com.loyo.oa.v2.activityui.signinnew.presenter.TeamSigninListFragPresenter;
+import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -24,14 +18,12 @@ import retrofit.client.Response;
  * Created by loyo_dev1 on 16/11/16.
  */
 
-public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
+public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresenter {
 
-    private FollowUpListView crolView;
-    private Context mContext;
+    private SigninNewListView crolView;
 
-    public FollowUpFragPresenterImpl(FollowUpListView crolView, Context mContext){
+    public TeamSigninListFragPresenterImpl(SigninNewListView crolView){
         this.crolView = crolView;
-        this.mContext = mContext;
     }
 
     /**
@@ -74,15 +66,12 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
         });
     }
 
-    /**
-     * 获取列表数据
-     * */
     @Override
-    public void getListData(HashMap<String,Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).followUp(map, new RCallback<BaseBeanT<PaginationX<FollowUpListModel>>>() {
+    public void getListData(HashMap<String, Object> map) {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).teamSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
             @Override
-            public void success(BaseBeanT<PaginationX<FollowUpListModel>> paginationX, Response response) {
-                HttpErrorCheck.checkResponse("拜访列表", response);
+            public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
+                HttpErrorCheck.checkResponse("团队拜访", response);
                 crolView.getListDataSuccesseEmbl(paginationX);
             }
 
@@ -94,4 +83,5 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
             }
         });
     }
+
 }

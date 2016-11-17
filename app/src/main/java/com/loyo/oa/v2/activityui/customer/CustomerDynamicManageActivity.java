@@ -245,9 +245,6 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
 
         player = new Player(musicProgress);
         musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
-        //layout_audioplayer.getBackground().setAlpha(50);
-        //layout_view_bottom.getBackground().setAlpha(50);
-
         player.mediaPlayer.setOnCompletionListener(this);
     }
 
