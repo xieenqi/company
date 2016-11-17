@@ -7,4 +7,5 @@ package com.loyo.oa.v2.activityui.signinnew.model;
 public class AudioModel {
     public String url;
     public long length;
+    public boolean isAnim = false;
 }

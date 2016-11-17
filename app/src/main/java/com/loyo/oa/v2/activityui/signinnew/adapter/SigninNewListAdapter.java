@@ -18,6 +18,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
@@ -45,16 +46,18 @@ public class SigninNewListAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<SigninNewListModel> listModel;
     private SigninNewListView viewCrol;
+    private AudioPlayCallBack audioPlayCallBack;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格图片 */
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
 
-    public SigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, SigninNewListView viewCrol) {
+    public SigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, SigninNewListView viewCrol,AudioPlayCallBack audioPlayCallBack) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
+        this.audioPlayCallBack = audioPlayCallBack;
     }
 
     @Override
@@ -129,7 +132,7 @@ public class SigninNewListAdapter extends BaseAdapter {
         /** 录音语音 */
         if(null != signinNewListModel.audioInfo){
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,signinNewListModel.audioInfo);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext,signinNewListModel.audioInfo,audioPlayCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
         }else{
             holder.lv_audio.setVisibility(View.GONE);

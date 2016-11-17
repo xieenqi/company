@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
@@ -42,16 +43,18 @@ public class FollowUpListAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<FollowUpListModel> listModel;
     private FollowUpListView viewCrol;
+    private AudioPlayCallBack audioCallBack;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格附件 */
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
 
-    public FollowUpListAdapter(Context mContext, ArrayList<FollowUpListModel> listModel, FollowUpListView viewCrol) {
+    public FollowUpListAdapter(Context mContext, ArrayList<FollowUpListModel> listModel, FollowUpListView viewCrol,AudioPlayCallBack audioCallBack) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
+        this.audioCallBack = audioCallBack;
     }
 
     @Override
@@ -116,7 +119,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         /** 录音语音 */
         if(null != followUpListModel.audioInfo){
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,followUpListModel.audioInfo);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext,followUpListModel.audioInfo,audioCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
         }else{
             holder.lv_audio.setVisibility(View.GONE);

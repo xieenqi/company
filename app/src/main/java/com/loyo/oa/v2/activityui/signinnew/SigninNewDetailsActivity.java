@@ -24,10 +24,15 @@ import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
+import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
+import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
+import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CusGridView;
@@ -55,7 +60,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class SigninNewDetailsActivity extends BaseActivity implements View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack {
+public class SigninNewDetailsActivity extends BaseActivity implements View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack{
 
 
     private ScrollView layout_scrollview;
@@ -116,7 +121,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         /*录音语音*/
         if(null != mSigninDelModel.audioInfo){
             lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,mSigninDelModel.audioInfo);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext,mSigninDelModel.audioInfo,this);
             lv_audio.setAdapter(audioAdapter);
         }
 
@@ -345,5 +350,10 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
             return;
         }
         requestComment(editText.getText().toString());
+    }
+
+    @Override
+    public void playVoice(AudioModel audioModel) {
+
     }
 }
