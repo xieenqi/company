@@ -33,6 +33,7 @@ import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CusGridView;
@@ -46,6 +47,7 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -60,7 +62,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class SigninNewDetailsActivity extends BaseActivity implements View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack{
+public class SigninNewDetailsActivity extends BaseActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
     private ScrollView layout_scrollview;
@@ -100,10 +102,11 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     private ListOrDetailsCommentAdapter commentAdapter;  /* 评论区Adapter */
     private ListOrDetailsGridViewAdapter imageAdapter;   /* 图片9宫格Adapter */
-    private ListOrDetailsOptionsAdapter  optionAdapter;  /* 文件列表Adapter */
+    private ListOrDetailsOptionsAdapter optionAdapter;  /* 文件列表Adapter */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
 
     private MsgAudiomMenu msgAudiomMenu;
+    private String uuid = StringUtil.getUUID();
 
 
     @Override
@@ -115,21 +118,21 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     /**
      * 适配器绑定
-     * */
-    private void bindAdapter(){
+     */
+    private void bindAdapter() {
 
         /*录音语音*/
-        if(null != mSigninDelModel.audioInfo){
+        if (null != mSigninDelModel.audioInfo) {
             lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,mSigninDelModel.audioInfo,this);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext, mSigninDelModel.audioInfo, this);
             lv_audio.setAdapter(audioAdapter);
         }
 
         /*评论数据绑定*/
-        if(null == commentAdapter){
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext,mSigninDelModel.comments);
+        if (null == commentAdapter) {
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mSigninDelModel.comments);
             lv_comment.setAdapter(commentAdapter);
-        }else{
+        } else {
             commentAdapter.notifyDataSetChanged();
         }
 
@@ -145,12 +148,12 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
         /*gridView数据绑定*/
         if (null != mSigninDelModel.imageAttachments && mSigninDelModel.imageAttachments.size() > 0) {
-            if(null == imageAdapter){
+            if (null == imageAdapter) {
                 if (null != mSigninDelModel.imageAttachments && mSigninDelModel.imageAttachments.size() > 0)
                     gv_image.setVisibility(View.VISIBLE);
-                    imageAdapter = new ListOrDetailsGridViewAdapter(mContext,mSigninDelModel.imageAttachments);
-                    gv_image.setAdapter(imageAdapter);
-            }else{
+                imageAdapter = new ListOrDetailsGridViewAdapter(mContext, mSigninDelModel.imageAttachments);
+                gv_image.setAdapter(imageAdapter);
+            } else {
                 imageAdapter.notifyDataSetChanged();
             }
         }
@@ -190,7 +193,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访详情");
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         requestDetails();
@@ -198,8 +201,8 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     /**
      * 评论删除
-     * */
-    private void deleteComment(String id){
+     */
+    private void deleteComment(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
@@ -217,15 +220,15 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     /**
      * 评论操作
-     * */
-    private void requestComment(String content){
+     */
+    private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizzId", id);
         map.put("title", content);
-        map.put("commentType",1); //1文本 2语音
+        map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
-        LogUtil.dee("评论参数:"+MainApp.gson.toJson(map));
+        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
@@ -242,12 +245,37 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         });
     }
 
-    private void bindData(){
-        setContent(ll_web," ");
+    /**
+     * 评论操作 语音
+     */
+    private void requestComment(Record record) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bizzId", id);
+        map.put("commentType", 2); //1文本 2语音
+        map.put("bizzType", 1);   //1拜访 2跟进
+        map.put("audioInfo",record);//语音信息
+        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
+            @Override
+            public void success(Object object, Response response) {
+                HttpErrorCheck.checkResponse("评论", response);
+                msgAudiomMenu.closeMenu();
+                requestDetails();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                super.failure(error);
+            }
+        });
+    }
+    private void bindData() {
+        setContent(ll_web, " ");
         bindAdapter();
 
-        if(TextUtils.isEmpty(mSigninDelModel.creator.avatar)){
-            ImageLoader.getInstance().displayImage(mSigninDelModel.creator.avatar,iv_heading);
+        if (TextUtils.isEmpty(mSigninDelModel.creator.avatar)) {
+            ImageLoader.getInstance().displayImage(mSigninDelModel.creator.avatar, iv_heading);
         }
 
         tv_name.setText(mSigninDelModel.creator.name);
@@ -255,8 +283,8 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         tv_toast.setText(mSigninDelModel.atNameAndDepts);
         tv_customer_name.setText(mSigninDelModel.customerName);
         tv_position.setText(mSigninDelModel.position);
-        tv_pc.setText(mSigninDelModel.offsetDistance+"");
-        tv_time.setText(DateTool.timet(mSigninDelModel.createdAt+"","yyyy-MM-dd hh:mm:ss"));
+        tv_pc.setText(mSigninDelModel.offsetDistance + "");
+        tv_time.setText(DateTool.timet(mSigninDelModel.createdAt + "", "yyyy-MM-dd hh:mm:ss"));
 
         /** 绑定评论数据 */
         if (null != mSigninDelModel.comments && mSigninDelModel.comments.size() > 0) {
@@ -289,12 +317,12 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     /**
      * 获取详情数据
-     * */
-    private void requestDetails(){
+     */
+    private void requestDetails() {
         showLoading("");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("split",true);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getSigninDetails(id,map, new RCallback<BaseBeanT<SigninNewListModel>>() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("split", true);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getSigninDetails(id, map, new RCallback<BaseBeanT<SigninNewListModel>>() {
             @Override
             public void success(BaseBeanT<SigninNewListModel> signinNewListModel, Response response) {
                 HttpErrorCheck.checkResponse("拜访详情", response);
@@ -342,7 +370,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     /**
      * 回调发送评论
-     * */
+     */
     @Override
     public void sendMsg(EditText editText) {
         if (TextUtils.isEmpty(editText.getText().toString())) {
@@ -350,6 +378,11 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
             return;
         }
         requestComment(editText.getText().toString());
+    }
+
+    @Override
+    public void sebdRecordInfo(Record record) {
+        requestComment(record);
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
@@ -20,6 +21,7 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
+import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CusGridView;
@@ -32,8 +34,11 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -81,6 +86,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     private FollowUpListModel mFollowUpDelModel;
     private MsgAudiomMenu msgAudiomMenu;
+    private String uuid = StringUtil.getUUID();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +158,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("跟进详情");
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
         requestDetails();
     }
@@ -252,7 +258,33 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         map.put("title", content);
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
-        //map.put("audioInfo", "");//语音信息
+//        map.put("audioInfo", "");//语音信息
+        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
+            @Override
+            public void success(Object object, Response response) {
+                HttpErrorCheck.checkResponse("评论", response);
+                msgAudiomMenu.closeMenu();
+                requestDetails();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                super.failure(error);
+            }
+        });
+    }
+
+    /**
+     * 评论操作
+     */
+    private void requestComment(Record record) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bizzId", id);
+        map.put("commentType", 2); //1文本 2语音
+        map.put("bizzType", 2);   //1拜访 2跟进
+        map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
@@ -302,7 +334,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     /**
      * 回调发送评论
-     * */
+     */
     @Override
     public void sendMsg(EditText editText) {
         if (TextUtils.isEmpty(editText.getText().toString())) {
@@ -310,5 +342,10 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
             return;
         }
         requestComment(editText.getText().toString());
+    }
+
+    @Override
+    public void sebdRecordInfo(Record record) {
+        requestComment(record);
     }
 }

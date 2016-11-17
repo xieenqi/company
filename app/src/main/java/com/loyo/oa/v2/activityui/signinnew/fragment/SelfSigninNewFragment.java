@@ -42,6 +42,7 @@ import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CustomerListView;
@@ -50,6 +51,7 @@ import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -84,6 +86,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     private SigninNewListAdapter mAdapter;
     private SigninListFragPresenter mPresenter;
     private MsgAudiomMenu msgAudiomMenu;
+    private String uuid = StringUtil.getUUID();
 
 
     @SuppressLint("InflateParams")
@@ -141,7 +144,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this,uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         Utils.btnSpcHideForListViewTest(getActivity(),listView.getRefreshableView(),
@@ -160,6 +163,18 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
+        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
+        mPresenter.requestComment(map);
+    }
+    /**
+     * 评论语言
+     */
+    private void requestComment(Record record) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("commentType", 2); //1文本 2语音
+        map.put("bizzType", 1);   //1拜访 2跟进
+        map.put("audioInfo",record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
@@ -314,6 +329,11 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
             return;
         }
         requestComment(editText.getText().toString());
+    }
+
+    @Override
+    public void sebdRecordInfo(Record record) {
+        requestComment(record);
     }
 
     @Override

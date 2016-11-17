@@ -40,6 +40,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -49,6 +50,7 @@ import com.loyo.oa.v2.db.bean.DBDepartment;
 import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ import java.util.List;
  * 【团队跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2,FollowUpListView,View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack {
+public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
     private View mView;
     private Button btn_add;
@@ -86,6 +88,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private FollowUpFragPresenter mPresenter;
 
     private MsgAudiomMenu msgAudiomMenu;
+    private String uuid = StringUtil.getUUID();
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -116,7 +119,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
         permission = (Permission) getArguments().getSerializable("permission");
-        mPresenter = new FollowUpFragPresenterImpl(this,getActivity());
+        mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
 
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
@@ -132,18 +135,18 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        Utils.btnSpcHideForListViewTest(getActivity(),listView.getRefreshableView(),
+        Utils.btnSpcHideForListViewTest(getActivity(), listView.getRefreshableView(),
                 btn_add,
-                layout_bottom_menu,msgAudiomMenu.getEditComment());
+                layout_bottom_menu, msgAudiomMenu.getEditComment());
 
     }
 
     /**
      * 加载顶部菜单
-     * */
+     */
     private void loadFilterOptions() {
 
         List<DBDepartment> depts = new ArrayList<>();
@@ -157,8 +160,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         else if (permission != null && permission.dataRange == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "人员";
-        }
-        else {
+        } else {
             title = "人员";
             depts.add(OrganizationFilterModel.selfDepartment());
         }
@@ -174,26 +176,26 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
                 MenuModel model = selectedModels.get(0);
-                switch (menuIndex){
+                switch (menuIndex) {
 
                     /*时间*/
                     case 0:
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:"+menuTimekey+" value"+model.getValue());
+                        Toast("key:" + menuTimekey + " value" + model.getValue());
                         break;
 
                     /*筛选*/
                     case 1:
                         menuChoskey = model.getKey();
-                        Toast("key:"+menuChoskey+" value"+model.getValue());
+                        Toast("key:" + menuChoskey + " value" + model.getValue());
                         break;
 
                     /*人员*/
                     case 2:
                         menuGuykey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:"+menuGuykey+" value"+model.getValue());
+                        Toast("key:" + menuGuykey + " value" + model.getValue());
                         break;
 
                 }
@@ -209,7 +211,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new FollowUpListAdapter(getActivity(), listModel,this,this);
+            mAdapter = new FollowUpListAdapter(getActivity(), listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -217,16 +219,29 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     /**
-     * 发送语音
-     * */
-    private void requestComment(String content){
+     * 发送文字
+     */
+    private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizzId", listModel.get(commentPosition).id);
         map.put("title", content);
-        map.put("commentType",1); //1文本 2语音
+        map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
-        LogUtil.dee("评论参数:"+ MainApp.gson.toJson(map));
+        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
+        mPresenter.requestComment(map);
+    }
+
+    /**
+     * 发送语音
+     */
+    private void requestComment(Record record) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("commentType", 2); //1文本 2语音
+        map.put("bizzType", 2);   //1拜访 2跟进
+        map.put("audioInfo", record);//语音信息
+        LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
 
@@ -234,7 +249,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      * 获取Self列表数据
      */
     private void getData(boolean isPullOrDown) {
-        if(!isPullOrDown){
+        if (!isPullOrDown) {
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
@@ -242,8 +257,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("xpath", "");
         map.put("timeType", 5);//时间查询
         map.put("method", 0); //跟进类型0:全部 1:线索 2:客户
-        map.put("typeId","");
-        map.put("split",true);
+        map.put("typeId", "");
+        map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
@@ -263,7 +278,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 评论删除
-     * */
+     */
     @Override
     public void deleteCommentEmbl(final String id) {
         ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
@@ -278,7 +293,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 刷新列表数据
-     * */
+     */
     @Override
     public void rushListData(boolean shw) {
         getData(shw);
@@ -296,7 +311,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 获取列表数据成功
-     * */
+     */
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
         listView.onRefreshComplete();
@@ -310,7 +325,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 获取列表数据失败
-     * */
+     */
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
@@ -339,6 +354,11 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             return;
         }
         requestComment(editText.getText().toString());
+    }
+
+    @Override
+    public void sebdRecordInfo(Record record) {
+        requestComment(record);
     }
 
     @Override
