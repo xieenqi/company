@@ -26,6 +26,30 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_add_customer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dimen_8"
+        android:paddingTop="@dimen/dimen_8">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_contact_insert"
+            android:drawablePadding="@dimen/dimen_5"
+            android:gravity="center_vertical"
+            android:text="新建客户"
+            android:textColor="@color/title_bg1"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/include_solid_line" />
+
     <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
         android:id="@+id/lv_list"
         android:layout_width="match_parent"

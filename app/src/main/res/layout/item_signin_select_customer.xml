@@ -42,7 +42,7 @@
         android:paddingLeft="@dimen/margin_other_view"
         android:paddingRight="@dimen/margin_other_view"
         android:layout_marginBottom="@dimen/dimen_6"
-        android:text="购买产品："
+        android:text="无客户定位"
         android:textColor="@color/text99" />
 
     <include layout="@layout/include_solid_line_left" />
