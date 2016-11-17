@@ -105,6 +105,7 @@ public class LocationUtilGD {
 
         if (!TextUtils.isEmpty(location.getAddress())) {
             LogUtil.d("定位notify高德Location,address : " + location.getAddress());
+            //地址  得到经度  得到的纬度
             afterLocation.OnLocationGDSucessed(location.getAddress(), location.getLongitude(), location.getLatitude(),
                     location.getRoad());
         } else {

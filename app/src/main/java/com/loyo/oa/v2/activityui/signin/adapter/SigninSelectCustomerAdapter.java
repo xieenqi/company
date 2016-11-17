@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -70,11 +71,22 @@ public class SigninSelectCustomerAdapter extends BaseAdapter {
 
     class Holder {
         TextView tv_name, tv_distance, tv_location;
+        private DecimalFormat df = new DecimalFormat("0.0");
 
         public void setContent(SigninSelectCustomer item) {
             tv_name.setText(item.name);
             tv_location.setText(item.position.addr);
-            tv_distance.setText(item.distance + "米");
+            tv_distance.setText(distanceText(item.distance));
+        }
+
+        private String distanceText(double distance) {
+            String distanceText;
+            if (distance <= 100) {
+                distanceText = "<0.1km";
+            } else {
+                distanceText = df.format(distance / 1000) + "km";
+            }
+            return distanceText;
         }
     }
 }

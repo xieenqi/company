@@ -531,9 +531,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     private String getDeviationDistance(double la, double lo) {
         LatLng ll = new LatLng(laPosition, loPosition);
-        LatLng llCustomer = new LatLng(la, lo);
+        LatLng llCustomer = new LatLng(lo, la);// 地点的纬度，在-90 与90 之间的double 型数值。、地点的经度，在-180 与180 之间的double 型数值。
+        LogUtil.d("偏差距离:" + AMapUtils.calculateLineDistance(ll, llCustomer));
         return Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer));
-    }
+    }//  104.073255,30.689493
+
 
     @Override
     protected void onDestroy() {

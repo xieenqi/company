@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.signin.adapter.SigninSelectCustomerAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.signin.persenter.SigninSelectCustomerPControl;
@@ -27,7 +28,8 @@ import java.util.ArrayList;
 
 public class SigninSelectCustomerActivity extends BaseActivity implements View.OnClickListener,
         PullToRefreshBase.OnRefreshListener2, SigninSelectCustomerVControl {
-
+    private static final int SEARCH_CUSTOMER = 100;
+    private static final int CREAT_CUSTOMER = 200;
     private PullToRefreshListView lv_list;
     private SigninSelectCustomerPControl pControl;
     private SigninSelectCustomerAdapter adapter;
@@ -43,6 +45,7 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
     private void initView() {
         findViewById(R.id.ll_back).setOnClickListener(this);
         findViewById(R.id.ll_search).setOnClickListener(this);
+        findViewById(R.id.ll_add_customer).setOnClickListener(this);
         ((TextView) findViewById(R.id.tv_title)).setText("选择客户");
         lv_list = (PullToRefreshListView) findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
@@ -52,7 +55,7 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SigninSelectCustomer item = adapter.getItemData(position);
+                SigninSelectCustomer item = adapter.getItemData(position - 1);
                 Intent intent = new Intent();
                 intent.putExtra("id", item.id);
                 intent.putExtra("name", item.name);
@@ -70,8 +73,16 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
             case R.id.ll_back:
                 onBackPressed();
                 break;
+            /*搜索客户*/
             case R.id.ll_search:
-                startActivityForResult(new Intent(this, SigninSelectCustomerSearch.class), Activity.RESULT_FIRST_USER);
+                startActivityForResult(new Intent(this, SigninSelectCustomerSearch.class), SEARCH_CUSTOMER);
+                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                break;
+            /*创建一个新客户*/
+            case R.id.ll_add_customer:
+                Intent intent = new Intent(SigninSelectCustomerActivity.this, CustomerAddActivity_.class);
+                intent.putExtra("isResultSignin", true);
+                startActivityForResult(intent, CREAT_CUSTOMER);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
 
@@ -102,7 +113,8 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
             return;
         }
         switch (requestCode) {
-            case Activity.RESULT_FIRST_USER:
+            case SEARCH_CUSTOMER:
+            case CREAT_CUSTOMER:
                 Intent intent = new Intent();
                 intent.putExtra("id", data.getStringExtra("id"));
                 intent.putExtra("name", data.getStringExtra("name"));
