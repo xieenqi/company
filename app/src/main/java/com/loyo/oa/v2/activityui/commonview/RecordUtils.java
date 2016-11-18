@@ -77,6 +77,9 @@ public class RecordUtils {
         /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default */
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         recorder.setMaxDuration(60 * 1000);
+        recorder.setOnErrorListener(null);
+        recorder.setOnInfoListener(null);
+        recorder.setPreviewDisplay(null);
         startRecord();
         LogUtil.d("本地录音文件名:  " + fileName);
     }
@@ -118,9 +121,6 @@ public class RecordUtils {
                 timer.cancel();
                 task.cancel();
                 isStart = false;
-                recorder.setOnErrorListener(null);
-                recorder.setOnInfoListener(null);
-                recorder.setPreviewDisplay(null);
                 recorder.stop();
                 recorder.reset();
                 recorder.release();
