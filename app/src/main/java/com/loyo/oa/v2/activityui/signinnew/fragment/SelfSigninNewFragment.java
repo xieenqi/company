@@ -85,7 +85,6 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     private String uuid = StringUtil.getUUID();
 
 
-
     /*录音播放相关*/
     private LinearLayout layout_bottom_voice;
     private int playVoiceSize = 0;

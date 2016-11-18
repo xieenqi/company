@@ -254,7 +254,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     /**
-     * 获取Self列表数据
+     * 获取Team列表数据
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {

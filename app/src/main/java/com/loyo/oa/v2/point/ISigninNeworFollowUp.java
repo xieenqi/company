@@ -26,6 +26,13 @@ import retrofit.http.QueryMap;
 
 public interface ISigninNeworFollowUp {
 
+
+    /**
+     * 客户下 拜访数据
+     */
+    @GET("/visit/m/bycustId/")
+    void getCustomerSignin(@QueryMap Map<String, Object> params, Callback<BaseBeanT<PaginationX<SigninNewListModel>>> cb);
+
     /**
      * 我的拜访数据
      */

@@ -398,10 +398,16 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*拜访签到*/
             case R.id.layout_visit:
-                bundle.putBoolean("isMyUser", isMyUser);
+               /* bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = SignInListActivity_.class;
+                requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;*/
+
+                bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putSerializable("mCustomer", mCustomer);
+                _class = CustomerSigninListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;
+
                 break;
             /*任务计划*/
             case R.id.layout_task:
