@@ -391,9 +391,14 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*跟进动态*/
             case R.id.layout_sale_activity:
-                bundle.putBoolean("isMyUser", isMyUser);
+                /*bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
                 _class = CustomerDynamicManageActivity.class;
+                requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;*/
+
+                bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putSerializable(Customer.class.getName(), mCustomer);
+                _class = CustomerFollowUpListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;
             /*拜访签到*/

@@ -9,22 +9,22 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewListAdapter;
-import com.loyo.oa.v2.activityui.customer.presenter.SigninListFragPresenter;
-import com.loyo.oa.v2.activityui.customer.presenter.impl.SigninListFragPresenterImpl;
+import com.loyo.oa.v2.activityui.customer.adapter.CustomerFollowUpListAdapter;
+import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
+import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.AudioPlayer;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.signin.SignInActivity;
+import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
-import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
-import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Record;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
@@ -34,15 +34,18 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * 【客户下】拜访签到
+ * 【客户下】跟进动态
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerSigninListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2,SigninNewListView,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack,View.OnClickListener {
+public class CustomerFollowUpListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2,FollowUpListView,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack, View.OnClickListener{
+
+    public static final int ACTIVITIES_ADD = 101;
 
     private ViewGroup layout_back;
     private TextView tv_title;
@@ -52,12 +55,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     private boolean isMyUser;
     private boolean isTopAdd;
     private boolean isChanged;
-
-    private Permission permission;
-    private PaginationX<SigninNewListModel> mPagination = new PaginationX<>(20);
-    private ArrayList<SigninNewListModel> listModel = new ArrayList<>();
-    private CustomerSigninNewListAdapter mAdapter;
-
+    private Customer customer;
 
     /*录音 评论 播放相关*/
     private LinearLayout layout_bottom_voice;
@@ -69,21 +67,27 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     private int commentPosition;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
-    private SigninListFragPresenter mPresenter;
+    private CustomerFollowUpListPresenter mPresenter;
+    private CustomerFollowUpListAdapter mAdapter;
 
+    private ArrayList<FollowUpListModel> listModel = new ArrayList<>();
+    private PaginationX<FollowUpListModel> mPagination = new PaginationX<>(20);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_signin);
+        setContentView(R.layout.activity_customer_follow);
         initView();
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
         audioPlayer.killPlayer();
+        layout_bottom_voice.setVisibility(View.GONE);
+        layout_bottom_voice.removeAllViews();
     }
+
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
@@ -100,67 +104,44 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     }
 
     private void initView(){
-        mCustomer = (Customer) getIntent().getSerializableExtra("mCustomer");
-        isMyUser = getIntent().getBooleanExtra("isMyUser",true);
-        mPresenter = new SigninListFragPresenterImpl(this);
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getExtras();
+            customer = (Customer) bundle.getSerializable(Customer.class.getName());
+            isMyUser = bundle.getBoolean("isMyUser");
+        }
+        mPresenter = new CustomerFollowUpListPresenterImpl(this,mContext);
         audioPlayer = new AudioPlayer(this);
 
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
         listView = (PullToRefreshListView) findViewById(R.id.listView_legworks);
+        tv_title = (TextView) findViewById(R.id.tv_title);
 
         layout_bottom_voice = (LinearLayout) findViewById(R.id.layout_bottom_voice);
         layout_bottom_menu = (LinearLayout) findViewById(R.id.layout_bottom_menu);
 
         layout_add.setOnClickListener(this);
         layout_back.setOnClickListener(this);
+        layout_back.setOnTouchListener(Global.GetTouch());
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
         msgAudiomMenu = new MsgAudiomMenu(mContext, this,uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        setTouchView(NO_SCROLL);
-        tv_title.setVisibility(View.VISIBLE);
-        tv_title.setText("拜访签到");
-        layout_back.setOnTouchListener(Global.GetTouch());
         if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
-        layout_add.setOnTouchListener(Global.GetTouch());
 
-        //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = MainApp.rootMap.get("0228");
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
+        tv_title.setVisibility(View.VISIBLE);
+        tv_title.setText("跟进动态");
 
         Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
-                 layout_add,
-                 layout_bottom_menu,msgAudiomMenu.getEditComment());
+                layout_add,
+                layout_bottom_menu,msgAudiomMenu.getEditComment());
 
         getData(false);
-    }
-
-    @Override
-    public void onBackPressed() {
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, isChanged ? RESULT_OK : 0, new Intent());
-    }
-
-    /**
-     * 数据绑定
-     */
-    public void bindData() {
-        if (null == mAdapter) {
-            mAdapter = new CustomerSigninNewListAdapter(mContext, listModel, this,this);
-            listView.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
     }
 
     /**
@@ -171,13 +152,60 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
+        map.put("userId", MainApp.user.id);//我的传id,团队则空着
+        map.put("xpath", "");
+        map.put("timeType", 5);//时间查询
+        map.put("method", 0); //跟进类型0:全部 1:线索 2:客户
+        map.put("typeId", "");
         map.put("split", true);
-        map.put("customerId", mCustomer.id);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (isChanged) {
+            Intent intent = new Intent();
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, FinalVariables.REQUEST_CREATE_TASK, intent);
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+
+            /*返回*/
+            case R.id.layout_back:
+                onBackPressed();
+                break;
+
+            /*新建*/
+            case R.id.layout_add:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Customer.class.getName(), customer);
+                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                break;
+        }
+    }
+
+    /**
+     * 数据绑定
+     */
+    public void bindData() {
+        if (null == mAdapter) {
+            mAdapter = new CustomerFollowUpListAdapter(mContext, listModel, this,this);
+            listView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
 
     /**
      * 评论操作
@@ -300,7 +328,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      * 获取列表数据成
      * */
     @Override
-    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
+    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
         listView.onRefreshComplete();
         if (isTopAdd) {
             listModel.clear();
@@ -316,28 +344,5 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-
-            /*新建*/
-            case R.id.layout_add:
-                if (null != permission && !permission.isEnable()) {
-                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
-                } else {
-                    Bundle b = new Bundle();
-                    b.putSerializable("data", mCustomer);
-                    app.startActivityForResult(this, SignInActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_LEGWORK, b);
-                }
-                break;
-
-            /*返回*/
-            case R.id.layout_back:
-                onBackPressed();
-                break;
-
-        }
     }
 }

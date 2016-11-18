@@ -73,7 +73,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
         getData();
     }
 
-    private void getIntenData() {//intent.putExtra(ExtraAndResult.RESULT_NAME, data.data.sales.responsorName);
+    private void getIntenData() {
         Intent intent = getIntent();
         clueId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
         name = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);

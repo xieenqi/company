@@ -75,7 +75,6 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private int commentPosition;
 
     private Permission permission;
-
     private ArrayList<FollowUpListModel> listModel = new ArrayList<>();
     private PaginationX<FollowUpListModel> mPagination = new PaginationX<>(20);
 
@@ -104,9 +103,11 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         audioPlayer.killPlayer();
+        layout_bottom_voice.setVisibility(View.GONE);
+        layout_bottom_voice.removeAllViews();
     }
 
     @Override

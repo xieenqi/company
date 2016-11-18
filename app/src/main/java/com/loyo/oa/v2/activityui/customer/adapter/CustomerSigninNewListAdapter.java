@@ -79,7 +79,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         final SigninNewListModel signinNewListModel = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sgninnew_selflist, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_sgninnew_selflist, null);
             holder.iv_heading = (RoundImageView) convertView.findViewById(R.id.iv_heading);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);

@@ -105,9 +105,11 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         audioPlayer.killPlayer();
+        layout_bottom_voice.setVisibility(View.GONE);
+        layout_bottom_voice.removeAllViews();
     }
 
     @Override
@@ -379,5 +381,4 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
         playVoiceSize++;
     }
-
 }
