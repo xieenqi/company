@@ -222,15 +222,17 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
             @Override
             public void success(PaginationX<LegWork> paginationX, Response response) {
                 HttpErrorCheck.checkResponse("我客户拜访", response);
+                if (paginationX== null) {
+                    return;
+                }
+
                 lv.onRefreshComplete();
                 workPaginationX = paginationX;
                 if (isTopAdd) {
                     legWorks.clear();
                 }
-                if (paginationX== null) {
-                    return;
-                }
-                
+
+
                 legWorks.addAll(paginationX.getRecords());
                 bindData();
             }

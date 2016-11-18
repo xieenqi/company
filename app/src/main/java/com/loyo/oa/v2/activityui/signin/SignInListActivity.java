@@ -162,7 +162,12 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
             @Override
             public void success(final PaginationX<LegWork> paginationX, final Response response) {
                 HttpErrorCheck.checkResponse("拜访签到列表数据：", response);
+                if (paginationX == null) {
+                    return;
+                }
+
                 workPaginationX = paginationX;
+
                 lv.onRefreshComplete();
                 if (isTopAdd) {
                     legWorks.clear();
