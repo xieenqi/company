@@ -20,6 +20,7 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
     private SeekBar seekBar;
     private Timer mTimer = new Timer();
     TimerTask timerTask;
+    private String curentUrl;
 
 
     public Player(final SeekBar seekBar) {
@@ -36,8 +37,36 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                if (mediaPlayer != null && mediaPlayer.isPlaying() && seekBar.isPressed() == false) {
-                    handler.sendEmptyMessage(0);
+                try {
+                    if (mediaPlayer != null && mediaPlayer.isPlaying() && seekBar.isPressed() == false) {
+                        handler.sendEmptyMessage(0);
+                    }
+                }
+                /** http://stackoverflow.com/questions/15730772/android-java-lang-illegalstateexception-mediaplayer-isplaying/15730932
+                 *
+                 * umeng crash
+                 * ------
+                 * java.lang.IllegalStateException
+                 * at android.media.MediaPlayer.isPlaying(Native Method)
+                 * at com.loyo.oa.v2.tool.Player$1.run(Player.java:39)
+                 * at java.util.Timer$TimerImpl.run(Timer.java:284)
+                 * ------
+                 * fix by ethan 2016-11-18
+                 * TODO:
+                 */
+                catch (IllegalStateException e) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
+                    mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    mediaPlayer.setOnBufferingUpdateListener(Player.this);
+                    mediaPlayer.setOnPreparedListener(Player.this);
+                    if (curentUrl != null) {
+                        playUrl(curentUrl);
+                    }
                 }
             }
         };
@@ -65,6 +94,7 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
 
     public void playUrl(String url) {
         try {
+            curentUrl = url;
             mediaPlayer.reset();
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
