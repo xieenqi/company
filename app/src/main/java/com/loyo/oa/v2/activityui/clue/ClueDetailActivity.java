@@ -510,7 +510,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
         intent.putExtra(ExtraAndResult.RESULT_NAME, data.data.sales.responsorName);
         intent.putExtra(ExtraAndResult.EXTRA_ADD, isAdd);
-        intent.setClass(this, ClueDynamicManagerActivity.class);
+        intent.setClass(this, ClueFollowUpListActivity.class);
         startActivityForResult(intent, this.RESULT_FIRST_USER);
         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }

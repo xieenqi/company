@@ -85,7 +85,6 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     private String uuid = StringUtil.getUUID();
 
 
-
     /*录音播放相关*/
     private LinearLayout layout_bottom_voice;
     private int playVoiceSize = 0;
@@ -106,9 +105,11 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         audioPlayer.killPlayer();
+        layout_bottom_voice.setVisibility(View.GONE);
+        layout_bottom_voice.removeAllViews();
     }
 
     @Override
@@ -380,5 +381,4 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
         playVoiceSize++;
     }
-
 }

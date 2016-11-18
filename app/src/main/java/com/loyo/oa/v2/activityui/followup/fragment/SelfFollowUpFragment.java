@@ -103,9 +103,11 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         audioPlayer.killPlayer();
+        layout_bottom_voice.setVisibility(View.GONE);
+        layout_bottom_voice.removeAllViews();
     }
 
     public void initView(View view) {
@@ -250,7 +252,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     @Override
     public void commentEmbl(int position) {
-
         layout_bottom_voice.setVisibility(View.GONE);
         layout_bottom_voice.removeAllViews();
 

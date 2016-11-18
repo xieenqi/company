@@ -4,12 +4,15 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
@@ -87,9 +90,8 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
 
         layout_audio_pauseorplay.setOnClickListener(this);
         layout_audio_close.setOnClickListener(this);
-
-        musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
         player = new Player(musicProgress);
+        musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
         player.mediaPlayer.setOnCompletionListener(new PlayerComplte());
         this.addView(mView);
     }
@@ -98,13 +100,22 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
      * 线程池播放Player
      */
     public void threadPool(final AudioModel audioModel,TextView nowsView) {
+        if(null == player){
+            player = new Player(musicProgress);
+            player.mediaPlayer.setOnCompletionListener(new PlayerComplte());
+        }
         this.nowsView = nowsView;
         tv_audio_endtime.setText(DateTool.stringForTime((int) audioModel.length * 1000));
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         cachedThreadPool.execute(new Runnable() {
             @Override
             public void run() {
-                player.playUrl(audioModel.url);
+                try {
+                    player.playUrl(audioModel.url);
+                }catch (NullPointerException e){
+                    LogUtil.dee("崩溃");
+                    e.printStackTrace();
+                }
             }
         });
     }

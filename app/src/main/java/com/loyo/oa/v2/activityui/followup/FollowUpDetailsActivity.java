@@ -268,7 +268,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getFollowUpDetails(map, new RCallback<BaseBeanT<FollowUpListModel>>() {
             @Override
             public void success(BaseBeanT<FollowUpListModel> followuplistmodel, Response response) {
-                HttpErrorCheck.checkResponse("拜访详情", response);
+                HttpErrorCheck.checkResponse("跟进详情", response);
                 mFollowUpDelModel = followuplistmodel.data;
                 bindData();
             }

@@ -1,15 +1,14 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
+import com.loyo.oa.v2.activityui.clue.bean.ClueFollowUpListModel;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -23,6 +22,12 @@ import retrofit.http.QueryMap;
  * Created by xeq on 16/8/22.
  */
 public interface IClue {
+
+    /**
+     * 线索下的 跟进
+     */
+    @GET("/saleactivity/saleslead")
+    void followUp(@QueryMap Map<String, Object> params, Callback<PaginationX<ClueFollowUpListModel>> cb);
 
     /**
      * 获取 线索来源

@@ -215,6 +215,7 @@ public interface ICustomer {
     @GET("/visit/bycustId")
     void getLegworks(@QueryMap HashMap<String, Object> map, Callback<PaginationX<LegWork>> callback);
 
+
     @GET("/visit/{id}")
     void getLegwork(@Path("id") String id, Callback<LegWork> callback);
 

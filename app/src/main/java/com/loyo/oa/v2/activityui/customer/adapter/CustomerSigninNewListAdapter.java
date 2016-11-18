@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.signinnew.adapter;
+package com.loyo.oa.v2.activityui.customer.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,22 +19,19 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
+import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -42,7 +39,7 @@ import java.util.ArrayList;
  * Created by yyy on 16/11/12.
  */
 
-public class SigninNewListAdapter extends BaseAdapter {
+public class CustomerSigninNewListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<SigninNewListModel> listModel;
@@ -53,10 +50,8 @@ public class SigninNewListAdapter extends BaseAdapter {
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
-    private DecimalFormat df = new DecimalFormat("0.0");
 
-
-    public SigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, SigninNewListView viewCrol,AudioPlayCallBack audioPlayCallBack) {
+    public CustomerSigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, SigninNewListView viewCrol, AudioPlayCallBack audioPlayCallBack) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
@@ -84,7 +79,7 @@ public class SigninNewListAdapter extends BaseAdapter {
         final SigninNewListModel signinNewListModel = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sgninnew_selflist, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_sgninnew_selflist, null);
             holder.iv_heading = (RoundImageView) convertView.findViewById(R.id.iv_heading);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
@@ -113,9 +108,9 @@ public class SigninNewListAdapter extends BaseAdapter {
         holder.tv_address.setText(signinNewListModel.address);
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.position);
-        holder.tv_offset.setText(signinNewListModel.offsetDistance+"");
+        holder.tv_offset.setText(signinNewListModel.offsetDistance + "");
         holder.tv_customer.setText(signinNewListModel.customerName);
-        holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "MM-dd hh:mm"));
+        holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "yyyy-MM-dd hh:mm"));
 
         /** 备注内容 */
         if(null != signinNewListModel.memo && !TextUtils.isEmpty(signinNewListModel.memo)){
