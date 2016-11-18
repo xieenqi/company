@@ -332,9 +332,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             return;
         }
         HashMap<String, Object> map = new HashMap<>();
-        map.put("gpsInfo", loPosition + "," + laPosition);
-        map.put("address", mAddress.trim());
-        map.put("position", customerAddress);
+        map.put("gpsInfo", loPosition + "," + laPosition);//当前定位信息
+//        map.put("address", mAddress.trim());//客户地址
+        map.put("position", tv_address.getText().toString());//当前定位地址
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("audioInfo", audioInfo);

@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
 import com.loyo.oa.v2.activityui.other.model.Tag;
@@ -26,6 +27,7 @@ import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -45,7 +47,7 @@ import retrofit.client.Response;
  * 【跟进列表】fragment管理类
  * Created by yyy on 16/11/10
  */
-public class FollowUpManagerActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class FollowUpManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
 
 
     private LinearLayout img_title_left, ll_category;
@@ -98,7 +100,7 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
         //超级管理员权全公司  没有获取到权限就不显示
         permission = MainApp.rootMap.get("0205"); //客户权限 暂时用客户权限做测试
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
-            SaleItemStatus = new String[]{"我的跟进","团队跟进"};
+            SaleItemStatus = new String[]{"我的跟进", "团队跟进"};
             publicOrTeam = true;
         }
 
@@ -111,11 +113,11 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
      */
     public void getStageData() {
         showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                GetTags(new RCallback<ArrayList<Tag>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).
+                getFollupFilters(new RCallback<ArrayList<Tag>>() {
                     @Override
                     public void success(ArrayList<Tag> tags, Response response) {
-                        HttpErrorCheck.checkResponse("客户标签：", response);
+                        HttpErrorCheck.checkResponse("跟进 赛选 ：", response);
                         mTags = tags;
                         try {
                             cloneMdata(tags);
@@ -235,8 +237,8 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
                 break;
             /*搜索*/
             case R.id.img_title_search_right:
-                Intent mIntent = new Intent(FollowUpManagerActivity.this,FollowUpDetailsActivity.class);
-                mIntent.putExtra("id","582d8ea0608e4f1e39000007");
+                Intent mIntent = new Intent(FollowUpManagerActivity.this, FollowUpDetailsActivity.class);
+                mIntent.putExtra("id", "582d8ea0608e4f1e39000007");
                 startActivity(mIntent);
                 break;
 
@@ -257,8 +259,8 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
 
     /**
      * 重启Activity
-     * */
-    void reStart(){
+     */
+    void reStart() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

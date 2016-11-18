@@ -77,7 +77,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private ArrayList<AudioModel> allAudio = new ArrayList<>();
 
     private FollowUpListAdapter mAdapter;
-    private FollowUpFragPresenter mPresenter;
+    private FollowUpFragPresenterImpl mPresenter;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
 

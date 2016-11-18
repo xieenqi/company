@@ -94,7 +94,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private RelativeLayout layout_wirete, layout_phone;
     private LinearLayout layout_gj, layout_sign;
     private ImageView iv_select_tag;
-    private CustomerDetailInfoPresenter mPresenter;
+    private CustomerDetailinfoPresenterimpl mPresenter;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
 
 

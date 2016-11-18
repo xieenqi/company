@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.clue;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,15 +20,19 @@ import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
+import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -35,6 +40,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.voip.VoIPCallActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -45,6 +51,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static com.loyo.oa.v2.common.Global.Toast;
 
 public class ClueDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -280,12 +288,92 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 Utils.sendSms(this, data.data.sales.cellphone);
                 break;
             case R.id.ll_call:
-                Utils.call(this, data.data.sales.cellphone);
+                if (!TextUtils.isEmpty(data.data.sales.cellphone)) {
+                    isMobile(ClueDetailActivity.this,data.data.sales.cellphone,0,data.data.sales.name);
+                } else {
+                    Toast("电话号码不能为空");
+                }
+//                Utils.call(this, data.data.sales.cellphone);
                 break;
             case R.id.ll_wiretel_call:
                 Utils.call(this, data.data.sales.tel);
                 break;
         }
+    }
+
+
+    /**
+     * 电话号码格式验证
+     */
+    public void isMobile(final Activity mActivity, final String phone, final int callType, final String name) {
+        if (null == MainApp.user.mobile || TextUtils.isEmpty(MainApp.user.mobile)) {
+            final SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(mContext);
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                    MainApp.getMainApp().startActivity((Activity) mContext, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                }
+            }, "提示", mContext.getString(R.string.app_homeqq_message));
+        } else {
+            paymentSet(mActivity, phone, callType, name);
+        }
+    }
+
+    /**
+     * 拨打电话弹出框
+     */
+    public void paymentSet(final Activity mActivity, final String phone, final int callType, final String name) {
+        boolean checkTag = false;
+        if (callType == 0) {
+            checkTag = RegularCheck.isYunPhone(phone);
+        } else {
+            checkTag = RegularCheck.isYunTell(phone);
+        }
+
+        final CallPhonePopView callPhonePopView = new CallPhonePopView(mContext, name, checkTag);
+        callPhonePopView.show();
+        callPhonePopView.setCanceledOnTouchOutside(true);
+        /*商务电话*/
+        callPhonePopView.businessPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle mBundle = new Bundle();
+                mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone.replaceAll(" +", ""));
+                mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name.trim().toString());
+                MainApp.getMainApp().startActivity(mActivity, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                callPhonePopView.dismiss();
+            }
+        });
+        /*普通电话*/
+        callPhonePopView.commonlyPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (callType == 0) {
+                    if (RegularCheck.isMobilePhone(phone)) {
+                        Utils.call(mContext, phone);
+                    } else {
+                        Toast("电话号码格式不正确或为空!");
+                    }
+                } else {
+                    Utils.call(mContext, phone);
+                }
+
+                callPhonePopView.dismiss();
+            }
+        });
+        callPhonePopView.cancelPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPhonePopView.dismiss();
+            }
+        });
     }
 
     /**
@@ -371,22 +459,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                             deleteClue();
                         }
                     }, "提示", "线索删除过后不可恢复，\n你确定要删除？");
-
-/*                    final GeneralPopView dailog = showGeneralDialog(true, true, "线索删除过后不可恢复，\n你确定要删除？");
-                    dailog.setSureOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            deleteClue();
-                            dailog.dismisDialog();
-                        }
-                    });
-                    dailog.setCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dailog.dismisDialog();
-                        }
-                    });*/
-
                 }
             });
 
@@ -595,20 +667,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     }
                 }, "提示", "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
 
-/*                final GeneralPopView dailog = showGeneralDialog(true, true, "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
-                dailog.setSureOnclick(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        transferClue(u.getId());
-                        dailog.dismisDialog();
-                    }
-                });
-                dailog.setCancelOnclick(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dailog.dismisDialog();
-                    }
-                });*/
                 break;
 
             /*转移客户*/
