@@ -94,7 +94,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private RelativeLayout layout_wirete, layout_phone;
     private LinearLayout layout_gj, layout_sign;
     private ImageView iv_select_tag;
-    private CustomerDetailInfoPresenter mPresenter;
+    private CustomerDetailinfoPresenterimpl mPresenter;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
 
 
@@ -194,6 +194,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
         mContact = Utils.findDeault(mCustomer);
         if (null != mContact) {
+            mPresenter.setDefaultContact(mContact.getId(),mCustomer.id);
 
             if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
                 layout_phone.setVisibility(View.GONE);

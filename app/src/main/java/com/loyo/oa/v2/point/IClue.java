@@ -4,14 +4,11 @@ import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueFollowUpListModel;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
-import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
-import com.loyo.oa.v2.beans.BaseBeanT;
+import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -77,6 +74,7 @@ public interface IClue {
 
     /**
      * 获取跟进
+     *
      * @param map
      * @param cb
      */
@@ -86,7 +84,8 @@ public interface IClue {
 
 
     /**
-     *  线索写 新建跟进
+     * 线索写 新建跟进
+     *
      * @param map
      * @param cb
      */
@@ -95,6 +94,7 @@ public interface IClue {
 
     /**
      * 删除
+     *
      * @param map
      * @param callback
      */
@@ -107,4 +107,18 @@ public interface IClue {
      */
     @PUT("/salesleads/batch/transfer")
     void transferClue(@Body HashMap<String, Object> map, Callback<Object> callback);
+
+
+    /**
+     * 线索 拨打商务电话 【回拨】信息查询
+     */
+    @POST("/ipvoice/request")
+    void getCallReturnInfo(@Body HashMap<String, Object> mao, Callback<CallBackCallid> callback);
+
+    /**
+     * 线索 拨打商务电话 【直播】信息查询
+     */
+    @POST("/ipvoice/direct/request")
+    void getCallLiveInfo(@Body HashMap<String, Object> mao, Callback<CallBackCallid> callback);
+
 }

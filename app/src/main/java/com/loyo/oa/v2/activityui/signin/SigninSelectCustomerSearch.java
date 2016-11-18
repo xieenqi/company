@@ -95,7 +95,7 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
                 returnData(position - 1);
             }
         });
-        dataRequestvoid();
+//        dataRequestvoid();
     }
 
     @Override
@@ -128,8 +128,8 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
                     public void success(final BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX, final Response response) {
                         HttpErrorCheck.checkResponse("拜访搜索选择客户:", response);
                         expandableListView_search.onRefreshComplete();
-                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                         if (null == customerPaginationX) {
                             if (isTopAdd) {
                                 showNoData();

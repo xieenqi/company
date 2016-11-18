@@ -57,7 +57,7 @@ import java.util.List;
  * 【我的跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack {
+public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
     private View mView;
     private Button btn_add;
@@ -68,7 +68,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private ArrayList<Tag> mTags;
     private String menuTimeKey = ""; /*时间*/
-    private String menuChosKey = ""; /*筛选*/
+    private String menuChosKey = "", method, typeId, activityType; /*筛选*/
+
     private boolean isTopAdd;
     private int commentPosition;
 
@@ -77,7 +78,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private ArrayList<AudioModel> allAudio = new ArrayList<>();
 
     private FollowUpListAdapter mAdapter;
-    private FollowUpFragPresenter mPresenter;
+    private FollowUpFragPresenterImpl mPresenter;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
 
@@ -127,12 +128,12 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this,uuid);
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        Utils.btnSpcHideForListViewTest(getActivity(),listView.getRefreshableView(),
+        Utils.btnSpcHideForListViewTest(getActivity(), listView.getRefreshableView(),
                 btn_add,
-                layout_bottom_menu,msgAudiomMenu.getEditComment());
+                layout_bottom_menu, msgAudiomMenu.getEditComment());
     }
 
     /**
@@ -155,7 +156,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                     case 0:
                         menuTimeKey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:" + menuTimeKey + " value" + model.getValue());
+//                        Toast("key:" + menuTimeKey + " value" + model.getValue());
                         break;
 
                     /*筛选*/
@@ -176,7 +177,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new FollowUpListAdapter(getActivity(), listModel, this,this);
+            mAdapter = new FollowUpListAdapter(getActivity(), listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -197,6 +198,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
+
     /**
      * 发送语音
      */
@@ -209,6 +211,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
+
     /**
      * 获取Self列表数据
      */
@@ -219,9 +222,10 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", MainApp.user.id);//我的传id,团队则空着
         map.put("xpath", "");
-        map.put("timeType", 5);//时间查询
+        map.put("timeType", menuTimeKey);//时间查询
         map.put("method", 0); //跟进类型0:全部 1:线索 2:客户
         map.put("typeId", "");
+        map.put("activityType", "");
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
@@ -302,18 +306,18 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
 
-       for(FollowUpListModel model : listModel){
-           if(null != model.audioInfo){
-               allAudio.addAll(model.audioInfo);
-           }
-           if(null != model.comments){
-              for(CommentModel commentModel : model.comments){
-                  if(null != commentModel.audioInfo){
-                      allAudio.add(commentModel.audioInfo);
-                  }
-              }
-           }
-       }
+        for (FollowUpListModel model : listModel) {
+            if (null != model.audioInfo) {
+                allAudio.addAll(model.audioInfo);
+            }
+            if (null != model.comments) {
+                for (CommentModel commentModel : model.comments) {
+                    if (null != commentModel.audioInfo) {
+                        allAudio.add(commentModel.audioInfo);
+                    }
+                }
+            }
+        }
         bindData();
     }
 
@@ -357,10 +361,10 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 列表播放语音回调
-     * */
+     */
     @Override
-    public void playVoice(AudioModel audioModel,TextView textView) {
-        if(TextUtils.isEmpty(audioModel.url)){
+    public void playVoice(AudioModel audioModel, TextView textView) {
+        if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
         }
@@ -369,19 +373,19 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);
         /*关闭上一条TextView动画*/
-        if(playVoiceSize > 0){
-            if(null != lastView)
-            MainApp.getMainApp().stopAnim(lastView);
+        if (playVoiceSize > 0) {
+            if (null != lastView)
+                MainApp.getMainApp().stopAnim(lastView);
         }
 
         /*点击同一条则暂停播放*/
-        if(lastView == textView){
+        if (lastView == textView) {
             MainApp.getMainApp().stopAnim(textView);
             audioPlayer.audioPause(textView);
             lastView = null;
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel,textView);
+            audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }
