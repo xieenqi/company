@@ -119,12 +119,15 @@ public class NearCustomerAdapter extends BaseAdapter {
         else if (customer_type == Customer.CUSTOMER_TYPE_NEAR_TEAM) {
             layout_go_where.setVisibility(View.VISIBLE);
             img_public.setVisibility(View.GONE);
-            layout2.setVisibility(View.GONE);
+            layout2.setVisibility(View.VISIBLE);
             layout3.setVisibility(View.GONE);
 
             img1.setImageResource(R.drawable.icon_customer_tag);
+            img2.setImageResource(R.drawable.icon_follow_up_creator);
 
             tv_content1.setText("标签：" + tagItems);
+            String ownerName = customer.owner!=null?customer.owner.getRealname():"无";
+            tv_content2.setText("负责人：" + ownerName);
             tv_content4.setText("距离：" + customer.distance);
             if (isNear && customer.winCount != 0) {
                 imgWin.setVisibility(View.VISIBLE);
@@ -141,7 +144,7 @@ public class NearCustomerAdapter extends BaseAdapter {
             img1.setImageResource(R.drawable.img_sign_list_position);
             img2.setImageResource(R.drawable.icon_customer_demands_plan);
 
-            tv_content1.setText("地址：" + customer.loc.addr);
+            tv_content1.setText("地址：" + customer.position!=null?customer.position.addr:"无定位");
 
             if (null != customer.distance) {
                 String distance;
