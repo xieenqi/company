@@ -95,7 +95,7 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
                 returnData(position - 1);
             }
         });
-        dataRequestvoid();
+//        dataRequestvoid();
     }
 
     @Override
