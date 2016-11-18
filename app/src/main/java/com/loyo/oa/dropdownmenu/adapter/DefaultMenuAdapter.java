@@ -8,6 +8,7 @@ import com.loyo.oa.dropdownmenu.callback.OnMenuButtonClick;
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.view.DoubleMenuView;
 import com.loyo.oa.dropdownmenu.filtermenu.view.OrganizationMenuView;
 import com.loyo.oa.dropdownmenu.filtermenu.view.TagMenuView;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
@@ -101,6 +102,26 @@ public class DefaultMenuAdapter implements MenuAdapter {
                             model.setSelectedIndexes(idxes);
                             DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, model.getSelectedModels(), null);
                         }
+                    }
+                });
+                result = view;
+            }
+            break;
+            case DOUBLE_LIST_MULTI_SEL:
+            {
+                final DoubleMenuView view = new DoubleMenuView(context);
+                view.setFilterModel(model);
+                view.setCallback(new OnMenuButtonClick(){
+
+                    @Override
+                    public void onMenuConfirmClick() {
+                        DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, view.getSelectedMenuModels(), view.getSelectedParams());
+                    }
+
+                    @Override
+                    public void onMenuResetClick() {
+                        DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, view.getSelectedMenuModels(), "");
+
                     }
                 });
                 result = view;
