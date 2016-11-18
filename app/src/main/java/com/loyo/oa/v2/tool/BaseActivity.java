@@ -75,6 +75,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public static final int PEOJECT_MANAGE = 0x07; //项目管理
     public static final int WFIN_MANAGE = 0x09; //审批列表
     public static final int CLUE_MANAGE = 0x20; //线索列表
+    public static final int DYNAMIC_MANAGE = 211; //跟进对象 客户 到新建跟进动态
 
     public SystemBarTintManager tintManager;
 
@@ -396,7 +397,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
                     }
                 });
             }
-        }, 100);
+        }, 300);
     }
 
     /**

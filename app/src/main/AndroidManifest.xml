@@ -225,6 +225,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
+            android:name=".activityui.signin.SigninSelectCustomerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
             android:name=".activityui.other.DepartmentUserActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -281,6 +287,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activityui.followup.DynamicSelectActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activityui.tasks.TasksManageActivity_"
             android:launchMode="singleTop"
@@ -404,24 +415,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <!-- <activity -->
-
-
-        <!-- < -->
-        <!-- < -->
-        <!-- < -->
-        <!-- < -->
-        <!-- < -->
-        <!-- < -->
-        <!-- < HEAD -->
-        <!-- ======= -->
-        <!-- android:name=".activityui.other.DepartmentActivity" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:windowSoftInputMode="adjustUnspecified|stateHidden" /> -->
-        <!-- <activity>>>>>>> develop-bug-fix2 -->
-        <!-- android:name=".activityui.signin.SignInManagerFromCustomer" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:windowSoftInputMode="stateAlwaysHidden" /> -->
         <!-- 任务审核 -->
         <activity
             android:name=".activityui.tasks.TasksInfoScoreActivity_"
@@ -432,9 +425,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
-            android:name=".activityui.customer.CustomerDynamicAddActivity"
+            android:name=".activityui.followup.DynamicAddActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activityui.other.DepartmentUserSearchActivity"
             android:launchMode="singleTop"
@@ -475,12 +469,21 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-
-        <!--<activity-->
-        <!--android:name=".activityui.work.WorkReportModelSelectManageActivity_"-->
-        <!--android:launchMode="singleTop"-->
-        <!--android:screenOrientation="portrait"-->
-        <!--android:windowSoftInputMode="stateAlwaysHidden"/>-->
+        <activity
+            android:name=".activityui.customer.CustomerSigninListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activityui.customer.CustomerFollowUpListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activityui.clue.ClueFollowUpListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".activityui.tasks.TaskModelSelectManageActivity_"
@@ -519,7 +522,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activityui.signin.SigninSelectCustomer"
+            android:name=".activityui.signin.SigninSelectCustomerSearch"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
@@ -759,6 +762,22 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
 
+        <activity
+            android:name=".activityui.signinnew.SigninNewManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activityui.followup.FollowUpDetailsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activityui.signinnew.SigninNewDetailsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <!-- 其它 -->
         <activity
             android:name=".activityui.other.PreviewImageAddActivity"
@@ -812,6 +831,11 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activityui.customer.MyContactMailSerachList"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activityui.followup.FollowUpManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -993,7 +1017,11 @@
             android:value="56f0a2a367e58e2176002ad6" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="ukuaiqi" />
+            android:value="ukuaiqi" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
     </application>
 </manifest>

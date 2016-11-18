@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.clue;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,24 +18,32 @@ import com.loyo.oa.v2.activityui.clue.bean.ClueDetailWrapper;
 import com.loyo.oa.v2.activityui.clue.bean.ClueSales;
 import com.loyo.oa.v2.activityui.clue.common.ClueCommon;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
+import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
+import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
+import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.compat.Compat;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.voip.VoIPCallActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -45,6 +54,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static com.loyo.oa.v2.common.Global.Toast;
 
 public class ClueDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -280,12 +291,208 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 Utils.sendSms(this, data.data.sales.cellphone);
                 break;
             case R.id.ll_call:
-                Utils.call(this, data.data.sales.cellphone);
+                if (!TextUtils.isEmpty(data.data.sales.cellphone)) {
+                    isMobile(data.data.sales.cellphone, 0, data.data.sales.name);
+                } else {
+                    Toast("电话号码不能为空");
+                }
+//                Utils.call(this, data.data.sales.cellphone);
                 break;
             case R.id.ll_wiretel_call:
-                Utils.call(this, data.data.sales.tel);
+                if (!TextUtils.isEmpty(data.data.sales.cellphone)) {
+                    isMobile(data.data.sales.cellphone, 1, data.data.sales.name);
+                } else {
+                    Toast("电话号码不能为空");
+                }
+//                Utils.call(this, data.data.sales.tel);
                 break;
         }
+    }
+
+
+    /**
+     * callType 0 手机 1座机
+     * 电话号码格式验证
+     */
+    public void isMobile(final String phone, final int callType, final String name) {
+        if (null == MainApp.user.mobile || TextUtils.isEmpty(MainApp.user.mobile)) {
+            final SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(mContext);
+            sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialogView.sweetAlertDialog.dismiss();
+                    MainApp.getMainApp().startActivity((Activity) mContext, EditUserMobileActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                }
+            }, "提示", mContext.getString(R.string.app_homeqq_message));
+        } else {
+            paymentSet(phone, callType, name);
+        }
+    }
+
+    /**
+     * 拨打电话弹出框
+     */
+    public void paymentSet(final String phone, final int callType, final String name) {
+        boolean checkTag = false;
+        if (callType == 0) {
+            checkTag = RegularCheck.isYunPhone(phone);
+        } else {
+            checkTag = RegularCheck.isYunTell(phone);
+        }
+
+        final CallPhonePopView callPhonePopView = new CallPhonePopView(mContext, name, checkTag);
+        callPhonePopView.show();
+        callPhonePopView.setCanceledOnTouchOutside(true);
+         /*商务电话-回拨*/
+        callPhonePopView.businessPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callReturn(phone, callType, name);
+            }
+        });
+
+         /*商务电话-直拨*/
+        callPhonePopView.directPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callLive(phone, callType, name);
+//                contactProcessCallback.onCallBack(phone.replaceAll(" +", ""), mContact.getId(), mContact.getName().trim().toString(), DirectPhone, phoneType);
+                callPhonePopView.dismiss();
+            }
+        });
+        /*普通电话*/
+        callPhonePopView.commonlyPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (callType == 0) {
+                    if (RegularCheck.isMobilePhone(phone)) {
+                        Utils.call(mContext, phone);
+                    } else {
+                        Toast("电话号码格式不正确或为空!");
+                    }
+                } else {
+                    Utils.call(mContext, phone);
+                }
+
+                callPhonePopView.dismiss();
+            }
+        });
+        callPhonePopView.cancelPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPhonePopView.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 回拨查询
+     */
+    void callReturn(String phone, int callType, final String name) {
+        showLoading("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("salesleadId", data.data.sales.id);
+        map.put("type", callType);
+        map.put("mobile", phone);
+        LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallReturnInfo(map,
+                new RCallback<CallBackCallid>() {
+                    @Override
+                    public void success(final CallBackCallid callBackCallid, final Response response) {
+                        HttpErrorCheck.checkResponse("线索请求回拨", response);
+                        try {
+                            switch (callBackCallid.errcode) {
+                                case 0:
+                                    Bundle mBundle = new Bundle();
+                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
+                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
+                                    app.startActivity(ClueDetailActivity.this, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                                    break;
+
+                                case 50000:
+                                    Toast("主叫与被叫号码不能相同!");
+                                    break;
+
+                                case 50001:
+                                    Toast("余额不足!");
+                                    break;
+
+                                case 50002:
+                                    Toast("号码格式错误!");
+                                    break;
+                            }
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            Toast(e.getMessage());
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    /**
+     * 直播查询
+     */
+    void callLive(final String phone, int callType, final String name) {
+        showLoading("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("salesleadId", data.data.sales.id);
+        map.put("type", callType);
+        map.put("mobile", phone);
+        LogUtil.dee("请求直播发送数据：" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallLiveInfo(map,
+                new RCallback<CallBackCallid>() {
+                    @Override
+                    public void success(final CallBackCallid callBackCallid, final Response response) {
+                        HttpErrorCheck.checkResponse("线索请求直播", response);
+                        try {
+                            switch (callBackCallid.errcode) {
+                                case 0:
+                                    Bundle mBundle = new Bundle();
+                                    mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone);
+                                    mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name);
+//                                    mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
+//                                    mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerContact.getId());
+                                    app.startActivity(ClueDetailActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                                    break;
+
+                                case 50000:
+                                    Toast("主叫与被叫号码不能相同!");
+                                    break;
+
+                                case 50001:
+                                    Toast("余额不足!");
+                                    break;
+
+                                case 50002:
+                                    Toast("号码格式错误!");
+                                    break;
+                            }
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            Toast(e.getMessage());
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
     /**
@@ -294,13 +501,14 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     private void clueActivity() {
         Intent intent = new Intent();
         intent.putExtra(ExtraAndResult.EXTRA_ID, data.data.sales.id);
-        String name = data.data.sales.name;
+        String name = data.data.sales.companyName;
         if (TextUtils.isEmpty(name)) {
             name = "";
         }
         intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
+        intent.putExtra(ExtraAndResult.RESULT_NAME, data.data.sales.responsorName);
         intent.putExtra(ExtraAndResult.EXTRA_ADD, isAdd);
-        intent.setClass(this, ClueDynamicManagerActivity.class);
+        intent.setClass(this, ClueFollowUpListActivity.class);
         startActivityForResult(intent, this.RESULT_FIRST_USER);
         overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
@@ -370,22 +578,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                             deleteClue();
                         }
                     }, "提示", "线索删除过后不可恢复，\n你确定要删除？");
-
-/*                    final GeneralPopView dailog = showGeneralDialog(true, true, "线索删除过后不可恢复，\n你确定要删除？");
-                    dailog.setSureOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            deleteClue();
-                            dailog.dismisDialog();
-                        }
-                    });
-                    dailog.setCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dailog.dismisDialog();
-                        }
-                    });*/
-
                 }
             });
 
@@ -594,20 +786,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                     }
                 }, "提示", "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
 
-/*                final GeneralPopView dailog = showGeneralDialog(true, true, "转移后，线索的数据和管理权限\n将归属新的负责人。\n你确定要转移？");
-                dailog.setSureOnclick(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        transferClue(u.getId());
-                        dailog.dismisDialog();
-                    }
-                });
-                dailog.setCancelOnclick(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dailog.dismisDialog();
-                    }
-                });*/
                 break;
 
             /*转移客户*/

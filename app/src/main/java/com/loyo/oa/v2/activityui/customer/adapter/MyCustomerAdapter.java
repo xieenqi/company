@@ -28,15 +28,29 @@ public class MyCustomerAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater inflater;
 
+    public MyCustomerAdapter(Context mContext) {
+        this.mContext = mContext;
+        inflater = LayoutInflater.from(mContext);
+    }
+
     public MyCustomerAdapter(final Context context, ArrayList<Customer> customers) {
         mCustomers = customers;
         mContext = context;
         inflater = LayoutInflater.from(mContext);
     }
 
+    public void setData(ArrayList<Customer> customers) {
+        this.mCustomers = customers;
+        notifyDataSetChanged();
+    }
+
+    public Customer getItemData(int position) {
+        return mCustomers.get(position);
+    }
+
     @Override
     public int getCount() {
-        return mCustomers.size();
+        return null == mCustomers ? 0 : mCustomers.size();
     }
 
     @Override

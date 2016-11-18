@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title" />
+
+    <LinearLayout
+        android:id="@+id/ll_search"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#d9d9d9"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dimen_6"
+        android:paddingLeft="@dimen/margin_other_view"
+        android:paddingRight="@dimen/margin_other_view"
+        android:paddingTop="@dimen/dimen_6">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/icon_search_one" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_add_customer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dimen_8"
+        android:paddingTop="@dimen/dimen_8">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_contact_insert"
+            android:drawablePadding="@dimen/dimen_5"
+            android:gravity="center_vertical"
+            android:text="新建客户"
+            android:textColor="@color/title_bg1"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/include_solid_line" />
+
+    <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
+        android:id="@+id/lv_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/activity_bg"
+        android:cacheColorHint="#00000000"
+        android:divider="@null"
+        android:drawSelectorOnTop="true"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"
+        android:scrollbars="none"
+        android:smoothScrollbar="true" />
+</LinearLayout>

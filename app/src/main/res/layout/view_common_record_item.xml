@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/dimen_3"
+    android:paddingLeft="@dimen/margin_other_view"
+    android:paddingRight="9dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_record_item" />
+
+    <TextView
+        android:id="@+id/tv_record_length"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="@drawable/animation_calls"
+        android:textColor="#3FD3AA" />
+
+    <TextView
+        android:id="@+id/tv_record_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="@dimen/dimen_10"
+        android:text="53'"
+        android:textColor="@color/text99" />
+
+    <RelativeLayout
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="@dimen/dimen_5">
+
+
+        <ImageView
+            android:id="@+id/iv_uploading_fial"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_record_item_refresh"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/pb_progress"
+            style="?android:attr/progressBarStyleSmallTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="@dimen/dimen_5"
+        android:src="@drawable/icon_record_item_delete" />
+
+
+</LinearLayout>

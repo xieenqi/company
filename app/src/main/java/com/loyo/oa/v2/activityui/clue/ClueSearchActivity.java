@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
@@ -58,8 +59,7 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
 
     private int fromPage;
     private int page = 1;
-    private boolean isPullDown = true;
-
+    private boolean isPullDown = true, isSelect, isResult;//是否加载第一页数据供选择  isResult是否设置返回值
     private Intent mIntent;
 
 
@@ -76,6 +76,8 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
     void initView() {
         mBundle = getIntent().getExtras();
         fromPage = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
+        isSelect = mBundle.getBoolean("isSelect", false);
+        isResult = mBundle.getBoolean("isResult", false);
         mInflater = LayoutInflater.from(this);
         emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
@@ -134,12 +136,29 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
-                mIntent.putExtra(ExtraAndResult.EXTRA_ID, listData.get(position - 1).id);
-                startActivity(mIntent);
+                if (!isSelect) {//查看详情
+                    mIntent = new Intent(getApplicationContext(), ClueDetailActivity.class);
+                    mIntent.putExtra(ExtraAndResult.EXTRA_ID, listData.get(position - 1).id);
+                    startActivity(mIntent);
+                } else {//选择线索
+                    Intent intent = new Intent();
+                    intent.putExtra(ClueListItem.class.getName(), listData.get(position - 1));
+                    intent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
+                    intent.setClass(ClueSearchActivity.this, DynamicAddActivity.class);
+                    if (isResult) {
+                        setResult(RESULT_OK, intent);
+                        onBackPressed();
+                    } else {
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                        finish();
+                    }
+                }
                 hideInputKeyboard(edt_search);
             }
         });
+        if (isSelect)
+            doSearch();
     }
 
     /**

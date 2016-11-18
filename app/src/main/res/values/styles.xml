@@ -305,15 +305,25 @@
         <item name="android:windowEnterAnimation">@anim/actionsheet_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>
     </style>
+
     <style name="popwin_anim_style">
         <item name="android:windowEnterAnimation">@anim/contactlist_show</item>
         <item name="android:windowExitAnimation">@anim/contactlist_diss</item>
     </style>
 
     <declare-styleable name="AnimCheckBox">
-        <attr name="stroke_width" format="dimension"/>
-        <attr name="stroke_color" format="color"/>
-        <attr name="circle_color" format="color"/>
+        <attr name="stroke_width" format="dimension" />
+        <attr name="stroke_color" format="color" />
+        <attr name="circle_color" format="color" />
     </declare-styleable>
 
+    <!--透明背景的dialog-->
+    <style name="check_photodailog_style" parent="@android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 </resources>

@@ -102,6 +102,10 @@ public class ExtraAndResult {
     public static final int WORKSHEET_EVENT_REDO = 307;
     public static final int WORKSHEET_EVENT_FINISH = 308;
     public static final int WORKSHEET_EVENT_DETAIL = 309;
+    //写跟进页面的action
+    public static final String DYNAMIC_ADD_ACTION = "dynamic_add_action";
+    public static final int DYNAMIC_ADD_CUSTOMER = 112;
+    public static final int DYNAMIC_ADD_CULE = 114;
 
     protected ExtraAndResult() {
         throw new UnsupportedOperationException(); // 防止子类调用

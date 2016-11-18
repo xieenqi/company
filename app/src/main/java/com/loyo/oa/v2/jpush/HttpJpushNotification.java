@@ -12,6 +12,7 @@ public class HttpJpushNotification implements Serializable {
     public int buzzType;
     public String operationType;//discuss/delete/finished/finished/update/expire/willexpire/redo/done/repeat/accept/reject/attachment/demand/share/remind
     public String uuid;//暂时没有用到
+    public String pusherCognate = "";//调用接口回传给服务器跟新系统消息的红点状态
     public int silentType;
     public ArrayList<String> buzzIds;
 

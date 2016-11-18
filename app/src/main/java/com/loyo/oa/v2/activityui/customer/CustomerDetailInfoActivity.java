@@ -23,6 +23,7 @@ import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerDetailInfoPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPresenterimpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signin.SignInListActivity_;
 import com.loyo.oa.v2.application.MainApp;
@@ -47,10 +48,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Date;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -93,7 +90,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private RelativeLayout layout_wirete, layout_phone;
     private LinearLayout layout_gj, layout_sign;
     private ImageView iv_select_tag;
-    private CustomerDetailInfoPresenter mPresenter;
+    private CustomerDetailinfoPresenterimpl mPresenter;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
 
 
@@ -193,6 +190,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
         mContact = Utils.findDeault(mCustomer);
         if (null != mContact) {
+            mPresenter.setDefaultContact(mContact.getId(),mCustomer.id);
 
             if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
                 layout_phone.setVisibility(View.GONE);
@@ -301,8 +299,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
             /*跟进*/
             case R.id.layout_gj:
-                mIntent = new Intent(CustomerDetailInfoActivity.this, CustomerDynamicAddActivity.class);
+                mIntent = new Intent(CustomerDetailInfoActivity.this, DynamicAddActivity.class);
                 mIntent.putExtra(Customer.class.getName(), mCustomer);
+                mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 startActivity(mIntent);
                 break;
 
@@ -389,17 +388,28 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*跟进动态*/
             case R.id.layout_sale_activity:
-                bundle.putBoolean("isMyUser", isMyUser);
+                /*bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
                 _class = CustomerDynamicManageActivity.class;
+                requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;*/
+
+                bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putSerializable(Customer.class.getName(), mCustomer);
+                _class = CustomerFollowUpListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;
             /*拜访签到*/
             case R.id.layout_visit:
-                bundle.putBoolean("isMyUser", isMyUser);
+               /* bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = SignInListActivity_.class;
+                requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;*/
+
+                bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putSerializable("mCustomer", mCustomer);
+                _class = CustomerSigninListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;
+
                 break;
             /*任务计划*/
             case R.id.layout_task:

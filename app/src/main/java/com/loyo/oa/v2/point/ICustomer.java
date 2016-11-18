@@ -13,7 +13,7 @@ import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.Product;
-import com.loyo.oa.v2.activityui.customer.model.Tag;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
@@ -125,7 +125,7 @@ public interface ICustomer {
 
     /**
      * 客户详情,编辑跟进标签
-     * */
+     */
     @PUT("/customer/tag/{id}")
     void setCusLabel(@Path("id") String id, @Body ArrayList<NewTag> map, Callback<Contact> callback);
 
@@ -178,12 +178,7 @@ public interface ICustomer {
     @GET("/saleactivitytype/")
     void getSaleactivitytypes(Callback<ArrayList<CommonTag>> cb);
 
-    /**
-     * customerId		"客户id"	string	form<BR/>
-     * content		"动态内容"	string	form<BR/>
-     * remindAt		"提醒时间"	int64	form<BR/>
-     * typeId		"动态类型id"	string	form<BR/>
-     *
+    /*客户 写跟进
      * @param map
      * @param cb
      */
@@ -219,6 +214,7 @@ public interface ICustomer {
 
     @GET("/visit/bycustId")
     void getLegworks(@QueryMap HashMap<String, Object> map, Callback<PaginationX<LegWork>> callback);
+
 
     @GET("/visit/{id}")
     void getLegwork(@Path("id") String id, Callback<LegWork> callback);
@@ -274,42 +270,42 @@ public interface ICustomer {
      */
     @GET("/order/cus/{id}")
     void getCutomerOrder(@Path("id") String id, @QueryMap HashMap<String, Object> map, Callback<PaginationX<OrderListItem>> callback);
+//
+//    /**
+//     * 查询Client信息
+//     * */
+//    @GET("/Accounts/{accountSid}/ClientsByMobile")
+//    void getClientInfo(@Path("accountSid") String sid,@Query("sig") String sig,@QueryMap HashMap<String,Object> map,Callback<CallClientInfo> callback);
 
-    /**
-     * 查询Client信息
-     * */
-    @GET("/Accounts/{accountSid}/ClientsByMobile")
-    void getClientInfo(@Path("accountSid") String sid,@Query("sig") String sig,@QueryMap HashMap<String,Object> map,Callback<CallClientInfo> callback);
+//    /**
+//     * 请求Client绑定
+//     * */
+//    @POST("/Accounts/{accountSid}/Clients")
+//    void getClient(@Path("accountSid") String sid,@Query("sig") String sig,@Body HashMap<String,Object> map,Callback<CallUserResp> callback);
 
-    /**
-     * 请求Client绑定
-     * */
-    @POST("/Accounts/{accountSid}/Clients")
-    void getClient(@Path("accountSid") String sid,@Query("sig") String sig,@Body HashMap<String,Object> map,Callback<CallUserResp> callback);
+//    /**
+//     * 回拨
+//     * */
+//    @POST("/Accounts/{accountSid}/Calls/callBack")
+//    void getCallBack(@Path("accountSid") String sid,@Query("sig") String sig,@Body HashMap<String,Object> map,Callback<CallBackResp> callback);
 
-    /**
-     * 回拨
-     * */
-    @POST("/Accounts/{accountSid}/Calls/callBack")
-    void getCallBack(@Path("accountSid") String sid,@Query("sig") String sig,@Body HashMap<String,Object> map,Callback<CallBackResp> callback);
-
-    /**
-     * 通知我们的服务器 回拨成功
-     * */
-    @POST("/ipvoice/")
-    void toastOurServer(@Body HashMap<String,Object> map,Callback<CallBackCallid>callback);
+//    /**
+//     * 通知我们的服务器 回拨成功
+//     * */
+//    @POST("/ipvoice/")
+//    void toastOurServer(@Body HashMap<String,Object> map,Callback<CallBackCallid>callback);
 
     /**
      * 通知服务器请求回拨
-     * */
+     */
     @POST("/ipvoice/request")
-    void requestCallBack(@Body HashMap<String,Object> map,Callback<CallBackCallid>callback);
+    void requestCallBack(@Body HashMap<String, Object> map, Callback<CallBackCallid> callback);
 
     /**
      * 通知服务器取消回拨
-     * */
+     */
     @GET("/ipvoice/callCancel/{callLogId}")
-    void cancelCallBack(@Path("callLogId")String id,Callback<CallBackCallid>callback);
+    void cancelCallBack(@Path("callLogId") String id, Callback<CallBackCallid> callback);
 
 
 }

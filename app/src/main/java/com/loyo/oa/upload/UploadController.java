@@ -39,7 +39,7 @@ import rx.schedulers.Schedulers;
  * Created by EthanGong on 16/10/9.
  */
 
-public class UploadController implements ImageCell.ImageCellCallback{
+public class UploadController implements ImageCell.ImageCellCallback {
 
     private ArrayList<UploadTask> taskList = new ArrayList<UploadTask>();
     private Activity context;
@@ -51,7 +51,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
     public int maxSize;
 
 
-    public UploadController(Activity context, int maxSize){
+    public UploadController(Activity context, int maxSize) {
         this.context = context;
         this.adapter = new UploadImageAdapter(context, taskList, maxSize);
         this.adapter.callback = this;
@@ -59,21 +59,20 @@ public class UploadController implements ImageCell.ImageCellCallback{
     }
 
 
-    public UploadTask uploadFile(String filePath, String UUID)
-    {
-        UploadTask task  = new UploadTask(filePath, UUID);
+    public UploadTask uploadFile(String filePath, String UUID) {
+        UploadTask task = new UploadTask(filePath, UUID);
         taskList.add(task);
         executeTask(task);
         return task;
     }
 
     public void addUploadTask(String filePath, String UUID) {
-        UploadTask task  = new UploadTask(filePath, UUID);
+        UploadTask task = new UploadTask(filePath, UUID);
         taskList.add(task);
     }
 
     public void addUploadTask(String originPath, String filePath, String UUID) {
-        UploadTask task  = new UploadTask(originPath, filePath, UUID);
+        UploadTask task = new UploadTask(originPath, filePath, UUID);
         taskList.add(task);
     }
 
@@ -206,11 +205,11 @@ public class UploadController implements ImageCell.ImageCellCallback{
         observer = new WeakReference<UploadControllerCallback>(callback);
     }
 
-    private void onUploadTaskProgress(final UploadTask uploadTask,final double progress) {
+    private void onUploadTaskProgress(final UploadTask uploadTask, final double progress) {
         uploadTask.status = UploadTask.UPLOADING;
         uploadTask.progress = progress;
 
-        if(gridView == null) {
+        if (gridView == null) {
             return;
         }
 
@@ -234,7 +233,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
             onAllUploadTasksComplete(taskList);
         }
 
-        if(gridView == null) {
+        if (gridView == null) {
             return;
         }
 
@@ -257,7 +256,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
             onAllUploadTasksComplete(taskList);
         }
 
-        if(gridView == null) {
+        if (gridView == null) {
             return;
         }
 
@@ -302,7 +301,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
         int result = 0;
         for (int i = 0; i < taskList.size(); i++) {
             UploadTask task = taskList.get(i);
-            if ( UploadTask.FAILED == task.getStatus() || UploadTask.CANCEL == task.getStatus()) {
+            if (UploadTask.FAILED == task.getStatus() || UploadTask.CANCEL == task.getStatus()) {
                 result++;
             }
         }
@@ -341,12 +340,11 @@ public class UploadController implements ImageCell.ImageCellCallback{
                 uploadTask.setFilePath(newFile.getPath());
                 uploadTask.size = newFile.length();
                 uploadTask.name = newFile.getName();
-            }
-            else {
+            } else {
                 uploadTask.setFilePath(uploadTask.originPath);
             }
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
     }
 
     private void upload(final UploadTask uploadTask) {
@@ -358,7 +356,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
             @Override
             public void onProgress(PutObjectRequest request, long l, long l1) {
-                onUploadTaskProgress(uploadTask, l*1.0/l1);
+                onUploadTaskProgress(uploadTask, l * 1.0 / l1);
             }
         });
 
@@ -370,6 +368,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
 
                         LogUtil.dee("ETag" + result.getETag());
                         LogUtil.dee("RequestId" + result.getRequestId());
+                        LogUtil.dee("Body" + result.getServerCallbackReturnBody());
                         onUploadTaskSuccess(uploadTask, 1.0);
 
                         Log.v("debug", "UploadSuccess");
@@ -401,7 +400,7 @@ public class UploadController implements ImageCell.ImageCellCallback{
     @Override
     public void onRetry(final int index) {
         final UploadControllerCallback observer = getObserver();
-        if (null != observer && index >=0 && index < taskList.size()) {
+        if (null != observer && index >= 0 && index < taskList.size()) {
             context.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

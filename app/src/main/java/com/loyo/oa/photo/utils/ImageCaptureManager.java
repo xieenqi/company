@@ -60,7 +60,7 @@ public class ImageCaptureManager {
       // Create the File where the photo should go
       File file = createImageFile();
       Uri photoFile;
-      if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      if (android.os.Build.VERSION.SDK_INT >= 24/*Build.VERSION_CODES.N*/) {
         String authority = mContext.getApplicationInfo().packageName + ".provider";
         photoFile = FileProvider.getUriForFile(this.mContext.getApplicationContext(), authority, file);
       } else {

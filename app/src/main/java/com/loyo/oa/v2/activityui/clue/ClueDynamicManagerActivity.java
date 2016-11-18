@@ -12,11 +12,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.customer.adapter.DynamicListnestingAdapter;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
+import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
@@ -54,7 +56,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
     private ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
     private PaginationX<SaleActivity> paginationX = new PaginationX<>(20);
     private String clueId;
-    private String name;
+    private String name, responsorName;
     private SaleActivity mSaleActivity;
     private boolean isChanged;
     private boolean isTopAdd = true;
@@ -75,6 +77,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
         Intent intent = getIntent();
         clueId = intent.getStringExtra(ExtraAndResult.EXTRA_ID);
         name = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+        responsorName = intent.getStringExtra(ExtraAndResult.RESULT_NAME);
         isMyUser = intent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
         if (TextUtils.isEmpty(clueId)) {
             onBackPressed();
@@ -142,10 +145,14 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
 
             /*新建线索*/
             case R.id.layout_add:
+                ClueListItem item = new ClueListItem();
+                item.id = clueId;
+                item.companyName = name;
+                item.responsorName = responsorName;
                 Bundle bundle = new Bundle();
-                bundle.putString(ExtraAndResult.EXTRA_ID, clueId);
-                bundle.putString(ExtraAndResult.EXTRA_NAME, name);
-                app.startActivityForResult(this, ClueDynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+                bundle.putSerializable(ClueListItem.class.getName(), item);
+                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
+                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
 
             default:
@@ -297,6 +304,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
         TextView tv_audio_length;
         ImageView iv_imgTime;
         TextView tv_calls;
+
         /**
          * 设置图文混编
          */

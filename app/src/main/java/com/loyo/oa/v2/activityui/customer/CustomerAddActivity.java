@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
@@ -29,10 +28,12 @@ import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
 import com.loyo.oa.v2.activityui.customer.model.HttpAddCustomer;
+import com.loyo.oa.v2.activityui.customer.model.Locate;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
@@ -55,6 +56,7 @@ import com.loyo.oa.v2.tool.UMengTools;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
@@ -99,6 +101,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     CusGridView gridView_photo;
     @ViewById
     TextView tv_gscx;
+    //新建拜访 过来新建客户成功过后需要把数据回传到新建拜访页面
+    @Extra("isResultSignin")
+    boolean isResultSignin = false;
 
 
     private TextView tv_phone_name1;
@@ -166,7 +171,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private boolean cusMobile = false;//座机权限
     private boolean cusLocation = false;//定位权限
     private boolean cusDetialAdress = false;//客户的详细地址
-
+    private boolean isSave = true;
+    private Customer mCustomer;
     private ArrayList<String> telGroup;
     private ArrayList<String> wiretelGroup;
 
@@ -214,8 +220,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         ll_phone_layout3 = (LinearLayout) findViewById(R.id.ll_phone_layout3);
         ll_call_layout2 = (LinearLayout) findViewById(R.id.ll_call_layout2);
         ll_call_layout3 = (LinearLayout) findViewById(R.id.ll_call_layout3);
-        layout_more     = (LinearLayout) findViewById(R.id.layout_more);
-        container       = (LinearLayout) findViewById(R.id.layout_customer_extra_info);
+        layout_more = (LinearLayout) findViewById(R.id.layout_more);
+        container = (LinearLayout) findViewById(R.id.layout_customer_extra_info);
 
         layout_more.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -276,7 +282,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 组装动态数据
      */
     private void initExtra(final boolean ismy) {
-        if(null == mCustomerExtraDatas || mCustomerExtraDatas.size() == 0){
+        if (null == mCustomerExtraDatas || mCustomerExtraDatas.size() == 0) {
             layout_more.setVisibility(View.GONE);
             return;
         }
@@ -284,10 +290,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         ExtraData extraData;
         ExtraProperties properties;
 
-        for(ContactLeftExtras contactLeftExtras : mCustomerExtraDatas){
+        for (ContactLeftExtras contactLeftExtras : mCustomerExtraDatas) {
             extraData = new ExtraData();
             properties = new ExtraProperties();
-            if(!contactLeftExtras.isSystem && contactLeftExtras.enabled){
+            if (!contactLeftExtras.isSystem && contactLeftExtras.enabled) {
                 properties.setEnabled(contactLeftExtras.enabled);
                 properties.setRequired(contactLeftExtras.required);
                 properties.setLabel(contactLeftExtras.label);
@@ -368,7 +374,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
             R.id.layout_customer_label, R.id.img_refresh_address, R.id.iv_phone_insert1,
-            R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx,R.id.layout_more})
+            R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx, R.id.layout_more})
     public void onClick(final View v) {
         switch (v.getId()) {
 
@@ -560,8 +566,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
-    public void getTelNum(EditText editText,ArrayList<String> arrayList){
-        if(!TextUtils.isEmpty(editText.getText().toString())){
+    public void getTelNum(EditText editText, ArrayList<String> arrayList) {
+        if (!TextUtils.isEmpty(editText.getText().toString())) {
             arrayList.add(editText.getText().toString());
         }
     }
@@ -591,12 +597,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         telGroup = new ArrayList<>();
         wiretelGroup = new ArrayList<>();
 
-        getTelNum(edt_contract_tel1,telGroup);
-        getTelNum(edt_contract_tel2,telGroup);
-        getTelNum(edt_contract_tel3,telGroup);
-        getTelNum(edt_contract_telnum1,wiretelGroup);
-        getTelNum(edt_contract_telnum2,wiretelGroup);
-        getTelNum(edt_contract_telnum3,wiretelGroup);
+        getTelNum(edt_contract_tel1, telGroup);
+        getTelNum(edt_contract_tel2, telGroup);
+        getTelNum(edt_contract_tel3, telGroup);
+        getTelNum(edt_contract_telnum1, wiretelGroup);
+        getTelNum(edt_contract_telnum2, wiretelGroup);
+        getTelNum(edt_contract_telnum3, wiretelGroup);
 
         HashMap<String, Object> map = new HashMap<>();
         if (pickPhots.size() > 0) {
@@ -614,11 +620,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("telGroup", telGroup);
         map.put("wiretelGroup", wiretelGroup);
 
-        LogUtil.dee("新建客户map:"+MainApp.gson.toJson(map));
+        LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse("新建客户",response);
+                HttpErrorCheck.checkResponse("新建客户", response);
                 //没有附件
                 if (customer == null || customer.id == null) {
                     return;
@@ -647,11 +653,20 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         MyCustomerListRushEvent event = new MyCustomerListRushEvent();
         AppBus.getInstance().post(event);
         isSave = false;
+        if (isResultSignin) {
+            Intent intent = new Intent();
+            intent.putExtra("id", retCustomer.id);
+            intent.putExtra("name", retCustomer.name);
+            Locate oldeLoc = retCustomer.position;
+            List<Double> loc = new ArrayList<>();
+            loc.add(oldeLoc.loc[0]);
+            loc.add(oldeLoc.loc[1]);
+            Location location = new Location(loc, oldeLoc.addr);
+            intent.putExtra("loc", location);
+            setResult(RESULT_OK, intent);
+        }
         onBackPressed();
     }
-
-    boolean isSave = true;
-    Customer mCustomer;
 
     @Override
     protected void onDestroy() {

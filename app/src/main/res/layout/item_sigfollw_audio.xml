@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/layout_audio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_voice_phone" />
+
+        <TextView
+            android:id="@+id/iv_calls"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_33"
+            android:background="@drawable/animation_calls"
+            android:textColor="#3FD3AA" />
+
+        <TextView
+            android:id="@+id/tv_audio_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10"
+            android:text="00:00"
+            android:textColor="@color/text99"
+            android:textSize="@dimen/text_sp12" />
+
+    </LinearLayout>
+</LinearLayout>

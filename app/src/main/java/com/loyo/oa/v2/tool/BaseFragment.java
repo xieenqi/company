@@ -1,10 +1,14 @@
 package com.loyo.oa.v2.tool;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity;
@@ -14,6 +18,9 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {
 
@@ -39,7 +46,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     }
 
     @Subscribe
-    public void onEvent(Object object){
+    public void onEvent(Object object) {
 
     }
 
@@ -97,9 +104,40 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     }
 
     /**
+     * 关闭软键盘
+     */
+    public void hideInputKeyboard(EditText et) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
+
+
+    /**
+     * 手动 显示软键盘
+     */
+    public void showInputKeyboard(final EditText view) {
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        final Handler handler = new Handler();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (imm != null) {
+                            view.requestFocus();
+                            imm.showSoftInput(view, 0);
+                        }
+                    }
+                });
+            }
+        }, 100);
+    }
+
+    /**
      * 关闭SweetAlertDialog
-     * */
-    public void cancelDialog(){
+     */
+    public void cancelDialog() {
         sweetAlertDialogView.sweetAlertDialog.dismiss();
     }
 

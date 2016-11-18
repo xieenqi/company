@@ -2,7 +2,7 @@ package com.loyo.oa.photo.utils;
 
 import android.Manifest;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+//import android.support.annotation.RequiresApi;
 
 /**
  * https://github.com/donglua/PhotoPicker
@@ -22,7 +22,7 @@ public class PermissionsConstant {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public static final String[] PERMISSIONS_EXTERNAL_READ = {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };

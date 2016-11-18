@@ -41,6 +41,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.AbsListView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -170,8 +171,6 @@ public class Utils {
 
     /**
      * 根据当前选择的秒数还原时间点
-     *
-     * @param args
      */
 
     public static String getCheckTimeBySeconds(int progress, String startTime) {
@@ -1588,6 +1587,14 @@ public class Utils {
         return lengthfilter;
     }
 
+    /**
+     * 自动弹出软键盘
+     * */
+    public static void autoKeyBoard(Context mContext,EditText editText){
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0,InputMethodManager.SHOW_FORCED);
+    }
 
     /**
      * 添加按钮，根据滑动显示隐藏(recyclerView)
@@ -1613,6 +1620,166 @@ public class Utils {
     }
 
     /**
+     * 关闭软键盘
+     */
+    public static void hideInputKeyboard(EditText et,Context mContext) {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
+
+    /**
+     * 添加按钮,底部评论菜单,滑动隐藏(ListView)
+     */
+    public static void btnSpcHideForListViewTeam(final Context mContext,final ListView listView,final LinearLayout menu,final LinearLayout voice,final EditText editText) {
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                editText.setText("");
+                hideInputKeyboard(editText,mContext);
+                menu.setVisibility(View.GONE);
+                voice.setVisibility(View.GONE);
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrollFlag = true;
+                } else {
+                    scrollFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+    }
+
+
+    /**
+     * 客户下跟进拜访,滑动隐藏(ListView)
+     */
+    public static void btnSpcHideForListViewCus(final Context mContext,final ListView listView,final ViewGroup add, final LinearLayout menu,final EditText editText) {
+        lastVisibleItemPosition = 0;
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                editText.setText("");
+                hideInputKeyboard(editText,mContext);
+                menu.setVisibility(View.GONE);
+
+                if(menu.getVisibility() == View.GONE){
+                    add.setVisibility(View.VISIBLE);
+                }
+
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrollFlag = true;
+                } else {
+                    scrollFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (scrollFlag) {
+                    if (firstVisibleItem > lastVisibleItemPosition) {
+                        LogUtil.dee("上滑");
+                    }
+                    if (firstVisibleItem < lastVisibleItemPosition) {
+                        LogUtil.dee("下滑");
+                    }
+                    if (firstVisibleItem == lastVisibleItemPosition) {
+                        return;
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
+                }
+            }
+        });
+    }
+
+    /**
+     * 添加按钮,底部评论菜单,滑动隐藏(ListView)
+     */
+    public static void btnSpcHideForListViewTest(final Context mContext,final ListView listView, final View btn, final LinearLayout menu,final EditText editText) {
+        lastVisibleItemPosition = 0;
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                editText.setText("");
+                hideInputKeyboard(editText,mContext);
+                menu.setVisibility(View.GONE);
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrollFlag = true;
+                } else {
+                    scrollFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (scrollFlag) {
+                    if (firstVisibleItem > lastVisibleItemPosition) {
+                        LogUtil.dee("上滑");
+                        if (btn.getVisibility() == View.VISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animHide);
+                        btn.setVisibility(View.INVISIBLE);
+                    }
+                    if (firstVisibleItem < lastVisibleItemPosition) {
+                        LogUtil.dee("下滑");
+                        if (btn.getVisibility() == View.INVISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animShow);
+                        btn.setVisibility(View.VISIBLE);
+                    }
+                    if (firstVisibleItem == lastVisibleItemPosition) {
+                        return;
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
+                }
+            }
+        });
+    }
+
+    /**
+     * 添加按钮,底部评论菜单,滑动隐藏(ListView)
+     */
+    public static void btnSpcHideForListView(final Context mContext,final ListView listView, final View btn, final LinearLayout menu,final LinearLayout voice,final EditText editText) {
+        lastVisibleItemPosition = 0;
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                editText.setText("");
+                hideInputKeyboard(editText,mContext);
+                menu.setVisibility(View.GONE);
+                voice.setVisibility(View.GONE);
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrollFlag = true;
+                } else {
+                    scrollFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (scrollFlag) {
+                    if (firstVisibleItem > lastVisibleItemPosition) {
+                        LogUtil.dee("上滑");
+                        if (btn.getVisibility() == View.VISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animHide);
+                        btn.setVisibility(View.INVISIBLE);
+                    }
+                    if (firstVisibleItem < lastVisibleItemPosition) {
+                        LogUtil.dee("下滑");
+                        if (btn.getVisibility() == View.INVISIBLE)
+                            btn.startAnimation(MainApp.getMainApp().animShow);
+                        btn.setVisibility(View.VISIBLE);
+                    }
+                    if (firstVisibleItem == lastVisibleItemPosition) {
+                        return;
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
+                }
+            }
+        });
+    }
+
+    /**
      * 添加按钮，根据滑动显示隐藏(ListView)
      */
     public static void btnHideForListView(final ListView listView, final View btn) {
@@ -1620,6 +1787,7 @@ public class Utils {
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                LogUtil.dee("scrollState:"+scrollState);
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     scrollFlag = true;
                 } else {
