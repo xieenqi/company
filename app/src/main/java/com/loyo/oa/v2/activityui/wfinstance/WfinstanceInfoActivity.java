@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -65,8 +63,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -199,6 +195,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 /**
                  * 赢单审批
                  */
+                if (wfInstance_current==null || wfInstance_current.bizForm == null)
+                {
+                    return;
+                }
+
                 if (300 == wfInstance_current.bizForm.bizCode) {
                     wfData(wfInstance_current);
                 } else if (400 == wfInstance_current.bizForm.bizCode) {//订单审批
