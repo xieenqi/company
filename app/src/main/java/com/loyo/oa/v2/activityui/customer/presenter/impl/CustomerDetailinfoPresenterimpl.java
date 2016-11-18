@@ -5,7 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerDetailInfoPresenter;
@@ -25,28 +28,36 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.voip.VoIPCallActivity;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
 import static com.loyo.oa.v2.common.Global.Toast;
 
 /**
  * Created by yyy on 16/11/7.
  */
 
-public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresenter{
+public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresenter {
 
     private Context mContext;
     private CustomerDetailinfoView crolView;
+    private String contactId, customerId;
 
-    public CustomerDetailinfoPresenterimpl(Context mContext, CustomerDetailinfoView crolView){
+    public CustomerDetailinfoPresenterimpl(Context mContext, CustomerDetailinfoView crolView) {
         this.mContext = mContext;
         this.crolView = crolView;
     }
 
+    public void setDefaultContact(String contactId, String customerId) {
+        this.contactId = contactId;
+        this.customerId = customerId;
+    }
+
     /**
      * 丢入公海操作
-     * */
+     */
     @Override
     public void toPublic(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).toPublic(id, new RCallback<Customer>() {
@@ -64,7 +75,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
 
     /**
      * 删除客户操作
-     * */
+     */
     @Override
     public void delete(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(id, new RCallback<Customer>() {
@@ -83,7 +94,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
 
     /**
      * 获取参与人权限
-     * */
+     */
     @Override
     public void getMembersRoot() {
         crolView.showProgress("");
@@ -105,7 +116,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
 
     /**
      * 获取客户详情数据
-     * */
+     */
     @Override
     public void getData(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
@@ -129,7 +140,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
 
     /**
      * 判断是否为参与人
-     * */
+     */
     @Override
     public boolean isMenber(Customer mCustomer) {
         if (null != mCustomer) {
@@ -144,7 +155,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
 
     /**
      * 显示编辑客户弹出框
-     * */
+     */
     @Override
     public void showEditPopu(Activity mActivity) {
         boolean isDelte = false, isPublic = false;
@@ -178,7 +189,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
 
     /**
      * 拨打电话弹出框
-     * */
+     */
     @Override
     public void paymentSet(final Activity mActivity, final String phone, final int callType, final String name) {
         boolean checkTag = false;
@@ -196,8 +207,21 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
             @Override
             public void onClick(View v) {
                 Bundle mBundle = new Bundle();
-                mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY,phone.replaceAll(" +", ""));
+                mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone.replaceAll(" +", ""));
                 mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name.trim().toString());
+                MainApp.getMainApp().startActivity(mActivity, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                callPhonePopView.dismiss();
+            }
+        });
+         /*商务电话-直拨*/
+        callPhonePopView.directPhone(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle mBundle = new Bundle();
+                mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone);
+                mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name);
+                mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
+                mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerId);
                 MainApp.getMainApp().startActivity(mActivity, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 callPhonePopView.dismiss();
             }
@@ -230,7 +254,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
 
     /**
      * 电话号码格式验证
-     * */
+     */
     @Override
     public void isMobile(final Activity mActivity, final String phone, final int callType, final String name) {
         if (null == MainApp.user.mobile || TextUtils.isEmpty(MainApp.user.mobile)) {
@@ -248,7 +272,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
                 }
             }, "提示", mContext.getString(R.string.app_homeqq_message));
         } else {
-            paymentSet(mActivity,phone, callType,name);
+            paymentSet(mActivity, phone, callType, name);
         }
     }
 

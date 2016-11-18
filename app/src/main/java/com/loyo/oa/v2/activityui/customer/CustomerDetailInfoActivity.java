@@ -194,6 +194,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
         mContact = Utils.findDeault(mCustomer);
         if (null != mContact) {
+            mPresenter.setDefaultContact(mContact.getId(),mCustomer.id);
 
             if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
                 layout_phone.setVisibility(View.GONE);

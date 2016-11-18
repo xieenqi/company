@@ -142,6 +142,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 MenuModel model = selectedModels.get(0);
                 String key = model.getKey();
                 String value = model.getValue();
+//                Toast("key  "+key+"value  "+value);
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
 
                 if (menuIndex == 0) {
