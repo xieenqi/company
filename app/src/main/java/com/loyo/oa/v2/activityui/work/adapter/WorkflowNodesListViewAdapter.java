@@ -11,11 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WfNodes;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 
@@ -68,7 +66,8 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
 
         WfNodes wfNodes = lstData.get(position);
         if (wfNodes != null) {
-            String actionName = wfNodes.getExecutorUser().getRealname();//节点人的名字
+            User executor = wfNodes.getExecutorUser();
+            String actionName = executor!=null? executor.getRealname(): "无";//节点人的名字
             String actionInfo = wfNodes.getComment();//处理意见
 
             if (TextUtils.isEmpty(wfNodes.title)) {
