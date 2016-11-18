@@ -1628,32 +1628,6 @@ public class Utils {
     }
 
     /**
-     * 添加按钮,底部评论菜单,滑动隐藏(ListView)
-     */
-    public static void btnSpcHideForListViewTeam(final Context mContext,final ListView listView,final LinearLayout menu,final LinearLayout voice,final EditText editText) {
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                editText.setText("");
-                hideInputKeyboard(editText,mContext);
-                menu.setVisibility(View.GONE);
-                voice.setVisibility(View.GONE);
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    scrollFlag = true;
-                } else {
-                    scrollFlag = false;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
-    }
-
-
-    /**
      * 客户下跟进拜访,滑动隐藏(ListView)
      */
     public static void btnSpcHideForListViewCus(final Context mContext,final ListView listView,final ViewGroup add, final LinearLayout menu,final EditText editText) {
@@ -1697,7 +1671,7 @@ public class Utils {
     /**
      * 添加按钮,底部评论菜单,滑动隐藏(ListView)
      */
-    public static void btnSpcHideForListViewTest(final Context mContext,final ListView listView, final View btn, final LinearLayout menu,final EditText editText) {
+    public static void btnSpcHideForListView(final Context mContext,final ListView listView, final LinearLayout menu,final EditText editText) {
         lastVisibleItemPosition = 0;
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -1714,24 +1688,7 @@ public class Utils {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (scrollFlag) {
-                    if (firstVisibleItem > lastVisibleItemPosition) {
-                        LogUtil.dee("上滑");
-                        if (btn.getVisibility() == View.VISIBLE)
-                            btn.startAnimation(MainApp.getMainApp().animHide);
-                        btn.setVisibility(View.INVISIBLE);
-                    }
-                    if (firstVisibleItem < lastVisibleItemPosition) {
-                        LogUtil.dee("下滑");
-                        if (btn.getVisibility() == View.INVISIBLE)
-                            btn.startAnimation(MainApp.getMainApp().animShow);
-                        btn.setVisibility(View.VISIBLE);
-                    }
-                    if (firstVisibleItem == lastVisibleItemPosition) {
-                        return;
-                    }
-                    lastVisibleItemPosition = firstVisibleItem;
-                }
+
             }
         });
     }
@@ -1739,7 +1696,7 @@ public class Utils {
     /**
      * 添加按钮,底部评论菜单,滑动隐藏(ListView)
      */
-    public static void btnSpcHideForListView(final Context mContext,final ListView listView, final View btn, final LinearLayout menu,final LinearLayout voice,final EditText editText) {
+    public static void btnSpcHideForListViewTest(final Context mContext,final ListView listView, final View btn, final LinearLayout menu,final EditText editText) {
         lastVisibleItemPosition = 0;
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -1747,7 +1704,6 @@ public class Utils {
                 editText.setText("");
                 hideInputKeyboard(editText,mContext);
                 menu.setVisibility(View.GONE);
-                voice.setVisibility(View.GONE);
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     scrollFlag = true;
                 } else {

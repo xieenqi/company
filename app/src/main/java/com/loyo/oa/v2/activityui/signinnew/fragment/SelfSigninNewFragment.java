@@ -26,10 +26,12 @@ import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signinnew.adapter.SigninNewListAdapter;
+import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.presenter.SelfSigninListFragPresenter;
@@ -49,6 +51,8 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -252,6 +256,11 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         getData(false);
     }
 
+    @Subscribe
+    public void onSigninNewRushEvent(SigninNewRushEvent event){
+        LogUtil.dee("onFollowUpRushEvent");
+        getData(false);
+    }
 
     /**
      * 点击评论回调
@@ -301,9 +310,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
         listView.onRefreshComplete();
-        if (isTopAdd) {
-            listModel.clear();
-        }
+        listModel.clear();
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();

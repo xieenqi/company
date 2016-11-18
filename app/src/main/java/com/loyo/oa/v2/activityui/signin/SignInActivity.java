@@ -30,6 +30,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.beans.Customer;
@@ -38,6 +39,7 @@ import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.point.IAttachment;
@@ -353,9 +355,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 if (legWork != null) {
                     Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
-                        Intent intent = getIntent();
-                        intent.putExtra("data", legWork);
-                        app.finishActivity(SignInActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                        AppBus.getInstance().post(new SigninNewRushEvent());
+                        finish();
                     } else {
                         Toast(getString(R.string.sign) + "异常!");
                     }

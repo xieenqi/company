@@ -148,8 +148,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        Utils.btnSpcHideForListViewTest(getActivity(), listView.getRefreshableView(),
-                btn_add,
+        Utils.btnSpcHideForListView(getActivity(), listView.getRefreshableView(),
                 layout_bottom_menu, msgAudiomMenu.getEditComment());
     }
 

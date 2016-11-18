@@ -35,7 +35,7 @@ public class MultiFunctionModule extends LinearLayout {
     private ImageView ll_action_record, iv_record, iv_record_keyboard;
     private TextView tv_record_action, tv_record_number;
     private long recordTime;
-    private boolean isRecordCancle;
+    private boolean isRecordCancle, isEffective = false;//录音是否达到有效值
     private RecordUtils voice;
     private RecordComplete callbackComplete;
     Handler handler = new Handler();
@@ -163,7 +163,7 @@ public class MultiFunctionModule extends LinearLayout {
             }
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    v.setAlpha(0.6f);
+//                    v.setAlpha(0.6f);
                     dialog.setVisibility(VISIBLE);
                     voice.initStaratRecord();
                     break;
@@ -174,7 +174,7 @@ public class MultiFunctionModule extends LinearLayout {
                         puaseRecordingTime();
                         cancleRecord();
                         voice.stopRecord();
-                        v.setAlpha(1f);
+//                        v.setAlpha(1f);
                         isRecordCancle = true;
                     } else {
                         // 开始动画
@@ -182,20 +182,22 @@ public class MultiFunctionModule extends LinearLayout {
                             stratRecordingTime();
                         }
                         recordOngoing();
-                        v.setAlpha(0.6f);
+//                        v.setAlpha(0.6f);
                         isRecordCancle = false;
                     }
                     break;
                 case MotionEvent.ACTION_UP:
                     dialog.setVisibility(GONE);
-                    if (!isRecordCancle) {
+                    if (!isRecordCancle && isEffective) {
                         callbackComplete.recordComplete(voice.getOutPath(), voice.getFormat(voice.getEndTime() - voice.getStartTime()));
                         //恢复默认录音状态是键盘
                         ll_record_keyboard.setTag(false);
                         setIsRecording(false);
                         cancleRecordingTime();
+                    } else {
+                        Global.Toast("好像你没有说话哦!");
                     }
-                    v.setAlpha(1f);
+//                    v.setAlpha(1f);
                     if (voice.isStart()) {
                         voice.stopRecord();
                     }
@@ -245,6 +247,7 @@ public class MultiFunctionModule extends LinearLayout {
         recordTime = 0;
         task.cancel();
         task = null;
+        tv_record_number.setText("");
     }
 
     /**
@@ -285,20 +288,28 @@ public class MultiFunctionModule extends LinearLayout {
         } else if (db > 10 && db < 20) {
             iv_record.setImageResource(R.drawable.icon_record_ok2);
         } else if (db > 20 && db < 30) {
+            isEffective = true;
             iv_record.setImageResource(R.drawable.icon_record_ok3);
         } else if (db > 30 && db < 40) {
+            isEffective = true;
             iv_record.setImageResource(R.drawable.icon_record_ok4);
         } else if (db > 40 && db < 50) {
+            isEffective = true;
             iv_record.setImageResource(R.drawable.icon_record_ok5);
         } else if (db > 50 && db < 60) {
+            isEffective = true;
             iv_record.setImageResource(R.drawable.icon_record_ok6);
         } else if (db > 60 && db < 70) {
+            isEffective = true;
             iv_record.setImageResource(R.drawable.icon_record_ok7);
         } else if (db > 70 && db < 80) {
+            isEffective = true;
             iv_record.setImageResource(R.drawable.icon_record_ok8);
         } else if (db > 80 && db < 90) {
+            isEffective = true;
             iv_record.setImageResource(R.drawable.icon_record_ok9);
         } else if (db > 90 && db < 100) {
+            isEffective = true;
             iv_record.setImageResource(R.drawable.icon_record_ok10);
         }
 

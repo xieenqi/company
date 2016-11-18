@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
 import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
@@ -33,6 +34,9 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -238,6 +242,12 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         mPresenter.requestComment(map);
     }
 
+    @Subscribe
+    public void onFollowUpRushEvent(FollowUpRushEvent event){
+        LogUtil.dee("onFollowUpRushEvent");
+        getData(false);
+    }
+
     /**
      * 回调发送评论
      */
@@ -336,9 +346,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
     @Override
     public void getListDataSuccesseEmbl(PaginationX<ClueFollowUpListModel> paginationX) {
         listView.onRefreshComplete();
-        if (isTopAdd) {
-            listModel.clear();
-        }
+        listModel.clear();
         mPagination = paginationX;
         listModel.addAll(paginationX.getRecords());
         bindData();

@@ -15,6 +15,7 @@ import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerFollowUpListPre
 import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
@@ -34,6 +35,8 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,6 +235,12 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         mPresenter.requestComment(map);
     }
 
+    @Subscribe
+    public void onFollowUpRushEvent(FollowUpRushEvent event){
+        LogUtil.dee("onFollowUpRushEvent");
+        getData(false);
+    }
+
     /**
      * 回调发送评论
      */
@@ -330,9 +339,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
         listView.onRefreshComplete();
-        if (isTopAdd) {
-            listModel.clear();
-        }
+        listModel.clear();
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();

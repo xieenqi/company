@@ -32,6 +32,7 @@ import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activityui.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.signin.SigninSelectCustomerSearch;
 import com.loyo.oa.v2.application.MainApp;
@@ -45,6 +46,7 @@ import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.DateTimePickDialog;
 import com.loyo.oa.v2.db.DBManager;
@@ -327,6 +329,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             @Override
             public void success(final SaleActivity saleActivity, final Response response) {
                 HttpErrorCheck.checkResponse("新建跟进动态", response);
+                AppBus.getInstance().post(new FollowUpRushEvent());
                 app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
             }
 

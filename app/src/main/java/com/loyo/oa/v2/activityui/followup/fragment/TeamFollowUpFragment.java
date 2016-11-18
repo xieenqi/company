@@ -147,8 +147,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        Utils.btnSpcHideForListViewTest(getActivity(), listView.getRefreshableView(),
-                btn_add,
+        Utils.btnSpcHideForListView(getActivity(), listView.getRefreshableView(),
                 layout_bottom_menu, msgAudiomMenu.getEditComment());
 
     }
@@ -324,9 +323,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
         listView.onRefreshComplete();
-        if (isTopAdd) {
-            listModel.clear();
-        }
+        listModel.clear();
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();

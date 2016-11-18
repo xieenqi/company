@@ -26,6 +26,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
+import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
@@ -47,6 +48,8 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +78,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private ArrayList<FollowUpListModel> listModel = new ArrayList<>();
     private PaginationX<FollowUpListModel> mPagination = new PaginationX<>(20);
-    private ArrayList<AudioModel> allAudio = new ArrayList<>();
 
     private FollowUpListAdapter mAdapter;
     private FollowUpFragPresenterImpl mPresenter;
@@ -233,6 +235,12 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPresenter.getListData(map);
     }
 
+    @Subscribe
+    public void onFollowUpRushEvent(FollowUpRushEvent event){
+        LogUtil.dee("onFollowUpRushEvent");
+        getData(false);
+    }
+
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         isTopAdd = true;
@@ -300,24 +308,9 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
         listView.onRefreshComplete();
-        if (isTopAdd) {
-            listModel.clear();
-        }
+        listModel.clear();
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
-
-        for (FollowUpListModel model : listModel) {
-            if (null != model.audioInfo) {
-                allAudio.addAll(model.audioInfo);
-            }
-            if (null != model.comments) {
-                for (CommentModel commentModel : model.comments) {
-                    if (null != commentModel.audioInfo) {
-                        allAudio.add(commentModel.audioInfo);
-                    }
-                }
-            }
-        }
         bindData();
     }
 

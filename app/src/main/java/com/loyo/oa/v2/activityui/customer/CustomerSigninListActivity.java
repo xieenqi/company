@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
+import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
@@ -34,6 +35,9 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -204,6 +208,12 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         mPresenter.requestComment(map);
     }
 
+    @Subscribe
+    public void onSigninNewRushEvent(SigninNewRushEvent event){
+        LogUtil.dee("onFollowUpRushEvent");
+        getData(false);
+    }
+
     /**
      * 回调发送评论
      */
@@ -302,9 +312,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
         listView.onRefreshComplete();
-        if (isTopAdd) {
-            listModel.clear();
-        }
+        listModel.clear();
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
