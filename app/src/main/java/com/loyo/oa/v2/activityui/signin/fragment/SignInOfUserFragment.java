@@ -227,6 +227,10 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 if (isTopAdd) {
                     legWorks.clear();
                 }
+                if (paginationX== null) {
+                    return;
+                }
+                
                 legWorks.addAll(paginationX.getRecords());
                 bindData();
             }
