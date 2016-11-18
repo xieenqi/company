@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
+import com.loyo.oa.v2.activityui.followup.common.FollowFilter;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.followup.fragment.SelfFollowUpFragment;
 import com.loyo.oa.v2.activityui.followup.fragment.TeamFollowUpFragment;
@@ -66,10 +67,10 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
     private String[] SaleItemStatus = new String[]{"我的跟进"};
 
     private Permission permission;
-    private ArrayList<Tag> mTags;
-    private ArrayList<Tag> mTags1;
-    private ArrayList<Tag> mTags2;
-    private ArrayList<Tag> mTags3;
+    private ArrayList<FollowFilter> mTags;
+    private ArrayList<FollowFilter> mTags1;
+    private ArrayList<FollowFilter> mTags2;
+    private ArrayList<FollowFilter> mTags3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,9 +115,9 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
     public void getStageData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).
-                getFollupFilters(new RCallback<ArrayList<Tag>>() {
+                getFollupFilters(new RCallback<ArrayList<FollowFilter>>() {
                     @Override
-                    public void success(ArrayList<Tag> tags, Response response) {
+                    public void success(ArrayList<FollowFilter> tags, Response response) {
                         HttpErrorCheck.checkResponse("跟进 赛选 ：", response);
                         mTags = tags;
                         try {
@@ -146,14 +147,14 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
     /**
      * 深克隆筛选数据
      */
-    private void cloneMdata(ArrayList<Tag> tags) throws IOException, ClassNotFoundException {
+    private void cloneMdata(ArrayList<FollowFilter> tags) throws IOException, ClassNotFoundException {
         mTags1 = new ArrayList<>(tags.size());
         mTags2 = new ArrayList<>(tags.size());
         mTags3 = new ArrayList<>(tags.size());
 
-        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
-        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
-        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
+        mTags1 = (ArrayList<FollowFilter>) Utils.deepCopyT(mTags);
+        mTags2 = (ArrayList<FollowFilter>) Utils.deepCopyT(mTags);
+        mTags3 = (ArrayList<FollowFilter>) Utils.deepCopyT(mTags);
     }
 
     void initTitleItem() {

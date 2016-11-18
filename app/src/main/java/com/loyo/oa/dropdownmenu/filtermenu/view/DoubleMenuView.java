@@ -1,11 +1,13 @@
 package com.loyo.oa.dropdownmenu.filtermenu.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import com.loyo.oa.dropdownmenu.callback.OnMenuButtonClick;
 import com.loyo.oa.dropdownmenu.callback.OnMenuItemClick;
 import com.loyo.oa.dropdownmenu.filtermenu.CommonMenuAdapter;
+import com.loyo.oa.dropdownmenu.filtermenu.SingleSelectionAdapter;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
@@ -33,13 +36,14 @@ public class DoubleMenuView extends LinearLayout implements View.OnClickListener
     private Button confirmBtn;
 
     private CommonMenuAdapter parentAdapter;
-    private CommonMenuAdapter itemAdapter;
+    private SingleSelectionAdapter itemAdapter;
 
     private FilterModel filterModel;
 
     private OnMenuButtonClick callback;
 
     private Map<String, MenuModel> selected = new HashMap<>();
+    private Map<String, Integer> selectedIndex = new HashMap<>();
 
     public DoubleMenuView(Context context) {
         super(context);
@@ -54,7 +58,7 @@ public class DoubleMenuView extends LinearLayout implements View.OnClickListener
     private void init(Context context) {
         setBackgroundColor(Color.WHITE);
         parentAdapter = new CommonMenuAdapter();
-        itemAdapter = new CommonMenuAdapter();
+        itemAdapter = new SingleSelectionAdapter();
         inflate(context, R.layout.layout_tag_menu_view, this);
 
         cancelBtn = (Button)findViewById(R.id.btn_cancel);
@@ -81,6 +85,7 @@ public class DoubleMenuView extends LinearLayout implements View.OnClickListener
         parentAdapter.setCallback(new OnMenuItemClick() {
             @Override
             public void onMenuItemClick(int index) {
+                itemAdapter.selectedIndex = selectedIndex.get(filterModel.getChildrenAtIndex(index).getKey());
                 itemAdapter.loadData(filterModel.getChildrenAtIndex(index).getChildren());
             }
         });
@@ -92,6 +97,7 @@ public class DoubleMenuView extends LinearLayout implements View.OnClickListener
                 List<MenuModel> parents = filterModel.getChildren();
                 MenuModel parent = parents.get(parentIndex);
                 selected.put(parent.getKey(), parent.getChildren().get(index));
+                selectedIndex.put(parent.getKey(), index);
             }
         });
     }
@@ -109,6 +115,8 @@ public class DoubleMenuView extends LinearLayout implements View.OnClickListener
                 defaultChild = model.getChildren().get(0);
             }
             selected.put(model.getKey(), defaultChild);
+            selectedIndex.put(model.getKey(), 0);
+            Log.v("", "");
         }
     }
 

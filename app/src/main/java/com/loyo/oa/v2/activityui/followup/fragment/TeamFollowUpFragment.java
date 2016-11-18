@@ -25,6 +25,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
+import com.loyo.oa.v2.activityui.followup.common.FollowFilter;
+import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
@@ -63,13 +65,13 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private Button btn_add;
     private ViewStub emptyView;
     private PullToRefreshListView listView;
-    private ArrayList<Tag> mTags;
+    private ArrayList<FollowFilter> mTags;
     private DropDownMenu filterMenu;
 
     private LinearLayout layout_bottom_menu;
 
     private String menuTimekey = "";        /*时间*/
-    private String menuChoskey = "";        /*筛选*/
+    private String menuChoskey = "", method, typeId, activityType; /*筛选*/
     private String menuGuykey = "";         /*人员*/
     private boolean isTopAdd;
     private int commentPosition;
@@ -125,7 +127,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         permission = (Permission) getArguments().getSerializable("permission");
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
@@ -176,7 +178,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
         List<FilterModel> options = new ArrayList<>();
         options.add(DynamicFilterTimeModel.getFilterModel());     //时间
-        options.add(TagMenuModel.getTagFilterModel(mTags));       //筛选
+        options.add(FollowFilterMenuModel.getFilterModel(mTags));  //筛选
         options.add(new OrganizationFilterModel(depts, title));   //人员
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
@@ -196,8 +198,16 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
                     /*筛选*/
                     case 1:
-                        menuChoskey = model.getKey();
-                        Toast("key:" + menuChoskey + " value" + model.getValue());
+//                        menuChoskey = model.getKey();
+//                        Toast("key:" + menuChoskey + " value" + model.getValue());
+
+                        HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
+                        MenuModel field1 = map.get("跟进方式");
+                        MenuModel field2 = map.get("跟进对象");
+                        MenuModel field3 = map.get("跟进类型");
+                        method = field1.getKey();
+                        typeId = field2.getKey();
+                        activityType = field3.getKey();
                         break;
 
                     /*人员*/
@@ -265,8 +275,9 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("userId", "");//我的传id,团队则空着
         map.put("xpath", "");
         map.put("timeType", 5);//时间查询
-        map.put("method", 0); //跟进类型0:全部 1:线索 2:客户
-        map.put("typeId", "");
+        map.put("method", method); //跟进类型0:全部 1:线索 2:客户
+        map.put("typeId", typeId);
+        map.put("activityType", activityType);
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
@@ -327,6 +338,9 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         if (isTopAdd) {
             listModel.clear();
         }
+        if (paginationX == null) {
+            return;
+        }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
@@ -371,10 +385,10 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 列表播放语音回调
-     * */
+     */
     @Override
-    public void playVoice(AudioModel audioModel,TextView textView) {
-        if(TextUtils.isEmpty(audioModel.url)){
+    public void playVoice(AudioModel audioModel, TextView textView) {
+        if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
         }
@@ -383,19 +397,19 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);
         /*关闭上一条TextView动画*/
-        if(playVoiceSize > 0){
-            if(null != lastView)
+        if (playVoiceSize > 0) {
+            if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
         /*点击同一条则暂停播放*/
-        if(lastView == textView){
+        if (lastView == textView) {
             MainApp.getMainApp().stopAnim(textView);
             audioPlayer.audioPause(textView);
             lastView = null;
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel,textView);
+            audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }

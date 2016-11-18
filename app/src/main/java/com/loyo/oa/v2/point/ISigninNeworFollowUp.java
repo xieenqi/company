@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.point;
 
 
+import com.loyo.oa.v2.activityui.followup.common.FollowFilter;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
@@ -90,6 +91,6 @@ public interface ISigninNeworFollowUp {
      * 获取跟进列表 赛选的数据
      */
     @GET("/saleactivity/mobile/filters")
-    void getFollupFilters(Callback<ArrayList<Tag>> cb);
+    void getFollupFilters(Callback<ArrayList<FollowFilter>> cb);
 }
 
