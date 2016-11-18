@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -582,21 +581,21 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         updateUser();
         //超级管理员判断
         if (null != MainApp.user && !MainApp.user.isSuperUser()) {
-            if (null == MainApp.user || null == MainApp.user.permissionGroup) {
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Looper.prepare();
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                testJurl();
-                            }
-                        });
-                        Looper.loop();
-                    }
-                }, 5000);
+            if (null == MainApp.user.permissionGroup) {
+//                Timer timer = new Timer();
+//                timer.schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        Looper.prepare();
+//                        getActivity().runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                testJurl();
+//                            }
+//                        });
+//                        Looper.loop();
+//                    }
+//                }, 5000);
                 return;
             }
 
