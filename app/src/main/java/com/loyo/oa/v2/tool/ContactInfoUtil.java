@@ -29,7 +29,8 @@ public class ContactInfoUtil {
         ContentResolver cr = mContext.getContentResolver();
         Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
 
-        while (cursor.moveToNext()) {
+        // TODO:
+        while (cursor!=null && cursor.moveToNext()) {
             //获取联系人名字
             int nameFieldColumnIndex = cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME);
             String contact = cursor.getString(nameFieldColumnIndex);
