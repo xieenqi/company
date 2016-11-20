@@ -64,7 +64,7 @@ public class RecordUtils {
         if (!ff.exists()) {
             ff.mkdirs();
         }
-        fileName = getDate() + ".wav";
+        fileName = getDate() + ".amr";
         outPath = AUDIO_ROOTPATH + File.separator + fileName;
         recorder.setOutputFile(outPath);
          /*
@@ -73,9 +73,9 @@ public class RecordUtils {
 			 * /ARM音频编码)、MPEG-4、RAW_AMR(只支持音频且音频编码要求为AMR_NB)
 			 * recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
 			 */
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
         /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default */
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         recorder.setMaxDuration(60 * 1000);
         recorder.setOnErrorListener(null);
         recorder.setOnInfoListener(null);
@@ -126,6 +126,7 @@ public class RecordUtils {
                 recorder.release();
                 recorder = null;//这个必须有不然录音设备释放不成功
                 endTime = System.currentTimeMillis();
+                startTime = 0;
 
             }
         } catch (IllegalStateException e) {

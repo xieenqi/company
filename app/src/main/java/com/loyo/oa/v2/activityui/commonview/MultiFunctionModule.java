@@ -163,7 +163,7 @@ public class MultiFunctionModule extends LinearLayout {
             }
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-//                    v.setAlpha(0.6f);
+                    v.setAlpha(0.6f);
                     dialog.setVisibility(VISIBLE);
                     voice.initStaratRecord();
                     break;
@@ -174,7 +174,7 @@ public class MultiFunctionModule extends LinearLayout {
                         puaseRecordingTime();
                         cancleRecord();
                         voice.stopRecord();
-//                        v.setAlpha(1f);
+                        v.setAlpha(1f);
                         isRecordCancle = true;
                     } else {
                         // 开始动画
@@ -182,11 +182,12 @@ public class MultiFunctionModule extends LinearLayout {
                             stratRecordingTime();
                         }
                         recordOngoing();
-//                        v.setAlpha(0.6f);
+                        v.setAlpha(0.6f);
                         isRecordCancle = false;
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                    LogUtil.d("开始时间: "+System.currentTimeMillis());
                     dialog.setVisibility(GONE);
                     if (!isRecordCancle && isEffective) {
                         callbackComplete.recordComplete(voice.getOutPath(), voice.getFormat(voice.getEndTime() - voice.getStartTime()));
@@ -197,10 +198,11 @@ public class MultiFunctionModule extends LinearLayout {
                     } else {
                         Global.Toast("好像你没有说话哦!");
                     }
-//                    v.setAlpha(1f);
+                    v.setAlpha(1f);
                     if (voice.isStart()) {
                         voice.stopRecord();
                     }
+                    LogUtil.d("结束时间: "+System.currentTimeMillis());
                     break;
             }
             return true;

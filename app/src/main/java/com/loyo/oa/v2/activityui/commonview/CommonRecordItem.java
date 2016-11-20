@@ -3,6 +3,8 @@ package com.loyo.oa.v2.activityui.commonview;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +56,28 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     private ProgressBar pb_progress;
     private AnimationDrawable mAnimationDrawable;
     private RecordUploadingCallback recordUploadingCallback;
+    Handler handler=new Handler(){
+        @Override
+        public void dispatchMessage(Message msg) {
+            super.dispatchMessage(msg);
+            switch (msg.what){
+                case 1:
+                    pb_progress.setVisibility(GONE);
+                    recordUploadingCallback.Success((Record)msg.obj);
+                    break;
+                case 2:
+                    Global.Toast("连接异常");
+                    pb_progress.setVisibility(GONE);
+                    iv_uploading_fial.setVisibility(VISIBLE);
+                    break;
+                case 3:
+                    Global.Toast("录音服务端异常");
+                    pb_progress.setVisibility(GONE);
+                    iv_uploading_fial.setVisibility(VISIBLE);
+                    break;
+            }
+        }
+    };
 
 
     public CommonRecordItem(Context context, String path, String time, String uuid, RecordUploadingCallback recordUploadingCallback) {
@@ -161,31 +185,36 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
         task.name = new File(path).getName();
         // 构造上传请求
         LogUtil.d("录音key:  " + task.getKey());
-        PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(),
-                task.getKey(), path);
-        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+        new Thread(new Runnable() {
             @Override
-            public void onProgress(PutObjectRequest putObjectRequest, long l, long l1) {
-                LogUtil.d(l1 + "上传进度: " + l);
-                if (l == l1) {
-                    pb_progress.setVisibility(GONE);
-                    recordUploadingCallback.Success(new Record(task.getKey(), Integer.parseInt(time)));
+            public void run() {
+                PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(),
+                        task.getKey(), path);
+                put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+                    @Override
+                    public void onProgress(PutObjectRequest putObjectRequest, long l, long l1) {
+                        LogUtil.d(l1 + "上传进度: " + l);
+                        if (l == l1) {
+                            Message msg=new Message();
+                            msg.what=1;
+                            msg.obj=new Record(task.getKey(), Integer.parseInt(time));
+                            handler.sendMessage(msg);
+                        }
+                    }
+                });
+                try {
+                    AliOSSManager.getInstance().getOss().putObject(put);
+                } catch (ClientException e) {
+                    e.printStackTrace();
+                    handler.sendEmptyMessage(2);
+
+                } catch (ServiceException e) {
+                    e.printStackTrace();
+                    handler.sendEmptyMessage(3);
+
                 }
             }
-        });
-        try {
-            AliOSSManager.getInstance().getOss().putObject(put);
-        } catch (ClientException e) {
-            e.printStackTrace();
-            Global.Toast("连接异常");
-            pb_progress.setVisibility(GONE);
-            iv_uploading_fial.setVisibility(VISIBLE);
-        } catch (ServiceException e) {
-            e.printStackTrace();
-            Global.Toast("录音服务端异常");
-            pb_progress.setVisibility(GONE);
-            iv_uploading_fial.setVisibility(VISIBLE);
-        }
+        }).start();
     }
 
     public interface RecordUploadingCallback {
