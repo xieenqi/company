@@ -92,7 +92,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     private String birthStr;
 //    private int age;
 
-    private ContactInfoEditPresenter mPresenter;
+    private ContactInfoEditPresenterImpl mPresenter;
 
     private class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;

@@ -167,6 +167,20 @@ public enum SystemMessageItemType {
             return ExtraAndResult.EXTRA_ID;
         }
     },
+    /*工单 事件详情*/
+    MSG_WorksheetEvent(29) {
+        public int getIcon() {
+            return R.drawable.icon_sys_worksheet;
+        }
+
+        public Class<?> getItemClass() {
+            return WorksheetDetailActivity.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
     /*考勤*/
     MSG_ATTENDANCE(15) {
         public int getIcon() {
@@ -240,7 +254,7 @@ public enum SystemMessageItemType {
 
 //    LYMsgWorkReport   = 1,           //1.工作汇报*
 //    LYMsgTask,                       //2.任务*
-//    LYMsgSchedule,                   //3.日程
+//    LYMsgSchedule,                   //3.日程(没有了)
 //    LYMsgLegWork,                    //4.外勤
 //    LYMsgProject,                    //5.项目
 //    LYMsgCustomer,                   //6.客户*

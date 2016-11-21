@@ -156,6 +156,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
             case R.id.iv_delete:
                 LinearLayout parentView = (LinearLayout) CommonRecordItem.this.getParent();
                 parentView.removeView(CommonRecordItem.this);
+                RecordUtils.getInstance(context).clean_play();
                 break;
             case R.id.iv_uploading_fial:
                 uploadingRecord();
