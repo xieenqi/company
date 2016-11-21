@@ -73,7 +73,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private String menuTimeKey = ""; /*时间*/
     private String menuChosKey = "", method, typeId, activityType; /*筛选*/
 
-    private boolean isTopAdd;
+
+    private boolean isPullOrDown;
     private int commentPosition;
 
     private ArrayList<FollowUpListModel> listModel = new ArrayList<>();
@@ -102,6 +103,21 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
             loadFilterOptions();
         }
         return mView;
+    }
+
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        isPullOrDown = true;
+        mPagination.setPageIndex(1);
+        getData(true);
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        isPullOrDown = false;
+        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
+        getData(true);
     }
 
     @Override
@@ -230,29 +246,17 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("activityType", "");
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
+        map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map);
     }
 
+    /**
+     * 回调刷新
+     * */
     @Subscribe
     public void onFollowUpRushEvent(FollowUpRushEvent event){
-        LogUtil.dee("onFollowUpRushEvent");
         getData(false);
-    }
-
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
-        mPagination.setPageIndex(1);
-        getData(true);
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
-        mPagination.setPageIndex(mPagination.getPageIndex() + 1);
-        getData(true);
     }
 
     /**
@@ -308,7 +312,9 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
         listView.onRefreshComplete();
-        listModel.clear();
+        if(isPullOrDown){
+            listModel.clear();
+        }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();

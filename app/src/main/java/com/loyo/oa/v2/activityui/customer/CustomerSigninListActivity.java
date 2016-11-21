@@ -54,7 +54,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     private ViewGroup layout_add;
     private Customer mCustomer;
     private boolean isMyUser;
-    private boolean isTopAdd;
+    private boolean isPullOrDown;
     private boolean isChanged;
 
     private Permission permission;
@@ -91,14 +91,14 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
+        isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
+        isPullOrDown = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
         getData(true);
     }
@@ -178,7 +178,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         map.put("split", true);
         map.put("customerId", mCustomer.id);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
+        map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map);
     }
@@ -312,7 +312,9 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
         listView.onRefreshComplete();
-        listModel.clear();
+        if(isPullOrDown){
+            listModel.clear();
+        }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();

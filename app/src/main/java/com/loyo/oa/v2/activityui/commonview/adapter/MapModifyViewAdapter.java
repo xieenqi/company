@@ -56,10 +56,7 @@ public class MapModifyViewAdapter extends RecyclerView.Adapter<MapModifyViewAdap
         }else{
             holder.selected.setVisibility(View.INVISIBLE);
         }
-
     }
-
-
 
     @Override
     public int getItemCount() {

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.signinnew.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,18 +14,24 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.MapSingleView;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
+import com.loyo.oa.v2.activityui.signin.SignInfoActivity;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CusGridView;
@@ -101,6 +108,8 @@ public class SigninNewListAdapter extends BaseAdapter {
             holder.lv_options = (CustomerListView) convertView.findViewById(R.id.lv_options);
             holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
+            holder.layout_address = (LinearLayout) convertView.findViewById(R.id.layout_address);
+            holder.layout_customer = (LinearLayout) convertView.findViewById(R.id.layout_customer);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -110,12 +119,29 @@ public class SigninNewListAdapter extends BaseAdapter {
 
         ImageLoader.getInstance().displayImage(signinNewListModel.creator.avatar, holder.iv_heading);
         holder.tv_name.setText(signinNewListModel.creator.name);
-        holder.tv_address.setText(signinNewListModel.address);
         holder.tv_contact.setText(signinNewListModel.contactName);
-        holder.tv_position.setText(signinNewListModel.position);
+        holder.tv_position.setText(signinNewListModel.address);
         holder.tv_offset.setText(signinNewListModel.offsetDistance+"");
-        holder.tv_customer.setText(signinNewListModel.customerName);
         holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "MM-dd hh:mm"));
+
+
+        /** 客户姓名 */
+        if(null != signinNewListModel.customerName && !TextUtils.isEmpty(signinNewListModel.customerName)){
+            holder.layout_customer.setVisibility(View.VISIBLE);
+            holder.tv_customer.setText(signinNewListModel.customerName);
+            holder.tv_customer.setOnTouchListener(Global.GetTouch());
+        }else{
+            holder.layout_customer.setVisibility(View.GONE);
+        }
+
+        /** 客户地址 */
+        if(null != signinNewListModel.position && !TextUtils.isEmpty(signinNewListModel.position)){
+            holder.layout_address.setVisibility(View.VISIBLE);
+            holder.tv_address.setText(signinNewListModel.position);
+            holder.layout_address.setOnTouchListener(Global.GetTouch());
+        }else{
+            holder.layout_address.setVisibility(View.GONE);
+        }
 
         /** 备注内容 */
         if(null != signinNewListModel.memo && !TextUtils.isEmpty(signinNewListModel.memo)){
@@ -198,6 +224,38 @@ public class SigninNewListAdapter extends BaseAdapter {
                 viewCrol.commentEmbl(position);
             }
         });
+
+        /** 查看位置地图 */
+        holder.layout_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(null != signinNewListModel.gpsInfo && !TextUtils.isEmpty(signinNewListModel.gpsInfo)){
+                    Intent mIntent = new Intent(mContext, MapSingleView.class);
+                    String[] gps = signinNewListModel.gpsInfo.split(",");
+                    mIntent.putExtra("la",Double.valueOf(gps[1]));
+                    mIntent.putExtra("lo",Double.valueOf(gps[0]));
+                    mIntent.putExtra("address",signinNewListModel.address);
+                    LogUtil.dee("la:"+ Double.valueOf(gps[1]));
+                    LogUtil.dee("lo:"+ Double.valueOf(gps[0]));
+                    mContext.startActivity(mIntent);
+                }else{
+                    Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        /** 查看客户详情 */
+        holder.tv_customer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("Id", signinNewListModel.customerId);
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
+                intent.setClass(mContext, CustomerDetailInfoActivity_.class);
+                mContext.startActivity(intent);
+            }
+        });
+
         return convertView;
     }
 
@@ -214,6 +272,8 @@ public class SigninNewListAdapter extends BaseAdapter {
         TextView tv_memo;        /*内容*/
 
         LinearLayout layout_comment;
+        LinearLayout layout_address;
+        LinearLayout layout_customer;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件区*/

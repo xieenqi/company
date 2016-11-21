@@ -269,8 +269,13 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
             @Override
             public void success(BaseBeanT<FollowUpListModel> followuplistmodel, Response response) {
                 HttpErrorCheck.checkResponse("跟进详情", response);
-                mFollowUpDelModel = followuplistmodel.data;
-                bindData();
+                if(followuplistmodel.errcode != 0){
+                    Toast("获取拜访详情出错!");
+                    finish();
+                }else{
+                    mFollowUpDelModel = followuplistmodel.data;
+                    bindData();
+                }
             }
 
             @Override

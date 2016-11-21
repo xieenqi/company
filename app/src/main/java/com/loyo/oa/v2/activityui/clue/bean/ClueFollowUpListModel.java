@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.clue.bean;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.CommentModel;
 
@@ -30,6 +31,11 @@ public class ClueFollowUpListModel implements Serializable{
     public ArrayList<CommentModel> comments;  //评论内容
     public String avatar;
     public String addr;
+    public Location location;
 
+    public class Location{
+        public String addr;
+        public String[] loc;
+    }
 
 }

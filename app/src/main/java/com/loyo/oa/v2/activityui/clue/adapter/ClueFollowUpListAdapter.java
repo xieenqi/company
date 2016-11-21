@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.clue.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.bean.ClueFollowUpListModel;
@@ -20,6 +22,7 @@ import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
+import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDynamicManageActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
@@ -102,6 +105,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
             holder.lv_options = (CustomerListView) convertView.findViewById(R.id.lv_options);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
+            holder.layout_address = (LinearLayout) convertView.findViewById(R.id.layout_address);
             holder.ll_web = (LinearLayout) convertView.findViewById(R.id.ll_web);
             convertView.setTag(holder);
         } else {
@@ -116,6 +120,15 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         holder.tv_contact.setText(TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
         holder.tv_create_time.setText(DateTool.timet(model.createAt + "", "MM-dd hh:mm"));
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# "+model.typeName);
+
+        /** 客户地址 */
+        if(null != model.addr && !TextUtils.isEmpty(model.location.addr)){
+            holder.layout_address.setVisibility(View.VISIBLE);
+            holder.tv_address.setText(model.location.addr);
+            holder.tv_address.setOnTouchListener(Global.GetTouch());
+        }else{
+            holder.layout_address.setVisibility(View.GONE);
+        }
 
         /** @的相关人员 */
         if(null != model.atNameAndDepts && !TextUtils.isEmpty(model.atNameAndDepts)){
@@ -187,6 +200,23 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
                 viewCrol.commentEmbl(position);
             }
         });
+
+        /** 查看定位地址 */
+        holder.tv_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(null != model.location.loc){
+                    Intent mIntent = new Intent(mContext, MapSingleView.class);
+                    mIntent.putExtra("la", Double.valueOf(model.location.loc[0]));
+                    mIntent.putExtra("lo", Double.valueOf(model.location.loc[1]));
+                    mIntent.putExtra("address",model.location.addr);
+                    mContext.startActivity(mIntent);
+                }else{
+                    Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return convertView;
     }
 
@@ -203,6 +233,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
 
         LinearLayout ll_web;
         LinearLayout layout_comment;
+        LinearLayout layout_address;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件列表区*/

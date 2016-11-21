@@ -41,6 +41,7 @@ public class FollowUpListModel implements Serializable{
 
     public class Location{
         public String addr;
+        public String[] loc;
     }
 
 }

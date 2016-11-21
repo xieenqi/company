@@ -56,7 +56,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone" />
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tv_memo"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/text33"
+                android:visibility="gone"
+                />
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_audio"
@@ -107,13 +117,16 @@
 
 
             <LinearLayout
+                android:id="@+id/layout_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -152,11 +165,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_customer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginTop="@dimen/dimen_8"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
 
                 <ImageView
                     android:layout_width="wrap_content"

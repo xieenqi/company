@@ -38,6 +38,10 @@ public class ContactInfoUtil {
             String ContactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
             Cursor phone = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + ContactId, null, null);
 
+            if (phone == null) {
+                continue;
+            }
+
             while (phone.moveToNext()) {//获取联系人所有电话信息  手机、单位电话 ..
                 String PhoneNumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 contactInfo = new MyContactInfo();
@@ -54,8 +58,11 @@ public class ContactInfoUtil {
                     contactInfo.setSortLetters("#");
                 }
             }
+            phone.close();
         }
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
         return contactInfoList;
     }
 

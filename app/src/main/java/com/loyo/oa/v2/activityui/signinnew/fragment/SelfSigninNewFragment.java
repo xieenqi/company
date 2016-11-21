@@ -72,7 +72,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     private String menuTimekey = "0";        /*时间*/
     private String menuKindkey = "0";        /*类型*/
     private String menuSortkey = "0";        /*排序*/
-    private boolean isTopAdd;
+    private boolean isPullOrDown;
     private int commentPosition;
 
     private View mView;
@@ -118,14 +118,14 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
+        isPullOrDown = true;
         mPagination.setPageIndex(1);
         getData(true);
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
+        isPullOrDown = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
         getData(true);
     }
@@ -208,7 +208,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         map.put("orderType", Integer.parseInt(menuSortkey));
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
-        map.put("pageSize", isTopAdd ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
+        map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
         mPresenter.getListData(map);
     }
@@ -310,7 +310,9 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
         listView.onRefreshComplete();
-        listModel.clear();
+        if(isPullOrDown){
+            listModel.clear();
+        }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
