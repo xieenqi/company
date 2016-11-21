@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.followup.common;
+package com.loyo.oa.v2.activityui.followup.model;
 
 import java.io.Serializable;
 

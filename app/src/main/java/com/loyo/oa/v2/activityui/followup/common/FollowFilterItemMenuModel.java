@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.activityui.followup.common;
 
 import com.loyo.oa.dropdownmenu.model.MenuModel;
-import com.loyo.oa.v2.activityui.customer.model.TagItem;
+import com.loyo.oa.v2.activityui.followup.model.FollowFilterItem;
 
 import java.util.List;
 

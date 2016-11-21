@@ -1,8 +1,7 @@
 package com.loyo.oa.v2.point;
 
 
-import com.loyo.oa.v2.activityui.followup.common.FollowFilter;
-import com.loyo.oa.v2.activityui.other.model.Tag;
+import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;

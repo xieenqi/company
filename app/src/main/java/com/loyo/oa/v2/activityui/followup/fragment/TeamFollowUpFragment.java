@@ -18,21 +18,19 @@ import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterTimeModel;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
-import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
-import com.loyo.oa.v2.activityui.followup.common.FollowFilter;
+import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
-import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -193,18 +191,14 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                     case 0:
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:" + menuTimekey + " value" + model.getValue());
                         break;
 
                     /*筛选*/
                     case 1:
-//                        menuChoskey = model.getKey();
-//                        Toast("key:" + menuChoskey + " value" + model.getValue());
-
                         HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
-                        MenuModel field1 = map.get("跟进方式");
-                        MenuModel field2 = map.get("跟进对象");
-                        MenuModel field3 = map.get("跟进类型");
+                        MenuModel field1 = map.get("activityType");
+                        MenuModel field2 = map.get("typeId");
+                        MenuModel field3 = map.get("method");
                         method = field1.getKey();
                         typeId = field2.getKey();
                         activityType = field3.getKey();
@@ -214,7 +208,6 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                     case 2:
                         menuGuykey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:" + menuGuykey + " value" + model.getValue());
                         break;
 
                 }
@@ -246,7 +239,6 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("title", content);
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
-        //map.put("audioInfo", "");//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }

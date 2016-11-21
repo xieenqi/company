@@ -1,4 +1,5 @@
-package com.loyo.oa.v2.activityui.followup.common;
+package com.loyo.oa.v2.activityui.followup.model;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,6 +10,6 @@ import java.util.ArrayList;
 
 public class FollowFilter implements Serializable {
     public String name;
-    public String field;
+    public String fieldName;
     public ArrayList<FollowFilterItem> items;
 }

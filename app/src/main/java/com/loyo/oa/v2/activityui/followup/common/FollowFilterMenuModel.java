@@ -1,13 +1,10 @@
 package com.loyo.oa.v2.activityui.followup.common;
 
-import com.loyo.oa.dropdownmenu.filtermenu.TagItemMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuListType;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
-import com.loyo.oa.v2.activityui.customer.model.TagItem;
-import com.loyo.oa.v2.activityui.followup.common.FollowFilter;
-import com.loyo.oa.v2.activityui.followup.common.FollowFilterItem;
-import com.loyo.oa.v2.activityui.other.model.Tag;
+import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
+import com.loyo.oa.v2.activityui.followup.model.FollowFilterItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +17,7 @@ public class FollowFilterMenuModel implements MenuModel {
 
     public static FilterModel getFilterModel(List<FollowFilter> filters) {
         List<MenuModel> filterModel = new ArrayList<>();
-        for (FollowFilter filter:filters) {
+        for (FollowFilter filter : filters) {
             filterModel.add(new FollowFilterMenuModel(filter));
         }
         return new FilterModel(filterModel, "筛选", MenuListType.DOUBLE_LIST_MULTI_SEL);
@@ -34,7 +31,7 @@ public class FollowFilterMenuModel implements MenuModel {
     public FollowFilterMenuModel(FollowFilter filter) {
         this.filter = filter;
         List<FollowFilterItem> items = filter.items;
-        for (FollowFilterItem item:items) {
+        for (FollowFilterItem item : items) {
             FollowFilterItemMenuModel model = new FollowFilterItemMenuModel(item);
             children.add(model);
         }
@@ -43,7 +40,7 @@ public class FollowFilterMenuModel implements MenuModel {
 
     @Override
     public String getKey() {
-        return filter.name;
+        return filter.fieldName;
     }
 
     @Override
