@@ -160,13 +160,19 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
                     /*筛选*/
                     case 1:
-                        HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
-                        MenuModel field1 = map.get("activityType");
-                        MenuModel field2 = map.get("typeId");
-                        MenuModel field3 = map.get("method");
-                        method = field1.getKey();
-                        typeId = field2.getKey();
-                        activityType = field3.getKey();
+                        if (userInfo != null && !TextUtils.isEmpty((String) userInfo)) {
+                            HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
+                            MenuModel field1 = map.get("activityType");
+                            MenuModel field2 = map.get("typeId");
+                            MenuModel field3 = map.get("method");
+                            method = field1.getKey();
+                            typeId = field2.getKey();
+                            activityType = field3.getKey();
+                        } else {
+                            method = "";
+                            typeId = "";
+                            activityType = "";
+                        }
                         break;
 
                 }
@@ -306,7 +312,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         if (isTopAdd) {
             listModel.clear();
         }
-        if(paginationX==null){
+        if (paginationX == null) {
             return;
         }
         mPagination = paginationX.data;

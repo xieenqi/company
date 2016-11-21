@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMapUtils;
@@ -84,6 +85,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact;
     private GridView gridView_photo;
+    private ImageView iv_at_delete;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID(), mAddress, customerId = "", customerName, customerAddress;
     private SignInGridViewAdapter signInGridViewAdapter;
@@ -149,12 +151,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             tv_customer_name.setText(customerName);
             ll_contact.setVisibility(View.VISIBLE);
             getDefaultContact(mCustomer.contacts);
-            contactList=mCustomer.contacts;
+            contactList = mCustomer.contacts;
         }
         ll_contact.setOnClickListener(this);
         tv_address = (TextView) findViewById(R.id.tv_address);
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
+        iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
+        iv_at_delete.setOnClickListener(this);
         init_gridView_photo();
         startLocation();
         initMultiFunctionModule();
@@ -171,6 +175,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (ll_record.getChildCount() >= 3) {
+                    Toast("最多只能添加3条语音");
+                    return;
+                }
+
                 if (RecordUtils.permissionRecord()) {
                     if ((boolean) v.getTag()) {
                         showInputKeyboard(edt_memo);
@@ -324,6 +333,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
                 app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
+                break;
+            case R.id.iv_at_delete://清除@的人员
+                ll_at.setVisibility(View.GONE);
+                atDepts.clear();
+                atUserIds.clear();
+                collection = null;
                 break;
         }
     }

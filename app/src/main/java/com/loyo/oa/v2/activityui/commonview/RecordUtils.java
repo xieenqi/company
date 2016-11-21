@@ -120,12 +120,12 @@ public class RecordUtils {
             if (recorder != null && isStart) {
                 timer.cancel();
                 task.cancel();
+                endTime = System.currentTimeMillis();
                 isStart = false;
                 recorder.stop();
                 recorder.reset();
                 recorder.release();
                 recorder = null;//这个必须有不然录音设备释放不成功
-                endTime = System.currentTimeMillis();
                 startTime = 0;
 
             }
@@ -177,10 +177,6 @@ public class RecordUtils {
 
     public long getStartTime() {
         return startTime;
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
     }
 
     public long getEndTime() {

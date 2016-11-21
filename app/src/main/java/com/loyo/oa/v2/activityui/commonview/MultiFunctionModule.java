@@ -187,7 +187,6 @@ public class MultiFunctionModule extends LinearLayout {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    LogUtil.d("开始时间: "+System.currentTimeMillis());
                     dialog.setVisibility(GONE);
                     if (!isRecordCancle && isEffective) {
                         callbackComplete.recordComplete(voice.getOutPath(), voice.getFormat(voice.getEndTime() - voice.getStartTime()));
@@ -202,7 +201,6 @@ public class MultiFunctionModule extends LinearLayout {
                     if (voice.isStart()) {
                         voice.stopRecord();
                     }
-                    LogUtil.d("结束时间: "+System.currentTimeMillis());
                     break;
             }
             return true;
