@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.setting;
 
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewStub;
@@ -11,10 +10,9 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.setting.adapter.AdapterSystemMessage;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
 import com.loyo.oa.v2.activityui.setting.persenter.SystemMessagePControl;
-import com.loyo.oa.v2.activityui.setting.persenter.SystemMesssagePersenter;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SystemMessageVControl;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;

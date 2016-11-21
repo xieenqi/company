@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.discuss.persenter;
 
 import com.loyo.oa.v2.common.base.BasePersenter;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 
 /**
  * 【我的讨论】页面persenter

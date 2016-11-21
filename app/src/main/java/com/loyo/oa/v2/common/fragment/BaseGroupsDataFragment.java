@@ -4,8 +4,8 @@ import android.widget.ExpandableListView;
 
 import com.loyo.oa.v2.common.adapter.BaseGroupsDataAdapter;
 import com.loyo.oa.v2.common.GroupsData;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 /**

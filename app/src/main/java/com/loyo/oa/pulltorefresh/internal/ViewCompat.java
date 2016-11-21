@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.loyo.oa.v2.customview.pullToRefresh.internal;
+package com.loyo.oa.pulltorefresh.internal;
 
 import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;

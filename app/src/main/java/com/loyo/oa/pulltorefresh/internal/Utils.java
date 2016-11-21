@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.customview.pullToRefresh.internal;
+package com.loyo.oa.pulltorefresh.internal;
 
 import android.util.Log;
 

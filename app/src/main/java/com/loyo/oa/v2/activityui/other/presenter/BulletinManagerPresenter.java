@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.other.presenter;
 
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
+import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
 
 /**
  * Created by yyy on 16/10/10.

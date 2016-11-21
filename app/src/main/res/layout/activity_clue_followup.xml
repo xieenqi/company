@@ -12,7 +12,7 @@
         android:id="@+id/layout_include"
         layout="@layout/include_common_title"/>
 
-    <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
+    <com.loyo.oa.pulltorefresh.PullToRefreshListView
         android:id="@+id/lv_saleActivity"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

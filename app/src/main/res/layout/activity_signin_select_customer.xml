@@ -50,7 +50,7 @@
 
     <include layout="@layout/include_solid_line" />
 
-    <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
+    <com.loyo.oa.pulltorefresh.PullToRefreshListView
         android:id="@+id/lv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

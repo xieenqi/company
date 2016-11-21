@@ -16,7 +16,7 @@
         <include layout="@layout/include_common_title_2" />
     </LinearLayout>
 
-    <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
+    <com.loyo.oa.pulltorefresh.PullToRefreshListView
         android:id="@+id/listView_legworks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

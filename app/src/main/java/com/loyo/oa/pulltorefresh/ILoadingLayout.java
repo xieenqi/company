@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.customview.pullToRefresh;
+package com.loyo.oa.pulltorefresh;
 
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;

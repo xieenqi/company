@@ -22,7 +22,7 @@
                 android:inflatedId="@+id/layout_nodata"
                 android:layout="@layout/item_layout_nodata"/>
 
-            <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView
+            <com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView
                 android:id="@+id/expandableListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

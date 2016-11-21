@@ -14,11 +14,10 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
+import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;

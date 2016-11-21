@@ -1,14 +1,14 @@
-package com.loyo.oa.v2.customview.pullToRefresh.internal;
+package com.loyo.oa.pulltorefresh.internal;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 
 /**
- * com.loyo.oa.v2.customview.pullToRefresh.internal
+ * com.loyo.oa.pulltorefresh.internal
  * 描述 :gif动画加载视图
  * 作者 : ykb
  * 时间 : 15/11/3.

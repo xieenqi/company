@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:background="@color/activity_bg">
 
-    <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
+    <com.loyo.oa.pulltorefresh.PullToRefreshListView
         android:id="@+id/newhome_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

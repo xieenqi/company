@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.signin;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,8 +12,8 @@ import com.loyo.oa.v2.activityui.signin.adapter.SigninSelectCustomerAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.signin.persenter.SigninSelectCustomerPControl;
 import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninSelectCustomerVControl;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.UMengTools;
