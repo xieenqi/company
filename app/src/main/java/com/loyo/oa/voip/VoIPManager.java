@@ -48,7 +48,7 @@ public class VoIPManager implements CallStateListener {
     private String cacheToken;
 
     private String customerId;
-    private String userId;
+//    private String userId;
     private RequestAccess requestAccess;
 
     private VoIPManager() {
@@ -84,7 +84,7 @@ public class VoIPManager implements CallStateListener {
     private ResponseBase<RequestAccess> getPaymentAccess() {
         HashMap<String, String> params = new HashMap<>();
         params.put("customerId", customerId);
-        params.put("contactId", userId);
+//        params.put("contactId", userId);
         ResponseBase<RequestAccess> access = RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IVoIP.class).getRequestAccess(params);
         requestAccess = access.data;
@@ -197,7 +197,7 @@ public class VoIPManager implements CallStateListener {
             return;
         }
         this.customerId = customerId;
-        this.userId = userId;
+//        this.userId = userId;
 
         //
         if (UCSService.isConnected() ) {
