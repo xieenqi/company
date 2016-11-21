@@ -44,7 +44,6 @@ import java.util.TimerTask;
 public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListener {
 
     private Context mContext;
-
     private View mView;
     private LinearLayout layout_voice, layout_keyboard, layout_voicemenu, keyboardView;
     private ImageView iv_voice, iv_keyboard;
@@ -59,16 +58,20 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
         void sebdRecordInfo(Record record);
     }
 
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-//            if (msg.what == 0x01) {
-//                layout_voice.setAnimation(AnimationCommon.inFromBottomAnimation(150));
-//                layout_voice.setVisibility(View.VISIBLE);
-//            } else if (msg.what == 0x02) {
-//                layout_voice.setVisibility(View.GONE);
-//            }
+            switch (msg.what) {
+                case AliOSSManager.OSS_SUCCESS:
+                    callBack.sebdRecordInfo((Record) msg.obj);
+                    break;
+                case AliOSSManager.OSS_ERROR1:
+                    Global.Toast("连接异常");
+                    break;
+                case AliOSSManager.OSS_ERROR2:
+                    Global.Toast("录音服务端异常");
+                    break;
+            }
         }
     };
 
@@ -155,10 +158,15 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
         /*录音完成回调*/
         mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
             @Override
-            public void recordComplete(String recordPath, String tiem) {
+            public void recordComplete(final String recordPath, final String tiem) {
                 layout_voicemenu.setVisibility(View.VISIBLE);
                 ((LinearLayout) keyboardView.getParent().getParent().getParent().getParent()).setVisibility(View.GONE);
-                uplodingRecord(recordPath, tiem, UUID);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        uplodingRecord(recordPath, tiem, UUID);
+                    }
+                }).start();
             }
         });
     }
@@ -175,7 +183,10 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
             public void onProgress(PutObjectRequest putObjectRequest, long l, long l1) {
                 LogUtil.d(l1 + "上传进度: " + l);
                 if (l == l1) {
-                    callBack.sebdRecordInfo(new Record(task.getKey(), Integer.parseInt(tiem)));
+                    Message msg = new Message();
+                    msg.what = AliOSSManager.OSS_SUCCESS;
+                    msg.obj = new Record(task.getKey(), Integer.parseInt(tiem));
+                    mHandler.sendMessage(msg);
                 }
             }
         });
@@ -183,10 +194,10 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
             AliOSSManager.getInstance().getOss().putObject(put);
         } catch (ClientException e) {
             e.printStackTrace();
-            Global.Toast("连接异常");
+            mHandler.sendEmptyMessage(AliOSSManager.OSS_ERROR1);
         } catch (ServiceException e) {
             e.printStackTrace();
-            Global.Toast("录音服务端异常");
+            mHandler.sendEmptyMessage(AliOSSManager.OSS_ERROR2);
         }
     }
 

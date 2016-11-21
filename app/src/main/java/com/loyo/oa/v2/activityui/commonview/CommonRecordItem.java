@@ -56,21 +56,21 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     private ProgressBar pb_progress;
     private AnimationDrawable mAnimationDrawable;
     private RecordUploadingCallback recordUploadingCallback;
-    Handler handler=new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
-            switch (msg.what){
-                case 1:
+            switch (msg.what) {
+                case AliOSSManager.OSS_SUCCESS:
                     pb_progress.setVisibility(GONE);
-                    recordUploadingCallback.Success((Record)msg.obj);
+                    recordUploadingCallback.Success((Record) msg.obj);
                     break;
-                case 2:
+                case AliOSSManager.OSS_ERROR1:
                     Global.Toast("连接异常");
                     pb_progress.setVisibility(GONE);
                     iv_uploading_fial.setVisibility(VISIBLE);
                     break;
-                case 3:
+                case AliOSSManager.OSS_ERROR2:
                     Global.Toast("录音服务端异常");
                     pb_progress.setVisibility(GONE);
                     iv_uploading_fial.setVisibility(VISIBLE);
@@ -195,9 +195,9 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
                     public void onProgress(PutObjectRequest putObjectRequest, long l, long l1) {
                         LogUtil.d(l1 + "上传进度: " + l);
                         if (l == l1) {
-                            Message msg=new Message();
-                            msg.what=1;
-                            msg.obj=new Record(task.getKey(), Integer.parseInt(time));
+                            Message msg = new Message();
+                            msg.what = AliOSSManager.OSS_SUCCESS;
+                            msg.obj = new Record(task.getKey(), Integer.parseInt(time));
                             handler.sendMessage(msg);
                         }
                     }
@@ -206,11 +206,11 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
                     AliOSSManager.getInstance().getOss().putObject(put);
                 } catch (ClientException e) {
                     e.printStackTrace();
-                    handler.sendEmptyMessage(2);
+                    handler.sendEmptyMessage(AliOSSManager.OSS_ERROR1);
 
                 } catch (ServiceException e) {
                     e.printStackTrace();
-                    handler.sendEmptyMessage(3);
+                    handler.sendEmptyMessage(AliOSSManager.OSS_ERROR2);
 
                 }
             }
