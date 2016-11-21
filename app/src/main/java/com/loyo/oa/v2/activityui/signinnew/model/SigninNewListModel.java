@@ -19,6 +19,7 @@ public class SigninNewListModel implements Serializable {
     public String ContactTpl;
     public String gpsInfo;
     public String address;       //客户地址
+    public String distance;
     public Creator creator;
     public long createdAt;      //创建时间
     public long updatedAt;      //更新时间

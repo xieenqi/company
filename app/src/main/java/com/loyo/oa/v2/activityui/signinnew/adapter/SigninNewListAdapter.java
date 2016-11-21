@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
@@ -24,13 +23,10 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
-import com.loyo.oa.v2.activityui.signin.SignInfoActivity;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -40,7 +36,6 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -121,8 +116,8 @@ public class SigninNewListAdapter extends BaseAdapter {
         holder.tv_name.setText(signinNewListModel.creator.name);
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.address);
-        holder.tv_offset.setText(signinNewListModel.offsetDistance+"");
-        holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "MM-dd hh:mm"));
+        holder.tv_offset.setText(signinNewListModel.distance);
+        holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "MM-dd HH:mm"));
 
 
         /** 客户姓名 */
