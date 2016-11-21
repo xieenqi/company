@@ -141,7 +141,20 @@ public enum SystemMessageItemType {
             return "projectId";
         }
     },
-    /*g跟进动态*/
+    /*g跟进动态  评论*/
+    MSG_FOLLOWUP_COMMENTS(31) {
+        public int getIcon() {
+            return R.drawable.icon_sys_followup;
+        }
+
+        public Class<?> getItemClass() {
+            return FollowUpDetailsActivity.class;
+        }
+
+        public String getExtraName() {
+            return "id";
+        }
+    },/*g跟进动态*/
     MSG_FOLLOWUP(9) {
         public int getIcon() {
             return R.drawable.icon_sys_followup;
@@ -155,7 +168,20 @@ public enum SystemMessageItemType {
             return "id";
         }
     },
-    /*客户拜访*/
+    /*客户拜访 评论*/
+    MSG_SIGNIN_COMMENTS(30) {
+        public int getIcon() {
+            return R.drawable.icon_sys_signin;
+        }
+
+        public Class<?> getItemClass() {
+            return SigninNewDetailsActivity.class;
+        }
+
+        public String getExtraName() {
+            return "id";
+        }
+    }, /*客户拜访*/
     MSG_SIGNIN(4) {
         public int getIcon() {
             return R.drawable.icon_sys_signin;
@@ -213,7 +239,7 @@ public enum SystemMessageItemType {
     },
     // TODO 公海客户暂还没有定义
     /*公海客户详情*/
-    MSG_CUSTOMER_PUBLIC(30) {
+    MSG_CUSTOMER_PUBLIC(40) {
         public int getIcon() {
             return R.drawable.icon_sys_custom_public;
         }

@@ -317,7 +317,6 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                // TODO 类型id 没有确定
                 case 22://拜访的推送
                 case 24://拜访的评论
                     intent.setClass(MainHomeActivity.this, SigninNewDetailsActivity.class);
