@@ -54,6 +54,34 @@ public enum SystemMessageItemType {
             return ExtraAndResult.EXTRA_ID;
         }
     },
+    /*任务 完成*/
+    MSG_TASK_COMPLETE(21) {
+        public int getIcon() {
+            return R.drawable.icon_sys_task;
+        }
+
+        public Class<?> getItemClass() {
+            return TasksInfoActivity_.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
+    /*工作报告  已经点评*/
+    MSG_WORKREPORT_COMPLETE(23) {
+        public int getIcon() {
+            return R.drawable.icon_sys_workreport;
+        }
+
+        public Class<?> getItemClass() {
+            return WorkReportsInfoActivity_.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
     /*工作报告*/
     MSG_WORKREPORT(1) {
         public int getIcon() {
@@ -62,6 +90,20 @@ public enum SystemMessageItemType {
 
         public Class<?> getItemClass() {
             return WorkReportsInfoActivity_.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
+    /*审批 通过 详情*/
+    MSG_APPROVAL_COMPLETE(22) {
+        public int getIcon() {
+            return R.drawable.icon_sys_approval;
+        }
+
+        public Class<?> getItemClass() {
+            return WfinstanceInfoActivity_.class;
         }
 
         public String getExtraName() {
@@ -152,6 +194,32 @@ public enum SystemMessageItemType {
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
         }
+    }, /*订单详情 回款记录*/
+    MSG_ORDER_RECORD(26) {
+        public int getIcon() {
+            return R.drawable.icon_sys_order;
+        }
+
+        public Class<?> getItemClass() {
+            return OrderDetailActivity.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    }, /*订单详情 回款计划*/
+    MSG_ORDER_PLAN(27) {
+        public int getIcon() {
+            return R.drawable.icon_sys_order;
+        }
+
+        public Class<?> getItemClass() {
+            return OrderDetailActivity.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
     },
     /*工单详情*/
     MSG_Worksheet(28) {
@@ -211,6 +279,20 @@ public enum SystemMessageItemType {
     },
     /*系统消息*/
     MSG_SYS(0) {
+        public int getIcon() {
+            return R.drawable.icon_sys_sys;
+        }
+
+        public Class<?> getItemClass() {
+            return WorkReportsInfoActivity_.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
+    /*系统消息*/
+    MOVE_SUPER_USER(24) {
         public int getIcon() {
             return R.drawable.icon_sys_sys;
         }
