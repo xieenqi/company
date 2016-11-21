@@ -113,6 +113,7 @@ public class MoreWindowCase extends PopupWindow {
         Paint paint = new Paint();
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(mBitmap, 0, -statusBarHeight, paint);
+        canvas.drawBitmap(mBitmap, 0, height-statusBarHeight, paint);
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
         return overlay;
