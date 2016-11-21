@@ -20,8 +20,8 @@ import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 
 import org.apache.http.Header;
 

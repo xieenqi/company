@@ -21,7 +21,7 @@ import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBUser;
 import com.loyo.oa.v2.tool.BaseActivity;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.loyo.oa.v2.customview.pullToRefresh;
+package com.loyo.oa.pulltorefresh;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -36,12 +36,12 @@ import android.widget.LinearLayout;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.customview.pullToRefresh.internal.AutoRoteLoadingLayout;
-import com.loyo.oa.v2.customview.pullToRefresh.internal.FlipLoadingLayout;
-import com.loyo.oa.v2.customview.pullToRefresh.internal.LoadingLayout;
-import com.loyo.oa.v2.customview.pullToRefresh.internal.RotateLoadingLayout;
-import com.loyo.oa.v2.customview.pullToRefresh.internal.Utils;
-import com.loyo.oa.v2.customview.pullToRefresh.internal.ViewCompat;
+import com.loyo.oa.pulltorefresh.internal.AutoRoteLoadingLayout;
+import com.loyo.oa.pulltorefresh.internal.FlipLoadingLayout;
+import com.loyo.oa.pulltorefresh.internal.LoadingLayout;
+import com.loyo.oa.pulltorefresh.internal.RotateLoadingLayout;
+import com.loyo.oa.pulltorefresh.internal.Utils;
+import com.loyo.oa.pulltorefresh.internal.ViewCompat;
 
 public abstract class PullToRefreshBase<T extends View> extends LinearLayout implements IPullToRefresh<T> {
 

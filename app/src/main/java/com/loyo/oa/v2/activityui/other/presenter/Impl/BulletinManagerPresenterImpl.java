@@ -13,9 +13,8 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
+import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.point.INotice;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 
 import java.util.ArrayList;

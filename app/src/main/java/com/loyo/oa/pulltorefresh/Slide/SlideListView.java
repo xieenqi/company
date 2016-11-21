@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.customview.pullToRefresh.Slide;
+package com.loyo.oa.pulltorefresh.Slide;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.loyo.oa.v2.customview.pullToRefresh;
+package com.loyo.oa.pulltorefresh;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -33,8 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.customview.pullToRefresh.internal.EmptyViewMethodAccessor;
-import com.loyo.oa.v2.customview.pullToRefresh.internal.IndicatorLayout;
+import com.loyo.oa.pulltorefresh.internal.EmptyViewMethodAccessor;
+import com.loyo.oa.pulltorefresh.internal.IndicatorLayout;
 
 
 public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extends PullToRefreshBase<T> implements

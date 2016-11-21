@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.loyo.oa.v2.customview.pullToRefresh.extras;
+package com.loyo.oa.pulltorefresh.extras;
 
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.view.View;
 
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 
 import java.util.HashMap;
 

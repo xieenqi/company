@@ -5,13 +5,10 @@ import android.os.Message;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.HttpDiscussItem;
-import com.loyo.oa.v2.activityui.discuss.MyDiscussActivity;
-import com.loyo.oa.v2.activityui.discuss.adapter.DiscussAdapter;
 import com.loyo.oa.v2.activityui.discuss.viewcontrol.MyDisscussVControl;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;

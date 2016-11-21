@@ -1,9 +1,9 @@
-package com.loyo.oa.v2.customview.pullToRefresh;
+package com.loyo.oa.pulltorefresh;
 
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
-import com.loyo.oa.v2.customview.pullToRefresh.internal.LoadingLayout;
+import com.loyo.oa.pulltorefresh.internal.LoadingLayout;
 
 import java.util.HashSet;
 

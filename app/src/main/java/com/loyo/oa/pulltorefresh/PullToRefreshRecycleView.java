@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.customview.pullToRefresh;
+package com.loyo.oa.pulltorefresh;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

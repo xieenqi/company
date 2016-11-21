@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.loyo.oa.v2.customview.pullToRefresh;
+package com.loyo.oa.pulltorefresh;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -23,7 +23,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ExpandableListView;
 
-import com.loyo.oa.v2.customview.pullToRefresh.internal.EmptyViewMethodAccessor;
+import com.loyo.oa.pulltorefresh.internal.EmptyViewMethodAccessor;
 
 public class PullToRefreshExpandableListView extends PullToRefreshAdapterViewBase<ExpandableListView> {
 

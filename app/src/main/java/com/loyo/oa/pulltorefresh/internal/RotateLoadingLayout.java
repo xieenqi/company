@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.loyo.oa.v2.customview.pullToRefresh.internal;
+package com.loyo.oa.pulltorefresh.internal;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -24,7 +24,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView.ScaleType;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 
 //import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 //import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
