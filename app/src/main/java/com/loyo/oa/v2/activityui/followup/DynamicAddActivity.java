@@ -83,7 +83,8 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
     UploadController controller;
     private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue;
     private EditText edt;
-    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text, tv_at_text, tv_clue_company, tv_clue_name;
+    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text,
+            tv_at_text, tv_clue_company, tv_clue_name;
     private Customer mCustomer;
     private ClueListItem mClue;
     private String tagItemIds, contactId, contactName = "无";

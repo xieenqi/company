@@ -144,7 +144,7 @@ public enum SystemMessageItemType {
     /*g跟进动态*/
     MSG_FOLLOWUP(9) {
         public int getIcon() {
-            return R.drawable.icon_sys_project;
+            return R.drawable.icon_sys_followup;
         }
 
         public Class<?> getItemClass() {
@@ -158,7 +158,7 @@ public enum SystemMessageItemType {
     /*客户拜访*/
     MSG_SIGNIN(4) {
         public int getIcon() {
-            return R.drawable.icon_sys_project;
+            return R.drawable.icon_sys_signin;
         }
 
         public Class<?> getItemClass() {

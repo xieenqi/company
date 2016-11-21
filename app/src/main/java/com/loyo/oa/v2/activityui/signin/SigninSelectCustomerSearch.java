@@ -197,6 +197,7 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
         intent.putExtra("id", item.id);
         intent.putExtra("name", item.name);
         intent.putExtra("loc", item.position);
+        intent.putExtra("contact", item.contacts);
         setResult(RESULT_OK, intent);
         onBackPressed();
     }

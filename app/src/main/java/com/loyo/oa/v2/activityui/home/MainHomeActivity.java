@@ -318,13 +318,15 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     MainApp.jpushData = null;
                     break;
                 // TODO 类型id 没有确定
-                case 11://拜访的推送
+                case 22://拜访的推送
+                case 24://拜访的评论
                     intent.setClass(MainHomeActivity.this, SigninNewDetailsActivity.class);
                     intent.putExtra("id", MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 433://跟进动态的推送
+                case 23://跟进动态的推送
+                case 25://跟进的评论
                     intent.setClass(MainHomeActivity.this, FollowUpDetailsActivity.class);
                     intent.putExtra("id", MainApp.jpushData.buzzId);
                     startActivity(intent);
