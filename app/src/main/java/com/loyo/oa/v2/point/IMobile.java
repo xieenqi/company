@@ -18,7 +18,12 @@ public interface IMobile {
     @GET("/")
     void getVerifyCode(@Query("tel") String tel, Callback<Object> callback);
 
-    @GET("/oapi/sms/code/verify")
+    /**
+     * 跟换手机号 /oapi/sms/code/verify
+     * @param map
+     * @param callback
+     */
+    @GET("/user/update/num")
     void modifyMobile(@QueryMap HashMap<String, Object> map, Callback<Object> callback);
 
     @GET("/")

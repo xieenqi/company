@@ -8,11 +8,14 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
+import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activityui.signinnew.SigninNewDetailsActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
@@ -138,6 +141,34 @@ public enum SystemMessageItemType {
             return "projectId";
         }
     },
+    /*g跟进动态*/
+    MSG_FOLLOWUP(9) {
+        public int getIcon() {
+            return R.drawable.icon_sys_project;
+        }
+
+        public Class<?> getItemClass() {
+            return FollowUpDetailsActivity.class;
+        }
+
+        public String getExtraName() {
+            return "id";
+        }
+    },
+    /*客户拜访*/
+    MSG_SIGNIN(4) {
+        public int getIcon() {
+            return R.drawable.icon_sys_project;
+        }
+
+        public Class<?> getItemClass() {
+            return SigninNewDetailsActivity.class;
+        }
+
+        public String getExtraName() {
+            return "id";
+        }
+    },
     /*通知公告*/
     MSG_BULLETIN(19) {
         public int getIcon() {
@@ -150,6 +181,20 @@ public enum SystemMessageItemType {
 
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
+        }
+    },
+    /*客户详情 服务端的老数据 要求18也是客户的详情*/
+    MSG_CUSTOMER2(18) {
+        public int getIcon() {
+            return R.drawable.icon_sys_custom;
+        }
+
+        public Class<?> getItemClass() {
+            return CustomerDetailInfoActivity_.class;
+        }
+
+        public String getExtraName() {
+            return "Id";
         }
     },
     /*客户详情*/
@@ -194,7 +239,8 @@ public enum SystemMessageItemType {
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
         }
-    }, /*订单详情 回款记录*/
+    },
+    /*订单详情 回款记录*/
     MSG_ORDER_RECORD(26) {
         public int getIcon() {
             return R.drawable.icon_sys_order;
@@ -207,8 +253,9 @@ public enum SystemMessageItemType {
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
         }
-    }, /*订单详情 回款计划*/
-    MSG_ORDER_PLAN(27) {
+    },
+    /*订单详情 回款计划*/
+    msg_order_plan(27) {
         public int getIcon() {
             return R.drawable.icon_sys_order;
         }
@@ -256,42 +303,14 @@ public enum SystemMessageItemType {
         }
 
         public Class<?> getItemClass() {
-            return WorkReportsInfoActivity_.class;
+            return AttendanceManagerActivity.class;
         }
 
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
         }
     },
-    /*销售机会*/
-    MSG_SALE(8) {
-        public int getIcon() {
-            return R.drawable.icon_ws_status2;
-        }
-
-        public Class<?> getItemClass() {
-            return WorkReportsInfoActivity_.class;
-        }
-
-        public String getExtraName() {
-            return ExtraAndResult.EXTRA_ID;
-        }
-    },
-    /*系统消息*/
-    MSG_SYS(0) {
-        public int getIcon() {
-            return R.drawable.icon_sys_sys;
-        }
-
-        public Class<?> getItemClass() {
-            return WorkReportsInfoActivity_.class;
-        }
-
-        public String getExtraName() {
-            return ExtraAndResult.EXTRA_ID;
-        }
-    },
-    /*系统消息*/
+    /*系统消息  转移超级用户*/
     MOVE_SUPER_USER(24) {
         public int getIcon() {
             return R.drawable.icon_sys_sys;
@@ -337,7 +356,7 @@ public enum SystemMessageItemType {
 //    LYMsgWorkReport   = 1,           //1.工作汇报*
 //    LYMsgTask,                       //2.任务*
 //    LYMsgSchedule,                   //3.日程(没有了)
-//    LYMsgLegWork,                    //4.外勤
+//    LYMsgLegWork,                    //4.外勤(改成拜访了)
 //    LYMsgProject,                    //5.项目
 //    LYMsgCustomer,                   //6.客户*
 //    LYMsgContact,                    //7.客户联系人
