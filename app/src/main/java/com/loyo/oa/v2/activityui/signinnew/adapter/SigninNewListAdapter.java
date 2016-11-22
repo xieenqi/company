@@ -116,8 +116,18 @@ public class SigninNewListAdapter extends BaseAdapter {
         holder.tv_name.setText(signinNewListModel.creator.name);
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.address);
-        holder.tv_offset.setText(signinNewListModel.distance);
         holder.tv_create_time.setText(DateTool.getDiffTime(signinNewListModel.createdAt));
+
+
+        /** 偏差距离,当未知显示红色 */
+        if(signinNewListModel.distance.equals("未知")){
+            holder.tv_offset.setTextColor(mContext.getResources().getColor(R.color.red));
+        }else{
+            holder.tv_offset.setTextColor(mContext.getResources().getColor(R.color.text99));
+        }
+        holder.tv_offset.setText(signinNewListModel.distance);
+
+
         /** 客户姓名 */
         if(null != signinNewListModel.customerName && !TextUtils.isEmpty(signinNewListModel.customerName)){
             holder.layout_customer.setVisibility(View.VISIBLE);
@@ -227,7 +237,7 @@ public class SigninNewListAdapter extends BaseAdapter {
                     String[] gps = signinNewListModel.gpsInfo.split(",");
                     mIntent.putExtra("la",Double.valueOf(gps[1]));
                     mIntent.putExtra("lo",Double.valueOf(gps[0]));
-                    mIntent.putExtra("address",signinNewListModel.address);
+                    mIntent.putExtra("address",signinNewListModel.position);
                     mIntent.putExtra("title","签到地址");
                     mContext.startActivity(mIntent);
                 }else{

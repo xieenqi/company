@@ -183,13 +183,16 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
-                MenuModel model = selectedModels.get(0);
+
                 switch (menuIndex) {
 
                     /*时间*/
                     case 0:
+                    {
+                        MenuModel model = selectedModels.get(0);
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                    }
                         break;
 
                     /*筛选*/
@@ -213,11 +216,14 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
                     /*人员*/
                     case 2:
+                    {
+                        MenuModel model = selectedModels.get(0);
                         menuGuykey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                    }
                         break;
-
                 }
+                isPullOrDown = true;
                 getData(false);
             }
         });
@@ -271,10 +277,10 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userId", "");//我的传id,团队则空着
+        map.put("userId", "");            //我的传id,团队则空着
         map.put("xpath", "");
-        map.put("timeType", 5);//时间查询
-        map.put("method", method); //跟进类型0:全部 1:线索 2:客户
+        map.put("timeType", menuTimekey); //时间查询
+        map.put("method", method);        //跟进类型0:全部 1:线索 2:客户
         map.put("typeId", typeId);
         map.put("activityType", activityType);
         map.put("split", true);

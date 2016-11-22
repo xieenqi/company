@@ -210,6 +210,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
                         }
                         break;
                 }
+                isPullOrDown = true;
                 getData(false);
             }
         });

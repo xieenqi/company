@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
@@ -38,7 +37,6 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 
 /**
@@ -115,8 +113,15 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         holder.tv_name.setText(signinNewListModel.creator.name);
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.position);
-        holder.tv_offset.setText(signinNewListModel.distance);
         holder.tv_create_time.setText(DateTool.getDiffTime(signinNewListModel.createdAt));
+
+        /** 偏差距离,当未知显示红色 */
+        if(signinNewListModel.distance.equals("未知")){
+            holder.tv_offset.setTextColor(mContext.getResources().getColor(R.color.red));
+        }else{
+            holder.tv_offset.setTextColor(mContext.getResources().getColor(R.color.text99));
+        }
+        holder.tv_offset.setText(signinNewListModel.distance);
 
         /** 客户姓名 */
         if(null != signinNewListModel.customerName && !TextUtils.isEmpty(signinNewListModel.customerName)){

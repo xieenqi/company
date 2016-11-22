@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.signinnew;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,11 +16,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
+import com.loyo.oa.v2.activityui.commonview.MapSingleView;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
@@ -28,6 +34,7 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
+import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
@@ -35,6 +42,9 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CusGridView;
@@ -78,6 +88,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private TextView tv_contact_name;      /* 联系人 */
     private TextView tv_pc;                /* 偏差 */
     private TextView tv_time;              /* 时间 */
+    private TextView tv_memo;              /* 时间 */
     private RoundImageView iv_heading;     /* 头像 */
 
     private CustomerListView lv_comment;
@@ -86,11 +97,12 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private CusGridView gv_image;
 
     private LinearLayout layout_touch;
-    private LinearLayout ll_web;
     private LinearLayout layout_enclosure;
     private LinearLayout layout_bottom_menu;
     private LinearLayout layout_comment;
     private LinearLayout layout_back;
+    private LinearLayout layout_position;
+    private LinearLayout layout_contact;
     private ImageView iv_comment;
 
     private float mPosX;
@@ -182,8 +194,9 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
         layout_bottom_voice = (LinearLayout) findViewById(R.id.layout_bottom_voice);
+        layout_position = (LinearLayout) findViewById(R.id.layout_position);
+        layout_contact = (LinearLayout) findViewById(R.id.layout_contact);
 
-        ll_web = (LinearLayout) findViewById(R.id.ll_web);
         layout_bottom_menu = (LinearLayout) findViewById(R.id.layout_bottom_menu);
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -196,6 +209,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_time = (TextView) findViewById(R.id.tv_time);
+        tv_memo = (TextView) findViewById(R.id.tv_memo);
         iv_comment = (ImageView) findViewById(R.id.iv_comment);
         iv_heading = (RoundImageView) findViewById(R.id.iv_heading);
         layout_scrollview = (ScrollView) findViewById(R.id.layout_scrollview);
@@ -207,12 +221,14 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         iv_comment.setOnClickListener(this);
         layout_back.setOnClickListener(this);
 
+        tv_position.setOnTouchListener(Global.GetTouch());
+        tv_customer_name.setOnTouchListener(Global.GetTouch());
+
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访详情");
 
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
-
         requestDetails();
     }
 
@@ -288,7 +304,6 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         });
     }
     private void bindData() {
-        setContent(ll_web, " ");
         bindAdapter();
 
         if (TextUtils.isEmpty(mSigninDelModel.creator.avatar)) {
@@ -297,11 +312,43 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
         tv_name.setText(mSigninDelModel.creator.name);
         tv_address.setText(TextUtils.isEmpty(mSigninDelModel.address) ? "无地址数据" : mSigninDelModel.address);
-        tv_toast.setText(mSigninDelModel.atNameAndDepts);
         tv_customer_name.setText(mSigninDelModel.customerName);
         tv_position.setText(mSigninDelModel.position);
-        tv_pc.setText(mSigninDelModel.offsetDistance + "");
-        tv_time.setText(DateTool.timet(mSigninDelModel.createdAt + "", "yyyy-MM-dd hh:mm:ss"));
+        tv_time.setText(DateTool.getDiffTime(mSigninDelModel.createdAt));
+
+        /** 备注内容 */
+        if(null != mSigninDelModel.memo && !TextUtils.isEmpty(mSigninDelModel.memo)){
+            tv_memo.setVisibility(View.VISIBLE);
+            tv_memo.setText(mSigninDelModel.memo);
+        }else{
+            tv_memo.setVisibility(View.GONE);
+        }
+
+        /** 设置@ */
+        if(null != mSigninDelModel.atNameAndDepts && TextUtils.isEmpty(mSigninDelModel.atNameAndDepts)){
+            tv_toast.setVisibility(View.VISIBLE);
+            tv_toast.setText(mSigninDelModel.atNameAndDepts);
+        }
+
+        /** 设置联系人 */
+        if(null != mSigninDelModel.contactName && !TextUtils.isEmpty(mSigninDelModel.contactName)){
+            tv_contact_name.setText(mSigninDelModel.contactName);
+        }else{
+            layout_contact.setVisibility(View.GONE);
+        }
+
+        /** 偏差距离 */
+        if(mSigninDelModel.distance.equals("未知")){
+            tv_pc.setTextColor(getResources().getColor(R.color.red));
+        }else{
+            tv_pc.setTextColor(getResources().getColor(R.color.text99));
+        }
+        tv_pc.setText(mSigninDelModel.distance + "");
+
+        /** 设置拜访地址信息 */
+        if(null != mSigninDelModel.address && !TextUtils.isEmpty(mSigninDelModel.address)){
+            layout_position.setVisibility(View.VISIBLE);
+        }
 
         /** 绑定评论数据 */
         if (null != mSigninDelModel.comments && mSigninDelModel.comments.size() > 0) {
@@ -329,6 +376,51 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         } else {
             layout_comment.setVisibility(View.GONE);
         }
+
+
+        /*图片预览*/
+        gv_image.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("data", mSigninDelModel.imageAttachments);
+                bundle.putInt("position", position);
+                bundle.putBoolean("isEdit", false);
+                MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
+                        MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+            }
+        });
+
+
+        /** 查看位置地图 */
+        tv_position.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(null != mSigninDelModel.gpsInfo && !TextUtils.isEmpty(mSigninDelModel.gpsInfo)){
+                    Intent mIntent = new Intent(mContext, MapSingleView.class);
+                    String[] gps = mSigninDelModel.gpsInfo.split(",");
+                    mIntent.putExtra("la",Double.valueOf(gps[1]));
+                    mIntent.putExtra("lo",Double.valueOf(gps[0]));
+                    mIntent.putExtra("address",mSigninDelModel.position);
+                    mIntent.putExtra("title","签到地址");
+                    mContext.startActivity(mIntent);
+                }else{
+                    Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        /** 查看客户详情 */
+        tv_customer_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("Id", mSigninDelModel.customerId);
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
+                intent.setClass(mContext, CustomerDetailInfoActivity_.class);
+                mContext.startActivity(intent);
+            }
+        });
 
     }
 

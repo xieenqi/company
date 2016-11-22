@@ -194,6 +194,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                         break;
 
                 }
+                isPullOrDown = true;
                 getData(false);
             }
         });

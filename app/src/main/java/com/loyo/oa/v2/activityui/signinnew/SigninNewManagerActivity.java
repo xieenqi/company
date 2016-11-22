@@ -88,8 +88,6 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         layout_title_action = (RelativeLayout) findViewById(R.id.layout_title_action);
         layout_title_action.setOnClickListener(this);
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
-        img_title_search_right.setOnClickListener(this);
-        img_title_search_right.setOnTouchListener(Global.GetTouch());
         layout_title_action.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setVisibility(View.INVISIBLE);
 
@@ -231,15 +229,6 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
                 if (SaleItemStatus.length != 1) {
                     changeTitleImg();
                 }
-                break;
-            /*搜索*/
-            case R.id.img_title_search_right:
-                Intent mIntent = new Intent(SigninNewManagerActivity.this, SigninNewDetailsActivity.class);
-                mIntent.putExtra("id", "582d777c608e4f615d000166");
-                startActivity(mIntent);
-                break;
-
-            default:
                 break;
         }
     }
