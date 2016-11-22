@@ -230,6 +230,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
                     mIntent.putExtra("la",Double.valueOf(gps[1]));
                     mIntent.putExtra("lo",Double.valueOf(gps[0]));
                     mIntent.putExtra("address",signinNewListModel.address);
+                    mIntent.putExtra("title","签到地址");
                     LogUtil.dee("la:"+ Double.valueOf(gps[1]));
                     LogUtil.dee("lo:"+ Double.valueOf(gps[0]));
                     mContext.startActivity(mIntent);

@@ -230,8 +230,7 @@ public class SigninNewListAdapter extends BaseAdapter {
                     mIntent.putExtra("la",Double.valueOf(gps[1]));
                     mIntent.putExtra("lo",Double.valueOf(gps[0]));
                     mIntent.putExtra("address",signinNewListModel.address);
-                    LogUtil.dee("la:"+ Double.valueOf(gps[1]));
-                    LogUtil.dee("lo:"+ Double.valueOf(gps[0]));
+                    mIntent.putExtra("title","签到地址");
                     mContext.startActivity(mIntent);
                 }else{
                     Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
