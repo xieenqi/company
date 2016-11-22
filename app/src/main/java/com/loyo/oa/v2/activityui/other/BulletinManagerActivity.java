@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
+import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinManagerPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinManagerView;
@@ -14,9 +17,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
-import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -38,7 +38,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     @ViewById
     TextView tv_title_1;
     @ViewById
-    PullToRefreshRecycleView lv_notice;
+    PullToRefreshRecyclerView2 lv_notice;
     @ViewById
     Button btn_notice_add;
     protected PaginationX<Bulletin> mPagination = new PaginationX(20);
@@ -71,7 +71,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
      * 获取通知列表
      */
     void getData() {
-        managerPresenter.requestListData(mPagination.getPageIndex(), isTopAdd ? mPagination.getPageSize() >= 20 ? mPagination.getPageSize() : 20 : 20);
+        managerPresenter.requestListData(mPagination.getPageIndex(), 20, isTopAdd);
     }
 
     /**

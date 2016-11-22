@@ -59,4 +59,15 @@ public class Bulletin extends BaseBeans {
         return MainApp.getMainApp().df3.format(new Date(createdAt * 1000));
     }
 
+    public ArrayList<String> attachmentUrls() {
+        ArrayList<String> result = new ArrayList<String>();
+        for (Attachment attachment:attachments) {
+            final boolean isImage = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
+
+            if (isImage && attachment.getUrl() != null) {//预览图片
+                result.add(attachment.getUrl());
+            }
+        }
+        return result;
+    }
 }
