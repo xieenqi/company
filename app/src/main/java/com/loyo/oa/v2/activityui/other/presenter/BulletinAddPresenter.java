@@ -1,9 +1,8 @@
 package com.loyo.oa.v2.activityui.other.presenter;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.tool.ImageInfo;
 
 import java.util.ArrayList;
 
@@ -20,16 +19,16 @@ public interface BulletinAddPresenter {
     void dealDepartmentResult(Members member);
 
     /*组装附件*/
-    ArrayList<Attachment> assembleAttachment();
+    ArrayList<Attachment> assembleAttachment(ArrayList<AttachmentForNew> attachments);
 
     /*格式验证*/
     void verifyText(String title,String content);
 
     /*提交通知公告*/
-    void requestBulletinAdd(String title,String content,String uuid);
+    void requestBulletinAdd(String title,String content,String uuid, ArrayList<AttachmentForNew> attachments);
 
     /*上传附件*/
-    void uploadAttachement(SweetAlertDialogView sweetAlertDialogView, ArrayList<ImageInfo> pickPhots, String title, String content, String uuid);
+    //void uploadAttachement(SweetAlertDialogView sweetAlertDialogView, ArrayList<ImageInfo> pickPhots, String title, String content, String uuid);
 
 
 }

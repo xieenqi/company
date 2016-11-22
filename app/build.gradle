@@ -45,7 +45,7 @@ android {
         multiDexEnabled = true
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 2016111001
         versionName '1.4.4t'
     }
@@ -57,6 +57,9 @@ android {
             resValue "string", "app_name", "快启"
             jniDebuggable true
             debuggable true
+//            minifyEnabled true//混淆打包
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            shrinkResources true//去掉不用资源
         }
         release {
 //            minifyEnabled false
@@ -98,6 +101,7 @@ android {
     ext {
 //        supportLibVersion = "24.2.1"
         supportLibVersion = "23.4.0"
+//        supportLibVersion = "24.2.1"
     }
 
     dependencies {
