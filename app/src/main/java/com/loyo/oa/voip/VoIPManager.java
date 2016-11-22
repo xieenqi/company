@@ -47,7 +47,7 @@ public class VoIPManager implements CallStateListener {
     private boolean isInitialized = false;
     private String cacheToken;
 
-    private String customerId;
+    private String customerId, salesleadId;
     private String userId;
     private String phone;
     private int callType;
@@ -84,6 +84,7 @@ public class VoIPManager implements CallStateListener {
     private ResponseBase<RequestAccess> getPaymentAccess() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("customerId", customerId);
+        params.put("salesleadId", salesleadId);
         params.put("contactId", userId);
         params.put("type", callType);
         params.put("mobile", phone);
@@ -191,7 +192,7 @@ public class VoIPManager implements CallStateListener {
 
     }
 
-    public void dialNumber(final String phone, final String customerId, final String userId, int callType, final OnRespond callback) {
+    public void dialNumber(final String phone, final String customerId, final String userId, int callType, String salesleadId, final OnRespond callback) {
         if (phone == null || phone.length() <= 0) {
             return;
         }
@@ -199,6 +200,7 @@ public class VoIPManager implements CallStateListener {
         this.userId = userId;
         this.callType = callType;
         this.phone = phone;
+        this.salesleadId = salesleadId;
         //
         if (UCSService.isConnected()) {
             Observable.just("connect")

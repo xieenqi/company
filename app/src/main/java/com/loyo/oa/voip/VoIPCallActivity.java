@@ -42,6 +42,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     static public String CALLEE_CUSTOMER_KEY = "com.loyo.voip.callee.customer";
     static public String CALLEE_USER_KEY = "com.loyo.voip.callee.user";
     static public String CALLEE_USER_TYPE = "com.loyo.voip.callee.type";
+    static public String CALLEE_SALE_KEY = "com.loyo.voip.callee.sale";
 
 
     private ImageView iv_1, iv_2, iv_3, iv_4;
@@ -76,7 +77,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     private boolean isAnswering;
     private String callee;
     private String phone;
-    private String customerId;
+    private String customerId, salesleadId;
     private String userId;
     private int callType;
     private long startTimestamp;
@@ -99,6 +100,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         customerId = mIntent.getStringExtra(CALLEE_CUSTOMER_KEY);
         userId = mIntent.getStringExtra(CALLEE_USER_KEY);
         callType = mIntent.getIntExtra(CALLEE_USER_TYPE, -1);
+        salesleadId = mIntent.getStringExtra(CALLEE_SALE_KEY);
         initUI();
 
         UCSCall.addCallStateListener(this);
@@ -504,7 +506,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             return;
         }
 
-        VoIPManager.getInstance().dialNumber(number, customerId, userId, callType, new OnRespond() {
+        VoIPManager.getInstance().dialNumber(number, customerId, userId, callType,salesleadId, new OnRespond() {
             @Override
             public void onPaymentDeny() {
                 // 余额不足

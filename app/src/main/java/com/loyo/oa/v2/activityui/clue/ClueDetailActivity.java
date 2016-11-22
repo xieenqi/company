@@ -448,7 +448,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         Bundle mBundle = new Bundle();
         mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone);
         mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name);
-        mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, data.data.sales.id);
+        mBundle.putString(VoIPCallActivity.CALLEE_SALE_KEY, data.data.sales.id);
         mBundle.putInt(VoIPCallActivity.CALLEE_USER_TYPE, callType);
         app.startActivity(ClueDetailActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
 //        showLoading("");
