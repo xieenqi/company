@@ -48,6 +48,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
@@ -73,6 +74,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -335,7 +337,24 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 break;
 
             case R.id.img_title_right:
-                addSignIn();
+                if (TextUtils.isEmpty(customerAddress)) {
+                    sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                            addSignIn();
+                        }
+                    }, new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dismissSweetAlert();
+                            customerAddress = tv_address.getText().toString();
+                            addSignIn();
+                        }
+                    }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
+                } else {
+                    addSignIn();
+                }
                 break;
 
             /*选择客户*/
@@ -384,10 +403,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             Global.ToastLong("需要上传照片，请拍照");
             return;
         }
+
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("gpsInfo", loPosition + "," + laPosition);//当前定位信息
 //        map.put("address", mAddress.trim());//客户地址
-        map.put("position", tv_address.getText().toString());//当前定位地址
+        map.put("position", customerAddress);//当前定位地址
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("audioInfo", audioInfo);

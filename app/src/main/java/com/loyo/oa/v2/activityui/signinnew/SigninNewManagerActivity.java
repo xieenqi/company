@@ -44,7 +44,7 @@ import retrofit.client.Response;
  * 【拜访列表】fragment管理类
  * Created by yyy on 16/11/10
  */
-public class SigninNewManagerActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class SigninNewManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
 
 
     private LinearLayout img_title_left, ll_category;
@@ -95,7 +95,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
 
         imageArrow.setVisibility(View.INVISIBLE);
         /*超级管理员,Web权限判断*/
-        Permission permission = MainApp.rootMap.get("0228");
+        permission = MainApp.rootMap.get("0228");
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new String[]{"我的拜访", "团队拜访"};
             imageArrow.setVisibility(View.VISIBLE);
@@ -234,8 +234,8 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
                 break;
             /*搜索*/
             case R.id.img_title_search_right:
-                Intent mIntent = new Intent(SigninNewManagerActivity.this,SigninNewDetailsActivity.class);
-                mIntent.putExtra("id","582d777c608e4f615d000166");
+                Intent mIntent = new Intent(SigninNewManagerActivity.this, SigninNewDetailsActivity.class);
+                mIntent.putExtra("id", "582d777c608e4f615d000166");
                 startActivity(mIntent);
                 break;
 
@@ -256,8 +256,8 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
 
     /**
      * 重启Activity
-     * */
-    void reStart(){
+     */
+    void reStart() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
