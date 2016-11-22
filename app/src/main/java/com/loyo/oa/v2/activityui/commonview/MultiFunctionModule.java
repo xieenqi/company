@@ -188,8 +188,12 @@ public class MultiFunctionModule extends LinearLayout {
                     break;
                 case MotionEvent.ACTION_UP:
                     dialog.setVisibility(GONE);
+                    v.setAlpha(1f);
+                    if (voice.isStart()) {
+                        voice.stopRecord();
+                    }
                     if (!isRecordCancle && isEffective) {
-                        callbackComplete.recordComplete(voice.getOutPath(), voice.getFormat(voice.getEndTime() - voice.getStartTime()));
+                        callbackComplete.recordComplete(voice.getOutPath(), recordTime + "");
                         //恢复默认录音状态是键盘
                         ll_record_keyboard.setTag(false);
                         setIsRecording(false);
@@ -197,10 +201,7 @@ public class MultiFunctionModule extends LinearLayout {
                     } else {
                         Global.Toast("好像你没有说话哦!");
                     }
-                    v.setAlpha(1f);
-                    if (voice.isStart()) {
-                        voice.stopRecord();
-                    }
+
                     break;
             }
             return true;
@@ -226,7 +227,7 @@ public class MultiFunctionModule extends LinearLayout {
                 });
             }
         };
-        timer.schedule(task, 1000, 1000);
+        timer.schedule(task, 0, 1000);
     }
 
     /*录音时间 暂停*/

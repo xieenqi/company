@@ -26,8 +26,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 
 public class RecordUtils {
 
-    private static RecordUtils mInstance;
-    private static MediaRecorder recorder;
+    //    private static RecordUtils mInstance;
+    private MediaRecorder recorder;
     private Context context;
     private MediaPlayer play;
     private String AUDIO_ROOTPATH, outPath, fileName;//录音存放路径、输出路径、输出文件名字
@@ -42,9 +42,9 @@ public class RecordUtils {
     }
 
     public static RecordUtils getInstance(Context context) {
-        if (mInstance == null) {
-            mInstance = new RecordUtils();
-        }
+//        if (mInstance == null) {
+        RecordUtils mInstance = new RecordUtils();
+//        }
         mInstance.setContext(context);
         return mInstance;
     }
@@ -92,7 +92,9 @@ public class RecordUtils {
             isStart = true;
             recorder.prepare();
             recorder.start();
+            LogUtil.d("开始 前 时间:" + startTime);
             startTime = System.currentTimeMillis();
+            LogUtil.d("开始 后 时间:" + startTime);
         } catch (IllegalStateException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -120,7 +122,9 @@ public class RecordUtils {
             if (recorder != null && isStart) {
                 timer.cancel();
                 task.cancel();
+                LogUtil.d("结束 前 时间:" + endTime);
                 endTime = System.currentTimeMillis();
+                LogUtil.d("结束 后 时间:" + endTime);
                 isStart = false;
                 recorder.stop();
                 recorder.reset();
