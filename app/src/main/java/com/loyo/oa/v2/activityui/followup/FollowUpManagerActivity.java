@@ -91,8 +91,8 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
-
         layout_title_action.setOnTouchListener(Global.GetTouch());
+        img_title_search_right.setVisibility(View.INVISIBLE);
 
         //超级管理员权全公司  没有获取到权限就不显示
         permission = MainApp.rootMap.get("0205"); //客户权限 暂时用客户权限做测试

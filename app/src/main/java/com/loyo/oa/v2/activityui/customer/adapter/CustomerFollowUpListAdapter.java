@@ -119,7 +119,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(followUpListModel.creator.avatar, holder.iv_heading);
         holder.tv_name.setText(followUpListModel.creator.name);
         holder.tv_contact.setText(TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
-        holder.tv_create_time.setText(DateTool.timet(followUpListModel.createAt + "", "MM-dd hh:mm"));
+        holder.tv_create_time.setText(DateTool.timet(followUpListModel.createAt + "", "MM-dd HH:mm"));
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# "+followUpListModel.typeName);
 
         /** 设置跟进内容 */

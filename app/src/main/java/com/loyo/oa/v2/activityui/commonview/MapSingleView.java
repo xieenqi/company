@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.commonview;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,11 +29,13 @@ public class MapSingleView extends BaseActivity implements View.OnClickListener{
     private LatLng latlng;
     private double laPosition,loPosition;
     private String address;
+    private String titleStr;
     private StringBuffer stringBuffer;
     private Intent mIntent;
     private Marker mMarker;
     private TextView title;
     private ImageView img_back;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,8 @@ public class MapSingleView extends BaseActivity implements View.OnClickListener{
             laPosition = mIntent.getDoubleExtra("la", 0);
             loPosition = mIntent.getDoubleExtra("lo", 0);
             address    = mIntent.getStringExtra("address");
+            titleStr   = TextUtils.isEmpty(mIntent.getStringExtra("title")) ? "定位地址" : mIntent.getStringExtra("title");
+
             stringBuffer = new StringBuffer();
             for(int i = 0;i<address.length();i++){
                 stringBuffer.append(address.charAt(i));
@@ -102,7 +107,7 @@ public class MapSingleView extends BaseActivity implements View.OnClickListener{
         mUiSettings.setZoomControlsEnabled(false);
         img_back = (ImageView) findViewById(R.id.img_back);
         title = (TextView) findViewById(R.id.tv_title);
-        title.setText("定位地址");
+        title.setText(titleStr);
         img_back.setOnClickListener(this);
 
         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 17));
@@ -113,11 +118,10 @@ public class MapSingleView extends BaseActivity implements View.OnClickListener{
      * 设置标记
      * */
     public void drawMarkers() {
-
         mMarker = aMap.addMarker(new MarkerOptions()
                 .position(latlng)
                 .icon(BitmapDescriptorFactory.defaultMarker())
-                .title("定位地址:")
+                .title(titleStr+":")
                 .snippet(stringBuffer.toString())
                 .draggable(true));
         mMarker.showInfoWindow();//内容默认显示出来

@@ -305,7 +305,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     break;
                 case 16://订单详情
                     intent.setClass(MainHomeActivity.this, OrderDetailActivity.class);
-//              mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+//                  mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;

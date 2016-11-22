@@ -116,8 +116,8 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         holder.tv_name.setText(signinNewListModel.creator.name);
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.position);
-        holder.tv_offset.setText(signinNewListModel.offsetDistance + "");
-        holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "yyyy-MM-dd hh:mm"));
+        holder.tv_offset.setText(signinNewListModel.distance);
+        holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "yyyy-MM-dd HH:mm"));
 
         /** 客户姓名 */
         if(null != signinNewListModel.customerName && !TextUtils.isEmpty(signinNewListModel.customerName)){
@@ -230,6 +230,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
                     mIntent.putExtra("la",Double.valueOf(gps[1]));
                     mIntent.putExtra("lo",Double.valueOf(gps[0]));
                     mIntent.putExtra("address",signinNewListModel.address);
+                    mIntent.putExtra("title","签到地址");
                     LogUtil.dee("la:"+ Double.valueOf(gps[1]));
                     LogUtil.dee("lo:"+ Double.valueOf(gps[0]));
                     mContext.startActivity(mIntent);
