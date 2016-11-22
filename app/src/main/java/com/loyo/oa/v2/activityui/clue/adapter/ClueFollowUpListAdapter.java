@@ -119,9 +119,12 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(model.avatar, holder.iv_heading);
         holder.tv_name.setText(model.creatorName);
         holder.tv_address.setText(TextUtils.isEmpty(model.addr) ? "无定位信息" : model.addr);
-        holder.tv_contact.setText(TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
         holder.tv_create_time.setText(DateTool.getDiffTime(model.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# "+model.typeName);
+
+        holder.tv_contact.setText(TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
+
+
 
         /** 绑定公司 */
         if(null != model.salesleadCompanyName && !TextUtils.isEmpty(model.salesleadCompanyName)){

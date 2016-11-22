@@ -231,23 +231,21 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
                     case 0:
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:" + menuTimekey + " value" + model.getValue());
                         break;
 
                     /*类型*/
                     case 1:
                         menuKindkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:" + menuKindkey + " value" + model.getValue());
                         break;
 
                     /*排序*/
                     case 2:
                         menuSortkey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:" + menuSortkey + " value" + model.getValue());
                         break;
                 }
+                isPullOrDown = true;
                 getData(false);
             }
         });

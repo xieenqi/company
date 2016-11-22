@@ -82,7 +82,7 @@ public class CustomerInfoExtraData extends LinearLayout {
                 continue;
             }
 
-            final View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_customerextra, null, false);
+            final View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_addextra, null, false);
 
             /*是否为公海客户*/
             if (!isLock) {
@@ -102,7 +102,7 @@ public class CustomerInfoExtraData extends LinearLayout {
                 tv_tag.setTextSize(valueSize);
                 tv_content.setTextSize(valueSize);
             }
-            tv_content.setTextColor(valueColor);
+            //tv_content.setTextColor(valueColor);
             tv_tag.setText(properties.getLabel());
 
             /**

@@ -215,8 +215,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                         menuGuykey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
                         break;
-
                 }
+                isPullOrDown = true;
                 getData(false);
             }
         });
@@ -270,10 +270,10 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userId", "");//我的传id,团队则空着
+        map.put("userId", "");            //我的传id,团队则空着
         map.put("xpath", "");
-        map.put("timeType", 5);//时间查询
-        map.put("method", method); //跟进类型0:全部 1:线索 2:客户
+        map.put("timeType", menuTimekey); //时间查询
+        map.put("method", method);        //跟进类型0:全部 1:线索 2:客户
         map.put("typeId", typeId);
         map.put("activityType", activityType);
         map.put("split", true);

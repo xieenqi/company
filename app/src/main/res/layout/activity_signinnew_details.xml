@@ -63,12 +63,16 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_web"
+            <TextView
+                android:id="@+id/tv_memo"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone" />
+                android:text=""
+                android:textColor="@color/text33"
+                android:visibility="gone"
+                />
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_audio"
@@ -78,7 +82,9 @@
                 android:layout_height="wrap_content"
                 android:divider="#00000000"
                 android:listSelector="@android:color/transparent"
-                android:dividerHeight="3dp" />
+                android:dividerHeight="3dp"
+                android:visibility="gone"
+                />
 
             <com.loyo.oa.v2.customview.CusGridView
                 android:id="@+id/layout_gridview"
@@ -90,7 +96,9 @@
                 android:gravity="center"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="3"
-                android:verticalSpacing="15dp" />
+                android:verticalSpacing="15dp"
+                android:visibility="gone"
+                />
 
             <LinearLayout
                 android:id="@+id/layout_enclosure"
@@ -98,8 +106,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                >
             </LinearLayout>
 
             <com.loyo.oa.v2.customview.CustomerListView
@@ -109,16 +117,19 @@
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
                 android:divider="#00000000"
-                android:dividerHeight="3dp" />
+                android:dividerHeight="3dp"
+                />
 
             <LinearLayout
+                android:id="@+id/layout_position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -137,10 +148,13 @@
                 android:id="@+id/tv_toast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
                 android:text=""
-                android:textColor="@color/text99" />
+                android:textColor="@color/text99"
+                android:visibility="gone"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -179,11 +193,13 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginTop="@dimen/dimen_8"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -258,7 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/red" />
+                    />
 
             </LinearLayout>
 

@@ -145,6 +145,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private List<String> mSelectPath;
     private ArrayList<ImageInfo> pickPhotsResult;
     private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
+    private ArrayList<ExtraData> extDatas;
 
     private String uuid;
     private String tagItemIds;
@@ -286,7 +287,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             layout_more.setVisibility(View.GONE);
             return;
         }
-        ArrayList<ExtraData> extDatas = new ArrayList<>();
+
+        extDatas = new ArrayList<>();
         ExtraData extraData;
         ExtraProperties properties;
 
@@ -300,11 +302,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 properties.setType(contactLeftExtras.type);
                 properties.setIsList(contactLeftExtras.isList);
                 properties.setDefVal(contactLeftExtras.defVal);
+                properties.setName(contactLeftExtras.name);
                 extraData.setProperties(properties);
+                extDatas.add(extraData);
             }
-            extDatas.add(extraData);
         }
-        container.addView(new CustomerInfoExtraData(mContext, extDatas, ismy, R.color.title_bg1, 0, true, true, false));
+        container.addView(new CustomerInfoExtraData(mContext, extDatas, ismy, R.color.text33, 0, true, true, false));
     }
 
     void getTempCustomer() {
@@ -479,9 +482,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
                     Toast("请输入联系人姓名!");
                     return;
+                } else if(!testDynamicword()){
+                    Toast("请填写必填字段!");
+                    return;
                 }
 
-/*                if(!customerContractTel.isEmpty()){
+/*              if(!customerContractTel.isEmpty()){
                     if(!RegularCheck.isMobilePhone(customerContractTel)){
                         Toast("手机号码格式不正确");
                         return;
@@ -494,6 +500,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         return;
                     }
                 }*/
+
                 showLoading("");
                 requestCommitTask();
                 break;
@@ -505,7 +512,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     bundle2.putSerializable("tags", tags);
                 }
                 app.startActivityForResult((Activity) mContext, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
-
                 break;
 
             default:
@@ -572,6 +578,26 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * 验证必填动态字段是否填写
+     */
+
+    private boolean testDynamicword() {
+        for (ExtraData ext : extDatas) {
+            try{
+                if (ext.getProperties().isRequired() && ext.getProperties().isEnabled()) {
+                    LogUtil.d("动态字段必填:" + ext.getProperties().isRequired());
+                    if (ext.getVal().isEmpty() || null == ext.getVal()) {
+                        return false;
+                    }
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
 
     /**
      * 新建客户请求
@@ -611,14 +637,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
 
         map.put("position", positionData.loc); //定位数据
-        map.put("loc", locData.loc);          //地址详情数据
+        map.put("loc", locData.loc);           //地址详情数据
         map.put("name", customer_name);
         map.put("pname", customerContract);
-        /*map.put("ptel", customerContractTel);
-        map.put("wiretel", customerWrietele);*/
         map.put("tags", positionData.tags);
         map.put("telGroup", telGroup);
         map.put("wiretelGroup", wiretelGroup);
+        map.put("extDatas", extDatas);
 
         LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {

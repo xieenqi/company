@@ -233,7 +233,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/icon_contacter" />
+                    android:background="@drawable/icon_remaind_li" />
 
                 <TextView
                     android:layout_width="wrap_content"
