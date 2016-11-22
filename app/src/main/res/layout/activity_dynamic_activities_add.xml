@@ -25,22 +25,18 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
             android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/white"
                 android:orientation="vertical">
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@color/white"
                     android:orientation="vertical">
 
@@ -74,7 +70,7 @@
                         <com.loyo.oa.upload.view.ImageUploadGridView
                             android:id="@+id/image_upload_grid_view"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:horizontalSpacing="10dp"
                             android:listSelector="@android:color/transparent"
@@ -376,92 +372,4 @@
             android:orientation="vertical" />
 
     </RelativeLayout>
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/layout_status"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:orientation="vertical"-->
-    <!--android:visibility="gone">-->
-
-    <!--<View-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:background="#D1D1D1" />-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="@dimen/dimen_45"-->
-    <!--android:background="#F3F3F3"-->
-    <!--android:gravity="center"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/layout_image"-->
-    <!--android:layout_width="0dip"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:gravity="center">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="@dimen/dimen_23"-->
-    <!--android:layout_height="@dimen/dimen_23"-->
-    <!--android:background="@drawable/icon_selectimage_view" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="0dip"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:gravity="center"-->
-    <!--android:visibility="invisible">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="@dimen/dimen_23"-->
-    <!--android:layout_height="@dimen/dimen_23"-->
-    <!--android:background="@drawable/icon_position_modify" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="0dip"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:gravity="center"-->
-    <!--android:visibility="invisible">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="@dimen/dimen_23"-->
-    <!--android:layout_height="@dimen/dimen_23"-->
-    <!--android:background="@drawable/icon_position_modify" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="0dip"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:gravity="center"-->
-    <!--android:visibility="invisible">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="@dimen/dimen_23"-->
-    <!--android:layout_height="@dimen/dimen_23"-->
-    <!--android:background="@drawable/icon_position_modify" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="0dip"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:gravity="center"-->
-    <!--android:visibility="invisible">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="@dimen/dimen_25"-->
-    <!--android:layout_height="@dimen/dimen_25"-->
-    <!--android:background="@drawable/icon_position_modify" />-->
-    <!--</LinearLayout>-->
-    <!--</LinearLayout>-->
-    <!--</LinearLayout>-->
-
 </LinearLayout>

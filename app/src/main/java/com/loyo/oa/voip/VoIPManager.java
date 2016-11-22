@@ -47,18 +47,19 @@ public class VoIPManager implements CallStateListener {
     private boolean isInitialized = false;
     private String cacheToken;
 
-    private String customerId;
-//    private String userId;
+    private String customerId, salesleadId;
+    private String userId;
+    private String phone;
+    private int callType;
     private RequestAccess requestAccess;
 
     private VoIPManager() {
     }
 
-    public VoIPManager init(Context context)
-    {
+    public VoIPManager init(Context context) {
         mContext = context;
         cacheToken = "";
-                //getCacheToken();
+        //getCacheToken();
         /** Fix samsung crash */
 //        UCSService.initAction(context);
 //        UCSService.init(context, true);
@@ -75,30 +76,32 @@ public class VoIPManager implements CallStateListener {
             UCSService.init(mContext, true);
             UCSCall.addCallStateListener(this);
             isInitialized = true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new PermissionException();
         }
     }
 
     private ResponseBase<RequestAccess> getPaymentAccess() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("customerId", customerId);
-//        params.put("contactId", userId);
+        params.put("salesleadId", salesleadId);
+        params.put("contactId", userId);
+        params.put("type", callType);
+        params.put("mobile", phone);
         ResponseBase<RequestAccess> access = RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IVoIP.class).getRequestAccess(params);
         requestAccess = access.data;
         return access;
     }
 
-//    private String getCacheToken() {
+    //    private String getCacheToken() {
 //
 //        SharedPreferences base_share = mContext.getSharedPreferences(FinalVariables.BASE_SHARE, Context.MODE_PRIVATE);
 //        return base_share.getString(TOKEN_KEY, null);
 //    }
 //
     private void saveToken(String token) {
-        if (token != null && ! token.equals(cacheToken)) {
+        if (token != null && !token.equals(cacheToken)) {
             cacheToken = token;
             // save
 //            SharedPreferences base_share = mContext.getSharedPreferences(FinalVariables.BASE_SHARE, Context.MODE_PRIVATE);
@@ -114,8 +117,7 @@ public class VoIPManager implements CallStateListener {
 
         if (data != null && data.data != null) {
             return data.data.loginToken;
-        }
-        else  {
+        } else {
             return null;
         }
     }
@@ -123,8 +125,8 @@ public class VoIPManager implements CallStateListener {
     //    300001	连接失败
     //    300107	连接服务器成功
     //    300108	TCP 连接成功
-    private void connect(String token , final OnRespond callback) {
-        UCSManager.connect(token, new ILoginListener(){
+    private void connect(String token, final OnRespond callback) {
+        UCSManager.connect(token, new ILoginListener() {
 
             @Override
             public void onLogin(UcsReason reason) {
@@ -154,7 +156,7 @@ public class VoIPManager implements CallStateListener {
                         if (access.errcode != 0) {
                             return "";
                         }
-                        if (cacheToken!= null && cacheToken.length() > 0) {
+                        if (cacheToken != null && cacheToken.length() > 0) {
                             return cacheToken;
                         }
                         return getToken();
@@ -168,18 +170,16 @@ public class VoIPManager implements CallStateListener {
                         if (token == null) {
                             // 网络
                             Log.v("yzx", "网络");
-                            if(callback!=null) {
+                            if (callback != null) {
                                 callback.onNetworkError();
                             }
-                        }
-                        else if (token.length() <= 0) {
+                        } else if (token.length() <= 0) {
                             // 余额
                             Log.v("yzx", "余额");
                             if (callback != null) {
                                 callback.onPaymentDeny();
                             }
-                        }
-                        else {
+                        } else {
                             saveToken(token);
                             connect(token, callback);
                         }
@@ -192,15 +192,17 @@ public class VoIPManager implements CallStateListener {
 
     }
 
-    public void dialNumber(final String phone, final String customerId, final String userId, final OnRespond callback) {
+    public void dialNumber(final String phone, final String customerId, final String userId, int callType, String salesleadId, final OnRespond callback) {
         if (phone == null || phone.length() <= 0) {
             return;
         }
         this.customerId = customerId;
-//        this.userId = userId;
-
+        this.userId = userId;
+        this.callType = callType;
+        this.phone = phone;
+        this.salesleadId = salesleadId;
         //
-        if (UCSService.isConnected() ) {
+        if (UCSService.isConnected()) {
             Observable.just("connect")
                     .map(new Func1<String, ResponseBase<RequestAccess>>() {
                         @Override
@@ -218,8 +220,7 @@ public class VoIPManager implements CallStateListener {
                                     callback.onRespond(new UcsReason(300107));
                                 }
                                 _dial(phone);
-                            }
-                            else {
+                            } else {
                                 if (callback != null) {
                                     callback.onPaymentDeny();
                                 }
@@ -227,8 +228,7 @@ public class VoIPManager implements CallStateListener {
                         }
                     });
 
-        }
-        else {
+        } else {
             connectVoipServer(new OnRespond() {
                 @Override
                 public void onPaymentDeny() {
@@ -308,7 +308,6 @@ public class VoIPManager implements CallStateListener {
     public void stopRecording() {
         UCSCall.StopRecord();
     }
-
 
 
     /**

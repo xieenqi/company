@@ -112,7 +112,7 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent mIntent = new Intent(mActivity, DynamicAddActivity.class);
                 mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
-                mIntent.putExtra(Customer.class.getName(), adapter.getItemData(position));
+                mIntent.putExtra(Customer.class.getName(), adapter.getItemData(position-1));
                 startActivity(mIntent);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 mActivity.finish();

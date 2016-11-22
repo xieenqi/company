@@ -41,6 +41,9 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     static public String CALLEE_PHONE_KEY = "com.loyo.voip.callee.phone";
     static public String CALLEE_CUSTOMER_KEY = "com.loyo.voip.callee.customer";
     static public String CALLEE_USER_KEY = "com.loyo.voip.callee.user";
+    static public String CALLEE_USER_TYPE = "com.loyo.voip.callee.type";
+    static public String CALLEE_SALE_KEY = "com.loyo.voip.callee.sale";
+
 
     private ImageView iv_1, iv_2, iv_3, iv_4;
     private Animation anim1, anim2, anim3, anim4;
@@ -59,23 +62,24 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     private TextView
             calleeName2, statusView2;       /* 被呼者 */
     private Button
-            keyOne,   keyTwo,   keyThree,   /* 1 2 3 */
-            keyFour,  keyFive,  keySix,     /* 4 5 6 */
+            keyOne, keyTwo, keyThree,   /* 1 2 3 */
+            keyFour, keyFive, keySix,     /* 4 5 6 */
             keySeven, keyEight, keyNine,    /* 7 8 9 */
-            keyStar,  keyZero,  keyHash;    /* * 0 # */
+            keyStar, keyZero, keyHash;    /* * 0 # */
 
     private View
             padDown,                        /* 键盘收起 */
             hangUp;                         /* 挂断 */
 
     /* Data */
-    private boolean isSpeakPhoneOn= false;
+    private boolean isSpeakPhoneOn = false;
     private boolean isMuteOn = false;
     private boolean isAnswering;
     private String callee;
     private String phone;
-    private String customerId;
+    private String customerId, salesleadId;
     private String userId;
+    private int callType;
     private long startTimestamp;
 
     private String dialNumber;
@@ -95,6 +99,8 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         phone = mIntent.getStringExtra(CALLEE_PHONE_KEY);
         customerId = mIntent.getStringExtra(CALLEE_CUSTOMER_KEY);
         userId = mIntent.getStringExtra(CALLEE_USER_KEY);
+        callType = mIntent.getIntExtra(CALLEE_USER_TYPE, -1);
+        salesleadId = mIntent.getStringExtra(CALLEE_SALE_KEY);
         initUI();
 
         UCSCall.addCallStateListener(this);
@@ -124,11 +130,11 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             @Override
             public void run() {
                 long currentTimestamp = System.currentTimeMillis();
-                long diff = (currentTimestamp -startTimestamp)/1000;
-                long hour = diff/3600;
-                long minute = (diff%3600)/60;
-                long second = ((diff%3600)%60);
-                final String time = ""+hour+":"+String.format("%02d", minute)+":"+String.format("%02d", second);
+                long diff = (currentTimestamp - startTimestamp) / 1000;
+                long hour = diff / 3600;
+                long minute = (diff % 3600) / 60;
+                long second = ((diff % 3600) % 60);
+                final String time = "" + hour + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second);
                 VoIPCallActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -152,11 +158,11 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         anim4 = AnimationUtils.loadAnimation(this, R.anim.call_phone_anim);
 
         /**/
-        callingContainer = (LinearLayout)findViewById(R.id.calling_container);
+        callingContainer = (LinearLayout) findViewById(R.id.calling_container);
         //
-        calleeView = (TextView)findViewById(R.id.tv_callee);
-        calleeName = (TextView)findViewById(R.id.tv_callee_name);
-        statusView = (TextView)findViewById(R.id.tv_calling_status);
+        calleeView = (TextView) findViewById(R.id.tv_callee);
+        calleeName = (TextView) findViewById(R.id.tv_callee_name);
+        statusView = (TextView) findViewById(R.id.tv_calling_status);
         //
         speakPhone = findViewById(R.id.speak_phone);
         padUp = findViewById(R.id.pad_up);
@@ -165,24 +171,24 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         /**/
         padContainer = (LinearLayout) findViewById(R.id.pad_container);
         //
-        calleeName2 = (TextView)findViewById(R.id.tv_callee_name2);
-        statusView2 = (TextView)findViewById(R.id.tv_calling_status2);
+        calleeName2 = (TextView) findViewById(R.id.tv_callee_name2);
+        statusView2 = (TextView) findViewById(R.id.tv_calling_status2);
         //
-        keyOne = (Button)findViewById(R.id.key_one);
-        keyTwo = (Button)findViewById(R.id.key_two);
-        keyThree = (Button)findViewById(R.id.key_three);
+        keyOne = (Button) findViewById(R.id.key_one);
+        keyTwo = (Button) findViewById(R.id.key_two);
+        keyThree = (Button) findViewById(R.id.key_three);
         //
-        keyFour = (Button)findViewById(R.id.key_four);
-        keyFive = (Button)findViewById(R.id.key_five);
-        keySix = (Button)findViewById(R.id.key_six);
+        keyFour = (Button) findViewById(R.id.key_four);
+        keyFive = (Button) findViewById(R.id.key_five);
+        keySix = (Button) findViewById(R.id.key_six);
         //
-        keySeven = (Button)findViewById(R.id.key_seven);
-        keyEight = (Button)findViewById(R.id.key_eight);
-        keyNine = (Button)findViewById(R.id.key_nine);
+        keySeven = (Button) findViewById(R.id.key_seven);
+        keyEight = (Button) findViewById(R.id.key_eight);
+        keyNine = (Button) findViewById(R.id.key_nine);
         //
-        keyStar = (Button)findViewById(R.id.key_star);
-        keyZero = (Button)findViewById(R.id.key_zero);
-        keyHash = (Button)findViewById(R.id.key_hash);
+        keyStar = (Button) findViewById(R.id.key_star);
+        keyZero = (Button) findViewById(R.id.key_zero);
+        keyHash = (Button) findViewById(R.id.key_hash);
 
 
         /**/
@@ -320,8 +326,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         if (callee.length() > 0) {
             String name = callee.substring(0, 1);
             calleeView.setText(name);
-        }
-        else {
+        } else {
             calleeView.setText(" ");
         }
         calleeName.setText(callee);
@@ -340,8 +345,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                         dial(dialNumber);
                     }
                 });
-            }
-            else {
+            } else {
                 final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
                 dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
@@ -355,12 +359,12 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                         dialog.sweetAlertDialog.dismiss();
                         finish();
                     }
-                },"提示","电话号码不正确");
+                }, "提示", "电话号码不正确");
                 return;
             }
 
         } else {
-            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.RECORD_AUDIO},
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
                     1);
         }
     }
@@ -374,8 +378,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                 public void run() {
                     try {
                         VoIPManager.getInstance().initUCSIfNeeded();
-                    }
-                    catch (PermissionException e) {
+                    } catch (PermissionException e) {
 
                         final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
                         dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
@@ -390,7 +393,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                                 dialog.sweetAlertDialog.dismiss();
                                 finish();
                             }
-                        },"提示","无相关权限，使用此功能前请前往设置开启权限");
+                        }, "提示", "无相关权限，使用此功能前请前往设置开启权限");
                         return;
                     }
                     recordAudioPermissionRequest();
@@ -398,14 +401,14 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             });
 
         } else {
-            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.CALL_PHONE},
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE},
                     1);
         }
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (permissions[0].equals(Manifest.permission.RECORD_AUDIO)
-                &&grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (dialNumber != null) {
                 this.runOnUiThread(new Runnable() {
                     @Override
@@ -413,8 +416,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                         dial(dialNumber);
                     }
                 });
-            }
-            else {
+            } else {
                 final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
                 dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
@@ -428,19 +430,18 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                         dialog.sweetAlertDialog.dismiss();
                         finish();
                     }
-                },"提示","无录音权限，使用此功能前请前往设置开启权限");
+                }, "提示", "无录音权限，使用此功能前请前往设置开启权限");
                 return;
             }
 
-        }else if (permissions[0].equals(Manifest.permission.CALL_PHONE)
-                &&grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        } else if (permissions[0].equals(Manifest.permission.CALL_PHONE)
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         VoIPManager.getInstance().initUCSIfNeeded();
-                    }
-                    catch (PermissionException e) {
+                    } catch (PermissionException e) {
 
                         final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
                         dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
@@ -455,14 +456,13 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                                 dialog.sweetAlertDialog.dismiss();
                                 finish();
                             }
-                        },"提示","无相关权限，使用此功能前请前往设置开启权限");
+                        }, "提示", "无相关权限，使用此功能前请前往设置开启权限");
                         return;
                     }
                     recordAudioPermissionRequest();
                 }
             });
-        }
-        else {
+        } else {
             final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
             dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
@@ -476,7 +476,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                     dialog.sweetAlertDialog.dismiss();
                     finish();
                 }
-            },"提示","无拨打电话权限，使用此功能前请前往设置开启权限");
+            }, "提示", "无拨打电话权限，使用此功能前请前往设置开启权限");
             return;
         }
     }
@@ -502,11 +502,11 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                     dialog.sweetAlertDialog.dismiss();
                     finish();
                 }
-            },"提示","电话号码「 "+number+" 」不正确");
+            }, "提示", "电话号码「 " + number + " 」不正确");
             return;
         }
 
-        VoIPManager.getInstance().dialNumber(number, customerId, userId, new OnRespond() {
+        VoIPManager.getInstance().dialNumber(number, customerId, userId, callType,salesleadId, new OnRespond() {
             @Override
             public void onPaymentDeny() {
                 // 余额不足
@@ -524,7 +524,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                         dialog.sweetAlertDialog.dismiss();
                         finish();
                     }
-                },"提示","余额不足，请提醒管理员充值！");
+                }, "提示", "余额不足，请提醒管理员充值！");
             }
 
             @Override
@@ -544,17 +544,16 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                         dialog.sweetAlertDialog.dismiss();
                         finish();
                     }
-                },"提示","网络连接出错,请检查网络然后重试！");
+                }, "提示", "网络连接出错,请检查网络然后重试！");
             }
 
             @Override
             public void onRespond(Object userInfo) {
-                UcsReason reason = (UcsReason)userInfo;
-                if (reason!=null && reason.getReason() == 300107) {
+                UcsReason reason = (UcsReason) userInfo;
+                if (reason != null && reason.getReason() == 300107) {
                     // 连接成功
                     Log.v("yzx", "连接成功");
-                }
-                else {
+                } else {
                     // 连接失败
                     Log.v("yzx", "连接失败");
                     final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
@@ -570,7 +569,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                             dialog.sweetAlertDialog.dismiss();
                             finish();
                         }
-                    },"提示",reason.getMsg()!=null?reason.getMsg():"连接失败");
+                    }, "提示", reason.getMsg() != null ? reason.getMsg() : "连接失败");
                 }
             }
         });
@@ -579,32 +578,32 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
-            case R.id.speak_phone:{
+        switch (v.getId()) {
+            case R.id.speak_phone: {
                 isSpeakPhoneOn = !isSpeakPhoneOn;
-                speakPhone.setAlpha((float) (isSpeakPhoneOn?1.0:0.5));
+                speakPhone.setAlpha((float) (isSpeakPhoneOn ? 1.0 : 0.5));
                 VoIPManager.getInstance().switchSpeackPhone(isSpeakPhoneOn);
             }
             break;
-            case R.id.mute:{
+            case R.id.mute: {
                 isMuteOn = !isMuteOn;
-                mute.setAlpha((float) (isMuteOn?1.0:0.5));
+                mute.setAlpha((float) (isMuteOn ? 1.0 : 0.5));
                 VoIPManager.getInstance().switchMicMute(isMuteOn);
             }
             break;
-            case R.id.pad_up:{
+            case R.id.pad_up: {
                 callingContainer.setVisibility(View.INVISIBLE);
                 padContainer.setVisibility(View.VISIBLE);
                 padDown.setVisibility(View.VISIBLE);
             }
             break;
-            case R.id.pad_down:{
+            case R.id.pad_down: {
                 callingContainer.setVisibility(View.VISIBLE);
                 padContainer.setVisibility(View.INVISIBLE);
                 padDown.setVisibility(View.INVISIBLE);
             }
             break;
-            case R.id.img_hang_up:{
+            case R.id.img_hang_up: {
                 selfHangUp = true;
                 VoIPManager.getInstance().hangUp();
                 finish();
@@ -631,7 +630,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                         dialog.sweetAlertDialog.dismiss();
                         finish();
                     }
-                },"提示","连接异常，不能使用商务电话，请点击重新连接");
+                }, "提示", "连接异常，不能使用商务电话，请点击重新连接");
             }
         });
     }
@@ -667,7 +666,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
                         dialog.sweetAlertDialog.dismiss();
                         finish();
                     }
-                },"提示", "已挂断");
+                }, "提示", "已挂断");
                 if (timer != null) {
                     timer.cancel();
                 }
