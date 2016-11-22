@@ -220,6 +220,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     public void Success(Record record) {//上传录音完成回调
                         audioInfo.add(record);
                     }
+
+                    @Override
+                    public void deleteRecord(String tag) {
+                        for (int i = 0; i < audioInfo.size(); i++) {
+                            Record ele = audioInfo.get(i);
+                            if (ele.fileName.contains(tag)) {
+                                audioInfo.remove(i);
+                            }
+                        }
+                    }
                 }));
             }
         });
@@ -390,13 +400,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             public void success(final LegWork legWork, final Response response) {
                 HttpErrorCheck.checkResponse(" 新增拜访传result：", response);
                 if (legWork != null) {
-                    Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
+                        Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                         AppBus.getInstance().post(new SigninNewRushEvent());
                         finish();
-                    } else {
-                        Toast(getString(R.string.sign) + "异常!");
                     }
+//                    else {
+//                        Toast(getString(R.string.sign) + "异常!");
+//                    }
                 } else {
                     Toast("提交失败" + response.getStatus());
                 }

@@ -166,12 +166,12 @@ public class HttpErrorCheck {
     private static void checkResponseError(String result) throws JsonSyntaxException {
         BaseBean data = MainApp.gson.fromJson(result, BaseBean.class);
         switch (data.errcode) {
-            case 1:
-                Toast("非常抱歉,服务器错误");
-                break;
-            case 2:
-                Toast("请求参数错误");
-                break;
+//            case 1:
+//                Toast("非常抱歉,服务器错误");
+//                break;
+//            case 2:
+//                Toast("请求参数错误");
+//                break;
             default:
             {
                 String msg;
