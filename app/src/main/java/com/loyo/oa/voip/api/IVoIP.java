@@ -18,7 +18,7 @@ import retrofit.http.POST;
 public interface IVoIP {
 
     @POST("/ipvoice/direct/request")
-    ResponseBase<RequestAccess> getRequestAccess(@Body HashMap<String ,String> params);
+    ResponseBase<RequestAccess> getRequestAccess(@Body HashMap<String ,Object> params);
 
     @POST("/ipvoice/direct/request")
     void asybGetRequestAccess(@Body HashMap<String ,String> params, Callback<ResponseBase<RequestAccess>> callback);
