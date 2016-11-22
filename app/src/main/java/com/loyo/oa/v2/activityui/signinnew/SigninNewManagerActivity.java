@@ -92,6 +92,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         layout_title_action.setOnTouchListener(Global.GetTouch());
+        img_title_search_right.setVisibility(View.INVISIBLE);
 
         imageArrow.setVisibility(View.INVISIBLE);
         /*超级管理员,Web权限判断*/
