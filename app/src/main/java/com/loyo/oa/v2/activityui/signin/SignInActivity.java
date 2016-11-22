@@ -68,6 +68,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -164,6 +165,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             ll_contact.setVisibility(View.VISIBLE);
             getDefaultContact(mCustomer.contacts);
             contactList = mCustomer.contacts;
+            if (mCustomer.position != null) {
+//                List<Double> locData = Arrays.asList(mCustomer.position.loc);
+                Location loc = new Location(null, mCustomer.position.addr);
+                distanceInfo(loc);
+            }
         }
     }
 
@@ -557,14 +563,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
                 tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-                if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
-                    tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
-                    tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
-                } else {
-                    tv_distance_deviation.setText("未知");
-                    tv_distance_deviation.setTextColor(Color.parseColor("#f5625a"));
-                }
-
+                distanceInfo(loc);
                 break;
              /* 选择客户联系人 回调*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
@@ -575,6 +574,17 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     tv_contact_name.setText(contact.getName());
                 }
                 break;
+        }
+    }
+
+    private void distanceInfo(Location loc) {
+
+        if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
+            tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
+            tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
+        } else {
+            tv_distance_deviation.setText("未知");
+            tv_distance_deviation.setTextColor(Color.parseColor("#f5625a"));
         }
     }
 
