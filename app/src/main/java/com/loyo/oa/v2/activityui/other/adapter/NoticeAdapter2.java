@@ -67,6 +67,7 @@ public class NoticeAdapter2 extends RecyclerView.Adapter<NoticeAdapter2.Bulletin
         mBulletins = bulletins;
         this.mContext = mContext;
         this.mActivity = mActivity;
+        setHasStableIds(true);
         pool = new ReusePool<ViewGroup>();
         pool.setCreator(new ReusePool.ReusableCreator<ViewGroup>(){
 
@@ -200,4 +201,11 @@ public class NoticeAdapter2 extends RecyclerView.Adapter<NoticeAdapter2.Bulletin
     public int getItemCount() {
         return mBulletins.size();
     }
+
+    @Override
+    public long getItemId(int position) {
+        final Bulletin bulletin = mBulletins.get(position);
+        return bulletin.getId().hashCode();
+    }
+
 }
