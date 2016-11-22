@@ -296,7 +296,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 } else {
                     Toast("电话号码不能为空");
                 }
-//                Utils.call(this, data.data.sales.cellphone);
                 break;
             case R.id.ll_wiretel_call:
                 if (!TextUtils.isEmpty(data.data.sales.cellphone)) {
@@ -304,7 +303,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 } else {
                     Toast("电话号码不能为空");
                 }
-//                Utils.call(this, data.data.sales.tel);
                 break;
         }
     }
@@ -463,8 +461,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                                     Bundle mBundle = new Bundle();
                                     mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone);
                                     mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name);
-//                                    mBundle.putString(VoIPCallActivity.CALLEE_USER_KEY, contactId);
-//                                    mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, customerContact.getId());
+                                    mBundle.putString(VoIPCallActivity.CALLEE_CUSTOMER_KEY, data.data.sales.id);
                                     app.startActivity(ClueDetailActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                                     break;
 

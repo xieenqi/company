@@ -76,7 +76,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
         map.put("birthDay", birthDay);
         map.put("weixinId", weixinId);
         map.put("avatar", path);
-
+        LogUtil.d("修改个人信息发送:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(id, map, new RCallback<User>() {
             @Override
             public void success(final User user, final Response response) {
@@ -104,10 +104,10 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
             String[] tt = shortDeptNames.split(",");
             for (String ele : tt) {
                 String[] t = ele.split("\\|");
-                depNames = depNames + t[0];
+                depNames = depNames + t[0] + (",");
             }
         }
-        return depNames;
+        return depNames.substring(0, depNames.length() - 1);
     }
 
     /**
@@ -123,11 +123,11 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
             for (String ele : tt) {
                 if (ele.contains("|")) {
                     String[] t = ele.split("\\|");
-                    positionNames = positionNames + t[1];
+                    positionNames = positionNames + t[1] + ",";
                 }
             }
         }
-        return positionNames;
+        return positionNames.substring(0, positionNames.length() - 1);
     }
 
     /**

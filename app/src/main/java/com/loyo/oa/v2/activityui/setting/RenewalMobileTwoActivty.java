@@ -16,11 +16,13 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IMobile;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -115,9 +117,9 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
                 btn_get_code.setEnabled(true);
-                if ("500".equals(error.getMessage().substring(0, 3))) {
-                    Toast("该手机号已被录入本系统,请勿重复使用!");
-                }
+//                if ("500".equals(error.getMessage().substring(0, 3))) {
+//                    Toast("该手机号已被录入本系统,请勿重复使用!");
+//                }
             }
         });
     }
@@ -141,24 +143,26 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
         HashMap<String, Object> map = new HashMap<>();
         map.put("tel", mobile);
         map.put("code", code);
-        app.getRestAdapter(1).create(IMobile.class).modifyMobile(map, new RCallback<Object>() {
-            @Override
-            public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                Toast("修改手机号码成功");
-                MenuFragment.callback.onExit(RenewalMobileTwoActivty.this);
+        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMobile.class).
+                modifyMobile(map, new RCallback<BaseBean>() {
+                    @Override
+                    public void success(final BaseBean o, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        if(o.errcode==0){
+                            MenuFragment.callback.onExit(RenewalMobileTwoActivty.this);
+                        }
 //                Intent mIntent = new Intent();
 //                mIntent.putExtra("phone", mobile);
 //                app.finishActivity(RenewalMobileTwoActivty.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 //                finish();
-            }
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
     private Runnable countRunner = new Runnable() {

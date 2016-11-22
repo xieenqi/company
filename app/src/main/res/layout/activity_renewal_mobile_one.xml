@@ -16,6 +16,6 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:hint="请输入登录密码"
-        android:inputType="numberPassword"
+        android:inputType="textPassword"
         android:minHeight="@dimen/dimen_48" />
 </LinearLayout>

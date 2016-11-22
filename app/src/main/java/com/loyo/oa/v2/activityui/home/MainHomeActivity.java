@@ -17,6 +17,7 @@ import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
+import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.home.cusview.SlidingMenu;
 import com.loyo.oa.v2.activityui.home.fragment.HomeFragment;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
@@ -26,6 +27,7 @@ import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activityui.signinnew.SigninNewDetailsActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
@@ -315,7 +317,19 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                default:
+                case 22://拜访的推送
+                case 24://拜访的评论
+                    intent.setClass(MainHomeActivity.this, SigninNewDetailsActivity.class);
+                    intent.putExtra("id", MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 23://跟进动态的推送
+                case 25://跟进的评论
+                    intent.setClass(MainHomeActivity.this, FollowUpDetailsActivity.class);
+                    intent.putExtra("id", MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
                     break;
             }
         }

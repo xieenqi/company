@@ -71,6 +71,9 @@ public class DefaultMenuAdapter implements MenuAdapter {
         else if (model.getType() == MenuListType.TAG) {
             return UIUtil.dp(context, 350);
         }
+        else if (model.getType() == MenuListType.DOUBLE_LIST_MULTI_SEL) {
+            return UIUtil.dp(context, 350);
+        }
 
         int height = 50 * model.getChildrenCount() + 10;
 

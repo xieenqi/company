@@ -19,6 +19,10 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
  * Created by yyy on 16/8/10.
  */
 public class AliOSSManager {
+    public static final int OSS_SUCCESS = 122;
+    public static final int OSS_FAILURE = 123;
+    public static final int OSS_ERROR1 = 124;
+    public static final int OSS_ERROR2 = 125;
 
     private static AliOSSManager instance = null;
 

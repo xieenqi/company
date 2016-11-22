@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
@@ -85,7 +86,8 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
     UploadController controller;
     private LinearLayout ll_root, ll_record, ll_location, ll_at, ll_clue_company, ll_clue;
     private EditText edt;
-    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text, tv_at_text, tv_clue_company, tv_clue_name;
+    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name, tv_location_text,
+            tv_at_text, tv_clue_company, tv_clue_name;
     private Customer mCustomer;
     private ClueListItem mClue;
     private String tagItemIds, contactId, contactName = "无";
@@ -200,6 +202,10 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 if (RecordUtils.permissionRecord()) {
+                    if (ll_record.getChildCount() >= 3) {
+                        Toast("最多只能添加3条语音");
+                        return;
+                    }
                     if ((boolean) v.getTag()) {
                         showInputKeyboard(edt);
                         mfmodule.setIsRecording(false);
@@ -591,7 +597,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
 
             /*附件删除回调*/
             case PhotoPreview.REQUEST_CODE:
-                if (data != null){
+                if (data != null) {
                     int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
                     if (index >= 0) {
                         controller.removeTaskAt(index);
@@ -672,7 +678,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
 
         for (int i = 0; i < taskList.size(); i++) {
             String path = taskList.get(i).getValidatePath();
-            if (path.startsWith("file://"));
+            if (path.startsWith("file://")) ;
             {
                 path = path.replace("file://", "");
             }

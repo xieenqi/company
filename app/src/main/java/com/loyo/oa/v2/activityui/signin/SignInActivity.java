@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMapUtils;
@@ -27,6 +28,8 @@ import com.loyo.oa.v2.activityui.commonview.MapModifyView;
 import com.loyo.oa.v2.activityui.commonview.MultiFunctionModule;
 import com.loyo.oa.v2.activityui.commonview.RecordUtils;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
+import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
@@ -37,6 +40,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
@@ -78,16 +82,19 @@ import static com.loyo.oa.v2.application.MainApp.PICTURE;
  */
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address, tv_at_text, tv_distance_deviation;
+    private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address,
+            tv_at_text, tv_distance_deviation, tv_contact_name;
     private EditText edt_memo;
-    private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at;
+    private ViewGroup img_title_left, img_title_right, ll_root, ll_record, ll_at, ll_contact;
     private GridView gridView_photo;
+    private ImageView iv_at_delete;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID(), mAddress, customerId = "", customerName, customerAddress;
     private SignInGridViewAdapter signInGridViewAdapter;
     private double laPosition, loPosition;
     boolean mLocationFlag = false;  //是否定位完成的标记
     private Customer mCustomer;
+    private ArrayList<Contact> contactList;
     private Animation animation;
     private boolean isPicture = false;
     private PositionResultItem positionResultItem;
@@ -115,6 +122,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     void initUI() {
+        ll_contact = (ViewGroup) findViewById(R.id.ll_contact);
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
         tv_customer_address = (TextView) findViewById(R.id.tv_customer_address);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -138,14 +146,21 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (null == mCustomer) {
             layout_customer_name.setOnTouchListener(Global.GetTouch());
             layout_customer_name.setOnClickListener(this);
+            ll_contact.setVisibility(View.GONE);
         } else {
             findViewById(R.id.divider_customer_name).setVisibility(View.GONE);
             layout_customer_name.setVisibility(View.GONE);
             tv_customer_name.setText(customerName);
+            ll_contact.setVisibility(View.VISIBLE);
+            getDefaultContact(mCustomer.contacts);
+            contactList = mCustomer.contacts;
         }
-
+        ll_contact.setOnClickListener(this);
         tv_address = (TextView) findViewById(R.id.tv_address);
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
+        iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
+        iv_at_delete.setOnClickListener(this);
         init_gridView_photo();
         startLocation();
         initMultiFunctionModule();
@@ -162,6 +177,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (ll_record.getChildCount() >= 3) {
+                    Toast("最多只能添加3条语音");
+                    return;
+                }
+
                 if (RecordUtils.permissionRecord()) {
                     if ((boolean) v.getTag()) {
                         showInputKeyboard(edt_memo);
@@ -309,7 +329,18 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
                 break;
 
-            default:
+            case R.id.ll_contact://选择客户联系人
+                Bundle bContact = new Bundle();
+                bContact.putSerializable(ExtraAndResult.EXTRA_DATA, contactList);
+                bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
+                app.startActivityForResult(SignInActivity.this, FollowContactSelectActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
+                break;
+            case R.id.iv_at_delete://清除@的人员
+                ll_at.setVisibility(View.GONE);
+                atDepts.clear();
+                atUserIds.clear();
+                collection = null;
                 break;
         }
     }
@@ -318,12 +349,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 新增签到
      */
     private void addSignIn() {
-
-//        if (TextUtils.isEmpty(customerId)) {
-//            Toast("请选择客户");
-//            return;
-//        }
-
+        if (TextUtils.isEmpty(customerId)) {
+            Toast("请选择客户");
+            return;
+        }
         mAddress = tv_address.getText().toString();
         if (TextUtils.isEmpty(mAddress)) {
             Global.ToastLong("无效地址!请刷新地址后重试");
@@ -342,6 +371,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("audioInfo", audioInfo);
         map.put("atDepts", atDepts);
         map.put("atUserIds", atUserIds);
+        map.put("contactName", tv_contact_name.getText().toString());
 
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
@@ -511,12 +541,20 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             case BaseSearchActivity.REQUEST_SEARCH:
                 customerId = data.getStringExtra("id");
                 customerName = data.getStringExtra("name");
+                contactList = (ArrayList<Contact>) data.getSerializableExtra("contact");
                 Location loc = (Location) data.getSerializableExtra("loc");
                 if (loc != null) {
                     customerAddress = loc.addr;
                 }
+                if (contactList != null && contactList.size() > 0) {
+                    ll_contact.setVisibility(View.VISIBLE);
+                    getDefaultContact(contactList);
+                } else {
+                    ll_contact.setVisibility(View.GONE);
+                }
                 tv_customer_address.setVisibility(View.VISIBLE);
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
                 tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
                 if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
                     tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
@@ -527,6 +565,32 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 }
 
                 break;
+             /* 选择客户联系人 回调*/
+            case ExtraAndResult.REQUEST_CODE_STAGE:
+                Contact contact = (Contact) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                if (null != contact) {
+//                    contactId = contact.getId();
+//                    contactName = contact.getName();
+                    tv_contact_name.setText(contact.getName());
+                }
+                break;
+        }
+    }
+
+    /**
+     * 获取客户的默认联系人
+     *
+     * @param data
+     */
+    private void getDefaultContact(ArrayList<Contact> data) {
+        for (Contact ele : data) {
+            if (!ele.isDefault()) {
+                continue;
+            } else {
+//                contactId = ele.getId();
+//                contactName = ele.getName();
+                tv_contact_name.setText(ele.getName());
+            }
         }
     }
 

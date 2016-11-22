@@ -110,11 +110,13 @@ public class AdapterSystemMessage extends BaseAdapter {
             if (item.bizzType != null) {
                 iv_icon.setImageResource(item.bizzType.getIcon());
             }
-            // TODO 红点后台没有做好 暂时隐藏 20161108
             view_ack.setVisibility(item.viewedAt == 0 ? View.VISIBLE : View.GONE);
         }
 
         public void openItem(SystemMessageItem item) {
+            if (item.bizzType.getValue() == 24) {
+                return;//系统消息不做调转
+            }
             Intent intent = new Intent();
             intent.setClass(context, item.bizzType.getItemClass());
             intent.putExtra(item.bizzType.getExtraName(), item.bizzId);
