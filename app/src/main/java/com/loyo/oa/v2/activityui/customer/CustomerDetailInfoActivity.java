@@ -385,7 +385,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*拨打座机*/
             case R.id.layout_wiretel_call:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
-                    mPresenter.isMobile(CustomerDetailInfoActivity.this, mCustomer.contacts.get(0).getTel(), 1, mContact.getName());
+                    mPresenter.isMobile(CustomerDetailInfoActivity.this, mCustomer.contacts.get(0).getWiretel(), 1, mContact.getName());
                 } else {
                     Toast("没有号码");
                 }

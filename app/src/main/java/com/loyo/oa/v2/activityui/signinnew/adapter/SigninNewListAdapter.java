@@ -117,9 +117,7 @@ public class SigninNewListAdapter extends BaseAdapter {
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.address);
         holder.tv_offset.setText(signinNewListModel.distance);
-        holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "MM-dd HH:mm"));
-
-
+        holder.tv_create_time.setText(DateTool.getDiffTime(signinNewListModel.createdAt));
         /** 客户姓名 */
         if(null != signinNewListModel.customerName && !TextUtils.isEmpty(signinNewListModel.customerName)){
             holder.layout_customer.setVisibility(View.VISIBLE);

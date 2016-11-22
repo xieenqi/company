@@ -181,7 +181,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
             dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
-                    crolView.setPopViewEmbl(true, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+                    crolView.setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
                 }
             });
         dialog.show();

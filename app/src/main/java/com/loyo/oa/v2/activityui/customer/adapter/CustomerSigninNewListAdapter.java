@@ -111,13 +111,12 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         }
 
         holder.iv_comment.setOnTouchListener(Global.GetTouch());
-
         ImageLoader.getInstance().displayImage(signinNewListModel.creator.avatar, holder.iv_heading);
         holder.tv_name.setText(signinNewListModel.creator.name);
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.position);
         holder.tv_offset.setText(signinNewListModel.distance);
-        holder.tv_create_time.setText(DateTool.timet(signinNewListModel.createdAt + "", "yyyy-MM-dd HH:mm"));
+        holder.tv_create_time.setText(DateTool.getDiffTime(signinNewListModel.createdAt));
 
         /** 客户姓名 */
         if(null != signinNewListModel.customerName && !TextUtils.isEmpty(signinNewListModel.customerName)){
