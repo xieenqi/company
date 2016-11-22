@@ -7,8 +7,8 @@ def outputPath = 'D:\\jenkins\\workspace\\loyo-android-v2\\app\\build\\apk'
 
 android {
     useLibrary 'org.apache.http.legacy'
-    compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     packagingOptions {
@@ -96,7 +96,7 @@ android {
 //    }
 
     ext {
-        supportLibVersion = "24.2.1"
+        supportLibVersion = "23.1.1"
     }
 
     dependencies {
@@ -168,6 +168,7 @@ dependencies {
     compile project(path: ':library:sweetDialog')
     compile project(path: ':LibraryModule')
     compile project(':library:circularprogressbutton')
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
 
 apt {
