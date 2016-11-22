@@ -186,6 +186,7 @@ public class MultiFunctionModule extends LinearLayout {
                         isRecordCancle = false;
                     }
                     if (recordTime >= 60) {//此处过了一分钟
+                        dialog.setVisibility(GONE);
                         completeRecord();
                         Global.Toast("录音时间只能在一分钟内");
                         return false;
