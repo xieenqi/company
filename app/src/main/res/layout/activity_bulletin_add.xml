@@ -52,24 +52,21 @@
                 android:paddingRight="@dimen/margin_other_view"
                 android:paddingTop="10dp" />
 
-            <LinearLayout
+            <com.loyo.oa.upload.view.ImageUploadGridView
+                android:id="@+id/photoGridView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_5"
-                android:orientation="horizontal">
-
-                <com.loyo.oa.v2.customview.CusGridView
-                    android:id="@+id/gridView_photo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:horizontalSpacing="@dimen/activity_horizontal_margin"
-                    android:listSelector="@android:color/transparent"
-                    android:numColumns="3"
-                    android:paddingLeft="@dimen/margin_other_view"
-                    android:paddingRight="@dimen/margin_other_view"
-                    android:verticalSpacing="@dimen/activity_horizontal_margin" />
-            </LinearLayout>
+                android:layout_height="match_parent"
+                android:numColumns="3"
+                android:verticalSpacing="10dp"
+                android:horizontalSpacing="10dp"
+                android:stretchMode="columnWidth"
+                android:gravity="center"
+                android:listSelector="@android:color/transparent"
+                android:paddingLeft="@dimen/margin_other_view"
+                android:paddingRight="@dimen/margin_other_view"
+                android:paddingTop="@dimen/margin_other_view"
+                android:paddingBottom="@dimen/margin_other_view"
+                />
 
             <include layout="@layout/include_solid_line_left" />
 

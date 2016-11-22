@@ -12,20 +12,28 @@ import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
+import com.loyo.oa.upload.UploadController;
+import com.loyo.oa.upload.UploadControllerCallback;
+import com.loyo.oa.upload.UploadTask;
+import com.loyo.oa.upload.view.ImageUploadGridView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.activityui.other.presenter.BulletinAddPresenter;
 import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinAddPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinAddView;
+import com.loyo.oa.v2.beans.AttachmentBatch;
+import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.compat.Compat;
-import com.loyo.oa.v2.customview.CusGridView;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -37,20 +45,24 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 /**
  * 【发布通知】
  * Restructure by yyy on 2016/10/9
  */
 
 @EActivity(R.layout.activity_bulletin_add)
-public class BulletinAddActivity extends BaseActivity implements BulletinAddView {
+public class BulletinAddActivity extends BaseActivity implements BulletinAddView ,UploadControllerCallback {
 
     @ViewById
     EditText edt_title;
     @ViewById
     EditText edt_content;
     @ViewById
-    CusGridView gridView_photo;
+    ImageUploadGridView photoGridView;
     @ViewById
     ViewGroup layout_recevier;
     @ViewById
@@ -58,28 +70,24 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     private Context mContext;
     private String uuid = StringUtil.getUUID();
-    private ImageGridViewAdapter mGridViewAdapter;
-    private ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
     private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
-
-    private List<String> mSelectPath;
-    private ArrayList<ImageInfo> pickPhotsResult;
     private BulletinAddPresenter mBulletinAddPresenter;
+
+    private ArrayList<AttachmentBatch> attachment = new ArrayList<>();
+    ArrayList<AttachmentForNew> attachmentForNew;
+
+    UploadController controller;
+    private int bizType = 0;
 
     @AfterViews
     void init() {
         super.setTitle("发布通知");
         mContext = this;
-        init_gridView_photo();
-        mBulletinAddPresenter = new BulletinAddPresenterImpl(this, mContext);
-    }
+        controller = new UploadController(this, 9);
+        controller.setObserver(this);
 
-    /**
-     * 添加 图片 附件
-     */
-    void init_gridView_photo() {
-        mGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
-        ImageGridViewAdapter.setAdapter(gridView_photo, mGridViewAdapter);
+        controller.loadView(photoGridView);
+        mBulletinAddPresenter = new BulletinAddPresenterImpl(this, mContext);
     }
 
     /**
@@ -123,16 +131,14 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      */
     @OnActivityResult(PhotoPicker.REQUEST_CODE)
     void onPhotoResult(final Intent data) {
+        /*相册选择 回调*/
         if (data != null) {
-            pickPhotsResult = new ArrayList<>();
-            mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+            List<String> mSelectPath = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
             for (String path : mSelectPath) {
-                pickPhotsResult.add(new ImageInfo("file://" + path));
+                controller.addUploadTask("file://" + path, null, uuid);
             }
-            pickPhots.addAll(pickPhotsResult);
-            init_gridView_photo();
+            controller.reloadGridView();
         }
-
     }
 
     /**
@@ -140,11 +146,11 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      */
     @OnActivityResult(PhotoPreview.REQUEST_CODE)
     void onDeletePhotoResult(final Intent data) {
-        if (data != null) {
+        if (data != null){
             int index = data.getExtras().getInt(PhotoPreview.KEY_DELETE_INDEX);
             if (index >= 0) {
-                pickPhots.remove(index);
-                init_gridView_photo();
+                controller.removeTaskAt(index);
+                controller.reloadGridView();
             }
         }
     }
@@ -199,11 +205,8 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      * */
     @Override
     public void verifySuccess(String title,String content) {
-        if (pickPhots.size() == 0) {
-            mBulletinAddPresenter.requestBulletinAdd(title,content,uuid);
-        } else {
-            mBulletinAddPresenter.uploadAttachement(sweetAlertDialogView, pickPhots,title,content,uuid);
-        }
+        controller.startUpload();
+        controller.notifyCompletionIfNeeded();
     }
 
     /**
@@ -250,4 +253,99 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
         dismissSweetAlert();
     }
 
+    private void buildAttachment() {
+        ArrayList<UploadTask> list = controller.getTaskList();
+        attachment = new ArrayList<AttachmentBatch>();
+        for (int i = 0; i < list.size(); i++) {
+            UploadTask task = list.get(i);
+            AttachmentBatch attachmentBatch = new AttachmentBatch();
+            attachmentBatch.UUId = uuid;
+            attachmentBatch.bizType = bizType;
+            attachmentBatch.mime = Utils.getMimeType(task.getValidatePath());
+            attachmentBatch.name = task.getKey();
+            attachmentBatch.size = Integer.parseInt(task.size + "");
+            attachment.add(attachmentBatch);
+        }
+    }
+
+    private void commitAttachment() {
+        showLoading("");
+        buildAttachment();
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
+                .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
+                    @Override
+                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
+                        HttpErrorCheck.checkResponse("上传附件信息", response);
+                        if (attachmentForNew != null) {
+                            BulletinAddActivity.this.attachmentForNew = attachmentForNew;
+                            commitAnnouncement();
+                        }
+                        else {
+                            Toast("提交失败");
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    private void commitAnnouncement() {
+        mBulletinAddPresenter.requestBulletinAdd(
+                edt_title.getText().toString().trim(),
+                edt_content.getText().toString().trim(),
+                uuid,
+                attachmentForNew);
+    }
+
+    @Override
+    public void onRetryEvent(UploadController controller, UploadTask task) {
+        controller.retry();
+    }
+
+    @Override
+    public void onAddEvent(UploadController controller) {
+        PhotoPicker.builder()
+                .setPhotoCount(9 - controller.count())
+                .setShowCamera(true)
+                .setPreviewEnabled(false)
+                .start(this);
+    }
+
+    @Override
+    public void onItemSelected(UploadController controller, int index) {
+        ArrayList<UploadTask> taskList = controller.getTaskList();
+        ArrayList<String> selectedPhotos = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            String path = taskList.get(i).getValidatePath();
+            if (path.startsWith("file://"));
+            {
+                path = path.replace("file://", "");
+            }
+            selectedPhotos.add(path);
+        }
+        PhotoPreview.builder()
+                .setPhotos(selectedPhotos)
+                .setCurrentItem(index)
+                .setShowDeleteButton(true)
+                .start(this);
+    }
+
+    @Override
+    public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
+        cancelLoading();
+        int count = controller.failedTaskCount();
+        if (count > 0) {
+            Toast(count + "个附件上传失败，请重试或者删除");
+            return;
+        }
+        if (taskList.size() > 0) {
+            commitAttachment();
+        } else {
+            commitAnnouncement();
+        }
+    }
 }
