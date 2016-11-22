@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -45,7 +46,9 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -174,7 +177,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
                     /*筛选*/
                     case 1:
-                        if (userInfo != null && !TextUtils.isEmpty((String) userInfo)) {
+                        String clas = userInfo.getClass() + "";
+                        if (userInfo != null && clas.contains("HashMap")) {
                             HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
                             MenuModel field1 = map.get("activityType");
                             MenuModel field2 = map.get("typeId");
@@ -258,9 +262,9 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 回调刷新
-     * */
+     */
     @Subscribe
-    public void onFollowUpRushEvent(FollowUpRushEvent event){
+    public void onFollowUpRushEvent(FollowUpRushEvent event) {
         getData(false);
     }
 
@@ -317,7 +321,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
         listView.onRefreshComplete();
-        if(isPullOrDown){
+        if (isPullOrDown) {
             listModel.clear();
         }
         if (paginationX == null) {
