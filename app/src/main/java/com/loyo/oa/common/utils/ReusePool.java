@@ -7,7 +7,7 @@ import java.util.List;
  * Created by EthanGong on 2016/11/21.
  */
 
-public class ResuePool<T extends Object> {
+public class ReusePool<T extends Object> {
     private List<T> pool = new ArrayList<>();
     private ReusableCreator<T> creator;
 

@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.loyo.oa.common.utils.ResuePool;
+import com.loyo.oa.common.utils.ReusePool;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -39,7 +39,7 @@ public class NoticeAdapter2 extends RecyclerView.Adapter<NoticeAdapter2.Bulletin
     private ArrayList<Bulletin> mBulletins;
     private Context mContext;
     private Activity mActivity;
-    private ResuePool<ViewGroup> pool;
+    private ReusePool<ViewGroup> pool;
 
 
     public class BulletinViewHolder extends RecyclerView.ViewHolder {
@@ -67,8 +67,8 @@ public class NoticeAdapter2 extends RecyclerView.Adapter<NoticeAdapter2.Bulletin
         mBulletins = bulletins;
         this.mContext = mContext;
         this.mActivity = mActivity;
-        pool = new ResuePool<ViewGroup>();
-        pool.setCreator(new ResuePool.ReusableCreator<ViewGroup>(){
+        pool = new ReusePool<ViewGroup>();
+        pool.setCreator(new ReusePool.ReusableCreator<ViewGroup>(){
 
             @Override
             public ViewGroup getInstance() {
