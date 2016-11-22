@@ -33,6 +33,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,6 +74,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_opportunities);
         initView();
+
     }
 
     private void initView() {
