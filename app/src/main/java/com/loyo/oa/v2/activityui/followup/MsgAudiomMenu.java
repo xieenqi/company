@@ -45,8 +45,8 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
 
     private Context mContext;
     private View mView;
-    private LinearLayout layout_voice, layout_keyboard, layout_voicemenu, keyboardView;
-    private ImageView iv_voice, iv_keyboard;
+    private LinearLayout layout_keyboard, layout_voicemenu, keyboardView, parent;
+    private ImageView iv_voice;
     private EditText edit_comment;
     private TextView tv_send_message;
     private MsgAudioMenuCallBack callBack;
@@ -86,16 +86,12 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
 
     public void initView() {
         mView = LayoutInflater.from(mContext).inflate(R.layout.customerview_list_voicemenu2, null);
-
-//        layout_voice = (LinearLayout) mView.findViewById(R.id.layout_voice);
         layout_keyboard = (LinearLayout) mView.findViewById(R.id.layout_keyboard);
         layout_voicemenu = (LinearLayout) mView.findViewById(R.id.layout_voicemenu);
         iv_voice = (ImageView) mView.findViewById(R.id.iv_voice);
-//        iv_keyboard = (ImageView) mView.findViewById(R.id.iv_keyboard);
         edit_comment = (EditText) mView.findViewById(R.id.edit_comment);
         tv_send_message = (TextView) mView.findViewById(R.id.tv_send_message);
         iv_voice.setOnClickListener(this);
-//        iv_keyboard.setOnClickListener(this);
         tv_send_message.setOnClickListener(this);
 
         edit_comment.addTextChangedListener(new TextWatcher() {
@@ -134,20 +130,20 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
         keyboardView = mfmodule.setRecordClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LinearLayout parent = (LinearLayout) v.getParent().getParent().getParent().getParent().getParent();
+                parent = (LinearLayout) v.getParent().getParent().getParent().getParent().getParent();
                 if (RecordUtils.permissionRecord()) {
                     if ((boolean) v.getTag()) {
-                        showInputKeyboard(edit_comment);
                         mfmodule.setIsRecording(false);
                         v.setTag(false);
-                        layout_voicemenu.setVisibility(View.VISIBLE);
-                        parent.setVisibility(View.GONE);
+                        layout_voicemenu.setVisibility(View.VISIBLE);//评论
+                        parent.setVisibility(View.GONE);//语音
+                        showInputKeyboard(edit_comment);
                     } else {
-                        hideInputKeyboard(edit_comment);
                         mfmodule.setIsRecording(true);
                         v.setTag(true);
                         parent.setVisibility(View.VISIBLE);
                         layout_voicemenu.setVisibility(View.GONE);
+                        hideInputKeyboard(edit_comment);
                     }
                 } else {
                     Global.Toast("你没有配置录音或者储存权限");
@@ -160,7 +156,7 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
             @Override
             public void recordComplete(final String recordPath, final String tiem) {
                 layout_voicemenu.setVisibility(View.VISIBLE);
-                ((LinearLayout) keyboardView.getParent().getParent().getParent().getParent()).setVisibility(View.GONE);
+                parent.setVisibility(View.GONE);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -212,17 +208,12 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
         return edit_comment;
     }
 
-    public LinearLayout getVoiceLayout() {
-        return layout_voice;
-    }
-
     /**
      * 评论成功操作
      */
     public void commentSuccessEmbl() {
         hideInputKeyboard(edit_comment);
         edit_comment.setText("");
-        //layout_voice.setVisibility(View.GONE);
     }
 
     /**
@@ -240,7 +231,6 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
     public void closeMenu() {
         hideInputKeyboard(edit_comment);
         edit_comment.setText("");
-//        layout_voice.setVisibility(View.GONE);
     }
 
     /**
@@ -279,31 +269,11 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
 
              /*切换录音*/
             case R.id.iv_voice:
-                layout_keyboard.setVisibility(View.VISIBLE);
-                layout_voicemenu.setVisibility(View.GONE);
-                hideInputKeyboard(edit_comment);
-//                new Handler().postDelayed(new Runnable() {
-//                    public void run() {
-//                        mHandler.sendEmptyMessage(0x01);
-//                    }
-//                }, 100);
                 keyboardView.performClick();
                 break;
-
-//            /*切换软键盘*/
-//            case R.id.iv_keyboard:
-//                layout_keyboard.setVisibility(View.GONE);
-////                layout_voice.setVisibility(View.GONE);
-//                layout_voicemenu.setVisibility(View.VISIBLE);
-//                Utils.autoKeyBoard(mContext, edit_comment);
-//                break;
-
             /*发送评论*/
             case R.id.tv_send_message:
                 callBack.sendMsg(edit_comment);
-                break;
-            case R.id.layout_voicemenu:
-//                keyboardView.performClick();
                 break;
         }
     }

@@ -87,6 +87,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
         this.time = time;
         this.uuid = uuid;
         this.recordUploadingCallback = recordUploadingCallback;
+        this.setTag(path);
         initView();
     }
 
@@ -157,6 +158,8 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
                 LinearLayout parentView = (LinearLayout) CommonRecordItem.this.getParent();
                 parentView.removeView(CommonRecordItem.this);
                 RecordUtils.getInstance(context).clean_play();
+                String tag = (String) CommonRecordItem.this.getTag();
+                recordUploadingCallback.deleteRecord(tag.substring(tag.length() - 10, tag.length()));
                 break;
             case R.id.iv_uploading_fial:
                 uploadingRecord();
@@ -219,6 +222,8 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     }
 
     public interface RecordUploadingCallback {
-        void Success(Record record);
+        void Success(Record record);//上传录音成功
+
+        void deleteRecord(String tag);//删除录音
     }
 }

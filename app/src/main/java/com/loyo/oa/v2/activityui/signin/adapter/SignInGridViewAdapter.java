@@ -118,7 +118,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
         public void setContent(final int position) {
 
             if (position == mListData.size()) {
-                if (mListData.size() == 9) {
+                if (mListData.size() >= 9) {
                     imageView.setVisibility(View.GONE);
                 } else {
                     imageView.setImageResource(R.drawable.icon_add_file);

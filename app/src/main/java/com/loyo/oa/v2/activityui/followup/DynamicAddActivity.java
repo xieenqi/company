@@ -236,6 +236,16 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                     public void Success(Record record) {//上传录音完成回调
                         audioInfo.add(record);
                     }
+
+                    @Override
+                    public void deleteRecord(String tag) {
+                        for (int i = 0; i < audioInfo.size(); i++) {
+                            Record ele = audioInfo.get(i);
+                            if (ele.fileName.contains(tag)) {
+                                audioInfo.remove(i);
+                            }
+                        }
+                    }
                 }));
             }
         });

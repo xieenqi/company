@@ -67,7 +67,9 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -143,6 +145,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         tv_at_text = (TextView) findViewById(R.id.tv_at_text);
         tv_distance_deviation = (TextView) findViewById(R.id.tv_distance_deviation);
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
+
+        ll_contact.setOnClickListener(this);
+        tv_address = (TextView) findViewById(R.id.tv_address);
+        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
+        iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
+        iv_at_delete.setOnClickListener(this);
+        init_gridView_photo();
+        startLocation();
+        initMultiFunctionModule();
         if (null == mCustomer) {
             layout_customer_name.setOnTouchListener(Global.GetTouch());
             layout_customer_name.setOnClickListener(this);
@@ -154,16 +166,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             ll_contact.setVisibility(View.VISIBLE);
             getDefaultContact(mCustomer.contacts);
             contactList = mCustomer.contacts;
+            if (mCustomer.position != null) {
+//                List<Double> locData = Arrays.asList(mCustomer.position.loc);
+                Location loc = new Location(null, mCustomer.position.addr);
+                distanceInfo(loc);
+            }
         }
-        ll_contact.setOnClickListener(this);
-        tv_address = (TextView) findViewById(R.id.tv_address);
-        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
-        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
-        iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
-        iv_at_delete.setOnClickListener(this);
-        init_gridView_photo();
-        startLocation();
-        initMultiFunctionModule();
     }
 
     /**
@@ -213,6 +221,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     public void Success(Record record) {//上传录音完成回调
                         audioInfo.add(record);
                     }
+
+                    @Override
+                    public void deleteRecord(String tag) {
+                        for (int i = 0; i < audioInfo.size(); i++) {
+                            Record ele = audioInfo.get(i);
+                            if (ele.fileName.contains(tag)) {
+                                audioInfo.remove(i);
+                            }
+                        }
+                    }
                 }));
             }
         });
@@ -220,11 +238,15 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mfmodule.setPictureClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this, SelectPicPopupWindow.class);
-                intent.putExtra("localpic", false);//是否可以选择相册
-                intent.putExtra("imgsize", 9 - pcitureNumber);//还可以选多少张图片
-                intent.putExtra("addpg", true);
-                startActivityForResult(intent, MainApp.GET_IMG);
+                if (signInGridViewAdapter.getCount() >= 9) {
+                    Toast("最多只能加9张图片");
+                } else {
+                    Intent intent = new Intent(SignInActivity.this, SelectPicPopupWindow.class);
+                    intent.putExtra("localpic", false);//是否可以选择相册
+                    intent.putExtra("imgsize", 9 - pcitureNumber);//还可以选多少张图片
+                    intent.putExtra("addpg", true);
+                    startActivityForResult(intent, MainApp.GET_IMG);
+                }
             }
         });
         /*@相关人员*/
@@ -383,13 +405,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             public void success(final LegWork legWork, final Response response) {
                 HttpErrorCheck.checkResponse(" 新增拜访传result：", response);
                 if (legWork != null) {
-                    Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
+                        Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                         AppBus.getInstance().post(new SigninNewRushEvent());
                         finish();
-                    } else {
-                        Toast(getString(R.string.sign) + "异常!");
                     }
+//                    else {
+//                        Toast(getString(R.string.sign) + "异常!");
+//                    }
                 } else {
                     Toast("提交失败" + response.getStatus());
                 }
@@ -556,14 +579,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
                 tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-                if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
-                    tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
-                    tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
-                } else {
-                    tv_distance_deviation.setText("未知");
-                    tv_distance_deviation.setTextColor(Color.parseColor("#f5625a"));
-                }
-
+                distanceInfo(loc);
                 break;
              /* 选择客户联系人 回调*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
@@ -574,6 +590,17 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     tv_contact_name.setText(contact.getName());
                 }
                 break;
+        }
+    }
+
+    private void distanceInfo(Location loc) {
+
+        if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
+            tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
+            tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
+        } else {
+            tv_distance_deviation.setText("未知");
+            tv_distance_deviation.setTextColor(Color.parseColor("#f5625a"));
         }
     }
 
@@ -598,7 +625,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         LatLng ll = new LatLng(laPosition, loPosition);
         LatLng llCustomer = new LatLng(lo, la);// 地点的纬度，在-90 与90 之间的double 型数值。、地点的经度，在-180 与180 之间的double 型数值。
         LogUtil.d("偏差距离:" + AMapUtils.calculateLineDistance(ll, llCustomer));
-        return Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer));
+        Double distance = Double.valueOf(Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer)));
+        DecimalFormat df = new DecimalFormat("0.00");
+        String distanceText;
+        if (distance <= 1000) {
+            distanceText = Utils.setValueDouble2(distance) + "m";
+        } else {
+            distanceText = df.format(distance / 1000) + "km";
+        }
+
+        return distanceText;
     }//  104.073255,30.689493
 
 
