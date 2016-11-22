@@ -322,6 +322,7 @@
 
                         <TextView
                             style="@style/text_item1"
+                            android:layout_marginLeft="@dimen/dimen_16"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center"
@@ -331,6 +332,7 @@
                         <TextView
                             android:id="@+id/tv_contact_tel"
                             style="@style/text_item1"
+                            android:layout_marginLeft="@dimen/margin_other_view"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center"

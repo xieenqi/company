@@ -81,7 +81,6 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
         imageArrow = (ImageView) findViewById(R.id.img_title_arrow);
-        imageArrow.setVisibility(View.VISIBLE);
         lv_sale = (ListView) findViewById(R.id.lv_sale);
         ll_category = (LinearLayout) findViewById(R.id.ll_category);
         ll_category.setOnClickListener(this);
@@ -93,12 +92,13 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         layout_title_action.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setVisibility(View.INVISIBLE);
-
+        imageArrow.setVisibility(View.INVISIBLE);
         //超级管理员权全公司  没有获取到权限就不显示
-        permission = MainApp.rootMap.get("0205"); //客户权限 暂时用客户权限做测试
+        permission = MainApp.rootMap.get("0229"); //客户权限 暂时用客户权限做测试
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new String[]{"我的跟进", "团队跟进"};
             publicOrTeam = true;
+            imageArrow.setVisibility(View.VISIBLE);
         }
 
         rotateAnimation = initArrowAnimation();

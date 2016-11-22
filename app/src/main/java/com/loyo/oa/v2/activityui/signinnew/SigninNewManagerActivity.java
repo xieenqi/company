@@ -81,7 +81,6 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
         imageArrow = (ImageView) findViewById(R.id.img_title_arrow);
-        imageArrow.setVisibility(View.VISIBLE);
         lv_sale = (ListView) findViewById(R.id.lv_sale);
         ll_category = (LinearLayout) findViewById(R.id.ll_category);
         ll_category.setOnClickListener(this);
