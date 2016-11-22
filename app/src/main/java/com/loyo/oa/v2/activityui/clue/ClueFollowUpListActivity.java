@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpListAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueFollowUpListModel;
+import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.clue.presenter.impl.ClueFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
@@ -196,9 +197,18 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
 
             /*新建*/
             case R.id.layout_add:
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable(Customer.class.getName(), customer);
+//                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+//                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
+
+                ClueListItem item = new ClueListItem();
+                item.id = clueId;
+                item.companyName = name;
+                item.responsorName = responsorName;
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(Customer.class.getName(), customer);
-                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+                bundle.putSerializable(ClueListItem.class.getName(), item);
+                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
                 app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
         }
