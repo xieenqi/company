@@ -200,9 +200,9 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                         String clas = userInfo.getClass() + "";
                         if (userInfo != null && clas.contains("HashMap")) {
                             HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
-                            MenuModel field1 = map.get("activityType");
+                            MenuModel field1 = map.get("method");
                             MenuModel field2 = map.get("typeId");
-                            MenuModel field3 = map.get("method");
+                            MenuModel field3 = map.get("activityType");
                             method = field1.getKey();
                             typeId = field2.getKey();
                             activityType = field3.getKey();

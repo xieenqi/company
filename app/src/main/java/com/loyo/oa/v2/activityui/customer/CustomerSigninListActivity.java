@@ -131,9 +131,12 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         layout_back.setOnTouchListener(Global.GetTouch());
         if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
+        }else{
+            layout_add.setOnTouchListener(Global.GetTouch());
+            Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
+                    layout_add,
+                    layout_bottom_menu,msgAudiomMenu.getEditComment());
         }
-        layout_add.setOnTouchListener(Global.GetTouch());
-
         //超级管理员\权限判断
         if (!MainApp.user.isSuperUser()) {
             try {
@@ -142,11 +145,6 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
                 e.printStackTrace();
             }
         }
-
-        Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
-                 layout_add,
-                 layout_bottom_menu,msgAudiomMenu.getEditComment());
-
         getData(false);
     }
 

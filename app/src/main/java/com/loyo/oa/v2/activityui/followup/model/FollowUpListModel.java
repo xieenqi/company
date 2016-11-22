@@ -16,11 +16,14 @@ public class FollowUpListModel implements Serializable{
     public String id;
     public String customerId;
     public String customerName;
+    public String sealsleadId;
+    public String salesleadCompanyName;
     public String uuid;
     public Creator creator;
     public String audioUrl;
     public int audioLength;
     public long createAt;
+    public int  remindAt;
     public String content;
     public ArrayList<Attachment> attachments;    //文件
     public ArrayList<Attachment> imgAttachments; //图片

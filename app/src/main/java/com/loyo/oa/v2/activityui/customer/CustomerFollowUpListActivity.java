@@ -58,7 +58,6 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     private boolean isMyUser;
     private boolean isPullOrDown;
     private boolean isChanged;
-    private Customer customer;
 
     /*录音 评论 播放相关*/
     private LinearLayout layout_bottom_voice;
@@ -109,7 +108,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     private void initView(){
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
-            customer = (Customer) bundle.getSerializable(Customer.class.getName());
+            mCustomer = (Customer) bundle.getSerializable("mCustomer");
             isMyUser = bundle.getBoolean("isMyUser");
         }
         mPresenter = new CustomerFollowUpListPresenterImpl(this,mContext);
@@ -135,15 +134,14 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
 
         if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
+        }else{
+            Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
+                    layout_add,
+                    layout_bottom_menu,msgAudiomMenu.getEditComment());
         }
 
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("跟进动态");
-
-        Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
-                layout_add,
-                layout_bottom_menu,msgAudiomMenu.getEditComment());
-
         getData(false);
     }
 
@@ -155,10 +153,10 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userId", MainApp.user.id);//我的传id,团队则空着
+        map.put("userId", mCustomer.id);//我的传id,团队则空着
         map.put("xpath", "");
-        map.put("timeType", 5);//时间查询
-        map.put("method", 0); //跟进类型0:全部 1:线索 2:客户
+        map.put("timeType", 0);//时间查询
+        map.put("method", 2);  //跟进类型0:全部 1:线索 2:客户
         map.put("typeId", "");
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
@@ -190,7 +188,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
             /*新建*/
             case R.id.layout_add:
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(Customer.class.getName(), customer);
+                bundle.putSerializable(Customer.class.getName(), mCustomer);
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;

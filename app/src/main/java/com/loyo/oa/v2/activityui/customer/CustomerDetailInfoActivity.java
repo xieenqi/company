@@ -393,7 +393,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*跟进动态*/
             case R.id.layout_sale_activity:
                 bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putSerializable(Customer.class.getName(), mCustomer);
+                bundle.putSerializable("mCustomer", mCustomer);
                 _class = CustomerFollowUpListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;

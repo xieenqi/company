@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.dropdownmenu.view.DoubleListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
@@ -101,14 +102,19 @@ public class FollowUpListAdapter extends BaseAdapter {
             holder.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
             holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
             holder.iv_comment = (ImageView) convertView.findViewById(R.id.iv_comment);
+            holder.tv_last_time = (TextView) convertView.findViewById(R.id.tv_last_time);
+            holder.tv_clue = (TextView) convertView.findViewById(R.id.tv_clue);
             holder.layout_gridview = (CusGridView) convertView.findViewById(R.id.layout_gridview);
             holder.lv_comment = (CustomerListView) convertView.findViewById(R.id.lv_comment);
             holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
             holder.lv_options = (CustomerListView) convertView.findViewById(R.id.lv_options);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
             holder.layout_address = (LinearLayout) convertView.findViewById(R.id.layout_address);
+            holder.layout_lasttime = (LinearLayout) convertView.findViewById(R.id.layout_lasttime);
             holder.ll_web = (LinearLayout) convertView.findViewById(R.id.ll_web);
+            holder.layout_phonely = (LinearLayout) convertView.findViewById(R.id.layout_phonely);
             holder.layout_customer = (LinearLayout) convertView.findViewById(R.id.layout_customer);
+            holder.layout_clue = (LinearLayout) convertView.findViewById(R.id.layout_clue);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -122,6 +128,20 @@ public class FollowUpListAdapter extends BaseAdapter {
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# "+followUpListModel.typeName);
         holder.tv_create_time.setText(DateTool.getDiffTime(followUpListModel.createAt));
 
+        /** 电话录音设置 */
+        if(null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)){
+            holder.layout_phonely.setVisibility(View.VISIBLE);
+        }else{
+            holder.layout_phonely.setVisibility(View.GONE);
+        }
+
+        /** 下次跟进时间 */
+        if(followUpListModel.remindAt != 0){
+            holder.layout_lasttime.setVisibility(View.VISIBLE);
+            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt+"","yyyy-MM-dd HH:mm"));
+        }else{
+            holder.layout_lasttime.setVisibility(View.GONE);
+        }
 
         /** 设置跟进内容 */
         if(null != followUpListModel.content && !TextUtils.isEmpty(followUpListModel.content)){
@@ -131,6 +151,15 @@ public class FollowUpListAdapter extends BaseAdapter {
                 holder.tv_memo.setVisibility(View.VISIBLE);
                 holder.tv_memo.setText(followUpListModel.content);
             }
+        }
+
+        /** 线索 */
+        if(null != followUpListModel.salesleadCompanyName && !TextUtils.isEmpty(followUpListModel.salesleadCompanyName)){
+            holder.layout_clue.setVisibility(View.VISIBLE);
+            holder.tv_clue.setText(followUpListModel.salesleadCompanyName);
+            holder.tv_clue.setOnTouchListener(Global.GetTouch());
+        }else{
+            holder.layout_clue.setVisibility(View.GONE);
         }
 
         /** 客户姓名 */
@@ -251,6 +280,27 @@ public class FollowUpListAdapter extends BaseAdapter {
             }
         });
 
+        /** 进入线索详情 */
+        holder.tv_clue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent();
+                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                mIntent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */ followUpListModel.sealsleadId);
+                mIntent.setClass(mContext, ClueDetailActivity.class);
+                mContext.startActivity(mIntent);
+            }
+        });
+
+        final TextView iv_phone_call = (TextView) convertView.findViewById(R.id.iv_phone_call);
+        /** 电话录音播放 */
+        iv_phone_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         return convertView;
     }
 
@@ -264,11 +314,16 @@ public class FollowUpListAdapter extends BaseAdapter {
         TextView tv_toast;       /*通知人员*/
         TextView tv_memo;        /*内容*/
         TextView tv_kind;        /*内容*/
+        TextView tv_last_time;   /*下次跟进时间*/
+        TextView tv_clue;        /*线索*/
 
         LinearLayout ll_web;
         LinearLayout layout_comment;
         LinearLayout layout_address;
         LinearLayout layout_customer;
+        LinearLayout layout_lasttime;
+        LinearLayout layout_clue;
+        LinearLayout layout_phonely;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件列表区*/

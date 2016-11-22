@@ -68,7 +68,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private LinearLayout layout_bottom_menu;
 
     private ArrayList<FollowFilter> mTags;
-    private String menuTimeKey = ""; /*时间*/
+    private String menuTimeKey = "0"; /*时间*/
     private String menuChosKey = "", method, typeId, activityType; /*筛选*/
 
 
@@ -183,16 +183,18 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                             MenuModel field1 = map.get("activityType");
                             MenuModel field2 = map.get("typeId");
                             MenuModel field3 = map.get("method");
-                            method = field1.getKey();
-                            typeId = field2.getKey();
-                            activityType = field3.getKey();
+                            activityType = field1.getKey();  //跟进方式
+                            typeId = field2.getKey();        //跟进对象
+                            method = field3.getKey();        //跟进类型
                         } else {
                             method = "";
                             typeId = "";
                             activityType = "";
                         }
+                        LogUtil.dee("method:"+method);
+                        LogUtil.dee("typeId:"+typeId);
+                        LogUtil.dee("activityType:"+activityType);
                         break;
-
                 }
                 isPullOrDown = true;
                 getData(false);
@@ -234,7 +236,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizzId", listModel.get(commentPosition).id);
         map.put("commentType", 2); //1文本 2语音
-        map.put("bizzType", 2);   //1拜访 2跟进
+        map.put("bizzType", 2);    //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);

@@ -420,4 +420,5 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         }
         playVoiceSize++;
     }
+
 }
