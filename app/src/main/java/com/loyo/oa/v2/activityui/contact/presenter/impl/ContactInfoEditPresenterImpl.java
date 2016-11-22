@@ -104,10 +104,10 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
             String[] tt = shortDeptNames.split(",");
             for (String ele : tt) {
                 String[] t = ele.split("\\|");
-                depNames = depNames + t[0];
+                depNames = depNames + t[0] + (",");
             }
         }
-        return depNames;
+        return depNames.substring(0, depNames.length() - 1);
     }
 
     /**
@@ -123,11 +123,11 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
             for (String ele : tt) {
                 if (ele.contains("|")) {
                     String[] t = ele.split("\\|");
-                    positionNames = positionNames + t[1];
+                    positionNames = positionNames + t[1] + ",";
                 }
             }
         }
-        return positionNames;
+        return positionNames.substring(0, positionNames.length() - 1);
     }
 
     /**

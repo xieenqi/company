@@ -8,11 +8,14 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
+import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activityui.signinnew.SigninNewDetailsActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
@@ -54,6 +57,34 @@ public enum SystemMessageItemType {
             return ExtraAndResult.EXTRA_ID;
         }
     },
+    /*任务 完成*/
+    MSG_TASK_COMPLETE(21) {
+        public int getIcon() {
+            return R.drawable.icon_sys_task;
+        }
+
+        public Class<?> getItemClass() {
+            return TasksInfoActivity_.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
+    /*工作报告  已经点评*/
+    MSG_WORKREPORT_COMPLETE(23) {
+        public int getIcon() {
+            return R.drawable.icon_sys_workreport;
+        }
+
+        public Class<?> getItemClass() {
+            return WorkReportsInfoActivity_.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
     /*工作报告*/
     MSG_WORKREPORT(1) {
         public int getIcon() {
@@ -62,6 +93,20 @@ public enum SystemMessageItemType {
 
         public Class<?> getItemClass() {
             return WorkReportsInfoActivity_.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
+    /*审批 通过 详情*/
+    MSG_APPROVAL_COMPLETE(22) {
+        public int getIcon() {
+            return R.drawable.icon_sys_approval;
+        }
+
+        public Class<?> getItemClass() {
+            return WfinstanceInfoActivity_.class;
         }
 
         public String getExtraName() {
@@ -96,6 +141,60 @@ public enum SystemMessageItemType {
             return "projectId";
         }
     },
+    /*g跟进动态  评论*/
+    MSG_FOLLOWUP_COMMENTS(31) {
+        public int getIcon() {
+            return R.drawable.icon_sys_followup;
+        }
+
+        public Class<?> getItemClass() {
+            return FollowUpDetailsActivity.class;
+        }
+
+        public String getExtraName() {
+            return "id";
+        }
+    },/*g跟进动态*/
+    MSG_FOLLOWUP(9) {
+        public int getIcon() {
+            return R.drawable.icon_sys_followup;
+        }
+
+        public Class<?> getItemClass() {
+            return FollowUpDetailsActivity.class;
+        }
+
+        public String getExtraName() {
+            return "id";
+        }
+    },
+    /*客户拜访 评论*/
+    MSG_SIGNIN_COMMENTS(30) {
+        public int getIcon() {
+            return R.drawable.icon_sys_signin;
+        }
+
+        public Class<?> getItemClass() {
+            return SigninNewDetailsActivity.class;
+        }
+
+        public String getExtraName() {
+            return "id";
+        }
+    }, /*客户拜访*/
+    MSG_SIGNIN(4) {
+        public int getIcon() {
+            return R.drawable.icon_sys_signin;
+        }
+
+        public Class<?> getItemClass() {
+            return SigninNewDetailsActivity.class;
+        }
+
+        public String getExtraName() {
+            return "id";
+        }
+    },
     /*通知公告*/
     MSG_BULLETIN(19) {
         public int getIcon() {
@@ -108,6 +207,20 @@ public enum SystemMessageItemType {
 
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
+        }
+    },
+    /*客户详情 服务端的老数据 要求18也是客户的详情*/
+    MSG_CUSTOMER2(18) {
+        public int getIcon() {
+            return R.drawable.icon_sys_custom;
+        }
+
+        public Class<?> getItemClass() {
+            return CustomerDetailInfoActivity_.class;
+        }
+
+        public String getExtraName() {
+            return "Id";
         }
     },
     /*客户详情*/
@@ -126,7 +239,7 @@ public enum SystemMessageItemType {
     },
     // TODO 公海客户暂还没有定义
     /*公海客户详情*/
-    MSG_CUSTOMER_PUBLIC(30) {
+    MSG_CUSTOMER_PUBLIC(40) {
         public int getIcon() {
             return R.drawable.icon_sys_custom_public;
         }
@@ -153,8 +266,50 @@ public enum SystemMessageItemType {
             return ExtraAndResult.EXTRA_ID;
         }
     },
+    /*订单详情 回款记录*/
+    MSG_ORDER_RECORD(26) {
+        public int getIcon() {
+            return R.drawable.icon_sys_order;
+        }
+
+        public Class<?> getItemClass() {
+            return OrderDetailActivity.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
+    /*订单详情 回款计划*/
+    msg_order_plan(27) {
+        public int getIcon() {
+            return R.drawable.icon_sys_order;
+        }
+
+        public Class<?> getItemClass() {
+            return OrderDetailActivity.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
     /*工单详情*/
     MSG_Worksheet(28) {
+        public int getIcon() {
+            return R.drawable.icon_sys_worksheet;
+        }
+
+        public Class<?> getItemClass() {
+            return WorksheetDetailActivity.class;
+        }
+
+        public String getExtraName() {
+            return ExtraAndResult.EXTRA_ID;
+        }
+    },
+    /*工单 事件详情*/
+    MSG_WorksheetEvent(29) {
         public int getIcon() {
             return R.drawable.icon_sys_worksheet;
         }
@@ -174,29 +329,15 @@ public enum SystemMessageItemType {
         }
 
         public Class<?> getItemClass() {
-            return WorkReportsInfoActivity_.class;
+            return AttendanceManagerActivity.class;
         }
 
         public String getExtraName() {
             return ExtraAndResult.EXTRA_ID;
         }
     },
-    /*销售机会*/
-    MSG_SALE(8) {
-        public int getIcon() {
-            return R.drawable.icon_ws_status2;
-        }
-
-        public Class<?> getItemClass() {
-            return WorkReportsInfoActivity_.class;
-        }
-
-        public String getExtraName() {
-            return ExtraAndResult.EXTRA_ID;
-        }
-    },
-    /*系统消息*/
-    MSG_SYS(0) {
+    /*系统消息  转移超级用户*/
+    MOVE_SUPER_USER(24) {
         public int getIcon() {
             return R.drawable.icon_sys_sys;
         }
@@ -240,8 +381,8 @@ public enum SystemMessageItemType {
 
 //    LYMsgWorkReport   = 1,           //1.工作汇报*
 //    LYMsgTask,                       //2.任务*
-//    LYMsgSchedule,                   //3.日程
-//    LYMsgLegWork,                    //4.外勤
+//    LYMsgSchedule,                   //3.日程(没有了)
+//    LYMsgLegWork,                    //4.外勤(改成拜访了)
 //    LYMsgProject,                    //5.项目
 //    LYMsgCustomer,                   //6.客户*
 //    LYMsgContact,                    //7.客户联系人

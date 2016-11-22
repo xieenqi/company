@@ -18,19 +18,19 @@ import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterTimeModel;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
-import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
+import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
+import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
-import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -63,13 +63,13 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private Button btn_add;
     private ViewStub emptyView;
     private PullToRefreshListView listView;
-    private ArrayList<Tag> mTags;
+    private ArrayList<FollowFilter> mTags;
     private DropDownMenu filterMenu;
 
     private LinearLayout layout_bottom_menu;
 
     private String menuTimekey = "";        /*时间*/
-    private String menuChoskey = "";        /*筛选*/
+    private String menuChoskey = "", method, typeId, activityType; /*筛选*/
     private String menuGuykey = "";         /*人员*/
     private boolean isPullOrDown;
     private int commentPosition;
@@ -125,7 +125,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         permission = (Permission) getArguments().getSerializable("permission");
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
@@ -175,7 +175,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
         List<FilterModel> options = new ArrayList<>();
         options.add(DynamicFilterTimeModel.getFilterModel());     //时间
-        options.add(TagMenuModel.getTagFilterModel(mTags));       //筛选
+        options.add(FollowFilterMenuModel.getFilterModel(mTags));  //筛选
         options.add(new OrganizationFilterModel(depts, title));   //人员
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
@@ -190,20 +190,30 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                     case 0:
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:" + menuTimekey + " value" + model.getValue());
                         break;
 
                     /*筛选*/
                     case 1:
-                        menuChoskey = model.getKey();
-                        Toast("key:" + menuChoskey + " value" + model.getValue());
+                        if (userInfo != null && !TextUtils.isEmpty((String) userInfo)) {
+                            HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
+                            MenuModel field1 = map.get("activityType");
+                            MenuModel field2 = map.get("typeId");
+                            MenuModel field3 = map.get("method");
+                            method = field1.getKey();
+                            typeId = field2.getKey();
+                            activityType = field3.getKey();
+                        } else {
+                            method = "";
+                            typeId = "";
+                            activityType = "";
+                        }
+
                         break;
 
                     /*人员*/
                     case 2:
                         menuGuykey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-                        Toast("key:" + menuGuykey + " value" + model.getValue());
                         break;
 
                 }
@@ -235,7 +245,6 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("title", content);
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
-        //map.put("audioInfo", "");//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
@@ -264,8 +273,9 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("userId", "");//我的传id,团队则空着
         map.put("xpath", "");
         map.put("timeType", 5);//时间查询
-        map.put("method", 0); //跟进类型0:全部 1:线索 2:客户
-        map.put("typeId", "");
+        map.put("method", method); //跟进类型0:全部 1:线索 2:客户
+        map.put("typeId", typeId);
+        map.put("activityType", activityType);
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
@@ -326,6 +336,9 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         if(isPullOrDown){
             listModel.clear();
         }
+        if (paginationX == null) {
+            return;
+        }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
@@ -370,10 +383,10 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     /**
      * 列表播放语音回调
-     * */
+     */
     @Override
-    public void playVoice(AudioModel audioModel,TextView textView) {
-        if(TextUtils.isEmpty(audioModel.url)){
+    public void playVoice(AudioModel audioModel, TextView textView) {
+        if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
         }
@@ -382,19 +395,19 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);
         /*关闭上一条TextView动画*/
-        if(playVoiceSize > 0){
-            if(null != lastView)
+        if (playVoiceSize > 0) {
+            if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
         /*点击同一条则暂停播放*/
-        if(lastView == textView){
+        if (lastView == textView) {
             MainApp.getMainApp().stopAnim(textView);
             audioPlayer.audioPause(textView);
             lastView = null;
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel,textView);
+            audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }

@@ -21,6 +21,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IMobile;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -141,7 +142,8 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
         HashMap<String, Object> map = new HashMap<>();
         map.put("tel", mobile);
         map.put("code", code);
-        app.getRestAdapter(1).create(IMobile.class).modifyMobile(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IMobile.class).
+                modifyMobile(map, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse(response);

@@ -26,8 +26,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 
 public class RecordUtils {
 
-    private static RecordUtils mInstance;
-    private static MediaRecorder recorder;
+    //    private static RecordUtils mInstance;
+    private MediaRecorder recorder;
     private Context context;
     private MediaPlayer play;
     private String AUDIO_ROOTPATH, outPath, fileName;//录音存放路径、输出路径、输出文件名字
@@ -42,9 +42,9 @@ public class RecordUtils {
     }
 
     public static RecordUtils getInstance(Context context) {
-        if (mInstance == null) {
-            mInstance = new RecordUtils();
-        }
+//        if (mInstance == null) {
+        RecordUtils mInstance = new RecordUtils();
+//        }
         mInstance.setContext(context);
         return mInstance;
     }
@@ -64,7 +64,7 @@ public class RecordUtils {
         if (!ff.exists()) {
             ff.mkdirs();
         }
-        fileName = getDate() + ".wav";
+        fileName = getDate() + ".amr";
         outPath = AUDIO_ROOTPATH + File.separator + fileName;
         recorder.setOutputFile(outPath);
          /*
@@ -73,9 +73,9 @@ public class RecordUtils {
 			 * /ARM音频编码)、MPEG-4、RAW_AMR(只支持音频且音频编码要求为AMR_NB)
 			 * recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
 			 */
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
         /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default */
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         recorder.setMaxDuration(60 * 1000);
         recorder.setOnErrorListener(null);
         recorder.setOnInfoListener(null);
@@ -92,7 +92,9 @@ public class RecordUtils {
             isStart = true;
             recorder.prepare();
             recorder.start();
+            LogUtil.d("开始 前 时间:" + startTime);
             startTime = System.currentTimeMillis();
+            LogUtil.d("开始 后 时间:" + startTime);
         } catch (IllegalStateException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -120,12 +122,15 @@ public class RecordUtils {
             if (recorder != null && isStart) {
                 timer.cancel();
                 task.cancel();
+                LogUtil.d("结束 前 时间:" + endTime);
+                endTime = System.currentTimeMillis();
+                LogUtil.d("结束 后 时间:" + endTime);
                 isStart = false;
                 recorder.stop();
                 recorder.reset();
                 recorder.release();
                 recorder = null;//这个必须有不然录音设备释放不成功
-                endTime = System.currentTimeMillis();
+                startTime = 0;
 
             }
         } catch (IllegalStateException e) {
@@ -176,10 +181,6 @@ public class RecordUtils {
 
     public long getStartTime() {
         return startTime;
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
     }
 
     public long getEndTime() {

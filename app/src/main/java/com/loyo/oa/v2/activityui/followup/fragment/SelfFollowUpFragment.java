@@ -14,12 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterTimeModel;
-import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
@@ -27,14 +25,14 @@ import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
+import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
+import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterImpl;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
-import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
-import com.loyo.oa.v2.activityui.signinnew.model.CommentModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -47,9 +45,7 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +64,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private PullToRefreshListView listView;
     private LinearLayout layout_bottom_menu;
 
-    private ArrayList<Tag> mTags;
+    private ArrayList<FollowFilter> mTags;
     private String menuTimeKey = ""; /*时间*/
     private String menuChosKey = "", method, typeId, activityType; /*筛选*/
 
@@ -128,7 +124,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
 
@@ -159,27 +155,38 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private void loadFilterOptions() {
         List<FilterModel> options = new ArrayList<>();
         options.add(DynamicFilterTimeModel.getFilterModel());     //时间
-        options.add(TagMenuModel.getTagFilterModel(mTags));       //筛选
+        options.add(FollowFilterMenuModel.getFilterModel(mTags));  //筛选
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(getContext(), options);
         filterMenu.setMenuAdapter(adapter);
         adapter.setCallback(new OnMenuModelsSelected() {
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
-                MenuModel model = selectedModels.get(0);
+
                 switch (menuIndex) {
 
                     /*时间*/
                     case 0:
+                        MenuModel model = selectedModels.get(0);
                         menuTimeKey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
-//                        Toast("key:" + menuTimeKey + " value" + model.getValue());
                         break;
 
                     /*筛选*/
                     case 1:
-                        menuChosKey = model.getKey();
-                        Toast("key:" + menuChosKey + " value" + model.getValue());
+                        if (userInfo != null && !TextUtils.isEmpty((String) userInfo)) {
+                            HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
+                            MenuModel field1 = map.get("activityType");
+                            MenuModel field2 = map.get("typeId");
+                            MenuModel field3 = map.get("method");
+                            method = field1.getKey();
+                            typeId = field2.getKey();
+                            activityType = field3.getKey();
+                        } else {
+                            method = "";
+                            typeId = "";
+                            activityType = "";
+                        }
                         break;
 
                 }
@@ -211,7 +218,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("title", content);
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 2);   //1拜访 2跟进
-        //map.put("audioInfo", "");//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
@@ -240,9 +246,9 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("userId", MainApp.user.id);//我的传id,团队则空着
         map.put("xpath", "");
         map.put("timeType", menuTimeKey);//时间查询
-        map.put("method", 0); //跟进类型0:全部 1:线索 2:客户
-        map.put("typeId", "");
-        map.put("activityType", "");
+        map.put("method", method); //跟进类型0:全部 1:线索 2:客户
+        map.put("typeId", typeId);
+        map.put("activityType", activityType);
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
@@ -313,6 +319,9 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         listView.onRefreshComplete();
         if(isPullOrDown){
             listModel.clear();
+        }
+        if (paginationX == null) {
+            return;
         }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
