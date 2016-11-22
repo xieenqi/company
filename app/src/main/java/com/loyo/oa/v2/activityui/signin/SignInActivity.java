@@ -67,6 +67,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -620,7 +621,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         LatLng ll = new LatLng(laPosition, loPosition);
         LatLng llCustomer = new LatLng(lo, la);// 地点的纬度，在-90 与90 之间的double 型数值。、地点的经度，在-180 与180 之间的double 型数值。
         LogUtil.d("偏差距离:" + AMapUtils.calculateLineDistance(ll, llCustomer));
-        return Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer));
+        Double distance = Double.valueOf(Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer)));
+        DecimalFormat df = new DecimalFormat("0.00");
+        String distanceText;
+        if (distance <= 1000) {
+            distanceText = Utils.setValueDouble2(distance) + "m";
+        } else {
+            distanceText = df.format(distance / 1000) + "km";
+        }
+
+        return distanceText;
     }//  104.073255,30.689493
 
 
