@@ -76,7 +76,7 @@ public class ContactInfoEditPresenterImpl implements ContactInfoEditPresenter {
         map.put("birthDay", birthDay);
         map.put("weixinId", weixinId);
         map.put("avatar", path);
-
+        LogUtil.d("修改个人信息发送:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(id, map, new RCallback<User>() {
             @Override
             public void success(final User user, final Response response) {
