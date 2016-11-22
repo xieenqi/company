@@ -238,11 +238,15 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mfmodule.setPictureClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this, SelectPicPopupWindow.class);
-                intent.putExtra("localpic", false);//是否可以选择相册
-                intent.putExtra("imgsize", 9 - pcitureNumber);//还可以选多少张图片
-                intent.putExtra("addpg", true);
-                startActivityForResult(intent, MainApp.GET_IMG);
+                if (signInGridViewAdapter.getCount() >= 9) {
+                    Toast("最多只能加9张图片");
+                } else {
+                    Intent intent = new Intent(SignInActivity.this, SelectPicPopupWindow.class);
+                    intent.putExtra("localpic", false);//是否可以选择相册
+                    intent.putExtra("imgsize", 9 - pcitureNumber);//还可以选多少张图片
+                    intent.putExtra("addpg", true);
+                    startActivityForResult(intent, MainApp.GET_IMG);
+                }
             }
         });
         /*@相关人员*/
