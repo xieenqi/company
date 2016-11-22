@@ -109,7 +109,7 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent();
-                intent.putExtra(ClueListItem.class.getName(), adapter.getItemData(position));
+                intent.putExtra(ClueListItem.class.getName(), adapter.getItemData(position-1));
                 intent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
                 intent.setClass(mActivity, DynamicAddActivity.class);
                 startActivity(intent);
