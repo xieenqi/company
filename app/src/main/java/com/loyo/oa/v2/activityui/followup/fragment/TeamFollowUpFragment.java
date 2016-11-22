@@ -183,13 +183,16 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             @Override
             public void onMenuModelsSelected(int menuIndex, List<MenuModel> selectedModels, Object userInfo) {
                 filterMenu.close();
-                MenuModel model = selectedModels.get(0);
+
                 switch (menuIndex) {
 
                     /*时间*/
                     case 0:
+                    {
+                        MenuModel model = selectedModels.get(0);
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                    }
                         break;
 
                     /*筛选*/
@@ -213,8 +216,11 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
                     /*人员*/
                     case 2:
+                    {
+                        MenuModel model = selectedModels.get(0);
                         menuGuykey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
+                    }
                         break;
                 }
                 isPullOrDown = true;
