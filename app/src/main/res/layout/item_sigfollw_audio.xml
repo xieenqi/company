@@ -29,6 +29,5 @@
             android:text="00:00"
             android:textColor="@color/text99"
             android:textSize="@dimen/text_sp12" />
-
     </LinearLayout>
 </LinearLayout>

@@ -99,6 +99,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             holder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
             holder.tv_toast = (TextView) convertView.findViewById(R.id.tv_toast);
             holder.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
+            holder.tv_last_time = (TextView) convertView.findViewById(R.id.tv_last_time);
             holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
             holder.tv_kind = (TextView) convertView.findViewById(R.id.tv_kind);
             holder.iv_comment = (ImageView) convertView.findViewById(R.id.iv_comment);
@@ -109,6 +110,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
             holder.layout_address = (LinearLayout) convertView.findViewById(R.id.layout_address);
             holder.layout_customer = (LinearLayout) convertView.findViewById(R.id.layout_customer);
+            holder.layout_lasttime = (LinearLayout) convertView.findViewById(R.id.layout_lasttime);
             holder.ll_web = (LinearLayout) convertView.findViewById(R.id.ll_web);
             convertView.setTag(holder);
         } else {
@@ -121,10 +123,16 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         holder.tv_address.setText(TextUtils.isEmpty(model.addr) ? "无定位信息" : model.addr);
         holder.tv_create_time.setText(DateTool.getDiffTime(model.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# "+model.typeName);
-
         holder.tv_contact.setText(TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
 
 
+        /** 下次跟进时间 */
+        if(model.remindAt != 0){
+            holder.layout_lasttime.setVisibility(View.VISIBLE);
+            holder.tv_last_time.setText(DateTool.timet(model.remindAt+"","yyyy-MM-dd HH:mm"));
+        }else{
+            holder.layout_lasttime.setVisibility(View.GONE);
+        }
 
         /** 绑定公司 */
         if(null != model.salesleadCompanyName && !TextUtils.isEmpty(model.salesleadCompanyName)){
@@ -266,11 +274,13 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         TextView tv_toast;       /*通知人员*/
         TextView tv_memo;        /*内容*/
         TextView tv_kind;        /*跟进类型*/
+        TextView tv_last_time;   /*下次跟进时间*/
 
         LinearLayout ll_web;
         LinearLayout layout_comment;
         LinearLayout layout_address;
         LinearLayout layout_customer;
+        LinearLayout layout_lasttime;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件列表区*/
