@@ -185,6 +185,11 @@ public class MultiFunctionModule extends LinearLayout {
                         v.setAlpha(0.6f);
                         isRecordCancle = false;
                     }
+                    if (recordTime >= 60) {//此处过了一分钟
+                        completeRecord();
+                        Global.Toast("录音时间只能在一分钟内");
+                        return false;
+                    }
                     break;
                 case MotionEvent.ACTION_UP:
                     dialog.setVisibility(GONE);
@@ -192,21 +197,24 @@ public class MultiFunctionModule extends LinearLayout {
                     if (voice.isStart()) {
                         voice.stopRecord();
                     }
-                    if (!isRecordCancle && isEffective) {
-                        callbackComplete.recordComplete(voice.getOutPath(), recordTime + "");
-                        //恢复默认录音状态是键盘
-                        ll_record_keyboard.setTag(false);
-                        setIsRecording(false);
-                        cancleRecordingTime();
-                    } else {
-                        Global.Toast("好像你没有说话哦!");
-                    }
-
+                    completeRecord();
                     break;
             }
             return true;
         }
     };
+
+    private void completeRecord() {
+        if (!isRecordCancle && isEffective) {
+            callbackComplete.recordComplete(voice.getOutPath(), recordTime + "");
+            //恢复默认录音状态是键盘
+            ll_record_keyboard.setTag(false);
+            setIsRecording(false);
+            cancleRecordingTime();
+        } else {
+            Global.Toast("好像你没有说话哦!");
+        }
+    }
 
     /*录音时间开始*/
     private void stratRecordingTime() {
@@ -222,7 +230,11 @@ public class MultiFunctionModule extends LinearLayout {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        tv_record_number.setText(recordTime + "'");
+                        if (recordTime >= 50) {
+                            tv_record_number.setText("录音倒计时" + (60 - recordTime) + "'");
+                        } else {
+                            tv_record_number.setText(recordTime + "'");
+                        }
                     }
                 });
             }
