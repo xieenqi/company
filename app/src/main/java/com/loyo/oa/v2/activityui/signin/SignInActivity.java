@@ -162,15 +162,21 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             layout_customer_name.setOnClickListener(this);
             ll_contact.setVisibility(View.GONE);
         } else {
-            findViewById(R.id.divider_customer_name).setVisibility(View.GONE);
-            layout_customer_name.setVisibility(View.GONE);
+            findViewById(R.id.divider_customer_name).setVisibility(View.VISIBLE);
+            layout_customer_name.setVisibility(View.VISIBLE);
+            layout_customer_name.setEnabled(false);
             tv_customer_name.setText(customerName);
             ll_contact.setVisibility(View.VISIBLE);
+            tv_customer_address.setVisibility(View.VISIBLE);
+            tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
             getDefaultContact(mCustomer.contacts);
             contactList = mCustomer.contacts;
             if (mCustomer.position != null) {
-//                List<Double> locData = Arrays.asList(mCustomer.position.loc);
-                Location loc = new Location(null, mCustomer.position.addr);
+                List<Double> locList = new ArrayList<>();
+                for (Double ele : mCustomer.position.loc) {
+                    locList.add(ele);
+                }
+                Location loc = new Location(locList, mCustomer.position.addr);
                 distanceInfo(loc);
             }
         }
@@ -596,9 +602,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 } else {
                     ll_contact.setVisibility(View.GONE);
                 }
-                tv_customer_address.setVisibility(View.VISIBLE);
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
+                tv_customer_address.setVisibility(View.VISIBLE);
                 tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
                 distanceInfo(loc);
                 break;
