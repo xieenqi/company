@@ -1,5 +1,9 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.beans.BaseBean;
+
+import org.jsoup.Connection;
+
 import java.util.HashMap;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -23,8 +27,8 @@ public interface IMobile {
      * @param map
      * @param callback
      */
-    @GET("/user/update/num")
-    void modifyMobile(@QueryMap HashMap<String, Object> map, Callback<Object> callback);
+    @PUT("/user/update/num")
+    void modifyMobile(@Body HashMap<String, Object> map, Callback<BaseBean> callback);
 
     @GET("/")
     void verifyCode(@QueryMap HashMap<String, Object> map, Callback<Object> callback);
