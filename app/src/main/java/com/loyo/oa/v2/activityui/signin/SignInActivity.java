@@ -143,6 +143,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         tv_at_text = (TextView) findViewById(R.id.tv_at_text);
         tv_distance_deviation = (TextView) findViewById(R.id.tv_distance_deviation);
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
+
+        ll_contact.setOnClickListener(this);
+        tv_address = (TextView) findViewById(R.id.tv_address);
+        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
+        iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
+        iv_at_delete.setOnClickListener(this);
+        init_gridView_photo();
+        startLocation();
+        initMultiFunctionModule();
         if (null == mCustomer) {
             layout_customer_name.setOnTouchListener(Global.GetTouch());
             layout_customer_name.setOnClickListener(this);
@@ -155,15 +165,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             getDefaultContact(mCustomer.contacts);
             contactList = mCustomer.contacts;
         }
-        ll_contact.setOnClickListener(this);
-        tv_address = (TextView) findViewById(R.id.tv_address);
-        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
-        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
-        iv_at_delete = (ImageView) findViewById(R.id.iv_at_delete);
-        iv_at_delete.setOnClickListener(this);
-        init_gridView_photo();
-        startLocation();
-        initMultiFunctionModule();
     }
 
     /**
