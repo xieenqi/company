@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signinnew.model.CommentModel;
@@ -20,13 +21,13 @@ import java.util.ArrayList;
  * Created by yyy on 16/11/11.
  */
 
-public class ListOrDetailsCommentAdapter extends BaseAdapter{
+public class ListOrDetailsCommentAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<CommentModel> commentsl;
     private AudioPlayCallBack audioPlayCallBack;
 
-    public  ListOrDetailsCommentAdapter(Context mContext,ArrayList<CommentModel> commentsl,AudioPlayCallBack audioPlayCallBack){
+    public ListOrDetailsCommentAdapter(Context mContext, ArrayList<CommentModel> commentsl, AudioPlayCallBack audioPlayCallBack) {
         this.mContext = mContext;
         this.commentsl = commentsl;
         this.audioPlayCallBack = audioPlayCallBack;
@@ -34,7 +35,7 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return commentsl.size();
+        return commentsl == null ? 0 : commentsl.size();
     }
 
     @Override
@@ -51,25 +52,25 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         final CommentModel commentModel = commentsl.get(position);
-        if(null == convertView){
+        if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_comment,null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_comment, null);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
             holder.layout_audio = (LinearLayout) convertView.findViewById(R.id.layout_audio);
             holder.tv_audio_length = (TextView) convertView.findViewById(R.id.tv_audio_length);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tv_name.setText(commentModel.creatorName+": ");
+        holder.tv_name.setText(commentModel.creatorName + ": ");
         holder.tv_title.setText(commentModel.title);
 
         final TextView tv_calls = (TextView) convertView.findViewById(R.id.iv_calls);
 
         /** 如果有语音 */
-        if(null != commentModel.audioInfo){
+        if (null != commentModel.audioInfo) {
             holder.layout_audio.setVisibility(View.VISIBLE);
             long audioLength = commentModel.audioInfo.length;
             if (audioLength > 0 && audioLength <= 60) {
@@ -92,7 +93,7 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter{
             holder.layout_audio.setVisibility(View.VISIBLE);
             holder.tv_audio_length.setText(DateTool.stringForTime((int) audioLength * 1000));
 
-        }else{
+        } else {
             holder.layout_audio.setVisibility(View.GONE);
         }
 
@@ -100,7 +101,7 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter{
         tv_calls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                audioPlayCallBack.playVoice(commentModel.audioInfo,tv_calls);
+                audioPlayCallBack.playVoice(commentModel.audioInfo, tv_calls);
             }
         });
 
@@ -108,7 +109,7 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter{
     }
 
 
-    class ViewHolder{
+    class ViewHolder {
         TextView tv_name;
         TextView tv_title;
         TextView tv_audio_length;

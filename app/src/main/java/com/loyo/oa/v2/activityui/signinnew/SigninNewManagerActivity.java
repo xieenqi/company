@@ -33,6 +33,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,7 @@ import retrofit.client.Response;
  * 【拜访列表】fragment管理类
  * Created by yyy on 16/11/10
  */
-public class SigninNewManagerActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class SigninNewManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
 
 
     private LinearLayout img_title_left, ll_category;
@@ -73,6 +74,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_opportunities);
         initView();
+
     }
 
     private void initView() {
@@ -88,14 +90,12 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         layout_title_action = (RelativeLayout) findViewById(R.id.layout_title_action);
         layout_title_action.setOnClickListener(this);
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
-        img_title_search_right.setOnClickListener(this);
-        img_title_search_right.setOnTouchListener(Global.GetTouch());
         layout_title_action.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setVisibility(View.INVISIBLE);
 
         imageArrow.setVisibility(View.INVISIBLE);
         /*超级管理员,Web权限判断*/
-        Permission permission = MainApp.rootMap.get("0228");
+        permission = MainApp.rootMap.get("0228");
         if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
             SaleItemStatus = new String[]{"我的拜访", "团队拜访"};
             imageArrow.setVisibility(View.VISIBLE);
@@ -232,15 +232,6 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
                     changeTitleImg();
                 }
                 break;
-            /*搜索*/
-            case R.id.img_title_search_right:
-                Intent mIntent = new Intent(SigninNewManagerActivity.this,SigninNewDetailsActivity.class);
-                mIntent.putExtra("id","5834018c608e4f733c00000a");
-                startActivity(mIntent);
-                break;
-
-            default:
-                break;
         }
     }
 
@@ -256,8 +247,8 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
 
     /**
      * 重启Activity
-     * */
-    void reStart(){
+     */
+    void reStart() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

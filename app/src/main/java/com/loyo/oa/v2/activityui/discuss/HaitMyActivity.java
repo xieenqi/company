@@ -15,6 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.loyo.oa.common.utils.GlideCircleTransform;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -27,10 +31,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ import retrofit.client.Response;
  */
 public class HaitMyActivity extends BaseActivity {
 
-    private PullToRefreshRecycleView lv_myDiscuss;
+    private PullToRefreshRecyclerView2 lv_myDiscuss;
     private LinearLayout img_title_left;
     private ImageView img_back;
     private TextView tv_back;
@@ -82,7 +82,7 @@ public class HaitMyActivity extends BaseActivity {
         tv_back = (TextView) findViewById(R.id.tv_back);
         layout_back = (LinearLayout) findViewById(R.id.img_title_left);
         tv_title1 = (TextView) findViewById(R.id.tv_title_1);
-        lv_myDiscuss = (PullToRefreshRecycleView) findViewById(R.id.lv_myDiscuss);
+        lv_myDiscuss = (PullToRefreshRecyclerView2) findViewById(R.id.lv_myDiscuss);
     }
 
     private void initListener() {
@@ -178,8 +178,18 @@ public class HaitMyActivity extends BaseActivity {
             holder.tv_time.setText(info.newUpdatedAt != 0 ? DateTool.getDiffTime(info.newUpdatedAt) : info.updatedAt.substring(11, 19));
             holder.tv_content.setText(info.atContent);
             holder.tv_title.setText(parseTitle(info.creator.name, info.title));
-            ImageLoader.getInstance().displayImage(info.creator.avatar, holder.iv_avatar);
+            Glide.with(MainApp.getMainApp())
+                    .load(info.creator.avatar)
+                    .placeholder(R.drawable.img_default_user)
+                    .override(150, 150)
+                    .transform(new GlideCircleTransform(MainApp.getMainApp()))
+                    .into(holder.iv_avatar);
             holder.openItem(datas.get(position));
+        }
+
+        @Override public void onViewRecycled(HaitViewHolder holder) {
+            super.onViewRecycled(holder);
+            Glide.clear(holder.iv_avatar);
         }
 
         private SpannableStringBuilder parseTitle(final String name, final String group) {
@@ -201,19 +211,24 @@ public class HaitMyActivity extends BaseActivity {
         public int getItemCount() {
             return datas.size();
         }
+
+        @Override
+        public long getItemId(int position) {
+            return datas.get(position).id.hashCode();
+        }
     }
 
     private class HaitViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tv_time;
-        private RoundImageView iv_avatar;
+        private ImageView iv_avatar;
         private TextView tv_title;
         private TextView tv_content;
 
         public HaitViewHolder(final View itemView) {
             super(itemView);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
-            iv_avatar = (RoundImageView) itemView.findViewById(R.id.iv_avatar);
+            iv_avatar = (ImageView) itemView.findViewById(R.id.iv_avatar);
             tv_title = (TextView) itemView.findViewById(R.id.tv_title);
             tv_content = (TextView) itemView.findViewById(R.id.tv_content);
 

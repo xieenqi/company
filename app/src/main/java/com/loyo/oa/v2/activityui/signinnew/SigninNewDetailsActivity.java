@@ -149,22 +149,22 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private void bindAdapter() {
 
         /*录音语音*/
-        if (null != mSigninDelModel.audioInfo) {
+        if (mSigninDelModel != null && null != mSigninDelModel.audioInfo) {
             lv_audio.setVisibility(View.VISIBLE);
             audioAdapter = new ListOrDetailsAudioAdapter(mContext, mSigninDelModel.audioInfo, this);
             lv_audio.setAdapter(audioAdapter);
         }
 
         /*评论数据绑定*/
-        if(null == commentAdapter){
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext,mSigninDelModel.comments,this);
+        if (null == commentAdapter && mSigninDelModel != null && mSigninDelModel.comments != null) {
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mSigninDelModel.comments, this);
             lv_comment.setAdapter(commentAdapter);
-        } else {
+        } else if (commentAdapter != null) {
             commentAdapter.notifyDataSetChanged();
         }
 
         /*文件数据绑定*/
-        if (null != mSigninDelModel.attachments && mSigninDelModel.attachments.size() > 0) {
+        if (mSigninDelModel != null && null != mSigninDelModel.attachments && mSigninDelModel.attachments.size() > 0) {
             if (null == optionAdapter) {
                 optionAdapter = new ListOrDetailsOptionsAdapter(mContext, mSigninDelModel.attachments);
                 lv_options.setAdapter(optionAdapter);
@@ -174,7 +174,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         }
 
         /*gridView数据绑定*/
-        if (null != mSigninDelModel.imageAttachments && mSigninDelModel.imageAttachments.size() > 0) {
+        if (mSigninDelModel != null && null != mSigninDelModel.imageAttachments && mSigninDelModel.imageAttachments.size() > 0) {
             if (null == imageAdapter) {
                 if (null != mSigninDelModel.imageAttachments && mSigninDelModel.imageAttachments.size() > 0)
                     gv_image.setVisibility(View.VISIBLE);
@@ -286,7 +286,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         map.put("bizzId", id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
-        map.put("audioInfo",record);//语音信息
+        map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
@@ -303,6 +303,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
             }
         });
     }
+
     private void bindData() {
         bindAdapter();
 
@@ -317,43 +318,43 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         tv_time.setText(DateTool.getDiffTime(mSigninDelModel.createdAt));
 
         /** 备注内容 */
-        if(null != mSigninDelModel.memo && !TextUtils.isEmpty(mSigninDelModel.memo)){
+        if (null != mSigninDelModel.memo && !TextUtils.isEmpty(mSigninDelModel.memo)) {
             tv_memo.setVisibility(View.VISIBLE);
             tv_memo.setText(mSigninDelModel.memo);
-        }else{
+        } else {
             tv_memo.setVisibility(View.GONE);
         }
 
         /** 设置@ */
-        if(null != mSigninDelModel.atNameAndDepts && TextUtils.isEmpty(mSigninDelModel.atNameAndDepts)){
+        if (null != mSigninDelModel.atNameAndDepts && TextUtils.isEmpty(mSigninDelModel.atNameAndDepts)) {
             tv_toast.setVisibility(View.VISIBLE);
             tv_toast.setText(mSigninDelModel.atNameAndDepts);
         }
 
         /** 设置联系人 */
-        if(null != mSigninDelModel.contactName && !TextUtils.isEmpty(mSigninDelModel.contactName)){
+        if (null != mSigninDelModel.contactName && !TextUtils.isEmpty(mSigninDelModel.contactName)) {
             tv_contact_name.setText(mSigninDelModel.contactName);
-        }else{
+        } else {
             layout_contact.setVisibility(View.GONE);
         }
 
         /** 偏差距离 */
-        if(mSigninDelModel.distance.equals("未知")){
+        if (mSigninDelModel.distance.equals("未知")) {
             tv_pc.setTextColor(getResources().getColor(R.color.red));
-        }else{
+        } else {
             tv_pc.setTextColor(getResources().getColor(R.color.text99));
         }
         tv_pc.setText(mSigninDelModel.distance + "");
 
         /** 设置拜访地址信息 */
-        if(null != mSigninDelModel.address && !TextUtils.isEmpty(mSigninDelModel.address)){
+        if (null != mSigninDelModel.address && !TextUtils.isEmpty(mSigninDelModel.address)) {
             layout_position.setVisibility(View.VISIBLE);
         }
 
         /** 绑定评论数据 */
         if (null != mSigninDelModel.comments && mSigninDelModel.comments.size() > 0) {
             layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mSigninDelModel.comments,this);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mSigninDelModel.comments, this);
             lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -396,16 +397,16 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         tv_position.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(null != mSigninDelModel.gpsInfo && !TextUtils.isEmpty(mSigninDelModel.gpsInfo)){
+                if (null != mSigninDelModel.gpsInfo && !TextUtils.isEmpty(mSigninDelModel.gpsInfo)) {
                     Intent mIntent = new Intent(mContext, MapSingleView.class);
                     String[] gps = mSigninDelModel.gpsInfo.split(",");
-                    mIntent.putExtra("la",Double.valueOf(gps[1]));
-                    mIntent.putExtra("lo",Double.valueOf(gps[0]));
-                    mIntent.putExtra("address",mSigninDelModel.position);
-                    mIntent.putExtra("title","签到地址");
+                    mIntent.putExtra("la", Double.valueOf(gps[1]));
+                    mIntent.putExtra("lo", Double.valueOf(gps[0]));
+                    mIntent.putExtra("address", mSigninDelModel.position);
+                    mIntent.putExtra("title", "签到地址");
                     mContext.startActivity(mIntent);
-                }else{
-                    Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "GPS坐标不全!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -436,7 +437,12 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
             public void success(BaseBeanT<SigninNewListModel> signinNewListModel, Response response) {
                 HttpErrorCheck.checkResponse("拜访详情", response);
                 mSigninDelModel = signinNewListModel.data;
-                bindData();
+                if (mSigninDelModel == null) {
+                    Toast("没有获取到数据");
+                    onBackPressed();
+                } else {
+                    bindData();
+                }
             }
 
             @Override
@@ -496,11 +502,11 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     /**
      * 列表播放语音回调
-     * */
+     */
     @Override
-    public void playVoice(AudioModel audioModel,TextView textView) {
+    public void playVoice(AudioModel audioModel, TextView textView) {
 
-        if(TextUtils.isEmpty(audioModel.url)){
+        if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
         }
@@ -510,19 +516,19 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         layout_bottom_voice.addView(audioPlayer);
 
         /*关闭上一条TextView动画*/
-        if(playVoiceSize > 0){
-            if(null != lastView)
+        if (playVoiceSize > 0) {
+            if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
         /*点击同一条则暂停播放*/
-        if(lastView == textView){
+        if (lastView == textView) {
             MainApp.getMainApp().stopAnim(textView);
             audioPlayer.audioPause(textView);
             lastView = null;
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel,textView);
+            audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }

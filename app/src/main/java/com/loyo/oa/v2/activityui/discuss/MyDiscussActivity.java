@@ -5,18 +5,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
+import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.discuss.adapter.DiscussAdapter;
+import com.loyo.oa.v2.activityui.discuss.adapter.DiscussAdapter2;
 import com.loyo.oa.v2.activityui.discuss.persenter.MyDisscussPControl;
 import com.loyo.oa.v2.activityui.discuss.viewcontrol.MyDisscussVControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 
@@ -27,11 +29,11 @@ import java.util.ArrayList;
  * create by libo 2016/3/9
  */
 public class MyDiscussActivity extends BaseActivity implements View.OnClickListener, PullToRefreshListView.OnRefreshListener2, MyDisscussVControl {
-    private PullToRefreshListView lv_discuss;
+    private PullToRefreshRecyclerView2 lv_discuss;
     private LinearLayout layout_back;
     private TextView tv_title;
     private TextView tv_edit;
-    private DiscussAdapter adapter;
+    private DiscussAdapter2 adapter;
 
     Handler handler = new Handler() {
         @Override
@@ -61,14 +63,17 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         tv_edit.setText("@我的");
         tv_title.setVisibility(View.VISIBLE);
         tv_edit.setVisibility(View.VISIBLE);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        lv_discuss.getRefreshableView().setLayoutManager(layoutManager);
         lv_discuss.setMode(PullToRefreshBase.Mode.BOTH);
         lv_discuss.setOnRefreshListener(this);
-        adapter = new DiscussAdapter(this);
+        adapter = new DiscussAdapter2(this);
         lv_discuss.getRefreshableView().setAdapter(adapter);
     }
 
     private void assignViews() {
-        lv_discuss = (PullToRefreshListView) findViewById(R.id.lv_discuss);
+        lv_discuss = (PullToRefreshRecyclerView2) findViewById(R.id.lv_discuss);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_edit = (TextView) findViewById(R.id.tv_edit);

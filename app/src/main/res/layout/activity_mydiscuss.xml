@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:clipToPadding="true"
-    android:fitsSystemWindows="true"
-    tools:context=".activityui.discuss.MyDiscussActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
 
-    <include
-        android:id="@+id/actionbar"
-        layout="@layout/include_common_title_2"></include>
+    <include layout="@layout/include_common_title_2" />
 
-    <com.loyo.oa.pulltorefresh.PullToRefreshListView
+    <com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2
         android:id="@+id/lv_discuss"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/actionbar"
-        android:clickable="false"
-        android:divider="@color/white"
-        android:layoutAnimation="@anim/list_item_anim_layout" />
-
-</RelativeLayout>
+        android:layout_height="match_parent"/>
+</LinearLayout>

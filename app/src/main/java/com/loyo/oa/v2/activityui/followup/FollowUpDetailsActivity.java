@@ -51,7 +51,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class FollowUpDetailsActivity extends BaseActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack {
+public class FollowUpDetailsActivity extends BaseActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
     private ScrollView layout_scrollview;
@@ -119,26 +119,26 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     private void bindAdapter() {
 
         /*录音语音*/
-        if (null != mFollowUpDelModel.audioInfo) {
+        if (null != mFollowUpDelModel && null != mFollowUpDelModel.audioInfo) {
             lv_audio.setVisibility(View.VISIBLE);
             audioAdapter = new ListOrDetailsAudioAdapter(mContext, mFollowUpDelModel.audioInfo, this);
             lv_audio.setAdapter(audioAdapter);
         }
 
         /*评论数据绑定*/
-        if(null != mFollowUpDelModel.comments && mFollowUpDelModel.comments.size() > 0){
+        if (null != mFollowUpDelModel && null != mFollowUpDelModel.comments && mFollowUpDelModel.comments.size() > 0) {
             if (null == commentAdapter) {
-                commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments,this);
+                commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments, this);
                 lv_comment.setAdapter(commentAdapter);
-            } else {
+            } else if (commentAdapter != null) {
                 commentAdapter.notifyDataSetChanged();
             }
-        }else{
+        } else {
 
         }
 
         /*文件数据绑定*/
-        if (null != mFollowUpDelModel.attachments && mFollowUpDelModel.attachments.size() > 0) {
+        if (null != mFollowUpDelModel && null != mFollowUpDelModel.attachments && mFollowUpDelModel.attachments.size() > 0) {
             if (null == optionAdapter) {
                 optionAdapter = new ListOrDetailsOptionsAdapter(mContext, mFollowUpDelModel.attachments);
                 lv_options.setAdapter(optionAdapter);
@@ -148,7 +148,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         }
 
         /*gridView数据绑定*/
-        if (null != mFollowUpDelModel.imgAttachments && mFollowUpDelModel.imgAttachments.size() > 0) {
+        if (null != mFollowUpDelModel && null != mFollowUpDelModel.imgAttachments && mFollowUpDelModel.imgAttachments.size() > 0) {
             if (null == imageAdapter) {
                 if (null != mFollowUpDelModel.imgAttachments && mFollowUpDelModel.imgAttachments.size() > 0)
                     gv_image.setVisibility(View.VISIBLE);
@@ -213,7 +213,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         /** 绑定评论数据 */
         if (null != mFollowUpDelModel.comments && mFollowUpDelModel.comments.size() > 0) {
             layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments,this);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, mFollowUpDelModel.comments, this);
             lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -269,10 +269,10 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
             @Override
             public void success(BaseBeanT<FollowUpListModel> followuplistmodel, Response response) {
                 HttpErrorCheck.checkResponse("跟进详情", response);
-                if(followuplistmodel.errcode != 0){
+                if (followuplistmodel.errcode != 0) {
                     Toast("获取拜访详情出错!");
                     finish();
-                }else{
+                } else {
                     mFollowUpDelModel = followuplistmodel.data;
                     bindData();
                 }
@@ -388,11 +388,11 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
     /**
      * 列表播放语音回调
-     * */
+     */
     @Override
-    public void playVoice(AudioModel audioModel,TextView textView) {
+    public void playVoice(AudioModel audioModel, TextView textView) {
 
-        if(TextUtils.isEmpty(audioModel.url)){
+        if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
         }
@@ -402,19 +402,19 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         layout_bottom_voice.addView(audioPlayer);
 
         /*关闭上一条TextView动画*/
-        if(playVoiceSize > 0){
-            if(null != lastView)
+        if (playVoiceSize > 0) {
+            if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
         /*点击同一条则暂停播放*/
-        if(lastView == textView){
+        if (lastView == textView) {
             MainApp.getMainApp().stopAnim(textView);
             audioPlayer.audioPause(textView);
             lastView = null;
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel,textView);
+            audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }
