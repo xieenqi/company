@@ -191,9 +191,9 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                             typeId = "";
                             activityType = "";
                         }
-                        LogUtil.dee("method:"+method);
-                        LogUtil.dee("typeId:"+typeId);
-                        LogUtil.dee("activityType:"+activityType);
+                        LogUtil.d("method:"+method);
+                        LogUtil.d("typeId:"+typeId);
+                        LogUtil.d("activityType:"+activityType);
                         break;
                 }
                 isPullOrDown = true;

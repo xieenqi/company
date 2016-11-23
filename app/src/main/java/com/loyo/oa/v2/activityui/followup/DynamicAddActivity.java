@@ -184,9 +184,11 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         if (null != mCustomer && isCustom) {
             getDefaultContact(mCustomer.contacts);
             tv_customer.setText(mCustomer.name);
+            ll_customer.setVisibility(View.GONE);
         } else if (null != mClue && !isCustom) {
             tv_clue_company.setText(mClue.companyName);
             tv_clue_name.setText(mClue.responsorName);
+            ll_clue_company.setVisibility(View.GONE);
         }
         controller.loadView(gridView);
         initMultiFunctionModule();
