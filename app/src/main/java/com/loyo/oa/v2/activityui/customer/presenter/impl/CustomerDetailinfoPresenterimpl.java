@@ -8,6 +8,8 @@ import android.view.View;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
+import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
+import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
@@ -17,22 +19,28 @@ import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.voip.VoIPCallActivity;
 
+import java.util.HashMap;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static android.R.attr.data;
 import static com.loyo.oa.v2.common.Global.Toast;
 
 /**
@@ -202,14 +210,11 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
         final CallPhonePopView callPhonePopView = new CallPhonePopView(mContext, name, checkTag);
         callPhonePopView.show();
         callPhonePopView.setCanceledOnTouchOutside(true);
-        /*商务电话*/
+        /*商务电话-回拨*/
         callPhonePopView.businessPhone(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle mBundle = new Bundle();
-                mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone.replaceAll(" +", ""));
-                mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name.trim().toString());
-                MainApp.getMainApp().startActivity(mActivity, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                callReturn(phone,callType,name);
                 callPhonePopView.dismiss();
             }
         });
@@ -277,4 +282,55 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
         }
     }
 
+    /**
+     * 客户回拨查询
+     */
+    void callReturn(String phone, int callType, final String name) {
+        crolView.showProgress("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("customerId", customerId);
+        map.put("contactId",contactId);
+        map.put("type", callType);
+        map.put("mobile", phone);
+        LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallReturnInfo(map,
+                new RCallback<CallBackCallid>() {
+                    @Override
+                    public void success(final CallBackCallid callBackCallid, final Response response) {
+                        HttpErrorCheck.checkResponse("线索请求回拨", response);
+                        try {
+                            switch (callBackCallid.errcode) {
+                                case 0:
+                                    Bundle mBundle = new Bundle();
+                                    mBundle.putString(ExtraAndResult.WELCOM_KEY, callBackCallid.data.callLogId);
+                                    mBundle.putString(ExtraAndResult.EXTRA_NAME, name);
+                                    MainApp.getMainApp().startActivity((Activity) mContext, CallPhoneBackActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                                    break;
+
+                                case 50000:
+                                    Toast("主叫与被叫号码不能相同!");
+                                    break;
+
+                                case 50001:
+                                    Toast("余额不足!");
+                                    break;
+
+                                case 50002:
+                                    Toast("号码格式错误!");
+                                    break;
+                            }
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            Toast(e.getMessage());
+//                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
 }

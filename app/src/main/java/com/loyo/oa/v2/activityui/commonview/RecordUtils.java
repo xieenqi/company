@@ -64,7 +64,7 @@ public class RecordUtils {
         if (!ff.exists()) {
             ff.mkdirs();
         }
-        fileName = getDate() + ".amr";
+        fileName = getDate() + ".aac";
         outPath = AUDIO_ROOTPATH + File.separator + fileName;
         recorder.setOutputFile(outPath);
          /*
