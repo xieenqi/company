@@ -22,7 +22,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
 
             var2 = new Intent(var1, MsgBackReceiver.class);
-            PendingIntent var3 = PendingIntent.getBroadcast(var1, 0, var2, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent var3 = PendingIntent.getBroadcast(var1, 0, var2, PendingIntent.FLAG_UPDATE_CURRENT);
             ((AlarmManager)var1.getSystemService(Context.ALARM_SERVICE)).set(0, System.currentTimeMillis() + 20000L, var3);
         }
         (new PatchA()).onSendMessage();
