@@ -436,9 +436,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         AppBus.getInstance().post(new SigninNewRushEvent());
                         finish();
                     }
-//                    else {
-//                        Toast(getString(R.string.sign) + "异常!");
-//                    }
                 } else {
                     Toast("提交失败" + response.getStatus());
                 }
@@ -622,7 +619,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private void distanceInfo(Location loc) {
 
         if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
-            tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
+            tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)));
             tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
         } else {
             tv_distance_deviation.setText("未知");
