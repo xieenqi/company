@@ -940,7 +940,7 @@
 
         <service android:name="com.yzxtcp.service.YzxIMCoreService" />
 
-        <receiver android:name="com.yzxtcp.tools.tcp.receiver.AlarmReceiver"></receiver>
+        <receiver android:name="com.loyo.oa.common.patch.AlarmReceiver"></receiver>
         <receiver android:name="com.yzxtcp.tools.tcp.receiver.MsgBackReceiver"></receiver>
         <receiver android:name="com.yzx.tools.RtppReceiver" />
 
