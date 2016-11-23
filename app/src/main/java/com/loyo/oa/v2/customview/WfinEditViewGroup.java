@@ -156,7 +156,10 @@ public class WfinEditViewGroup extends LinearLayout {
             }
 
             HashMap<String, Object> map = wfInstanceValuesDatas.get(position);
-            value.setText(map.get(bizFormFields.getId()).toString());
+            try {
+                value.setText(map.get(bizFormFields.getId()).toString());
+            }
+            catch (Exception e) {}
 
             if (bizFormFields.isEnable()) {
                 addView(convertView);
