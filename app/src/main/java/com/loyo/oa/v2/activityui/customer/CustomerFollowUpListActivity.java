@@ -190,6 +190,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
+                bundle.putBoolean("isDetail", true);
                 app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
         }

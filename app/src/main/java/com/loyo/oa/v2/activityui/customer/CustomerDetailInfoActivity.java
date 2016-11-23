@@ -48,8 +48,10 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Date;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -194,7 +196,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
         mContact = Utils.findDeault(mCustomer);
         if (null != mContact) {
-            mPresenter.setDefaultContact(mContact.getId(),mCustomer.id);
+            mPresenter.setDefaultContact(mContact.getId(), mCustomer.id);
 
             if (null == mContact.getTel() || TextUtils.isEmpty(mContact.getTel())) {
                 layout_phone.setVisibility(View.GONE);
@@ -305,6 +307,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             case R.id.layout_gj:
                 mIntent = new Intent(CustomerDetailInfoActivity.this, DynamicAddActivity.class);
                 mIntent.putExtra(Customer.class.getName(), mCustomer);
+                mIntent.putExtra("isDetail", true);
                 mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 startActivity(mIntent);
                 break;
