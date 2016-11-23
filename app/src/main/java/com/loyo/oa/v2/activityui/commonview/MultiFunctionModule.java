@@ -32,7 +32,7 @@ import java.util.TimerTask;
 public class MultiFunctionModule extends LinearLayout {
 
     private LinearLayout ll_record_keyboard, ll_picture, ll_location, ll_at, dialog, ll_record;
-    private ImageView ll_action_record, iv_record, iv_record_keyboard;
+    private ImageView ll_action_record, iv_record, iv_record_keyboard, iv_picture;
     private TextView tv_record_action, tv_record_number;
     private long recordTime;
     private boolean isRecordCancle, isEffective = false;//录音是否达到有效值
@@ -73,6 +73,7 @@ public class MultiFunctionModule extends LinearLayout {
         ll_record = (LinearLayout) view.findViewById(R.id.ll_record);
         iv_record_keyboard = (ImageView) view.findViewById(R.id.iv_record_keyboard);
         iv_record_keyboard.setImageResource(R.drawable.icon_record);
+        iv_picture = (ImageView) view.findViewById(R.id.iv_picture);
         this.removeAllViews();
         this.addView(view);
         initRecord(context);
@@ -87,6 +88,14 @@ public class MultiFunctionModule extends LinearLayout {
         ll_picture.setVisibility(picture ? VISIBLE : GONE);
         ll_location.setVisibility(location ? VISIBLE : GONE);
         ll_at.setVisibility(at ? VISIBLE : GONE);
+    }
+
+    /**
+     * 拜访签到要单独设置图片
+     * @param icon
+     */
+    public void setPictureIcon(int icon) {
+        iv_picture.setImageResource(icon);
     }
 
     /**
@@ -161,7 +170,7 @@ public class MultiFunctionModule extends LinearLayout {
             if (recordTime == 0 && voice.getStartTime() != 0) {
                 stratRecordingTime();
             }
-            LogUtil.d("模式+++"+event.getAction());
+            LogUtil.d("模式+++" + event.getAction());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.setAlpha(0.6f);
@@ -205,7 +214,7 @@ public class MultiFunctionModule extends LinearLayout {
                         Global.Toast("录音时间只能在一分钟内");
                         return false;
                     }
-                    LogUtil.d(recordTime+" ACTION_MOVE------");
+                    LogUtil.d(recordTime + " ACTION_MOVE------");
                     break;
                 case MotionEvent.ACTION_UP:
                     dialog.setVisibility(GONE);
@@ -223,9 +232,10 @@ public class MultiFunctionModule extends LinearLayout {
 
     /**
      * 录音超时的处理
+     *
      * @return
      */
-    private boolean recordTomeOut(){
+    private boolean recordTomeOut() {
         if (recordTime >= 60) {//此处过了一分钟
             isRecordCancle = true;
             dialog.setVisibility(GONE);
@@ -235,6 +245,7 @@ public class MultiFunctionModule extends LinearLayout {
         }
         return true;
     }
+
     /**
      * 录音完成的操作
      */
