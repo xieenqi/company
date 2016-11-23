@@ -208,6 +208,8 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
      * 数据绑定
      */
     public void bindData() {
+        ll_stage.setEnabled(true);
+        ll_product.setEnabled(true);
 
         //机会 是否 是创建者
         if (MainApp.user.id.equals(mSaleDetails.creatorId) && !isTeam || MainApp.user.isSuperUser) {
@@ -274,7 +276,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         }
         if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
             img_title_right.setVisibility((mSaleDetails.prob == 100 && MainApp.user.id.equals(mSaleDetails.creatorId)) ? View.VISIBLE : View.GONE);
-            ll_product.setEnabled(false);
+            ll_product.setEnabled(true);
             ll_stage.setEnabled(false);
             iv_wfstatus.setVisibility(View.VISIBLE);
             switch (mSaleDetails.wfState) {
@@ -331,6 +333,13 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 Bundle product = new Bundle();
                 product.putInt("data", ActionCode.SALE_FROM_DETAILS);
                 product.putString("saleId", selectId);
+                if (null != mSaleDetails && 0 != mSaleDetails.wfState) {/*赢单*/
+                    product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, false);
+                }
+                else {
+                    product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
+                }
+
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails.getProInfos());
                 app.startActivityForResult(SaleDetailsActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);

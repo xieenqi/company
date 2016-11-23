@@ -42,6 +42,9 @@ import retrofit.client.Response;
  */
 public class IntentionProductActivity extends BaseActivity {
 
+    public static String KEY_CAN_EDIT = "com.logo.oa.IntentionProduct.KEY_CAN_EDIT";
+
+    private boolean canEdit = false;
     private String saleId = "";
     private int resultAction = 0;
     private int fromPage = 0;
@@ -97,7 +100,9 @@ public class IntentionProductActivity extends BaseActivity {
         ll_add = (LinearLayout) findViewById(R.id.ll_add);
         ll_add.setOnTouchListener(Global.GetTouch());
         ll_add.setOnClickListener(click);
+        ll_add.setVisibility(canEdit?View.VISIBLE:View.GONE);
         saleProductAdapter = new SaleProductAdapter();
+        saleProductAdapter.canEdit = canEdit;
         lv_list = (ListView) findViewById(R.id.lv_list);
         lv_list.setAdapter(saleProductAdapter);
         tv_saleToal = (CustomTextView) findViewById(R.id.tv_saleToal);
@@ -131,6 +136,7 @@ public class IntentionProductActivity extends BaseActivity {
      * 获得传递过来的数据
      */
     private void getIntentData() {
+        canEdit = getIntent().getBooleanExtra(KEY_CAN_EDIT, false);
         saleId = getIntent().getStringExtra("saleId");
         fromPage = getIntent().getIntExtra("data", 0);
         isKine = getIntent().getBooleanExtra("boolean", false);
@@ -208,6 +214,7 @@ public class IntentionProductActivity extends BaseActivity {
 
     class SaleProductAdapter extends BaseAdapter {
 
+        public boolean canEdit;
         @Override
         public int getCount() {
             return listData.size();
@@ -251,6 +258,8 @@ public class IntentionProductActivity extends BaseActivity {
                 holderView = (HolderView) convertView.getTag();
             }
             holderView.setContentView(position);
+            holderView.ll_edit.setVisibility(canEdit?View.VISIBLE:View.GONE);
+            holderView.ll_delete.setVisibility(canEdit?View.VISIBLE:View.GONE);
             return convertView;
         }
     }
