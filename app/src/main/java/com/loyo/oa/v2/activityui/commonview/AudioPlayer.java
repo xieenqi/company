@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.followup;
+package com.loyo.oa.v2.activityui.commonview;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -206,6 +206,8 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
             this.progress = progress * player.mediaPlayer.getDuration() / seekBar.getMax();
             playTime = DateTool.stringForTime(this.progress);
             mHandler.sendEmptyMessage(0x03);
+            LogUtil.dee("progress:"+progress);
+            LogUtil.dee("this.Duration:"+progress);
         }
 
         @Override

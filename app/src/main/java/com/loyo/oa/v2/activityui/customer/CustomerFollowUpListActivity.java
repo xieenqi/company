@@ -12,9 +12,9 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerFollowUpListAdapter;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerFollowUpListPresenterImpl;
-import com.loyo.oa.v2.activityui.followup.AudioPlayer;
+import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
-import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
@@ -156,7 +156,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         map.put("userId", mCustomer.id);//我的传id,团队则空着
         map.put("xpath", "");
         map.put("timeType", 0);//时间查询
-        map.put("method", 2);  //跟进类型0:全部 1:线索 2:客户
+        map.put("method", 1);  //跟进类型0:全部 2:线索 1:客户
         map.put("typeId", "");
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());

@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
+import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
+import com.loyo.oa.v2.activityui.followup.FollowUpManagerActivity;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.fragment.SelfSigninNewFragment;
 import com.loyo.oa.v2.activityui.signinnew.fragment.TeamSigninNewFragment;
@@ -91,6 +93,8 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         layout_title_action.setOnClickListener(this);
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         layout_title_action.setOnTouchListener(Global.GetTouch());
+        img_title_search_right.setOnClickListener(this);
+        img_title_search_right.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setVisibility(View.INVISIBLE);
 
         imageArrow.setVisibility(View.INVISIBLE);
@@ -231,6 +235,12 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
                 if (SaleItemStatus.length != 1) {
                     changeTitleImg();
                 }
+
+                /*搜索*/
+            case R.id.img_title_search_right:
+                Intent mIntent = new Intent(SigninNewManagerActivity.this, SigninNewDetailsActivity.class);
+                mIntent.putExtra("id", "583535f4608e4f5326000031");
+                startActivity(mIntent);
                 break;
         }
     }

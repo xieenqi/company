@@ -66,7 +66,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginLeft="59dp"
                 android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_memo"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/text33"
+                android:visibility="gone"
+                />
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_audio"
@@ -77,6 +89,38 @@
                 android:divider="#00000000"
                 android:listSelector="@android:color/transparent"
                 android:dividerHeight="3dp" />
+
+            <LinearLayout
+                android:id="@+id/layout_phonely"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginLeft="59dp"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_phone_call" />
+
+                <TextView
+                    android:id="@+id/iv_phone_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_33"
+                    android:background="@drawable/animation_calls"
+                    android:textColor="#3FD3AA" />
+
+                <TextView
+                    android:id="@+id/tv_audio_length"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:text="00:00"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp12" />
+            </LinearLayout>
 
             <com.loyo.oa.v2.customview.CusGridView
                 android:id="@+id/layout_gridview"
@@ -111,13 +155,42 @@
                 android:divider="#00000000"
                 android:dividerHeight="3dp" />
 
+
+            <LinearLayout
+                android:id="@+id/layout_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_addressimg" />
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="@color/title_bg1" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_toast"
                 android:layout_marginRight="14dp"
                 android:layout_marginLeft="59dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\@张杰,罗超,谢啦"
+                android:text=""
                 android:textColor="@color/text99"
                 android:visibility="gone"
                 />
@@ -127,16 +200,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginTop="@dimen/dimen_10">
-
                 <include layout="@layout/include_solid_line" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_customer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:layout_marginTop="@dimen/dimen_8"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -152,6 +227,37 @@
 
                 <TextView
                     android:id="@+id/tv_customername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/title_bg1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_clue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginTop="@dimen/dimen_8"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_dynamicer" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:text="线索: "
+                    android:textColor="@color/text99" />
+
+                <TextView
+                    android:id="@+id/tv_clue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""

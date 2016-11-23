@@ -9,12 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.followup.AudioPlayer;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.DateTool;
-
 import java.util.ArrayList;
 
 /**

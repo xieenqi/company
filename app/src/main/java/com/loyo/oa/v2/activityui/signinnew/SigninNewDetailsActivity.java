@@ -3,12 +3,7 @@ package com.loyo.oa.v2.activityui.signinnew;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -26,21 +21,18 @@ import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
-import com.loyo.oa.v2.activityui.followup.AudioPlayer;
-import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
+import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
-import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -51,7 +43,6 @@ import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.point.ISigninNeworFollowUp;
-import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -59,7 +50,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.HashMap;
@@ -326,7 +316,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         }
 
         /** 设置@ */
-        if (null != mSigninDelModel.atNameAndDepts && TextUtils.isEmpty(mSigninDelModel.atNameAndDepts)) {
+        if (null != mSigninDelModel.atNameAndDepts && !TextUtils.isEmpty(mSigninDelModel.atNameAndDepts)) {
             tv_toast.setVisibility(View.VISIBLE);
             tv_toast.setText(mSigninDelModel.atNameAndDepts);
         }

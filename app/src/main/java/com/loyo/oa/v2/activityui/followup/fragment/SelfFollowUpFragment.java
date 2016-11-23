@@ -22,8 +22,8 @@ import com.loyo.oa.dropdownmenu.filtermenu.DynamicFilterTimeModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.followup.AudioPlayer;
-import com.loyo.oa.v2.activityui.followup.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
+import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
@@ -191,9 +191,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                             typeId = "";
                             activityType = "";
                         }
-                        LogUtil.d("method:"+method);
-                        LogUtil.d("typeId:"+typeId);
-                        LogUtil.d("activityType:"+activityType);
                         break;
                 }
                 isPullOrDown = true;
@@ -253,7 +250,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("userId", MainApp.user.id);//我的传id,团队则空着
         map.put("xpath", "");
         map.put("timeType", menuTimeKey);//时间查询
-        map.put("method", method); //跟进类型0:全部 1:线索 2:客户
+        map.put("method", method); //跟进类型0:全部 2:线索 1:客户
         map.put("typeId", typeId);
         map.put("activityType", activityType);
         map.put("split", true);

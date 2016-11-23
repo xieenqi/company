@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.followup;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,22 +11,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
+import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
+import com.loyo.oa.v2.activityui.commonview.MapSingleView;
+import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
+import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Record;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CusGridView;
@@ -63,6 +76,11 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     private TextView tv_contact;           /* 联系人 */
     private TextView tv_time;              /* 时间 */
     private TextView tv_customername;      /* 客户姓名 */
+    private TextView tv_address;           /* 位置定位 */
+    private TextView tv_clue;              /* 线索 */
+    private TextView iv_phone_call;
+    private TextView tv_audio_length;
+    private TextView tv_memo;
     private RoundImageView iv_heading;     /* 头像 */
 
     private CustomerListView lv_comment;
@@ -76,6 +94,10 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     private LinearLayout layout_comment;
     private LinearLayout layout_back;
     private LinearLayout layout_bottom_menu;
+    private LinearLayout layout_address;
+    private LinearLayout layout_customer;
+    private LinearLayout layout_clue;
+    private LinearLayout layout_phonely;
     private ImageView iv_comment;
 
     private float mPosX;
@@ -155,7 +177,6 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
                 imageAdapter = new ListOrDetailsGridViewAdapter(mContext, mFollowUpDelModel.imgAttachments);
                 gv_image.setAdapter(imageAdapter);
             } else {
-                gv_image.setVisibility(View.GONE);
                 imageAdapter.notifyDataSetChanged();
             }
         }
@@ -170,6 +191,10 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
         layout_bottom_menu = (LinearLayout) findViewById(R.id.layout_bottom_menu);
         layout_bottom_voice = (LinearLayout) findViewById(R.id.layout_bottom_voice);
+        layout_customer = (LinearLayout) findViewById(R.id.layout_customer);
+        layout_clue = (LinearLayout) findViewById(R.id.layout_clue);
+        layout_phonely = (LinearLayout) findViewById(R.id.layout_phonely);
+        layout_address = (LinearLayout) findViewById(R.id.layout_address);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
         ll_web = (LinearLayout) findViewById(R.id.ll_web);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -177,6 +202,11 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_time = (TextView) findViewById(R.id.tv_time);
         tv_kind = (TextView) findViewById(R.id.tv_kind);
+        tv_clue = (TextView) findViewById(R.id.tv_clue);
+        tv_memo = (TextView) findViewById(R.id.tv_memo);
+        iv_phone_call = (TextView) findViewById(R.id.iv_phone_call);
+        tv_audio_length = (TextView) findViewById(R.id.tv_audio_length);
+        tv_address = (TextView) findViewById(R.id.tv_address);
         tv_customername = (TextView) findViewById(R.id.tv_customername);
         tv_toast = (TextView) findViewById(R.id.tv_toast);
         iv_comment = (ImageView) findViewById(R.id.iv_comment);
@@ -197,7 +227,6 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     }
 
     private void bindData() {
-        setContent(ll_web, " ");
         bindAdapter();
 
         if (TextUtils.isEmpty(mFollowUpDelModel.creator.avatar)) {
@@ -206,9 +235,48 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
         tv_name.setText(mFollowUpDelModel.creator.name);
         tv_contact.setText(mFollowUpDelModel.contactName);
-        tv_toast.setText(mFollowUpDelModel.atNameAndDepts);
         tv_customername.setText(mFollowUpDelModel.customerName);
-        tv_time.setText(DateTool.timet(mFollowUpDelModel.createAt + "", "yyyy-MM-dd hh:mm:ss"));
+        tv_time.setText(DateTool.getDiffTime(mFollowUpDelModel.createAt));
+
+        /** 设置跟进内容 */
+        if(null != mFollowUpDelModel.content && !TextUtils.isEmpty(mFollowUpDelModel.content)){
+            if(mFollowUpDelModel.content.contains("<p>")){
+                setContent(ll_web, mFollowUpDelModel.content);
+            }else{
+                tv_memo.setVisibility(View.VISIBLE);
+                tv_memo.setText(mFollowUpDelModel.content);
+            }
+        }
+
+        /** @通知人员 */
+        if(null != mFollowUpDelModel.atNameAndDepts && !TextUtils.isEmpty(mFollowUpDelModel.atNameAndDepts)){
+            tv_toast.setVisibility(View.VISIBLE);
+            tv_toast.setText(mFollowUpDelModel.atNameAndDepts);
+        }
+
+        /** 线索 */
+        if(null != mFollowUpDelModel.salesleadCompanyName && !TextUtils.isEmpty(mFollowUpDelModel.salesleadCompanyName)){
+            layout_clue.setVisibility(View.VISIBLE);
+            tv_clue.setText(mFollowUpDelModel.salesleadCompanyName);
+            tv_clue.setOnTouchListener(Global.GetTouch());
+        }
+
+        /** 客户姓名 */
+        if(null != mFollowUpDelModel.customerName && !TextUtils.isEmpty(mFollowUpDelModel.customerName)){
+            layout_customer.setVisibility(View.VISIBLE);
+            tv_customername.setText(mFollowUpDelModel.customerName);
+            tv_customername.setOnTouchListener(Global.GetTouch());
+        }
+
+        /** 客户地址 */
+        if(null != mFollowUpDelModel.location.addr && !TextUtils.isEmpty(mFollowUpDelModel.location.addr)){
+            layout_address.setVisibility(View.VISIBLE);
+            tv_address.setText(mFollowUpDelModel.location.addr);
+            tv_address.setOnTouchListener(Global.GetTouch());
+        }else{
+            layout_address.setVisibility(View.GONE);
+        }
+
 
         /** 绑定评论数据 */
         if (null != mFollowUpDelModel.comments && mFollowUpDelModel.comments.size() > 0) {
@@ -228,7 +296,6 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
                         }
                     });
                     dialog.show();
-
                     return false;
                 }
             });
@@ -236,6 +303,95 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         } else {
             layout_comment.setVisibility(View.GONE);
         }
+
+
+        /** 图片预览 */
+        gv_image.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("data", mFollowUpDelModel.imgAttachments);
+                bundle.putInt("position", position);
+                bundle.putBoolean("isEdit", false);
+                MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
+                        MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+            }
+        });
+
+        /** 查看定位地址 */
+        tv_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(null != mFollowUpDelModel.location.loc){
+                    Intent mIntent = new Intent(mContext, MapSingleView.class);
+                    mIntent.putExtra("la", Double.valueOf(mFollowUpDelModel.location.loc[0]));
+                    mIntent.putExtra("lo", Double.valueOf(mFollowUpDelModel.location.loc[1]));
+                    mIntent.putExtra("address",mFollowUpDelModel.location.addr);
+                    mContext.startActivity(mIntent);
+                }else{
+                    Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        /** 查看客户详情 */
+        tv_customername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("Id", mFollowUpDelModel.customerId);
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
+                intent.setClass(mContext, CustomerDetailInfoActivity_.class);
+                mContext.startActivity(intent);
+            }
+        });
+
+        /** 进入线索详情 */
+        tv_clue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent();
+                mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
+                mIntent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */ mFollowUpDelModel.sealsleadId);
+                mIntent.setClass(mContext, ClueDetailActivity.class);
+                mContext.startActivity(mIntent);
+            }
+        });
+
+        /** 电话录音设置 */
+        if(null != mFollowUpDelModel.audioUrl && !TextUtils.isEmpty(mFollowUpDelModel.audioUrl)){
+            layout_phonely.setVisibility(View.VISIBLE);
+            tv_audio_length.setText(DateTool.stringForTime(mFollowUpDelModel.audioLength * 1000));
+            int audioLength = mFollowUpDelModel.audioLength;
+            if (audioLength > 0 && audioLength <= 60) {
+                iv_phone_call.setText("000");
+            } else if (audioLength > 60 && audioLength <= 300) {
+                iv_phone_call.setText("00000");
+            } else if (audioLength > 300 && audioLength <= 600) {
+                iv_phone_call.setText("0000000");
+            } else if (audioLength > 600 && audioLength <= 1200) {
+                iv_phone_call.setText("000000000");
+            } else if (audioLength > 1200 && audioLength <= 1800) {
+                iv_phone_call.setText("00000000000");
+            } else if (audioLength > 1800 && audioLength <= 3600) {
+                iv_phone_call.setText("00000000000000");
+            } else if (audioLength > 3600) {
+                iv_phone_call.setText("0000000000000000");
+            } else {
+                iv_phone_call.setText("");
+            }
+        }
+
+        /** 播放通话录音 */
+        iv_phone_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AudioModel audioModel = new AudioModel();
+                audioModel.url = mFollowUpDelModel.audioUrl;
+                audioModel.length = 10;
+                playVoice(audioModel,iv_phone_call);
+            }
+        });
     }
 
     /**

@@ -112,7 +112,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(signinNewListModel.creator.avatar, holder.iv_heading);
         holder.tv_name.setText(signinNewListModel.creator.name);
         holder.tv_contact.setText(signinNewListModel.contactName);
-        holder.tv_position.setText(signinNewListModel.position);
+        holder.tv_position.setText(signinNewListModel.address);
         holder.tv_create_time.setText(DateTool.getDiffTime(signinNewListModel.createdAt));
 
         /** 偏差距离,当未知显示红色 */
@@ -123,20 +123,21 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         }
         holder.tv_offset.setText(signinNewListModel.distance);
 
-        /** 客户姓名 */
-        if(null != signinNewListModel.customerName && !TextUtils.isEmpty(signinNewListModel.customerName)){
+
+        /** 客户姓名(测试说 客户下的拜访,不需要显示客户) */
+        /*if(null != signinNewListModel.customerName && !TextUtils.isEmpty(signinNewListModel.customerName)){
             holder.layout_customer.setVisibility(View.VISIBLE);
             holder.tv_customer.setText(signinNewListModel.customerName);
             holder.tv_customer.setOnTouchListener(Global.GetTouch());
         }else{
             holder.layout_customer.setVisibility(View.GONE);
-        }
+        }*/
 
 
         /** 客户地址 */
         if(null != signinNewListModel.address && !TextUtils.isEmpty(signinNewListModel.address)){
             holder.layout_address.setVisibility(View.VISIBLE);
-            holder.tv_address.setText(signinNewListModel.address);
+            holder.tv_address.setText(signinNewListModel.position);
             holder.layout_address.setOnTouchListener(Global.GetTouch());
         }else{
             holder.layout_address.setVisibility(View.GONE);
@@ -152,6 +153,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
 
         /** @的相关人员 */
         if(null != signinNewListModel.atNameAndDepts){
+            holder.tv_toast.setVisibility(View.VISIBLE);
             holder.tv_toast.setText("@" + signinNewListModel.atNameAndDepts);
         }else{
             holder.tv_toast.setVisibility(View.GONE);

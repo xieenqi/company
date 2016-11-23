@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.followup;
+package com.loyo.oa.v2.activityui.commonview;
 
 import android.content.Context;
 import android.graphics.Color;

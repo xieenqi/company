@@ -99,9 +99,11 @@ public class FollowUpListAdapter extends BaseAdapter {
             holder.tv_kind = (TextView) convertView.findViewById(R.id.tv_kind);
             holder.tv_create_time = (TextView) convertView.findViewById(R.id.tv_create_time);
             holder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
+            holder.iv_phone_call = (TextView) convertView.findViewById(R.id.iv_phone_call);
             holder.tv_toast = (TextView) convertView.findViewById(R.id.tv_toast);
             holder.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
             holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
+            holder.tv_audio_length = (TextView) convertView.findViewById(R.id.tv_audio_length);
             holder.iv_comment = (ImageView) convertView.findViewById(R.id.iv_comment);
             holder.tv_last_time = (TextView) convertView.findViewById(R.id.tv_last_time);
             holder.tv_clue = (TextView) convertView.findViewById(R.id.tv_clue);
@@ -132,6 +134,26 @@ public class FollowUpListAdapter extends BaseAdapter {
         /** 电话录音设置 */
         if(null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)){
             holder.layout_phonely.setVisibility(View.VISIBLE);
+            holder.tv_audio_length.setText(DateTool.stringForTime(followUpListModel.audioLength * 1000));
+            int audioLength = followUpListModel.audioLength;
+            if (audioLength > 0 && audioLength <= 60) {
+                holder.iv_phone_call.setText("000");
+            } else if (audioLength > 60 && audioLength <= 300) {
+                holder.iv_phone_call.setText("00000");
+            } else if (audioLength > 300 && audioLength <= 600) {
+                holder.iv_phone_call.setText("0000000");
+            } else if (audioLength > 600 && audioLength <= 1200) {
+                holder.iv_phone_call.setText("000000000");
+            } else if (audioLength > 1200 && audioLength <= 1800) {
+                holder.iv_phone_call.setText("00000000000");
+            } else if (audioLength > 1800 && audioLength <= 3600) {
+                holder.iv_phone_call.setText("00000000000000");
+            } else if (audioLength > 3600) {
+                holder.iv_phone_call.setText("0000000000000000");
+            } else {
+                holder.iv_phone_call.setText("");
+            }
+
         }else{
             holder.layout_phonely.setVisibility(View.GONE);
         }
@@ -184,6 +206,7 @@ public class FollowUpListAdapter extends BaseAdapter {
 
         /** @的相关人员 */
         if(null != followUpListModel.atNameAndDepts){
+            holder.tv_toast.setVisibility(View.VISIBLE);
             holder.tv_toast.setText("@" + followUpListModel.atNameAndDepts);
         }else{
             holder.tv_toast.setVisibility(View.GONE);
@@ -320,6 +343,8 @@ public class FollowUpListAdapter extends BaseAdapter {
         TextView tv_kind;        /*内容*/
         TextView tv_last_time;   /*下次跟进时间*/
         TextView tv_clue;        /*线索*/
+        TextView tv_audio_length;/*通话录音时间*/
+        TextView iv_phone_call;
 
         LinearLayout ll_web;
         LinearLayout layout_comment;
