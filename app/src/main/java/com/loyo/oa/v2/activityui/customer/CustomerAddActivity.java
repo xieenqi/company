@@ -259,7 +259,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      * 获取定位
      */
     void startLocation() {
-
         et_address.setText(app.address);
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override

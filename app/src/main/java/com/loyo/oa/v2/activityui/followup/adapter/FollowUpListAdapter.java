@@ -223,8 +223,11 @@ public class FollowUpListAdapter extends BaseAdapter {
 
         /** 文件列表 数据绑定 */
         if(null != followUpListModel.attachments && followUpListModel.attachments.size() > 0){
+            holder.lv_options.setVisibility(View.VISIBLE);
             optionAdapter = new ListOrDetailsOptionsAdapter(mContext,followUpListModel.attachments);
             holder.lv_options.setAdapter(optionAdapter);
+        }else{
+            holder.lv_options.setVisibility(View.GONE);
         }
 
         /** 绑定图片与GridView监听 */

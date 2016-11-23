@@ -13,6 +13,7 @@ import com.loyo.oa.v2.activityui.customer.adapter.CustomerFollowUpListAdapter;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
+import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
@@ -46,7 +47,7 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerFollowUpListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2,FollowUpListView,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack, View.OnClickListener{
+public class CustomerFollowUpListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2,CustomerFollowUpListView,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack, View.OnClickListener{
 
     public static final int ACTIVITIES_ADD = 101;
 
@@ -153,16 +154,11 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userId", mCustomer.id);//我的传id,团队则空着
-        map.put("xpath", "");
-        map.put("timeType", 0);//时间查询
-        map.put("method", 1);  //跟进类型0:全部 2:线索 1:客户
-        map.put("typeId", "");
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map);
+        mPresenter.getListData(map,mCustomer.id);
     }
 
     @Override
@@ -336,13 +332,13 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      * 获取列表数据成
      * */
     @Override
-    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
+    public void getListDataSuccesseEmbl(PaginationX<FollowUpListModel> paginationX) {
         listView.onRefreshComplete();
         if(isPullOrDown){
             listModel.clear();
         }
-        mPagination = paginationX.data;
-        listModel.addAll(paginationX.data.getRecords());
+        mPagination = paginationX;
+        listModel.addAll(paginationX.getRecords());
         bindData();
     }
 

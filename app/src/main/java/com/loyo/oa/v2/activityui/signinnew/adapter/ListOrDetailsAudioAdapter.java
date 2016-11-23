@@ -84,7 +84,7 @@ public class ListOrDetailsAudioAdapter extends BaseAdapter {
                 tv_calls.setText("");
             }
             holder.layout_audio.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(DateTool.stringForTime((int) audioModel.length * 1000));
+            holder.tv_audio_length.setText(audioModel.length+"\'");
         } else {
             holder.layout_audio.setVisibility(View.GONE);
         }

@@ -235,6 +235,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
                 if (SaleItemStatus.length != 1) {
                     changeTitleImg();
                 }
+                break;
 
                 /*搜索*/
             case R.id.img_title_search_right:

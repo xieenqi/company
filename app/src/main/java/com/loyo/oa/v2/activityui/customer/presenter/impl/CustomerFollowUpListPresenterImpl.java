@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.customer.presenter.impl;
 import android.content.Context;
 
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
+import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -24,10 +25,10 @@ import retrofit.client.Response;
 
 public class CustomerFollowUpListPresenterImpl implements CustomerFollowUpListPresenter {
 
-    private FollowUpListView crolView;
+    private CustomerFollowUpListView crolView;
     private Context mContext;
 
-    public CustomerFollowUpListPresenterImpl(FollowUpListView crolView, Context mContext){
+    public CustomerFollowUpListPresenterImpl(CustomerFollowUpListView crolView, Context mContext){
         this.crolView = crolView;
         this.mContext = mContext;
     }
@@ -76,11 +77,11 @@ public class CustomerFollowUpListPresenterImpl implements CustomerFollowUpListPr
      * 获取列表数据
      * */
     @Override
-    public void getListData(HashMap<String,Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).followUp(map, new RCallback<BaseBeanT<PaginationX<FollowUpListModel>>>() {
+    public void getListData(HashMap<String,Object> map,String id) {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getCustomerFollowUpList(id,map, new RCallback<PaginationX<FollowUpListModel>>() {
             @Override
-            public void success(BaseBeanT<PaginationX<FollowUpListModel>> paginationX, Response response) {
-                HttpErrorCheck.checkResponse("拜访列表", response);
+            public void success(PaginationX<FollowUpListModel> paginationX, Response response) {
+                HttpErrorCheck.checkResponse("客户下的跟进", response);
                 crolView.getListDataSuccesseEmbl(paginationX);
             }
 

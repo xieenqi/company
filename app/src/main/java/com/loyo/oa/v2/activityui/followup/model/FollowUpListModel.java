@@ -19,8 +19,10 @@ public class FollowUpListModel implements Serializable{
     public String sealsleadId;
     public String salesleadCompanyName;
     public String uuid;
+    public String creatorName;
     public Creator creator;
     public String audioUrl;
+    public String avatar;
     public int audioLength;
     public long createAt;
     public int  remindAt;
