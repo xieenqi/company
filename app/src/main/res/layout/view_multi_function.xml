@@ -81,7 +81,7 @@
                     android:id="@+id/iv_picture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/icon_picture" />
+                    android:src="@drawable/icon_picture" />
             </LinearLayout>
 
             <LinearLayout
@@ -94,7 +94,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/icon_location" />
+                    android:src="@drawable/icon_location" />
             </LinearLayout>
 
             <LinearLayout
@@ -107,7 +107,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/icon_at" />
+                    android:src="@drawable/icon_at" />
             </LinearLayout>
         </LinearLayout>
 

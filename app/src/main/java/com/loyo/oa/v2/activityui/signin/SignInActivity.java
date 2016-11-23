@@ -269,7 +269,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 startActivity(intent);
             }
         });
-        mfmodule.setPictureIcon(R.drawable.asy);
+        mfmodule.setPictureIcon(R.drawable.icon_picture_photo);
     }
 
     /**
