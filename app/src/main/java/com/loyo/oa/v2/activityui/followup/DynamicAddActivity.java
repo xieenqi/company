@@ -270,7 +270,11 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 Bundle mBundle = new Bundle();
-                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
+                mBundle.putInt("page", MapModifyView.SIGNIN_PAGE);
+//                app.startActivityForResult(this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
+//
+//                Bundle mBundle = new Bundle();
+//                mBundle.putInt("page", MapModifyView.CUSTOMER_PAGE);
                 app.startActivityForResult(DynamicAddActivity.this, MapModifyView.class, MainApp.ENTER_TYPE_RIGHT, MapModifyView.SERACH_MAP, mBundle);
             }
         });

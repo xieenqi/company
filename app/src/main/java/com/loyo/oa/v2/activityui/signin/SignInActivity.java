@@ -340,7 +340,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 break;
 
             case R.id.img_title_right:
-                if (TextUtils.isEmpty(customerAddress)) {
+                if (mCustomer != null && TextUtils.isEmpty(customerAddress)) {
                     sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
