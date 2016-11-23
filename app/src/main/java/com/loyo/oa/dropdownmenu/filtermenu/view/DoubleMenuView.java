@@ -1,13 +1,11 @@
 package com.loyo.oa.dropdownmenu.filtermenu.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -116,7 +114,6 @@ public class DoubleMenuView extends LinearLayout implements View.OnClickListener
             }
             selected.put(model.getKey(), defaultChild);
             selectedIndex.put(model.getKey(), 0);
-            Log.v("", "");
         }
     }
 
@@ -174,20 +171,14 @@ public class DoubleMenuView extends LinearLayout implements View.OnClickListener
     }
 
     private void reset() {
-        List<MenuModel> tags = filterModel.getChildren();
-        for (MenuModel tag:tags) {
-            resetTag(tag);
+        for (MenuModel model:filterModel.getChildren()) {
+            MenuModel defaultChild = null;
+            if (model.getChildren().size() >0) {
+                defaultChild = model.getChildren().get(0);
+            }
+            selected.put(model.getKey(), defaultChild);
+            selectedIndex.put(model.getKey(), 0);
         }
         itemAdapter.notifyDataSetChanged();
-    }
-
-    private void resetTag(MenuModel tag) {
-        List<MenuModel> tagItems = tag.getChildren();
-        if (tagItems.size() > 0) {
-            tagItems.get(0).setSelected(true);
-        }
-        for (int i = 1; i < tagItems.size(); i++) {
-            tagItems.get(i).setSelected(false);
-        }
     }
 }
