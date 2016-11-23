@@ -76,8 +76,10 @@ public class SigninSelectCustomerAdapter extends BaseAdapter {
 
         public void setContent(SigninSelectCustomer item) {
             tv_name.setText(item.name);
-            tv_location.setText(item.position.addr);
-            tv_distance.setText(distanceText(item.distance));
+            if (isLocationOk(item)) {
+                tv_location.setText(item.position.addr);
+                tv_distance.setText(distanceText(item.distance));
+            }
         }
 
         private String distanceText(double distance) {
@@ -89,5 +91,18 @@ public class SigninSelectCustomerAdapter extends BaseAdapter {
             }
             return distanceText;
         }
+    }
+
+    /**
+     * 判断客户是否有定位信息
+     */
+    public boolean isLocationOk(SigninSelectCustomer item) {
+        if (item.position == null || item.position.loc == null) {
+            return false;
+        }
+        if (item.position.loc.get(0) == 0 && item.position.loc.get(1) == -90) {
+            return false;
+        }
+        return true;
     }
 }

@@ -58,7 +58,9 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 Intent intent = new Intent();
                 intent.putExtra("id", item.id);
                 intent.putExtra("name", item.name);
-                intent.putExtra("loc", item.position);
+                if (adapter.isLocationOk(item)) {//有定位信息才传
+                    intent.putExtra("loc", item.position);
+                }
                 intent.putExtra("contact", item.contacts);
                 setResult(RESULT_OK, intent);
                 onBackPressed();

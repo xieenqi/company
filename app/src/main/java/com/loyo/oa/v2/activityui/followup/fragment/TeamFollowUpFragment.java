@@ -126,6 +126,11 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     public void initView(View view) {
         mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
+        for (int i = 0; i < mTags.size(); i++) {//过滤掉跟进方式
+            if (mTags.get(i).fieldName.contains("type")) {
+                mTags.remove(i);
+            }
+        }
         permission = (Permission) getArguments().getSerializable("permission");
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
@@ -187,13 +192,12 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                 switch (menuIndex) {
 
                     /*时间*/
-                    case 0:
-                    {
+                    case 0: {
                         MenuModel model = selectedModels.get(0);
                         menuTimekey = selectedModels.get(0).getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
                     }
-                        break;
+                    break;
 
                     /*筛选*/
                     case 1:
@@ -215,13 +219,12 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                         break;
 
                     /*人员*/
-                    case 2:
-                    {
+                    case 2: {
                         MenuModel model = selectedModels.get(0);
                         menuGuykey = model.getKey();
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
                     }
-                        break;
+                    break;
                 }
                 isPullOrDown = true;
                 getData(false);
@@ -340,7 +343,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<FollowUpListModel>> paginationX) {
         listView.onRefreshComplete();
-        if(isPullOrDown){
+        if (isPullOrDown) {
             listModel.clear();
         }
         if (paginationX == null) {

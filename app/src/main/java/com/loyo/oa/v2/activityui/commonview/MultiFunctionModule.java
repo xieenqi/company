@@ -168,6 +168,17 @@ public class MultiFunctionModule extends LinearLayout {
                     dialog.setVisibility(VISIBLE);
                     voice.initStaratRecord();
                     LogUtil.d("ACTION_DOWN++++++");
+                    // 此处兼容魅族手机
+//                    if (isRecordCancle || (recordTime == 0 && voice.getStartTime() != 0)) {
+//                        stratRecordingTime();
+//                    }
+//                    if (recordTime >= 60) {//此处过了一分钟
+//                        isRecordCancle = true;
+//                        dialog.setVisibility(GONE);
+//                        completeRecord();
+//                        Global.Toast("录音时间只能在一分钟内");
+//                        return false;
+//                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     dialog.setVisibility(VISIBLE);
@@ -210,6 +221,23 @@ public class MultiFunctionModule extends LinearLayout {
         }
     };
 
+    /**
+     * 录音超时的处理
+     * @return
+     */
+    private boolean recordTomeOut(){
+        if (recordTime >= 60) {//此处过了一分钟
+            isRecordCancle = true;
+            dialog.setVisibility(GONE);
+            completeRecord();
+            Global.Toast("录音时间只能在一分钟内");
+            return false;
+        }
+        return true;
+    }
+    /**
+     * 录音完成的操作
+     */
     private void completeRecord() {
         if (!isRecordCancle && isEffective) {
             callbackComplete.recordComplete(voice.getOutPath(), recordTime + "");

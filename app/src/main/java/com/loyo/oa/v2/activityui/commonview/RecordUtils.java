@@ -138,6 +138,8 @@ public class RecordUtils {
             }
         } catch (IllegalStateException e) {
             LogUtil.d("录音停止异常 可能没有权限");
+        } catch (RuntimeException e) {
+            LogUtil.d("录音运行异常");
         }
 
     }
