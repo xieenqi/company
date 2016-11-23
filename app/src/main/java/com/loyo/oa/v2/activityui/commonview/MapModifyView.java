@@ -304,10 +304,10 @@ public class MapModifyView extends BaseActivity
      */
     protected void doSearchQuery(String address, double lat, double lon) {
         currentPage = 0;
-        query = new PoiSearch.Query(address, "", app.cityCode);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        query = new PoiSearch.Query(address, "", "");// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query.setPageSize(150);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页
-        query.setCityLimit(true);
+        query.setCityLimit(false);
 
         poiSearch = new PoiSearch(this, query);
         poiSearch.setOnPoiSearchListener(this);
@@ -367,7 +367,7 @@ public class MapModifyView extends BaseActivity
                         resultItems.add(serachItem);
                     }
 
-                    if (resultItems != null && resultItems.size() > 0) {
+                    if (resultItems != null && resultItems.size() >= 0) {
                         Collections.reverse(resultItems);
                         selectPosition = 0;
                         if (null == adapter) {
