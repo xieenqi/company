@@ -31,6 +31,7 @@ import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
+import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
@@ -56,7 +57,7 @@ public class FollowUpListAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<FollowUpListModel> listModel;
     private FollowUpListView viewCrol;
-    private AudioPlayCallBack audioCallBack;
+    private AudioPlayCallBack audioPlayCallBack;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格附件 */
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
@@ -67,7 +68,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
-        this.audioCallBack = audioCallBack;
+        this.audioPlayCallBack = audioCallBack;
     }
 
     @Override
@@ -191,7 +192,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         /** 录音语音 */
         if(null != followUpListModel.audioInfo){
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,followUpListModel.audioInfo,audioCallBack);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext,followUpListModel.audioInfo,audioPlayCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
         }else{
             holder.lv_audio.setVisibility(View.GONE);
@@ -228,7 +229,7 @@ public class FollowUpListAdapter extends BaseAdapter {
         /** 绑定评论数据 */
         if (null != followUpListModel.comments && followUpListModel.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments,audioCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments,audioPlayCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -292,12 +293,15 @@ public class FollowUpListAdapter extends BaseAdapter {
             }
         });
 
-        final TextView iv_phone_call = (TextView) convertView.findViewById(R.id.iv_phone_call);
         /** 电话录音播放 */
+        final TextView iv_phone_call = (TextView) convertView.findViewById(R.id.iv_phone_call);
         iv_phone_call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                AudioModel audioModel = new AudioModel();
+                audioModel.url = followUpListModel.audioUrl;
+                audioModel.length = 10;
+                audioPlayCallBack.playVoice(audioModel,iv_phone_call);
             }
         });
 

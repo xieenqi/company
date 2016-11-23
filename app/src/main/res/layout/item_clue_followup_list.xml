@@ -82,6 +82,39 @@
                 android:visibility="gone"
                 />
 
+
+            <LinearLayout
+                android:id="@+id/layout_phonely"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginLeft="59dp"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_phone_call" />
+
+                <TextView
+                    android:id="@+id/iv_phone_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_33"
+                    android:background="@drawable/animation_calls"
+                    android:textColor="#3FD3AA" />
+
+                <TextView
+                    android:id="@+id/tv_audio_length"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:text="00:00"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp12" />
+            </LinearLayout>
+
             <com.loyo.oa.v2.customview.CusGridView
                 android:id="@+id/layout_gridview"
                 android:layout_width="match_parent"
