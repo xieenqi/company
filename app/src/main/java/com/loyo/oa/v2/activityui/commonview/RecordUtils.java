@@ -11,11 +11,14 @@ import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.SoundPool;
 import android.os.Environment;
 import android.os.Handler;
 
+import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -280,5 +283,19 @@ public class RecordUtils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 播放提示音 录音准备完成
+     */
+    private void playPrompt() {
+        SoundPool sp = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+//        sp.load(context,R.raw.10, 1);
+        try {
+            context.getAssets().list("10.wav");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

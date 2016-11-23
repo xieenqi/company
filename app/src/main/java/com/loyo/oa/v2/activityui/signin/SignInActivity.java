@@ -100,7 +100,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private Customer mCustomer;
     private ArrayList<Contact> contactList;
     private Animation animation;
-    private boolean isPicture = false;
+    private boolean isPicture = false, isCusPosition = false;
     private PositionResultItem positionResultItem;
     private int pcitureNumber;//记录上传了多少张图
     private StaffMemberCollection collection;//选人返回的数据
@@ -353,6 +353,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     }, new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            isCusPosition = true;
                             dismissSweetAlert();
                             customerAddress = tv_address.getText().toString();
                             addSignIn();
@@ -414,13 +415,15 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         HashMap<String, Object> map = new HashMap<>();
         map.put("gpsInfo", loPosition + "," + laPosition);//当前定位信息
 //        map.put("address", mAddress.trim());//客户地址
-        map.put("position", customerAddress);//当前定位地址
+        map.put("position", tv_address.getText().toString());//当前定位地址
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("audioInfo", audioInfo);
         map.put("atDepts", atDepts);
         map.put("atUserIds", atUserIds);
         map.put("contactName", tv_contact_name.getText().toString());
+        if (isCusPosition)
+            map.put("isCusPosition", customerAddress);
 
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
