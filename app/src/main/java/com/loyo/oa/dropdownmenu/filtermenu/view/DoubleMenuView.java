@@ -179,6 +179,7 @@ public class DoubleMenuView extends LinearLayout implements View.OnClickListener
             selected.put(model.getKey(), defaultChild);
             selectedIndex.put(model.getKey(), 0);
         }
+        itemAdapter.selectedIndex = 0;
         itemAdapter.notifyDataSetChanged();
     }
 }
