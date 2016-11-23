@@ -84,6 +84,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
 
     private String dialNumber;
     private boolean selfHangUp = false;
+    private String dtmfString = "";
 
     /**/
     private Timer timer;
@@ -316,9 +317,11 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     }
 
     private void sendDTMF(DTMF dtmf) {
-        if (!isAnswering) {
-            return;
-        }
+//        if (!isAnswering) {
+//            return;
+//        }
+        dtmfString = dtmfString + dtmf.getKey();
+        calleeName2.setText(dtmfString);
         VoIPManager.getInstance().sendDTMF(dtmf);
     }
 

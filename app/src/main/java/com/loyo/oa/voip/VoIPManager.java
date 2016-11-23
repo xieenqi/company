@@ -202,7 +202,7 @@ public class VoIPManager implements CallStateListener {
         this.phone = phone;
         this.salesleadId = salesleadId;
         //
-        if (UCSService.isConnected()) {
+        if (false/*UCSService.isConnected()*/) {
             Observable.just("connect")
                     .map(new Func1<String, ResponseBase<RequestAccess>>() {
                         @Override
