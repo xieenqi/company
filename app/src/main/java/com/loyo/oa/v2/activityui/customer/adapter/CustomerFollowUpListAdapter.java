@@ -99,6 +99,8 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
             holder.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
             holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
             holder.tv_last_time = (TextView) convertView.findViewById(R.id.tv_last_time);
+            holder.iv_phone_call = (TextView) convertView.findViewById(R.id.iv_phone_call);
+            holder.tv_audio_length = (TextView) convertView.findViewById(R.id.tv_audio_length);
             holder.tv_kind = (TextView) convertView.findViewById(R.id.tv_kind);
             holder.iv_comment = (ImageView) convertView.findViewById(R.id.iv_comment);
             holder.layout_gridview = (CusGridView) convertView.findViewById(R.id.layout_gridview);
@@ -106,6 +108,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
             holder.lv_audio = (CustomerListView) convertView.findViewById(R.id.lv_audio);
             holder.lv_options = (CustomerListView) convertView.findViewById(R.id.lv_options);
             holder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
+            holder.layout_phonely = (LinearLayout) convertView.findViewById(R.id.layout_phonely);
             holder.layout_address = (LinearLayout) convertView.findViewById(R.id.layout_address);
             holder.layout_lasttime = (LinearLayout) convertView.findViewById(R.id.layout_lasttime);
             holder.ll_web = (LinearLayout) convertView.findViewById(R.id.ll_web);
@@ -123,6 +126,32 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         holder.tv_contact.setText(TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
         holder.tv_create_time.setText(DateTool.getDiffTime(followUpListModel.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# "+followUpListModel.typeName);
+
+        /** 电话录音设置 */
+        if(null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)){
+            holder.layout_phonely.setVisibility(View.VISIBLE);
+            holder.tv_audio_length.setText(DateTool.stringForTime(followUpListModel.audioLength * 1000));
+            int audioLength = followUpListModel.audioLength;
+            if (audioLength > 0 && audioLength <= 60) {
+                holder.iv_phone_call.setText("000");
+            } else if (audioLength > 60 && audioLength <= 300) {
+                holder.iv_phone_call.setText("00000");
+            } else if (audioLength > 300 && audioLength <= 600) {
+                holder.iv_phone_call.setText("0000000");
+            } else if (audioLength > 600 && audioLength <= 1200) {
+                holder.iv_phone_call.setText("000000000");
+            } else if (audioLength > 1200 && audioLength <= 1800) {
+                holder.iv_phone_call.setText("00000000000");
+            } else if (audioLength > 1800 && audioLength <= 3600) {
+                holder.iv_phone_call.setText("00000000000000");
+            } else if (audioLength > 3600) {
+                holder.iv_phone_call.setText("0000000000000000");
+            } else {
+                holder.iv_phone_call.setText("");
+            }
+        }else{
+            holder.layout_phonely.setVisibility(View.GONE);
+        }
 
         /** 下次跟进时间 */
         if(followUpListModel.remindAt != 0){
@@ -142,14 +171,14 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
             }
         }
 
-        /** 客户姓名 */
-        if(null != followUpListModel.customerName && !TextUtils.isEmpty(followUpListModel.customerName)){
+        /** 客户姓名(测试说 客户下的跟进,不需要显示客户) */
+        /*if(null != followUpListModel.customerName && !TextUtils.isEmpty(followUpListModel.customerName)){
             holder.layout_customer.setVisibility(View.VISIBLE);
             holder.tv_customer.setText(followUpListModel.customerName);
             holder.tv_customer.setOnTouchListener(Global.GetTouch());
         }else{
             holder.layout_customer.setVisibility(View.GONE);
-        }
+        }*/
 
         /** 客户地址 */
         if(null != followUpListModel.location.addr && !TextUtils.isEmpty(followUpListModel.location.addr)){
@@ -274,12 +303,15 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         TextView tv_memo;        /*内容*/
         TextView tv_kind;        /*跟进类型*/
         TextView tv_last_time;   /*下次跟进时间*/
+        TextView tv_audio_length;
+        TextView iv_phone_call;
 
         LinearLayout ll_web;
         LinearLayout layout_comment;
         LinearLayout layout_address;
         LinearLayout layout_customer;
         LinearLayout layout_lasttime;
+        LinearLayout layout_phonely;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件列表区*/

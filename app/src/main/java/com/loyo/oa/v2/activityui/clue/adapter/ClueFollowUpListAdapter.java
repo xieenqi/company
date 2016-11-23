@@ -98,7 +98,9 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             holder.tv_contact = (TextView) convertView.findViewById(R.id.tv_contact);
             holder.tv_create_time = (TextView) convertView.findViewById(R.id.tv_create_time);
             holder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
+            holder.iv_phone_call = (TextView) convertView.findViewById(R.id.iv_phone_call);
             holder.tv_toast = (TextView) convertView.findViewById(R.id.tv_toast);
+            holder.tv_audio_length = (TextView) convertView.findViewById(R.id.tv_audio_length);
             holder.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
             holder.tv_last_time = (TextView) convertView.findViewById(R.id.tv_last_time);
             holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);
@@ -130,6 +132,25 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         /** 电话录音设置 */
         if(null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)){
             holder.layout_phonely.setVisibility(View.VISIBLE);
+            holder.tv_audio_length.setText(DateTool.stringForTime(model.audioLength * 1000));
+            int audioLength = model.audioLength;
+            if (audioLength > 0 && audioLength <= 60) {
+                holder.iv_phone_call.setText("000");
+            } else if (audioLength > 60 && audioLength <= 300) {
+                holder.iv_phone_call.setText("00000");
+            } else if (audioLength > 300 && audioLength <= 600) {
+                holder.iv_phone_call.setText("0000000");
+            } else if (audioLength > 600 && audioLength <= 1200) {
+                holder.iv_phone_call.setText("000000000");
+            } else if (audioLength > 1200 && audioLength <= 1800) {
+                holder.iv_phone_call.setText("00000000000");
+            } else if (audioLength > 1800 && audioLength <= 3600) {
+                holder.iv_phone_call.setText("00000000000000");
+            } else if (audioLength > 3600) {
+                holder.iv_phone_call.setText("0000000000000000");
+            } else {
+                holder.iv_phone_call.setText("");
+            }
         }else{
             holder.layout_phonely.setVisibility(View.GONE);
         }
@@ -142,14 +163,14 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             holder.layout_lasttime.setVisibility(View.GONE);
         }
 
-        /** 绑定公司 */
-        if(null != model.salesleadCompanyName && !TextUtils.isEmpty(model.salesleadCompanyName)){
+        /** 绑定公司(测试说 线索下不需要显示线索名) */
+/*        if(null != model.salesleadCompanyName && !TextUtils.isEmpty(model.salesleadCompanyName)){
             holder.layout_customer.setVisibility(View.VISIBLE);
             holder.tv_customer.setText(model.salesleadCompanyName);
             holder.tv_customer.setOnTouchListener(Global.GetTouch());
         }else{
             holder.layout_customer.setVisibility(View.GONE);
-        }
+        }*/
 
         /** 设置跟进内容 */
         if(null != model.content && !TextUtils.isEmpty(model.content)){
@@ -295,6 +316,8 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         TextView tv_memo;        /*内容*/
         TextView tv_kind;        /*跟进类型*/
         TextView tv_last_time;   /*下次跟进时间*/
+        TextView tv_audio_length;
+        TextView iv_phone_call;
 
         LinearLayout ll_web;
         LinearLayout layout_comment;

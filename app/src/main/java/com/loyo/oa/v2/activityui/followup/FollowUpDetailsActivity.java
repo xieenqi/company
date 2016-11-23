@@ -11,9 +11,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
 import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
+import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;

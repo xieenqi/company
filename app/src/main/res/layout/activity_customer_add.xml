@@ -42,7 +42,9 @@
                         android:hint="请输入客户名称"
                         android:maxLength="50"
                         android:paddingLeft="@dimen/dimen_1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:textColor="@color/suodesilei"
+                        />
 
                     <TextView
                         android:id="@+id/tv_gscx"
@@ -102,7 +104,9 @@
                         android:lineSpacingExtra="6dp"
                         android:paddingBottom="@dimen/dimen_10"
                         android:paddingTop="@dimen/dimen_3"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:textColor="@color/suodesilei"
+                        />
 
                     <ImageView
                         android:id="@+id/img_refresh_address"
@@ -147,7 +151,7 @@
                         android:lineSpacingExtra="6dp"
                         android:paddingBottom="@dimen/dimen_10"
                         android:paddingTop="@dimen/dimen_3"
-                        android:textColor="@color/title_bg1"
+                        android:textColor="@color/suodesilei"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -182,7 +186,7 @@
                         android:inputType="textPersonName"
                         android:maxLength="20"
                         android:paddingRight="0dp"
-                        android:textColor="@color/title_bg1" />
+                        android:textColor="@color/suodesilei" />
 
                 </LinearLayout>
 
@@ -216,7 +220,7 @@
                         android:maxLength="24"
                         android:numeric="integer"
                         android:paddingRight="0dp"
-                        android:textColor="@color/title_bg1" />
+                        android:textColor="@color/suodesilei" />
 
                     <ImageView
                         android:id="@+id/iv_phone_insert1"
@@ -263,7 +267,7 @@
                             android:maxLength="24"
                             android:numeric="integer"
                             android:paddingRight="0dp"
-                            android:textColor="@color/title_bg1" />
+                            android:textColor="@color/suodesilei" />
 
                         <ImageView
                             android:id="@+id/iv_phone_insert2"
@@ -311,7 +315,7 @@
                             android:maxLength="24"
                             android:numeric="integer"
                             android:paddingRight="0dp"
-                            android:textColor="@color/title_bg1" />
+                            android:textColor="@color/suodesilei" />
 
                         <ImageView
                             android:id="@+id/iv_phone_insert3"
@@ -353,7 +357,7 @@
                         android:maxLength="24"
                         android:numeric="integer"
                         android:paddingRight="0dp"
-                        android:textColor="@color/title_bg1" />
+                        android:textColor="@color/suodesilei" />
 
                     <ImageView
                         android:id="@+id/iv_call_insert1"
@@ -400,7 +404,7 @@
                             android:maxLength="24"
                             android:numeric="integer"
                             android:paddingRight="0dp"
-                            android:textColor="@color/title_bg1" />
+                            android:textColor="@color/suodesilei" />
 
                         <ImageView
                             android:id="@+id/iv_call_insert2"
@@ -448,7 +452,7 @@
                             android:maxLength="24"
                             android:numeric="integer"
                             android:paddingRight="0dp"
-                            android:textColor="@color/title_bg1" />
+                            android:textColor="@color/suodesilei" />
 
                         <ImageView
                             android:id="@+id/iv_call_insert3"
@@ -529,7 +533,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint=""
-                        android:textColor="@color/title_bg1" />
+                        android:textColor="@color/suodesilei" />
 
                     <ImageView
                         android:id="@+id/img_title_right_toUser"
