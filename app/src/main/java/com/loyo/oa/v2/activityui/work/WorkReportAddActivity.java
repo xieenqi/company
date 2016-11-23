@@ -557,7 +557,7 @@ public class WorkReportAddActivity extends BaseActivity {
             /*点评人*/
             case R.id.layout_reviewer:
             {
-                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer.user);
+                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer!=null?mReviewer.user:null);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
                 if (collection != null) {
