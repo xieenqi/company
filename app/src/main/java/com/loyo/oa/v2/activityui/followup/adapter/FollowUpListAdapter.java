@@ -206,6 +206,7 @@ public class FollowUpListAdapter extends BaseAdapter {
 
         /** @的相关人员 */
         if(null != followUpListModel.atNameAndDepts){
+            holder.tv_toast.setVisibility(View.VISIBLE);
             holder.tv_toast.setText("@" + followUpListModel.atNameAndDepts);
         }else{
             holder.tv_toast.setVisibility(View.GONE);

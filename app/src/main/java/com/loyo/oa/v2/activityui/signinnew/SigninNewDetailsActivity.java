@@ -316,7 +316,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         }
 
         /** 设置@ */
-        if (null != mSigninDelModel.atNameAndDepts && TextUtils.isEmpty(mSigninDelModel.atNameAndDepts)) {
+        if (null != mSigninDelModel.atNameAndDepts && !TextUtils.isEmpty(mSigninDelModel.atNameAndDepts)) {
             tv_toast.setVisibility(View.VISIBLE);
             tv_toast.setText(mSigninDelModel.atNameAndDepts);
         }
