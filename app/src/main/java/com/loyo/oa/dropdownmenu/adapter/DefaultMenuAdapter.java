@@ -123,7 +123,7 @@ public class DefaultMenuAdapter implements MenuAdapter {
 
                     @Override
                     public void onMenuResetClick() {
-                        DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, view.getSelectedMenuModels(), "");
+                        DefaultMenuAdapter.this.callback.onMenuModelsSelected(position, view.getSelectedMenuModels(), view.getSelectedParams());
 
                     }
                 });
