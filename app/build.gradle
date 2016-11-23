@@ -7,8 +7,8 @@ def outputPath = 'D:\\jenkins\\workspace\\loyo-android-v2\\app\\build\\apk'
 
 android {
     useLibrary 'org.apache.http.legacy'
-    compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     packagingOptions {
@@ -45,7 +45,7 @@ android {
         multiDexEnabled = true
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 2016111001
         versionName '1.4.4t'
     }
@@ -57,6 +57,9 @@ android {
             resValue "string", "app_name", "快启"
             jniDebuggable true
             debuggable true
+//            minifyEnabled true//混淆打包
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            shrinkResources true//去掉不用资源
         }
         release {
 //            minifyEnabled false
@@ -68,7 +71,7 @@ android {
 //            // "6085830b754c86f0d9886b545f5b38f8"
 //            resValue "string", "app_name", "快启"
             minifyEnabled false//混淆打包
-//            shrinkResources true//去掉不用资源
+//          shrinkResources true//去掉不用资源
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.SignConfig
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
@@ -97,8 +100,7 @@ android {
 
     ext {
 //        supportLibVersion = "24.2.1"
-        //supportLibVersion = "23.2.1"
-        supportLibVersion = "23.1.1"
+        supportLibVersion = "23.4.0"
     }
 
     dependencies {
