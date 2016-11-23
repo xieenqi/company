@@ -34,6 +34,7 @@ import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
+import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -56,7 +57,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<ClueFollowUpListModel> listModel;
     private ClueFollowUpListView viewCrol;
-    private AudioPlayCallBack audioCallBack;
+    private AudioPlayCallBack audioPlayCallBack;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格附件 */
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
@@ -67,7 +68,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
-        this.audioCallBack = audioCallBack;
+        this.audioPlayCallBack = audioCallBack;
     }
 
     @Override
@@ -111,6 +112,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             holder.layout_address = (LinearLayout) convertView.findViewById(R.id.layout_address);
             holder.layout_customer = (LinearLayout) convertView.findViewById(R.id.layout_customer);
             holder.layout_lasttime = (LinearLayout) convertView.findViewById(R.id.layout_lasttime);
+            holder.layout_phonely = (LinearLayout) convertView.findViewById(R.id.layout_phonely);
             holder.ll_web = (LinearLayout) convertView.findViewById(R.id.ll_web);
             convertView.setTag(holder);
         } else {
@@ -125,6 +127,12 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# "+model.typeName);
         holder.tv_contact.setText(TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
 
+        /** 电话录音设置 */
+        if(null != model.audioUrl && !TextUtils.isEmpty(model.audioUrl)){
+            holder.layout_phonely.setVisibility(View.VISIBLE);
+        }else{
+            holder.layout_phonely.setVisibility(View.GONE);
+        }
 
         /** 下次跟进时间 */
         if(model.remindAt != 0){
@@ -172,7 +180,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         /** 录音语音 */
         if(null != model.audioInfo){
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,model.audioInfo,audioCallBack);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext,model.audioInfo,audioPlayCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
         }else{
             holder.lv_audio.setVisibility(View.GONE);
@@ -209,7 +217,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         /** 绑定评论数据 */
         if (null != model.comments && model.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, model.comments,audioCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, model.comments,audioPlayCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -261,6 +269,18 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             }
         });
 
+        /** 电话录音播放 */
+        final TextView iv_phone_call = (TextView) convertView.findViewById(R.id.iv_phone_call);
+        iv_phone_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AudioModel audioModel = new AudioModel();
+                audioModel.url = model.audioUrl;
+                audioModel.length = 10;
+                audioPlayCallBack.playVoice(audioModel,iv_phone_call);
+            }
+        });
+
         return convertView;
     }
 
@@ -281,6 +301,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         LinearLayout layout_address;
         LinearLayout layout_customer;
         LinearLayout layout_lasttime;
+        LinearLayout layout_phonely;
         CustomerListView lv_comment; /*评论区*/
         CustomerListView lv_audio;   /*语音录音区*/
         CustomerListView lv_options; /*文件列表区*/
