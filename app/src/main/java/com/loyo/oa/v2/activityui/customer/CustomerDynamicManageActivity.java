@@ -348,6 +348,7 @@ public class CustomerDynamicManageActivity extends BaseActivity implements View.
             case R.id.layout_add:
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Customer.class.getName(), customer);
+                bundle.putBoolean("isDetail", true);
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
                 app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;

@@ -141,6 +141,9 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                if (position < 0 || position >= dataSelects.size()) {
+                    return;
+                }
                 dataSelectAdapter.selectPosition(position);
                 dataSelectAdapter.notifyDataSetChanged();
                 data_time_tv.setText(dataSelects.get(position).yearMonDay);

@@ -152,6 +152,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(ClueListItem.class.getName(), item);
                 bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CULE);
+                bundle.putBoolean("isDetail", true);
                 app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
 

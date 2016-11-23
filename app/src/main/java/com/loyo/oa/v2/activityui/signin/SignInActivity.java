@@ -30,7 +30,6 @@ import com.loyo.oa.v2.activityui.commonview.RecordUtils;
 import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
-import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
@@ -48,7 +47,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
@@ -70,7 +68,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -79,7 +76,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static com.loyo.oa.v2.application.MainApp.PICTURE;
 
 /**
  * 【 拜访签到 】 页面
@@ -100,7 +96,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private Customer mCustomer;
     private ArrayList<Contact> contactList;
     private Animation animation;
-    private boolean isPicture = false;
+    private boolean isPicture = false, isCusPosition = false;
     private PositionResultItem positionResultItem;
     private int pcitureNumber;//记录上传了多少张图
     private StaffMemberCollection collection;//选人返回的数据
@@ -353,6 +349,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     }, new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            isCusPosition = true;
                             dismissSweetAlert();
                             customerAddress = tv_address.getText().toString();
                             addSignIn();
@@ -413,14 +410,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("gpsInfo", loPosition + "," + laPosition);//当前定位信息
-//      map.put("address", mAddress.trim());//客户地址
-        map.put("position", customerAddress);//当前定位地址
+//        map.put("address", mAddress.trim());//客户地址
+        map.put("position", tv_address.getText().toString());//当前定位地址
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("audioInfo", audioInfo);
         map.put("atDepts", atDepts);
         map.put("atUserIds", atUserIds);
         map.put("contactName", tv_contact_name.getText().toString());
+        if (isCusPosition)
+            map.put("isCusPosition", customerAddress);
 
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
@@ -437,9 +436,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         AppBus.getInstance().post(new SigninNewRushEvent());
                         finish();
                     }
-//                    else {
-//                        Toast(getString(R.string.sign) + "异常!");
-//                    }
                 } else {
                     Toast("提交失败" + response.getStatus());
                 }
@@ -623,7 +619,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private void distanceInfo(Location loc) {
 
         if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
-            tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)) + "m");
+            tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)));
             tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
         } else {
             tv_distance_deviation.setText("未知");

@@ -161,11 +161,13 @@ public class MultiFunctionModule extends LinearLayout {
             if (recordTime == 0 && voice.getStartTime() != 0) {
                 stratRecordingTime();
             }
+            LogUtil.d("模式+++"+event.getAction());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.setAlpha(0.6f);
                     dialog.setVisibility(VISIBLE);
                     voice.initStaratRecord();
+                    LogUtil.d("ACTION_DOWN++++++");
                     break;
                 case MotionEvent.ACTION_MOVE:
                     dialog.setVisibility(VISIBLE);
@@ -186,11 +188,13 @@ public class MultiFunctionModule extends LinearLayout {
                         isRecordCancle = false;
                     }
                     if (recordTime >= 60) {//此处过了一分钟
+                        isRecordCancle = true;
                         dialog.setVisibility(GONE);
                         completeRecord();
                         Global.Toast("录音时间只能在一分钟内");
                         return false;
                     }
+                    LogUtil.d(recordTime+" ACTION_MOVE------");
                     break;
                 case MotionEvent.ACTION_UP:
                     dialog.setVisibility(GONE);
@@ -199,6 +203,7 @@ public class MultiFunctionModule extends LinearLayout {
                         voice.stopRecord();
                     }
                     completeRecord();
+                    LogUtil.d("!!!!ACTION_UP");
                     break;
             }
             return true;
@@ -213,7 +218,8 @@ public class MultiFunctionModule extends LinearLayout {
             setIsRecording(false);
             cancleRecordingTime();
         } else {
-            Global.Toast("好像你没有说话哦!");
+            if (!isRecordCancle)
+                Global.Toast("好像你没有说话哦!");
         }
     }
 

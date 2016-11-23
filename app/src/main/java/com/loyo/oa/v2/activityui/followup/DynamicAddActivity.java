@@ -103,7 +103,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
     private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
     private List<String> atUserIds = new ArrayList<>();//@的人员
     private StaffMemberCollection collection;//选人返回的数据
-    private boolean isCustom;//是否是客户写跟进 否则就是是线索写跟进
+    private boolean isCustom, isDetail;//是否是客户写跟进 否则就是是线索写跟进
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -121,6 +121,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             Bundle bundle = getIntent().getExtras();
             mCustomer = (Customer) bundle.getSerializable(Customer.class.getName());
             mClue = (ClueListItem) bundle.getSerializable(ClueListItem.class.getName());
+            isDetail = bundle.getBoolean("isDetail");
             int action = bundle.getInt(ExtraAndResult.DYNAMIC_ADD_ACTION, 0);
             if (action == ExtraAndResult.DYNAMIC_ADD_CULE) {
                 isCustom = false;
@@ -184,9 +185,13 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         if (null != mCustomer && isCustom) {
             getDefaultContact(mCustomer.contacts);
             tv_customer.setText(mCustomer.name);
+            if(isDetail)
+            ll_customer.setVisibility(View.GONE);
         } else if (null != mClue && !isCustom) {
             tv_clue_company.setText(mClue.companyName);
             tv_clue_name.setText(mClue.responsorName);
+            if(isDetail)
+            ll_clue_company.setVisibility(View.GONE);
         }
         controller.loadView(gridView);
         initMultiFunctionModule();
