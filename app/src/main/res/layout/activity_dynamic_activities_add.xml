@@ -320,7 +320,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_48"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -359,8 +359,8 @@
                             android:src="@drawable/right_arrow" />
                     </RelativeLayout>
 
-                    <include layout="@layout/include_solid_line_left" />
                 </LinearLayout>
+                <include layout="@layout/include_solid_line_left" />
             </LinearLayout>
         </ScrollView>
 

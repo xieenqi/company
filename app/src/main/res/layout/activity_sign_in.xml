@@ -232,7 +232,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="left"
-                        android:hint="填写备注后将自动增加1条跟进动态（拜访）"
+                        android:hint="请填写拜访说明"
                         android:maxLength="500"
                         android:minHeight="@dimen/dimen_110"
                         android:textSize="15sp" />

@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dimen_15"
-            android:drawableLeft="@drawable/icon_customer_follow_time"
+            android:drawableLeft="@drawable/icon_system_lock"
             android:drawablePadding="5dp"
             android:textColor="@color/text99"
             android:textSize="14sp" />

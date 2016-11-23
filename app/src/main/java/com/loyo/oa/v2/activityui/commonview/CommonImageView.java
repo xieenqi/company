@@ -37,7 +37,7 @@ public class CommonImageView extends LinearLayout {
             }
         });
         this.addView(img);
-        this.setGravity(Gravity.CENTER);
+        this.setGravity(Gravity.LEFT);
         LinearLayout.LayoutParams pl = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(pl);
     }

@@ -32,11 +32,11 @@
             android:layout_marginLeft="@dimen/dimen_25"
             android:layout_marginRight="@dimen/dimen_25"
             android:layout_marginTop="@dimen/dimen_20"
-            android:background="@drawable/callback_shape"
+            android:background="@drawable/callback_shape2"
             android:gravity="center"
             android:text="商务电话-回拨"
             android:textSize="@dimen/text_sp16"
-            android:textColor="@color/white"
+            android:textColor="@color/title_bg1"
             />
 
         <TextView

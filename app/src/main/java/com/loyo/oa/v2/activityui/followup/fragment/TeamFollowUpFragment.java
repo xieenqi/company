@@ -208,11 +208,11 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                             MenuModel field2 = map.get("typeId");
                             MenuModel field3 = map.get("activityType");
                             method = field1.getKey();
-                            typeId = field2.getKey();
+//                            typeId = field2.getKey();
                             activityType = field3.getKey();
                         } else {
                             method = "";
-                            typeId = "";
+//                            typeId = "";
                             activityType = "";
                         }
 
@@ -284,7 +284,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("xpath", "");
         map.put("timeType", menuTimekey); //时间查询
         map.put("method", method);        //跟进类型0:全部 1:线索 2:客户
-        map.put("typeId", typeId);
+        map.put("typeId", typeId);//没有这项了
         map.put("activityType", activityType);
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
