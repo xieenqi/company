@@ -271,7 +271,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void OnLocationGDFailed() {
-                Toast("定位失败,请在网络和GPS信号良好时重试");
+                Toast("获取位置失败，请检查网络或GPS是否正常");
                 LocationUtilGD.sotpLocation();
             }
         });

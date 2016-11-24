@@ -297,7 +297,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
             public void onClick(View view) {
                 AudioModel audioModel = new AudioModel();
                 audioModel.url = model.audioUrl;
-                audioModel.length = 10;
+                audioModel.length = model.audioLength;
                 audioPlayCallBack.playVoice(audioModel,iv_phone_call);
             }
         });

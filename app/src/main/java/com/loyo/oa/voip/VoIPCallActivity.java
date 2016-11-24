@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -89,6 +90,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
     /**/
     private Timer timer;
     private Handler handler = new Handler();
+    private MediaPlayer hangupPalyer;
     SweetAlertDialogView dialog;
 
     @Override
@@ -103,6 +105,7 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
         callType = mIntent.getIntExtra(CALLEE_USER_TYPE, -1);
         salesleadId = mIntent.getStringExtra(CALLEE_SALE_KEY);
         initUI();
+        hangupPalyer = MediaPlayer.create(this, R.raw.dododo);
 
         UCSCall.addCallStateListener(this);
         loadData();
@@ -609,6 +612,13 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             case R.id.img_hang_up: {
                 selfHangUp = true;
                 VoIPManager.getInstance().hangUp();
+                if (hangupPalyer != null) {
+                    hangupPalyer.setOnCompletionListener(null);
+                    hangupPalyer.setOnErrorListener(null);
+                    if (hangupPalyer.isPlaying()) {
+                        hangupPalyer.stop();
+                    }
+                }
                 finish();
             }
             break;
@@ -656,25 +666,50 @@ public class VoIPCallActivity extends Activity implements View.OnClickListener, 
             public void run() {
                 statusView.setText("已挂断");
                 statusView2.setText("已挂断");
-                final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
-                dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        dialog.sweetAlertDialog.dismiss();
-                        finish();
-                    }
-                }, new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        dialog.sweetAlertDialog.dismiss();
-                        finish();
-                    }
-                }, "提示", "已挂断");
+                playHangupAudio();
+
                 if (timer != null) {
                     timer.cancel();
                 }
             }
         });
+    }
+
+    private void playHangupAudio() {
+        if (hangupPalyer != null) {
+            hangupPalyer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.setOnCompletionListener(null);
+                    mp.setOnErrorListener(null);
+                    finish();
+                }
+            });
+
+            hangupPalyer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    return true;
+                }
+            });
+            hangupPalyer.start();
+        }
+        else {
+            final SweetAlertDialogView dialog = new SweetAlertDialogView(VoIPCallActivity.this);
+            dialog.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dialog.sweetAlertDialog.dismiss();
+                    finish();
+                }
+            }, "提示", "已挂断");
+        }
     }
 
     @Override

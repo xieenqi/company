@@ -310,7 +310,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity", "0213", 0),
                 new HomeItem(R.drawable.newmain_clue, "销售线索", "com.loyo.oa.v2.activityui.clue.ClueManagerActivity", "0217", 1),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
-                new HomeItem(R.drawable.newmain_followup, "跟进动态", "com.loyo.oa.v2.activityui.followup.FollowUpManagerActivity", "0", 0),
+                new HomeItem(R.drawable.newmain_followup, "跟进动态", "com.loyo.oa.v2.activityui.followup.FollowUpManagerActivity", "0229", 0),
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signinnew.SigninNewManagerActivity", "0228", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
                 new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0216", 1),//新加订单
@@ -764,7 +764,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 attendanceRecords = attendanceRecord;
                 HttpErrorCheck.checkResponse("考勤信息：", response);
-                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
+                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "获取位置失败，请检查网络或GPS是否正常" : address);
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
                 } else {
@@ -786,7 +786,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "获取位置失败，请检查网络或GPS是否正常", Toast.LENGTH_SHORT).show();
     }
 
     @Override

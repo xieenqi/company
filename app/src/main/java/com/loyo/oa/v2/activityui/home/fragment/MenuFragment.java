@@ -239,7 +239,7 @@ public class MenuFragment extends BaseFragment {
             //检查更新
             case R.id.ll_version:
                 if (PackageManager.PERMISSION_GRANTED ==
-                        getActivity().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
+                        mActivity.getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
                     mIntentCheckUpdate = new Intent(getActivity(), CheckUpdateService.class);
                     mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
                     getActivity().startService(mIntentCheckUpdate);

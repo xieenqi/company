@@ -302,7 +302,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
             public void onClick(View view) {
                 AudioModel audioModel = new AudioModel();
                 audioModel.url = followUpListModel.audioUrl;
-                audioModel.length = 10;
+                audioModel.length = followUpListModel.audioLength;
                 audioPlayCallBack.playVoice(audioModel,iv_phone_call);
             }
         });
