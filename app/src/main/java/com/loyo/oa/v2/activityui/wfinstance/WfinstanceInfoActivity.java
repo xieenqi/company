@@ -492,11 +492,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     }
                     BizFormFields field = fields.get(i);
                     View view_value = LayoutInflater.from(this).inflate(R.layout.item_listview_wfinstancevalues_data, null, false);
-                    EditText tv_value = (EditText) view_value.findViewById(R.id.et_value);
-                    tv_value.setEnabled(false);
-                    tv_value.setText(wfinstanceInfoValue(jsonObject.get(field.getId())));
+                    //EditText tv_value = (EditText) view_value.findViewById(R.id.et_value);
+                    //tv_value.setEnabled(false);
+                    //tv_value.setText(wfinstanceInfoValue(jsonObject.get(field.getId())));
                     TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-                    tv_key.setText(field.getName() + ": ");
+                    tv_key.setText(field.getName() + ": " + wfinstanceInfoValue(jsonObject.get(field.getId())));
                     layout_wfinstance_content.addView(view_value);
                 }
             }
