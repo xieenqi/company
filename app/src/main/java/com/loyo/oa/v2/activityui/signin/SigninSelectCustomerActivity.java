@@ -78,7 +78,9 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 break;
             /*搜索客户*/
             case R.id.ll_search:
-                startActivityForResult(new Intent(this, SigninSelectCustomerSearch.class), SEARCH_CUSTOMER);
+                Intent intents = new Intent(this, SigninSelectCustomerSearch.class);
+                intents.putExtra("isSignin", true);
+                startActivityForResult(intents, SEARCH_CUSTOMER);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
             /*创建一个新客户*/
@@ -118,7 +120,7 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
         switch (requestCode) {
             case SEARCH_CUSTOMER:
             case CREAT_CUSTOMER:
-                ArrayList<Contact>  contact= (ArrayList<Contact>) data.getSerializableExtra("contact");
+                ArrayList<Contact> contact = (ArrayList<Contact>) data.getSerializableExtra("contact");
                 Intent intent = new Intent();
                 intent.putExtra("id", data.getStringExtra("id"));
                 intent.putExtra("name", data.getStringExtra("name"));
