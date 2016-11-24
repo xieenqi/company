@@ -180,8 +180,8 @@ public class ContactPickerActivity extends BaseActivity implements View.OnClickL
         userAdapter = new PickUserAdapter(this);
         userView.setAdapter(userAdapter);
 
-        final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(userAdapter);
-        userView.addItemDecoration(headersDecor);
+//        final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(userAdapter);
+//        userView.addItemDecoration(headersDecor);
         userView.addItemDecoration(new DividerDecoration(this));
 
         zSideBar = (ZSideBar) findViewById(R.id.contact_zsidebar);
