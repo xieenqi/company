@@ -161,7 +161,7 @@ public class TasksEditActivity extends BaseActivity {
 
         UpdateUI();
         //getEditAttachments();
-        setTouchView(-1);
+//        setTouchView(-1);
 
     }
 

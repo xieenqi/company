@@ -49,7 +49,7 @@ public class ChildTaskMnageActivity extends BaseActivity implements PullToRefres
 
     @AfterViews
     void initUi() {
-        setTouchView(-1);
+//        setTouchView(-1);
         iv_child_task_add.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
         mChildTasks = mTask.getchecklists();

@@ -10,12 +10,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.photo.PhotoPicker;
-import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
+import com.loyo.oa.photo.PhotoPicker;
+import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.upload.UploadController;
 import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
@@ -71,8 +71,6 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-
-import static com.loyo.oa.v2.application.MainApp.PICTURE;
 
 /**
  * 【新建跟进】客户管理
@@ -185,13 +183,13 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         if (null != mCustomer && isCustom) {
             getDefaultContact(mCustomer.contacts);
             tv_customer.setText(mCustomer.name);
-            if(isDetail)
-            ll_customer.setVisibility(View.GONE);
+            if (isDetail)
+                ll_customer.setVisibility(View.GONE);
         } else if (null != mClue && !isCustom) {
             tv_clue_company.setText(mClue.companyName);
             tv_clue_name.setText(mClue.responsorName);
-            if(isDetail)
-            ll_clue_company.setVisibility(View.GONE);
+            if (isDetail)
+                ll_clue_company.setVisibility(View.GONE);
         }
         controller.loadView(gridView);
         initMultiFunctionModule();
@@ -258,6 +256,10 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         mfmodule.setPictureClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (controller.count() >= 9) {
+                    Toast("最多选九张图片");
+                    return;
+                }
                 PhotoPicker.builder()
                         .setPhotoCount(9 - controller.count())
                         .setShowCamera(true)
@@ -325,6 +327,8 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
      * contact_name (联系人)
      */
     public void commitDynamic() {
+        cancelLoading();
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         if (isCustom) {
             map.put("customerId", mCustomer.getId());
@@ -356,12 +360,14 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                 HttpErrorCheck.checkResponse("新建跟进动态", response);
                 AppBus.getInstance().post(new FollowUpRushEvent());
                 app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                cancelLoading();
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
+                cancelLoading();
             }
         });
     }

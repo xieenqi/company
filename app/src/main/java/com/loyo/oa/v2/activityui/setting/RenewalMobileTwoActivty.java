@@ -49,7 +49,7 @@ public class RenewalMobileTwoActivty extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_renewal_mobile_two);
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         initUI();
     }
 

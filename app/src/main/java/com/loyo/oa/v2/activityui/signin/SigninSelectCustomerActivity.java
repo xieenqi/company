@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.adapter.SigninSelectCustomerAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.signin.persenter.SigninSelectCustomerPControl;
@@ -117,10 +118,12 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
         switch (requestCode) {
             case SEARCH_CUSTOMER:
             case CREAT_CUSTOMER:
+                ArrayList<Contact>  contact= (ArrayList<Contact>) data.getSerializableExtra("contact");
                 Intent intent = new Intent();
                 intent.putExtra("id", data.getStringExtra("id"));
                 intent.putExtra("name", data.getStringExtra("name"));
                 intent.putExtra("loc", data.getSerializableExtra("loc"));
+                intent.putExtra("contact", data.getSerializableExtra("contact"));
                 setResult(RESULT_OK, intent);
                 onBackPressed();
                 break;

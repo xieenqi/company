@@ -50,7 +50,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     @AfterViews
     void initViews() {
-        setTouchView(-1);
+//        setTouchView(-1);
         managerPresenter = new BulletinManagerPresenterImpl(this, mContext, BulletinManagerActivity.this);
         managerPresenter.isPermission();
 

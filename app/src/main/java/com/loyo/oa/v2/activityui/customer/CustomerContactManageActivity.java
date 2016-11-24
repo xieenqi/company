@@ -81,7 +81,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 layout_add.setVisibility(View.GONE);
             }
         }
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("联系人详情");
         layout_back.setOnTouchListener(Global.GetTouch());

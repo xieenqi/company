@@ -73,7 +73,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
             aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 1));
             aMap.setMyLocationEnabled(true);
         }
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         layout_back.setOnTouchListener(Global.GetTouch());
         layout_back.setOnClickListener(new View.OnClickListener() {
             @Override

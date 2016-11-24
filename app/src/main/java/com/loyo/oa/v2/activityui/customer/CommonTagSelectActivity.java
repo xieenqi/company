@@ -75,7 +75,7 @@ public class CommonTagSelectActivity extends BaseActivity {
 
     @AfterViews
     void initViews() {
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         tv_title_1.setText(title);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setVisibility(View.GONE);

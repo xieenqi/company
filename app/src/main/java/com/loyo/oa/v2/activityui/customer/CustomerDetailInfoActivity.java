@@ -101,7 +101,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     @AfterViews
     void initViews() {
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
         showLoading("", false);
 

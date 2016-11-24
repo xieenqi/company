@@ -125,6 +125,8 @@ public class RecordUtils {
             if (recorder != null && isStart) {
                 timer.cancel();
                 task.cancel();
+                timer = null;
+                task = null;
                 LogUtil.d("结束 前 时间:" + endTime);
                 endTime = System.currentTimeMillis();
                 LogUtil.d("结束 后 时间:" + endTime);

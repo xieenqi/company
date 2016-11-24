@@ -70,7 +70,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
 
     @AfterViews
     void initViews() {
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("任务管理");
         layout_back.setOnTouchListener(Global.GetTouch());

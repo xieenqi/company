@@ -58,7 +58,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         setContentView(R.layout.activity_demands_manage);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();

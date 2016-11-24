@@ -51,7 +51,7 @@ public class VerifyAccountActivity extends BaseActivity {
 
     @AfterViews
     void initViews() {
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         tv_title_1.setText("找回密码");
         Global.SetTouchView(img_title_left, btn_confirm, btn_get_code);
         et_account.addTextChangedListener(textWatcher);

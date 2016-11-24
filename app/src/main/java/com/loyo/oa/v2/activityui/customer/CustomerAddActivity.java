@@ -687,6 +687,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             loc.add(oldeLoc.loc[1]);
             Location location = new Location(loc, oldeLoc.addr);
             intent.putExtra("loc", location);
+            intent.putExtra("contact", retCustomer.contacts);
             setResult(RESULT_OK, intent);
         }
         onBackPressed();

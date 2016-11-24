@@ -125,7 +125,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         msgAudiomMenu = new MsgAudiomMenu(mContext, this,uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访签到");
         layout_back.setOnTouchListener(Global.GetTouch());

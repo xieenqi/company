@@ -49,7 +49,7 @@ public class CropImageActivity extends BaseActivity {
 
     @AfterViews
     void initViews() {
-        setTouchView(-1);
+//        setTouchView(-1);
         tv_edit.setVisibility(View.VISIBLE);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("设置头像");

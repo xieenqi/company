@@ -61,7 +61,7 @@ public class ChildTaskAddActivity extends BaseActivity {
 
     @AfterViews
     void intUi() {
-        setTouchView(-1);
+//        setTouchView(-1);
         layout_child_add_responser.setOnTouchListener(Global.GetTouch());
         btn_child_add_complete.setOnTouchListener(Global.GetTouch());
         btn_child_add_cancel_complete.setOnTouchListener(Global.GetTouch());

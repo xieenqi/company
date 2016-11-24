@@ -41,7 +41,7 @@ public class SettingPasswordActivity extends BaseActivity {
 
     @AfterViews
     void initUI() {
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         tv_title_1.setText("修改密码");
         Global.SetTouchView(img_title_left, btn_submit);
     }
