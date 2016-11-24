@@ -409,6 +409,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
                 mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, productData);
                 mBundle.putBoolean("boolean", true);
+                mBundle.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
                 app.startActivityForResult(OrderAddActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, mBundle);
                 break;
@@ -512,11 +513,13 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //选择客户
             case ExtraAndResult.REQUEST_CODE_CUSTOMER:
-                Customer customer = (Customer) data.getSerializableExtra("data");
+                customerId = data.getStringExtra("id");
+                customerName = data.getStringExtra("name");
+                /*Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     customerId = customer.getId();
                     customerName = customer.name;
-                }
+                }*/
                 tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 break;
 
