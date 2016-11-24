@@ -304,8 +304,10 @@ public class MultiFunctionModule extends LinearLayout {
 
     /*录音时间 暂停*/
     private void puaseRecordingTime() {
-        task.cancel();
-        timer.cancel();
+        if (task != null)
+            task.cancel();
+        if (timer != null)
+            timer.cancel();
     }
 
     /*录音时间  重新开始*/

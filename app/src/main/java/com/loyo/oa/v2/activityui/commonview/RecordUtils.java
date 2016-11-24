@@ -283,7 +283,9 @@ public class RecordUtils {
      */
     public static boolean permissionRecord() {
         if (PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.RECORD_AUDIO", "com.loyo.oa.v2")
-                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
+                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
+                && PackageManager.PERMISSION_GRANTED == MainApp.getMainApp().getPackageManager().checkPermission("android.permission.READ_PHONE_STATE", "com.loyo.oa.v2")
+                ) {
             return true;
         }
         return false;
