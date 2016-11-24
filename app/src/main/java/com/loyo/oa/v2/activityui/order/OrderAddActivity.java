@@ -513,13 +513,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //选择客户
             case ExtraAndResult.REQUEST_CODE_CUSTOMER:
-                customerId = data.getStringExtra("id");
-                customerName = data.getStringExtra("name");
-                /*Customer customer = (Customer) data.getSerializableExtra("data");
+                Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     customerId = customer.getId();
                     customerName = customer.name;
-                }*/
+                }
                 tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 break;
 

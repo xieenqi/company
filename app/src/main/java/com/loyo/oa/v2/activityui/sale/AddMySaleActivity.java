@@ -525,13 +525,11 @@ public class AddMySaleActivity extends BaseActivity {
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE_CUSTOMER://选择客户
-                    customerId = data.getStringExtra("id");
-                    customerName = data.getStringExtra("name");
-                    /*Customer customer = (Customer) data.getSerializableExtra("data");
+                    Customer customer = (Customer) data.getSerializableExtra("data");
                     if (null != customer) {
                         customerId = customer.getId();
                         customerName = customer.name;
-                    }*/
+                    }
                     tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                     /*if (TextUtils.isEmpty(et_name.getText().toString()))
                         et_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);*/
