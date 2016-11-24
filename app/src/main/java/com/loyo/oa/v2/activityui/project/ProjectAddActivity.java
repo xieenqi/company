@@ -215,7 +215,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     @Click(R.id.img_title_right)
     void createOrUpdateProject() {
-        if (selectedManagers.size() == 0) {
+        if (selectedManagers== null || selectedManagers.size() == 0) {
             Toast("项目负责人不能为空!");
             return;
         }
