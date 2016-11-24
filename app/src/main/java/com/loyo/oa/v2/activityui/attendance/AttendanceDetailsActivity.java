@@ -96,7 +96,7 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
 
     @AfterViews
     void initViews() {
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         layout_back.setOnTouchListener(Global.GetTouch());
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("考勤详情");

@@ -85,7 +85,7 @@ public class EditUserMobileActivity extends BaseActivity {
                 et_pwd.setTransformationMethod(isChecked ? HideReturnsTransformationMethod.getInstance() : PasswordTransformationMethod.getInstance());
             }
         });
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         Global.SetTouchView(img_title_left, bt_verificationCode, btn_complete, bt_renewal);
 
     }

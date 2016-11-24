@@ -147,7 +147,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @AfterViews
     void init() {
         initUI();
-        setTouchView(R.id.layout_touch);
+//        setTouchView(R.id.layout_touch);
 
         getDataWorkReport();
     }

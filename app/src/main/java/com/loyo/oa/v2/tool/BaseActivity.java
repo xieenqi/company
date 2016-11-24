@@ -45,7 +45,7 @@ import java.util.TimerTask;
  * activity 基类
  */
 
-public class BaseActivity extends Activity implements GestureDetector.OnGestureListener {
+public class BaseActivity extends Activity {
 
     protected MainApp app;
     protected boolean isNeedLogin = true;
@@ -54,7 +54,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public CustomProgressDialog customProgressDialog;
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
-    private GestureDetector mDetector;
+//    private GestureDetector mDetector;
     public SweetAlertDialogView sweetAlertDialogView;
 
     /**
@@ -84,7 +84,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         app = (MainApp) getApplicationContext();
         mContext = this;
-        mDetector = new GestureDetector(this, this);
+//        mDetector = new GestureDetector(this, this);
         com.loyo.oa.v2.common.event.AppBus.getInstance().register(this);
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
@@ -283,87 +283,87 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         void Confirm();
     }
 
-    //当控件Id>0的时候，是指定ViewGroup的ID
-    // = 0的时候是Activity使用手势。
-    // = -1的时候是Activity不使用手势。
-    protected void setTouchView(int _touchViewGroupId) {
-        if (_touchViewGroupId <= 0) {
-            mTouchViewGroupId = _touchViewGroupId;
-            return;
-        }
-
-        mTouchViewGroupId = _touchViewGroupId;
-
-        ViewGroup vg = (ViewGroup) findViewById(mTouchViewGroupId);
-        vg.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return mDetector.onTouchEvent(event);
-            }
-        });
-    }
-
-
-    @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-
-    }
-
-    /*页面左滑手指监听*/
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-//        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
-//            //onBackPressed();
+//    //当控件Id>0的时候，是指定ViewGroup的ID
+//    // = 0的时候是Activity使用手势。
+//    // = -1的时候是Activity不使用手势。
+//    protected void setTouchView(int _touchViewGroupId) {
+//        if (_touchViewGroupId <= 0) {
+//            mTouchViewGroupId = _touchViewGroupId;
+//            return;
 //        }
+//
+//        mTouchViewGroupId = _touchViewGroupId;
+//
+//        ViewGroup vg = (ViewGroup) findViewById(mTouchViewGroupId);
+//        vg.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                return mDetector.onTouchEvent(event);
+//            }
+//        });
+//    }
 
-        return false;
-    }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (!isNeedLogin || mTouchViewGroupId == -1) {
-            return super.onTouchEvent(event);
-        }
+//    @Override
+//    public boolean onDown(MotionEvent e) {
+//        return true;
+//    }
+//
+//    @Override
+//    public void onShowPress(MotionEvent e) {
+//
+//    }
+//
+//    @Override
+//    public boolean onSingleTapUp(MotionEvent e) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+//        return false;
+//    }
+//
+//    @Override
+//    public void onLongPress(MotionEvent e) {
+//
+//    }
+//
+//    /*页面左滑手指监听*/
+//    @Override
+//    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//
+////        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
+////            //onBackPressed();
+////        }
+//
+//        return false;
+//    }
 
-        return mDetector.onTouchEvent(event);
-    }
-
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-
-        if (!isNeedLogin || mTouchViewGroupId == -1) {
-            return super.dispatchTouchEvent(event);
-        } else if (mDetector != null) {
-            if (mDetector.onTouchEvent(event))
-            //If the gestureDetector handles the event, a swipe has been executed and no more needs to be done.
-            {
-                return true;
-            }
-        }
-        return super.dispatchTouchEvent(event);
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        if (!isNeedLogin || mTouchViewGroupId == -1) {
+//            return super.onTouchEvent(event);
+//        }
+//
+//        return mDetector.onTouchEvent(event);
+//    }
+//
+//
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent event) {
+//
+//        if (!isNeedLogin || mTouchViewGroupId == -1) {
+//            return super.dispatchTouchEvent(event);
+//        } else if (mDetector != null) {
+//            if (mDetector.onTouchEvent(event))
+//            //If the gestureDetector handles the event, a swipe has been executed and no more needs to be done.
+//            {
+//                return true;
+//            }
+//        }
+//        return super.dispatchTouchEvent(event);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

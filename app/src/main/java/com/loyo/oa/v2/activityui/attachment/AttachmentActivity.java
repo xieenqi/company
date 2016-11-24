@@ -88,7 +88,7 @@ public class AttachmentActivity extends BaseActivity {
                 tv_upload.setVisibility(View.GONE);
             }
         }
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         getAttachments();
     }
 

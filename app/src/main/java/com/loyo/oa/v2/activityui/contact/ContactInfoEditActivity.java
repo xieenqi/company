@@ -118,7 +118,7 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
 
     @AfterViews
     void initViews() {
-        setTouchView(-1);
+//        setTouchView(-1);
         mPresenter = new ContactInfoEditPresenterImpl(this, mContext, ContactInfoEditActivity.this);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("个人信息");

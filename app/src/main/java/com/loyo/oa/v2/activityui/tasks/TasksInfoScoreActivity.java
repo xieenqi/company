@@ -63,7 +63,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
     @AfterViews
     void init() {
         super.setTitle("任务审核");
-        setTouchView(R.id.layout_btn);
+//        setTouchView(R.id.layout_btn);
         getTempTask();
 
         ratingBar_Task.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {

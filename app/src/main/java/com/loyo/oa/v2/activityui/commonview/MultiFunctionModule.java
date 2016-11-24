@@ -35,7 +35,7 @@ public class MultiFunctionModule extends LinearLayout {
     private ImageView ll_action_record, iv_record, iv_record_keyboard, iv_picture;
     private TextView tv_record_action, tv_record_number;
     private long recordTime;
-    private boolean isRecordCancle, isEffective = false;//录音是否达到有效值
+    private boolean isRecordCancle, isEffective = false, isActionMove;//录音是否达到有效值
     private RecordUtils voice;
     private RecordComplete callbackComplete;
     Handler handler = new Handler();
@@ -78,6 +78,13 @@ public class MultiFunctionModule extends LinearLayout {
         this.addView(view);
         initRecord(context);
         Global.SetTouchView(ll_record_keyboard, ll_picture, ll_location, ll_at);
+        ll_action_record.setOnGenericMotionListener(new View.OnGenericMotionListener() {
+            @Override
+            public boolean onGenericMotion(View v, MotionEvent event) {
+                LogUtil.d("是俺家那么白浮雕" + event.getAction());
+                return true;
+            }
+        });
     }
 
     /**
@@ -92,6 +99,7 @@ public class MultiFunctionModule extends LinearLayout {
 
     /**
      * 拜访签到要单独设置图片
+     *
      * @param icon
      */
     public void setPictureIcon(int icon) {
@@ -170,6 +178,7 @@ public class MultiFunctionModule extends LinearLayout {
             if (recordTime == 0 && voice.getStartTime() != 0) {
                 stratRecordingTime();
             }
+            LogUtil.d("shuz数字+++" + event.getDownTime());
             LogUtil.d("模式+++" + event.getAction());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -178,18 +187,12 @@ public class MultiFunctionModule extends LinearLayout {
                     voice.initStaratRecord();
                     LogUtil.d("ACTION_DOWN++++++");
                     // 此处兼容魅族手机
-//                    if (isRecordCancle || (recordTime == 0 && voice.getStartTime() != 0)) {
-//                        stratRecordingTime();
-//                    }
-//                    if (recordTime >= 60) {//此处过了一分钟
-//                        isRecordCancle = true;
-//                        dialog.setVisibility(GONE);
-//                        completeRecord();
-//                        Global.Toast("录音时间只能在一分钟内");
-//                        return false;
-//                    }
+                    if (isRecordCancle || (recordTime == 0 && voice.getStartTime() != 0)) {
+                        stratRecordingTime();
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
+                    isActionMove = true;// 此处兼容魅族手机
                     dialog.setVisibility(VISIBLE);
                     if (event.getX() <= 0.0F || event.getY() <= -100 || event.getX() >= ll_action_record.getWidth()) {
                         //停止动画
@@ -208,7 +211,7 @@ public class MultiFunctionModule extends LinearLayout {
                         isRecordCancle = false;
                     }
                     if (recordTime >= 60) {//此处过了一分钟
-                        isRecordCancle = true;
+                        isRecordCancle = false;
                         dialog.setVisibility(GONE);
                         completeRecord();
                         Global.Toast("录音时间只能在一分钟内");
@@ -219,9 +222,6 @@ public class MultiFunctionModule extends LinearLayout {
                 case MotionEvent.ACTION_UP:
                     dialog.setVisibility(GONE);
                     v.setAlpha(1f);
-                    if (voice.isStart()) {
-                        voice.stopRecord();
-                    }
                     completeRecord();
                     LogUtil.d("!!!!ACTION_UP");
                     break;
@@ -250,7 +250,10 @@ public class MultiFunctionModule extends LinearLayout {
      * 录音完成的操作
      */
     private void completeRecord() {
-        if (!isRecordCancle && isEffective) {
+        if (!isRecordCancle && isEffective && recordTime > 2) {
+            if (voice.isStart()) {
+                voice.stopRecord();
+            }
             callbackComplete.recordComplete(voice.getOutPath(), recordTime + "");
             //恢复默认录音状态是键盘
             ll_record_keyboard.setTag(false);
@@ -259,6 +262,8 @@ public class MultiFunctionModule extends LinearLayout {
         } else {
             if (!isRecordCancle)
                 Global.Toast("好像你没有说话哦!");
+//            if (recordTime<2)
+//                Global.Toast("录音时间太短");
         }
     }
 
@@ -268,6 +273,7 @@ public class MultiFunctionModule extends LinearLayout {
             timer.cancel();
             timer = null;
         }
+        LogUtil.d("此处兼容[[【开始】]]魅族手机");
         timer = new Timer();
         task = new TimerTask() {
             @Override
@@ -280,6 +286,14 @@ public class MultiFunctionModule extends LinearLayout {
                             tv_record_number.setText("录音倒计时" + (60 - recordTime) + "'");
                         } else {
                             tv_record_number.setText(recordTime + "'");
+                        }
+                        // 此处兼容魅族手机
+                        if (recordTime >= 60 && !isActionMove) {//此处过了一分钟
+                            isRecordCancle = false;
+                            dialog.setVisibility(GONE);
+                            completeRecord();
+                            LogUtil.d("此处兼容魅族手机");
+                            Global.Toast("录音时间只能在一分钟内");
                         }
                     }
                 });
@@ -302,10 +316,13 @@ public class MultiFunctionModule extends LinearLayout {
 
     /*录音时间  取消*/
     private void cancleRecordingTime() {
-        timer.cancel();
+        if (timer != null)
+            timer.cancel();
         recordTime = 0;
-        task.cancel();
+        if (task != null)
+            task.cancel();
         task = null;
+        timer = null;
         tv_record_number.setText("");
     }
 

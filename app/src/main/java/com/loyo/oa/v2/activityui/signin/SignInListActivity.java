@@ -71,7 +71,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
 
     @AfterViews
     void initViews() {
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访签到");
         layout_back.setOnTouchListener(Global.GetTouch());

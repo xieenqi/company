@@ -129,7 +129,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     @AfterViews
     void initViews() {
 
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         switch (outKind) {
             case 0:
                 state = CLOCKIN_STATE_NO;

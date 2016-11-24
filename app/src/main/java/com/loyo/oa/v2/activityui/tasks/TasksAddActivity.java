@@ -190,7 +190,7 @@ public class TasksAddActivity extends BaseActivity {
         switch_approve.setState(true);
         edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
         init_gridView_photo();
-        setTouchView(-1);
+//        setTouchView(-1);
         getTempTask();
 
         projectAddTask();
