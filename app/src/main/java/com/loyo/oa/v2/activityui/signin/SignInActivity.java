@@ -96,7 +96,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private Customer mCustomer;
     private ArrayList<Contact> contactList;
     private Animation animation;
-    private boolean isPicture = false, isCusPosition = false;
+    private boolean isPicture = false, isCusPosition = false, isLocation = false;
     private PositionResultItem positionResultItem;
     private int pcitureNumber;//记录上传了多少张图
     private StaffMemberCollection collection;//选人返回的数据
@@ -345,7 +345,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 if (!checkData()) {
                     return;
                 }
-                if ("未知地址".equals(tv_customer_address.getText().toString())) {
+                if (!isLocation) {
                     sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -636,9 +636,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
             tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)));
             tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
+            isLocation = true;
         } else {
             tv_distance_deviation.setText("未知");
             tv_distance_deviation.setTextColor(Color.parseColor("#f5625a"));
+            isLocation = false;
         }
     }
 
