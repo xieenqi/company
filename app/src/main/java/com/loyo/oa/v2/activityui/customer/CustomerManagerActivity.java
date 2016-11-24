@@ -91,6 +91,12 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     public final static int CUSTOMER_COMM = 4;
 
     /**
+     * 游客
+     */
+    public final static int CUSTOMER_MMP  = 5;
+
+
+    /**
      * 个人附近客户
      */
     public final static int NEARCUS_SELF = 1;

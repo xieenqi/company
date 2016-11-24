@@ -91,7 +91,7 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter {
                 tv_calls.setText("");
             }
             holder.layout_audio.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(audioLength+"\'");
+            holder.tv_audio_length.setText(audioLength+"\"");
 
         } else {
             holder.layout_audio.setVisibility(View.GONE);
@@ -113,7 +113,6 @@ public class ListOrDetailsCommentAdapter extends BaseAdapter {
         TextView tv_name;
         TextView tv_title;
         TextView tv_audio_length;
-
         LinearLayout layout_audio;
     }
 }

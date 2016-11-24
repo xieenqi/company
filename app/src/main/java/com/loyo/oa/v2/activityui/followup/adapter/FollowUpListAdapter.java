@@ -301,7 +301,7 @@ public class FollowUpListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra("Id", followUpListModel.customerId);
-                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MMP);
                 intent.setClass(mContext, CustomerDetailInfoActivity_.class);
                 mContext.startActivity(intent);
             }
