@@ -172,6 +172,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
      */
     public void commitDynamic() {
 
+
         if (StringUtil.isEmpty(content)) {
             Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
             return;
@@ -183,6 +184,8 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
             return;
         }
 
+        cancelLoading();
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("sealsleadId", clueId);
         map.put("content", content);
@@ -198,6 +201,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
             @Override
             public void success(final SaleActivity saleActivity, final Response response) {
                 HttpErrorCheck.checkResponse("新建跟进动态", response);
+                cancelLoading();
                 app.finishActivity(ClueDynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
             }
 
@@ -205,6 +209,7 @@ public class ClueDynamicAddActivity extends BaseActivity implements View.OnClick
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
+                cancelLoading();
             }
         });
 
