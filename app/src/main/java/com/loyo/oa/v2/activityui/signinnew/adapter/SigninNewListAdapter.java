@@ -237,7 +237,7 @@ public class SigninNewListAdapter extends BaseAdapter {
                     String[] gps = signinNewListModel.gpsInfo.split(",");
                     mIntent.putExtra("la",Double.valueOf(gps[1]));
                     mIntent.putExtra("lo",Double.valueOf(gps[0]));
-                    mIntent.putExtra("address",signinNewListModel.address);
+                    mIntent.putExtra("address",signinNewListModel.position);
                     mIntent.putExtra("title","签到地址");
                     mContext.startActivity(mIntent);
                 }else{
