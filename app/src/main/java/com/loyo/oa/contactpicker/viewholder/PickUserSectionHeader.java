@@ -18,7 +18,7 @@ public class PickUserSectionHeader extends RecyclerView.ViewHolder {
 
     private PickUserSectionHeader(View itemView) {
         super(itemView);
-        contentView = (TextView) itemView;
+        contentView = (TextView) itemView.findViewById(R.id.text_view);
     }
 
     public static PickUserSectionHeader instance(ViewGroup parent) {
