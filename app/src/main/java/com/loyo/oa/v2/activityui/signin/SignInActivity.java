@@ -340,7 +340,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 break;
 
             case R.id.img_title_right:
-                if (mCustomer != null && TextUtils.isEmpty(customerAddress)) {
+                if (!checkData()) {
+                    return;
+                }
+                if ("未知地址".equals(tv_customer_address.getText().toString())) {
                     sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -390,23 +393,32 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    /**
-     * 新增签到
-     */
-    private void addSignIn() {
+    private boolean checkData() {
         if (TextUtils.isEmpty(customerId)) {
             Toast("请选择客户");
-            return;
+            return false;
         }
         mAddress = tv_address.getText().toString();
         if (TextUtils.isEmpty(mAddress)) {
             Global.ToastLong("无效地址!请刷新地址后重试");
-            return;
+            return false;
+        }
+        if (TextUtils.isEmpty(edt_memo.getText().toString())) {
+            Global.ToastLong("请填写拜访说明");
+            return false;
         }
         if (isPicture && !(lstData_Attachment.size() > 0)) {
             Global.ToastLong("需要上传照片，请拍照");
-            return;
+            return false;
         }
+
+        return true;
+    }
+
+    /**
+     * 新增签到
+     */
+    private void addSignIn() {
 
 
         HashMap<String, Object> map = new HashMap<>();
@@ -419,8 +431,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("atDepts", atDepts);
         map.put("atUserIds", atUserIds);
         map.put("contactName", tv_contact_name.getText().toString());
-        if (isCusPosition)
-            map.put("isCusPosition", customerAddress);
+        map.put("isCusPosition", isCusPosition);//是否把签到地址设为客户定位地址
 
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
