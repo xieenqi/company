@@ -47,9 +47,9 @@ public class SexSelectActivity extends BaseActivity implements View.OnClickListe
         img_title_left.setOnClickListener(this);
         tv_title_1.setText("性别");
         if ("男".equals(sex)) {
-            iv_man.setImageResource(R.drawable.icon_newchildtask_select_sure);
+            iv_man.setImageResource(R.drawable.icon_sex_select_sure);
         } else if ("女".equals(sex)) {
-            iv_woman.setImageResource(R.drawable.icon_newchildtask_select_sure);
+            iv_woman.setImageResource(R.drawable.icon_sex_select_sure);
         }
     }
 
@@ -72,11 +72,11 @@ public class SexSelectActivity extends BaseActivity implements View.OnClickListe
     private void sendData(int sex) {
         Intent intent = new Intent();
         if (sex == 1) {
-            iv_man.setImageResource(R.drawable.icon_newchildtask_select_sure);
+            iv_man.setImageResource(R.drawable.icon_sex_select_sure);
             iv_woman.setImageResource(R.color.white);
             intent.putExtra("sex", SEX_MAN);
         } else {
-            iv_woman.setImageResource(R.drawable.icon_newchildtask_select_sure);
+            iv_woman.setImageResource(R.drawable.icon_sex_select_sure);
             iv_man.setImageResource(R.color.white);
             intent.putExtra("sex", SEX_WOMAN);
         }
