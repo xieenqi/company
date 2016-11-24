@@ -61,9 +61,7 @@ public class MapModifySerachView extends BaseActivity implements View.OnClickLis
     private Intent mIntent;
     private Bundle mBundle;
     private LatLonPoint mLatLonPoint;
-
     private PositionResultItem posiResuItem;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

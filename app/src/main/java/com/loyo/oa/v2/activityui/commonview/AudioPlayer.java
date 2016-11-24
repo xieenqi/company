@@ -128,10 +128,18 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
         isOnPlay = false;
         MainApp.getMainApp().startAnim(textView);
         layout_audioplayer.setVisibility(View.VISIBLE);
+        LogUtil.dee("audioStart");
         layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
         if (player != null) {
             player.play();
         }
+    }
+
+    /**
+     * 是否正在播放
+     * */
+    public boolean isPlaying(){
+        return player.mediaPlayer.isPlaying();
     }
 
     /**
@@ -207,8 +215,6 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
             this.progress = progress * player.mediaPlayer.getDuration() / seekBar.getMax();
             playTime = DateTool.stringForTime(this.progress);
             mHandler.sendEmptyMessage(0x03);
-            LogUtil.dee("progress:"+progress);
-            LogUtil.dee("this.Duration:"+progress);
         }
 
         @Override

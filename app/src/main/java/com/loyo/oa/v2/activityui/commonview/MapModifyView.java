@@ -291,7 +291,7 @@ public class MapModifyView extends BaseActivity
                 showLoading("");
                 getAddress(mLatLonPoint);
             } else {
-                Toast("请检查您的网络连接");
+                Toast("获取位置失败，请检查网络或GPS是否正常");
             }
         } else {
             isTouch = false;
@@ -385,7 +385,7 @@ public class MapModifyView extends BaseActivity
                 Toast("没有查询到相关信息！");
             }
         } else {
-            Toast("请检查您的网络连接！");
+            Toast("获取位置失败，请检查网络或GPS是否正常！");
         }
     }
 
@@ -416,7 +416,7 @@ public class MapModifyView extends BaseActivity
             }
         } else {
             cancelLoading();
-            Toast("请检查您的网络连接！");
+            Toast("获取位置失败，请检查网络或GPS是否正常！");
         }
     }
 
@@ -490,7 +490,7 @@ public class MapModifyView extends BaseActivity
 
             @Override
             public void OnLocationGDFailed() {
-                Toast("定位失败,请在网络和GPS信号良好时重试");
+                Toast("获取位置失败，请检查网络或GPS是否正常");
                 LocationUtilGD.sotpLocation();
             }
         });

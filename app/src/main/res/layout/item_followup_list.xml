@@ -57,40 +57,39 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="59dp"
                 android:orientation="vertical"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/tv_memo"
-                android:layout_marginLeft="59dp"
-                android:layout_marginRight="14dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
                 android:text=""
                 android:textColor="@color/text33"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_audio"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="59dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginTop="8dp"
                 android:divider="#00000000"
-                android:listSelector="@android:color/transparent"
                 android:dividerHeight="3dp"
-                android:visibility="gone"
-                />
+                android:listSelector="@android:color/transparent"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/layout_phonely"
-                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:layout_marginLeft="59dp"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,42 +123,37 @@
                 android:listSelector="@android:color/transparent"
                 android:numColumns="3"
                 android:verticalSpacing="15dp"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/layout_enclosure"
-                android:layout_marginLeft="59dp"
-                android:layout_marginRight="14dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-            </LinearLayout>
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
+                android:orientation="vertical"></LinearLayout>
 
             <com.loyo.oa.v2.customview.CustomerListView
                 android:id="@+id/lv_options"
-                android:layout_marginLeft="59dp"
-                android:layout_marginRight="14dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
                 android:divider="#00000000"
                 android:dividerHeight="3dp"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
 
             <LinearLayout
                 android:id="@+id/layout_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginLeft="59dp"
                 android:layout_marginRight="14dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -168,25 +162,24 @@
 
                 <TextView
                     android:id="@+id/tv_address"
-                    android:layout_marginLeft="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:singleLine="true"
+                    android:layout_marginLeft="8dp"
                     android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text=""
                     android:textColor="@color/title_bg1" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_toast"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginLeft="59dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="59dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="8dp"
                 android:text=""
-                android:textColor="@color/text99"
-                />
+                android:textColor="@color/text99" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -204,8 +197,7 @@
                 android:layout_marginLeft="59dp"
                 android:layout_marginTop="@dimen/dimen_8"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -236,8 +228,7 @@
                 android:layout_marginLeft="59dp"
                 android:layout_marginTop="@dimen/dimen_8"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -295,8 +286,7 @@
                 android:layout_marginLeft="59dp"
                 android:layout_marginTop="@dimen/dimen_8"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -368,8 +358,7 @@
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:background="@drawable/bg_comment"
                 android:orientation="vertical"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <com.loyo.oa.v2.customview.CustomerListView
                     android:id="@+id/lv_comment"
@@ -377,6 +366,13 @@
                     android:layout_height="wrap_content"
                     android:divider="#00000000"
                     android:dividerHeight="3dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+                <include layout="@layout/include_solid_line_left" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

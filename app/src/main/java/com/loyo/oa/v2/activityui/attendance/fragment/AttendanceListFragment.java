@@ -406,7 +406,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         }
 
         if (!Global.isConnected()) {
-            Toast("请检查您的网络连接");
+            Toast("获取位置失败，请检查网络或GPS是否正常");
             return;
         }
         /*工作日*/
@@ -495,7 +495,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast("获取打卡位置失败");
+        Toast("获取位置失败，请检查网络或GPS是否正常");
     }
 
     /**

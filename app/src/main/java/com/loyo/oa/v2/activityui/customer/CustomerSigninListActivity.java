@@ -229,40 +229,6 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     }
 
     /**
-     * 列表播放语音回调
-     * */
-    @Override
-    public void playVoice(AudioModel audioModel,TextView textView) {
-        if(TextUtils.isEmpty(audioModel.url)){
-            Toast("无录音资源!");
-            return;
-        }
-
-        layout_bottom_voice.setVisibility(View.VISIBLE);
-        layout_bottom_voice.removeAllViews();
-        layout_bottom_voice.addView(audioPlayer);
-        /*关闭上一条TextView动画*/
-        if(playVoiceSize > 0){
-            if(null != lastView)
-                MainApp.getMainApp().stopAnim(lastView);
-        }
-
-        /*点击同一条则暂停播放*/
-        if(lastView == textView){
-            MainApp.getMainApp().stopAnim(textView);
-            audioPlayer.audioPause(textView);
-            lastView = null;
-        }else{
-            audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel,textView);
-            lastUrl = audioModel.url;
-            lastView = textView;
-        }
-
-        playVoiceSize++;
-    }
-
-    /**
      * 点击评论回调
      */
     @Override
@@ -348,4 +314,46 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
 
         }
     }
+
+    /**
+     * 列表播放语音回调
+     */
+    @Override
+    public void playVoice(AudioModel audioModel, TextView textView) {
+        if (TextUtils.isEmpty(audioModel.url)) {
+            Toast("无录音资源!");
+            return;
+        }
+
+        layout_bottom_voice.setVisibility(View.VISIBLE);
+        layout_bottom_voice.removeAllViews();
+        layout_bottom_voice.addView(audioPlayer);
+        /*关闭上一条TextView动画*/
+        if (playVoiceSize > 0) {
+            if (null != lastView)
+                MainApp.getMainApp().stopAnim(lastView);
+        }
+
+        if(audioPlayer.isPlaying()){
+            /*点击同一条则暂停播放*/
+            if (lastView == textView) {
+                LogUtil.dee("同一条");
+                MainApp.getMainApp().stopAnim(textView);
+                audioPlayer.audioPause(textView);
+                lastView = null;
+            } else {
+                audioPlayer.audioStart(textView);
+                audioPlayer.threadPool(audioModel, textView);
+                lastUrl = audioModel.url;
+                lastView = textView;
+            }
+        }else{
+            audioPlayer.audioStart(textView);
+            audioPlayer.threadPool(audioModel, textView);
+            lastUrl = audioModel.url;
+            lastView = textView;
+        }
+        playVoiceSize++;
+    }
+
 }

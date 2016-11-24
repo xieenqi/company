@@ -423,18 +423,25 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        /*点击同一条则暂停播放*/
-        if (lastView == textView) {
-            MainApp.getMainApp().stopAnim(textView);
-            audioPlayer.audioPause(textView);
-            lastView = null;
-        } else {
+        if(audioPlayer.isPlaying()){
+            /*点击同一条则暂停播放*/
+            if (lastView == textView) {
+                LogUtil.dee("同一条");
+                MainApp.getMainApp().stopAnim(textView);
+                audioPlayer.audioPause(textView);
+                lastView = null;
+            } else {
+                audioPlayer.audioStart(textView);
+                audioPlayer.threadPool(audioModel, textView);
+                lastUrl = audioModel.url;
+                lastView = textView;
+            }
+        }else{
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }
-
         playVoiceSize++;
     }
 }

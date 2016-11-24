@@ -764,7 +764,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 attendanceRecords = attendanceRecord;
                 HttpErrorCheck.checkResponse("考勤信息：", response);
-                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
+                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "获取位置失败，请检查网络或GPS是否正常" : address);
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
                 } else {
@@ -786,7 +786,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "获取位置失败，请检查网络或GPS是否正常", Toast.LENGTH_SHORT).show();
     }
 
     @Override

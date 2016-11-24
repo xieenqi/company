@@ -407,7 +407,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra("Id", mSigninDelModel.customerId);
-                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MMP);
                 intent.setClass(mContext, CustomerDetailInfoActivity_.class);
                 mContext.startActivity(intent);
             }
@@ -495,7 +495,6 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
      */
     @Override
     public void playVoice(AudioModel audioModel, TextView textView) {
-
         if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
@@ -504,19 +503,26 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);
-
         /*关闭上一条TextView动画*/
         if (playVoiceSize > 0) {
             if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        /*点击同一条则暂停播放*/
-        if (lastView == textView) {
-            MainApp.getMainApp().stopAnim(textView);
-            audioPlayer.audioPause(textView);
-            lastView = null;
-        } else {
+        if(audioPlayer.isPlaying()){
+            /*点击同一条则暂停播放*/
+            if (lastView == textView) {
+                LogUtil.dee("同一条");
+                MainApp.getMainApp().stopAnim(textView);
+                audioPlayer.audioPause(textView);
+                lastView = null;
+            } else {
+                audioPlayer.audioStart(textView);
+                audioPlayer.threadPool(audioModel, textView);
+                lastUrl = audioModel.url;
+                lastView = textView;
+            }
+        }else{
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
@@ -524,6 +530,4 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         }
         playVoiceSize++;
     }
-
-
 }

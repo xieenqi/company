@@ -157,6 +157,7 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
         showLoading("");
         getData();
         mPresenter = new MyCustomerFragPresenterImpl(getActivity(), this);
+        btn_add.setVisibility(View.GONE);
         Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
     }
 
