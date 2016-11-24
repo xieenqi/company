@@ -121,7 +121,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     }
 
     private void setRecordLength() {
-        tv_record_number.setText(time + "'");
+        tv_record_number.setText(time + "\"");
         int timeNumber = Integer.parseInt(time);
         if (timeNumber > 0 && timeNumber <= 15) {
             tv_record_length.setText("000");

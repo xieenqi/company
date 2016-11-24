@@ -103,7 +103,6 @@
                 android:background="@drawable/bg_btn_circle"
                 android:textColor="@color/white"
                 />
-
         </FrameLayout>
     </com.loyo.oa.dropdownmenu.DropDownMenu>
 </LinearLayout>

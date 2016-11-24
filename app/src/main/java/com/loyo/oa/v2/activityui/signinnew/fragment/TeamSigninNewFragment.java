@@ -371,10 +371,10 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
 
     /**
      * 列表播放语音回调
-     * */
+     */
     @Override
-    public void playVoice(AudioModel audioModel,TextView textView) {
-        if(TextUtils.isEmpty(audioModel.url)){
+    public void playVoice(AudioModel audioModel, TextView textView) {
+        if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
         }
@@ -383,25 +383,30 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);
         /*关闭上一条TextView动画*/
-        if(playVoiceSize > 0){
-            if(null != lastView)
+        if (playVoiceSize > 0) {
+            if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        /*点击同一条则暂停播放*/
-        if(lastView == textView){
-            MainApp.getMainApp().stopAnim(textView);
-            audioPlayer.audioPause(textView);
-            lastView = null;
+        if(audioPlayer.isPlaying()){
+            /*点击同一条则暂停播放*/
+            if (lastView == textView) {
+                LogUtil.dee("同一条");
+                MainApp.getMainApp().stopAnim(textView);
+                audioPlayer.audioPause(textView);
+                lastView = null;
+            } else {
+                audioPlayer.audioStart(textView);
+                audioPlayer.threadPool(audioModel, textView);
+                lastUrl = audioModel.url;
+                lastView = textView;
+            }
         }else{
             audioPlayer.audioStart(textView);
-            audioPlayer.threadPool(audioModel,textView);
+            audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
             lastView = textView;
         }
-
         playVoiceSize++;
     }
-
-
 }
