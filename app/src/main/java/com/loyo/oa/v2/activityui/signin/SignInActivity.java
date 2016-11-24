@@ -167,14 +167,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
             getDefaultContact(mCustomer.contacts);
             contactList = mCustomer.contacts;
-            if (mCustomer.position != null) {
-                List<Double> locList = new ArrayList<>();
-                for (Double ele : mCustomer.position.loc) {
-                    locList.add(ele);
-                }
-                Location loc = new Location(locList, mCustomer.position.addr);
-                distanceInfo(loc);
-            }
+
         }
     }
 
@@ -308,6 +301,15 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 tv_address.setText(address);
                 LocationUtilGD.sotpLocation();
                 UMengTools.sendLocationInfo(address, longitude, latitude);
+                //此处是客户详情在定位成功过后再计算偏差
+                if (mCustomer != null && mCustomer.position != null) {
+                    List<Double> locList = new ArrayList<>();
+                    for (Double ele : mCustomer.position.loc) {
+                        locList.add(ele);
+                    }
+                    Location loc = new Location(locList, mCustomer.position.addr);
+                    distanceInfo(loc);
+                }
             }
 
             @Override
@@ -609,6 +611,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     getDefaultContact(contactList);
                 } else {
                     ll_contact.setVisibility(View.GONE);
+                    tv_contact_name.setText("");
                 }
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 edt_memo.setText(TextUtils.isEmpty(customerName) ? "" : "我拜访了" + customerName);
