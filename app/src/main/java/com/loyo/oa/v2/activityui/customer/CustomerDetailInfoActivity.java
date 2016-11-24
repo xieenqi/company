@@ -81,13 +81,14 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @Extra("Id")
     String id;
     @Extra(ExtraAndResult.EXTRA_TYPE)
-    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户"
+    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户" 5.游客
     public boolean isLock;
     public boolean isMyUser;
     public boolean isPutOcen;
     public boolean isEdit;
     public boolean isRoot = false;
     private boolean isMem = false;
+    private boolean isTourist; //true:游客状态
     private MembersRoot memRoot;
     private Contact mContact;
     private RelativeLayout layout_wirete, layout_phone;
@@ -103,6 +104,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 //        setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
         showLoading("", false);
+
+        isTourist = getIntent().getBooleanExtra(ExtraAndResult.EXTRA_OBJ,false);
 
         layout_wirete = (RelativeLayout) findViewById(R.id.layout_wirete);
         layout_phone = (RelativeLayout) findViewById(R.id.layout_phone);
@@ -142,7 +145,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             if (customerType == 4) {
                 Permission perGet = MainApp.rootMap.get("0404");
                 if (perGet != null && perGet.isEnable()) {
-                    img_public.setVisibility(View.VISIBLE);
+                    if(!isTourist){
+                        img_public.setVisibility(View.VISIBLE);
+                    }
                     layout_menu.setVisibility(View.GONE);
                 }
             }
@@ -174,9 +179,18 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             isMem = true;
         }
 
-        if (customerType == 3) {//团队客户火力全开 相当于自己的客户
+        if (customerType == 3 /*团队客户火力全开 相当于自己的客户*/ ) {
             img_title_right.setVisibility(View.VISIBLE);
+        }else if(customerType == 5 /*游客*/){
+            img_title_right.setVisibility(View.INVISIBLE);
+            layout_menu.setVisibility(View.GONE);
+            mCustomer.lock = false;
+            isMem = true;
+            isRoot = false;
+            isMyUser = false;
         }
+
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         layout_customer_info.setOnTouchListener(Global.GetTouch());
         img_public.setOnTouchListener(Global.GetTouch());

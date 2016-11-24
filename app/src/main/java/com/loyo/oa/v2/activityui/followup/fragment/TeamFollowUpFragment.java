@@ -71,6 +71,10 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private String menuTimekey = "";        /*时间*/
     private String menuChoskey = "", method, typeId, activityType; /*筛选*/
     private String menuGuykey = "";         /*人员*/
+
+    private String userId = "";
+    private String xPath = "";
+
     private boolean isPullOrDown;
     private int commentPosition;
 
@@ -215,13 +219,22 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                             typeId = "";
 //                            activityType = "";
                         }
-
                         break;
 
                     /*人员*/
                     case 2: {
                         MenuModel model = selectedModels.get(0);
-                        menuGuykey = model.getKey();
+                        //menuGuykey = model.getKey();
+                        if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
+                            LogUtil.dee("xPath");
+                            xPath = model.getKey();
+                            userId = "";
+                        }
+                        else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
+                            LogUtil.dee("userId");
+                            xPath = "";
+                            userId = model.getKey();
+                        }
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
                     }
                     break;
@@ -280,8 +293,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userId", "");            //我的传id,团队则空着
-        map.put("xpath", "");
+        map.put("userId", userId);
+        map.put("xpath", xPath);
         map.put("timeType", menuTimekey); //时间查询
         map.put("method", method);        //跟进类型0:全部 1:线索 2:客户
         map.put("typeId", typeId);

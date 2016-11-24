@@ -249,7 +249,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             edt_contract.setText(contactName);
         }
         if (!TextUtils.isEmpty(contactPhone)) {
-            edt_contract_tel1.setText(contactPhone.replaceAll(" ", ""));
+            edt_contract_tel1.setText(contactPhone.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", ""));
         }
     }
 

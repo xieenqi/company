@@ -43,8 +43,10 @@ import retrofit.client.Response;
 public class IntentionProductActivity extends BaseActivity {
 
     public static String KEY_CAN_EDIT = "com.logo.oa.IntentionProduct.KEY_CAN_EDIT";
+    public static String KEY_CAN_DELETE = "com.logo.oa.IntentionProduct.KEY_CAN_DELETE";
 
     private boolean canEdit = false;
+    private boolean canDelete = false;
     private String saleId = "";
     private int resultAction = 0;
     private int fromPage = 0;
@@ -103,6 +105,7 @@ public class IntentionProductActivity extends BaseActivity {
         ll_add.setVisibility(canEdit?View.VISIBLE:View.GONE);
         saleProductAdapter = new SaleProductAdapter();
         saleProductAdapter.canEdit = canEdit;
+        saleProductAdapter.canDelete = canDelete;
         lv_list = (ListView) findViewById(R.id.lv_list);
         lv_list.setAdapter(saleProductAdapter);
         tv_saleToal = (CustomTextView) findViewById(R.id.tv_saleToal);
@@ -136,11 +139,14 @@ public class IntentionProductActivity extends BaseActivity {
      * 获得传递过来的数据
      */
     private void getIntentData() {
-        canEdit = getIntent().getBooleanExtra(KEY_CAN_EDIT, false);
-        saleId = getIntent().getStringExtra("saleId");
-        fromPage = getIntent().getIntExtra("data", 0);
-        isKine = getIntent().getBooleanExtra("boolean", false);
-        ArrayList<SaleIntentionalProduct> intentData = (ArrayList<SaleIntentionalProduct>) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        canEdit   = getIntent().getBooleanExtra(KEY_CAN_EDIT, false);
+        canDelete = getIntent().getBooleanExtra(KEY_CAN_DELETE, false);
+        saleId    = getIntent().getStringExtra("saleId");
+        fromPage  = getIntent().getIntExtra("data", 0);
+        isKine    = getIntent().getBooleanExtra("boolean", false);
+        ArrayList<SaleIntentionalProduct> intentData
+                  = (ArrayList<SaleIntentionalProduct>) getIntent()
+                      .getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentData && intentData.size() > 0) {
             listData = intentData;
         }
@@ -215,6 +221,7 @@ public class IntentionProductActivity extends BaseActivity {
     class SaleProductAdapter extends BaseAdapter {
 
         public boolean canEdit;
+        public boolean canDelete;
         @Override
         public int getCount() {
             return listData.size();
@@ -259,7 +266,7 @@ public class IntentionProductActivity extends BaseActivity {
             }
             holderView.setContentView(position);
             holderView.ll_edit.setVisibility(canEdit?View.VISIBLE:View.GONE);
-            holderView.ll_delete.setVisibility(canEdit?View.VISIBLE:View.GONE);
+            holderView.ll_delete.setVisibility(canDelete?View.VISIBLE:View.GONE);
             return convertView;
         }
     }
