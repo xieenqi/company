@@ -247,7 +247,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         String phone = event.bundle.getString(ExtraAndResult.EXTRA_DATA);
 
         et_name.setText(name);
-        edt_contract_tel1.setText(phone);
+        edt_contract_tel1.setText(phone.replaceAll(" ", ""));
 
     }
 

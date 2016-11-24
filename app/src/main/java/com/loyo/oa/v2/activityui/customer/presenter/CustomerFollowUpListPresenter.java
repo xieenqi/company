@@ -15,6 +15,6 @@ public interface CustomerFollowUpListPresenter {
     void requestComment(HashMap<String, Object> map);
 
     /*获取列表数据*/
-    void getListData(HashMap<String, Object> map);
+    void getListData(HashMap<String, Object> map,String id);
 
 }

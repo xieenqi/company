@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
+import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
@@ -32,6 +33,7 @@ import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
+import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -53,19 +55,19 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<FollowUpListModel> listModel;
-    private FollowUpListView viewCrol;
-    private AudioPlayCallBack audioCallBack;
+    private CustomerFollowUpListView viewCrol;
+    private AudioPlayCallBack audioPlayCallBack;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格附件 */
     private ListOrDetailsCommentAdapter commentAdapter;    /* 评论区域 */
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
 
-    public CustomerFollowUpListAdapter(Context mContext, ArrayList<FollowUpListModel> listModel, FollowUpListView viewCrol, AudioPlayCallBack audioCallBack) {
+    public CustomerFollowUpListAdapter(Context mContext, ArrayList<FollowUpListModel> listModel, CustomerFollowUpListView viewCrol, AudioPlayCallBack audioCallBack) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
-        this.audioCallBack = audioCallBack;
+        this.audioPlayCallBack = audioCallBack;
     }
 
     @Override
@@ -121,8 +123,8 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         holder.iv_comment.setOnTouchListener(Global.GetTouch());
 
         holder.setContent(holder.ll_web, followUpListModel.content);
-        ImageLoader.getInstance().displayImage(followUpListModel.creator.avatar, holder.iv_heading);
-        holder.tv_name.setText(followUpListModel.creator.name);
+        ImageLoader.getInstance().displayImage(followUpListModel.avatar, holder.iv_heading);
+        holder.tv_name.setText(followUpListModel.creatorName);
         holder.tv_contact.setText(TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
         holder.tv_create_time.setText(DateTool.getDiffTime(followUpListModel.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# "+followUpListModel.typeName);
@@ -191,7 +193,8 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
 
 
         /** @的相关人员 */
-        if(null != followUpListModel.atNameAndDepts){
+        if(null != followUpListModel.atNameAndDepts && !TextUtils.isEmpty(followUpListModel.atNameAndDepts)){
+            holder.tv_toast.setVisibility(View.VISIBLE);
             holder.tv_toast.setText("@" + followUpListModel.atNameAndDepts);
         }else{
             holder.tv_toast.setVisibility(View.GONE);
@@ -200,7 +203,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         /** 录音语音 */
         if(null != followUpListModel.audioInfo){
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,followUpListModel.audioInfo,audioCallBack);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext,followUpListModel.audioInfo,audioPlayCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
         }else{
             holder.lv_audio.setVisibility(View.GONE);
@@ -208,8 +211,11 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
 
         /** 文件列表 数据绑定 */
         if(null != followUpListModel.attachments && followUpListModel.attachments.size() > 0){
+            holder.lv_options.setVisibility(View.VISIBLE);
             optionAdapter = new ListOrDetailsOptionsAdapter(mContext,followUpListModel.attachments);
             holder.lv_options.setAdapter(optionAdapter);
+        }else{
+            holder.lv_options.setVisibility(View.GONE);
         }
 
         /** 绑定图片与GridView监听 */
@@ -237,7 +243,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         /** 绑定评论数据 */
         if (null != followUpListModel.comments && followUpListModel.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments,audioCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments,audioPlayCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -286,6 +292,18 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
                 intent.setClass(mContext, CustomerDetailInfoActivity_.class);
                 mContext.startActivity(intent);
+            }
+        });
+
+        /** 电话录音播放 */
+        final TextView iv_phone_call = (TextView) convertView.findViewById(R.id.iv_phone_call);
+        iv_phone_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AudioModel audioModel = new AudioModel();
+                audioModel.url = followUpListModel.audioUrl;
+                audioModel.length = 10;
+                audioPlayCallBack.playVoice(audioModel,iv_phone_call);
             }
         });
 

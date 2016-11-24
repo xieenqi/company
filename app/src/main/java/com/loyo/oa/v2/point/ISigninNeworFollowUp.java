@@ -17,6 +17,7 @@ import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
@@ -66,6 +67,12 @@ public interface ISigninNeworFollowUp {
      */
     @GET("/saleactivity/mobile/sale/")
     void followUp(@QueryMap Map<String, Object> params, Callback<BaseBeanT<PaginationX<FollowUpListModel>>> cb);
+
+    /**
+     * 客户下的跟进数据
+     */
+    @GET("/saleactivity/mobile/{id}/")
+    void getCustomerFollowUpList(@Path("id") String id,@QueryMap Map<String, Object> params, Callback<PaginationX<FollowUpListModel>> cb);
 
     /**
      * 拜访详情数据

@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.followup.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,11 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.other.PreviewOfficeActivity;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.XCRoundRectImageView;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -51,7 +57,7 @@ public class ListOrDetailsOptionsAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        Attachment mAttachment = attachments.get(position);
+        final Attachment mAttachment = attachments.get(position);
         if(null == convertView){
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_dynamic_listorlist,null);
@@ -64,11 +70,23 @@ public class ListOrDetailsOptionsAdapter extends BaseAdapter{
         }
 
         /*文件图片*/
-        if(null != mAttachment.getUrl()){
+        /*if(null != mAttachment.getUrl()){
             ImageLoader.getInstance().displayImage(mAttachment.getUrl(),holder.iv_image);
-        }
+        }*/
         holder.tv_image_name.setText(mAttachment.getName());
         holder.tv_image_size.setText("大小:" + Utils.FormetFileSize(Long.valueOf(mAttachment.getSize())));
+
+        holder.iv_image.setImageResource(Global.getAttachmentIcon(mAttachment.originalName));
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                LogUtil.d(" 预览文件的URL：" + mAttachment.getUrl());
+                //预览文件
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("data", mAttachment.getUrl());
+                MainApp.getMainApp().startActivity((Activity) mContext, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+            }
+        });
 
         return convertView;
     }
@@ -78,5 +96,4 @@ public class ListOrDetailsOptionsAdapter extends BaseAdapter{
         TextView tv_image_name;
         TextView tv_image_size;
     }
-
 }

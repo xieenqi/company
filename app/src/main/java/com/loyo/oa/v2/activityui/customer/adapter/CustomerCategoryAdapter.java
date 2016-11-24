@@ -64,6 +64,9 @@ public class CustomerCategoryAdapter extends BaseAdapter {
         }
 
         switch (content){
+
+            case "我的拜访":
+            case "我的跟进":
             case "我负责的":
                 iv.setBackgroundResource(R.drawable.icon_my);
                 break;
@@ -72,6 +75,8 @@ public class CustomerCategoryAdapter extends BaseAdapter {
                 iv.setBackgroundResource(R.drawable.icon_customer_member);
                 break;
 
+            case "团队拜访":
+            case "团队跟进":
             case "团队客户":
                 iv.setBackgroundResource(R.drawable.icon_team);
                 break;
