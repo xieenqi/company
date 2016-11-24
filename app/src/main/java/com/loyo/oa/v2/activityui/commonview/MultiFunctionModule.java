@@ -178,14 +178,11 @@ public class MultiFunctionModule extends LinearLayout {
             if (recordTime == 0 && voice.getStartTime() != 0) {
                 stratRecordingTime();
             }
-            LogUtil.d("shuz数字+++" + event.getDownTime());
-            LogUtil.d("模式+++" + event.getAction());
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.setAlpha(0.6f);
                     dialog.setVisibility(VISIBLE);
                     voice.initStaratRecord();
-                    LogUtil.d("ACTION_DOWN++++++");
                     // 此处兼容魅族手机
                     if (isRecordCancle || (recordTime == 0 && voice.getStartTime() != 0)) {
                         stratRecordingTime();
@@ -217,13 +214,11 @@ public class MultiFunctionModule extends LinearLayout {
                         Global.Toast("录音时间只能在一分钟内");
                         return false;
                     }
-                    LogUtil.d(recordTime + " ACTION_MOVE------");
                     break;
                 case MotionEvent.ACTION_UP:
                     dialog.setVisibility(GONE);
                     v.setAlpha(1f);
                     completeRecord();
-                    LogUtil.d("!!!!ACTION_UP");
                     break;
             }
             return true;
@@ -273,7 +268,6 @@ public class MultiFunctionModule extends LinearLayout {
             timer.cancel();
             timer = null;
         }
-        LogUtil.d("此处兼容[[【开始】]]魅族手机");
         timer = new Timer();
         task = new TimerTask() {
             @Override
@@ -292,7 +286,6 @@ public class MultiFunctionModule extends LinearLayout {
                             isRecordCancle = false;
                             dialog.setVisibility(GONE);
                             completeRecord();
-                            LogUtil.d("此处兼容魅族手机");
                             Global.Toast("录音时间只能在一分钟内");
                         }
                     }
@@ -360,8 +353,16 @@ public class MultiFunctionModule extends LinearLayout {
         return (availableBlocks * blockSize) / 1024 / 1024;//  MIB单位
     }
 
+    private int micNumber;
+
     private void refreshRecordIcon(double db) {
+//        if (micNumber >= 5) {
+//            Global.Toast("录音不成功,你需要开启相关权限");
+//            dialog.setVisibility(GONE);
+//            ll_record.setVisibility(GONE);
+//        }
         if (db < 10) {
+            micNumber++;
             iv_record.setImageResource(R.drawable.icon_record_ok1);
         } else if (db > 10 && db < 20) {
             iv_record.setImageResource(R.drawable.icon_record_ok2);

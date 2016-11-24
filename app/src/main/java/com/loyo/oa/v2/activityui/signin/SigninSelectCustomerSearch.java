@@ -48,7 +48,7 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
     private Customer customer;
     private String position;
     private Context mContext;
-    private boolean isTopAdd = true, isOpenOne = true;
+    private boolean isTopAdd = true, isOpenOne = true, isSignin = false;
     private int page = 1;
 
     @Override
@@ -60,6 +60,7 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
     }
 
     public void initView() {
+        isSignin = getIntent().getBooleanExtra("isSignin", false);//是否初始化第一页
         vs_nodata = findViewById(R.id.vs_nodata);
         findViewById(R.id.img_title_left).setOnClickListener(this);
         findViewById(R.id.iv_clean).setOnClickListener(this);
@@ -93,7 +94,8 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
                 returnData(position - 1);
             }
         });
-//        dataRequestvoid();
+        if (!isSignin)
+            dataRequestvoid();
     }
 
     @Override
@@ -190,12 +192,20 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
 
 
     protected void returnData(final int position) {
-        SigninSelectCustomer item = lstData.get(position);
         Intent intent = new Intent();
-        intent.putExtra("id", item.id);
-        intent.putExtra("name", item.name);
-        intent.putExtra("loc", item.position);
-        intent.putExtra("contact", item.contacts);
+        if (!isSignin) {//机会 订单 等选客户
+            Customer cus = new Customer();
+            cus.id = lstData.get(position).id;
+            cus.name = lstData.get(position).name;
+            cus.contacts=lstData.get(position).contacts;
+            intent.putExtra("data", cus);
+        } else {//此处拜访选客户
+            SigninSelectCustomer item = lstData.get(position);
+            intent.putExtra("id", item.id);
+            intent.putExtra("name", item.name);
+            intent.putExtra("loc", item.position);
+            intent.putExtra("contact", item.contacts);
+        }
         setResult(RESULT_OK, intent);
         onBackPressed();
     }
