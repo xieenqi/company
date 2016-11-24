@@ -172,6 +172,8 @@ public class AddMySaleActivity extends BaseActivity {
                 case R.id.ll_poduct://选择意向产品
                     Bundle product = new Bundle();
                     product.putSerializable(ExtraAndResult.EXTRA_DATA, intentionProductData);
+                    product.putBoolean("boolean", true);
+                    product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
                     app.startActivityForResult(AddMySaleActivity.this, IntentionProductActivity.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                     break;
@@ -523,14 +525,16 @@ public class AddMySaleActivity extends BaseActivity {
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE_CUSTOMER://选择客户
-                    Customer customer = (Customer) data.getSerializableExtra("data");
+                    customerId = data.getStringExtra("id");
+                    customerName = data.getStringExtra("name");
+                    /*Customer customer = (Customer) data.getSerializableExtra("data");
                     if (null != customer) {
                         customerId = customer.getId();
                         customerName = customer.name;
-                    }
+                    }*/
                     tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
-                    if (TextUtils.isEmpty(et_name.getText().toString()))
-                        et_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                    /*if (TextUtils.isEmpty(et_name.getText().toString()))
+                        et_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);*/
                     break;
                 case ExtraAndResult.REQUEST_CODE_STAGE://选择销售阶段
                     SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
