@@ -133,7 +133,6 @@
                         android:layout_marginRight="@dimen/margin_other_view"
                         android:layout_marginTop="@dimen/dimen_3"
                         android:gravity="center_vertical"
-                        android:text="客户地址"
                         android:textColor="@color/text99"
                         android:visibility="gone" />
 

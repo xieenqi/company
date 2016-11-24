@@ -345,7 +345,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 if (!checkData()) {
                     return;
                 }
-                if ("未知地址".equals(tv_customer_address.getText().toString())) {
+                String addressInfo = tv_customer_address.getText().toString();
+                if ("未知地址".equals(addressInfo) || TextUtils.isEmpty(addressInfo)) {
                     sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
