@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
             android:textSize="@dimen/text_sp15"
-            android:text="---"
+            android:text=""
             android:textColor="@color/text33"
             />
 
@@ -33,6 +33,7 @@
             android:textColor="@color/text33"
             android:textSize="@dimen/text_sp15"
             android:text="---"
+            android:visibility="gone"
             />
 
     </LinearLayout>

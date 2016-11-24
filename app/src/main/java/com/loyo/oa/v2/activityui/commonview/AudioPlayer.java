@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,8 +37,8 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
     private TextView tv_audio_starttime;
     private TextView tv_audio_endtime;
     private ImageView layout_audio_pauseorplay;
-    private ImageView layout_audio_close;
-    private LinearLayout layout_audioplayer;
+    private LinearLayout layout_audio_close;
+    private RelativeLayout layout_audioplayer;
 
     private String playTime;
     private boolean isOnPlay;
@@ -80,13 +81,13 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
     }
 
     private void initView(){
-        mView = LayoutInflater.from(mContext).inflate(R.layout.sg_audio_player,null);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.sgcopy_audio_player,null);
         musicProgress = (SeekBar) mView.findViewById(R.id.music_progress);
         tv_audio_starttime = (TextView) mView.findViewById(R.id.tv_audio_starttime);
         tv_audio_endtime = (TextView) mView.findViewById(R.id.tv_audio_endtime);
         layout_audio_pauseorplay = (ImageView) mView.findViewById(R.id.layout_audio_pauseorplay);
-        layout_audio_close = (ImageView) mView.findViewById(R.id.layout_audio_close);
-        layout_audioplayer = (LinearLayout) mView.findViewById(R.id.layout_audioplayer);
+        layout_audio_close = (LinearLayout) mView.findViewById(R.id.layout_audio_close);
+        layout_audioplayer = (RelativeLayout) mView.findViewById(R.id.layout_audioplayer);
 
         layout_audio_pauseorplay.setOnClickListener(this);
         layout_audio_close.setOnClickListener(this);

@@ -251,7 +251,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         /** @通知人员 */
         if(null != mFollowUpDelModel.atNameAndDepts && !TextUtils.isEmpty(mFollowUpDelModel.atNameAndDepts)){
             tv_toast.setVisibility(View.VISIBLE);
-            tv_toast.setText(mFollowUpDelModel.atNameAndDepts);
+            tv_toast.setText("@"+mFollowUpDelModel.atNameAndDepts);
         }
 
         /** 线索 */
