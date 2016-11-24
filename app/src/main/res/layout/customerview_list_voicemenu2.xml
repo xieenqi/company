@@ -12,6 +12,8 @@
         android:orientation="vertical"
         android:visibility="gone" />
 
+    <include layout="@layout/include_solid_line" />
+
     <LinearLayout
         android:id="@+id/layout_voicemenu"
         android:layout_width="match_parent"
