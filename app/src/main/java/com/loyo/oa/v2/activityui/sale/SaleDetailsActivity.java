@@ -208,25 +208,19 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
      * 数据绑定
      */
     public void bindData() {
-        ll_stage.setEnabled(true);
+        ll_stage.setEnabled(getEditPriority());
         ll_product.setEnabled(true);
 
         //机会 是否 是创建者
         if (MainApp.user.id.equals(mSaleDetails.creatorId) && !isTeam || MainApp.user.isSuperUser) {
             img_title_right.setVisibility(View.VISIBLE);
-            ll_stage.setEnabled(true);
-            ll_product.setEnabled(true);
         } else {
             img_title_right.setVisibility(View.INVISIBLE);
-            ll_stage.setEnabled(false);
-            ll_product.setEnabled(false);
         }
         //已通过的审批 任何人都不能删除
         if (mSaleDetails.wfState == 0 && mSaleDetails.prob == 100) {
             iv_wfstatus.setEnabled(false);
             img_title_right.setVisibility(View.INVISIBLE);
-            ll_product.setEnabled(false);
-            ll_stage.setEnabled(false);
         }
 
         if (MainApp.user.isSuperUser)
@@ -274,10 +268,8 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         } else {
             layout_losereson.setVisibility(View.GONE);
         }
-        if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
+        if (100 == mSaleDetails.prob) {//销售阶段是赢单的时候
             img_title_right.setVisibility((mSaleDetails.prob == 100 && MainApp.user.id.equals(mSaleDetails.creatorId)) ? View.VISIBLE : View.GONE);
-            ll_product.setEnabled(true);
-            ll_stage.setEnabled(false);
             iv_wfstatus.setVisibility(View.VISIBLE);
             switch (mSaleDetails.wfState) {
                 case 1:
@@ -333,12 +325,12 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 Bundle product = new Bundle();
                 product.putInt("data", ActionCode.SALE_FROM_DETAILS);
                 product.putString("saleId", selectId);
-                if (null != mSaleDetails && 0 != mSaleDetails.wfState) {/*赢单*/
-                    product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, false);
-                }
-                else {
-                    product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, true);
-                }
+
+                boolean canDelete = getDeletePriority();
+                boolean canEdit = getEditPriority();
+
+                product.putBoolean(IntentionProductActivity.KEY_CAN_DELETE, canDelete);
+                product.putBoolean(IntentionProductActivity.KEY_CAN_EDIT, canEdit);
 
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails.getProInfos());
                 app.startActivityForResult(SaleDetailsActivity.this, IntentionProductActivity.class,
@@ -365,6 +357,31 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 break;
 
         }
+    }
+
+    private boolean getDeletePriority() {
+        boolean canDelete = (null != mSaleDetails)                 /*未异常*/
+                &&
+                ( 100 != mSaleDetails.prob                                         /*未赢单*/
+                        || (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5 /*赢单未通过*/
+                            && mSaleDetails.wfState != 0) /*赢单需要审核*/
+                )
+                &&
+                ( MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/
+                        || MainApp.user.isSuperUser              /*超级管理员*/
+                );
+        return canDelete;
+    }
+
+    private boolean getEditPriority() {
+        boolean canEdit = (null != mSaleDetails)                 /*未异常*/
+                &&
+                ( 100 != mSaleDetails.prob                                         /*未赢单*/
+                        || (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5/*赢单未通过*/
+                            && mSaleDetails.wfState != 0) /*赢单需要审核*/
+                )
+                && MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/;
+        return canEdit;
     }
 
     /**
