@@ -127,7 +127,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     public void initView(View view) {
         mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         for (int i = 0; i < mTags.size(); i++) {//过滤掉跟进方式
-            if (mTags.get(i).fieldName.contains("type")) {
+            if (mTags.get(i).fieldName.contains("activity")) {
                 mTags.remove(i);
             }
         }
@@ -206,14 +206,14 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                             HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
                             MenuModel field1 = map.get("method");
                             MenuModel field2 = map.get("typeId");
-                            MenuModel field3 = map.get("activityType");
+//                            MenuModel field3 = map.get("activityType");
                             method = field1.getKey();
-//                            typeId = field2.getKey();
-                            activityType = field3.getKey();
+                            typeId = field2.getKey();
+//                            activityType = field3.getKey();
                         } else {
                             method = "";
-//                            typeId = "";
-                            activityType = "";
+                            typeId = "";
+//                            activityType = "";
                         }
 
                         break;
@@ -284,8 +284,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("xpath", "");
         map.put("timeType", menuTimekey); //时间查询
         map.put("method", method);        //跟进类型0:全部 1:线索 2:客户
-        map.put("typeId", typeId);//没有这项了
-        map.put("activityType", activityType);
+        map.put("typeId", typeId);
+//        map.put("activityType", activityType);//没有这项团队不做筛选了
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);

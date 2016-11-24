@@ -185,13 +185,13 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         if (null != mCustomer && isCustom) {
             getDefaultContact(mCustomer.contacts);
             tv_customer.setText(mCustomer.name);
-            if(isDetail)
-            ll_customer.setVisibility(View.GONE);
+            if (isDetail)
+                ll_customer.setVisibility(View.GONE);
         } else if (null != mClue && !isCustom) {
             tv_clue_company.setText(mClue.companyName);
             tv_clue_name.setText(mClue.responsorName);
-            if(isDetail)
-            ll_clue_company.setVisibility(View.GONE);
+            if (isDetail)
+                ll_clue_company.setVisibility(View.GONE);
         }
         controller.loadView(gridView);
         initMultiFunctionModule();
@@ -258,6 +258,10 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         mfmodule.setPictureClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (controller.count() >= 9) {
+                    Toast("最多选九张图片");
+                    return;
+                }
                 PhotoPicker.builder()
                         .setPhotoCount(9 - controller.count())
                         .setShowCamera(true)
