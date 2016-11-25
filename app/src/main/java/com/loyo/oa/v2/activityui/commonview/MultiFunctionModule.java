@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.commonview;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StatFs;
@@ -41,6 +42,7 @@ public class MultiFunctionModule extends LinearLayout {
     Handler handler = new Handler();
     Timer timer;
     TimerTask task;
+    AnimationDrawable mAnimationDrawable;
 
     public MultiFunctionModule(Context context) {
         super(context);
@@ -78,13 +80,7 @@ public class MultiFunctionModule extends LinearLayout {
         this.addView(view);
         initRecord(context);
         Global.SetTouchView(ll_record_keyboard, ll_picture, ll_location, ll_at);
-        ll_action_record.setOnGenericMotionListener(new View.OnGenericMotionListener() {
-            @Override
-            public boolean onGenericMotion(View v, MotionEvent event) {
-                LogUtil.d("是俺家那么白浮雕" + event.getAction());
-                return true;
-            }
-        });
+        mAnimationDrawable = (AnimationDrawable) iv_record.getBackground();
     }
 
     /**
@@ -353,43 +349,47 @@ public class MultiFunctionModule extends LinearLayout {
         return (availableBlocks * blockSize) / 1024 / 1024;//  MIB单位
     }
 
-    private int micNumber;
 
     private void refreshRecordIcon(double db) {
-//        if (micNumber >= 5) {
-//            Global.Toast("录音不成功,你需要开启相关权限");
-//            dialog.setVisibility(GONE);
-//            ll_record.setVisibility(GONE);
-//        }
+        LogUtil.d("分贝值 : " + db);
         if (db < 10) {
-            micNumber++;
-            iv_record.setImageResource(R.drawable.icon_record_ok1);
+              mAnimationDrawable.selectDrawable(0);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok1);
         } else if (db > 10 && db < 20) {
-            iv_record.setImageResource(R.drawable.icon_record_ok2);
+            mAnimationDrawable.selectDrawable(1);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok2);
         } else if (db > 20 && db < 30) {
+            mAnimationDrawable.selectDrawable(2);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok3);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok3);
         } else if (db > 30 && db < 40) {
+            mAnimationDrawable.selectDrawable(3);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok4);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok4);
         } else if (db > 40 && db < 50) {
+            mAnimationDrawable.selectDrawable(4);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok5);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok5);
         } else if (db > 50 && db < 60) {
+            mAnimationDrawable.selectDrawable(5);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok6);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok6);
         } else if (db > 60 && db < 70) {
+            mAnimationDrawable.selectDrawable(6);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok7);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok7);
         } else if (db > 70 && db < 80) {
+            mAnimationDrawable.selectDrawable(7);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok8);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok8);
         } else if (db > 80 && db < 90) {
+            mAnimationDrawable.selectDrawable(8);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok9);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok9);
         } else if (db > 90 && db < 100) {
+            mAnimationDrawable.selectDrawable(9);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok10);
+//            iv_record.setBackgroundResource(R.drawable.icon_record_ok10);
         }
 
     }

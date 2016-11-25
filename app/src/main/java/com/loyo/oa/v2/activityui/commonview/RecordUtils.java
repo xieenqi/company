@@ -69,7 +69,7 @@ public class RecordUtils {
                 new PullTransport.Default(mic(),
                         new PullTransport.OnAudioChunkPulledListener() {
                     @Override public void onAudioChunkPulled(AudioChunk audioChunk) {
-                        final double ratio =  (audioChunk.maxAmplitude()/2);
+                         double ratio =  (audioChunk.maxAmplitude()/1);
                         callbackMicStatus.setMicData(ratio);
                     }
                 }), new File(outPath));
