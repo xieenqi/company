@@ -8,8 +8,6 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.os.Environment;
-import android.os.Handler;
-import android.util.Log;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
@@ -20,10 +18,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import omrecorder.AudioChunk;
-import omrecorder.OmRecorder;
-import omrecorder.PullTransport;
-import omrecorder.Recorder;
+import vendor.omrecorder.AudioChunk;
+import vendor.omrecorder.OmRecorder;
+import vendor.omrecorder.PullTransport;
+import vendor.omrecorder.Recorder;
 
 /**
  * Created by xeq on 16/11/11.
@@ -37,7 +35,6 @@ public class RecordUtils {
     private String AUDIO_ROOTPATH, outPath, fileName;//录音存放路径、输出路径、输出文件名字
     private boolean isStart;
     private long startTime, endTime;
-    Handler handler = new Handler();
     CallbackMicStatus callbackMicStatus;
 
     private RecordUtils() {
@@ -80,8 +77,8 @@ public class RecordUtils {
         startTime = System.currentTimeMillis();
     }
 
-    private omrecorder.AudioSource mic() {
-        return new omrecorder.AudioSource.Smart(MediaRecorder.AudioSource.MIC, AudioFormat.ENCODING_PCM_16BIT,
+    private vendor.omrecorder.AudioSource mic() {
+        return new vendor.omrecorder.AudioSource.Smart(MediaRecorder.AudioSource.MIC, AudioFormat.ENCODING_PCM_16BIT,
                 AudioFormat.CHANNEL_IN_MONO, 44100);
     }
 
@@ -103,7 +100,7 @@ public class RecordUtils {
             recorder.resumeRecording();
     }
 
-    public void pauseRcord() {
+    private void pauseRcord() {
         if (recorder != null)
             recorder.pauseRecording();
     }
@@ -112,11 +109,11 @@ public class RecordUtils {
         return isStart;
     }
 
-    public void setStart(boolean isStart) {
+    private void setStart(boolean isStart) {
         this.isStart = isStart;
     }
 
-    public void releasaeFile(String Path) {
+    private void releasaeFile(String Path) {
         if (Path == null) {
             return;
         }
@@ -126,11 +123,11 @@ public class RecordUtils {
         }
     }
 
-    public void setContext(Context context) {
+    private void setContext(Context context) {
         this.context = context;
     }
 
-    public String getAUDIO_ROOTPATH() {
+    private String getAUDIO_ROOTPATH() {
         return AUDIO_ROOTPATH;
     }
 
@@ -143,7 +140,7 @@ public class RecordUtils {
         return outPath;
     }
 
-    public void setOutPath(String outPath) {
+    private void setOutPath(String outPath) {
         this.outPath = outPath;
     }
 
@@ -155,7 +152,7 @@ public class RecordUtils {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    private void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 

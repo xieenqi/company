@@ -302,6 +302,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     @Override
     public void rushListData(boolean shw) {
+        isPullOrDown = true;
         getData(shw);
     }
 
