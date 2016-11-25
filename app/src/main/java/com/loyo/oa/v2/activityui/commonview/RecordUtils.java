@@ -9,6 +9,7 @@ import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.os.Environment;
 
+import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 
@@ -36,6 +37,8 @@ public class RecordUtils {
     private boolean isStart;
     private long startTime, endTime;
     CallbackMicStatus callbackMicStatus;
+    private SoundPool sp;
+    private int shoot;
 
     private RecordUtils() {
     }
@@ -71,7 +74,7 @@ public class RecordUtils {
                                 callbackMicStatus.setMicData(ratio);
                             }
                         }), new File(outPath));
-
+//        sp.play(shoot, 1f, 1f, 0, 0, 1f);
         recorder.startRecording();
         isStart = true;
         startTime = System.currentTimeMillis();
@@ -125,6 +128,7 @@ public class RecordUtils {
 
     private void setContext(Context context) {
         this.context = context;
+        playPrompt();
     }
 
     private String getAUDIO_ROOTPATH() {
@@ -242,13 +246,7 @@ public class RecordUtils {
      * 播放提示音 录音准备完成
      */
     private void playPrompt() {
-        SoundPool sp = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-//        sp.load(context,R.raw.10, 1);
-        try {
-            context.getAssets().list("10.wav");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        sp = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        shoot = sp.load(context, R.raw.dododo, 1);
     }
 }
