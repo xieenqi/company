@@ -296,6 +296,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     public void commentSuccessEmbl() {
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
+        isPullOrDown = true;
         getData(false);
     }
 

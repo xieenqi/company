@@ -1,27 +1,29 @@
 package com.loyo.oa.v2.activityui.commonview;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-
-
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 
-import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.LogUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import omrecorder.AudioChunk;
+import omrecorder.OmRecorder;
+import omrecorder.PullTransport;
+import omrecorder.Recorder;
 
 /**
  * Created by xeq on 16/11/11.
@@ -29,8 +31,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 
 public class RecordUtils {
 
-    //    private static RecordUtils mInstance;
-    private MediaRecorder recorder;
+    Recorder recorder;
     private Context context;
     private MediaPlayer play;
     private String AUDIO_ROOTPATH, outPath, fileName;//录音存放路径、输出路径、输出文件名字
@@ -38,8 +39,6 @@ public class RecordUtils {
     private long startTime, endTime;
     Handler handler = new Handler();
     CallbackMicStatus callbackMicStatus;
-    Timer timer;
-    TimerTask task;
 
     private RecordUtils() {
     }
@@ -56,9 +55,6 @@ public class RecordUtils {
      * 初始化录音
      */
     public void initStaratRecord() {
-        recorder = new MediaRecorder();
-//		recorder.setAudioChannels(numChannels);
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);// 设置麦克风
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             Global.Toast("储存卡不可用");
             return;
@@ -67,85 +63,50 @@ public class RecordUtils {
         if (!ff.exists()) {
             ff.mkdirs();
         }
-        fileName = getDate() + ".aac";
+        fileName = getDate() + ".wav";
         outPath = AUDIO_ROOTPATH + File.separator + fileName;
-        recorder.setOutputFile(outPath);
-         /*
-             * ②设置输出文件的格式：THREE_GPP/MPEG-4/RAW_AMR/Default
-			 * THREE_GPP(3gp格式，H263视频
-			 * /ARM音频编码)、MPEG-4、RAW_AMR(只支持音频且音频编码要求为AMR_NB)
-			 * recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-			 */
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
-        /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default */
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        recorder.setMaxDuration(60 * 1000);
-        recorder.setOnErrorListener(null);
-        recorder.setOnInfoListener(null);
-        recorder.setPreviewDisplay(null);
-        startRecord();
-        LogUtil.d("本地录音文件名:  " + fileName);
+        recorder = OmRecorder.wav(
+                new PullTransport.Default(mic(),
+                        new PullTransport.OnAudioChunkPulledListener() {
+                            @Override
+                            public void onAudioChunkPulled(AudioChunk audioChunk) {
+                                double ratio = (audioChunk.maxAmplitude() / 1);
+                                callbackMicStatus.setMicData(ratio);
+                            }
+                        }), new File(outPath));
+
+        recorder.resumeRecording();
+        isStart = true;
+        startTime = System.currentTimeMillis();
     }
 
-    /**
-     * 开始录音
-     */
-    public void startRecord() {
-        try {
-            isStart = true;
-            recorder.prepare();
-            recorder.start();
-            LogUtil.d("开始 前 时间:" + startTime);
-            startTime = System.currentTimeMillis();
-            LogUtil.d("开始 后 时间:" + startTime);
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateMicStatus();
-                    }
-                });
-            }
-        };
-        timer.schedule(task, 500, 500);
+    private omrecorder.AudioSource mic() {
+        return new omrecorder.AudioSource.Smart(MediaRecorder.AudioSource.MIC, AudioFormat.ENCODING_PCM_16BIT,
+                AudioFormat.CHANNEL_IN_MONO, 44100);
     }
+
 
     public void stopRecord() {
-        try {
-            if (recorder != null && isStart) {
-                timer.cancel();
-                task.cancel();
-                timer = null;
-                task = null;
-                LogUtil.d("结束 前 时间:" + endTime);
-                endTime = System.currentTimeMillis();
-                LogUtil.d("结束 后 时间:" + endTime);
-                isStart = false;
-                recorder.stop();
-                recorder.reset();
-                recorder.release();
-                recorder = null;//这个必须有不然录音设备释放不成功
-                startTime = 0;
 
-            }
-        } catch (IllegalStateException e) {
-            LogUtil.d("录音停止异常 可能没有权限");
-        } catch (RuntimeException e) {
-            LogUtil.d("录音运行异常");
+        if (recorder != null) {
+            isStart = false;
+            startTime = 0;
+            endTime = System.currentTimeMillis();
+            recorder.stopRecording();
+            recorder = null;
         }
 
     }
 
+    public void resumRcord() {
+        if(null != recorder)
+        recorder.resumeRecording();
+    }
+
+    public void pauseRcord() {
+        if(null != recorder)
+        recorder.pauseRecording();
+    }
 
     public boolean isStart() {
         return isStart;
@@ -262,17 +223,6 @@ public class RecordUtils {
      * 更新话筒状态
      */
     private int BASE = 1;
-
-    private void updateMicStatus() {
-        if (recorder != null) {
-            double ratio = (double) recorder.getMaxAmplitude() / BASE;
-            double db = 0;// 分贝
-            if (ratio > 1)
-                db = 20 * Math.log10(ratio);
-            LogUtil.d("分贝值：" + db);
-            callbackMicStatus.setMicData(db);
-        }
-    }
 
     interface CallbackMicStatus {
         void setMicData(double db);

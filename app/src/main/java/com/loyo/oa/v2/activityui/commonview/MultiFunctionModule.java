@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.commonview;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StatFs;
@@ -41,6 +42,7 @@ public class MultiFunctionModule extends LinearLayout {
     Handler handler = new Handler();
     Timer timer;
     TimerTask task;
+    AnimationDrawable mAnimationDrawable;
 
     public MultiFunctionModule(Context context) {
         super(context);
@@ -78,13 +80,7 @@ public class MultiFunctionModule extends LinearLayout {
         this.addView(view);
         initRecord(context);
         Global.SetTouchView(ll_record_keyboard, ll_picture, ll_location, ll_at);
-        ll_action_record.setOnGenericMotionListener(new View.OnGenericMotionListener() {
-            @Override
-            public boolean onGenericMotion(View v, MotionEvent event) {
-                LogUtil.d("是俺家那么白浮雕" + event.getAction());
-                return true;
-            }
-        });
+        mAnimationDrawable = (AnimationDrawable) iv_record.getBackground();
     }
 
     /**
@@ -195,7 +191,7 @@ public class MultiFunctionModule extends LinearLayout {
                         //停止动画
                         puaseRecordingTime();
                         cancleRecord();
-                        voice.stopRecord();
+                        voice.pauseRcord();
                         v.setAlpha(1f);
                         isRecordCancle = true;
                     } else {
@@ -208,7 +204,6 @@ public class MultiFunctionModule extends LinearLayout {
                         isRecordCancle = false;
                     }
                     if (recordTime >= 60) {//此处过了一分钟
-                        isRecordCancle = false;
                         dialog.setVisibility(GONE);
                         completeRecord();
                         Global.Toast("录音时间只能在一分钟内");
@@ -245,6 +240,7 @@ public class MultiFunctionModule extends LinearLayout {
      * 录音完成的操作
      */
     private void completeRecord() {
+        isRecordCancle = false;
         if (!isRecordCancle && isEffective && recordTime > 2) {
             if (voice.isStart()) {
                 voice.stopRecord();
@@ -264,6 +260,7 @@ public class MultiFunctionModule extends LinearLayout {
 
     /*录音时间开始*/
     private void stratRecordingTime() {
+        voice.resumRcord();
         if (timer != null) {
             timer.cancel();
             timer = null;
@@ -293,6 +290,7 @@ public class MultiFunctionModule extends LinearLayout {
             }
         };
         timer.schedule(task, 0, 1000);
+
     }
 
     /*录音时间 暂停*/
@@ -325,7 +323,7 @@ public class MultiFunctionModule extends LinearLayout {
      * 取消录音
      */
     private void cancleRecord() {
-        iv_record.setImageResource(R.drawable.icon_record_no);
+        mAnimationDrawable.selectDrawable(10);
         tv_record_action.setText("松开手指取消语音");
         tv_record_action.setTextColor(Color.parseColor("#f5625a"));
         tv_record_number.setTextColor(Color.parseColor("#f5625a"));
@@ -335,7 +333,7 @@ public class MultiFunctionModule extends LinearLayout {
      * 录音 进行中
      */
     private void recordOngoing() {
-        iv_record.setImageResource(R.drawable.icon_record_ok1);
+        mAnimationDrawable.selectDrawable(0);
         tv_record_action.setText("滑动至此处可取消录音");
         tv_record_action.setTextColor(Color.parseColor("#ffffff"));
         tv_record_number.setTextColor(Color.parseColor("#ffffff"));
@@ -353,43 +351,40 @@ public class MultiFunctionModule extends LinearLayout {
         return (availableBlocks * blockSize) / 1024 / 1024;//  MIB单位
     }
 
-    private int micNumber;
 
     private void refreshRecordIcon(double db) {
-//        if (micNumber >= 5) {
-//            Global.Toast("录音不成功,你需要开启相关权限");
-//            dialog.setVisibility(GONE);
-//            ll_record.setVisibility(GONE);
-//        }
+        if (isRecordCancle) {
+            return;
+        }
+        LogUtil.d("分贝值 : " + db);
         if (db < 10) {
-            micNumber++;
-            iv_record.setImageResource(R.drawable.icon_record_ok1);
+            mAnimationDrawable.selectDrawable(0);
         } else if (db > 10 && db < 20) {
-            iv_record.setImageResource(R.drawable.icon_record_ok2);
+            mAnimationDrawable.selectDrawable(1);
         } else if (db > 20 && db < 30) {
+            mAnimationDrawable.selectDrawable(2);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok3);
         } else if (db > 30 && db < 40) {
+            mAnimationDrawable.selectDrawable(3);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok4);
         } else if (db > 40 && db < 50) {
+            mAnimationDrawable.selectDrawable(4);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok5);
         } else if (db > 50 && db < 60) {
+            mAnimationDrawable.selectDrawable(5);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok6);
         } else if (db > 60 && db < 70) {
+            mAnimationDrawable.selectDrawable(6);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok7);
         } else if (db > 70 && db < 80) {
+            mAnimationDrawable.selectDrawable(7);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok8);
         } else if (db > 80 && db < 90) {
+            mAnimationDrawable.selectDrawable(8);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok9);
         } else if (db > 90 && db < 100) {
+            mAnimationDrawable.selectDrawable(9);
             isEffective = true;
-            iv_record.setImageResource(R.drawable.icon_record_ok10);
         }
 
     }
