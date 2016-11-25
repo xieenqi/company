@@ -5,6 +5,7 @@ import com.loyo.oa.v2.activityui.clue.bean.ClueFollowUpListModel;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
+import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public interface IClue {
      * 获取 线索详情
      */
     @GET("/salesleads/mobile/{id}")
-    void getClueDetail(@Path("id") String id, Callback<ClueDetailWrapper> callback);
+    void getClueDetail(@Path("id") String id, Callback<BaseBeanT<ClueDetailWrapper.ClueDetail>> callback);
 
     /**
      * 编辑 线索

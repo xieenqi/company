@@ -256,6 +256,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
 
     @Override
     public void rushListData(boolean shw) {
+        isPullOrDown = true;
         getData(shw);
     }
 

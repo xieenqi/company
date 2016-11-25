@@ -303,6 +303,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
 
     @Override
     public void rushListData(boolean shw) {
+        isPullOrDown = true;
         getData(shw);
     }
 

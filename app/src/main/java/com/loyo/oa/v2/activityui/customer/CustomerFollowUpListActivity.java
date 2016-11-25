@@ -280,6 +280,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
 
     @Override
     public void rushListData(boolean shw) {
+        isPullOrDown = true;
         getData(shw);
     }
 

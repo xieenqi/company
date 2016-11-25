@@ -104,7 +104,12 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
         if(null == player){
             player = new Player(musicProgress);
             player.mediaPlayer.setOnCompletionListener(new PlayerComplte());
+            player.mediaPlayer.setOnErrorListener(new PlayerError());
         }
+
+        playTime = "00:00:00";
+        musicProgress.setProgress(0);
+
         this.nowsView = nowsView;
         tv_audio_endtime.setText(DateTool.stringForTime((int) audioModel.length * 1000));
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
@@ -128,7 +133,6 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
         isOnPlay = false;
         MainApp.getMainApp().startAnim(textView);
         layout_audioplayer.setVisibility(View.VISIBLE);
-        LogUtil.dee("audioStart");
         layout_audio_pauseorplay.setBackgroundResource(R.drawable.icon_audio_pause);
         if (player != null) {
             player.play();
@@ -203,6 +207,18 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
             }
         }
     }
+
+    /**
+     * Player播放失败监听
+     * */
+    class PlayerError implements MediaPlayer.OnErrorListener{
+        @Override
+        public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+            Toast.makeText(mContext,"录音文件损坏!",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
 
     /**
      * 拖动条监听

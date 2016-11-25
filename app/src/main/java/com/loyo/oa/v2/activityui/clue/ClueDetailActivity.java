@@ -23,6 +23,7 @@ import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -99,7 +100,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
     /* Data */
     String clueId;
-    ClueDetailWrapper data;
+    ClueDetailWrapper.ClueDetail data;
     private int clueStatus;
     private boolean isDelete = false, isAdd = false;
     private CustomerRegional regional = new CustomerRegional();
@@ -172,7 +173,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     public void bindData() {
-        ClueSales sales = data.data.sales;
+        ClueSales sales = data.sales;
 //        if (!MainApp.user.id.equals(sales.responsorId)) {//如果不是负责人有编辑 添加的权限
 //            img_title_right.setVisibility(View.GONE);
 //            isAdd = false;
@@ -191,14 +192,14 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
 
         /* 分区2 */
         if (sales.saleActivityCount <= 0      /* 没有拜访记录 */
-                || data.data.activity == null /* 当>0时，服务端也可能返空数据 */) {
+                || data.activity == null /* 当>0时，服务端也可能返空数据 */) {
             ll_track.setVisibility(View.GONE);
         } else {
             ll_track.setVisibility(View.VISIBLE);
-            tv_track_content.setText(data.data.activity.content.contains("<p>") ?
-                    CommonHtmlUtils.Instance().checkContent(data.data.activity.content) : data.data.activity.content);
-            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.data.activity.createAt + "") * 1000))
-                    + "  " + data.data.activity.creatorName + " # " + data.data.activity.typeName);
+            tv_track_content.setText(data.activity.content.contains("<p>") ?
+                    CommonHtmlUtils.Instance().checkContent(data.activity.content) : data.activity.content);
+            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.activity.createAt + "") * 1000))
+                    + "  " + data.activity.creatorName + " # " + data.activity.typeName);
         }
         tv_visit_number.setText("(" + sales.saleActivityCount + ")");
 
@@ -238,17 +239,17 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance()
                 .build(Config_project.API_URL_CUSTOMER())
                 .create(IClue.class)
-                .getClueDetail(clueId, new Callback<ClueDetailWrapper>() {
+                .getClueDetail(clueId, new Callback<BaseBeanT<ClueDetailWrapper.ClueDetail>>() {
                     @Override
-                    public void success(ClueDetailWrapper detail, Response response) {
+                    public void success(BaseBeanT<ClueDetailWrapper.ClueDetail> detail, Response response) {
                         HttpErrorCheck.checkResponse("线索详情：", response);
-                        if (null == detail) {
-                            Toast("没有获取数据");
+                        if(detail.errcode != 0){
+                            Toast("没有获取到数据");
                             onBackPressed();
-                            return;
+                        }else{
+                            data = detail.data;
+                            bindData();
                         }
-                        data = detail;
-                        bindData();
                     }
 
                     @Override
@@ -288,18 +289,18 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                 editClueStatus();
                 break;
             case R.id.ll_sms:
-                Utils.sendSms(this, data.data.sales.cellphone);
+                Utils.sendSms(this, data.sales.cellphone);
                 break;
             case R.id.ll_call:
-                if (!TextUtils.isEmpty(data.data.sales.cellphone)) {
-                    isMobile(data.data.sales.cellphone, 0, data.data.sales.name);
+                if (!TextUtils.isEmpty(data.sales.cellphone)) {
+                    isMobile(data.sales.cellphone, 0, data.sales.name);
                 } else {
                     Toast("电话号码不能为空");
                 }
                 break;
             case R.id.ll_wiretel_call:
-                if (!TextUtils.isEmpty(data.data.sales.cellphone)) {
-                    isMobile(data.data.sales.cellphone, 1, data.data.sales.name);
+                if (!TextUtils.isEmpty(data.sales.cellphone)) {
+                    isMobile(data.sales.cellphone, 1, data.sales.name);
                 } else {
                     Toast("电话号码不能为空");
                 }
@@ -395,7 +396,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     void callReturn(String phone, int callType, final String name) {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("salesleadId", data.data.sales.id);
+        map.put("salesleadId", data.sales.id);
         map.put("type", callType);
         map.put("mobile", phone);
         LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));
@@ -448,7 +449,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         Bundle mBundle = new Bundle();
         mBundle.putString(VoIPCallActivity.CALLEE_PHONE_KEY, phone);
         mBundle.putString(VoIPCallActivity.CALLEE_NAME_KEY, name);
-        mBundle.putString(VoIPCallActivity.CALLEE_SALE_KEY, data.data.sales.id);
+        mBundle.putString(VoIPCallActivity.CALLEE_SALE_KEY, data.sales.id);
         mBundle.putInt(VoIPCallActivity.CALLEE_USER_TYPE, callType);
         app.startActivity(ClueDetailActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
 //        showLoading("");
@@ -500,13 +501,13 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      */
     private void clueActivity() {
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, data.data.sales.id);
-        String name = data.data.sales.companyName;
+        intent.putExtra(ExtraAndResult.EXTRA_ID, data.sales.id);
+        String name = data.sales.companyName;
         if (TextUtils.isEmpty(name)) {
             name = "";
         }
         intent.putExtra(ExtraAndResult.EXTRA_NAME, name);
-        intent.putExtra(ExtraAndResult.RESULT_NAME, data.data.sales.responsorName);
+        intent.putExtra(ExtraAndResult.RESULT_NAME, data.sales.responsorName);
         intent.putExtra(ExtraAndResult.EXTRA_ADD, isAdd);
         intent.setClass(this, ClueFollowUpListActivity.class);
         startActivityForResult(intent, this.RESULT_FIRST_USER);
@@ -527,12 +528,12 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         dialog.addSheetItem("转为客户", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
-                if (null == data || null == data.data || data.data.sales == null) {
+                if (null == data || null == data || data.sales == null) {
                     Toast("数据不全不能转为客户");
                     return;
                 }
                 Bundle mBundle = new Bundle();
-                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.data.sales);
+                mBundle.putSerializable(ExtraAndResult.EXTRA_DATA, data.sales);
                 app.startActivityForResult(ClueDetailActivity.this, ClueTransferActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, mBundle);
             }
         });
@@ -589,9 +590,9 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      */
     void selectArea() {
         String[] cityValue = null;
-        if (data != null && data.data != null && data.data.sales != null
-                && data.data.sales.region != null) {
-            cityValue = data.data.sales.region.toArray();
+        if (data != null && data != null && data.sales != null
+                && data.sales.region != null) {
+            cityValue = data.sales.region.toArray();
         }
         final SelectCityView selectCityView = new SelectCityView(this, cityValue);
         selectCityView.setCanceledOnTouchOutside(true);
@@ -673,8 +674,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         HttpErrorCheck.checkResponse("【编辑详情】线索：", response);
                         /* 提交成功，更新本地model */
                         if (1 == function
-                                && data != null && data.data != null && data.data.sales != null) {
-                            data.data.sales.region = regional;
+                                && data != null && data != null && data.sales != null) {
+                            data.sales.region = regional;
                             clue_region.setText(regional.salesleadDisplayText());
                         }
 
@@ -685,8 +686,8 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
                         HttpErrorCheck.checkError(error);
                         /* 提交失败，更新UI至原来状态 */
                         if (1 == function
-                                && data != null && data.data != null && data.data.sales != null) {
-                            clue_region.setText(data.data.sales.region.salesleadDisplayText());
+                                && data != null && data != null && data.sales != null) {
+                            clue_region.setText(data.sales.region.salesleadDisplayText());
                         }
 
                     }
