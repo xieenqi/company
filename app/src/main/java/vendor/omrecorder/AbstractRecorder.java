@@ -48,6 +48,20 @@ abstract class AbstractRecorder implements Recorder {
 
   @Override public void stopRecording() {
     pullTransport.stop();
+
+    /**
+     *  Edited By EthanGong on 2016-11-25
+     *  flush when changed
+     */
+    try {
+      if (this.outputStream != null) {
+        this.outputStream.flush();
+        this.outputStream.close();
+      }
+    }
+    catch (Exception e) {
+
+    }
   }
 
   @Override public void pauseRecording() {
