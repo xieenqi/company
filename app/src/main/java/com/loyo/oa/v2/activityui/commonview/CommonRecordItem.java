@@ -185,13 +185,14 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     private void uploadingRecord() {
         iv_uploading_fial.setVisibility(GONE);
         pb_progress.setVisibility(VISIBLE);
-        final UploadTask task = new UploadTask(path, uuid);
-        task.name = new File(path).getName();
-        // 构造上传请求
-        LogUtil.d("录音key:  " + task.getKey());
-        new Thread(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                final UploadTask task = new UploadTask(path, uuid);
+                task.name = new File(path).getName();
+                // 构造上传请求
+                LogUtil.d("录音key:  " + task.getKey());
+
                 PutObjectRequest put = new PutObjectRequest(Config_project.OSS_UPLOAD_BUCKETNAME(),
                         task.getKey(), path);
                 put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
@@ -218,7 +219,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
 
                 }
             }
-        }).start();
+        },500);
     }
 
     public interface RecordUploadingCallback {
