@@ -157,6 +157,8 @@ public class MultiFunctionModule extends LinearLayout {
         voice.setCallbackMicStatus(new RecordUtils.CallbackMicStatus() {
             @Override
             public void setMicData(double db) {
+                if(db>20)
+                    isEffective=true;
                 refreshRecordIcon(db);
             }
         });
@@ -204,9 +206,9 @@ public class MultiFunctionModule extends LinearLayout {
                         v.setAlpha(0.6f);
                     }
                     if (recordTime >= 60) {//此处过了一分钟
-//                        dialog.setVisibility(GONE);
-//                        completeRecord();
-//                        Global.Toast("录音时间只能在一分钟内");
+                        dialog.setVisibility(GONE);
+                        completeRecord();
+                        Global.Toast("录音时间只能在一分钟内");
                         return false;
                     }
                     break;
@@ -309,7 +311,6 @@ public class MultiFunctionModule extends LinearLayout {
      */
     private void recordOngoing() {
         isRecordCancle = false;
-        mAnimationDrawable.selectDrawable(0);
         tv_record_action.setText("滑动至此处可取消录音");
         tv_record_action.setTextColor(Color.parseColor("#ffffff"));
         tv_record_number.setTextColor(Color.parseColor("#ffffff"));
@@ -339,28 +340,21 @@ public class MultiFunctionModule extends LinearLayout {
             mAnimationDrawable.selectDrawable(1);
         } else if (db > 20 && db < 30) {
             mAnimationDrawable.selectDrawable(2);
-            isEffective = true;
         } else if (db > 30 && db < 40) {
             mAnimationDrawable.selectDrawable(3);
-            isEffective = true;
         } else if (db > 40 && db < 50) {
             mAnimationDrawable.selectDrawable(4);
-            isEffective = true;
         } else if (db > 50 && db < 60) {
             mAnimationDrawable.selectDrawable(5);
-            isEffective = true;
         } else if (db > 60 && db < 70) {
             mAnimationDrawable.selectDrawable(6);
-            isEffective = true;
+            iv_record.clearAnimation();
         } else if (db > 70 && db < 80) {
             mAnimationDrawable.selectDrawable(7);
-            isEffective = true;
         } else if (db > 80 && db < 90) {
             mAnimationDrawable.selectDrawable(8);
-            isEffective = true;
         } else if (db > 90 && db < 100) {
             mAnimationDrawable.selectDrawable(9);
-            isEffective = true;
         }
 
     }
