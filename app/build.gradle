@@ -106,8 +106,8 @@ android {
 //    }
 
     ext {
-        supportLibVersion = "24.2.1"
-        //  supportLibVersion = "23.4.0"
+//        supportLibVersion = "24.2.1"
+          supportLibVersion = "23.4.0"
     }
 
     dependencies {
@@ -177,7 +177,7 @@ dependencies {
     compile project(path: ':library:sweetDialog')
     compile project(path: ':LibraryModule')
     compile project(':library:circularprogressbutton')
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+//    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
 
 apt {
