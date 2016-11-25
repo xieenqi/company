@@ -333,7 +333,7 @@ public class MultiFunctionModule extends LinearLayout {
      * 录音 进行中
      */
     private void recordOngoing() {
-//        iv_record.setImageResource(R.drawable.icon_record_ok1);
+        mAnimationDrawable.selectDrawable(0);
         tv_record_action.setText("滑动至此处可取消录音");
         tv_record_action.setTextColor(Color.parseColor("#ffffff"));
         tv_record_number.setTextColor(Color.parseColor("#ffffff"));
