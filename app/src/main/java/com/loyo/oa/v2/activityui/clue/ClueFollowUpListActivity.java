@@ -311,9 +311,12 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      */
     @Override
     public void commentSuccessEmbl() {
-        layout_add.setVisibility(View.VISIBLE);
+        if(isMyUser){
+            layout_add.setVisibility(View.VISIBLE);
+        }
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
+        isPullOrDown = true;
         getData(false);
     }
 

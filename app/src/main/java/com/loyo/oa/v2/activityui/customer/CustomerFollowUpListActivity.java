@@ -288,9 +288,12 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      */
     @Override
     public void commentSuccessEmbl() {
-        layout_add.setVisibility(View.VISIBLE);
+        if(isMyUser){
+            layout_add.setVisibility(View.VISIBLE);
+        }
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
+        isPullOrDown = true;
         getData(false);
     }
 
@@ -299,13 +302,13 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      * */
     @Override
     public void getListDataSuccesseEmbl(PaginationX<FollowUpListModel> paginationX) {
-        listView.onRefreshComplete();
         if(isPullOrDown){
             listModel.clear();
         }
         mPagination = paginationX;
         listModel.addAll(paginationX.getRecords());
         bindData();
+        listView.onRefreshComplete();
     }
 
     /**

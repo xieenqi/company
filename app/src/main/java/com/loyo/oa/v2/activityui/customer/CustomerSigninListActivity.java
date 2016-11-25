@@ -264,9 +264,12 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      */
     @Override
     public void commentSuccessEmbl() {
-        layout_add.setVisibility(View.VISIBLE);
+        if(isMyUser){
+            layout_add.setVisibility(View.VISIBLE);
+        }
         layout_bottom_menu.setVisibility(View.GONE);
         msgAudiomMenu.commentSuccessEmbl();
+        isPullOrDown = true;
         getData(false);
     }
 
