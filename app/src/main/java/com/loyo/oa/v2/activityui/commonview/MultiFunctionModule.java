@@ -191,7 +191,7 @@ public class MultiFunctionModule extends LinearLayout {
                         //停止动画
                         puaseRecordingTime();
                         cancleRecord();
-                        voice.stopRecord();
+                        voice.pauseRcord();
                         v.setAlpha(1f);
                         isRecordCancle = true;
                     } else {
@@ -260,6 +260,7 @@ public class MultiFunctionModule extends LinearLayout {
 
     /*录音时间开始*/
     private void stratRecordingTime() {
+        voice.resumRcord();
         if (timer != null) {
             timer.cancel();
             timer = null;
@@ -289,6 +290,7 @@ public class MultiFunctionModule extends LinearLayout {
             }
         };
         timer.schedule(task, 0, 1000);
+
     }
 
     /*录音时间 暂停*/
@@ -321,7 +323,7 @@ public class MultiFunctionModule extends LinearLayout {
      * 取消录音
      */
     private void cancleRecord() {
-        iv_record.setImageResource(R.drawable.icon_record_no);
+        mAnimationDrawable.selectDrawable(10);
         tv_record_action.setText("松开手指取消语音");
         tv_record_action.setTextColor(Color.parseColor("#f5625a"));
         tv_record_number.setTextColor(Color.parseColor("#f5625a"));
@@ -331,7 +333,7 @@ public class MultiFunctionModule extends LinearLayout {
      * 录音 进行中
      */
     private void recordOngoing() {
-        iv_record.setImageResource(R.drawable.icon_record_ok1);
+//        iv_record.setImageResource(R.drawable.icon_record_ok1);
         tv_record_action.setText("滑动至此处可取消录音");
         tv_record_action.setTextColor(Color.parseColor("#ffffff"));
         tv_record_number.setTextColor(Color.parseColor("#ffffff"));
@@ -351,45 +353,38 @@ public class MultiFunctionModule extends LinearLayout {
 
 
     private void refreshRecordIcon(double db) {
+        if (isRecordCancle) {
+            return;
+        }
         LogUtil.d("分贝值 : " + db);
         if (db < 10) {
-              mAnimationDrawable.selectDrawable(0);
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok1);
+            mAnimationDrawable.selectDrawable(0);
         } else if (db > 10 && db < 20) {
             mAnimationDrawable.selectDrawable(1);
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok2);
         } else if (db > 20 && db < 30) {
             mAnimationDrawable.selectDrawable(2);
             isEffective = true;
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok3);
         } else if (db > 30 && db < 40) {
             mAnimationDrawable.selectDrawable(3);
             isEffective = true;
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok4);
         } else if (db > 40 && db < 50) {
             mAnimationDrawable.selectDrawable(4);
             isEffective = true;
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok5);
         } else if (db > 50 && db < 60) {
             mAnimationDrawable.selectDrawable(5);
             isEffective = true;
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok6);
         } else if (db > 60 && db < 70) {
             mAnimationDrawable.selectDrawable(6);
             isEffective = true;
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok7);
         } else if (db > 70 && db < 80) {
             mAnimationDrawable.selectDrawable(7);
             isEffective = true;
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok8);
         } else if (db > 80 && db < 90) {
             mAnimationDrawable.selectDrawable(8);
             isEffective = true;
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok9);
         } else if (db > 90 && db < 100) {
             mAnimationDrawable.selectDrawable(9);
             isEffective = true;
-//            iv_record.setBackgroundResource(R.drawable.icon_record_ok10);
         }
 
     }

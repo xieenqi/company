@@ -68,11 +68,12 @@ public class RecordUtils {
         recorder = OmRecorder.wav(
                 new PullTransport.Default(mic(),
                         new PullTransport.OnAudioChunkPulledListener() {
-                    @Override public void onAudioChunkPulled(AudioChunk audioChunk) {
-                         double ratio =  (audioChunk.maxAmplitude()/1);
-                        callbackMicStatus.setMicData(ratio);
-                    }
-                }), new File(outPath));
+                            @Override
+                            public void onAudioChunkPulled(AudioChunk audioChunk) {
+                                double ratio = (audioChunk.maxAmplitude() / 1);
+                                callbackMicStatus.setMicData(ratio);
+                            }
+                        }), new File(outPath));
 
         recorder.resumeRecording();
         isStart = true;
@@ -97,6 +98,13 @@ public class RecordUtils {
 
     }
 
+    public void resumRcord() {
+        recorder.resumeRecording();
+    }
+
+    public void pauseRcord() {
+        recorder.pauseRecording();
+    }
 
     public boolean isStart() {
         return isStart;

@@ -36,4 +36,7 @@
         android:drawable="@drawable/icon_record_ok10"
         android:duration="300"></item>
 
+    <item
+        android:drawable="@drawable/icon_record_no"
+        android:duration="300"></item>
 </animation-list>
