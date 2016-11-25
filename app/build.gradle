@@ -106,8 +106,8 @@ android {
 //    }
 
     ext {
-        //supportLibVersion = "24.2.1"
-          supportLibVersion = "23.4.0"
+//        supportLibVersion = "24.2.1"
+        supportLibVersion = "23.4.0"
     }
 
     dependencies {
