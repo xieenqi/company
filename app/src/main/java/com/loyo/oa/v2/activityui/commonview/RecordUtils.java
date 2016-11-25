@@ -75,7 +75,7 @@ public class RecordUtils {
                             }
                         }), new File(outPath));
 
-        recorder.resumeRecording();
+        recorder.startRecording();
         isStart = true;
         startTime = System.currentTimeMillis();
     }
@@ -99,13 +99,13 @@ public class RecordUtils {
     }
 
     public void resumRcord() {
-        if(null != recorder)
-        recorder.resumeRecording();
+        if (recorder != null)
+            recorder.resumeRecording();
     }
 
     public void pauseRcord() {
-        if(null != recorder)
-        recorder.pauseRecording();
+        if (recorder != null)
+            recorder.pauseRecording();
     }
 
     public boolean isStart() {

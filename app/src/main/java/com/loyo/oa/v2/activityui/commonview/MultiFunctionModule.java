@@ -157,11 +157,14 @@ public class MultiFunctionModule extends LinearLayout {
         voice.setCallbackMicStatus(new RecordUtils.CallbackMicStatus() {
             @Override
             public void setMicData(double db) {
+                if(db>20)
+                    isEffective=true;
                 refreshRecordIcon(db);
             }
         });
     }
 
+    //TODO 此处逻辑比较乱 需要重构下review
     private View.OnTouchListener mOnVoiceRecTouchListener
             = new View.OnTouchListener() {
 
@@ -173,6 +176,7 @@ public class MultiFunctionModule extends LinearLayout {
             }
             if (recordTime == 0 && voice.getStartTime() != 0) {
                 stratRecordingTime();
+                isRecordCancle = false;
             }
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -189,11 +193,10 @@ public class MultiFunctionModule extends LinearLayout {
                     dialog.setVisibility(VISIBLE);
                     if (event.getX() <= 0.0F || event.getY() <= -100 || event.getX() >= ll_action_record.getWidth()) {
                         //停止动画
-                        puaseRecordingTime();
+//                        puaseRecordingTime();
                         cancleRecord();
-                        voice.pauseRcord();
+//                        voice.pauseRcord();
                         v.setAlpha(1f);
-                        isRecordCancle = true;
                     } else {
                         // 开始动画
                         if (isRecordCancle || (recordTime == 0 && voice.getStartTime() != 0)) {
@@ -201,7 +204,6 @@ public class MultiFunctionModule extends LinearLayout {
                         }
                         recordOngoing();
                         v.setAlpha(0.6f);
-                        isRecordCancle = false;
                     }
                     if (recordTime >= 60) {//此处过了一分钟
                         dialog.setVisibility(GONE);
@@ -220,42 +222,22 @@ public class MultiFunctionModule extends LinearLayout {
         }
     };
 
-    /**
-     * 录音超时的处理
-     *
-     * @return
-     */
-    private boolean recordTomeOut() {
-        if (recordTime >= 60) {//此处过了一分钟
-            isRecordCancle = true;
-            dialog.setVisibility(GONE);
-            completeRecord();
-            Global.Toast("录音时间只能在一分钟内");
-            return false;
-        }
-        return true;
-    }
 
     /**
      * 录音完成的操作
      */
     private void completeRecord() {
-        isRecordCancle = false;
-        if (!isRecordCancle && isEffective && recordTime > 2) {
-            if (voice.isStart()) {
-                voice.stopRecord();
-            }
+        if (!isRecordCancle && isEffective && recordTime > 1) {
             callbackComplete.recordComplete(voice.getOutPath(), recordTime + "");
             //恢复默认录音状态是键盘
             ll_record_keyboard.setTag(false);
             setIsRecording(false);
-            cancleRecordingTime();
         } else {
             if (!isRecordCancle)
                 Global.Toast("好像你没有说话哦!");
-//            if (recordTime<2)
-//                Global.Toast("录音时间太短");
         }
+        cancleRecordingTime();
+        voice.stopRecord();
     }
 
     /*录音时间开始*/
@@ -301,12 +283,6 @@ public class MultiFunctionModule extends LinearLayout {
             timer.cancel();
     }
 
-    /*录音时间  重新开始*/
-    private void reStratRecordingTime() {
-        task.run();
-        LogUtil.d("记录的时间: " + timer.purge());
-    }
-
     /*录音时间  取消*/
     private void cancleRecordingTime() {
         if (timer != null)
@@ -323,6 +299,7 @@ public class MultiFunctionModule extends LinearLayout {
      * 取消录音
      */
     private void cancleRecord() {
+        isRecordCancle = true;
         mAnimationDrawable.selectDrawable(10);
         tv_record_action.setText("松开手指取消语音");
         tv_record_action.setTextColor(Color.parseColor("#f5625a"));
@@ -333,7 +310,7 @@ public class MultiFunctionModule extends LinearLayout {
      * 录音 进行中
      */
     private void recordOngoing() {
-        mAnimationDrawable.selectDrawable(0);
+        isRecordCancle = false;
         tv_record_action.setText("滑动至此处可取消录音");
         tv_record_action.setTextColor(Color.parseColor("#ffffff"));
         tv_record_number.setTextColor(Color.parseColor("#ffffff"));
@@ -363,28 +340,21 @@ public class MultiFunctionModule extends LinearLayout {
             mAnimationDrawable.selectDrawable(1);
         } else if (db > 20 && db < 30) {
             mAnimationDrawable.selectDrawable(2);
-            isEffective = true;
         } else if (db > 30 && db < 40) {
             mAnimationDrawable.selectDrawable(3);
-            isEffective = true;
         } else if (db > 40 && db < 50) {
             mAnimationDrawable.selectDrawable(4);
-            isEffective = true;
         } else if (db > 50 && db < 60) {
             mAnimationDrawable.selectDrawable(5);
-            isEffective = true;
         } else if (db > 60 && db < 70) {
             mAnimationDrawable.selectDrawable(6);
-            isEffective = true;
+            iv_record.clearAnimation();
         } else if (db > 70 && db < 80) {
             mAnimationDrawable.selectDrawable(7);
-            isEffective = true;
         } else if (db > 80 && db < 90) {
             mAnimationDrawable.selectDrawable(8);
-            isEffective = true;
         } else if (db > 90 && db < 100) {
             mAnimationDrawable.selectDrawable(9);
-            isEffective = true;
         }
 
     }
