@@ -227,6 +227,7 @@ public class MultiFunctionModule extends LinearLayout {
      * 录音完成的操作
      */
     private void completeRecord() {
+        voice.stopRecord();
         if (!isRecordCancle && isEffective && recordTime > 1) {
             callbackComplete.recordComplete(voice.getOutPath(), recordTime + "");
             //恢复默认录音状态是键盘
@@ -237,7 +238,6 @@ public class MultiFunctionModule extends LinearLayout {
                 Global.Toast("好像你没有说话哦!");
         }
         cancleRecordingTime();
-        voice.stopRecord();
     }
 
     /*录音时间开始*/
