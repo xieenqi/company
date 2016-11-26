@@ -22,16 +22,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import vendor.omrecorder.AudioChunk;
 import vendor.omrecorder.OmRecorder;
 import vendor.omrecorder.PullTransport;
 import vendor.omrecorder.Recorder;
-
-//import vendor.omrecorder.AudioChunk;
-//import vendor.omrecorder.OmRecorder;
-//import vendor.omrecorder.PullTransport;
-//import vendor.omrecorder.Recorder;
 
 /**
  * Created by xeq on 16/11/11.
@@ -108,13 +102,13 @@ public class RecordUtils {
     }
 
     public void resumRcord() {
-//        if (recorder != null)
-//            recorder.resumeRecording();
+        if (recorder != null)
+            recorder.resumeRecording();
     }
 
     private void pauseRcord() {
-//        if (recorder != null)
-//            recorder.pauseRecording();
+        if (recorder != null)
+            recorder.pauseRecording();
     }
 
     public boolean isStart() {
