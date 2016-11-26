@@ -15,13 +15,13 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import vendor.omrecorder.AudioChunk;
 import vendor.omrecorder.OmRecorder;
 import vendor.omrecorder.PullTransport;
@@ -101,14 +101,14 @@ public class RecordUtils {
 
     }
 
-    public void resumRcord() {
-        if (recorder != null)
-            recorder.resumeRecording();
+    private void resumRcord() {
+//        if (recorder != null)
+//            recorder.resumeRecording();
     }
 
     private void pauseRcord() {
-        if (recorder != null)
-            recorder.pauseRecording();
+//        if (recorder != null)
+//            recorder.pauseRecording();
     }
 
     public boolean isStart() {
