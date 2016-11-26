@@ -369,6 +369,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             /*选择客户*/
             case R.id.layout_customer_name:
                 Bundle b = new Bundle();//SigninSelectCustomerSearch
+                b.putDouble("lon",loPosition);
+                b.putDouble("lat",laPosition);
                 app.startActivityForResult(this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
                 break;
 

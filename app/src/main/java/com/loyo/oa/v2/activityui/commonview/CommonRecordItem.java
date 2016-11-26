@@ -149,6 +149,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
                 rs.voicePlay(path).setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
+                        cleanOtherRecordAnimation();
                         mAnimationDrawable.stop();
                         mAnimationDrawable.selectDrawable(0);
                     }

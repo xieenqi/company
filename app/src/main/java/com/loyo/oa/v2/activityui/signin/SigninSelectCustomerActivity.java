@@ -67,7 +67,18 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 onBackPressed();
             }
         });
-        startLocation();
+        getLocationData();
+    }
+
+    private void getLocationData() {
+        Intent intent = getIntent();
+        double lon = intent.getDoubleExtra("lon", -1);
+        double lat = intent.getDoubleExtra("lat", -1);
+        if(lat==-1||lon==-1){
+            Toast("没有有效的定位信息");
+            onBackPressed();
+        }
+        pControl.oneGetNearCustomer(lon, lat);
     }
 
     @Override
@@ -92,23 +103,6 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 break;
 
         }
-    }
-
-    private void startLocation() {
-        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
-            @Override
-            public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
-                pControl.oneGetNearCustomer(longitude, latitude);
-                LocationUtilGD.sotpLocation();
-                UMengTools.sendLocationInfo(address, longitude, latitude);
-            }
-
-            @Override
-            public void OnLocationGDFailed() {
-                Toast("获取附近客户信息失败！");
-                LocationUtilGD.sotpLocation();
-            }
-        });
     }
 
     @Override
