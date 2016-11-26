@@ -736,4 +736,10 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             commitDynamic();
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        RecordUtils.getInstance(this).clean_play();
+    }
 }

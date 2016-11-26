@@ -42,14 +42,15 @@ public class RecordUtils {
     CallbackMicStatus callbackMicStatus;
     private SoundPool sp;
     private int shoot;
+    private static RecordUtils mInstance;
 
     private RecordUtils() {
     }
 
     public static RecordUtils getInstance(Context context) {
-//        if (mInstance == null) {
-        RecordUtils mInstance = new RecordUtils();
-//        }
+        if (mInstance == null) {
+            mInstance = new RecordUtils();
+        }
         mInstance.setContext(context);
         return mInstance;
     }
@@ -99,16 +100,6 @@ public class RecordUtils {
             recorder = null;
         }
 
-    }
-
-    private void resumRcord() {
-//        if (recorder != null)
-//            recorder.resumeRecording();
-    }
-
-    private void pauseRcord() {
-//        if (recorder != null)
-//            recorder.pauseRecording();
     }
 
     public boolean isStart() {
@@ -173,8 +164,9 @@ public class RecordUtils {
         try {
 //            File file = new File(playPath);
 //            FileInputStream is = new FileInputStream(file);
+            play.setAudioStreamType(AudioManager.STREAM_MUSIC);
             play.reset();
-            play.setDataSource("file://"+playPath);
+            play.setDataSource("file://" + playPath);
 //            play.prepare();
 //            play.start();
             play.prepareAsync();
@@ -185,7 +177,7 @@ public class RecordUtils {
                     LogUtil.d("播放准备完成 ");
                 }
             });
-            play.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
             play.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -197,8 +189,8 @@ public class RecordUtils {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if(play!=null)
-                    LogUtil.d("播放进度:  " + play.getDuration());
+                    if (play != null)
+                        LogUtil.d("播放进度:  " + play.getDuration());
                 }
             }, 100, 500);
 

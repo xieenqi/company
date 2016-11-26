@@ -193,9 +193,7 @@ public class MultiFunctionModule extends LinearLayout {
                     dialog.setVisibility(VISIBLE);
                     if (event.getX() <= 0.0F || event.getY() <= -100 || event.getX() >= ll_action_record.getWidth()) {
                         //停止动画
-//                        puaseRecordingTime();
                         cancleRecord();
-//                        voice.pauseRcord();
                         v.setAlpha(1f);
                     } else {
                         // 开始动画
@@ -242,7 +240,6 @@ public class MultiFunctionModule extends LinearLayout {
 
     /*录音时间开始*/
     private void stratRecordingTime() {
-        voice.resumRcord();
         if (timer != null) {
             timer.cancel();
             timer = null;

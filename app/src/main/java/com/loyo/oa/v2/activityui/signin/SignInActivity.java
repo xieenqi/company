@@ -684,6 +684,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         return distanceText;
     }//  104.073255,30.689493
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        RecordUtils.getInstance(this).clean_play();
+    }
 
     @Override
     protected void onDestroy() {
