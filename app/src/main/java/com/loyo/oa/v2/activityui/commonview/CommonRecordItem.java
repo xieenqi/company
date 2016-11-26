@@ -185,7 +185,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     private void uploadingRecord() {
         iv_uploading_fial.setVisibility(GONE);
         pb_progress.setVisibility(VISIBLE);
-        handler.postDelayed(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 final UploadTask task = new UploadTask(path, uuid);
@@ -219,7 +219,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
 
                 }
             }
-        },500);
+        }).start();
     }
 
     public interface RecordUploadingCallback {
