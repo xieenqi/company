@@ -17,30 +17,15 @@ import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
-import com.loyo.oa.upload.UploadController;
-import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.AttachmentBatch;
-import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.StringUtil;
 
 import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by xeq on 16/11/12.
@@ -219,7 +204,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
 
                 }
             }
-        },500);
+        },0);
     }
 
     public interface RecordUploadingCallback {
