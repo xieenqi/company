@@ -74,7 +74,7 @@ public class RecordUtils {
                                 callbackMicStatus.setMicData(ratio);
                             }
                         }), new File(outPath));
-//        sp.play(shoot, 1f, 1f, 0, 0, 1f);
+        sp.play(shoot, 1f, 1f, 0, 0, 1f);
         recorder.startRecording();
         isStart = true;
         startTime = System.currentTimeMillis();
