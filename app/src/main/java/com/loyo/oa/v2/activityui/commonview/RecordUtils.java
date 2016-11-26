@@ -99,13 +99,13 @@ public class RecordUtils {
     }
 
     public void resumRcord() {
-        if (recorder != null)
-            recorder.resumeRecording();
+//        if (recorder != null)
+//            recorder.resumeRecording();
     }
 
     private void pauseRcord() {
-        if (recorder != null)
-            recorder.pauseRecording();
+//        if (recorder != null)
+//            recorder.pauseRecording();
     }
 
     public boolean isStart() {
