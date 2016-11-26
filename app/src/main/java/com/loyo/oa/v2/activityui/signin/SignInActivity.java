@@ -96,7 +96,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private Customer mCustomer;
     private ArrayList<Contact> contactList;
     private Animation animation;
-    private boolean isPicture = false, isCusPosition = false, isLocation = false;
+    private boolean isPicture = false, isCusPosition = false, isLocation = false, isRecordRun = false;
     private PositionResultItem positionResultItem;
     private int pcitureNumber;//记录上传了多少张图
     private StaffMemberCollection collection;//选人返回的数据
@@ -213,10 +213,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
             @Override
             public void recordComplete(String recordPath, String tiem) {
+                isRecordRun = true;
                 ll_record.addView(new CommonRecordItem(SignInActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
                     @Override
                     public void Success(Record record) {//上传录音完成回调
                         audioInfo.add(record);
+                        isRecordRun = false;
                     }
 
                     @Override
@@ -369,8 +371,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             /*选择客户*/
             case R.id.layout_customer_name:
                 Bundle b = new Bundle();//SigninSelectCustomerSearch
-                b.putDouble("lon",loPosition);
-                b.putDouble("lat",laPosition);
+                b.putDouble("lon", loPosition);
+                b.putDouble("lat", laPosition);
                 app.startActivityForResult(this, SigninSelectCustomerActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
                 break;
 
@@ -415,7 +417,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             Global.ToastLong("需要上传照片，请拍照");
             return false;
         }
-
+        if (isRecordRun) {
+            Toast("录音上传中稍后提交");
+            return false;
+        }
         return true;
     }
 

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMember;
@@ -60,10 +61,13 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -97,7 +101,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
     private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
     private List<String> atUserIds = new ArrayList<>();//@的人员
     private StaffMemberCollection collection;//选人返回的数据
-    private boolean isCustom, isDetail;//是否是客户写跟进 否则就是是线索写跟进
+    private boolean isCustom, isDetail, isRecordRun;//是否是客户写跟进 否则就是是线索写跟进
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -230,10 +234,12 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         mfmodule.setRecordComplete(new MultiFunctionModule.RecordComplete() {
             @Override
             public void recordComplete(String recordPath, String tiem) {
+                isRecordRun = true;
                 ll_record.addView(new CommonRecordItem(DynamicAddActivity.this, recordPath, tiem, uuid, new CommonRecordItem.RecordUploadingCallback() {
                     @Override
                     public void Success(Record record) {//上传录音完成回调
                         audioInfo.add(record);
+                        isRecordRun = false;
                     }
 
                     @Override
@@ -469,6 +475,10 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                         Toast("请选择跟进线索");
                         return;
                     }
+                }
+                if (isRecordRun) {
+                    Toast("录音上传中稍后提交");
+                    return;
                 }
 
                 showLoading("");
