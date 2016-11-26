@@ -162,13 +162,9 @@ public class RecordUtils {
         clean_play();
         play = new MediaPlayer();
         try {
-//            File file = new File(playPath);
-//            FileInputStream is = new FileInputStream(file);
             play.setAudioStreamType(AudioManager.STREAM_MUSIC);
             play.reset();
             play.setDataSource("file://" + playPath);
-//            play.prepare();
-//            play.start();
             play.prepareAsync();
             play.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -186,14 +182,6 @@ public class RecordUtils {
                     return true;
                 }
             });
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (play != null)
-                        LogUtil.d("播放进度:  " + play.getDuration());
-                }
-            }, 100, 500);
-
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
             LogUtil.d("播放异常!!!IllegalArgumentException");
