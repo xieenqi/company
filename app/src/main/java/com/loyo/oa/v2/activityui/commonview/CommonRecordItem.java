@@ -56,6 +56,8 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     private ProgressBar pb_progress;
     private AnimationDrawable mAnimationDrawable;
     private RecordUploadingCallback recordUploadingCallback;
+    private RecordUtils rs;
+    private boolean isPlay;
     Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -118,6 +120,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
         uploadingRecord();
         mAnimationDrawable = (AnimationDrawable) tv_record_length.getBackground();
         tv_record_length.setTag(mAnimationDrawable);
+        rs = RecordUtils.getInstance(context);
     }
 
     private void setRecordLength() {
@@ -144,16 +147,23 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
             case R.id.tv_record_length:
                 cleanOtherRecordAnimation();
                 mAnimationDrawable.start();
-
-                RecordUtils rs = RecordUtils.getInstance(context);
-                rs.voicePlay(path).setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        cleanOtherRecordAnimation();
-                        mAnimationDrawable.stop();
-                        mAnimationDrawable.selectDrawable(0);
-                    }
-                });
+                if (isPlay) {
+                    rs.clean_play();
+                    cleanOtherRecordAnimation();
+                    mAnimationDrawable.stop();
+                    mAnimationDrawable.selectDrawable(0);
+                    isPlay = false;
+                } else {
+                    rs.voicePlay(path).setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            cleanOtherRecordAnimation();
+                            mAnimationDrawable.stop();
+                            mAnimationDrawable.selectDrawable(0);
+                        }
+                    });
+                    isPlay = true;
+                }
                 break;
             case R.id.iv_delete:
                 LinearLayout parentView = (LinearLayout) CommonRecordItem.this.getParent();

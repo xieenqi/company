@@ -12,17 +12,26 @@ import android.os.Environment;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import vendor.omrecorder.AudioChunk;
 import vendor.omrecorder.OmRecorder;
 import vendor.omrecorder.PullTransport;
 import vendor.omrecorder.Recorder;
+
+//import vendor.omrecorder.AudioChunk;
+//import vendor.omrecorder.OmRecorder;
+//import vendor.omrecorder.PullTransport;
+//import vendor.omrecorder.Recorder;
 
 /**
  * Created by xeq on 16/11/11.
@@ -65,6 +74,7 @@ public class RecordUtils {
         }
         fileName = getDate() + ".wav";
         outPath = AUDIO_ROOTPATH + File.separator + fileName;
+        sp.play(shoot, 1f, 1f, 0, 0, 1f);
         recorder = OmRecorder.wav(
                 new PullTransport.Default(mic(),
                         new PullTransport.OnAudioChunkPulledListener() {
@@ -74,7 +84,6 @@ public class RecordUtils {
                                 callbackMicStatus.setMicData(ratio);
                             }
                         }), new File(outPath));
-        sp.play(shoot, 1f, 1f, 0, 0, 1f);
         recorder.startRecording();
         isStart = true;
         startTime = System.currentTimeMillis();
@@ -168,38 +177,54 @@ public class RecordUtils {
         clean_play();
         play = new MediaPlayer();
         try {
-            play.setDataSource(playPath);
-            play.prepare();
-            play.start();
+//            File file = new File(playPath);
+//            FileInputStream is = new FileInputStream(file);
+            play.reset();
+            play.setDataSource("file://"+playPath);
+//            play.prepare();
+//            play.start();
             play.prepareAsync();
-//            play.setOnCompletionListener(Completion);
+            play.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    play.start();
+                    LogUtil.d("播放准备完成 ");
+                }
+            });
+            play.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            play.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    clean_play();
+                    Global.Toast("音频损坏,请删除重新录制");
+                    return true;
+                }
+            });
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if(play!=null)
+                    LogUtil.d("播放进度:  " + play.getDuration());
+                }
+            }, 100, 500);
+
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
+            LogUtil.d("播放异常!!!IllegalArgumentException");
             e.printStackTrace();
         } catch (SecurityException e) {
+            LogUtil.d("播放异常!!!SecurityException");
             e.printStackTrace();
         } catch (IllegalStateException e) {
+            LogUtil.d("播放异常!!!IllegalStateException");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+            LogUtil.d("播放异常!!!IOException");
         }
         return play;
     }
 
-    private MediaPlayer.OnCompletionListener Completion = new
-            MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mp.start();
-                }
-            };
-
-    //	private boolean scalea(float x,float y){
-//		float bx=recorder_bu.getLeft()+x;
-//		float by=recorder_bu.getTop()+y;
-//		RectF rectf=new RectF(img.getLeft(),img.getTop(),img.getRight(),img.getBottom());
-//		return rectf.contains(bx, by);
-//	}
     public void clean_play() {
         if (play != null) {
             play.stop();
