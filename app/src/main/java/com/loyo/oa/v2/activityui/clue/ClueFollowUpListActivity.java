@@ -52,6 +52,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
 
     private ViewGroup layout_back;
     private TextView tv_title;
+    private TextView voiceView;
     private PullToRefreshListView listView;
     private ViewGroup layout_add;
     private Customer mCustomer;
@@ -84,6 +85,12 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_follow);
         initView();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        audioPlayer.audioPause(voiceView);
     }
 
     @Override
@@ -348,11 +355,13 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      */
     @Override
     public void playVoice(AudioModel audioModel, TextView textView) {
+
         if (TextUtils.isEmpty(audioModel.url)) {
             Toast("无录音资源!");
             return;
         }
 
+        voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);

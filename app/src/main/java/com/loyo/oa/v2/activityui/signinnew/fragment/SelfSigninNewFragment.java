@@ -65,6 +65,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
 
     private ArrayList<Tag> mTags;
+    private TextView voiceView;
     private DropDownMenu filterMenu;
     private String menuTimekey = "0";        /*时间*/
     private String menuKindkey = "0";        /*类型*/
@@ -103,6 +104,12 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
             loadFilterOptions();
         }
         return mView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        audioPlayer.audioPause(voiceView);
     }
 
     @Override
@@ -362,7 +369,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
             Toast("无录音资源!");
             return;
         }
-
+        voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);

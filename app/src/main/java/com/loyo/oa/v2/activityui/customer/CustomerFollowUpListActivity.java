@@ -53,6 +53,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
 
     private ViewGroup layout_back;
     private TextView tv_title;
+    private TextView voiceView;
     private PullToRefreshListView listView;
     private ViewGroup layout_add;
     private Customer mCustomer;
@@ -81,6 +82,12 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_follow);
         initView();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        audioPlayer.audioPause(voiceView);
     }
 
     @Override
@@ -329,7 +336,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
             Toast("无录音资源!");
             return;
         }
-
+        voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);

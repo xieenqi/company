@@ -63,6 +63,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private View mView;
     private Button btn_add;
     private ViewStub emptyView;
+    private TextView voiceView;
     private DropDownMenu filterMenu;
     private PullToRefreshListView listView;
     private LinearLayout layout_bottom_menu;
@@ -103,6 +104,11 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         return mView;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        audioPlayer.audioPause(voiceView);
+    }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
@@ -381,7 +387,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
             Toast("无录音资源!");
             return;
         }
-
+        voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);

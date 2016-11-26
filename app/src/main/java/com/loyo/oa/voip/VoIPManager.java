@@ -2,7 +2,6 @@ package com.loyo.oa.voip;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.voip.api.IVoIP;
@@ -19,11 +18,9 @@ import com.yzx.listenerInterface.CallStateListener;
 import com.yzxtcp.UCSManager;
 import com.yzxtcp.data.UcsReason;
 import com.yzxtcp.listener.ILoginListener;
-
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;

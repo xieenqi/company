@@ -62,6 +62,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private View mView;
     private Button btn_add;
     private ViewStub emptyView;
+    private TextView voiceView;
     private PullToRefreshListView listView;
     private ArrayList<FollowFilter> mTags;
     private DropDownMenu filterMenu;
@@ -105,6 +106,13 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         }
         return mView;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        audioPlayer.audioPause(voiceView);
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -415,7 +423,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             Toast("无录音资源!");
             return;
         }
-
+        voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);

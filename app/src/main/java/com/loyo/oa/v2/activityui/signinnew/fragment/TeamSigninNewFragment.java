@@ -70,6 +70,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
 
     private View mView;
     private Button btn_add;
+    private TextView voiceView;
     private ViewStub emptyView;
     private DropDownMenu filterMenu;
     private PullToRefreshListView listView;
@@ -101,6 +102,12 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
             loadFilterOptions();
         }
         return mView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        audioPlayer.audioPause(voiceView);
     }
 
     @Override
@@ -380,7 +387,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
             Toast("无录音资源!");
             return;
         }
-
+        voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);
