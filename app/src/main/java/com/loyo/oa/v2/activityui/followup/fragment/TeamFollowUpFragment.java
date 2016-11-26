@@ -110,7 +110,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void onPause() {
         super.onPause();
-        audioPlayer.audioPause(voiceView);
+        if(null != voiceView)
+            audioPlayer.audioPause(voiceView);
     }
 
 

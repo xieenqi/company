@@ -87,8 +87,10 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     @Override
     public void onPause() {
         super.onPause();
-        audioPlayer.audioPause(voiceView);
+        if(null != voiceView)
+            audioPlayer.audioPause(voiceView);
     }
+
 
     @Override
     public void onDestroy() {

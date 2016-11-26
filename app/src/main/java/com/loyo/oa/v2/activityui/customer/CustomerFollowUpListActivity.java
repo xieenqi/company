@@ -87,8 +87,10 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     @Override
     public void onPause() {
         super.onPause();
-        audioPlayer.audioPause(voiceView);
+        if(null != voiceView)
+            audioPlayer.audioPause(voiceView);
     }
+
 
     @Override
     protected void onDestroy() {

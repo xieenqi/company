@@ -70,6 +70,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     private ScrollView layout_scrollview;
 
     private TextView tv_title;
+    private TextView voiceView;
     private TextView tv_name;              /* 姓名 */
     private TextView tv_kind;              /* 方式 */
     private TextView tv_toast;             /* 通知人员 */
@@ -133,6 +134,13 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     public void onDestroy() {
         super.onDestroy();
         audioPlayer.killPlayer();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(null != voiceView)
+            audioPlayer.audioPause(voiceView);
     }
 
     /**
@@ -551,7 +559,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
             Toast("无录音资源!");
             return;
         }
-
+        voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);

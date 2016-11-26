@@ -109,7 +109,8 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public void onPause() {
         super.onPause();
-        audioPlayer.audioPause(voiceView);
+        if(null != voiceView)
+            audioPlayer.audioPause(voiceView);
     }
 
     @Override

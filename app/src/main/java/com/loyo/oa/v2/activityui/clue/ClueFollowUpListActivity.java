@@ -90,6 +90,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
     @Override
     public void onPause() {
         super.onPause();
+        if(null != voiceView)
         audioPlayer.audioPause(voiceView);
     }
 

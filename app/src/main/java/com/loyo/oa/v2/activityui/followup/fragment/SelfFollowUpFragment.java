@@ -107,6 +107,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void onPause() {
         super.onPause();
+        if(null != voiceView)
         audioPlayer.audioPause(voiceView);
     }
 
