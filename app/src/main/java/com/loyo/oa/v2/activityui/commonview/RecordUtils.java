@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import vendor.omrecorder.AudioChunk;
 import vendor.omrecorder.OmRecorder;
@@ -160,28 +158,12 @@ public class RecordUtils {
 
     public MediaPlayer voicePlay(String playPath) {
         clean_play();
+
         play = new MediaPlayer();
         try {
-            play.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            play.reset();
-            play.setDataSource("file://" + playPath);
-            play.prepareAsync();
-            play.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    play.start();
-                    LogUtil.d("播放准备完成 ");
-                }
-            });
-
-            play.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    clean_play();
-                    Global.Toast("音频损坏,请删除重新录制");
-                    return true;
-                }
-            });
+            play.setDataSource(playPath);
+            play.prepare();
+            play.start();
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
             LogUtil.d("播放异常!!!IllegalArgumentException");
