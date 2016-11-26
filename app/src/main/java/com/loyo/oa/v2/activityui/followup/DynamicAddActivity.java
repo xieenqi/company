@@ -738,8 +738,9 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         RecordUtils.getInstance(this).clean_play();
     }
+
 }
