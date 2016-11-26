@@ -233,6 +233,7 @@ public class ProjectAddActivity extends BaseActivity {
         projectTransObj.content = content;
 
         projectTransObj.managers = selectedManagers;
+        if(mAdapter!=null)
         projectTransObj.members = mAdapter.getProjectMembers();
 
         if (mUpdate) {
