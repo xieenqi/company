@@ -19,7 +19,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.AnimationCommon;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
 import java.util.Timer;
