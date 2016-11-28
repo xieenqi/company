@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.photo.PhotoPreview;
 import com.loyo.oa.v2.R;
@@ -481,7 +482,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
                     Toast("请输入联系人姓名!");
                     return;
-                } else if(!testDynamicword()){
+                } else if (!testDynamicword()) {
                     Toast("请填写必填字段!");
                     return;
                 }
@@ -582,16 +583,18 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      */
 
     private boolean testDynamicword() {
-        for (ExtraData ext : extDatas) {
-            try{
-                if (ext.getProperties().isRequired() && ext.getProperties().isEnabled()) {
-                    LogUtil.d("动态字段必填:" + ext.getProperties().isRequired());
-                    if (ext.getVal().isEmpty() || null == ext.getVal()) {
-                        return false;
+        if (extDatas != null) {
+            for (ExtraData ext : extDatas) {
+                try {
+                    if (ext.getProperties().isRequired() && ext.getProperties().isEnabled()) {
+                        LogUtil.d("动态字段必填:" + ext.getProperties().isRequired());
+                        if (ext.getVal().isEmpty() || null == ext.getVal()) {
+                            return false;
+                        }
                     }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
-            }catch (NullPointerException e){
-                e.printStackTrace();
             }
         }
         return true;
