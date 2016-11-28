@@ -23,7 +23,7 @@ android {
 //    }
 
     dexOptions {
-        javaMaxHeapSize "4g"
+        javaMaxHeapSize "4g"gco
     }
 
     //.so文件的资源设置
@@ -54,7 +54,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 2016112602
-        versionName '1.4.5'
+        versionName '1.4.5t'
     }
 
     buildTypes {
