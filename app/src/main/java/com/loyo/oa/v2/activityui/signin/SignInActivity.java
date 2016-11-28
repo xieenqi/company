@@ -104,6 +104,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
     private List<String> atUserIds = new ArrayList<>();//@的人员
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -359,7 +360,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             isCusPosition = true;
                             dismissSweetAlert();
-                            customerAddress = tv_address.getText().toString();
                             addSignIn();
                         }
                     }, "提示", "该客户无定位信息,是否需要\n将签到地址设置为客户定位?", "不需要", "设为定位");
@@ -687,7 +687,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onPause() {
         super.onPause();
-        RecordUtils.getInstance(this).clean_play();
+        for (int i = 0; i < ll_record.getChildCount(); i++) {
+            ((CommonRecordItem) ll_record.getChildAt(i)).cleanPlayRecord();
+        }
+
     }
 
     @Override
