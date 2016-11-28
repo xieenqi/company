@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
+import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
+import com.loyo.oa.v2.activityui.sale.presenter.SaleOpportunitiesPresenterImpl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
@@ -44,7 +46,7 @@ import retrofit.client.Response;
  * 【销售机会列表页面】
  * Created by xeq on 16/5/17.
  */
-public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity implements View.OnClickListener, SaleOpportunitiesContract.View {
 
     /**
      * 销售阶段筛选Tag
@@ -71,11 +73,13 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
     private Permission permission;
+    private SaleOpportunitiesContract.Presenter mPersenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_opportunities);
+        mPersenter = new SaleOpportunitiesPresenterImpl(this);
         init();
     }
 
@@ -124,12 +128,17 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
             SaleItemStatus = new String[]{"我的机会", "团队机会"};
             imageArrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
-        }
-        else {
+        } else {
             img_title_arrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
         }
         getStageData();
+//         mPersenter.initStageData();
+    }
+
+    @Override
+    public void setSaleStgesData(ArrayList<SaleStage> saleStages) {
+
     }
 
     void initTitleItem() {
