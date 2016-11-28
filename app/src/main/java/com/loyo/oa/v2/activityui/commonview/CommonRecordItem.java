@@ -133,18 +133,13 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
                 cleanOtherRecordAnimation();
                 mAnimationDrawable.start();
                 if (isPlay) {
-                    rs.clean_play();
-                    cleanOtherRecordAnimation();
-                    mAnimationDrawable.stop();
-                    mAnimationDrawable.selectDrawable(0);
-                    isPlay = false;
+                    cleanPlayRecord();
                 } else {
                     rs.voicePlay(path).setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
                             cleanOtherRecordAnimation();
-                            mAnimationDrawable.stop();
-                            mAnimationDrawable.selectDrawable(0);
+                            cleanCuurentRecordAnimation();
                         }
                     });
                     isPlay = true;
@@ -164,7 +159,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     }
 
     /**
-     * 清理 其它录音在播放状态的动画
+     * 清理 【其它】录音在播放状态的动画
      */
     private void cleanOtherRecordAnimation() {
         LinearLayout parentView = (LinearLayout) CommonRecordItem.this.getParent();
@@ -174,8 +169,20 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
             if (animatiob != null) {
                 animatiob.stop();
                 animatiob.selectDrawable(0);
+                if (animatiob.isRunning()) {
+                    ((CommonRecordItem) parentView.getChildAt(i)).isPlay = false;
+                }
+
             }
         }
+    }
+
+    /**
+     * 清理 【当前】录音在播放状态的动画
+     */
+    private void cleanCuurentRecordAnimation() {
+        mAnimationDrawable.stop();
+        mAnimationDrawable.selectDrawable(0);
     }
 
     private void uploadingRecord() {
@@ -219,12 +226,11 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     }
 
     /**
-     * 清理在播放的状态动画
+     * 清理在播放的 【状态】 【动画】
      */
     public void cleanPlayRecord() {
         cleanOtherRecordAnimation();
-        mAnimationDrawable.stop();
-        mAnimationDrawable.selectDrawable(0);
+        cleanCuurentRecordAnimation();
         rs.clean_play();
         isPlay = false;
     }
