@@ -23,7 +23,7 @@ android {
 //    }
 
     dexOptions {
-        javaMaxHeapSize "4g"gco
+        javaMaxHeapSize "4g"
     }
 
     //.so文件的资源设置
