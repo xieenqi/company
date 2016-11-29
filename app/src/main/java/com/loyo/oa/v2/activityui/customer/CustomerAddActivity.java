@@ -53,6 +53,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
+import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -443,7 +444,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("Keyword", edt_name.getText().toString());
                     app.startActivityForResult((Activity) mContext, BusinessInquiryActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
-
+                    MobclickAgent.onEvent(mContext, "BusinessQuery");//统计工商查询次数
                 } else {
                     Toast("客户名称不能为空");
                 }
