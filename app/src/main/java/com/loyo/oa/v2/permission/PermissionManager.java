@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.permission;
 
+import com.loyo.oa.v2.application.MainApp;
+
 import java.util.HashMap;
 
 /**
@@ -24,14 +26,42 @@ public class PermissionManager {
         return this;
     }
 
-    public boolean hasTeamPermission(@BusinessOperation.Type String module) {
-        
+    public boolean hasPermission(@BusinessOperation.Type String module) {
 
+        Permission permission = data.get(module);
+        if (permission == null || ! permission.isEnable()) {
+            return false;
+        }
 
         return true;
     }
 
-    public int dateRange(@BusinessOperation.Type String mudule) {
-        return 0;
+    public boolean hasTeamPermission(@BusinessOperation.Type String module) {
+        Permission permission = data.get(module);
+        if (permission == null || ! permission.isEnable()) {
+            return false;
+        }
+        else if (permission.dataRange >= Permission.PERSONAL) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public int dataRange(@BusinessOperation.Type String mudule) {
+        Permission permission = data.get(mudule);
+        if (permission == null) {
+            return Permission.NONE;
+        }
+        else {
+            return permission.dataRange;
+        }
+    }
+
+    public boolean hasSuperPriority() {
+        if (MainApp.user != null) {
+            return MainApp.user.isSuperUser;
+        }
+        return false;
     }
 }

@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 @DatabaseTable(tableName = "permission")
 public class Permission implements Serializable {
 
+    public final static int NONE     = Integer.MAX_VALUE;
     public final static int ZERO     = 0;
     public final static int COMPANY  = 1;
     public final static int TEAM     = 2;
@@ -60,7 +61,7 @@ public class Permission implements Serializable {
         this.code = code;
     }
 
-    @IntDef({ZERO, COMPANY, TEAM, PERSONAL})
+    @IntDef({NONE, ZERO, COMPANY, TEAM, PERSONAL})
     @Retention(RetentionPolicy.SOURCE)
     public @interface DataRange {
     }

@@ -11,6 +11,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -98,6 +99,7 @@ public class InitDataService extends IntentService {
             }
 
             MainApp.rootMap = map;
+            PermissionManager.getInstance().init(map);
             LogUtil.d("x相关权限:" + MainApp.gson.toJson(map));
         }
     }
