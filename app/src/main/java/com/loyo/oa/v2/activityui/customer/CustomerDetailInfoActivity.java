@@ -318,7 +318,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 startActivity(mIntent);
                 break;
 
-            /*跟进*/
+            /*快捷跟进*/
             case R.id.layout_gj:
                 mIntent = new Intent(CustomerDetailInfoActivity.this, DynamicAddActivity.class);
                 mIntent.putExtra(Customer.class.getName(), mCustomer);
@@ -408,7 +408,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                     Toast("没有号码");
                 }
                 break;
-            /*跟进动态*/
+            /*跟进动态列表*/
             case R.id.layout_sale_activity:
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("mCustomer", mCustomer);
