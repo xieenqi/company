@@ -117,7 +117,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         isMyUser = getIntent().getBooleanExtra("isMyUser",true);
         mPresenter = new SigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(this);
-
+        audioPlayer.initPlayer();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -347,6 +347,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
+        audioPlayer.initPlayer();
         if(audioPlayer.isPlaying()){
             /*点击同一条则暂停播放*/
             if (lastView == textView) {

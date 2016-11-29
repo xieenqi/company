@@ -193,7 +193,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     private void initUI() {
         id = getIntent().getStringExtra("id");
         audioPlayer = new AudioPlayer(mContext);
-
+        audioPlayer.initPlayer();
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);

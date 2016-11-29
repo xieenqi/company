@@ -139,7 +139,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         permission = (Permission) getArguments().getSerializable("permission");
         mPresenter = new TeamSigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(getActivity());
-
+        audioPlayer.initPlayer();
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
@@ -399,6 +399,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
+        audioPlayer.initPlayer();
         if(audioPlayer.isPlaying()){
             /*点击同一条则暂停播放*/
             if (lastView == textView) {

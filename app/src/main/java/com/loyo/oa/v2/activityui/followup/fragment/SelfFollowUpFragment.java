@@ -112,6 +112,14 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        audioPlayer.killPlayer();
+        layout_bottom_voice.setVisibility(View.GONE);
+        layout_bottom_voice.removeAllViews();
+    }
+
+    @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         isPullOrDown = true;
         mPagination.setPageIndex(1);
@@ -125,19 +133,11 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         getData(true);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        audioPlayer.killPlayer();
-        layout_bottom_voice.setVisibility(View.GONE);
-        layout_bottom_voice.removeAllViews();
-    }
-
     public void initView(View view) {
         mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
-
+        audioPlayer.initPlayer();
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
@@ -398,6 +398,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
+        audioPlayer.initPlayer();
         if(audioPlayer.isPlaying()){
             /*点击同一条则暂停播放*/
             if (lastView == textView) {

@@ -66,7 +66,6 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private PullToRefreshListView listView;
     private ArrayList<FollowFilter> mTags;
     private DropDownMenu filterMenu;
-
     private LinearLayout layout_bottom_menu;
 
     private String menuTimekey = "";        /*时间*/
@@ -147,6 +146,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         permission = (Permission) getArguments().getSerializable("permission");
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
+        audioPlayer.initPlayer();
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
@@ -434,6 +434,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
+        audioPlayer.initPlayer();
         if(audioPlayer.isPlaying()){
             /*点击同一条则暂停播放*/
             if (lastView == textView) {

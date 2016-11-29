@@ -94,6 +94,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         audioPlayer.audioPause(voiceView);
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -133,7 +134,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         getIntenData();
         mPresenter = new ClueFollowUpListPresenterImpl(this,mContext);
         audioPlayer = new AudioPlayer(this);
-
+        audioPlayer.initPlayer();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -372,6 +373,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
+        audioPlayer.initPlayer();
         if(audioPlayer.isPlaying()){
             /*点击同一条则暂停播放*/
             if (lastView == textView) {

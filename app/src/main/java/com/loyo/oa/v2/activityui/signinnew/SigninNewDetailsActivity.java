@@ -188,7 +188,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private void initUI() {
         id = getIntent().getStringExtra("id");
         audioPlayer = new AudioPlayer(mContext);
-
+        audioPlayer.initPlayer();
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
