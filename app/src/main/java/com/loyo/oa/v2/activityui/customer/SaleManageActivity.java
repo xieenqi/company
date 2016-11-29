@@ -10,15 +10,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -26,8 +29,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,6 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
 
     private ViewGroup img_title_left, layout_add;
     private TextView tv_add;
-    private Permission permission;
     private PullToRefreshListView listView_demands;
     private AdapterCustomerSale listAdapter;
     private ArrayList<SaleRecord> listData = new ArrayList<>();
@@ -86,15 +86,6 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
         layout_add.setOnClickListener(this);
         layout_add.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         listView_demands = (PullToRefreshListView) findViewById(R.id.listView_demands);
-
-        //超级管理员\权限判断
-        if (null != MainApp.user && !MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0215");
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -158,7 +149,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.layout_add:
 
-                if (null != permission && !permission.isEnable()) {
+                if (! PermissionManager.getInstance().hasPermission(BusinessOperation.SALE_OPPORTUNITY)) {
 
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
 
@@ -264,7 +255,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (null != permission && !permission.isEnable()) {
+                    if (! PermissionManager.getInstance().hasPermission(BusinessOperation.SALE_OPPORTUNITY)) {
                         sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                         return;
                     }

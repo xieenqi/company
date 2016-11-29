@@ -17,15 +17,13 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
-import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
-import com.loyo.oa.v2.activityui.followup.FollowUpManagerActivity;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.fragment.SelfSigninNewFragment;
 import com.loyo.oa.v2.activityui.signinnew.fragment.TeamSigninNewFragment;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -35,7 +33,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,8 +61,6 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
 
     private List<BaseFragment> fragments = new ArrayList<>();
     private String[] SaleItemStatus = new String[]{"我的拜访"};
-
-    private Permission permission;
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mTags1;
     private ArrayList<Tag> mTags2;
@@ -98,9 +93,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         img_title_search_right.setVisibility(View.INVISIBLE);
 
         imageArrow.setVisibility(View.INVISIBLE);
-        /*超级管理员,Web权限判断*/
-        permission = MainApp.rootMap.get("0228");
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.CUSTOMER_VISIT)) {
             SaleItemStatus = new String[]{"我的拜访", "团队拜访"};
             imageArrow.setVisibility(View.VISIBLE);
         }
@@ -180,12 +173,10 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
             if ("我的拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, SelfSigninNewFragment.class.getName(), b);
             } else if ("团队拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamSigninNewFragment.class.getName(), b);
             }
             fragments.add(fragment);

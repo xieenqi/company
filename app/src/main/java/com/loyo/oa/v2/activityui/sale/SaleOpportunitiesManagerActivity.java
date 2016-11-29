@@ -15,32 +15,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
-import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
-import com.loyo.oa.v2.activityui.sale.presenter.SaleOpportunitiesPresenterImpl;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
-import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
 import com.loyo.oa.v2.activityui.sale.fragment.MySaleFragment;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.activityui.sale.presenter.SaleOpportunitiesPresenterImpl;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
+import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【销售机会列表页面】
@@ -68,11 +59,9 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     private Animation rotateAnimation;//标题动画
     private String[] SaleItemStatus = new String[]{"我的机会"};
     private List<BaseFragment> fragments = new ArrayList<>();
-    private ArrayList<SaleStage> mSaleStages;
     private float mRotation = 0;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
-    private Permission permission;
     private SaleOpportunitiesContract.Presenter mPersenter;
 
     @Override
@@ -81,26 +70,6 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         setContentView(R.layout.activity_sale_opportunities);
         mPersenter = new SaleOpportunitiesPresenterImpl(this);
         init();
-    }
-
-    public void getStageData() {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
-            @Override
-            public void success(final ArrayList<SaleStage> saleStages, final Response response) {
-                HttpErrorCheck.checkResponse("销售机会 销售阶段:", response);
-                mSaleStages = saleStages;
-                initTitleItem();
-                initChildren();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                finish();
-            }
-        });
     }
 
     private void init() {
@@ -122,9 +91,7 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
-        //超级管理员 全公司  权限判断
-        permission = MainApp.rootMap.get("0215");
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.SALE_OPPORTUNITY)) {
             SaleItemStatus = new String[]{"我的机会", "团队机会"};
             imageArrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
@@ -132,13 +99,19 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
             img_title_arrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
         }
-        getStageData();
-//         mPersenter.initStageData();
+        showProgress("");
+        mPersenter.getPageData();
     }
 
     @Override
     public void setSaleStgesData(ArrayList<SaleStage> saleStages) {
+        initTitleItem();
+        initChildren(saleStages);
+    }
 
+    @Override
+    public void closePageView() {
+        onBackPressed();
     }
 
     void initTitleItem() {
@@ -158,17 +131,16 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     /**
      * 初始化子片段
      */
-    private void initChildren() {
+    private void initChildren(ArrayList<SaleStage> saleStages) {
         for (int i = 0; i < SaleItemStatus.length; i++) {
             BaseFragment fragment = null;
             if (i == 0) {
                 Bundle b = new Bundle();
-                b.putSerializable("stage", mSaleStages);
+                b.putSerializable("stage", saleStages);
                 fragment = (BaseFragment) Fragment.instantiate(this, MySaleFragment.class.getName(), b);
             } else {
                 Bundle b = new Bundle();
-                b.putSerializable("stage", mSaleStages);
-                b.putSerializable("permission", permission);
+                b.putSerializable("stage", saleStages);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamSaleFragment.class.getName(), b);
             }
             fragments.add(fragment);
@@ -241,4 +213,18 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         }
     }
 
+    @Override
+    public void showProgress(String message) {
+        showLoading(message);
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        Toast(message);
+    }
 }

@@ -12,17 +12,17 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.activityui.signin.fragment.SignInOfTeamFragment;
 import com.loyo.oa.v2.activityui.signin.fragment.SignInOfUserFragment;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
+import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -68,9 +68,7 @@ public class SignInManagerActivity extends BaseFragmentActivity {
 //        findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
 //        findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
         imageArrow.setVisibility(View.INVISIBLE);
-        /*超级管理员,Web权限判断*/
-        Permission permission = MainApp.rootMap.get("0228");
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.CUSTOMER_VISIT)) {
             LEGWORK_FILTER_STRS = new String[]{"我的拜访", "团队拜访"};
             imageArrow.setVisibility(View.VISIBLE);
         }

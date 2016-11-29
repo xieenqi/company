@@ -24,9 +24,10 @@ import com.loyo.oa.v2.activityui.worksheet.fragment.ResponsableWorksheetFragment
 import com.loyo.oa.v2.activityui.worksheet.fragment.SelfCreatedWorksheetFragment;
 import com.loyo.oa.v2.activityui.worksheet.fragment.TeamWorksheetFragment;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
@@ -52,7 +53,6 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
     private WorksheetListType[] SaleItemStatus = new WorksheetListType[]
             {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE};
     private List<BaseFragment> fragments = new ArrayList<>();
-    private Permission permission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +81,7 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
-        //超级管理员\权限判断
-        permission = MainApp.rootMap.get("0218");
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.WORKSHEET_MANAGEMENT)) {
             SaleItemStatus = new WorksheetListType[]
                     {WorksheetListType.RESPONSABLE, WorksheetListType.SELF_CREATED, WorksheetListType.ASSIGNABLE, WorksheetListType.TEAM};
         }
@@ -113,7 +111,6 @@ public class WorksheetManageActivity extends BaseFragmentActivity implements Vie
         fragments.add(fragment);
 
         b = new Bundle();
-        b.putSerializable("permission", permission);
         fragment = (BaseFragment) Fragment.instantiate(this, TeamWorksheetFragment.class.getName(), b);
         fragments.add(fragment);
 
