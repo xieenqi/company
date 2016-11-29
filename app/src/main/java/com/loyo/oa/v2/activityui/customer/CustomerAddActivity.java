@@ -136,7 +136,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private LinearLayout ll_call_layout2;
     private LinearLayout ll_call_layout3;
     private LinearLayout layout_more;
-    private LinearLayout container;
+    private LinearLayout containerOp; //选填动态字段容器
+    private LinearLayout containerRe; //必填动态字段容器
 
     private EditText edit_address_details;
     private ImageGridViewAdapter imageGridViewAdapter;
@@ -146,7 +147,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private List<String> mSelectPath;
     private ArrayList<ImageInfo> pickPhotsResult;
     private ArrayList<ImageInfo> pickPhots = new ArrayList<>();
-    private ArrayList<ExtraData> extDatas;
+    private ArrayList<ExtraData> extDatas; //动态字段总汇
+    private ArrayList<ExtraData> RextDatasModel;  //必填
+    private ArrayList<ExtraData> OpextDatasModel; //选填
 
     private String uuid;
     private String tagItemIds;
@@ -223,7 +226,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         ll_call_layout2 = (LinearLayout) findViewById(R.id.ll_call_layout2);
         ll_call_layout3 = (LinearLayout) findViewById(R.id.ll_call_layout3);
         layout_more = (LinearLayout) findViewById(R.id.layout_more);
-        container = (LinearLayout) findViewById(R.id.layout_customer_extra_info);
+        containerOp = (LinearLayout) findViewById(R.id.layout_customer_optional_info);
+        containerRe = (LinearLayout) findViewById(R.id.layout_customer_required_info);
 
         layout_more.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -289,6 +293,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
 
         extDatas = new ArrayList<>();
+        RextDatasModel = new ArrayList<>();
+        OpextDatasModel = new ArrayList<>();
         ExtraData extraData;
         ExtraProperties properties;
 
@@ -307,7 +313,18 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 extDatas.add(extraData);
             }
         }
-        container.addView(new CustomerInfoExtraData(mContext, extDatas, ismy, R.color.text33, 0, true, true, false));
+
+        /*分离必填与非必填字段*/
+        for(ExtraData ext : extDatas){
+            if(ext.getProperties().isRequired()){
+                RextDatasModel.add(ext);
+            }else{
+                OpextDatasModel.add(ext);
+            }
+        }
+
+        containerOp.addView(new CustomerInfoExtraData(mContext, OpextDatasModel, ismy, R.color.text33, 0, true, true, false));
+        containerRe.addView(new CustomerInfoExtraData(mContext, RextDatasModel, ismy, R.color.text33, 0, true, true, false));
     }
 
     void getTempCustomer() {
@@ -327,7 +344,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             }
         }
     }
-
 
     /**
      * 批量上传附件
@@ -384,7 +400,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             /*更多信息*/
             case R.id.layout_more:
                 layout_more.setVisibility(View.GONE);
-                container.setVisibility(View.VISIBLE);
+                containerOp.setVisibility(View.VISIBLE);
                 break;
 
             /*手机添加1*/
@@ -583,6 +599,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
      */
 
     private boolean testDynamicword() {
+        extDatas.clear();
+        extDatas.addAll(RextDatasModel);
+        extDatas.addAll(OpextDatasModel);
+
         if (extDatas != null) {
             for (ExtraData ext : extDatas) {
                 try {
