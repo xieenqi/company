@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activityui.commonview.bean;
 
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.permission.Permission;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -8,25 +8,26 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -65,7 +66,6 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
     private PaginationX<LegWork> workPaginationX = new PaginationX<>(20);
     private ArrayList<LegWork> legWorks = new ArrayList<>();
     private SignInListAdapter adapter;
-    private Permission permission;
     private boolean isTopAdd;
     private boolean isChanged;
 
@@ -79,15 +79,6 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
             layout_add.setVisibility(View.GONE);
         }
         layout_add.setOnTouchListener(Global.GetTouch());
-
-        //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = MainApp.rootMap.get("0228");
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
         getData();
     }
 
@@ -106,7 +97,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
      */
     @Click(R.id.layout_add)
     void createNewSignIn() {
-        if (null != permission && !permission.isEnable()) {
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
             sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
         } else {
             Bundle b = new Bundle();
@@ -132,7 +123,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int i, final long l) {
-                if (null != permission && !permission.isEnable()) {
+                if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }

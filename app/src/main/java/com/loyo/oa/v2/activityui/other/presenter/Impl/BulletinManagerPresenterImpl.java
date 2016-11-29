@@ -11,9 +11,10 @@ import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinManagerView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.RCallback;
 
@@ -100,9 +101,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
      */
     @Override
     public void isPermission() {
-        //超级管理员\权限判断
-        Permission mPermission = MainApp.rootMap.get("0402");
-        if (mPermission != null && mPermission.isEnable()) {
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.ANNOUNCEMENT_POSTING)) {
             crolView.permissionSuccess();
         }
     }

@@ -17,13 +17,13 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
-import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.activityui.followup.fragment.SelfFollowUpFragment;
 import com.loyo.oa.v2.activityui.followup.fragment.TeamFollowUpFragment;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -62,7 +62,6 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
     private List<BaseFragment> fragments = new ArrayList<>();
     private String[] SaleItemStatus = new String[]{"我的跟进"};
 
-    private Permission permission;
     private ArrayList<FollowFilter> mTags;
     private ArrayList<FollowFilter> mTags1;
     private ArrayList<FollowFilter> mTags2;
@@ -93,9 +92,7 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
         layout_title_action.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setVisibility(View.INVISIBLE);
         imageArrow.setVisibility(View.INVISIBLE);
-        //超级管理员权全公司  没有获取到权限就不显示
-        permission = MainApp.rootMap.get("0229"); //客户权限 暂时用客户权限做测试
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.VISIT_TIMELINE)) {
             SaleItemStatus = new String[]{"我的跟进", "团队跟进"};
             publicOrTeam = true;
             imageArrow.setVisibility(View.VISIBLE);
@@ -176,12 +173,10 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
             if ("我的跟进".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, SelfFollowUpFragment.class.getName(), b);
             } else if ("团队跟进".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamFollowUpFragment.class.getName(), b);
             }
             fragments.add(fragment);

@@ -17,6 +17,8 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
@@ -40,7 +42,6 @@ import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
@@ -50,9 +51,9 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.AttenDancePopView;
 import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.point.IUser;
@@ -75,7 +76,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -304,33 +304,65 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 组装首页Item数据
      */
     void updateUser() {
-//产品确定 除了讨论模块其它都受权限控制 20161019
-        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", "com.loyo.oa.v2.activityui.other.BulletinManagerActivity_", "0200", 0),
-                new HomeItem(R.drawable.newmain_discuss, "我的讨论", "com.loyo.oa.v2.activityui.discuss.MyDiscussActivity", "0", 0),
-                new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity", "0213", 0),
-                new HomeItem(R.drawable.newmain_clue, "销售线索", "com.loyo.oa.v2.activityui.clue.ClueManagerActivity", "0217", 1),
-                new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity", "0205", 1),
-                new HomeItem(R.drawable.newmain_followup, "跟进动态", "com.loyo.oa.v2.activityui.followup.FollowUpManagerActivity", "0229", 0),
-                new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activityui.signinnew.SigninNewManagerActivity", "0228", 1),
-                new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity", "0215", 1),
-                new HomeItem(R.drawable.newmain_order, "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity", "0216", 1),//新加订单
-                new HomeItem(R.drawable.newmain_worksheet, "工单管理", "com.loyo.oa.v2.activityui.worksheet.WorksheetManageActivity", "0218"/* 测试是始终显示 */, 1),//新加工单
-                new HomeItem(R.drawable.newmain_project, "项目管理", "com.loyo.oa.v2.activityui.project.ProjectManageActivity_", "0201", 2),
-                new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_", "0202", 2),
-                new HomeItem(R.drawable.newmain_report, "工作报告", "com.loyo.oa.v2.activityui.work.WorkReportsManageActivity", "0203", 2),
-                new HomeItem(R.drawable.newmain_wfin, "审批流程", "com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity", "0204", 2),
-                new HomeItem(R.drawable.newmain_attent, "考勤管理", "com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_", "0211", 2)));
+        //产品确定 除了讨论模块其它都受权限控制 20161019
+        items = new ArrayList<>(Arrays.asList(
+                new HomeItem(R.drawable.newmain_toast,
+                        "公告通知", "com.loyo.oa.v2.activityui.other.BulletinManagerActivity_",
+                        BusinessOperation.ANNOUNCEMENT, 0),
+                new HomeItem(R.drawable.newmain_discuss,
+                        "我的讨论", "com.loyo.oa.v2.activityui.discuss.MyDiscussActivity",
+                        BusinessOperation.DEFAULT, 0),
+                new HomeItem(R.drawable.newmain_list,
+                        "通讯录", "com.loyo.oa.v2.activityui.contact.ContactsActivity",
+                        BusinessOperation.ORGANIZATION_CONTACTS, 0),
+                new HomeItem(R.drawable.newmain_clue,
+                        "销售线索", "com.loyo.oa.v2.activityui.clue.ClueManagerActivity",
+                        BusinessOperation.CLUE_MANAGEMENT, 1),
+                new HomeItem(R.drawable.newmain_customer,
+                        "客户管理", "com.loyo.oa.v2.activityui.customer.CustomerManagerActivity",
+                        BusinessOperation.CUSTOMER_MANAGEMENT, 1),
+                new HomeItem(R.drawable.newmain_followup,
+                        "跟进动态", "com.loyo.oa.v2.activityui.followup.FollowUpManagerActivity",
+                        BusinessOperation.VISIT_TIMELINE, 0),
+                new HomeItem(R.drawable.newmain_sagin,
+                        "客户拜访", "com.loyo.oa.v2.activityui.signinnew.SigninNewManagerActivity",
+                        BusinessOperation.CUSTOMER_VISIT, 1),
+                new HomeItem(R.drawable.newmain_sale,
+                        "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity",
+                        BusinessOperation.SALE_OPPORTUNITY, 1),
+                new HomeItem(R.drawable.newmain_order,
+                        "订单管理", "com.loyo.oa.v2.activityui.order.OrderManagementActivity",
+                        BusinessOperation.ORDER_MANAGEMENT, 1),//新加订单
+                new HomeItem(R.drawable.newmain_worksheet,
+                        "工单管理", "com.loyo.oa.v2.activityui.worksheet.WorksheetManageActivity",
+                        BusinessOperation.WORKSHEET_MANAGEMENT, 1),//新加工单
+                new HomeItem(R.drawable.newmain_project,
+                        "项目管理", "com.loyo.oa.v2.activityui.project.ProjectManageActivity_",
+                        BusinessOperation.PROJECT_MANAGEMENT, 2),
+                new HomeItem(R.drawable.newmain_task,
+                        "任务计划", "com.loyo.oa.v2.activityui.tasks.TasksManageActivity_",
+                        BusinessOperation.TASK, 2),
+                new HomeItem(R.drawable.newmain_report,
+                        "工作报告", "com.loyo.oa.v2.activityui.work.WorkReportsManageActivity",
+                        BusinessOperation.WORK_REPORT, 2),
+                new HomeItem(R.drawable.newmain_wfin,
+                        "审批流程", "com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity",
+                        BusinessOperation.APPROVAL_PROCESS, 2),
+                new HomeItem(R.drawable.newmain_attent,
+                        "考勤管理", "com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_",
+                        BusinessOperation.ATTENDANCE_MANAGEMENT, 2)));
 
 
-        caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务", "0202", R.drawable.newmain_post_task),
-                new MoreWindowItem("申请审批", "0204", R.drawable.newmain_post_wif),
-                new MoreWindowItem("提交报告", "0203", R.drawable.newmain_post_report),
-                new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
-                new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
-                new MoreWindowItem("新建订单", "0205", R.drawable.newmain_post_order),//0205权限还没有控制
-                new MoreWindowItem("客户拜访", "0228", R.drawable.newmain_post_sign),
-                new MoreWindowItem("考勤打卡", "0211", R.drawable.newmain_post_att),
-                new MoreWindowItem("写跟进", "0229", R.drawable.newmain_post_follow)));
+        caseItems = new ArrayList<>(Arrays.asList(
+                new MoreWindowItem("新建任务", BusinessOperation.TASK,                R.drawable.newmain_post_task),
+                new MoreWindowItem("申请审批", BusinessOperation.APPROVAL_PROCESS,    R.drawable.newmain_post_wif),
+                new MoreWindowItem("提交报告", BusinessOperation.WORK_REPORT,         R.drawable.newmain_post_report),
+                new MoreWindowItem("新建客户", BusinessOperation.CUSTOMER_MANAGEMENT, R.drawable.newmain_post_customer),
+                new MoreWindowItem("新建机会", BusinessOperation.SALE_OPPORTUNITY,    R.drawable.newmain_post_sale),
+                new MoreWindowItem("新建订单", BusinessOperation.ORDER_MANAGEMENT,    R.drawable.newmain_post_order),
+                new MoreWindowItem("客户拜访", BusinessOperation.CUSTOMER_VISIT,      R.drawable.newmain_post_sign),
+                new MoreWindowItem("考勤打卡", BusinessOperation.ATTENDANCE_MANAGEMENT, R.drawable.newmain_post_att),
+                new MoreWindowItem("写跟进"  , BusinessOperation.VISIT_TIMELINE,      R.drawable.newmain_post_follow)));
     }
 
     /**
@@ -600,23 +632,11 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 return;
             }
 
-//            ArrayList<Permission> suitesNew = new ArrayList<>();
-//            suitesNew.clear();
-//            suitesNew.addAll(MainApp.user.newpermission);
-//
-//            Map<String, Permission> mappedPermission = new HashMap<String, Permission>();
-//            for (Permission permission : suitesNew) {
-//                if (!TextUtils.isEmpty(permission.code)) {
-//                    LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
-//                    mappedPermission.put(permission.code, permission);
-//                }
-//            }
-            Map<String, Permission> mappedPermission = MainApp.rootMap;
             int itemsLength = items.size();
             for (int i = 0; i < itemsLength; i++) {
                 String code = items.get(i).code;
-                Permission p = mappedPermission.get(code);
-                if ((p == null || p.enable == false) && code != "0") {
+                boolean permission = PermissionManager.getInstance().hasPermission(code);
+                if (!permission && !TextUtils.equals(code, BusinessOperation.DEFAULT)) {
                     items.remove(i);
                     i--;
                     itemsLength--;
@@ -625,8 +645,8 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
             int caseItemsLength = caseItems.size();
             for (int i = 0; i < caseItemsLength; i++) {
                 String code = caseItems.get(i).code;
-                Permission p = mappedPermission.get(code);
-                if ((p == null || p.enable == false) && code != "0") {
+                boolean permission = PermissionManager.getInstance().hasPermission(code);
+                if (!permission && !TextUtils.equals(code, BusinessOperation.DEFAULT)) {
                     caseItems.remove(i);
                     i--;
                     caseItemsLength--;

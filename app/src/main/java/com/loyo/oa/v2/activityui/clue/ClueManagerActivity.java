@@ -20,13 +20,13 @@ import com.loyo.oa.v2.activityui.clue.fragment.MyClueFragment;
 import com.loyo.oa.v2.activityui.clue.fragment.TeamClueFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +50,6 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
     private float mRotation = 0;
     private String[] SaleItemStatus = new String[]{"我的线索"};
     private List<BaseFragment> fragments = new ArrayList<>();
-    private Permission permission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +77,7 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
-        //超级管理员\权限判断
-        permission = MainApp.rootMap.get("0217");
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.CLUE_MANAGEMENT)) {
             SaleItemStatus = new String[]{"我的线索", "团队线索"};
             img_title_arrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
@@ -104,7 +101,6 @@ public class ClueManagerActivity extends BaseFragmentActivity implements View.On
                 fragment = (BaseFragment) Fragment.instantiate(this, MyClueFragment.class.getName(), b);
             } else {
                 Bundle b = new Bundle();
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamClueFragment.class.getName(), b);
             }
             fragments.add(fragment);

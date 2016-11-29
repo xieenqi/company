@@ -14,9 +14,10 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
@@ -38,7 +39,6 @@ public class CommCustomerAdapter extends BaseAdapter {
 
     private ArrayList<Customer> mCustomers;
     private Context mContext;
-    private Permission permission;
     private Handler mHandler;
 
     public CommCustomerAdapter(final Context context, ArrayList<Customer> customers, Handler mHandler) {
@@ -48,9 +48,8 @@ public class CommCustomerAdapter extends BaseAdapter {
     }
 
     public void permissionTest(ImageView img) {
-        permission = MainApp.rootMap.get("0404");
-            /*超级管理员/Web控制权限判断*/
-        if ((null != permission && permission.isEnable()) || MainApp.user.isSuperUser()) {
+        /* 客户挑入权限 */
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_PICKING)) {
             img.setVisibility(View.VISIBLE);
         }
     }

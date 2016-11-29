@@ -12,26 +12,27 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.TaskRecord;
-import com.loyo.oa.v2.beans.WfInstanceRecord;
-import com.loyo.oa.v2.beans.WorkReportRecord;
-import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
-import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
+import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.project.HttpProject;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
+import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activityui.work.WorkReportAddActivity;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
-import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PagingGroupData_;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Project;
+import com.loyo.oa.v2.beans.TaskRecord;
+import com.loyo.oa.v2.beans.WfInstanceRecord;
+import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IProject;
 
 import java.io.Serializable;
@@ -58,7 +59,6 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     private boolean taskPsn = true;
     private boolean workPsn = true;
     private boolean wiftPsn = true;
-    private Permission permission;
     private FrameLayout indicatorGroup;
 
     @Override
@@ -126,26 +126,9 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     public void initView() {
 
         //超级管理员\权限判断
-        if (null != MainApp.user && !MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0202");
-                if (!permission.isEnable()) {
-                    taskPsn = false;
-                }
-
-                permission = (Permission) MainApp.rootMap.get("0203");
-                if (!permission.isEnable()) {
-                    workPsn = false;
-                }
-
-                permission = (Permission) MainApp.rootMap.get("0204");
-                if (!permission.isEnable()) {
-                    wiftPsn = false;
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
+        taskPsn = PermissionManager.getInstance().hasPermission(BusinessOperation.TASK);
+        workPsn = PermissionManager.getInstance().hasPermission(BusinessOperation.WORK_REPORT);
+        wiftPsn = PermissionManager.getInstance().hasPermission(BusinessOperation.APPROVAL_PROCESS);
     }
 
     int pageIndex;

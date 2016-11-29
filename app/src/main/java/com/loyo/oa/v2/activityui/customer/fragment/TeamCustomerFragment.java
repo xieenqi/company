@@ -20,6 +20,8 @@ import com.loyo.oa.dropdownmenu.filtermenu.TagMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
@@ -30,15 +32,15 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.Permission;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -66,7 +68,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private TextView nearTv;
     private ViewGroup nearLayout;
     private NearCount nearCount;
-    private Permission permission;
     private PullToRefreshListView listView;
     private TeamCustomerAdapter adapter;
     private DropDownMenu filterMenu;
@@ -113,8 +114,6 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
     public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-        permission = (Permission) getArguments().getSerializable("permission");
-
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         nearTv = (TextView) view.findViewById(R.id.tv_near_customers);
         nearLayout = (ViewGroup) view.findViewById(R.id.layout_near_customers);
@@ -136,12 +135,14 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         List<DBDepartment> depts = new ArrayList<>();
         String title = "部门";
         //为超管或权限为全公司 展示全公司成员
-        if (permission != null && permission.dataRange == Permission.COMPANY) {
+        if (PermissionManager.getInstance().dataRange(BusinessOperation.CUSTOMER_MANAGEMENT)
+                == Permission.COMPANY) {
             depts.addAll(OrganizationManager.shareManager().allDepartments());
             title = "全公司";
         }
         //权限为部门 展示我的部门
-        else if (permission != null && permission.dataRange == Permission.TEAM) {
+        else if (PermissionManager.getInstance().dataRange(BusinessOperation.CUSTOMER_MANAGEMENT)
+                == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "本部门";
         }

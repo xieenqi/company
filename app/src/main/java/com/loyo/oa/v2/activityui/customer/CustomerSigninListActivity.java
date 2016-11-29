@@ -8,12 +8,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
+import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewListAdapter;
 import com.loyo.oa.v2.activityui.customer.presenter.SigninListFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.SigninListFragPresenterImpl;
-import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
-import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
@@ -24,13 +27,12 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -58,7 +60,6 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     private boolean isPullOrDown;
     private boolean isChanged;
 
-    private Permission permission;
     private PaginationX<SigninNewListModel> mPagination = new PaginationX<>(20);
     private ArrayList<SigninNewListModel> listModel = new ArrayList<>();
     private CustomerSigninNewListAdapter mAdapter;
@@ -145,14 +146,6 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
             Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
                     layout_add,
                     layout_bottom_menu,msgAudiomMenu.getEditComment());
-        }
-        //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = MainApp.rootMap.get("0228");
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
         }
         getData(false);
     }
@@ -311,7 +304,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
 
             /*新建*/
             case R.id.layout_add:
-                if (null != permission && !permission.isEnable()) {
+                if (! PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                 } else {
                     Bundle b = new Bundle();
