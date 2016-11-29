@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.sale.contract;
 
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
+import com.loyo.oa.v2.common.BaseView;
+import com.loyo.oa.v2.common.base.BasePersenter;
 
 import java.util.ArrayList;
 
@@ -9,15 +11,16 @@ import java.util.ArrayList;
  */
 
 public interface SaleOpportunitiesContract {
-    public interface View {
+    interface View extends BaseView{
         void setSaleStgesData(ArrayList<SaleStage> saleStages);
+        void closePageView();
     }
 
-    public interface Presenter {
-        void initStageData();
+    interface Presenter extends BasePersenter{
+        void closePage();
     }
 
-    public interface Model {
+    interface Model {
         void getStageData();
     }
 

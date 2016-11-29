@@ -68,7 +68,6 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     private Animation rotateAnimation;//标题动画
     private String[] SaleItemStatus = new String[]{"我的机会"};
     private List<BaseFragment> fragments = new ArrayList<>();
-    private ArrayList<SaleStage> mSaleStages;
     private float mRotation = 0;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
@@ -81,26 +80,6 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         setContentView(R.layout.activity_sale_opportunities);
         mPersenter = new SaleOpportunitiesPresenterImpl(this);
         init();
-    }
-
-    public void getStageData() {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
-            @Override
-            public void success(final ArrayList<SaleStage> saleStages, final Response response) {
-                HttpErrorCheck.checkResponse("销售机会 销售阶段:", response);
-                mSaleStages = saleStages;
-                initTitleItem();
-                initChildren();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                finish();
-            }
-        });
     }
 
     private void init() {
@@ -132,13 +111,19 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
             img_title_arrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
         }
-        getStageData();
-//         mPersenter.initStageData();
+        showProgress("");
+        mPersenter.getPageData();
     }
 
     @Override
     public void setSaleStgesData(ArrayList<SaleStage> saleStages) {
+        initTitleItem();
+        initChildren(saleStages);
+    }
 
+    @Override
+    public void closePageView() {
+        onBackPressed();
     }
 
     void initTitleItem() {
@@ -158,16 +143,16 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     /**
      * 初始化子片段
      */
-    private void initChildren() {
+    private void initChildren(ArrayList<SaleStage> saleStages) {
         for (int i = 0; i < SaleItemStatus.length; i++) {
             BaseFragment fragment = null;
             if (i == 0) {
                 Bundle b = new Bundle();
-                b.putSerializable("stage", mSaleStages);
+                b.putSerializable("stage", saleStages);
                 fragment = (BaseFragment) Fragment.instantiate(this, MySaleFragment.class.getName(), b);
             } else {
                 Bundle b = new Bundle();
-                b.putSerializable("stage", mSaleStages);
+                b.putSerializable("stage", saleStages);
                 b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamSaleFragment.class.getName(), b);
             }
@@ -241,4 +226,18 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         }
     }
 
+    @Override
+    public void showProgress(String message) {
+        showLoading(message);
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        Toast(message);
+    }
 }
