@@ -43,8 +43,7 @@
                         android:maxLength="50"
                         android:paddingLeft="@dimen/dimen_1"
                         android:singleLine="true"
-                        android:textColor="@color/suodesilei"
-                        />
+                        android:textColor="@color/suodesilei" />
 
                     <TextView
                         android:id="@+id/tv_gscx"
@@ -104,9 +103,8 @@
                         android:lineSpacingExtra="6dp"
                         android:paddingBottom="@dimen/dimen_10"
                         android:paddingTop="@dimen/dimen_3"
-                        android:textSize="14sp"
                         android:textColor="@color/suodesilei"
-                        />
+                        android:textSize="14sp" />
 
                     <ImageView
                         android:id="@+id/img_refresh_address"
@@ -503,6 +501,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_customer_required_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:visibility="visible" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -543,6 +549,20 @@
                         android:src="@drawable/right_arrow" />
                 </LinearLayout>
 
+                <include layout="@layout/include_solid_line_left" />
+
+                <EditText
+                    android:id="@+id/edt_content"
+                    style="@style/edtText_normal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="left|top"
+                    android:hint="客户简介"
+                    android:minHeight="80dp"
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/dimen_14"
+                    android:paddingTop="@dimen/dimen_10" />
 
                 <LinearLayout
                     android:id="@+id/layout_photo"
@@ -550,8 +570,6 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/layout_bg1"
                     android:orientation="vertical">
-
-                    <include layout="@layout/include_solid_line_left" />
 
                     <com.loyo.oa.v2.customview.CusGridView
                         android:id="@+id/gridView_photo"
@@ -568,41 +586,38 @@
 
             <LinearLayout
                 android:id="@+id/layout_more"
-                android:layout_marginTop="@dimen/dimen_20"
-                android:layout_marginBottom="@dimen/dimen_20"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
-                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/dimen_20"
+                android:layout_marginTop="@dimen/dimen_20"
                 android:background="@color/white"
                 android:gravity="center"
-                >
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/icon_customer_more"
-                    />
+                    android:background="@drawable/icon_customer_more" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/title_bg1"
                     android:layout_marginLeft="@dimen/dimen_10"
-                    android:textSize="18sp"
-                    android:text="更多信息" />
+                    android:text="更多信息"
+                    android:textColor="@color/title_bg1"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_customer_extra_info"
-                android:layout_marginTop="@dimen/dimen_20"
-                android:layout_marginBottom="@dimen/dimen_20"
+                android:id="@+id/layout_customer_optional_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20"
+                android:layout_marginTop="@dimen/dimen_20"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:visibility="gone"/>
-
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
