@@ -444,7 +444,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("Keyword", edt_name.getText().toString());
                     app.startActivityForResult((Activity) mContext, BusinessInquiryActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
-                    MobclickAgent.onEvent(mContext, "BusinessQuery");//统计工商查询次数
+                    //统计工商查询次数(正式环境)
+                    if (Config_project.isRelease)
+                        MobclickAgent.onEvent(mContext, "BusinessQuery");
                 } else {
                     Toast("客户名称不能为空");
                 }
