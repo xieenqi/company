@@ -40,7 +40,7 @@ import com.loyo.oa.v2.activityui.wfinstance.WfInTypeSelectActivity;
 import com.loyo.oa.v2.activityui.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;

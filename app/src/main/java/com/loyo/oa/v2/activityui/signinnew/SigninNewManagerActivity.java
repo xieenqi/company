@@ -23,7 +23,7 @@ import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.signinnew.fragment.SelfSigninNewFragment;
 import com.loyo.oa.v2.activityui.signinnew.fragment.TeamSigninNewFragment;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;

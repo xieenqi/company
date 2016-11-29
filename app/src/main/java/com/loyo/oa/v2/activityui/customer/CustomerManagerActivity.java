@@ -22,7 +22,7 @@ import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.TeamCustomerFragment;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;

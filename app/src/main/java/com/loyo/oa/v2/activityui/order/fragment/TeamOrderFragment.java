@@ -24,7 +24,7 @@ import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.order.adapter.TeamOrderAdapter;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;

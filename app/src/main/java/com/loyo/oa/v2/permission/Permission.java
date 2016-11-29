@@ -1,10 +1,9 @@
-package com.loyo.oa.v2.beans;
+package com.loyo.oa.v2.permission;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Created by loyo_dev1 on 16/1/20.

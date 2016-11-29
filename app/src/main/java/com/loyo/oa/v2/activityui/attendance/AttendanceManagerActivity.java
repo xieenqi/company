@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.activityui.attendance.fragment.AttendanceListFragment;
 import com.loyo.oa.v2.tool.BaseFragment;

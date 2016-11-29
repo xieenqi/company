@@ -1,7 +1,5 @@
 package com.loyo.oa.v2.permission;
 
-import com.loyo.oa.v2.beans.Permission;
-
 import java.util.HashMap;
 
 /**

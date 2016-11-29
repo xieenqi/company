@@ -20,7 +20,7 @@ import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
 import com.loyo.oa.v2.activityui.sale.presenter.SaleOpportunitiesPresenterImpl;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;

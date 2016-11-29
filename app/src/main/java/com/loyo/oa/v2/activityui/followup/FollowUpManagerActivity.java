@@ -21,7 +21,7 @@ import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.activityui.followup.fragment.SelfFollowUpFragment;
 import com.loyo.oa.v2.activityui.followup.fragment.TeamFollowUpFragment;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISigninNeworFollowUp;

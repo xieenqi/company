@@ -23,7 +23,7 @@ import com.loyo.oa.v2.activityui.customer.model.Industry;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
-import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
