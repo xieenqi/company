@@ -23,7 +23,6 @@ import com.loyo.oa.v2.activityui.customer.model.Industry;
 import com.loyo.oa.v2.activityui.other.model.CellInfo;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.other.model.UserGroupData;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -57,7 +56,6 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -82,8 +80,6 @@ public class MainApp extends Application {
     public static final int PHOTO = 1011;
     public static final int PICTURE = 1012;
 
-    public static long nowTime;
-    public static long lastTime;
     public static DisplayImageOptions options_3;
     private static MainApp mainApp;
     public static Gson gson;
@@ -124,7 +120,6 @@ public class MainApp extends Application {
     public String region;//地区
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
-    public static HashMap<String, Permission> rootMap;
 
     public ScaleAnimation animShow;  //显示动画
     public ScaleAnimation animHide;  //隐藏动画
@@ -134,7 +129,6 @@ public class MainApp extends Application {
     //下属
     public static ArrayList<UserGroupData> lstUserGroupData;
     public static ArrayList<Department> lstDepartment;//组织架构 的缓存
-    public static ArrayList<User> selectAllUsers; //选人功能 所有人员缓存
 
     static String token;
     public static User user;//InitDataService 在这里负值

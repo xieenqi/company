@@ -168,7 +168,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         });
         btn_add.setVisibility(View.INVISIBLE);
 
-        if (PermissionManager.getInstance().hasPermission(BusinessOperation.PROJECT_CREATING)) {
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.PROJECT_CREATING)
+                && MainApp.permissionPage == 1) {
             btn_add.setVisibility(View.VISIBLE);
             Utils.btnHideForListView(expandableListView, btn_add);
         } else if (MainApp.permissionPage != 1) {
