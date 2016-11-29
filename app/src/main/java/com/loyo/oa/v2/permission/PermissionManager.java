@@ -56,13 +56,13 @@ public class PermissionManager {
         return true;
     }
 
-    public int dataRange(@BusinessOperation.Type String mudule) {
+    public int dataRange(@BusinessOperation.Type String module) {
 
         if (hasSuperPriority()) {
             return Permission.COMPANY;
         }
 
-        Permission permission = data.get(mudule);
+        Permission permission = data.get(module);
         if (permission == null) {
             return Permission.NONE;
         }
