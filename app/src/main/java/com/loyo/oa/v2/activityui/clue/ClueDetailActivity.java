@@ -452,48 +452,6 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         mBundle.putString(VoIPCallActivity.CALLEE_SALE_KEY, data.sales.id);
         mBundle.putInt(VoIPCallActivity.CALLEE_USER_TYPE, callType);
         app.startActivity(ClueDetailActivity.this, VoIPCallActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
-//        showLoading("");
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("salesleadId", data.data.sales.id);
-//        map.put("type", callType);
-//        map.put("mobile", phone);
-//        LogUtil.dee("请求直播发送数据：" + MainApp.gson.toJson(map));
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).getCallLiveInfo(map,
-//                new RCallback<CallBackCallid>() {
-//                    @Override
-//                    public void success(final CallBackCallid callBackCallid, final Response response) {
-//                        HttpErrorCheck.checkResponse("线索请求直播", response);
-//                        try {
-//                            switch (callBackCallid.errcode) {
-//                                case 0:
-//
-//                                    break;
-//
-//                                case 50000:
-//                                    Toast("主叫与被叫号码不能相同!");
-//                                    break;
-//
-//                                case 50001:
-//                                    Toast("余额不足!");
-//                                    break;
-//
-//                                case 50002:
-//                                    Toast("号码格式错误!");
-//                                    break;
-//                            }
-//                        } catch (NullPointerException e) {
-//                            e.printStackTrace();
-//                            Toast(e.getMessage());
-//                            finish();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void failure(final RetrofitError error) {
-//                        super.failure(error);
-//                        HttpErrorCheck.checkError(error);
-//                    }
-//                });
     }
 
     /**

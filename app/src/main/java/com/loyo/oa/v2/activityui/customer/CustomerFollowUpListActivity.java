@@ -87,8 +87,10 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     @Override
     public void onPause() {
         super.onPause();
-        audioPlayer.audioPause(voiceView);
+        if(null != voiceView)
+            audioPlayer.audioPause(voiceView);
     }
+
 
     @Override
     protected void onDestroy() {
@@ -121,7 +123,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         }
         mPresenter = new CustomerFollowUpListPresenterImpl(this,mContext);
         audioPlayer = new AudioPlayer(this);
-
+        audioPlayer.initPlayer();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -345,7 +347,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
             if (null != lastView)
                 MainApp.getMainApp().stopAnim(lastView);
         }
-
+        audioPlayer.initPlayer();
         if(audioPlayer.isPlaying()){
             /*点击同一条则暂停播放*/
             if (lastView == textView) {

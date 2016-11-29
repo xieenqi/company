@@ -740,7 +740,9 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onPause() {
         super.onPause();
-        RecordUtils.getInstance(this).clean_play();
+        for (int i = 0; i < ll_record.getChildCount(); i++) {
+            ((CommonRecordItem) ll_record.getChildAt(i)).cleanPlayRecord();
+        }
     }
 
 }

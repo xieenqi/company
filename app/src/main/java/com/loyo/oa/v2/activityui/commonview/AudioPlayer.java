@@ -88,14 +88,20 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
         layout_audio_pauseorplay = (ImageView) mView.findViewById(R.id.layout_audio_pauseorplay);
         layout_audio_close = (LinearLayout) mView.findViewById(R.id.layout_audio_close);
         layout_audioplayer = (RelativeLayout) mView.findViewById(R.id.layout_audioplayer);
-
         layout_audio_pauseorplay.setOnClickListener(this);
         layout_audio_close.setOnClickListener(this);
+        this.addView(mView);
+    }
+
+    /**
+     * 初始化Player
+     * */
+    public void initPlayer(){
         player = new Player(musicProgress);
         musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
         player.mediaPlayer.setOnCompletionListener(new PlayerComplte());
-        this.addView(mView);
     }
+
 
     /**
      * 线程池播放Player

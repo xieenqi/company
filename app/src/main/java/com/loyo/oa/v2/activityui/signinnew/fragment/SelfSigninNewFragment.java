@@ -109,7 +109,8 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public void onPause() {
         super.onPause();
-        audioPlayer.audioPause(voiceView);
+        if(null != voiceView)
+            audioPlayer.audioPause(voiceView);
     }
 
     @Override
@@ -150,7 +151,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
         mPresenter = new SelfSigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(getActivity());
-
+        audioPlayer.initPlayer();
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
@@ -379,6 +380,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
+        audioPlayer.initPlayer();
         if(audioPlayer.isPlaying()){
             /*点击同一条则暂停播放*/
             if (lastView == textView) {

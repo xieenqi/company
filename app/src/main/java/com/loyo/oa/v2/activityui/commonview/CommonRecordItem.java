@@ -17,30 +17,15 @@ import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
-import com.loyo.oa.upload.UploadController;
-import com.loyo.oa.upload.UploadControllerCallback;
 import com.loyo.oa.upload.UploadTask;
 import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.AttachmentBatch;
-import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.StringUtil;
 
 import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by xeq on 16/11/12.
@@ -148,18 +133,13 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
                 cleanOtherRecordAnimation();
                 mAnimationDrawable.start();
                 if (isPlay) {
-                    rs.clean_play();
-                    cleanOtherRecordAnimation();
-                    mAnimationDrawable.stop();
-                    mAnimationDrawable.selectDrawable(0);
-                    isPlay = false;
+                    cleanPlayRecord();
                 } else {
                     rs.voicePlay(path).setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
                             cleanOtherRecordAnimation();
-                            mAnimationDrawable.stop();
-                            mAnimationDrawable.selectDrawable(0);
+                            cleanCuurentRecordAnimation();
                         }
                     });
                     isPlay = true;
@@ -179,7 +159,7 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     }
 
     /**
-     * 清理 其它录音在播放状态的动画
+     * 清理 【其它】录音在播放状态的动画
      */
     private void cleanOtherRecordAnimation() {
         LinearLayout parentView = (LinearLayout) CommonRecordItem.this.getParent();
@@ -189,8 +169,20 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
             if (animatiob != null) {
                 animatiob.stop();
                 animatiob.selectDrawable(0);
+                if (animatiob.isRunning()) {
+                    ((CommonRecordItem) parentView.getChildAt(i)).isPlay = false;
+                }
+
             }
         }
+    }
+
+    /**
+     * 清理 【当前】录音在播放状态的动画
+     */
+    private void cleanCuurentRecordAnimation() {
+        mAnimationDrawable.stop();
+        mAnimationDrawable.selectDrawable(0);
     }
 
     private void uploadingRecord() {
@@ -231,6 +223,16 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
                 }
             }
         }).start();
+    }
+
+    /**
+     * 清理在播放的 【状态】 【动画】
+     */
+    public void cleanPlayRecord() {
+        cleanOtherRecordAnimation();
+        cleanCuurentRecordAnimation();
+        rs.clean_play();
+        isPlay = false;
     }
 
     public interface RecordUploadingCallback {

@@ -48,7 +48,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
     private CustomerRegional regional = new CustomerRegional();
     private String[] dataKind;
     private String clueId;
-    private ClueDetailWrapper editData;
+    private ClueDetailWrapper.ClueDetail editData;
     private boolean isEdit = false;
 
     @Override
@@ -61,7 +61,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
 
     private void getIntentData() {
         clueId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
-        editData = (ClueDetailWrapper) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        editData = (ClueDetailWrapper.ClueDetail) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
 //        if (TextUtils.isEmpty(orderId)) {
 //            onBackPressed();
 //            Toast("参数不全");
@@ -102,7 +102,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
             return;
         }
         isEdit = true;
-        ClueSales sales = editData.data.sales;
+        ClueSales sales = editData.sales;
         et_name.setText(sales.name);
         et_company.setText(sales.companyName);
         et_phone.setText(sales.cellphone);

@@ -70,6 +70,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
     private TextView tv_title;
     private TextView tv_toast;
+    private TextView voiceView;
     private TextView tv_address;           /* 地址 */
     private TextView tv_position;          /* 定位 */
     private TextView tv_name;              /* 姓名 */
@@ -133,6 +134,14 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         audioPlayer.killPlayer();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(null != voiceView)
+            audioPlayer.audioPause(voiceView);
+    }
+
+
     /**
      * 适配器绑定
      */
@@ -179,7 +188,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     private void initUI() {
         id = getIntent().getStringExtra("id");
         audioPlayer = new AudioPlayer(mContext);
-
+        audioPlayer.initPlayer();
         layout_touch = (LinearLayout) findViewById(R.id.layout_touch);
         layout_enclosure = (LinearLayout) findViewById(R.id.layout_enclosure);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
@@ -499,7 +508,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
             Toast("无录音资源!");
             return;
         }
-
+        voiceView = textView;
         layout_bottom_voice.setVisibility(View.VISIBLE);
         layout_bottom_voice.removeAllViews();
         layout_bottom_voice.addView(audioPlayer);
