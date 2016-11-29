@@ -13,25 +13,27 @@ import android.widget.ImageView;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
+import com.loyo.oa.dropdownmenu.filtermenu.ClueStatus;
+import com.loyo.oa.dropdownmenu.filtermenu.ClueStatusFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
+import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.adapter.TeamClueAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
-import com.loyo.oa.dropdownmenu.filtermenu.ClueStatus;
-import com.loyo.oa.dropdownmenu.filtermenu.ClueStatusFilterModel;
-import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
-import com.loyo.oa.dropdownmenu.filtermenu.TimeFilterModel;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.Permission;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -62,7 +64,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     private String statusKey = "";
 
     private ArrayList<ClueListItem> listData = new ArrayList<>();
-    private Permission permission;
     private ViewStub emptyView;
     private PullToRefreshListView lv_list;
     private TeamClueAdapter adapter;
@@ -82,7 +83,6 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initView(View view) {
-        permission = (Permission) getArguments().getSerializable("permission");
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
@@ -115,12 +115,14 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
         List<DBDepartment> depts = new ArrayList<>();
         String title = "部门";
         //为超管或权限为全公司 展示全公司成员
-        if (permission != null && permission.dataRange == Permission.COMPANY) {
+        if (PermissionManager.getInstance().dataRange(BusinessOperation.CLUE_MANAGEMENT)
+                == Permission.COMPANY) {
             depts.addAll(OrganizationManager.shareManager().allDepartments());
             title = "全公司";
         }
         //权限为部门 展示我的部门
-        else if (permission != null && permission.dataRange == Permission.TEAM) {
+        else if (PermissionManager.getInstance().dataRange(BusinessOperation.CLUE_MANAGEMENT)
+                == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "本部门";
         }

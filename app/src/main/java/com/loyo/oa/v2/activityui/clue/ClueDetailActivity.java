@@ -25,7 +25,6 @@ import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.RegularCheck;
@@ -36,6 +35,8 @@ import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -55,8 +56,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-
-import static com.loyo.oa.v2.common.Global.Toast;
 
 public class ClueDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -477,8 +476,7 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
      * 右上角菜单
      */
     private void functionButton() {
-        Permission permission = MainApp.rootMap.get("0409");
-        if ((permission != null && permission.isEnable()) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.CLUE_DELETING)) {
             isDelete = true;
         }
 

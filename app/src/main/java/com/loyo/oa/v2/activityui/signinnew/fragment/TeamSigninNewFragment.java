@@ -21,6 +21,8 @@ import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
 import com.loyo.oa.dropdownmenu.filtermenu.SigninFilterSortModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
@@ -35,14 +37,14 @@ import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.Permission;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -75,7 +77,6 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     private DropDownMenu filterMenu;
     private PullToRefreshListView listView;
     private LinearLayout layout_bottom_menu;
-    private Permission permission;
 
     private PaginationX<SigninNewListModel> mPagination = new PaginationX<>(20);
     private ArrayList<SigninNewListModel> listModel = new ArrayList<>();
@@ -136,7 +137,6 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
 
     public void initView(View view) {
         mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-        permission = (Permission) getArguments().getSerializable("permission");
         mPresenter = new TeamSigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();
@@ -169,12 +169,14 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         List<DBDepartment> depts = new ArrayList<>();
         String title = "人员";
         //为超管或权限为全公司 展示全公司成员
-        if (permission != null && permission.dataRange == Permission.COMPANY) {
+        if (PermissionManager.getInstance().dataRange(BusinessOperation.CUSTOMER_VISIT)
+                == Permission.COMPANY) {
             depts.addAll(OrganizationManager.shareManager().allDepartments());
             title = "人员";
         }
         //权限为部门 展示我的部门
-        else if (permission != null && permission.dataRange == Permission.TEAM) {
+        else if (PermissionManager.getInstance().dataRange(BusinessOperation.CUSTOMER_VISIT)
+                == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "人员";
         } else {

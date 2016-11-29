@@ -14,11 +14,13 @@ import android.widget.RelativeLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
-import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
 import com.loyo.oa.dropdownmenu.filtermenu.CommonSortTypeMenuModel;
+import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
 import com.loyo.oa.dropdownmenu.filtermenu.SaleStageMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
@@ -27,14 +29,14 @@ import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeam;
 import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.Permission;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -87,7 +89,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     private String sortType = "";
     private String userId = "";
     private String stageId = "";
-    private Permission permission;
 
 
     @Nullable
@@ -107,7 +108,6 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
     }
 
     public void initView(View view) {
-        permission = (Permission) getArguments().getSerializable("permission");
         mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
 
         listView = (PullToRefreshListView) view.findViewById(R.id.saleteam_list);
@@ -142,12 +142,14 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
         List<DBDepartment> depts = new ArrayList<>();
         String title = "部门";
         //为超管或权限为全公司 展示全公司成员
-        if (permission != null && permission.dataRange == Permission.COMPANY) {
+        if (PermissionManager.getInstance().dataRange(BusinessOperation.SALE_OPPORTUNITY)
+                == Permission.COMPANY) {
             depts.addAll(OrganizationManager.shareManager().allDepartments());
             title = "全公司";
         }
         //权限为部门 展示我的部门
-        else if (permission != null && permission.dataRange == Permission.TEAM) {
+        else if (PermissionManager.getInstance().dataRange(BusinessOperation.SALE_OPPORTUNITY)
+                == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "本部门";
         }

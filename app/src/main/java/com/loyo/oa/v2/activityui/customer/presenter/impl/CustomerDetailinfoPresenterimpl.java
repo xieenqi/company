@@ -7,10 +7,8 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
-import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerDetailInfoPresenter;
@@ -18,13 +16,14 @@ import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
@@ -40,7 +39,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static android.R.attr.data;
 import static com.loyo.oa.v2.common.Global.Toast;
 
 /**
@@ -166,26 +164,18 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void showEditPopu(Activity mActivity) {
-        boolean isDelte = false, isPublic = false;
-         /*超级管理员\web控制权限判断*/
-        if (!MainApp.user.isSuperUser()) {
-            Permission perDelete = MainApp.rootMap.get("0405");
-            Permission perOcean = MainApp.rootMap.get("0403");
-            if (perDelete != null && perDelete.enable)
-                isDelte = true;
-            if (perOcean != null && perOcean.enable)
-                isPublic = true;
-        }
+        boolean isDelete = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DELETING);
+        boolean isPublic = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DUMPING);
 
         ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
-        if (isDelte || MainApp.user.isSuperUser())
+        if (isDelete)
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
                     crolView.setPopViewEmbl(true, "你确定要删除客户?");
                 }
             });
-        if (isPublic || MainApp.user.isSuperUser())
+        if (isPublic)
             dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {

@@ -15,32 +15,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
-import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
-import com.loyo.oa.v2.activityui.sale.presenter.SaleOpportunitiesPresenterImpl;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
-import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
 import com.loyo.oa.v2.activityui.sale.fragment.MySaleFragment;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.activityui.sale.presenter.SaleOpportunitiesPresenterImpl;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
+import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【销售机会列表页面】
@@ -71,7 +62,6 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     private float mRotation = 0;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
-    private Permission permission;
     private SaleOpportunitiesContract.Presenter mPersenter;
 
     @Override
@@ -101,9 +91,7 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
-        //超级管理员 全公司  权限判断
-        permission = MainApp.rootMap.get("0215");
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.SALE_OPPORTUNITY)) {
             SaleItemStatus = new String[]{"我的机会", "团队机会"};
             imageArrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
@@ -153,7 +141,6 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
             } else {
                 Bundle b = new Bundle();
                 b.putSerializable("stage", saleStages);
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamSaleFragment.class.getName(), b);
             }
             fragments.add(fragment);

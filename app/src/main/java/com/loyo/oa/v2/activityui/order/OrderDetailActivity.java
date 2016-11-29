@@ -22,16 +22,18 @@ import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activityui.worksheet.bean.Worksheet;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
@@ -176,8 +178,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 functionBuuton();
                 break;
             case R.id.tv_customer://跳转到相关客户
-                Permission permissin = MainApp.rootMap.get("0205");
-                if (!permissin.enable) {
+                if (! PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }
@@ -189,8 +190,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 break;
             case R.id.tv_wfname://跳转到相关审批
-                Permission permissinWF = MainApp.rootMap.get("0204");
-                if (!permissinWF.enable) {
+                if (!PermissionManager.getInstance().hasPermission(BusinessOperation.APPROVAL_PROCESS)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }
@@ -233,8 +233,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(this, OrderPlanListActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
             case R.id.ll_worksheet://工单
-                Permission permissinWS = MainApp.rootMap.get("0218");
-                if (!permissinWS.enable) {
+                if (!PermissionManager.getInstance().hasPermission(BusinessOperation.WORKSHEET_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }

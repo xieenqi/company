@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.home.bean;
 
+import com.loyo.oa.v2.permission.BusinessOperation;
+
 import java.io.Serializable;
 
 /**
@@ -7,7 +9,11 @@ import java.io.Serializable;
  */
 public class HomeItem implements Serializable {
 
-    public HomeItem(final int _imageViewRes, final String _title, final String _cls, final String _code, final int _tag) {
+    public HomeItem(final int _imageViewRes,
+                    final String _title,
+                    final String _cls,
+                    @BusinessOperation.Type final String _code,
+                    final int _tag) {
         imageViewRes = _imageViewRes;
         title = _title;
         cls = _cls;
@@ -17,6 +23,7 @@ public class HomeItem implements Serializable {
 
     public int imageViewRes;
     public String title;
+    @BusinessOperation.Type
     public String code;
     public int tag;
 

@@ -21,12 +21,13 @@ import com.loyo.oa.v2.activityui.customer.fragment.CommCustomerFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyMemberFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.MyResponFragment;
 import com.loyo.oa.v2.activityui.customer.fragment.TeamCustomerFragment;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.activityui.other.model.Tag;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -118,7 +119,6 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private int mIndex = -1;
     private float mRotation = 0;
 
-    private Permission permission;
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mTags1;
     private ArrayList<Tag> mTags2;
@@ -154,7 +154,6 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                         }
                         initTitleItem();
                         try {
-                            /*permission = MainApp.rootMap.get("0404");*/
                             initChildren();
                         } catch (NullPointerException e) {
                             e.printStackTrace();
@@ -201,9 +200,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
-        //超级管理员权全公司  没有获取到权限就不显示
-        permission = MainApp.rootMap.get("0205"); //客户权限
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.CUSTOMER_MANAGEMENT)) {
             SaleItemStatus = new String[]{"我负责的", "我参与的", "团队客户", "公海客户"};
             publicOrTeam = true;
         }
@@ -238,22 +235,18 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
             if ("我负责的".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, MyResponFragment.class.getName(), b);
             } else if ("我参与的".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, MyMemberFragment.class.getName(), b);
             } else if ("团队客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags2);
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamCustomerFragment.class.getName(), b);
             } else if ("公海客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags3);
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, CommCustomerFragment.class.getName(), b);
             }
             fragments.add(fragment);

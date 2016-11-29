@@ -7,27 +7,28 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
-import com.loyo.oa.v2.beans.TaskRecord;
-import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
-import com.loyo.oa.v2.permission.Permission;
+import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -64,7 +65,6 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     private ArrayList<TaskRecord> tasks = new ArrayList<>();
     protected ArrayList<PagingGroupData_<TaskRecord>> pagingGroupDatas = new ArrayList<>();
     private CommonExpandableListAdapter adapter;
-    private Permission permission;
     private boolean isTopAdd;
     private boolean isChanged;
 
@@ -79,16 +79,6 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         }
 
         layout_add.setOnTouchListener(Global.GetTouch());
-
-
-        //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0202");
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -112,7 +102,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      */
     @Click(R.id.layout_add)
     void createNewTask() {
-        if (null != permission && !permission.isEnable()) {
+        if (! PermissionManager.getInstance().hasPermission(BusinessOperation.TASK)) {
             sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
         } else {
             Bundle b = new Bundle();
@@ -140,7 +130,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             lv.getRefreshableView().setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
-                    if (null != permission && !permission.isEnable()) {
+                    if (! PermissionManager.getInstance().hasPermission(BusinessOperation.TASK)) {
                         sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                         return false;
                     }

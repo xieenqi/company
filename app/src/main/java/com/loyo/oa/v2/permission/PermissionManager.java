@@ -28,6 +28,10 @@ public class PermissionManager {
 
     public boolean hasPermission(@BusinessOperation.Type String module) {
 
+        if (hasSuperPriority()) {
+            return true;
+        }
+
         Permission permission = data.get(module);
         if (permission == null || ! permission.isEnable()) {
             return false;
@@ -36,7 +40,11 @@ public class PermissionManager {
         return true;
     }
 
-    public boolean hasTeamPermission(@BusinessOperation.Type String module) {
+    public boolean teamPermission(@BusinessOperation.Type String module) {
+        if (hasSuperPriority()) {
+            return true;
+        }
+
         Permission permission = data.get(module);
         if (permission == null || ! permission.isEnable()) {
             return false;
@@ -58,6 +66,7 @@ public class PermissionManager {
         }
     }
 
+    /* 超级管理员权限 */
     public boolean hasSuperPriority() {
         if (MainApp.user != null) {
             return MainApp.user.isSuperUser;

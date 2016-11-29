@@ -12,18 +12,21 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.permission.Permission;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.activityui.attendance.fragment.AttendanceListFragment;
+import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
+import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,9 +74,7 @@ public class AttendanceManagerActivity extends BaseFragmentActivity {
         tv_title_1.setText("我的考勤");
         img_title_left.setOnTouchListener(Global.GetTouch());
         imageArrow.setVisibility(View.INVISIBLE);
-        //超级管理员判断
-        Permission permission = MainApp.rootMap.get("0211");
-        if (permission != null && permission.isEnable() && permission.dataRange<3) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.ATTENDANCE_MANAGEMENT)) {
             imageArrow.setVisibility(View.VISIBLE);
             ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};
         }

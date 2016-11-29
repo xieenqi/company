@@ -11,6 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
@@ -18,11 +20,10 @@ import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.order.common.OrderCommon;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -47,7 +48,6 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
 
     private ViewGroup img_title_left, layout_add;
     private TextView tv_add;
-    private Permission permission;
     private PullToRefreshListView listView_demands;
     private CustomerOrderAdapter listAdapter;
     private ArrayList<OrderListItem> listData = new ArrayList<>();
@@ -94,7 +94,8 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
         listView_demands.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (null != permission && !permission.isEnable()) {
+                if (! PermissionManager.getInstance()
+                        .hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }
@@ -106,14 +107,6 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
-        //超级管理员\权限判断
-        if (null != MainApp.user && !MainApp.user.isSuperUser()) {
-            try {
-                permission = (Permission) MainApp.rootMap.get("0216");//具体权限你没有做
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -125,17 +118,9 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.layout_add:
 
-                if (null != permission && !permission.isEnable()) {
-
+                if (! PermissionManager.getInstance()
+                        .hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
-/*
-                    showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
-                            .setNoCancelOnclick(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    generalPopView.dismiss();
-                                }
-                            });*/
 
                 } else {
                     if (customerId == null) {

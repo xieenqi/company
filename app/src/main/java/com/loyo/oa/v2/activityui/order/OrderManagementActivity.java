@@ -19,9 +19,10 @@ import com.loyo.oa.v2.activityui.order.fragment.MyOrderFragment;
 import com.loyo.oa.v2.activityui.order.fragment.TeamOrderFragment;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
@@ -46,8 +47,6 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
     private List<BaseFragment> fragments = new ArrayList<>();
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
-    private Permission permission;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +73,7 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
-        //超级管理员\权限判断
-        permission = MainApp.rootMap.get("0216");
-        if ((permission != null && permission.isEnable() && permission.dataRange < 3) || MainApp.user.isSuperUser()) {
+        if (PermissionManager.getInstance().teamPermission(BusinessOperation.ORDER_MANAGEMENT)) {
             SaleItemStatus = new String[]{"我的订单", "团队订单"};
             img_title_arrow.setVisibility(View.VISIBLE);
             layout_title_action.setEnabled(true);
@@ -100,7 +97,6 @@ public class OrderManagementActivity extends BaseFragmentActivity implements Vie
                 fragment = (BaseFragment) Fragment.instantiate(this, MyOrderFragment.class.getName(), b);
             } else {
                 Bundle b = new Bundle();
-                b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamOrderFragment.class.getName(), b);
             }
             fragments.add(fragment);
