@@ -3,8 +3,10 @@ package com.loyo.oa.v2.activityui.sale.presenter;
 
 import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
-import com.loyo.oa.v2.activityui.sale.contract.MySaleFrgmentContract;
-import com.loyo.oa.v2.activityui.sale.model.MySaleFrgmentModelImpl;
+import com.loyo.oa.v2.activityui.sale.contract.TeamSaleFragmentContract;
+import com.loyo.oa.v2.activityui.sale.model.TeamSaleFragmentModelImpl;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,18 +15,20 @@ import java.util.HashMap;
  * Created by xeq on 2016/11/29
  */
 
-public class MySaleFrgmentPresenterImpl implements MySaleFrgmentContract.Presenter {
-    private MySaleFrgmentContract.View mView;
-    private MySaleFrgmentContract.Model model;
-    private int page = 1;
-    private String stageId = "";
-    private String sortType = "";
+public class TeamSaleFragmentPresenterImpl implements TeamSaleFragmentContract.Presenter {
+    private TeamSaleFragmentContract.View mView;
+    private TeamSaleFragmentContract.Model model;
+    private ArrayList<SaleRecord> mData = new ArrayList<>();
     private boolean isPullUp = false;
-    private ArrayList<SaleRecord> recordData = new ArrayList<>();
+    private int page = 1;
+    private String xPath = "";
+    private String sortType = "";
+    private String userId = "";
+    private String stageId = "";
 
-    public MySaleFrgmentPresenterImpl(MySaleFrgmentContract.View mView) {
+    public TeamSaleFragmentPresenterImpl(TeamSaleFragmentContract.View mView) {
         this.mView = mView;
-        model = new MySaleFrgmentModelImpl(this);
+        model = new TeamSaleFragmentModelImpl(this);
     }
 
     @Override
@@ -33,9 +37,11 @@ public class MySaleFrgmentPresenterImpl implements MySaleFrgmentContract.Present
     }
 
     @Override
-    public void getScreenData(String stageId, String sortType) {
+    public void getScreenData(String stageId, String sortType, String xPath, String userId) {
         this.stageId = stageId;
         this.sortType = sortType;
+        this.xPath = xPath;
+        this.userId = userId;
         pullDown();
     }
 
@@ -46,6 +52,9 @@ public class MySaleFrgmentPresenterImpl implements MySaleFrgmentContract.Present
         map.put("pageSize", 15);
         map.put("stageId", stageId);
         map.put("sortType", sortType);
+        map.put("xpath", xPath);
+        map.put("userId", userId);
+        LogUtil.d("团队机会列表 请求数据:" + MainApp.gson.toJson(map));
         model.getData(map);
     }
 
@@ -56,17 +65,17 @@ public class MySaleFrgmentPresenterImpl implements MySaleFrgmentContract.Present
             if (isPullUp) {
                 mView.showMsg("没有更多数据了!");
             } else {
-                recordData.clear();
+                mData.clear();
             }
         } else {
             if (isPullUp) {
-                recordData.addAll(data.records);
+                mData.addAll(data.records);
             } else {
-                recordData.clear();
-                recordData = data.records;
+                mData.clear();
+                mData = data.records;
             }
         }
-        mView.bindData(recordData);
+        mView.bindData(mData);
     }
 
     @Override
