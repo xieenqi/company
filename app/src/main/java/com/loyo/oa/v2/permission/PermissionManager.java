@@ -57,6 +57,11 @@ public class PermissionManager {
     }
 
     public int dataRange(@BusinessOperation.Type String mudule) {
+
+        if (hasSuperPriority()) {
+            return Permission.COMPANY;
+        }
+
         Permission permission = data.get(mudule);
         if (permission == null) {
             return Permission.NONE;

@@ -13,17 +13,18 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.loyo.oa.dropdownmenu.DropDownMenu;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.dropdownmenu.DropDownMenu;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 
 import java.util.ArrayList;
 
@@ -166,8 +167,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
             }
         });
         btn_add.setVisibility(View.INVISIBLE);
-        Permission permission = MainApp.rootMap.get("0401");
-        if (permission != null && permission.isEnable() && MainApp.permissionPage == 1) {
+
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.PROJECT_CREATING)) {
             btn_add.setVisibility(View.VISIBLE);
             Utils.btnHideForListView(expandableListView, btn_add);
         } else if (MainApp.permissionPage != 1) {
