@@ -152,8 +152,8 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
     public void audioPause(TextView textView){
         isOnPlay = true;
         MainApp.getMainApp().stopAnim(textView);
-        mHandler.sendEmptyMessage(0x04);
         if (player != null) {
+            mHandler.sendEmptyMessage(0x04);
             player.pause();
         }
     }
@@ -228,6 +228,7 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress,
                                       boolean fromUser) {
+            if(null != player)
             this.progress = progress * player.mediaPlayer.getDuration() / seekBar.getMax();
             playTime = DateTool.stringForTime(this.progress);
             mHandler.sendEmptyMessage(0x03);
