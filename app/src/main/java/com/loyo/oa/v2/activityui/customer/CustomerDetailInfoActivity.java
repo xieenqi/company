@@ -117,6 +117,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_gj.setOnTouchListener(Global.GetTouch());
 
         mPresenter = new CustomerDetailinfoPresenterimpl(mContext, this);
+
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.VISIT_TIMELINE)) {
+            layout_gj.setVisibility(View.VISIBLE);
+        }
+        else {
+            layout_gj.setVisibility(View.GONE);
+        }
     }
 
     @Override

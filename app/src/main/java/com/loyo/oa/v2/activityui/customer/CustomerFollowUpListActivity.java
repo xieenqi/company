@@ -8,21 +8,22 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
+import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerFollowUpListAdapter;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerFollowUpListPresenterImpl;
-import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
-import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
@@ -30,8 +31,8 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.pulltorefresh.PullToRefreshBase;
-import com.loyo.oa.pulltorefresh.PullToRefreshListView;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -148,7 +149,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         msgAudiomMenu = new MsgAudiomMenu(mContext, this,uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        if (!isMyUser) {
+        if (!isMyUser || !PermissionManager.getInstance().hasPermission(BusinessOperation.VISIT_TIMELINE)) {
             layout_add.setVisibility(View.GONE);
         }else{
             Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
@@ -304,7 +305,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      */
     @Override
     public void commentSuccessEmbl() {
-        if(isMyUser){
+        if(isMyUser && PermissionManager.getInstance().hasPermission(BusinessOperation.VISIT_TIMELINE)){
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
