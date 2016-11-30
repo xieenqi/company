@@ -145,11 +145,11 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
      * 加载loading的方法
      */
     public void showLoading(String msg) {
-        DialogHelp.showLoading(getActivity(), msg, true);
+        DialogHelp.showLoading(mActivity, msg, true);
     }
 
     public void showLoading(String msg, boolean Cancelable) {
-        DialogHelp.showLoading(getActivity(), msg, Cancelable);
+        DialogHelp.showLoading(mActivity, msg, Cancelable);
     }
 
     public static void cancelLoading() {

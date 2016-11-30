@@ -67,7 +67,7 @@ public class RecordUtils {
         }
         fileName = getDate() + ".wav";
         outPath = AUDIO_ROOTPATH + File.separator + fileName;
-        sp.play(shoot, 1f, 1f, 0, 0, 1f);
+        sp.play(shoot, 1f, 1f, 0, 0, 0.8f);
         recorder = OmRecorder.wav(
                 new PullTransport.Default(mic(),
                         new PullTransport.OnAudioChunkPulledListener() {

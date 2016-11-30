@@ -36,13 +36,15 @@ public class MultiFunctionModule extends LinearLayout {
     private ImageView ll_action_record, iv_record, iv_record_keyboard, iv_picture;
     private TextView tv_record_action, tv_record_number;
     private long recordTime;
-    private boolean isRecordCancle, isEffective = false, isActionMove;//录音是否达到有效值
+    private boolean isRecordCancle;//录音是否达到有效值
+    private boolean isEffective;
+    private boolean isActionMove;
     private RecordUtils voice;
     private RecordComplete callbackComplete;
-    Handler handler = new Handler();
-    Timer timer;
-    TimerTask task;
-    AnimationDrawable mAnimationDrawable;
+    private Handler handler = new Handler();
+    private Timer timer;
+    private TimerTask task;
+    private AnimationDrawable mAnimationDrawable;
 
     public MultiFunctionModule(Context context) {
         super(context);
@@ -157,8 +159,9 @@ public class MultiFunctionModule extends LinearLayout {
         voice.setCallbackMicStatus(new RecordUtils.CallbackMicStatus() {
             @Override
             public void setMicData(double db) {
-                if(db>20)
-                    isEffective=true;
+                if (db > 20.0) {
+                    isEffective = true;
+                }
                 refreshRecordIcon(db);
             }
         });
@@ -330,7 +333,8 @@ public class MultiFunctionModule extends LinearLayout {
         if (isRecordCancle) {
             return;
         }
-        LogUtil.d("分贝值 : " + db);
+        mAnimationDrawable.stop();
+        LogUtil.d(" 分贝值aaa : " + db);
         if (db < 10) {
             mAnimationDrawable.selectDrawable(0);
         } else if (db > 10 && db < 20) {

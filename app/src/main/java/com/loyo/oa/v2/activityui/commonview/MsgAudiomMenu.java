@@ -44,7 +44,6 @@ import java.util.TimerTask;
 public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListener {
 
     private Context mContext;
-    private View mView;
     private LinearLayout layout_keyboard, layout_voicemenu, keyboardView, parent;
     private ImageView iv_voice;
     private EditText edit_comment;
@@ -80,12 +79,11 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
         this.callBack = callBack;
         this.mContext = context;
         this.UUID = UUID;
-        initView();
-        this.addView(mView);
+        this.addView(initView());
     }
 
-    public void initView() {
-        mView = LayoutInflater.from(mContext).inflate(R.layout.customerview_list_voicemenu2, null);
+    public View initView() {
+        View mView = LayoutInflater.from(mContext).inflate(R.layout.customerview_list_voicemenu2, null);
         layout_keyboard = (LinearLayout) mView.findViewById(R.id.layout_keyboard);
         layout_voicemenu = (LinearLayout) mView.findViewById(R.id.layout_voicemenu);
         iv_voice = (ImageView) mView.findViewById(R.id.iv_voice);
@@ -117,6 +115,7 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
             }
         });
         initMultiFunctionModule();
+        return mView;
     }
 
     /**

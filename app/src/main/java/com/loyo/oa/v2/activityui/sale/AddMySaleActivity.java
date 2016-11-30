@@ -267,80 +267,6 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
         }
     }
 
-
-//    /**
-//     * 获取动态字段
-//     */
-//    private void getDynamicInfo() {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                create(ISale.class).getSaleFild(new Callback<ArrayList<ContactLeftExtras>>() {
-//            @Override
-//            public void success(ArrayList<ContactLeftExtras> bulletinPaginationX, Response response) {
-//                HttpErrorCheck.checkResponse("销售机会动态字段：", response);
-//                filedData = new ArrayList<ContactLeftExtras>();
-//                for (ContactLeftExtras ele : bulletinPaginationX) {
-//                    if (!ele.isSystem) {
-//                        filedData.add(ele);
-//                    }
-//                    if ("product".equals(ele.fieldName) && ele.required) {
-//                        isProduct = true;
-//                        tv_product.setHint("必填,请选择");
-//                    }
-//                    if ("chance_type".equals(ele.fieldName) && ele.required) {
-//                        isType = true;
-//                        tv_type.setHint("必填,请选择");
-//                    }
-//                    if ("chance_source".equals(ele.fieldName) && ele.required) {
-//                        isSource = true;
-//                        tv_source.setHint("必填,请选择");
-//                    }
-//                    if ("estimated_amount".equals(ele.fieldName) && ele.required) {
-//                        isEstimatedAmount = true;
-//                        et_money.setHint("必填,请输入");
-//                    }
-//                    if ("estimated_time".equals(ele.fieldName) && ele.required) {
-//                        isEstimatedTime = true;
-//                        tv_estimate.setHint("必填,请选择");
-//                    }
-//
-//                    if ("memo".equals(ele.fieldName) && ele.required) {
-//                        isMemo = true;
-//                        et_remake.setHint("必填,请输入");
-//                    }
-//                }
-//                tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, 0));
-//                getSaleStageData();
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-//    }
-//
-//    /**
-//     * 获取销售阶段 数据  默认第一个阶段
-//     */
-//    public void getSaleStageData() {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                create(ISale.class).getSaleStage(new Callback<ArrayList<SaleStage>>() {
-//            @Override
-//            public void success(ArrayList<SaleStage> saleStage, Response response) {
-//                HttpErrorCheck.checkResponse("销售阶段", response);
-//                if (saleStage != null && saleStage.size() > 0) {
-//                    tv_stage.setText(saleStage.get(0).name);
-//                    stageId = saleStage.get(0).id;
-//                }
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-//    }
-
     public void estimateTime() {
         Calendar cal = Calendar.getInstance();
         final DatePickerDialog mDialog = new DatePickerDialog(this, null,
@@ -475,38 +401,8 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
         LogUtil.d("改变销售机会传递--》", app.gson.toJson(map));
         if (!isEdit) {
             mPresenter.creatSale(map);
-//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                    create(ISale.class).addSaleOpportunity(map, new Callback<SaleOpportunityAdd>() {
-//                @Override
-//                public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
-//                    HttpErrorCheck.checkResponse("创建销售机会", response);
-//                    Toast("创建成功");
-//                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE_STAGE, new Intent());
-//                }
-//
-//                @Override
-//                public void failure(RetrofitError error) {
-//                    HttpErrorCheck.checkError(error);
-//                }
-//            });
         } else {
             mPresenter.editSale(map, chanceId);
-//            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-//                    create(ISale.class).updateSaleOpportunity(map, chanceId, new Callback<SaleOpportunityAdd>() {
-//                @Override
-//                public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
-//                    HttpErrorCheck.checkResponse("修改销售机会", response);
-//                    Toast("修改成功");
-//                    mIntent = new Intent();
-//                    mIntent.putExtra(ExtraAndResult.RESULT_ID, ActionCode.SALE_DETAILS_EDIT);
-//                    app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-//                }
-//
-//                @Override
-//                public void failure(RetrofitError error) {
-//                    HttpErrorCheck.checkError(error);
-//                }
-//            });
         }
     }
 

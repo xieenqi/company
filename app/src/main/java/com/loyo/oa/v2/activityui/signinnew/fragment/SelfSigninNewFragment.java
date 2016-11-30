@@ -61,7 +61,7 @@ import java.util.List;
  * Created by yyy on 16/11/10.
  */
 
-public class SelfSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView,View.OnClickListener,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack {
+public class SelfSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
     private ArrayList<Tag> mTags;
@@ -109,7 +109,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public void onPause() {
         super.onPause();
-        if(null != voiceView)
+        if (null != voiceView)
             audioPlayer.audioPause(voiceView);
     }
 
@@ -140,7 +140,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new SigninNewListAdapter(getActivity(), listModel, this,this);
+            mAdapter = new SigninNewListAdapter(getActivity(), listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -164,13 +164,14 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
+        if (msgAudiomMenu == null) {
+            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+            layout_bottom_menu.addView(msgAudiomMenu);
+        }
 
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this,uuid);
-        layout_bottom_menu.addView(msgAudiomMenu);
-
-        Utils.btnSpcHideForListViewTest(getActivity(),listView.getRefreshableView(),
+        Utils.btnSpcHideForListViewTest(getActivity(), listView.getRefreshableView(),
                 btn_add,
-                layout_bottom_menu,msgAudiomMenu.getEditComment());
+                layout_bottom_menu, msgAudiomMenu.getEditComment());
     }
 
 
@@ -187,6 +188,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
+
     /**
      * 评论语言
      */
@@ -195,7 +197,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         map.put("bizzId", listModel.get(commentPosition).id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
-        map.put("audioInfo",record);//语音信息
+        map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
@@ -260,8 +262,12 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     }
 
     @Subscribe
-    public void onSigninNewRushEvent(SigninNewRushEvent event){
+    public void onSigninNewRushEvent(SigninNewRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
+        msgAudiomMenu = null;
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+        layout_bottom_menu.removeAllViews();
+        layout_bottom_menu.addView(msgAudiomMenu);
         getData(false);
     }
 
@@ -315,7 +321,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
         listView.onRefreshComplete();
-        if(isPullOrDown){
+        if (isPullOrDown) {
             listModel.clear();
         }
         mPagination = paginationX.data;
@@ -381,7 +387,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         }
 
         audioPlayer.initPlayer();
-        if(audioPlayer.isPlaying()){
+        if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
@@ -394,7 +400,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;

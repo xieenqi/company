@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -45,7 +46,9 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,8 +106,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void onPause() {
         super.onPause();
-        if(null != voiceView)
-        audioPlayer.audioPause(voiceView);
+        if (null != voiceView)
+            audioPlayer.audioPause(voiceView);
     }
 
     @Override
@@ -146,10 +149,10 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         listView.setOnRefreshListener(this);
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
-
-        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
-        layout_bottom_menu.addView(msgAudiomMenu);
-
+        if (msgAudiomMenu == null) {
+            msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+            layout_bottom_menu.addView(msgAudiomMenu);
+        }
         Utils.btnSpcHideForListViewTest(getActivity(), listView.getRefreshableView(),
                 btn_add,
                 layout_bottom_menu, msgAudiomMenu.getEditComment());
@@ -268,6 +271,10 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     @Subscribe
     public void onFollowUpRushEvent(FollowUpRushEvent event) {
+        msgAudiomMenu = null;
+        msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
+        layout_bottom_menu.removeAllViews();
+        layout_bottom_menu.addView(msgAudiomMenu);
         getData(false);
     }
 
@@ -394,7 +401,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         }
 
         audioPlayer.initPlayer();
-        if(audioPlayer.isPlaying()){
+        if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
@@ -407,7 +414,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;

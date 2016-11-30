@@ -16,16 +16,18 @@
         <include layout="@layout/include_item_title" />
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
 
 
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="100dp"
+            android:layout_weight="1"
             android:scrollbars="none">
 
             <LinearLayout
@@ -372,5 +374,5 @@
             android:layout_alignParentBottom="true"
             android:orientation="vertical" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>
