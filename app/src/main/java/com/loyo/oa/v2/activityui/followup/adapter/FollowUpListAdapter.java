@@ -64,7 +64,7 @@ public class FollowUpListAdapter extends BaseAdapter {
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
 
-    public FollowUpListAdapter(Context mContext, ArrayList<FollowUpListModel> listModel, FollowUpListView viewCrol,AudioPlayCallBack audioCallBack) {
+    public FollowUpListAdapter(Context mContext, ArrayList<FollowUpListModel> listModel, FollowUpListView viewCrol, AudioPlayCallBack audioCallBack) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
@@ -124,15 +124,19 @@ public class FollowUpListAdapter extends BaseAdapter {
         }
 
         holder.iv_comment.setOnTouchListener(Global.GetTouch());
-        ImageLoader.getInstance().displayImage(followUpListModel.creator.avatar, holder.iv_heading);
-        holder.tv_name.setText(followUpListModel.creator.name);
+        if (followUpListModel.creator != null && followUpListModel.creator.avatar != null) {
+            ImageLoader.getInstance().displayImage(followUpListModel.creator.avatar, holder.iv_heading);
+            holder.tv_name.setText(followUpListModel.creator.name);
+        } else {
+            LogUtil.d("qqqqqqqq==========" + MainApp.gson.toJson(followUpListModel));
+        }
         holder.tv_contact.setText(TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
         holder.tv_customer.setText(followUpListModel.customerName);
-        holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# "+followUpListModel.typeName);
+        holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# " + followUpListModel.typeName);
         holder.tv_create_time.setText(DateTool.getDiffTime(followUpListModel.createAt));
 
         /** 电话录音设置 */
-        if(null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)){
+        if (null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)) {
             holder.layout_phonely.setVisibility(View.VISIBLE);
             holder.tv_audio_length.setText(DateTool.stringForTime(followUpListModel.audioLength * 1000));
             int audioLength = followUpListModel.audioLength;
@@ -154,79 +158,79 @@ public class FollowUpListAdapter extends BaseAdapter {
                 holder.iv_phone_call.setText("");
             }
 
-        }else{
+        } else {
             holder.layout_phonely.setVisibility(View.GONE);
         }
 
         /** 下次跟进时间 */
-        if(followUpListModel.remindAt != 0){
+        if (followUpListModel.remindAt != 0) {
             holder.layout_lasttime.setVisibility(View.VISIBLE);
-            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt+"","yyyy-MM-dd HH:mm"));
-        }else{
+            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt + "", "yyyy-MM-dd HH:mm"));
+        } else {
             holder.layout_lasttime.setVisibility(View.GONE);
         }
 
         /** 设置跟进内容 */
-        if(null != followUpListModel.content && !TextUtils.isEmpty(followUpListModel.content)){
-            if(followUpListModel.content.contains("<p>")){
+        if (null != followUpListModel.content && !TextUtils.isEmpty(followUpListModel.content)) {
+            if (followUpListModel.content.contains("<p>")) {
                 holder.setContent(holder.ll_web, followUpListModel.content);
-            }else{
+            } else {
                 holder.tv_memo.setVisibility(View.VISIBLE);
                 holder.tv_memo.setText(followUpListModel.content);
             }
         }
 
         /** 线索 */
-        if(null != followUpListModel.salesleadCompanyName && !TextUtils.isEmpty(followUpListModel.salesleadCompanyName)){
+        if (null != followUpListModel.salesleadCompanyName && !TextUtils.isEmpty(followUpListModel.salesleadCompanyName)) {
             holder.layout_clue.setVisibility(View.VISIBLE);
             holder.tv_clue.setText(followUpListModel.salesleadCompanyName);
             holder.tv_clue.setOnTouchListener(Global.GetTouch());
-        }else{
+        } else {
             holder.layout_clue.setVisibility(View.GONE);
         }
 
         /** 客户姓名 */
-        if(null != followUpListModel.customerName && !TextUtils.isEmpty(followUpListModel.customerName)){
+        if (null != followUpListModel.customerName && !TextUtils.isEmpty(followUpListModel.customerName)) {
             holder.layout_customer.setVisibility(View.VISIBLE);
             holder.tv_customer.setText(followUpListModel.customerName);
             holder.tv_customer.setOnTouchListener(Global.GetTouch());
-        }else{
+        } else {
             holder.layout_customer.setVisibility(View.GONE);
         }
 
         /** 客户地址 */
-        if(null != followUpListModel.location.addr && !TextUtils.isEmpty(followUpListModel.location.addr)){
+        if (null != followUpListModel.location && null != followUpListModel.location.addr && !TextUtils.isEmpty(followUpListModel.location.addr)) {
             holder.layout_address.setVisibility(View.VISIBLE);
             holder.tv_address.setText(followUpListModel.location.addr);
             holder.tv_address.setOnTouchListener(Global.GetTouch());
-        }else{
+        } else {
             holder.layout_address.setVisibility(View.GONE);
         }
 
 
         /** @的相关人员 */
-        if(null != followUpListModel.atNameAndDepts){
+        if (null != followUpListModel.atNameAndDepts) {
             holder.tv_toast.setVisibility(View.VISIBLE);
             holder.tv_toast.setText("@" + followUpListModel.atNameAndDepts);
-        }else{
+        } else {
             holder.tv_toast.setVisibility(View.GONE);
         }
 
         /** 录音语音 */
-        if(null != followUpListModel.audioInfo){
+        if (null != followUpListModel.audioInfo) {
             holder.lv_audio.setVisibility(View.VISIBLE);
-            audioAdapter = new ListOrDetailsAudioAdapter(mContext,followUpListModel.audioInfo,audioPlayCallBack);
+            audioAdapter = new ListOrDetailsAudioAdapter(mContext, followUpListModel.audioInfo, audioPlayCallBack);
             holder.lv_audio.setAdapter(audioAdapter);
-        }else{
+        } else {
             holder.lv_audio.setVisibility(View.GONE);
         }
 
         /** 文件列表 数据绑定 */
-        if(null != followUpListModel.attachments && followUpListModel.attachments.size() > 0){
+        if (null != followUpListModel.attachments && followUpListModel.attachments.size() > 0) {
             holder.lv_options.setVisibility(View.VISIBLE);
-            optionAdapter = new ListOrDetailsOptionsAdapter(mContext,followUpListModel.attachments);
+            optionAdapter = new ListOrDetailsOptionsAdapter(mContext, followUpListModel.attachments);
             holder.lv_options.setAdapter(optionAdapter);
-        }else{
+        } else {
             holder.lv_options.setVisibility(View.GONE);
         }
 
@@ -248,14 +252,14 @@ public class FollowUpListAdapter extends BaseAdapter {
                             MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
                 }
             });
-        }else{
+        } else {
             holder.layout_gridview.setVisibility(View.GONE);
         }
 
         /** 绑定评论数据 */
         if (null != followUpListModel.comments && followUpListModel.comments.size() > 0) {
             holder.layout_comment.setVisibility(View.VISIBLE);
-            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments,audioPlayCallBack);
+            commentAdapter = new ListOrDetailsCommentAdapter(mContext, followUpListModel.comments, audioPlayCallBack);
             holder.lv_comment.setAdapter(commentAdapter);
 
             /*长按删除*/
@@ -283,14 +287,14 @@ public class FollowUpListAdapter extends BaseAdapter {
         holder.tv_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(null != followUpListModel.location.loc){
+                if (null != followUpListModel.location.loc) {
                     Intent mIntent = new Intent(mContext, MapSingleView.class);
                     mIntent.putExtra("la", Double.valueOf(followUpListModel.location.loc[0]));
                     mIntent.putExtra("lo", Double.valueOf(followUpListModel.location.loc[1]));
-                    mIntent.putExtra("address",followUpListModel.location.addr);
+                    mIntent.putExtra("address", followUpListModel.location.addr);
                     mContext.startActivity(mIntent);
-                }else{
-                    Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "GPS坐标不全!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -327,7 +331,7 @@ public class FollowUpListAdapter extends BaseAdapter {
                 AudioModel audioModel = new AudioModel();
                 audioModel.url = followUpListModel.audioUrl;
                 audioModel.length = followUpListModel.audioLength;
-                audioPlayCallBack.playVoice(audioModel,iv_phone_call);
+                audioPlayCallBack.playVoice(audioModel, iv_phone_call);
             }
         });
 

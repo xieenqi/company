@@ -60,7 +60,11 @@ public class DialogHelp {
                 LinearLayout.LayoutParams.FILL_PARENT,
                 LinearLayout.LayoutParams.FILL_PARENT));// 设置布局
         loadingDialog.setCanceledOnTouchOutside(false);
-        loadingDialog.show();
+        try {
+            loadingDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void cancelLoading() {
