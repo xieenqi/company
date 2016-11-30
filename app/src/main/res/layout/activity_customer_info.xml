@@ -120,35 +120,67 @@
 
                 <include layout="@layout/include_solid_line_left" />
 
-                <EditText
-                    android:id="@+id/edt_customer_memo"
+                <LinearLayout
+                    android:id="@+id/layout_customer_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/dimen_4">
+
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:minWidth="@dimen/dimen_80"
+                        android:text="标        签" />
+
+                    <TextView
+                        android:id="@+id/tv_labels"
+                        style="@style/text_item2"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:textColor="@color/title_bg1" />
+
+                    <ImageView
+                        android:id="@+id/img_title_right_toUser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow" />
+                </LinearLayout>
+
+                <include layout="@layout/include_solid_line_left" />
+
+                <LinearLayout
+                    android:id="@+id/layout_customer_required_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:layout_marginRight="@dimen/margin_other_view"
-                    android:background="@null"
-                    android:focusable="true"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:visibility="gone"/>
+
+                <EditText
+                    android:id="@+id/edt_customer_memo"
+                    style="@style/edtText_normal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="left|top"
                     android:hint="客户简介"
                     android:maxLength="500"
-                    android:minHeight="@dimen/dimen_48"
-                    android:paddingBottom="@dimen/dimen_8"
-                    android:paddingTop="@dimen/dimen_8"
-                    android:textColor="@color/text33"
-                    android:textColorHint="@color/text99"
-                    android:textSize="15sp" />
+                    android:minHeight="80dp"
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/dimen_14"
+                    android:paddingTop="@dimen/dimen_10" />
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left" />
-
-            <LinearLayout
-                android:id="@+id/layout_customer_extra_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:visibility="gone"></LinearLayout>
-
+            <include layout="@layout/include_solid_line15" />
 
             <LinearLayout
                 android:id="@+id/layout_customer_district"
@@ -186,38 +218,12 @@
             <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
-                android:id="@+id/layout_customer_label"
+                android:id="@+id/layout_customer_optional_info"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/view_h_title"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/margin_other_view"
-                android:paddingRight="@dimen/dimen_4">
-
-                <TextView
-                    style="@style/text_item1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:minWidth="@dimen/dimen_80"
-                    android:text="标        签" />
-
-                <TextView
-                    android:id="@+id/tv_labels"
-                    style="@style/text_item2"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:textColor="@color/title_bg1" />
-
-                <ImageView
-                    android:id="@+id/img_title_right_toUser"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="center"
-                    android:src="@drawable/right_arrow" />
-            </LinearLayout>
+                android:orientation="vertical"
+                android:visibility="gone"/>
 
             <include layout="@layout/include_solid_line15" />
 

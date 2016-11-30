@@ -121,6 +121,12 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
             mCustomer = (Customer) bundle.getSerializable("mCustomer");
             isMyUser = bundle.getBoolean("isMyUser");
         }
+
+        if(null == mCustomer){
+            Toast("参数异常");
+            finish();
+        }
+
         mPresenter = new CustomerFollowUpListPresenterImpl(this,mContext);
         audioPlayer = new AudioPlayer(this);
         audioPlayer.initPlayer();
