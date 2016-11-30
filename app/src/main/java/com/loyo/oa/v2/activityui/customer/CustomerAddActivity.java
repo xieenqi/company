@@ -119,6 +119,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private EditText edt_contract_tel1;
     private EditText edt_contract_tel2;
     private EditText edt_contract_tel3;
+    private EditText edt_content;
 
     private EditText edt_contract_telnum1;
     private EditText edt_contract_telnum2;
@@ -164,6 +165,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private String customerContractTel;
     private String customerWrietele;
     private String cusotmerDetalisAddress;
+    private String memo;
 
     private int bizType = 0x01;
     private int uploadSize;
@@ -215,6 +217,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         edt_contract_telnum1 = (EditText) findViewById(R.id.edt_contract_telnum1);
         edt_contract_telnum2 = (EditText) findViewById(R.id.edt_contract_telnum2);
         edt_contract_telnum3 = (EditText) findViewById(R.id.edt_contract_telnum3);
+        edt_content = (EditText) findViewById(R.id.edt_content);
 
         iv_phone_insert1 = (ImageView) findViewById(R.id.iv_phone_insert1);
         iv_phone_insert2 = (ImageView) findViewById(R.id.iv_phone_insert2);
@@ -482,6 +485,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 customerContractTel = edt_contract_tel1.getText().toString().trim();
                 customerWrietele = edt_contract_telnum1.getText().toString().trim();
                 cusotmerDetalisAddress = edit_address_details.getText().toString().trim();
+                memo = edt_content.getText().toString().trim();
 
                 if (customer_name.isEmpty()) {
                     Toast("请输入客户名称!");
@@ -500,6 +504,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     return;
                 } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
                     Toast("请输入联系人姓名!");
+                    return;
+                } else if(TextUtils.isEmpty(memo)){
+                    Toast("请填写客户简介!");
                     return;
                 } else if (!testDynamicword()) {
                     Toast("请填写必填字段!");
@@ -669,6 +676,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("telGroup", telGroup);
         map.put("wiretelGroup", wiretelGroup);
         map.put("extDatas", extDatas);
+        map.put("summary", memo);
 
         LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {

@@ -83,8 +83,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     ViewGroup layout_customer_responser;
     @ViewById
     ViewGroup layout_customer_join_users;
-    @ViewById(R.id.layout_customer_extra_info)
-    LinearLayout container;
+    @ViewById(R.id.layout_customer_optional_info)
+    LinearLayout containerOp;
     @ViewById
     EditText tv_address;
     @ViewById
@@ -140,6 +140,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     private StringBuffer mManagerNames = new StringBuffer();
     private ArrayList<CustomerExtraData> mCustomerExtraDatas;
     private PositionResultItem positionResultItem;
+    private LinearLayout containerRe;
 
     private double laPosition;//当前位置的经纬度
     private double loPosition;
@@ -147,8 +148,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     private boolean cusDetialAdress = false;//客户的详细地址
     private boolean cusBrief = false;//客户简介
 
+    private ArrayList<ExtraData> extDatas; //动态数据集
+    private ArrayList<ExtraData> opextDatasModel = new ArrayList<>(); //非必填动态数据
+    private ArrayList<ExtraData> reextDatasModel = new ArrayList<>(); //必填动态数据
+
     @AfterViews
     void initUI() {
+        containerRe = (LinearLayout) findViewById(R.id.layout_customer_required_info);
         layout_rushpackger = (LinearLayout) findViewById(R.id.layout_rushpackger);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
@@ -275,9 +281,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 初始化动态字段
      */
     private void initExtra(final boolean ismy) {
+
+        extDatas = new ArrayList<>();
+        extDatas.addAll(mCustomer.extDatas);
+
         /*动态字段 数据转换*/
-        if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
-            for (ExtraData extraData : mCustomer.extDatas) {
+        if (null != extDatas && !extDatas.isEmpty()) {
+            for (ExtraData extraData : extDatas) {
                 for (CustomerExtraData customerExtraData : mCustomerExtraDatas) {
                     if (extraData.getProperties().getName().equals(customerExtraData.getName())) {
                         extraData.getProperties().setEnabled(customerExtraData.isEnabled());
@@ -286,8 +296,21 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     }
                 }
             }
-            container.setVisibility(View.VISIBLE);
-            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0, isRoot, isMenber, mCustomer.lock));
+
+            /*分离必填与非必填字段*/
+            for(ExtraData ext : extDatas){
+                if(ext.getProperties().isRequired()){
+                    reextDatasModel.add(ext);
+                }else{
+                    opextDatasModel.add(ext);
+                }
+            }
+
+            containerOp.setVisibility(View.VISIBLE);
+            containerOp.addView(new CustomerInfoExtraData(mContext, opextDatasModel, ismy, R.color.title_bg1, 0, isRoot, isMenber, mCustomer.lock));
+            containerRe.setVisibility(View.VISIBLE);
+            containerRe.addView(new CustomerInfoExtraData(mContext, reextDatasModel, ismy, R.color.title_bg1, 0, isRoot, isMenber, mCustomer.lock));
+
         }
     }
 
@@ -405,8 +428,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         layout_customer_join_users.setEnabled(false);
         img_refresh_address.setEnabled(false);
 
-        container.setClickable(false);
-        container.setEnabled(false);
+        containerOp.setClickable(false);
+        containerOp.setEnabled(false);
         tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
@@ -451,11 +474,17 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      */
 
     private boolean testDynamicword() {
-        for (ExtraData extDatas : mCustomer.extDatas) {
-            if (extDatas.getProperties().isRequired() && extDatas.getProperties().isEnabled()) {
-                LogUtil.d("动态字段必填:" + extDatas.getProperties().isRequired());
-                if (extDatas.getVal().isEmpty() || null == extDatas.getVal()) {
-                    return false;
+        extDatas.clear();
+        extDatas.addAll(opextDatasModel);
+        extDatas.addAll(reextDatasModel);
+
+        if(null != extDatas){
+            for (ExtraData ext : extDatas) {
+                if (ext.getProperties().isRequired() && ext.getProperties().isEnabled()) {
+                    LogUtil.d("动态字段必填:" + ext.getProperties().isRequired());
+                    if (ext.getVal().isEmpty() || null == ext.getVal()) {
+                        return false;
+                    }
                 }
             }
         }
@@ -483,7 +512,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 break;
 
             case R.id.layout_customer_label:
-
                 mIntent = new Intent(CustomerInfoActivity.this,CustomerLabelCopyActivity.class);
                 mIntent.putExtra("isMem", isMem);
                 mIntent.putExtra("fromPage",1);
@@ -492,15 +520,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     mIntent.putExtra("customerId", mCustomer.getId());
                 }
                 startActivity(mIntent);
-
-                /*Bundle bundle2 = new Bundle();
-                if (mTagItems != null) {
-                    bundle2.putSerializable("tagitems", Utils.convertTagItems(mTagItems));
-                    bundle2.putString("customerId", mCustomer.getId());
-                    bundle2.putBoolean("isMem", isMem);
-                }
-                app.startActivityForResult(this, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);*/
                 break;
+
             /*刷新地理位置*/
             case R.id.img_refresh_address:
                 mBundle = new Bundle();
@@ -597,7 +618,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         map.put("tags", mTagItems);
         map.put("loc", adrDetailsData);
         map.put("position", mLocate);
-        map.put("extDatas", mCustomer.extDatas);
+        map.put("extDatas", extDatas);
         map.put("regional", regional);
 
         LogUtil.d("提交客户信息，发送的数据:" + MainApp.gson.toJson(map));
