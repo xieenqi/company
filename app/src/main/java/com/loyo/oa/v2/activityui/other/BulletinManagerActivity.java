@@ -67,7 +67,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         lv_notice.getRefreshableView().setLayoutManager(layoutManager);
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
-        ll_loading.setLoadingPage(LoadingView.getLoadingView(this));
         ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
@@ -161,7 +160,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     @Override
     public void bindListData() {
         managerPresenter.bindListData(lv_notice);
-        ll_loading.setStatus(LoadingLayout.Success);
+        ll_loading.setStatus(LoadingLayout.No_Network);
     }
 
     /**

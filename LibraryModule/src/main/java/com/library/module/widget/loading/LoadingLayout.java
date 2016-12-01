@@ -6,6 +6,7 @@ package com.library.module.widget.loading;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
@@ -69,6 +70,7 @@ public class LoadingLayout extends FrameLayout {
     private static int buttonWidth = -1;
     private static int buttonHeight = -1;
     private static int loadingLayoutId = R.layout.loading_page;
+    private AnimationDrawable ladingAnimaytion;
 
     public LoadingLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -119,6 +121,7 @@ public class LoadingLayout extends FrameLayout {
         errorReloadBtn = Utils.findViewById(errorPage, R.id.error_reload_btn);
         networkReloadBtn = Utils.findViewById(networkPage, R.id.no_network_reload_btn);
 
+        ladingAnimaytion = (AnimationDrawable) loadingPage.findViewById(R.id.iv_loading).getBackground();
         errorReloadBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,6 +202,7 @@ public class LoadingLayout extends FrameLayout {
                 emptyPage.setVisibility(View.GONE);
                 errorPage.setVisibility(View.GONE);
                 networkPage.setVisibility(View.GONE);
+                ladingAnimaytion.stop();
                 break;
 
             case Loading:
@@ -208,6 +212,7 @@ public class LoadingLayout extends FrameLayout {
                 emptyPage.setVisibility(View.GONE);
                 errorPage.setVisibility(View.GONE);
                 networkPage.setVisibility(View.GONE);
+                ladingAnimaytion.start();
                 break;
 
             case Empty:
@@ -217,6 +222,7 @@ public class LoadingLayout extends FrameLayout {
                 emptyPage.setVisibility(View.VISIBLE);
                 errorPage.setVisibility(View.GONE);
                 networkPage.setVisibility(View.GONE);
+                ladingAnimaytion.stop();
                 break;
 
             case Error:
@@ -226,6 +232,7 @@ public class LoadingLayout extends FrameLayout {
                 emptyPage.setVisibility(View.GONE);
                 errorPage.setVisibility(View.VISIBLE);
                 networkPage.setVisibility(View.GONE);
+                ladingAnimaytion.stop();
                 break;
 
             case No_Network:
@@ -235,6 +242,7 @@ public class LoadingLayout extends FrameLayout {
                 emptyPage.setVisibility(View.GONE);
                 errorPage.setVisibility(View.GONE);
                 networkPage.setVisibility(View.VISIBLE);
+                ladingAnimaytion.stop();
                 break;
 
             default:

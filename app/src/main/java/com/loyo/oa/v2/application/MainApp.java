@@ -192,6 +192,8 @@ public class MainApp extends Application {
                 .setAllTipTextColor(R.color.text99)
                 .setAllTipTextSize(16)
                 .setReloadButtonText("重试")
+                .setReloadButtonTextColor(R.color.title_bg1)
+//                .setReloadButtonBackgroundResource(R.drawable.retage_bule)
                 .setReloadButtonTextSize(16);
     }
 
