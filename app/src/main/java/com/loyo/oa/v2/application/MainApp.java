@@ -27,6 +27,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
+import com.loyo.oa.v2.customview.loading.LoadingLayout;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
@@ -177,7 +178,26 @@ public class MainApp extends Application {
         JPushInterface.init(this);
         GlideManager.getInstance().initWithContext(getApplicationContext());
         VoIPManager.getInstance().init(this);
+        initLoadingConfig();
     }
+
+    private void initLoadingConfig() {
+        LoadingLayout.getConfig()
+                .setErrorText("出错啦~请稍后重试！")
+                .setEmptyText("暂无数据!")
+                .setNoNetworkText("网络不给力!")
+//                .setErrorImage(R.drawable.define_error)
+                .setEmptyImage(R.drawable.define_empty)
+                .setNoNetworkImage(R.drawable.define_nonetwork)
+                .setAllTipTextColor(R.color.gray)
+                .setAllTipTextSize(14)
+                .setReloadButtonText("重试")
+                .setReloadButtonTextSize(14)
+                .setReloadButtonTextColor(R.color.gray)
+                .setReloadButtonWidthAndHeight(150, 40)
+                ;
+    }
+
 
     private void addActivityLifecycleCallback() {
 

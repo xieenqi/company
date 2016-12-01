@@ -11,12 +11,14 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.LoadingView;
 import com.loyo.oa.v2.activityui.other.presenter.Impl.BulletinManagerPresenterImpl;
 import com.loyo.oa.v2.activityui.other.viewcontrol.BulletinManagerView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.loading.LoadingLayout;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -41,6 +43,8 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     PullToRefreshRecyclerView2 lv_notice;
     @ViewById
     Button btn_notice_add;
+    @ViewById
+    LoadingLayout ll_loading;
     protected PaginationX<Bulletin> mPagination = new PaginationX(20);
     private boolean isTopAdd = true;
     private final int REQUEST_NEW = 1;
@@ -50,7 +54,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     @AfterViews
     void initViews() {
-//        setTouchView(-1);
         managerPresenter = new BulletinManagerPresenterImpl(this, mContext, BulletinManagerActivity.this);
         managerPresenter.isPermission();
 
@@ -64,6 +67,8 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         lv_notice.getRefreshableView().setLayoutManager(layoutManager);
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
+        ll_loading.setLoadingPage(LoadingView.getLoadingView(this));
+        ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
 
@@ -156,6 +161,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     @Override
     public void bindListData() {
         managerPresenter.bindListData(lv_notice);
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     /**
