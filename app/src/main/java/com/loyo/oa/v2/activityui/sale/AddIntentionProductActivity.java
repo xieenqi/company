@@ -21,6 +21,8 @@ import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.adapter.ProductsRadioListViewAdapter;
+import com.loyo.oa.v2.activityui.sale.contract.AddIntentionProductContract;
+import com.loyo.oa.v2.activityui.sale.presenter.AddIntentionProductPresenterImpl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Product;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -45,7 +47,7 @@ import retrofit.client.Response;
  * 【新增意向产品】
  * Created by xeq on 16/5/20.
  */
-public class AddIntentionProductActivity extends BaseActivity {
+public class AddIntentionProductActivity extends BaseActivity implements AddIntentionProductContract.View {
 
     private TextView tv_title, tv_product, tv_price, tv_discount, tv_total, tv_oldePrice, tv_salePrice;
     private LinearLayout ll_back, ll_poduct;
@@ -58,13 +60,17 @@ public class AddIntentionProductActivity extends BaseActivity {
     private String oldId = "";
     private int fromPage = 0;
     private ArrayList<SaleIntentionalProduct> productListData;
+    private AddIntentionProductContract.Presenter mPersenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_intention_product);
+        mPersenter = new AddIntentionProductPresenterImpl(this);
         init();
-        getData();
+//        getData();
+        showLoading("");
+        mPersenter.getProduct();
         getIntentData();
     }
 
@@ -123,27 +129,6 @@ public class AddIntentionProductActivity extends BaseActivity {
     }
 
     /**
-     * 获取意向产品
-     */
-    public void getData() {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getProducts(new RCallback<ArrayList<Product>>() {
-            @Override
-            public void success(final ArrayList<Product> products, final Response response) {
-                HttpErrorCheck.checkResponse("意向产品##的产品", response);
-                lstData_Product.addAll(products);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                finish();
-            }
-        });
-    }
-
-    /**
      * 编辑意向产品
      */
     public void editProduct() {
@@ -154,26 +139,8 @@ public class AddIntentionProductActivity extends BaseActivity {
         map.put("proInfo", data);
         map.put("oldId", oldId);
         LogUtil.d("编辑产品:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).editSaleProduct(map, saleId, new RCallback<SaleProductEdit>() {
-            @Override
-            public void success(SaleProductEdit saleProductEdit, final Response response) {
-                HttpErrorCheck.checkResponse("编辑意向产品", response);
-                if (null != data) {
-                    Intent intent = new Intent();
-                    intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
-                    intent.putExtra(ExtraAndResult.STR_SHOW_TYPE, ActionCode.SALE_DETAILS_RUSH);
-                    app.finishActivity(AddIntentionProductActivity.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        mPersenter.editProduct(map, data, saleId);
     }
-
 
     /**
      * 新增意向产品
@@ -192,29 +159,8 @@ public class AddIntentionProductActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("cId", saleId);
         map.put("proInfo", data);
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).addSaleProduct(map, new RCallback<SaleProductEdit>() {
-            @Override
-            public void success(SaleProductEdit saleProductEdit, final Response response) {
-                HttpErrorCheck.checkResponse("新增意向产品", response);
-
-                if (null != data) {
-                    Intent intent = new Intent();
-                    intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
-                    intent.putExtra(ExtraAndResult.STR_SHOW_TYPE, ActionCode.SALE_DETAILS_RUSH);
-                    app.finishActivity(AddIntentionProductActivity.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
-
-                }
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+        mPersenter.addProduct(map, data);
     }
-
 
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
@@ -327,7 +273,8 @@ public class AddIntentionProductActivity extends BaseActivity {
     private void SelectProduct() {
         if (null == lstData_Product || !(lstData_Product.size() > 0)) {
             Toast("没有可以选择的产品");
-            getData();
+            mPersenter.getProduct();
+//            getData();
             return;
         }
         if (null == dialog_Product) {
@@ -404,4 +351,48 @@ public class AddIntentionProductActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void showProgress(String message) {
+        showLoading(message);
+    }
+
+    @Override
+    public void hideProgress() {
+        cancelLoading();
+    }
+
+    @Override
+    public void showMsg(String message) {
+        Toast(message);
+    }
+
+    @Override
+    public void setProductInfo(ArrayList<Product> products) {
+        lstData_Product.addAll(products);
+    }
+
+    @Override
+    public void closePageUI() {
+        onBackPressed();
+    }
+
+    @Override
+    public void addProductSuccessUI(SaleIntentionalProduct data) {
+        if (null != data) {
+            Intent intent = new Intent();
+            intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
+            intent.putExtra(ExtraAndResult.STR_SHOW_TYPE, ActionCode.SALE_DETAILS_RUSH);
+            app.finishActivity(AddIntentionProductActivity.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
+        }
+    }
+
+    @Override
+    public void editProductSuccessUI(SaleIntentionalProduct data) {
+        if (null != data) {
+            Intent intent = new Intent();
+            intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
+            intent.putExtra(ExtraAndResult.STR_SHOW_TYPE, ActionCode.SALE_DETAILS_RUSH);
+            app.finishActivity(AddIntentionProductActivity.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
+        }
+    }
 }

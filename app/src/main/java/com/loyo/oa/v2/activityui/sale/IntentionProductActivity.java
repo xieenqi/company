@@ -89,6 +89,23 @@ public class IntentionProductActivity extends BaseActivity {
         init();
     }
 
+    /**
+     * 获得传递过来的数据
+     */
+    private void getIntentData() {
+        canEdit = getIntent().getBooleanExtra(KEY_CAN_EDIT, false);
+        canDelete = getIntent().getBooleanExtra(KEY_CAN_DELETE, false);
+        saleId = getIntent().getStringExtra("saleId");
+        fromPage = getIntent().getIntExtra("data", 0);
+        isKine = getIntent().getBooleanExtra("boolean", false);
+        ArrayList<SaleIntentionalProduct> intentData
+                = (ArrayList<SaleIntentionalProduct>) getIntent()
+                .getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        if (null != intentData && intentData.size() > 0) {
+            listData = intentData;
+        }
+    }
+
     private void init() {
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_addpro = (TextView) findViewById(R.id.tv_addpro);
@@ -102,7 +119,7 @@ public class IntentionProductActivity extends BaseActivity {
         ll_add = (LinearLayout) findViewById(R.id.ll_add);
         ll_add.setOnTouchListener(Global.GetTouch());
         ll_add.setOnClickListener(click);
-        ll_add.setVisibility(canEdit?View.VISIBLE:View.GONE);
+        ll_add.setVisibility(canEdit ? View.VISIBLE : View.GONE);
         saleProductAdapter = new SaleProductAdapter();
         saleProductAdapter.canEdit = canEdit;
         saleProductAdapter.canDelete = canDelete;
@@ -135,22 +152,6 @@ public class IntentionProductActivity extends BaseActivity {
         }
     };
 
-    /**
-     * 获得传递过来的数据
-     */
-    private void getIntentData() {
-        canEdit   = getIntent().getBooleanExtra(KEY_CAN_EDIT, false);
-        canDelete = getIntent().getBooleanExtra(KEY_CAN_DELETE, false);
-        saleId    = getIntent().getStringExtra("saleId");
-        fromPage  = getIntent().getIntExtra("data", 0);
-        isKine    = getIntent().getBooleanExtra("boolean", false);
-        ArrayList<SaleIntentionalProduct> intentData
-                  = (ArrayList<SaleIntentionalProduct>) getIntent()
-                      .getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-        if (null != intentData && intentData.size() > 0) {
-            listData = intentData;
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -222,6 +223,7 @@ public class IntentionProductActivity extends BaseActivity {
 
         public boolean canEdit;
         public boolean canDelete;
+
         @Override
         public int getCount() {
             return listData.size();
@@ -265,8 +267,7 @@ public class IntentionProductActivity extends BaseActivity {
                 holderView = (HolderView) convertView.getTag();
             }
             holderView.setContentView(position);
-            holderView.ll_edit.setVisibility(canEdit?View.VISIBLE:View.GONE);
-            holderView.ll_delete.setVisibility(canDelete?View.VISIBLE:View.GONE);
+
             return convertView;
         }
     }
@@ -321,7 +322,11 @@ public class IntentionProductActivity extends BaseActivity {
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, product);
                 }
             });
-            if (fromPage == ActionCode.ORDER_DETAIL) {
+
+            ll_edit.setVisibility(canEdit ? View.VISIBLE : View.GONE);
+            ll_delete.setVisibility(canDelete ? View.VISIBLE : View.GONE);
+
+            if (fromPage == ActionCode.ORDER_DETAIL) {//此处详情过来的处理
                 ll_delete.setVisibility(View.GONE);
                 ll_edit.setVisibility(View.GONE);
             }
