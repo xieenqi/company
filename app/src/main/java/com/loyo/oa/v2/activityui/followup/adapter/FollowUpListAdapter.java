@@ -145,13 +145,13 @@ public class FollowUpListAdapter extends BaseAdapter {
             } else if (audioLength > 300 && audioLength <= 600) {
                 holder.iv_phone_call.setText("0000000");
             } else if (audioLength > 600 && audioLength <= 1200) {
-                holder.iv_phone_call.setText("000000000");
+                holder.iv_phone_call.setText("00000000");
             } else if (audioLength > 1200 && audioLength <= 1800) {
-                holder.iv_phone_call.setText("00000000000");
+                holder.iv_phone_call.setText("000000000");
             } else if (audioLength > 1800 && audioLength <= 3600) {
-                holder.iv_phone_call.setText("00000000000000");
+                holder.iv_phone_call.setText("0000000000");
             } else if (audioLength > 3600) {
-                holder.iv_phone_call.setText("0000000000000000");
+                holder.iv_phone_call.setText("00000000000");
             } else {
                 holder.iv_phone_call.setText("");
             }

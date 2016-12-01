@@ -19,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_33"
             android:background="@drawable/animation_calls"
-            android:textColor="#3FD3AA" />
+            android:textColor="#3FD3AA"
+            />
 
         <TextView
             android:id="@+id/tv_audio_length"
