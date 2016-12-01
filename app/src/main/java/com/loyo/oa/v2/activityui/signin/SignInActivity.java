@@ -35,7 +35,7 @@ import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonIdName;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.beans.Record;

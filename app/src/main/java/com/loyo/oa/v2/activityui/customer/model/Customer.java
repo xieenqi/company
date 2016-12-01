@@ -1,15 +1,14 @@
-package com.loyo.oa.v2.beans;
+package com.loyo.oa.v2.activityui.customer.model;
 
-import com.loyo.oa.v2.activityui.customer.model.Contact;
-import com.loyo.oa.v2.activityui.customer.model.Counter;
-import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
-import com.loyo.oa.v2.activityui.customer.model.ExtraData;
-import com.loyo.oa.v2.activityui.customer.model.Industry;
-import com.loyo.oa.v2.activityui.customer.model.Locate;
-import com.loyo.oa.v2.activityui.customer.model.Member;
-import com.loyo.oa.v2.activityui.customer.model.NewTag;
+import android.support.annotation.IntDef;
+
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.beans.BaseBeans;
+import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.SaleActivity;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 /**
@@ -98,5 +97,35 @@ public class Customer extends BaseBeans {
 
     public String getId() {
         return null == id ? "" : id;
+    }
+
+    /**
+     * Added by Ethan 2016-11-30
+     *
+     * "state": 1,  // 1表示普通客户，2表示公海客户，3表示回收站客户
+     * "relationState": 1, // 1表示责任人，2表示参与人，3表示与责任人同部门，4表示业务相关
+     */
+
+    public int state;
+    public int relationState;
+
+
+    public final static int NormalCustomer = 1;              /*1表示普通客户*/
+    public final static int DumpedCustomer = 2;              /*2表示公海客户*/
+    public final static int RecycledCustomer = 3;            /*3表示回收站客户*/
+
+    public final static int RelationResponsible = 1;         /*1表示责任人*/
+    public final static int RelationParticipated = 2;        /*2表示参与人*/
+    public final static int RelationResponsibleSameDept = 3; /*3表示与责任人同部门*/
+    public final static int RelationInvolved = 4;            /*4表示业务相关*/
+
+    @IntDef ({NormalCustomer, DumpedCustomer, RecycledCustomer})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface CustomerState {
+    }
+
+    @IntDef ({RelationResponsible, RelationParticipated, RelationResponsibleSameDept, RelationInvolved})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface RelationState {
     }
 }

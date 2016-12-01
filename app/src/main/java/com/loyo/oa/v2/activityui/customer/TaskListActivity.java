@@ -14,7 +14,7 @@ import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.TaskRecord;

@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPresenterimpl;
@@ -25,7 +26,6 @@ import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -123,6 +123,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         }
         else {
             layout_gj.setVisibility(View.GONE);
+        }
+
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
+            layout_sign.setVisibility(View.VISIBLE);
+        }
+        else {
+            layout_sign.setVisibility(View.GONE);
         }
     }
 

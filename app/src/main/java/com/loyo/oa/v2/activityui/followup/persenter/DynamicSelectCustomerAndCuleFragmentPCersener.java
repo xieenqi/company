@@ -4,7 +4,7 @@ import com.loyo.oa.v2.activityui.clue.bean.ClueList;
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

@@ -1,8 +1,34 @@
 package com.loyo.oa.v2.permission;
 
+import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 
+import java.util.EnumSet;
 import java.util.HashMap;
+
+import static com.loyo.oa.v2.permission.BusinessOperation.CUSTOMER_MANAGEMENT;
+import static com.loyo.oa.v2.permission.CustomerAction.ATTACHMENT_ADD;
+import static com.loyo.oa.v2.permission.CustomerAction.CONTACT_ADD;
+import static com.loyo.oa.v2.permission.CustomerAction.DELETE;
+import static com.loyo.oa.v2.permission.CustomerAction.DUMP;
+import static com.loyo.oa.v2.permission.CustomerAction.EDIT;
+import static com.loyo.oa.v2.permission.CustomerAction.EXPORT;
+import static com.loyo.oa.v2.permission.CustomerAction.FOLLOWUP_ADD;
+import static com.loyo.oa.v2.permission.CustomerAction.IMPORT;
+import static com.loyo.oa.v2.permission.CustomerAction.ORDER_ADD;
+import static com.loyo.oa.v2.permission.CustomerAction.PARTICIPATED_PERSON_CHANGE;
+import static com.loyo.oa.v2.permission.CustomerAction.PICK_IN;
+import static com.loyo.oa.v2.permission.CustomerAction.PREVIEW;
+import static com.loyo.oa.v2.permission.CustomerAction.REMINDER_ADD;
+import static com.loyo.oa.v2.permission.CustomerAction.RESPONSIBLE_PERSON_CHANGE;
+import static com.loyo.oa.v2.permission.CustomerAction.SALE_OPPORTUNITY_ADD;
+import static com.loyo.oa.v2.permission.CustomerAction.TASK_ADD;
+import static com.loyo.oa.v2.permission.CustomerAction.VISIT;
+import static com.loyo.oa.v2.permission.CustomerAuthority.INVOLVED_VISITOR_LEVEL;
+import static com.loyo.oa.v2.permission.CustomerAuthority.NONE_AUTHORITY_LEVEL;
+import static com.loyo.oa.v2.permission.CustomerAuthority.PARTICIPATED_PERSON_LEVEL;
+import static com.loyo.oa.v2.permission.CustomerAuthority.RESPONSIBLE_PERSON_LEVEL;
 
 /**
  * Created by EthanGong on 2016/11/28.
@@ -77,5 +103,139 @@ public class PermissionManager {
             return MainApp.user.isSuperUser;
         }
         return false;
+    }
+
+    private static EnumSet[][] TABLE;
+    /* 静态库块，初始化数据 */
+    {
+        EnumSet[][] table = {
+                {
+                        /* 负责人level, 正常客户 */
+                        EnumSet.of(PREVIEW,      EDIT,         PARTICIPATED_PERSON_CHANGE,
+                                   CONTACT_ADD,  FOLLOWUP_ADD, SALE_OPPORTUNITY_ADD,
+                                   ORDER_ADD,    TASK_ADD,     ATTACHMENT_ADD,
+                                   REMINDER_ADD, VISIT,        PICK_IN,
+                                   DUMP,         IMPORT,       EXPORT,
+                                   RESPONSIBLE_PERSON_CHANGE,  DELETE),
+                        /* 负责人level, 公海客户 */
+                        EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
+                        /* 负责人level, 回收客户 */
+                        EnumSet.of(DELETE)
+                },
+                {
+                        /* 参与人level, 正常客户 */
+                        EnumSet.of(PREVIEW,
+                                   CONTACT_ADD,  FOLLOWUP_ADD, SALE_OPPORTUNITY_ADD,
+                                   ORDER_ADD,    TASK_ADD,     ATTACHMENT_ADD,
+                                   REMINDER_ADD, VISIT,        EDIT),
+                        /* 参与人level, 公海客户 */
+                        EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
+                        /* 参与人level, 回收客户 */
+                        EnumSet.of(DELETE)
+                },
+                {
+                        /* 相关level, 正常客户 */
+                        EnumSet.of(PREVIEW),
+                        /* 相关level, 公海客户 */
+                        EnumSet.of(PREVIEW,      PICK_IN,      DELETE),
+                        /* 相关level, 回收客户 */
+                        EnumSet.of(DELETE)
+                },
+                {
+                        /* 功能模块关闭, 正常客户 */
+                        EnumSet.noneOf(CustomerAction.class),
+                        /* 功能模块关闭, 公海客户 */
+                        EnumSet.noneOf(CustomerAction.class),
+                        /* 功能模块关闭, 回收客户 */
+                        EnumSet.noneOf(CustomerAction.class)
+                }
+        };
+        TABLE = table;
+    }
+
+    public boolean hasCustomerAuthority(@Customer.RelationState int relationState,
+                                        @Customer.CustomerState int state,
+                                        boolean sameDept,
+                                        CustomerAction action) {
+
+        /* 超级管理员 */
+        if (hasSuperPriority()) {
+            return true;
+        }
+
+        /* 功能模块关闭 */
+        if (!hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT)) {
+            return false;
+        }
+
+        /* 功能模块关闭 */
+        @BusinessOperation.Type String operation = action.bizOp;
+        if (!BusinessOperation.DEFAULT.equals(operation)
+                && !hasPermission(operation)) {
+            return false;
+        }
+
+        /* 客户状态不明 */
+        if (state < Customer.NormalCustomer || state > Customer.RecycledCustomer) { //
+            return false;
+        }
+
+        CustomerAuthority authorityLevel = getAuthorityLevel(relationState, sameDept, action);
+        EnumSet<CustomerAction> set = TABLE[authorityLevel.ordinal()][state-1];
+        if (set.contains(action)) {
+
+            // specially 参与人的编辑权限，判断CRM config
+            if (CustomerAction.EDIT== action && authorityLevel == PARTICIPATED_PERSON_LEVEL) {
+                return false; // TODO:
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public CustomerAuthority getAuthorityLevel(User user,
+                                               @Customer.RelationState int relationState,
+                                               boolean sameDept,
+                                               CustomerAction action) {
+
+        if (user != null && user.isSuperUser) {
+            return RESPONSIBLE_PERSON_LEVEL;
+        }
+
+        if (! hasPermission(CUSTOMER_MANAGEMENT)) {
+            return NONE_AUTHORITY_LEVEL;
+        }
+
+        if (relationState == Customer.RelationResponsible) {
+            return RESPONSIBLE_PERSON_LEVEL;
+        }
+
+        @BusinessOperation.Type String operation = action.bizOp;
+        if (BusinessOperation.DEFAULT.equals(operation)) {
+            operation = CUSTOMER_MANAGEMENT;
+        }
+
+        if (dataRange(operation) <= Permission.COMPANY) {
+            return RESPONSIBLE_PERSON_LEVEL;
+        }
+
+        if (dataRange(operation) <= Permission.TEAM
+                && sameDept) {
+            return RESPONSIBLE_PERSON_LEVEL;
+        }
+
+        if (relationState == Customer.RelationParticipated) {
+            return PARTICIPATED_PERSON_LEVEL;
+        }
+
+        return INVOLVED_VISITOR_LEVEL;
+    }
+
+    public CustomerAuthority getAuthorityLevel(@Customer.RelationState int relationState,
+                                               boolean sameDept,
+                                               CustomerAction action) {
+        return getAuthorityLevel(MainApp.user, relationState, sameDept, action);
     }
 }

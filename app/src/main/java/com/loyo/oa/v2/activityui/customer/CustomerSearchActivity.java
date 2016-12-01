@@ -2,16 +2,11 @@ package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
 
-import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;

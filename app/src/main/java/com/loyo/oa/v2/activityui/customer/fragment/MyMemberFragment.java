@@ -37,7 +37,7 @@ import com.loyo.oa.v2.activityui.customer.presenter.MyCustomerFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.MyCustomerFragPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.MyCustomerFragView;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
