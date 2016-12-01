@@ -111,16 +111,18 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     private void setRecordLength() {
         tv_record_number.setText(time + "\"");
         int timeNumber = Integer.parseInt(time);
-        if (timeNumber > 0 && timeNumber <= 15) {
+        if (timeNumber > 0 && timeNumber <= 10) {
             tv_record_length.setText("000");
-        } else if (timeNumber > 15 && timeNumber <= 30) {
+        } else if (timeNumber > 10 && timeNumber <= 20) {
             tv_record_length.setText("00000");
-        } else if (timeNumber > 30 && timeNumber <= 45) {
+        } else if (timeNumber > 20 && timeNumber <= 30) {
+            tv_record_length.setText("000000");
+        } else if (timeNumber > 30 && timeNumber <= 40) {
             tv_record_length.setText("0000000");
-        } else if (timeNumber > 45 && timeNumber <= 60) {
+        } else if (timeNumber > 40 && timeNumber <= 50) {
             tv_record_length.setText("000000000");
-        } else if (timeNumber > 60 && timeNumber <= 75) {
-            tv_record_length.setText("00000000000");
+        } else if (timeNumber > 50 && timeNumber <= 60) {
+            tv_record_length.setText("0000000000");
         } else {
             tv_record_length.setText("");
         }

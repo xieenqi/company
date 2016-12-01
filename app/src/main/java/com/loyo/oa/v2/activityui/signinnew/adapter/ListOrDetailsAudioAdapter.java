@@ -12,6 +12,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.ArrayList;
 
 /**
@@ -66,20 +68,19 @@ public class ListOrDetailsAudioAdapter extends BaseAdapter {
         /*判断是否有录音*/
         if (null != audioModel.url && !TextUtils.isEmpty(audioModel.url)) {
             long audioLength = audioModel.length;
-            if (audioLength > 0 && audioLength <= 60) {
+            LogUtil.dee("length:"+audioLength);
+            if (audioLength > 0 && audioLength <= 10) {
                 tv_calls.setText("000");
-            } else if (audioLength > 60 && audioLength <= 300) {
+            } else if (audioLength > 10 && audioLength <= 20) {
                 tv_calls.setText("00000");
-            } else if (audioLength > 300 && audioLength <= 600) {
+            } else if (audioLength > 20 && audioLength <= 30) {
                 tv_calls.setText("0000000");
-            } else if (audioLength > 600 && audioLength <= 1200) {
+            } else if (audioLength > 30 && audioLength <= 40) {
+                tv_calls.setText("00000000");
+            } else if (audioLength > 40 && audioLength <= 50) {
                 tv_calls.setText("000000000");
-            } else if (audioLength > 1200 && audioLength <= 1800) {
-                tv_calls.setText("00000000000");
-            } else if (audioLength > 1800 && audioLength <= 3600) {
-                tv_calls.setText("00000000000000");
-            } else if (audioLength > 3600) {
-                tv_calls.setText("0000000000000000");
+            } else if (audioLength > 50 && audioLength <= 60) {
+                tv_calls.setText("0000000000");
             } else {
                 tv_calls.setText("");
             }
