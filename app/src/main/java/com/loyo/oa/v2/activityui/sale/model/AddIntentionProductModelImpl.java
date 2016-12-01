@@ -1,15 +1,10 @@
 package com.loyo.oa.v2.activityui.sale.model;
 
-import android.content.Intent;
 
 import com.loyo.oa.v2.activityui.customer.model.Product;
-import com.loyo.oa.v2.activityui.sale.AddIntentionProductActivity;
-import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.contract.AddIntentionProductContract;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.point.ISale;
