@@ -127,31 +127,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         Global.SetTouchView(ll_stage, ll_product, img_title_right, img_title_left, iv_wfstatus);
         iv_wfstatus.setOnClickListener(this);
         getIntenData();
-//        getData();
         mPersenter.getPageData(selectId);
-    }
-
-    /**
-     * 获取销售机会详情
-     */
-    public void getData() {
-//        showLoading("");
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
-//                .create(ISale.class)
-//                .getSaleDetails(selectId, new RCallback<SaleDetails>() {
-//                    @Override
-//                    public void success(SaleDetails saleDetails, Response response) {
-//                        HttpErrorCheck.checkResponse("机会详情", response);
-//                        mSaleDetails = saleDetails;
-//                        bindData();
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                        finish();
-//                    }
-//                });
     }
 
     private void getIntenData() {
@@ -183,21 +159,6 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         map.put("content", "销售阶段由\"" + mSaleDetails.getStageName() + "\"变更为\"" + stageName + "\"");
         LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
         mPersenter.editSaleStage(map, selectId);
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
-//                .create(ISale.class)
-//                .editSaleStage(map, selectId, new RCallback<SaleProductEdit>() {
-//                    @Override
-//                    public void success(SaleProductEdit saleProductEdit, Response response) {
-//                        HttpErrorCheck.checkResponse("编辑销售阶段", response);
-////                        getData();
-//                        mPersenter.getPageData(selectId);
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        HttpErrorCheck.checkError(error);
-//                    }
-//                });
     }
 
 
@@ -434,7 +395,6 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             case ExtraAndResult.MSG_WHAT_DIALOG:
                 resultAction = data.getIntExtra(ExtraAndResult.RESULT_ID, 0);
                 if (resultAction == ActionCode.SALE_DETAILS_EDIT) {
-//                    getData();
                     mPersenter.getPageData(selectId);
                 }
                 break;
@@ -460,7 +420,6 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
                 resultAction = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
                 if (resultAction == ActionCode.SALE_DETAILS_RUSH) {
-//                    getData();
                     mPersenter.getPageData(selectId);
                 }
                 break;
@@ -476,7 +435,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 }
                 break;
             case ExtraAndResult.REQUEST_EDIT:
-                finish();
+                closePageUI();
                 break;
 
         }
