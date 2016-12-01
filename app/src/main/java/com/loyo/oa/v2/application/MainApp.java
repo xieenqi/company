@@ -189,13 +189,10 @@ public class MainApp extends Application {
 //                .setErrorImage(R.drawable.define_error)
                 .setEmptyImage(R.drawable.define_empty)
                 .setNoNetworkImage(R.drawable.define_nonetwork)
-                .setAllTipTextColor(R.color.gray)
-                .setAllTipTextSize(14)
+                .setAllTipTextColor(R.color.text99)
+                .setAllTipTextSize(16)
                 .setReloadButtonText("重试")
-                .setReloadButtonTextSize(14)
-                .setReloadButtonTextColor(R.color.gray)
-                .setReloadButtonWidthAndHeight(150, 40)
-                ;
+                .setReloadButtonTextSize(16);
     }
 
 

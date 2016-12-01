@@ -61,7 +61,7 @@ public class LoadingLayout extends FrameLayout {
     private static int emptyImgId = R.drawable.define_empty;
     private static int errorImgId = R.drawable.define_empty;//需要定义错误
     private static int networkImgId = R.drawable.define_nonetwork;
-    private static int reloadBtnId = R.drawable.define_empty;//需要定义重试按钮
+    private static int reloadBtnId = R.drawable.retage_bule;//重试按钮 的边框
     private static int tipTextSize = 14;
     private static int buttonTextSize = 14;
     private static int tipTextColor = R.color.base_text_color_light;
@@ -185,9 +185,12 @@ public class LoadingLayout extends FrameLayout {
     }
 
     public void setStatus(@Flavour int status) {
-
         this.state = status;
-
+//        public final static int Success = 0;
+//        public final static int Empty = 1;
+//        public final static int Error = 2;
+//        public final static int No_Network = 3;
+//        public final static int Loading = 4;
         switch (status) {
             case Success:
 
@@ -627,19 +630,19 @@ public class LoadingLayout extends FrameLayout {
             return mConfig;
         }
 
-        public LoadingLayout.Config setEmptyImage(@DrawableRes int id) {
+        public Config setEmptyImage(@DrawableRes int id) {
 
             emptyImgId = id;
             return this;
         }
 
-        public LoadingLayout.Config setNoNetworkImage(@DrawableRes int id) {
+        public Config setNoNetworkImage(@DrawableRes int id) {
 
             networkImgId = id;
             return mConfig;
         }
 
-        public LoadingLayout.Config setLoadingPageLayout(@LayoutRes int id) {
+        public Config setLoadingPageLayout(@LayoutRes int id) {
 
             loadingLayoutId = id;
             return mConfig;
