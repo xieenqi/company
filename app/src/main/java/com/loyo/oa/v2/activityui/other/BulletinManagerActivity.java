@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
@@ -18,7 +19,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.customview.loading.LoadingLayout;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Utils;
 

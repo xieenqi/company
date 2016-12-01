@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.customview.loading;
+package com.library.module.widget.loading;
 
 /**
  * Created by xeq on 16/12/1.

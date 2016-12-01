@@ -16,6 +16,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Department;
@@ -27,7 +28,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
-import com.loyo.oa.v2.customview.loading.LoadingLayout;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;

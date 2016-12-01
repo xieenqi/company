@@ -2,8 +2,6 @@ package com.loyo.oa.v2.tool;
 
 import android.os.Bundle;
 
-import com.loyo.oa.v2.R;
-import com.weavey.loading.lib.LoadingLayout;
 
 /**
  * 继承此基类 布局必须要     <com.weavey.loading.lib.LoadingLayout/>

@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.customview.loading;
+package com.library.module.widget.loading;
 
 /**
  * Created by xeq on 16/12/1.
@@ -7,7 +7,6 @@ package com.loyo.oa.v2.customview.loading;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
@@ -19,7 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loyo.oa.v2.R;
+import com.library.module.R;
+
 
 public class LoadingLayout extends FrameLayout {
 
@@ -49,11 +49,11 @@ public class LoadingLayout extends FrameLayout {
     private TextView networkReloadBtn;
 
     private View contentView;
-    private com.loyo.oa.v2.customview.loading.LoadingLayout.OnReloadListener listener;
+    private LoadingLayout.OnReloadListener listener;
     private boolean isFirstVisible; //是否一开始显示contentview，默认不显示
 
     //配置
-    private static com.loyo.oa.v2.customview.loading.LoadingLayout.Config mConfig = new com.loyo.oa.v2.customview.loading.LoadingLayout.Config();
+    private static LoadingLayout.Config mConfig = new LoadingLayout.Config();
     private static String emptyStr = "暂无数据";
     private static String errorStr = "加载失败，请稍后重试···";
     private static String netwrokStr = "无网络连接，请检查网络···";
@@ -73,8 +73,8 @@ public class LoadingLayout extends FrameLayout {
     public LoadingLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
-        TypedArray a = context.obtainStyledAttributes(attrs, com.loyo.oa.v2.R.styleable.LoadingLayout);
-        isFirstVisible = a.getBoolean(com.loyo.oa.v2.R.styleable.LoadingLayout_isFirstVisible, false);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LoadingLayout);
+        isFirstVisible = a.getBoolean(R.styleable.LoadingLayout_isFirstVisible, false);
         a.recycle();
     }
 
@@ -257,7 +257,7 @@ public class LoadingLayout extends FrameLayout {
      * @param text
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setEmptyText(String text) {
+    public LoadingLayout setEmptyText(String text) {
 
         emptyText.setText(text);
         return this;
@@ -269,7 +269,7 @@ public class LoadingLayout extends FrameLayout {
      * @param text
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setErrorText(String text) {
+    public LoadingLayout setErrorText(String text) {
 
         errorText.setText(text);
         return this;
@@ -281,7 +281,7 @@ public class LoadingLayout extends FrameLayout {
      * @param text
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setNoNetworkText(String text) {
+    public LoadingLayout setNoNetworkText(String text) {
 
         networkText.setText(text);
         return this;
@@ -293,7 +293,7 @@ public class LoadingLayout extends FrameLayout {
      * @param id
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setEmptyImage(@DrawableRes int id) {
+    public LoadingLayout setEmptyImage(@DrawableRes int id) {
 
 
         emptyImg.setImageResource(id);
@@ -306,7 +306,7 @@ public class LoadingLayout extends FrameLayout {
      * @param id
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setErrorImage(@DrawableRes int id) {
+    public LoadingLayout setErrorImage(@DrawableRes int id) {
 
         errorImg.setImageResource(id);
         return this;
@@ -318,7 +318,7 @@ public class LoadingLayout extends FrameLayout {
      * @param id
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setNoNetworkImage(@DrawableRes int id) {
+    public LoadingLayout setNoNetworkImage(@DrawableRes int id) {
 
         networkImg.setImageResource(id);
         return this;
@@ -330,7 +330,7 @@ public class LoadingLayout extends FrameLayout {
      * @param sp
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setEmptyTextSize(int sp) {
+    public LoadingLayout setEmptyTextSize(int sp) {
 
         emptyText.setTextSize(sp);
         return this;
@@ -342,7 +342,7 @@ public class LoadingLayout extends FrameLayout {
      * @param sp
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setErrorTextSize(int sp) {
+    public LoadingLayout setErrorTextSize(int sp) {
 
         errorText.setTextSize(sp);
         return this;
@@ -354,7 +354,7 @@ public class LoadingLayout extends FrameLayout {
      * @param sp
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setNoNetworkTextSize(int sp) {
+    public LoadingLayout setNoNetworkTextSize(int sp) {
 
         networkText.setTextSize(sp);
         return this;
@@ -366,7 +366,7 @@ public class LoadingLayout extends FrameLayout {
      * @param bool
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setEmptyImageVisible(boolean bool) {
+    public LoadingLayout setEmptyImageVisible(boolean bool) {
 
         if (bool) {
             emptyImg.setVisibility(View.VISIBLE);
@@ -382,7 +382,7 @@ public class LoadingLayout extends FrameLayout {
      * @param bool
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setErrorImageVisible(boolean bool) {
+    public LoadingLayout setErrorImageVisible(boolean bool) {
 
         if (bool) {
             errorImg.setVisibility(View.VISIBLE);
@@ -398,7 +398,7 @@ public class LoadingLayout extends FrameLayout {
      * @param bool
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setNoNetworkImageVisible(boolean bool) {
+    public LoadingLayout setNoNetworkImageVisible(boolean bool) {
 
         if (bool) {
             networkImg.setVisibility(View.VISIBLE);
@@ -414,7 +414,7 @@ public class LoadingLayout extends FrameLayout {
      * @param text
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setReloadButtonText(@NonNull String text) {
+    public LoadingLayout setReloadButtonText(@NonNull String text) {
 
         errorReloadBtn.setText(text);
         networkReloadBtn.setText(text);
@@ -427,7 +427,7 @@ public class LoadingLayout extends FrameLayout {
      * @param sp
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setReloadButtonTextSize(int sp) {
+    public LoadingLayout setReloadButtonTextSize(int sp) {
 
         errorReloadBtn.setTextSize(sp);
         networkReloadBtn.setTextSize(sp);
@@ -440,7 +440,7 @@ public class LoadingLayout extends FrameLayout {
      * @param id
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setReloadButtonTextColor(@ColorRes int id) {
+    public LoadingLayout setReloadButtonTextColor(@ColorRes int id) {
 
         errorReloadBtn.setTextColor(Utils.getColor(mContext, id));
         networkReloadBtn.setTextSize(Utils.getColor(mContext, id));
@@ -453,7 +453,7 @@ public class LoadingLayout extends FrameLayout {
      * @param id
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setReloadButtonBackgroundResource(@DrawableRes int id) {
+    public LoadingLayout setReloadButtonBackgroundResource(@DrawableRes int id) {
 
         errorReloadBtn.setBackgroundResource(id);
         networkReloadBtn.setBackgroundResource(id);
@@ -466,7 +466,7 @@ public class LoadingLayout extends FrameLayout {
      * @param listener
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setOnReloadListener(OnReloadListener listener) {
+    public LoadingLayout setOnReloadListener(OnReloadListener listener) {
 
         this.listener = listener;
         return this;
@@ -478,7 +478,7 @@ public class LoadingLayout extends FrameLayout {
      * @param view
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setLoadingPage(View view) {
+    public LoadingLayout setLoadingPage(View view) {
 
         loadingPage = view;
         this.removeView(loadingPage);
@@ -492,7 +492,7 @@ public class LoadingLayout extends FrameLayout {
      * @param id
      * @return
      */
-    public com.loyo.oa.v2.customview.loading.LoadingLayout setLoadingPage(@LayoutRes int id) {
+    public LoadingLayout setLoadingPage(@LayoutRes int id) {
 
         this.removeView(loadingPage);
         View view = LayoutInflater.from(mContext).inflate(id, null);
@@ -627,19 +627,19 @@ public class LoadingLayout extends FrameLayout {
             return mConfig;
         }
 
-        public com.loyo.oa.v2.customview.loading.LoadingLayout.Config setEmptyImage(@DrawableRes int id) {
+        public LoadingLayout.Config setEmptyImage(@DrawableRes int id) {
 
             emptyImgId = id;
             return this;
         }
 
-        public com.loyo.oa.v2.customview.loading.LoadingLayout.Config setNoNetworkImage(@DrawableRes int id) {
+        public LoadingLayout.Config setNoNetworkImage(@DrawableRes int id) {
 
             networkImgId = id;
             return mConfig;
         }
 
-        public com.loyo.oa.v2.customview.loading.LoadingLayout.Config setLoadingPageLayout(@LayoutRes int id) {
+        public LoadingLayout.Config setLoadingPageLayout(@LayoutRes int id) {
 
             loadingLayoutId = id;
             return mConfig;
