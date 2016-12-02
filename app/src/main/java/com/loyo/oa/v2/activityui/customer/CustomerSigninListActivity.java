@@ -32,6 +32,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -56,7 +57,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     private PullToRefreshListView listView;
     private ViewGroup layout_add;
     private Customer mCustomer;
-    private boolean isMyUser;
+    private boolean canAdd;
     private boolean isPullOrDown;
     private boolean isChanged;
 
@@ -115,7 +116,6 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
 
     private void initView(){
         mCustomer = (Customer) getIntent().getSerializableExtra("mCustomer");
-        isMyUser = getIntent().getBooleanExtra("isMyUser",true);
         mPresenter = new SigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(this);
         audioPlayer.initPlayer();
@@ -139,7 +139,10 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访签到");
         layout_back.setOnTouchListener(Global.GetTouch());
-        if (!isMyUser) {
+        canAdd = mCustomer != null &&
+                PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                        mCustomer.state, CustomerAction.VISIT);
+        if (!canAdd) {
             layout_add.setVisibility(View.GONE);
         }else{
             layout_add.setOnTouchListener(Global.GetTouch());
@@ -267,7 +270,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      */
     @Override
     public void commentSuccessEmbl() {
-        if(isMyUser){
+        if(canAdd){
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);

@@ -174,21 +174,26 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         img_public.setEnabled(canPickin);
         img_public.setVisibility(canPickin?View.VISIBLE : View.GONE);
 
+        boolean canVisit = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.VISIT);
+        layout_sign.setVisibility(canVisit?View.VISIBLE : View.GONE);
+
+
         /*超级管理员,我的客户,Web权限控制判断*/
-        if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 4) {
-            img_public.setVisibility(View.VISIBLE);
-            layout_menu.setVisibility(View.GONE);
-        } else {
-            if (customerType == 4) {
-                /* 客户挑入权限 */
-                if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_PICKING)) {
-                    if(!isTourist){
-                        img_public.setVisibility(View.VISIBLE);
-                    }
-                    layout_menu.setVisibility(View.GONE);
-                }
-            }
-        }
+//        if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 4) {
+//            img_public.setVisibility(View.VISIBLE);
+//            layout_menu.setVisibility(View.GONE);
+//        } else {
+//            if (customerType == 4) {
+//                /* 客户挑入权限 */
+//                if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_PICKING)) {
+//                    if(!isTourist){
+//                        img_public.setVisibility(View.VISIBLE);
+//                    }
+//                    layout_menu.setVisibility(View.GONE);
+//                }
+//            }
+//        }
 
         if (memRoot.getValue().equals("0")) {
             isRoot = false;
@@ -454,7 +459,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*拜访签到*/
             case R.id.layout_visit:
-                bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = CustomerSigninListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;
