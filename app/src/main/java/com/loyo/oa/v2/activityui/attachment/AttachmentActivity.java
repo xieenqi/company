@@ -63,6 +63,9 @@ public class AttachmentActivity extends BaseActivity {
     @Extra("isMyUser")
     boolean isMyUser;
 
+    @Extra("canAdd")
+    boolean canAdd;
+
     @Extra("fromPage")
     int fromPage;
 
@@ -80,9 +83,7 @@ public class AttachmentActivity extends BaseActivity {
     void init() {
         super.setTitle("附件");
         if (fromPage == Common.CUSTOMER_PAGE) {
-            if (!isMyUser) {
-                tv_upload.setVisibility(View.GONE);
-            }
+            tv_upload.setVisibility( isMyUser? View.VISIBLE: View.GONE);
         } else {
             if (isOver) {
                 tv_upload.setVisibility(View.GONE);

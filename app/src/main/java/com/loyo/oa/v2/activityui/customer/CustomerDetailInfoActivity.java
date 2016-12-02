@@ -461,7 +461,16 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*文件*/
             case R.id.layout_attachment:
-                bundle.putBoolean("isMyUser", isMyUser);
+
+                boolean canAdd = mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.ATTACHMENT_ADD
+                        );
+
+                bundle.putBoolean("canAdd", canAdd);
+                bundle.putBoolean("isMyUser", canAdd); // 兼容保留
                 bundle.putInt("fromPage", Common.CUSTOMER_PAGE);
                 bundle.putSerializable("uuid", mCustomer.uuid);
                 bundle.putInt("bizType", 6);
