@@ -113,7 +113,7 @@ public class PermissionManager {
     }
 
     private static EnumSet[][] TABLE;
-    /* 静态库块，初始化数据 */
+    /* 静态块，初始化数据 */
     {
         EnumSet[][] table = {
                 {
