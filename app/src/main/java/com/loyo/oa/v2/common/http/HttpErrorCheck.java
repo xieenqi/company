@@ -126,8 +126,8 @@ public class HttpErrorCheck {
     }
 
     public static void checkError(RetrofitError error, LoadingLayout loadingLayout) {
-        DialogHelp.cancelLoading();
-        LogUtil.d("网络异常" + error.getMessage());
+//        DialogHelp.cancelLoading();
+        LogUtil.d("loading网络异常: " + error.getMessage());
         LogUtil.d("error接口URL：" + error.getUrl());
 
         try {
@@ -139,11 +139,14 @@ public class HttpErrorCheck {
             LogUtil.d("error获得的：", msg);
             JSONObject job = new JSONObject(msg);
             if (500 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText(job.getString("error"));
             } else if (401 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText(job.getString("error"));
             } else if (404 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText(job.getString("error"));
             } else if (406 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
                 //到侧边栏 退出系统到登录界面
@@ -154,8 +157,8 @@ public class HttpErrorCheck {
             } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
                 Toast("请检查您的网络连接");
             } else {
-                String errorInfo = job.getString("error");
-                Toast(errorInfo);
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText(job.getString("error"));
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
@@ -164,7 +167,6 @@ public class HttpErrorCheck {
             LogUtil.d("Body空err:" + error.getUrl());
             e.printStackTrace();
             loadingLayout.setStatus(LoadingLayout.No_Network);
-            Toast("连接服务器失败");
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
             loadingLayout.setStatus(LoadingLayout.Error);
