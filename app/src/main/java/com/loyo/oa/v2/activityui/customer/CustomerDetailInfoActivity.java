@@ -454,7 +454,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*任务计划*/
             case R.id.layout_task:
-                bundle.putBoolean("isMyUser", isMyUser);
+                boolean canAddTask = mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.TASK_ADD
+                        );
+                bundle.putBoolean("canAdd", canAddTask);
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = TaskListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS;
@@ -470,7 +476,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                         );
 
                 bundle.putBoolean("canAdd", canAdd);
-                bundle.putBoolean("isMyUser", canAdd); // 兼容保留
                 bundle.putInt("fromPage", Common.CUSTOMER_PAGE);
                 bundle.putSerializable("uuid", mCustomer.uuid);
                 bundle.putInt("bizType", 6);

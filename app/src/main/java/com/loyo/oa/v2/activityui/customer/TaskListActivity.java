@@ -59,7 +59,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     @Extra
     Customer mCustomer;
     @Extra
-    boolean isMyUser;
+    boolean canAdd;
 
     private PaginationX<TaskRecord> taskPaginationX = new PaginationX<>(20);
     private ArrayList<TaskRecord> tasks = new ArrayList<>();
@@ -74,9 +74,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("任务管理");
         layout_back.setOnTouchListener(Global.GetTouch());
-        if (!isMyUser) {
-            layout_add.setVisibility(View.GONE);
-        }
+        layout_add.setVisibility(canAdd?View.VISIBLE:View.GONE);
 
         layout_add.setOnTouchListener(Global.GetTouch());
     }
