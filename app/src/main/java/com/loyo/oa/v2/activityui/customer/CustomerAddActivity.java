@@ -327,8 +327,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             }
         }
 
-        containerOp.addView(new CustomerInfoExtraData(mContext, OpextDatasModel, ismy, R.color.text33, 0, true, true, false));
-        containerRe.addView(new CustomerInfoExtraData(mContext, RextDatasModel, ismy, R.color.text33, 0, true, true, false));
+        containerOp.addView(new CustomerInfoExtraData(mContext, OpextDatasModel, ismy, R.color.text33, 0));
+        containerRe.addView(new CustomerInfoExtraData(mContext, RextDatasModel, ismy, R.color.text33, 0));
     }
 
     void getTempCustomer() {

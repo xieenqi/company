@@ -125,7 +125,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     @Extra("CustomerId")
     String mCustomerId;
     @Extra("canEdit")
-    private boolean canEdit;
+    boolean canEdit;
     private String addres;
     private Bundle mBundle;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
