@@ -348,7 +348,7 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkResponseForStatus(response);
+                HttpErrorCheck.checkCommitSus(response);
                 //不需要保存
                 cancelLoading();
                 isSave = false;
@@ -363,7 +363,7 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkErrorForStatus(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
