@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.tool.LogUtil;
 
 /**
@@ -20,11 +21,35 @@ import com.loyo.oa.v2.tool.LogUtil;
  */
 public class DialogHelp {
 
-    public static Dialog loadingDialog;//加载loading
+    public static LoadStatusView loadStatusDialog; //带成功失败的loading
+    public static Dialog loadingDialog;    //加载loading
     public static TextView tipTextView;
 
     public static void showLoading(Context context, String msg) {
         showLoading(context, msg, true);
+    }
+
+    /**
+     * 带成功,失败的加载Dialog
+     * */
+    public static void showStatusLoading(Context context,boolean outTouch){
+        loadStatusDialog = new LoadStatusView(context);
+        loadStatusDialog.setCanceledOnTouchOutside(outTouch);
+        loadStatusDialog.show();
+    }
+
+    /**
+     * 成功
+     * */
+    public static void successStatusLoad(){
+        loadStatusDialog.animSuccessEmbl();
+    }
+
+    /**
+     * 失败
+     * */
+    public static void errorStatusLoading(){
+        loadStatusDialog.animErrorEmbl();
     }
 
     /**

@@ -167,16 +167,12 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         ll_stage.setEnabled(getEditPriority());
         ll_product.setEnabled(true);
 
-        //机会 是否 是创建者
-        if (MainApp.user.id.equals(mSaleDetails.creatorId) && !isTeam || MainApp.user.isSuperUser) {
-            img_title_right.setVisibility(View.VISIBLE);
-        } else {
-            img_title_right.setVisibility(View.INVISIBLE);
-        }
+        boolean showActionsheet = getEditPriority() || canGenerateOrder();
+        img_title_right.setVisibility(showActionsheet?View.VISIBLE: View.INVISIBLE);
+
         //已通过的审批 任何人都不能删除
         if (mSaleDetails.wfState == 0 && mSaleDetails.prob == 100) {
             iv_wfstatus.setEnabled(false);
-            img_title_right.setVisibility(View.INVISIBLE);
         }
 
         title.setText(mSaleDetails.getName());
@@ -223,7 +219,6 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             layout_losereson.setVisibility(View.GONE);
         }
         if (100 == mSaleDetails.prob) {//销售阶段是赢单的时候
-            img_title_right.setVisibility((mSaleDetails.prob == 100 && MainApp.user.id.equals(mSaleDetails.creatorId)) ? View.VISIBLE : View.GONE);
             iv_wfstatus.setVisibility(View.VISIBLE);
             switch (mSaleDetails.wfState) {
                 case 1:
@@ -340,12 +335,24 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         return canEdit;
     }
 
+    private boolean canGenerateOrder() {
+        boolean canEdit = (null != mSaleDetails)                 /*未异常*/
+                &&
+                (100 == mSaleDetails.prob                                         /*未赢单*/
+                        && (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5/*赢单未通过*/
+                        && mSaleDetails.wfState != 0 /*赢单需要审核*/
+                        && mSaleDetails.wfState!=1 && mSaleDetails.wfState!=2  ) // 待审核,审核中
+                )
+                && MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/;
+        return canEdit;
+    }
+
     /**
      * 右上角菜单
      */
     private void functionBuuton() {
         ActionSheetDialog dialog = new ActionSheetDialog(SaleDetailsActivity.this).builder();
-        if (mSaleDetails.prob != 100 || mSaleDetails.wfState == 3) {
+        if (getEditPriority()) {
             dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
@@ -353,7 +360,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         }
-        if (mSaleDetails.prob == 100) {
+        if (canGenerateOrder()) {
             dialog.addSheetItem("生成订单", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
@@ -369,7 +376,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         }
-        if (mSaleDetails.prob != 100 || mSaleDetails.wfState == 3) {
+        if (getEditPriority()) {
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {

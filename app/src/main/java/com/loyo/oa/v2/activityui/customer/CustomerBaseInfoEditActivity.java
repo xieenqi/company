@@ -78,7 +78,6 @@ public class CustomerBaseInfoEditActivity extends BaseActivity {
                 ServerAPI.request(this, ServerAPI.PUT, FinalVariables.customers + customer.getId(), stringEntity, ServerAPI.CONTENT_TYPE_JSON, AsyncUpdateCustomer.class);
                 break;
             default:
-
                 break;
         }
 
