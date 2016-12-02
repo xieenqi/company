@@ -149,7 +149,6 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
      * 编辑销售阶段
      */
     public void editStage() {
-        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("stageId", stageId);
         map.put("cId", selectId);
