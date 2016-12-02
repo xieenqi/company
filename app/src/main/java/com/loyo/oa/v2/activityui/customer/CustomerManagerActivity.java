@@ -26,6 +26,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
@@ -94,7 +95,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     /**
      * 游客
      */
-    public final static int CUSTOMER_MMP  = 5;
+    public final static int CUSTOMER_MMP = 5;
 
 
     /**
@@ -116,7 +117,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
 
     private Animation rotateAnimation;//标题动画
     private FragmentManager fragmentManager = getSupportFragmentManager();
-    private int mIndex = -1;
+    private int mIndex = -1, jumpType;
     private float mRotation = 0;
 
     private ArrayList<Tag> mTags;
@@ -131,6 +132,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_opportunities);
+        getIentenData();
         initView();
     }
 
@@ -167,6 +169,11 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
                         HttpErrorCheck.checkError(error);
                     }
                 });
+    }
+
+    private void getIentenData() {
+        //主要是推送过来
+        jumpType = getIntent().getIntExtra(ExtraAndResult.EXTRA_TYPE, 0);
     }
 
     /**
@@ -251,7 +258,12 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
             }
             fragments.add(fragment);
         }
-        changeChild(0);
+        if (jumpType == 0 || jumpType == HttpJpushNotification.JumpType.MY_RESON.getValue()) {
+            changeChild(0);
+        } else if (jumpType == HttpJpushNotification.JumpType.MY_MEMBER.getValue()) {
+            changeChild(1);
+            setTitle("我参与的");
+        }
     }
 
     /**

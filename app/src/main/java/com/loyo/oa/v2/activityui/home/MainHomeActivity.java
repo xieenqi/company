@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.home.cusview.SlidingMenu;
@@ -35,6 +36,7 @@ import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.db.OrganizationManager;
+import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
@@ -297,10 +299,16 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     MainApp.jpushData = null;
                     break;
                 case 6://客户详情
-                    intent.setClass(MainHomeActivity.this, CustomerDetailInfoActivity_.class);
-                    intent.putExtra("Id", MainApp.jpushData.buzzId);
-                    intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
-                    startActivity(intent);
+                    if (MainApp.jpushData.jumpType == HttpJpushNotification.JumpType.NUONE.getValue()) {
+                        intent.setClass(MainHomeActivity.this, CustomerDetailInfoActivity_.class);
+                        intent.putExtra("Id", MainApp.jpushData.buzzId);
+                        intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
+                        startActivity(intent);
+                    } else {
+                        intent.setClass(MainHomeActivity.this, CustomerManagerActivity.class);
+                        intent.putExtra(ExtraAndResult.EXTRA_TYPE, MainApp.jpushData.jumpType);
+                        startActivity(intent);
+                    }
                     MainApp.jpushData = null;
                     break;
                 case 16://订单详情
