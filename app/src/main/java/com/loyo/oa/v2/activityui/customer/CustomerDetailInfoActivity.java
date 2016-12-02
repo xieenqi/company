@@ -405,11 +405,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*联系人*/
             case R.id.layout_contact:
                 try {
-                    bundle.putBoolean("isLock", mCustomer.lock);
-                    bundle.putBoolean("isMyUser", isMyUser);
-                    bundle.putBoolean("isRoot", isRoot);
-                    bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, mPresenter.isMenber(mCustomer));
                     bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
+                    boolean canEdit = mCustomer!=null &&
+                            PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                                    mCustomer.state, CustomerAction.CONTACT_ADD);
+                    bundle.putBoolean("canEdit", canEdit);
                     _class = CustomerContactManageActivity_.class;
                     requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
                 } catch (NullPointerException e) {
