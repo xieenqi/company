@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerDetailinfoPresenterimpl;
@@ -25,14 +26,15 @@ import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -80,14 +82,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     String id;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户" 5.游客
-    public boolean isLock;
-    public boolean isMyUser;
     public boolean isPutOcen;
     public boolean isEdit;
-    public boolean isRoot = false;
-    private boolean isMem = false;
-    private boolean isTourist; //true:游客状态
-    private MembersRoot memRoot;
+    public boolean canEdit;
     private Contact mContact;
     private RelativeLayout layout_wirete, layout_phone;
     private LinearLayout layout_gj, layout_sign;
@@ -103,8 +100,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         tv_title_1.setText("客户详情");
         showLoading("", false);
 
-        isTourist = getIntent().getBooleanExtra(ExtraAndResult.EXTRA_OBJ,false);
-
         layout_wirete = (RelativeLayout) findViewById(R.id.layout_wirete);
         layout_phone = (RelativeLayout) findViewById(R.id.layout_phone);
         layout_gj = (LinearLayout) findViewById(R.id.layout_gj);
@@ -117,6 +112,20 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         layout_gj.setOnTouchListener(Global.GetTouch());
 
         mPresenter = new CustomerDetailinfoPresenterimpl(mContext, this);
+
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.VISIT_TIMELINE)) {
+            layout_gj.setVisibility(View.VISIBLE);
+        }
+        else {
+            layout_gj.setVisibility(View.GONE);
+        }
+
+        if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
+            layout_sign.setVisibility(View.VISIBLE);
+        }
+        else {
+            layout_sign.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -132,62 +141,47 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private void initData() {
 
         if (null == mCustomer) {
+            finish();
             return;
         }
 
-        /*超级管理员,我的客户,Web权限控制判断*/
-        if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 4) {
-            img_public.setVisibility(View.VISIBLE);
-            layout_menu.setVisibility(View.GONE);
-        } else {
-            if (customerType == 4) {
-                /* 客户挑入权限 */
-                if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_PICKING)) {
-                    if(!isTourist){
-                        img_public.setVisibility(View.VISIBLE);
-                    }
-                    layout_menu.setVisibility(View.GONE);
+        if (! PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.PREVIEW)) {
+            sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dismissSweetAlert();
+                    finish();
                 }
-            }
+            }, "提示", "你无此功能权限");
+            return;
         }
 
-        if (memRoot.getValue().equals("0")) {
-            isRoot = false;
-        } else {
-            isRoot = true;
-        }
+        boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.DELETE);
+        boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.DUMP);
+        boolean canPickin = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.PICK_IN);
+        img_title_right.setVisibility((!canDelete && !canDump)?View.GONE : View.VISIBLE);
+        img_public.setEnabled(canPickin);
+        img_public.setVisibility(canPickin?View.VISIBLE : View.GONE);
 
-        /*判断是否有操作权限，来操作改客户信息
-        * 本地userid与服务器回传ownerId比较，相等则是自己的客户，islock＝true为自己客户，false在公海中
-        * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
-        * */
-        isMyUser = (customerType != 4) ? true : false;
+        boolean canVisit = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.VISIT);
+        layout_sign.setVisibility(canVisit?View.VISIBLE : View.GONE);
 
-        if (mCustomer.lock) {
-            if (null != mCustomer.owner) {
-                if (mCustomer.owner.id.equals(MainApp.user.getId())) {
-                    img_title_right.setOnTouchListener(Global.GetTouch());
-                } else {
-                    img_title_right.setVisibility(View.INVISIBLE);
-                    isMem = true;
-                }
-            }
-        } else {
-            img_title_right.setVisibility(View.INVISIBLE);
-            isMem = true;
-        }
-
-        if (customerType == 3 /*团队客户火力全开 相当于自己的客户*/ ) {
-            img_title_right.setVisibility(View.VISIBLE);
-        }else if(customerType == 5 /*游客*/){
-            img_title_right.setVisibility(View.INVISIBLE);
+        boolean canFollowup = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.FOLLOWUP_ADD);
+        layout_gj.setVisibility(canFollowup?View.VISIBLE : View.GONE);
+        if (! canVisit && ! canFollowup) {
             layout_menu.setVisibility(View.GONE);
-            mCustomer.lock = false;
-            isMem = true;
-            isRoot = false;
-            isMyUser = false;
         }
 
+        canEdit = PermissionManager.getInstance().hasCustomerAuthority(
+                mCustomer.relationState,
+                mCustomer.state,
+                CustomerAction.EDIT);
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         layout_customer_info.setOnTouchListener(Global.GetTouch());
@@ -300,7 +294,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*选择标签*/
             case R.id.iv_select_tag:
                 mIntent = new Intent(CustomerDetailInfoActivity.this, CustomerLabelCopyActivity.class);
-                mIntent.putExtra("isMem", isMem);
+                mIntent.putExtra("canEdit", canEdit);
                 mIntent.putExtra("fromPage", 0);
                 if (null != mTagItems) {
                     mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
@@ -336,16 +330,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*菜单*/
             case R.id.img_title_right:
-                mPresenter.showEditPopu(CustomerDetailInfoActivity.this);
+                onActionsheet();
                 break;
 
             /*客户信息*/
             case R.id.layout_customer_info:
-                bundle.putBoolean("isRoot", isRoot);
                 bundle.putSerializable("Customer", mCustomer);
-                bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 4);
-                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, mPresenter.isMenber(mCustomer));
+                bundle.putBoolean("canEdit", canEdit);
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
                 break;
@@ -371,11 +362,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*联系人*/
             case R.id.layout_contact:
                 try {
-                    bundle.putBoolean("isLock", mCustomer.lock);
-                    bundle.putBoolean("isMyUser", isMyUser);
-                    bundle.putBoolean("isRoot", isRoot);
-                    bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, mPresenter.isMenber(mCustomer));
                     bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
+                    boolean canEdit = mCustomer!=null &&
+                            PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                                    mCustomer.state, CustomerAction.CONTACT_ADD);
+                    bundle.putBoolean("canEdit", canEdit);
                     _class = CustomerContactManageActivity_.class;
                     requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
                 } catch (NullPointerException e) {
@@ -408,28 +399,40 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*跟进动态列表*/
             case R.id.layout_sale_activity:
-                bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = CustomerFollowUpListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;
             /*拜访签到*/
             case R.id.layout_visit:
-                bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = CustomerSigninListActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;
                 break;
             /*任务计划*/
             case R.id.layout_task:
-                bundle.putBoolean("isMyUser", isMyUser);
+                boolean canAddTask = mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.TASK_ADD
+                        );
+                bundle.putBoolean("canAdd", canAddTask);
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = TaskListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS;
                 break;
             /*文件*/
             case R.id.layout_attachment:
-                bundle.putBoolean("isMyUser", isMyUser);
+
+                boolean canAdd = mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.ATTACHMENT_ADD
+                        );
+
+                bundle.putBoolean("canAdd", canAdd);
                 bundle.putInt("fromPage", Common.CUSTOMER_PAGE);
                 bundle.putSerializable("uuid", mCustomer.uuid);
                 bundle.putInt("bizType", 6);
@@ -438,7 +441,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*销售机会*/
             case R.id.ll_sale:
-                bundle.putBoolean("isMyUser", isMyUser);
+                boolean canAddSaleOpportunity = mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.SALE_OPPORTUNITY_ADD
+                        );
+                bundle.putBoolean("canAdd", canAddSaleOpportunity);
                 bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = SaleManageActivity.class;
@@ -446,7 +455,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*订单管理*/
             case R.id.ll_order:
-                bundle.putBoolean("isMyUser", isMyUser);
+                boolean canAddOrder= mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.ORDER_ADD
+                        );
+                bundle.putBoolean("canAdd", canAddOrder);
                 bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = CustomerOrderList.class;
@@ -456,6 +471,34 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         if (null != _class && requestCode != -1) {
             goToChild(bundle, _class, requestCode);
         }
+    }
+
+    private void onActionsheet() {
+        boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.DELETE);
+        boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.DUMP);
+
+        if (!canDelete && !canDump) {
+            return;
+        }
+
+        ActionSheetDialog dialog = new ActionSheetDialog(this).builder();
+        if (canDelete)
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    setPopViewEmbl(true, "你确定要删除客户?");
+                }
+            });
+        if (canDump)
+            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+                }
+            });
+        dialog.show();
     }
 
     /**
@@ -551,7 +594,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      */
     @Override
     public void getMembersRootEmbl(MembersRoot membersRoot) {
-        memRoot = membersRoot;
+        PermissionManager.getInstance().loadCRMConfig(membersRoot);
         initData();
     }
 
@@ -560,7 +603,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      */
     @Override
     public void getDataSuccessEmbl(Customer customer) {
-        isLock = customer.lock;
         mCustomer = customer;
         mPresenter.getMembersRoot();
     }

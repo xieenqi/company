@@ -14,7 +14,7 @@ import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.TaskRecord;
@@ -59,7 +59,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     @Extra
     Customer mCustomer;
     @Extra
-    boolean isMyUser;
+    boolean canAdd;
 
     private PaginationX<TaskRecord> taskPaginationX = new PaginationX<>(20);
     private ArrayList<TaskRecord> tasks = new ArrayList<>();
@@ -74,9 +74,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("任务管理");
         layout_back.setOnTouchListener(Global.GetTouch());
-        if (!isMyUser) {
-            layout_add.setVisibility(View.GONE);
-        }
+        layout_add.setVisibility(canAdd?View.VISIBLE:View.GONE);
 
         layout_add.setOnTouchListener(Global.GetTouch());
     }

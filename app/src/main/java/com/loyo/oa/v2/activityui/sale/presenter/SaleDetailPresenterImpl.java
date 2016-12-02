@@ -44,6 +44,7 @@ public class SaleDetailPresenterImpl implements SaleDetailContract.Presenter {
     @Override
     public void editSaleStage(HashMap<String, Object> map, String selectId) {
         mView.showProgress("");
+        model.editSaleStageSend(map,selectId);
     }
 
     @Override

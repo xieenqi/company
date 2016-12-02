@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
@@ -33,11 +34,16 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 【我的跟进列表】adapter
@@ -250,6 +256,20 @@ public class SigninNewListAdapter extends BaseAdapter {
         holder.tv_customer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                boolean customerAuth = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT);
+                if (!customerAuth) {
+
+                    SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(mContext);
+                    sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                        }
+                    }, "提示", "你无此功能权限");
+                    return;
+                }
+
                 Intent intent = new Intent();
                 intent.putExtra("Id", signinNewListModel.customerId);
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MMP);

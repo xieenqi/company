@@ -1,11 +1,9 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
-import com.loyo.oa.v2.activityui.customer.model.CallBackResp;
-import com.loyo.oa.v2.activityui.customer.model.CallClientInfo;
-import com.loyo.oa.v2.activityui.customer.model.CallUserResp;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRepeatList;
 import com.loyo.oa.v2.activityui.customer.model.Industry;
@@ -13,16 +11,16 @@ import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.Product;
-import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
 import com.loyo.oa.v2.activityui.other.model.SaleStage;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerFollowUpModel;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.network.model.BaseResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,9 +90,15 @@ public interface ICustomer {
      *
      * @param id       customer/mobile/574eb3ef526f155720edde30?_=1465786248655
      * @param callback
+     *
+     * Updated by Ethan 2016-11-30
+     *
+     * @param id       customer/new/574eb3ef526f155720edde30?_=1465786248655
+     * @param callback
+     *
      */
-    @GET("/customer/mobile/{id}")
-    void getCustomerById(@Path("id") String id, Callback<Customer> callback);
+    @GET("/customer/new/{id}")
+    void getCustomerById(@Path("id") String id, Callback<BaseResponse<Customer>> callback);
 
     @GET("/properties/")
     void getDynamic(@QueryMap HashMap<String, Object> map, Callback<ArrayList<CustomerExtraData>> callback);

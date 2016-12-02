@@ -43,7 +43,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
     private ArrayList<TagItem> mTagItems;
     private String mCustomerId;
     private ArrayList<Tag> tags = new ArrayList<>();
-    private boolean isMem;
+    private boolean canEdit;
     private int fromPage; /*0:详情 1:信息*/
 
     @Override
@@ -58,7 +58,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
 
         mTagItems = (ArrayList<TagItem>) getIntent().getSerializableExtra("tagitems");
         mCustomerId = getIntent().getStringExtra("customerId");
-        isMem = getIntent().getBooleanExtra("isMem",false);
+        canEdit = getIntent().getBooleanExtra("canEdit",false);
         fromPage = getIntent().getIntExtra("fromPage",0);
 
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
@@ -72,7 +72,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
             mTagItems = new ArrayList<>();
         }
 
-        if (isMem) {
+        if (!canEdit) {
             img_title_right.setVisibility(View.GONE);
         }
 
@@ -86,7 +86,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
             }
         });
 
-        if (!isMem) {
+        if (canEdit) {
             expand_listview_label.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
@@ -318,9 +318,7 @@ public class CustomerLabelCopyActivity extends BaseActivity implements View.OnCl
             TagItem item = (TagItem) getChild(groupPosition, childPosition);
             item_info_Child.tv_title.setText(item.getName());
             item_info_Child.cb.setChecked(item.isChecked());
-            if (isMem) {
-                convertView.setEnabled(false);
-            }
+            convertView.setEnabled(canEdit);
             return convertView;
         }
 

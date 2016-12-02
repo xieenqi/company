@@ -18,7 +18,7 @@ import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -245,15 +245,17 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         }
         for (int i = 0; i < customers.size(); i++) {
             Customer customer = customers.get(i);
-            double lat = customer.loc.loc[1];
-            double lng = customer.loc.loc[0];
-            aMap.addMarker(new MarkerOptions().anchor(0.8f, 0.8f).icon(customerType == 1 ? (i < isMySize ? markMy : markCompany) : markTeam)
-                    .position(new LatLng(lat, lng)).title(customer.name)
-                    .snippet(customer.loc.addr).draggable(true));
-            OverlayItem item = new OverlayItem();
-            item.latLng = new LatLng(lat, lng);
-            item.customer = customer;
-            points.add(item);
+            if (customer.loc != null && customer.loc.loc.length > 1) {
+                double lat = customer.loc.loc[1];
+                double lng = customer.loc.loc[0];
+                aMap.addMarker(new MarkerOptions().anchor(0.8f, 0.8f).icon(customerType == 1 ? (i < isMySize ? markMy : markCompany) : markTeam)
+                        .position(new LatLng(lat, lng)).title(customer.name)
+                        .snippet(customer.loc.addr).draggable(true));
+                OverlayItem item = new OverlayItem();
+                item.latLng = new LatLng(lat, lng);
+                item.customer = customer;
+                points.add(item);
+            }
         }
         LogUtil.d("缩放基本：vdf" + customers.size());
         return points;

@@ -13,7 +13,7 @@ import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -54,14 +54,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     ViewGroup layout_add;
     @Extra(ExtraAndResult.EXTRA_ID)
     String customerId;
-    @Extra("isMyUser")
-    boolean isMyUser;
-    @Extra("isRoot")
-    boolean isRoot;
-    @Extra("isLock")
-    boolean isLock;
-    @Extra(ExtraAndResult.EXTRA_STATUS)
-    boolean isMenber;
+    @Extra("canEdit")
+    boolean canEdit;
 
     private Customer customerContact;
     private ArrayList<ContactLeftExtras> leftExtrases;
@@ -74,13 +68,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     @AfterViews
     void initViews() {
-        if (!isLock) {
-            layout_add.setVisibility(View.GONE);
-        } else if (!isMyUser || isMenber) {
-            if (!isRoot) {
-                layout_add.setVisibility(View.GONE);
-            }
-        }
+
+        layout_add.setVisibility(canEdit?View.VISIBLE:View.GONE);
 //        setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("联系人详情");
@@ -162,7 +151,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         for (int i = 0; i < contactsCopy.size(); i++) {
             Contact contact = contactsCopy.get(i);
             ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, leftExtrases, contact, this);
-            contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber, isRoot, isLock);
+            contactViewGroup.bindView(i + 1, layout_container, canEdit);
         }
 
         cancelLoading();

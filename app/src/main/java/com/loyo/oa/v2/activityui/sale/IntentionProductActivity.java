@@ -93,8 +93,8 @@ public class IntentionProductActivity extends BaseActivity {
      * 获得传递过来的数据
      */
     private void getIntentData() {
-        canEdit = getIntent().getBooleanExtra(KEY_CAN_EDIT, false);
-        canDelete = getIntent().getBooleanExtra(KEY_CAN_DELETE, false);
+        canEdit = getIntent().getBooleanExtra(KEY_CAN_EDIT, true/* 临时调整 */);
+        canDelete = getIntent().getBooleanExtra(KEY_CAN_DELETE, true/* 临时调整 */);
         saleId = getIntent().getStringExtra("saleId");
         fromPage = getIntent().getIntExtra("data", 0);
         isKine = getIntent().getBooleanExtra("boolean", false);

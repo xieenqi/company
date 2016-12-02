@@ -60,7 +60,7 @@ public class LoadingLayout extends FrameLayout {
     private static String netwrokStr = "无网络连接，请检查网络···";
     private static String reloadBtnStr = "点击重试";
     private static int emptyImgId = R.drawable.define_empty;
-    private static int errorImgId = R.drawable.define_empty;//需要定义错误
+    private static int errorImgId = R.drawable.define_error;//需要定义错误
     private static int networkImgId = R.drawable.define_nonetwork;
     private static int reloadBtnId = R.drawable.retage_bule;//重试按钮 的边框
     private static int tipTextSize = 14;

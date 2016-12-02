@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.DialogHelp;
@@ -125,6 +126,7 @@ public class HttpErrorCheck {
         }
     }
 
+<<<<<<< HEAD
     public static void checkResponseForStatus(Response response) {
         DialogHelp.successStatusLoad();
         try {
@@ -146,6 +148,11 @@ public class HttpErrorCheck {
     public static void checkErrorForStatus(RetrofitError error) {
         DialogHelp.errorStatusLoading();
         LogUtil.d("网络异常" + error.getMessage());
+=======
+    public static void checkError(RetrofitError error, LoadingLayout loadingLayout) {
+//        DialogHelp.cancelLoading();
+        LogUtil.d("loading网络异常: " + error.getMessage());
+>>>>>>> 68109afa710e74e28a05c9e4d514efd5fcf2bd34
         LogUtil.d("error接口URL：" + error.getUrl());
 
         try {
@@ -157,11 +164,22 @@ public class HttpErrorCheck {
             LogUtil.d("error获得的：", msg);
             JSONObject job = new JSONObject(msg);
             if (500 == error.getResponse().getStatus()) {
+<<<<<<< HEAD
                 Toast(job.getString("error"));
             } else if (401 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
             } else if (404 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
+=======
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText(job.getString("error"));
+            } else if (401 == error.getResponse().getStatus()) {
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText(job.getString("error"));
+            } else if (404 == error.getResponse().getStatus()) {
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText(job.getString("error"));
+>>>>>>> 68109afa710e74e28a05c9e4d514efd5fcf2bd34
             } else if (406 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
                 //到侧边栏 退出系统到登录界面
@@ -172,8 +190,13 @@ public class HttpErrorCheck {
             } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
                 Toast("请检查您的网络连接");
             } else {
+<<<<<<< HEAD
                 String errorInfo = job.getString("error");
                 Toast(errorInfo);
+=======
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText(job.getString("error"));
+>>>>>>> 68109afa710e74e28a05c9e4d514efd5fcf2bd34
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
@@ -181,10 +204,18 @@ public class HttpErrorCheck {
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
             e.printStackTrace();
+<<<<<<< HEAD
             Toast("连接服务器失败");
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
             Toast("服务端数据异常");
+=======
+            loadingLayout.setStatus(LoadingLayout.No_Network);
+        } catch (JSONException e) {
+            LogUtil.d("JSON异常err:" + error.getUrl());
+            loadingLayout.setStatus(LoadingLayout.Error);
+            loadingLayout.setErrorText("服务端数据异常");
+>>>>>>> 68109afa710e74e28a05c9e4d514efd5fcf2bd34
             e.printStackTrace();
         }
     }
@@ -238,13 +269,11 @@ public class HttpErrorCheck {
             case 2:
                 Toast("请求参数错误");
                 break;
-            default:
-            {
+            default: {
                 String msg;
                 if (!TextUtils.isEmpty(data.errmsg)) {
                     msg = data.errmsg;
-                }
-                else {
+                } else {
                     msg = "服务器出错";
                 }
                 if (data.errcode != 0) {

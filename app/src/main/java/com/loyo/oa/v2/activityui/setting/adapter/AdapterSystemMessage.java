@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activityui.setting.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,23 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
-import com.loyo.oa.v2.activityui.home.MainHomeActivity;
-import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
-import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
-import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
-import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItemType;
-import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
-import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activityui.work.WorkReportsInfoActivity_;
-import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.multi_image_selector.bean.Image;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;

@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.activityui.followup.viewcontrol;
 
 import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.BaseView;
 
 import java.util.ArrayList;

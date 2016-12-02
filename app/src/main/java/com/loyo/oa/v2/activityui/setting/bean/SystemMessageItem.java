@@ -17,4 +17,5 @@ public class SystemMessageItem implements Serializable {
     public long createdAt;
     public long viewedAt;
     public SystemMessageItemType bizzType;
+    public int jumpType;
 }

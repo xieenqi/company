@@ -64,6 +64,8 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
                     if (isTopAdd) {
                         bulletins.clear();
+                        if (lstData_bulletin_current != null && !(lstData_bulletin_current.size() > 0))
+                            crolView.emptyData();
                     }
                     bulletins.addAll(lstData_bulletin_current);
                     crolView.bindListData();
@@ -75,7 +77,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error,crolView.getLoadingLayout());
                 super.failure(error);
                 crolView.refreshCmpl();
             }
