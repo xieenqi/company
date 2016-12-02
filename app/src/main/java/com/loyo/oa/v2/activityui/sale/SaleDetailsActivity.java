@@ -345,7 +345,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
      */
     private void functionBuuton() {
         ActionSheetDialog dialog = new ActionSheetDialog(SaleDetailsActivity.this).builder();
-        if (mSaleDetails.prob != 100 || mSaleDetails.wfState == 3) {
+        if (getEditPriority()) {
             dialog.addSheetItem("编辑", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
@@ -369,7 +369,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         }
-        if (mSaleDetails.prob != 100 || mSaleDetails.wfState == 3) {
+        if (getEditPriority()) {
             dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
                 @Override
                 public void onClick(int which) {
