@@ -103,11 +103,13 @@ public class Customer extends BaseBeans {
      * Added by Ethan 2016-11-30
      *
      * "state": 1,  // 1表示普通客户，2表示公海客户，3表示回收站客户
-     * "relationState": 1, // 1表示责任人，2表示参与人，3表示与责任人同部门，4表示业务相关
+     * "relationState": 1, // 1表示责任人，2表示参与人，3表示关联业务人员
+     * "isStartUsing": true 客户管理菜单是否启用 1:是 0否
      */
 
     public int state;
     public int relationState;
+    public boolean isStartUsing;
 
 
     public final static int NormalCustomer = 1;              /*1表示普通客户*/
@@ -116,15 +118,14 @@ public class Customer extends BaseBeans {
 
     public final static int RelationResponsible = 1;         /*1表示责任人*/
     public final static int RelationParticipated = 2;        /*2表示参与人*/
-    public final static int RelationResponsibleSameDept = 3; /*3表示与责任人同部门*/
-    public final static int RelationInvolved = 4;            /*4表示业务相关*/
+    public final static int RelationInvolved = 3;            /*3表示业务相关*/
 
     @IntDef ({NormalCustomer, DumpedCustomer, RecycledCustomer})
     @Retention(RetentionPolicy.SOURCE)
     public @interface CustomerState {
     }
 
-    @IntDef ({RelationResponsible, RelationParticipated, RelationResponsibleSameDept, RelationInvolved})
+    @IntDef ({RelationResponsible, RelationParticipated, RelationInvolved})
     @Retention(RetentionPolicy.SOURCE)
     public @interface RelationState {
     }

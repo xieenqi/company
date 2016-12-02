@@ -9,19 +9,20 @@ import android.view.View;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerDetailInfoPresenter;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IClue;
@@ -125,15 +126,15 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void getData(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<BaseResponse<Customer>>() {
             @Override
-            public void success(final Customer customer, final Response response) {
+            public void success(final BaseResponse<Customer> customerResp, final Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
-                if (customer == null) {
+                if (customerResp == null || customerResp.data == null) {
                     crolView.showMsg("获取数据失败");
                     return;
                 }
-                crolView.getDataSuccessEmbl(customer);
+                crolView.getDataSuccessEmbl(customerResp.data);
             }
 
             @Override

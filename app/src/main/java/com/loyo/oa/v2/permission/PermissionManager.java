@@ -1,13 +1,12 @@
 package com.loyo.oa.v2.permission;
 
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.activityui.other.model.User;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 
 import java.util.EnumSet;
 import java.util.HashMap;
 
-import static com.loyo.oa.v2.permission.BusinessOperation.CUSTOMER_MANAGEMENT;
+import static com.loyo.oa.v2.application.MainApp.user;
 import static com.loyo.oa.v2.permission.CustomerAction.ATTACHMENT_ADD;
 import static com.loyo.oa.v2.permission.CustomerAction.CONTACT_ADD;
 import static com.loyo.oa.v2.permission.CustomerAction.DELETE;
@@ -26,7 +25,6 @@ import static com.loyo.oa.v2.permission.CustomerAction.SALE_OPPORTUNITY_ADD;
 import static com.loyo.oa.v2.permission.CustomerAction.TASK_ADD;
 import static com.loyo.oa.v2.permission.CustomerAction.VISIT;
 import static com.loyo.oa.v2.permission.CustomerAuthority.INVOLVED_VISITOR_LEVEL;
-import static com.loyo.oa.v2.permission.CustomerAuthority.NONE_AUTHORITY_LEVEL;
 import static com.loyo.oa.v2.permission.CustomerAuthority.PARTICIPATED_PERSON_LEVEL;
 import static com.loyo.oa.v2.permission.CustomerAuthority.RESPONSIBLE_PERSON_LEVEL;
 
@@ -42,12 +40,21 @@ public class PermissionManager {
 
     private HashMap<String, Permission> data = new HashMap<>();
 
+    private MembersRoot crmConfigMemberEdit;
+
     private PermissionManager() {
     }
 
     public PermissionManager init(HashMap<String, Permission> map) {
         if (map != null) {
             data = map;
+        }
+        return this;
+    }
+
+    public PermissionManager loadCRMConfig(MembersRoot crmConfigMemberEdit) {
+        if (crmConfigMemberEdit != null) {
+            this.crmConfigMemberEdit = crmConfigMemberEdit;
         }
         return this;
     }
@@ -99,8 +106,8 @@ public class PermissionManager {
 
     /* 超级管理员权限 */
     public boolean hasSuperPriority() {
-        if (MainApp.user != null) {
-            return MainApp.user.isSuperUser;
+        if (user != null) {
+            return user.isSuperUser;
         }
         return false;
     }
@@ -155,7 +162,6 @@ public class PermissionManager {
 
     public boolean hasCustomerAuthority(@Customer.RelationState int relationState,
                                         @Customer.CustomerState int state,
-                                        boolean sameDept,
                                         CustomerAction action) {
 
         /* 超级管理员 */
@@ -180,13 +186,13 @@ public class PermissionManager {
             return false;
         }
 
-        CustomerAuthority authorityLevel = getAuthorityLevel(relationState, sameDept, action);
+        CustomerAuthority authorityLevel = getAuthorityLevel(relationState);
         EnumSet<CustomerAction> set = TABLE[authorityLevel.ordinal()][state-1];
         if (set.contains(action)) {
 
             // specially 参与人的编辑权限，判断CRM config
             if (CustomerAction.EDIT== action && authorityLevel == PARTICIPATED_PERSON_LEVEL) {
-                return false; // TODO:
+                return crmConfigMemberEdit!=null&&crmConfigMemberEdit.enabled();
             }
 
             return true;
@@ -195,47 +201,23 @@ public class PermissionManager {
         return false;
     }
 
-    public CustomerAuthority getAuthorityLevel(User user,
-                                               @Customer.RelationState int relationState,
-                                               boolean sameDept,
-                                               CustomerAction action) {
+    public CustomerAuthority getAuthorityLevel(@Customer.RelationState int relationState) {
 
-        if (user != null && user.isSuperUser) {
-            return RESPONSIBLE_PERSON_LEVEL;
+        CustomerAuthority level;
+        switch(relationState) {
+            case Customer.RelationResponsible:
+                level = RESPONSIBLE_PERSON_LEVEL;
+                break;
+            case Customer.RelationParticipated:
+                level = PARTICIPATED_PERSON_LEVEL;
+                break;
+            case Customer.RelationInvolved:
+                level = INVOLVED_VISITOR_LEVEL;
+                break;
+            default:
+                level = INVOLVED_VISITOR_LEVEL;
+                break;
         }
-
-        if (! hasPermission(CUSTOMER_MANAGEMENT)) {
-            return NONE_AUTHORITY_LEVEL;
-        }
-
-        if (relationState == Customer.RelationResponsible) {
-            return RESPONSIBLE_PERSON_LEVEL;
-        }
-
-        @BusinessOperation.Type String operation = action.bizOp;
-        if (BusinessOperation.DEFAULT.equals(operation)) {
-            operation = CUSTOMER_MANAGEMENT;
-        }
-
-        if (dataRange(operation) <= Permission.COMPANY) {
-            return RESPONSIBLE_PERSON_LEVEL;
-        }
-
-        if (dataRange(operation) <= Permission.TEAM
-                && sameDept) {
-            return RESPONSIBLE_PERSON_LEVEL;
-        }
-
-        if (relationState == Customer.RelationParticipated) {
-            return PARTICIPATED_PERSON_LEVEL;
-        }
-
-        return INVOLVED_VISITOR_LEVEL;
-    }
-
-    public CustomerAuthority getAuthorityLevel(@Customer.RelationState int relationState,
-                                               boolean sameDept,
-                                               CustomerAction action) {
-        return getAuthorityLevel(MainApp.user, relationState, sameDept, action);
+        return level;
     }
 }

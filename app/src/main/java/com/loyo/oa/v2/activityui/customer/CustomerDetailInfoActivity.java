@@ -33,6 +33,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -146,6 +147,19 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     private void initData() {
 
         if (null == mCustomer) {
+            finish();
+            return;
+        }
+
+        if (! PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.PREVIEW)) {
+            sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    dismissSweetAlert();
+                    finish();
+                }
+            }, "提示", "你无此功能权限");
             return;
         }
 
@@ -566,6 +580,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @Override
     public void getMembersRootEmbl(MembersRoot membersRoot) {
         memRoot = membersRoot;
+        PermissionManager.getInstance().loadCRMConfig(membersRoot);
         initData();
     }
 
