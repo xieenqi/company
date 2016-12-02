@@ -5,7 +5,6 @@ import com.loyo.oa.dropdownmenu.model.MenuListType;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilterItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
