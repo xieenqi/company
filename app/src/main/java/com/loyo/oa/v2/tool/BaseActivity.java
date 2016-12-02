@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.library.module.common.SystemBarTintManager;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.activityui.login.LoginActivity;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
@@ -54,8 +55,8 @@ public class BaseActivity extends Activity {
     public CustomProgressDialog customProgressDialog;
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
-//    private GestureDetector mDetector;
     public SweetAlertDialogView sweetAlertDialogView;
+    public LoadStatusView loadView;
 
     /**
      * 搜索跳转分类
@@ -398,6 +399,13 @@ public class BaseActivity extends Activity {
                 });
             }
         }, 300);
+    }
+
+    /**
+     * 展示带成功失败动画加载框
+     * */
+    public void showDialogLoading(boolean outTouch){
+        DialogHelp.showStatusLoading(mContext,outTouch);
     }
 
     /**

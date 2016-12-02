@@ -79,7 +79,72 @@ public class HttpErrorCheck {
 
 
     public static void checkError(RetrofitError error) {
+        DialogHelp.errorStatusLoading();
         DialogHelp.cancelLoading();
+        LogUtil.d("网络异常" + error.getMessage());
+        LogUtil.d("error接口URL：" + error.getUrl());
+
+        try {
+            String msg = Utils.
+                    convertStreamToString(error.
+                            getResponse()
+                            .getBody()
+                            .in());
+            LogUtil.d("error获得的：", msg);
+            JSONObject job = new JSONObject(msg);
+            if (500 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (401 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (404 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (406 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+                //到侧边栏 退出系统到登录界面
+                Intent in = new Intent();
+                in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+                in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
+                LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
+            } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                Toast("请检查您的网络连接");
+            } else {
+                String errorInfo = job.getString("error");
+                Toast(errorInfo);
+            }
+            LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            LogUtil.d("Body空err:" + error.getUrl());
+            e.printStackTrace();
+            Toast("连接服务器失败");
+        } catch (JSONException e) {
+            LogUtil.d("JSON异常err:" + error.getUrl());
+            Toast("服务端数据异常");
+            e.printStackTrace();
+        }
+    }
+
+    public static void checkResponseForStatus(Response response) {
+        DialogHelp.successStatusLoad();
+        try {
+            String result = Utils.convertStreamToString(response.getBody().in());
+            LogUtil.d(" 接口成功result：" + result);
+            LogUtil.d(" 接口成功URL：" + response.getUrl());
+            checkResponseError(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            LogUtil.d("Body空response:" + response.getUrl());
+            e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void checkErrorForStatus(RetrofitError error) {
+        DialogHelp.errorStatusLoading();
         LogUtil.d("网络异常" + error.getMessage());
         LogUtil.d("error接口URL：" + error.getUrl());
 
@@ -142,6 +207,7 @@ public class HttpErrorCheck {
     }
 
     public static void checkResponse(Response response) {
+        DialogHelp.successStatusLoad();
         DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());

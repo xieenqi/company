@@ -16,6 +16,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.Department;
@@ -177,7 +178,25 @@ public class MainApp extends Application {
         JPushInterface.init(this);
         GlideManager.getInstance().initWithContext(getApplicationContext());
         VoIPManager.getInstance().init(this);
+        initLoadingConfig();
     }
+
+    private void initLoadingConfig() {
+        LoadingLayout.getConfig()
+                .setErrorText("出错啦~请稍后重试！")
+                .setEmptyText("暂无数据!")
+                .setNoNetworkText("网络不给力!")
+//                .setErrorImage(R.drawable.define_error)
+                .setEmptyImage(R.drawable.define_empty)
+                .setNoNetworkImage(R.drawable.define_nonetwork)
+                .setAllTipTextColor(R.color.text99)
+                .setAllTipTextSize(16)
+                .setReloadButtonText("重试")
+                .setReloadButtonTextColor(R.color.title_bg1)
+//                .setReloadButtonBackgroundResource(R.drawable.retage_bule)
+                .setReloadButtonTextSize(16);
+    }
+
 
     private void addActivityLifecycleCallback() {
 

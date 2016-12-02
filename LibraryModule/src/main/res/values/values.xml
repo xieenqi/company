@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="base_text_color_light">#999999</color>
+    <declare-styleable name="LoadingLayout"><attr format="boolean" name="isFirstVisible"/></declare-styleable>
+    <!--<string name="app_name">loadinglib</string>-->
+</resources>

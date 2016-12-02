@@ -69,6 +69,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -211,15 +213,13 @@ public class TasksAddActivity extends BaseActivity {
             newUser = Compat.convertStaffCollectionToNewUser(collection);
             if (newUser == null) {
                 tv_responsiblePerson.setText("无负责人");
-            }
-            else {
+            } else {
                 tv_responsiblePerson.setText(newUser.getName());
             }
-        }
-        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+        } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             members = Compat.convertStaffCollectionToMembers(collection);
-            if (null == members || (members.users.size()==0 && members.depts.size()==0)) {
+            if (null == members || (members.users.size() == 0 && members.depts.size() == 0)) {
                 tv_toUsers.setText("无参与人");
             } else {
                 joinName = new StringBuffer();
@@ -307,7 +307,8 @@ public class TasksAddActivity extends BaseActivity {
 
     void requestCommitTask() {
         if (pickPhots.size() == 0) {
-            showLoading("正在提交");
+            //showLoading("正在提交");
+            showDialogLoading(false);
         }
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
@@ -347,7 +348,7 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponseForStatus(response);
                 //不需要保存
                 cancelLoading();
                 isSave = false;
@@ -362,7 +363,7 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkErrorForStatus(error);
             }
         });
     }
@@ -436,8 +437,7 @@ public class TasksAddActivity extends BaseActivity {
                 break;
 
             //负责人选项
-            case R.id.layout_responsiblePerson:
-            {
+            case R.id.layout_responsiblePerson: {
                 StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(newUser);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
@@ -451,11 +451,10 @@ public class TasksAddActivity extends BaseActivity {
                 startActivity(intent);
             }
 
-                break;
+            break;
 
             //参与人选项
-            case R.id.tv_toUsers:
-            {
+            case R.id.tv_toUsers: {
                 StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
@@ -468,7 +467,7 @@ public class TasksAddActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
 
             case R.id.layout_del:
                 userss.clear();
