@@ -32,6 +32,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -162,6 +163,16 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             }, "提示", "你无此功能权限");
             return;
         }
+
+        boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.DELETE);
+        boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.DUMP);
+        boolean canPickin = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.PICK_IN);
+        img_title_right.setVisibility((!canDelete && !canDump)?View.GONE : View.VISIBLE);
+        img_public.setEnabled(canPickin);
+        img_public.setVisibility(canPickin?View.VISIBLE : View.GONE);
 
         /*超级管理员,我的客户,Web权限控制判断*/
         if (null != MainApp.user && MainApp.user.isSuperUser() && customerType == 4) {
@@ -364,7 +375,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*菜单*/
             case R.id.img_title_right:
-                mPresenter.showEditPopu(CustomerDetailInfoActivity.this);
+                onActionsheet();
                 break;
 
             /*客户信息*/
@@ -484,6 +495,34 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         if (null != _class && requestCode != -1) {
             goToChild(bundle, _class, requestCode);
         }
+    }
+
+    private void onActionsheet() {
+        boolean canDelete = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.DELETE);
+        boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.DUMP);
+
+        if (!canDelete && !canDump) {
+            return;
+        }
+
+        ActionSheetDialog dialog = new ActionSheetDialog(this).builder();
+        if (canDelete)
+            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    setPopViewEmbl(true, "你确定要删除客户?");
+                }
+            });
+        if (canDump)
+            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+                }
+            });
+        dialog.show();
     }
 
     /**

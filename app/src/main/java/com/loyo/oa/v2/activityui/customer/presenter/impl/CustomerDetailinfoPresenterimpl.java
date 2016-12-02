@@ -19,12 +19,9 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.network.model.BaseResponse;
-import com.loyo.oa.v2.permission.BusinessOperation;
-import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
@@ -165,25 +162,25 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void showEditPopu(Activity mActivity) {
-        boolean isDelete = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DELETING);
-        boolean isPublic = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DUMPING);
-
-        ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
-        if (isDelete)
-            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    crolView.setPopViewEmbl(true, "你确定要删除客户?");
-                }
-            });
-        if (isPublic)
-            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    crolView.setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
-                }
-            });
-        dialog.show();
+//        boolean isDelete = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DELETING);
+//        boolean isPublic = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DUMPING);
+//
+//        ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
+//        if (isDelete)
+//            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+//                @Override
+//                public void onClick(int which) {
+//                    crolView.setPopViewEmbl(true, "你确定要删除客户?");
+//                }
+//            });
+//        if (isPublic)
+//            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+//                @Override
+//                public void onClick(int which) {
+//                    crolView.setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+//                }
+//            });
+//        dialog.show();
     }
 
     /**
