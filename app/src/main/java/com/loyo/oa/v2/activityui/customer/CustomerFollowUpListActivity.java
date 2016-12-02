@@ -15,6 +15,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerFollowUpListAdapter;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
@@ -24,14 +25,13 @@ import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Record;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
-import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -58,7 +58,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     private PullToRefreshListView listView;
     private ViewGroup layout_add;
     private Customer mCustomer;
-    private boolean isMyUser;
+    private boolean canAdd;
     private boolean isPullOrDown;
     private boolean isChanged;
 
@@ -120,7 +120,6 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             mCustomer = (Customer) bundle.getSerializable("mCustomer");
-            isMyUser = bundle.getBoolean("isMyUser");
         }
 
         if(null == mCustomer){
@@ -149,7 +148,10 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         msgAudiomMenu = new MsgAudiomMenu(mContext, this,uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        if (!isMyUser || !PermissionManager.getInstance().hasPermission(BusinessOperation.VISIT_TIMELINE)) {
+        canAdd = mCustomer!=null&&
+                PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                        mCustomer.state, CustomerAction.FOLLOWUP_ADD);
+        if (canAdd) {
             layout_add.setVisibility(View.GONE);
         }else{
             Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
@@ -305,7 +307,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      */
     @Override
     public void commentSuccessEmbl() {
-        if(isMyUser && PermissionManager.getInstance().hasPermission(BusinessOperation.VISIT_TIMELINE)){
+        if(canAdd){
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
