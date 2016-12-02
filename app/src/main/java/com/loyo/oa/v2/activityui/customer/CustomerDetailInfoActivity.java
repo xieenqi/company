@@ -82,14 +82,9 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     String id;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户" 5.游客
-    public boolean isLock;
-    public boolean isMyUser;
     public boolean isPutOcen;
     public boolean isEdit;
-    public boolean isRoot = false;
-    private boolean isMem = false;
-    private boolean isTourist; //true:游客状态
-    private MembersRoot memRoot;
+    public boolean canEdit;
     private Contact mContact;
     private RelativeLayout layout_wirete, layout_phone;
     private LinearLayout layout_gj, layout_sign;
@@ -104,8 +99,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 //        setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
         showLoading("", false);
-
-        isTourist = getIntent().getBooleanExtra(ExtraAndResult.EXTRA_OBJ,false);
 
         layout_wirete = (RelativeLayout) findViewById(R.id.layout_wirete);
         layout_phone = (RelativeLayout) findViewById(R.id.layout_phone);
@@ -185,43 +178,10 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             layout_menu.setVisibility(View.GONE);
         }
 
-        if (memRoot.getValue().equals("0")) {
-            isRoot = false;
-        } else {
-            isRoot = true;
-        }
-
-        /*判断是否有操作权限，来操作改客户信息
-        * 本地userid与服务器回传ownerId比较，相等则是自己的客户，islock＝true为自己客户，false在公海中
-        * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
-        * */
-        isMyUser = (customerType != 4) ? true : false;
-
-        if (mCustomer.lock) {
-            if (null != mCustomer.owner) {
-                if (mCustomer.owner.id.equals(MainApp.user.getId())) {
-                    img_title_right.setOnTouchListener(Global.GetTouch());
-                } else {
-                    img_title_right.setVisibility(View.INVISIBLE);
-                    isMem = true;
-                }
-            }
-        } else {
-            img_title_right.setVisibility(View.INVISIBLE);
-            isMem = true;
-        }
-
-        if (customerType == 3 /*团队客户火力全开 相当于自己的客户*/ ) {
-            img_title_right.setVisibility(View.VISIBLE);
-        }else if(customerType == 5 /*游客*/){
-            img_title_right.setVisibility(View.INVISIBLE);
-            layout_menu.setVisibility(View.GONE);
-            mCustomer.lock = false;
-            isMem = true;
-            isRoot = false;
-            isMyUser = false;
-        }
-
+        canEdit = PermissionManager.getInstance().hasCustomerAuthority(
+                mCustomer.relationState,
+                mCustomer.state,
+                CustomerAction.EDIT);
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         layout_customer_info.setOnTouchListener(Global.GetTouch());
@@ -334,7 +294,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             /*选择标签*/
             case R.id.iv_select_tag:
                 mIntent = new Intent(CustomerDetailInfoActivity.this, CustomerLabelCopyActivity.class);
-                mIntent.putExtra("isMem", isMem);
+                mIntent.putExtra("canEdit", canEdit);
                 mIntent.putExtra("fromPage", 0);
                 if (null != mTagItems) {
                     mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
@@ -375,11 +335,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
             /*客户信息*/
             case R.id.layout_customer_info:
-                bundle.putBoolean("isRoot", isRoot);
                 bundle.putSerializable("Customer", mCustomer);
-                bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 4);
-                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, mPresenter.isMenber(mCustomer));
+                bundle.putBoolean("canEdit", canEdit);
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
                 break;
@@ -637,7 +594,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      */
     @Override
     public void getMembersRootEmbl(MembersRoot membersRoot) {
-        memRoot = membersRoot;
         PermissionManager.getInstance().loadCRMConfig(membersRoot);
         initData();
     }
@@ -647,7 +603,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
      */
     @Override
     public void getDataSuccessEmbl(Customer customer) {
-        isLock = customer.lock;
         mCustomer = customer;
         mPresenter.getMembersRoot();
     }

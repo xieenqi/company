@@ -30,7 +30,6 @@ import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
@@ -123,18 +122,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     @Extra("Customer")
     Customer mCustomer;
-    @Extra("isMyUser")
-    boolean isMyUser;
-    @Extra(ExtraAndResult.EXTRA_TYPE)
-    boolean isPublic;
-    @Extra(ExtraAndResult.EXTRA_STATUS)
-    boolean isMenber;
     @Extra("CustomerId")
     String mCustomerId;
-    @Extra("isRoot")
-    boolean isRoot;
-
-    private boolean isMem = false;
+    @Extra("canEdit")
+    private boolean canEdit;
     private String addres;
     private Bundle mBundle;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
@@ -290,7 +281,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     /**
      * 初始化动态字段
      */
-    private void initExtra(final boolean ismy) {
+    private void initExtra(final boolean editable) {
 
         extDatas = new ArrayList<>();
         extDatas.addAll(mCustomer.extDatas);
@@ -317,17 +308,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             }
 
             containerOp.setVisibility(View.VISIBLE);
-            containerOp.addView(new CustomerInfoExtraData(mContext, opextDatasModel, ismy, R.color.title_bg1, 0, isRoot, isMenber, mCustomer.lock));
+            containerOp.addView(new CustomerInfoExtraData(mContext, opextDatasModel, editable, R.color.title_bg1, 0));
             containerRe.setVisibility(View.VISIBLE);
-            containerRe.addView(new CustomerInfoExtraData(mContext, reextDatasModel, ismy, R.color.title_bg1, 0, isRoot, isMenber, mCustomer.lock));
+            containerRe.addView(new CustomerInfoExtraData(mContext, reextDatasModel, editable, R.color.title_bg1, 0));
 
         }
     }
 
     void initData() {
-        initExtra(isMyUser);
-
-        boolean canEdit = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+        this.canEdit = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.EDIT);
         boolean canChangeResponser = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.RESPONSIBLE_PERSON_CHANGE);
@@ -337,6 +326,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         updateUiWithEditAuth(canEdit);
         updateUiWithResponserAuth(canChangeResponser);
         updateUiWithMemberAuth(canChangeMember);
+
+        initExtra(canEdit);
 
 
         if (mCustomer == null) {
@@ -396,7 +387,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         String responser = (null == mCustomer.owner || null == mCustomer.owner) ? "" : mCustomer.owner.name;
         tv_customer_responser.setText(responser);
         if (members.size() != 0) {
-            if (isMyUser && !isMenber) {
+            if (canChangeMember) {
                 img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
             }
             tv_customer_join_users.setText(Utils.getMembers(members));
@@ -424,8 +415,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     }
 
     void updateUiWithEditAuth(boolean canEdit) {
-        isMem = !canEdit; // 标签可编辑标志位
-
         img_refresh_address.setVisibility(canEdit?View.VISIBLE:View.GONE);
         img_title_right.setVisibility(canEdit?View.VISIBLE:View.GONE);
         layout_rushpackger.setVisibility(canEdit?View.VISIBLE:View.GONE);
@@ -555,7 +544,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
             case R.id.layout_customer_label:
                 mIntent = new Intent(CustomerInfoActivity.this,CustomerLabelCopyActivity.class);
-                mIntent.putExtra("isMem", isMem);
+                mIntent.putExtra("canEdit", canEdit);
                 mIntent.putExtra("fromPage",1);
                 if (null != mTagItems) {
                     mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
