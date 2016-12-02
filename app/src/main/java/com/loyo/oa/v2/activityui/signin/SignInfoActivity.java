@@ -9,16 +9,20 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -29,6 +33,7 @@ import com.loyo.oa.v2.tool.ViewUtil;
 
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -102,6 +107,20 @@ public class SignInfoActivity extends BaseActivity {
             layout_customer_info.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
+
+                    boolean customerAuth = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT);
+                    if (!customerAuth) {
+
+                        SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(SignInfoActivity.this);
+                        sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        }, "提示", "你无此功能权限");
+                        return;
+                    }
+
                     Bundle b = new Bundle();
                     b.putString("Id", legWork.customerId);
                     app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);

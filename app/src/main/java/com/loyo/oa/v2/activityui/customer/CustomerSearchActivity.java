@@ -5,11 +5,16 @@ import android.os.Bundle;
 
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.customview.SweetAlertDialogView;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
@@ -20,6 +25,20 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
     @Override
     protected void openDetail(final int position) {
+
+        boolean customerAuth = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT);
+        if (!customerAuth) {
+
+            SweetAlertDialogView sweetAlertDialogView = new SweetAlertDialogView(this);
+            sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismiss();
+                }
+            }, "提示", "你无此功能权限");
+            return;
+        }
+
         Intent intent = new Intent();
         intent.setClass(mContext, CustomerDetailInfoActivity_.class);
         intent.putExtra("Customer", adapter.getItem(position));
