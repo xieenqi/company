@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
@@ -20,6 +21,7 @@ import com.loyo.oa.v2.activityui.discuss.viewcontrol.MyDisscussVControl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
  * 【我的讨论】
  * create by libo 2016/3/9
  */
-public class MyDiscussActivity extends BaseActivity implements View.OnClickListener, PullToRefreshListView.OnRefreshListener2, MyDisscussVControl {
+public class MyDiscussActivity extends BaseLoadingActivity implements View.OnClickListener, PullToRefreshListView.OnRefreshListener2, MyDisscussVControl {
     private PullToRefreshRecyclerView2 lv_discuss;
     private LinearLayout layout_back;
     private TextView tv_title;
@@ -40,6 +42,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
             adapter.updataList((ArrayList<HttpDiscussItem>) msg.obj);
+            ll_loading.setStatus(LoadingLayout.Success);
         }
     };
 
@@ -48,10 +51,19 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mydiscuss);
         pControl = new MyDisscussPControl(this, handler);
         initView();
         initListener();
+        getPageData();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_mydiscuss);
+    }
+
+    @Override
+    public void getPageData() {
         pControl.getPageData();
     }
 
@@ -134,5 +146,10 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void showMsg(String message) {
 
+    }
+
+    @Override
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 }
