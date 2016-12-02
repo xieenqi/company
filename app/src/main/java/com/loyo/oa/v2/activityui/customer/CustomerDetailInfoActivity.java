@@ -493,7 +493,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*订单管理*/
             case R.id.ll_order:
-                bundle.putBoolean("isMyUser", isMyUser);
+                boolean canAddOrder= mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.ORDER_ADD
+                        );
+                bundle.putBoolean("canAdd", canAddOrder);
                 bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = CustomerOrderList.class;
