@@ -2,7 +2,7 @@ package com.loyo.oa.v2.activityui.customer.presenter;
 
 import android.app.Activity;
 
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 
 /**
  * 【客户详情】Presenter

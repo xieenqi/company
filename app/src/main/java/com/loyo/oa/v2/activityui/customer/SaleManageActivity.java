@@ -48,7 +48,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
     private AdapterCustomerSale listAdapter;
     private ArrayList<SaleRecord> listData = new ArrayList<>();
     private String customerId, customerName;
-    private boolean isMyUser;
+    private boolean canAdd;
     private boolean isChanged;
     private boolean isTopAdd = true;
     public static final int VIEW_DEMANDS = 200;
@@ -63,7 +63,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
-                isMyUser = bundle.getBoolean("isMyUser");
+                canAdd = bundle.getBoolean("canAdd");
                 customerId = bundle.getString(ExtraAndResult.EXTRA_ID);
                 customerName = bundle.getString(ExtraAndResult.EXTRA_NAME);
             }
@@ -78,9 +78,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_add = (TextView) findViewById(R.id.tv_add);
         tv_add.setText("新增销售机会");
-        if (!isMyUser) {
-            layout_add.setVisibility(View.GONE);
-        }
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add.setOnClickListener(this);

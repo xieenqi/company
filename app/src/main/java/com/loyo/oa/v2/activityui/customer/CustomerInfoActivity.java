@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -18,6 +19,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.CustomerLabelRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerEvent;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
@@ -26,10 +28,8 @@ import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.compat.Compat;
@@ -37,6 +37,9 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
+import com.loyo.oa.v2.network.model.BaseResponse;
+import com.loyo.oa.v2.permission.CustomerAction;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -44,6 +47,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -51,10 +55,12 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -116,18 +122,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     @Extra("Customer")
     Customer mCustomer;
-    @Extra("isMyUser")
-    boolean isMyUser;
-    @Extra(ExtraAndResult.EXTRA_TYPE)
-    boolean isPublic;
-    @Extra(ExtraAndResult.EXTRA_STATUS)
-    boolean isMenber;
     @Extra("CustomerId")
     String mCustomerId;
-    @Extra("isRoot")
-    boolean isRoot;
-
-    private boolean isMem = false;
+    @Extra("canEdit")
+    boolean canEdit;
     private String addres;
     private Bundle mBundle;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
@@ -235,11 +233,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     void getCustomer() {
         Utils.dialogShow(this, "请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getCustomerById(null == mCustomer ? mCustomerId : mCustomer.getId(), new RCallback<Customer>() {
+                getCustomerById(null == mCustomer ? mCustomerId : mCustomer.getId(), new RCallback<BaseResponse<Customer>>() {
                     @Override
-                    public void success(final Customer customer, final Response response) {
+                    public void success(final BaseResponse<Customer> customerResp, final Response response) {
                         HttpErrorCheck.checkResponse("客户信息", response);
-                        mCustomer = customer;
+                        if (customerResp == null || customerResp.data == null) {
+                            return;
+                        }
+                        mCustomer = customerResp.data;
                         getExtraData();
                     }
 
@@ -280,7 +281,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     /**
      * 初始化动态字段
      */
-    private void initExtra(final boolean ismy) {
+    private void initExtra(final boolean editable) {
 
         extDatas = new ArrayList<>();
         extDatas.addAll(mCustomer.extDatas);
@@ -307,29 +308,27 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             }
 
             containerOp.setVisibility(View.VISIBLE);
-            containerOp.addView(new CustomerInfoExtraData(mContext, opextDatasModel, ismy, R.color.title_bg1, 0, isRoot, isMenber, mCustomer.lock));
+            containerOp.addView(new CustomerInfoExtraData(mContext, opextDatasModel, editable, R.color.title_bg1, 0));
             containerRe.setVisibility(View.VISIBLE);
-            containerRe.addView(new CustomerInfoExtraData(mContext, reextDatasModel, ismy, R.color.title_bg1, 0, isRoot, isMenber, mCustomer.lock));
+            containerRe.addView(new CustomerInfoExtraData(mContext, reextDatasModel, editable, R.color.title_bg1, 0));
 
         }
     }
 
     void initData() {
-        initExtra(isMyUser);
-        /*公海客户*/
-        if (!mCustomer.lock) {
-            setEnable();
-            /*如果不是自己的客户，不允许操作*/
-        } else if (!isMyUser || isMenber) {
-            if (!isRoot) {
-                setEnable();
-            } else {
-                layout_customer_responser.setEnabled(false);
-                layout_customer_join_users.setEnabled(false);
-                tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
-                tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
-            }
-        }
+        this.canEdit = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.EDIT);
+        boolean canChangeResponser = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.RESPONSIBLE_PERSON_CHANGE);
+        boolean canChangeMember = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+                mCustomer.state, CustomerAction.PARTICIPATED_PERSON_CHANGE);
+
+        updateUiWithEditAuth(canEdit);
+        updateUiWithResponserAuth(canChangeResponser);
+        updateUiWithMemberAuth(canChangeMember);
+
+        initExtra(canEdit);
+
 
         if (mCustomer == null) {
             return;
@@ -388,7 +387,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         String responser = (null == mCustomer.owner || null == mCustomer.owner) ? "" : mCustomer.owner.name;
         tv_customer_responser.setText(responser);
         if (members.size() != 0) {
-            if (isMyUser && !isMenber) {
+            if (canChangeMember) {
                 img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
             }
             tv_customer_join_users.setText(Utils.getMembers(members));
@@ -415,25 +414,57 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         }
     }
 
-    void setEnable() {
-        isMem = true;
-        layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
-        img_refresh_address.setVisibility(View.GONE);
-        img_title_right.setVisibility(View.GONE);
-        tv_customer_name.setEnabled(false);
-        tv_address.setEnabled(false);
-        edt_customer_memo.setEnabled(false);
-        layout_customer_district.setEnabled(false);
-        layout_customer_responser.setEnabled(false);
-        layout_customer_join_users.setEnabled(false);
-        img_refresh_address.setEnabled(false);
+    void updateUiWithEditAuth(boolean canEdit) {
+        img_refresh_address.setVisibility(canEdit?View.VISIBLE:View.GONE);
+        img_title_right.setVisibility(canEdit?View.VISIBLE:View.GONE);
+        layout_rushpackger.setVisibility(canEdit?View.VISIBLE:View.GONE);
+        tv_customer_name.setEnabled(canEdit);
+        tv_address.setEnabled(canEdit);
+        edt_customer_memo.setEnabled(canEdit);
+        layout_customer_district.setEnabled(canEdit);
+        img_refresh_address.setEnabled(canEdit);
+        layout_customer_label.setEnabled(canEdit);
 
-        containerOp.setClickable(false);
-        containerOp.setEnabled(false);
-        tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
-        tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
-        tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
-        tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
+        containerOp.setClickable(canEdit);
+        containerOp.setEnabled(canEdit);
+
+        if (canEdit) {
+            tv_address.setTextColor(getResources().getColor(R.color.text33));
+            tv_district.setTextColor(getResources().getColor(R.color.title_bg1));
+            tv_labels.setTextColor(getResources().getColor(R.color.title_bg1));
+        }
+        else {
+            tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
+            tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
+            tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
+        }
+//        layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+//                LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
+
+    }
+
+    void updateUiWithResponserAuth(boolean canChangeResponser) {
+
+        layout_customer_responser.setEnabled(canChangeResponser);
+        if (canChangeResponser) {
+            tv_customer_responser.setTextColor(getResources().getColor(R.color.title_bg1));
+        }
+        else {
+            tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
+        }
+
+    }
+
+    void updateUiWithMemberAuth(boolean canChangeMember) {
+
+        layout_customer_join_users.setEnabled(canChangeMember);
+        if (canChangeMember) {
+            tv_customer_join_users.setTextColor(getResources().getColor(R.color.title_bg1));
+        }
+        else {
+            tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
+        }
+
     }
 
     /**
@@ -513,7 +544,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
             case R.id.layout_customer_label:
                 mIntent = new Intent(CustomerInfoActivity.this,CustomerLabelCopyActivity.class);
-                mIntent.putExtra("isMem", isMem);
+                mIntent.putExtra("canEdit", canEdit);
                 mIntent.putExtra("fromPage",1);
                 if (null != mTagItems) {
                     mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
@@ -629,16 +660,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                         HttpErrorCheck.checkResponse("更新客户信息", response);
                         app.isCutomerEdit = true;
                         customer.loc = mLocate;
-                        //Intent intent = new Intent();
-                        /*boolean isCreator;
-                        if (!owner.id.equals(MainApp.user.getId())) {
-                            isCreator = false;
-                        } else {
-                            isCreator = true;
-                        }
-                        intent.putExtra("isCreator", isCreator);
-                        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, CustomerManagerActivity.CUSTOMER_COMM_RUSH, intent);*/
-
                         AppBus.getInstance().post(new EditCustomerEvent());
                         finish();
 
@@ -725,36 +746,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     mManagerNames.deleteCharAt(mManagerNames.length() - 1);
                 }
             }
-
-
-            /*if (members != null) {
-                if (cusMembers.depts.size() > 0) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
-                        if (!MainApp.user.id.equals(newUser.getId())) {
-                            mManagerNames.append(newUser.getName() + ",");
-                            mManagerIds.append(newUser.getId() + ",");
-                        } else {
-                            Toast("你已经是负责人，不能选自己为参与人!");
-                        }
-                    }
-                }
-                if (cusMembers.users.size() > 0) {
-                    for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
-                        LogUtil.dee("MainApp.user.id:"+MainApp.user.id);
-                        LogUtil.dee("newUser.getId():"+newUser.getId());
-                        if (!MainApp.user.id.equals(newUser.getId())) {
-                            mManagerNames.append(newUser.getName() + ",");
-                            mManagerIds.append(newUser.getId() + ",");
-                        } else {
-                            Toast("你已经是负责人，不能选自己为参与人!");
-                        }
-                    }
-                }
-                if (!TextUtils.isEmpty(mManagerNames)) {
-                    mManagerNames.deleteCharAt(mManagerNames.length() - 1);
-                }
-            }*/
-
             members = Utils.convert2Members(mManagerIds.toString(), mManagerNames.toString());
             if (members.size() != 0) {
                 img_del_join_users.setVisibility(View.VISIBLE);

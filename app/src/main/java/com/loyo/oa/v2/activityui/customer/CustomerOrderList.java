@@ -52,7 +52,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
     private CustomerOrderAdapter listAdapter;
     private ArrayList<OrderListItem> listData = new ArrayList<>();
     private String customerId, customerName;
-    private boolean isMyUser;
+    private boolean canAdd;
     private int page = 1;
     private boolean isPullDown = true;
 
@@ -64,7 +64,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
-                isMyUser = bundle.getBoolean("isMyUser");
+                canAdd = bundle.getBoolean("canAdd");
                 customerId = bundle.getString(ExtraAndResult.EXTRA_ID);
                 customerName = bundle.getString(ExtraAndResult.EXTRA_NAME);
             }
@@ -79,9 +79,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_add = (TextView) findViewById(R.id.tv_add);
         tv_add.setText("新增订单");
-        if (!isMyUser) {
-            layout_add.setVisibility(View.GONE);
-        }
+        layout_add.setVisibility(canAdd?View.VISIBLE:View.GONE);
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add.setOnClickListener(this);

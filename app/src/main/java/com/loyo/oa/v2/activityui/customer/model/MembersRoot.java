@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.customer.model;
 
+import android.text.TextUtils;
+
 /**
  * 客户详情 参与人权限
  * Created by loyo_dev1 on 16/4/22.
@@ -25,6 +27,10 @@ public class MembersRoot {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public boolean enabled() {
+        return TextUtils.equals("1", value);
     }
 
     public String getKey() {

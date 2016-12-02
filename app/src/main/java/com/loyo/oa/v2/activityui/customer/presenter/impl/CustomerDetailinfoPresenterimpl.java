@@ -9,21 +9,19 @@ import android.view.View;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.Member;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerDetailInfoPresenter;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerDetailinfoView;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.permission.BusinessOperation;
-import com.loyo.oa.v2.permission.PermissionManager;
+import com.loyo.oa.v2.network.model.BaseResponse;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
@@ -125,15 +123,15 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void getData(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<BaseResponse<Customer>>() {
             @Override
-            public void success(final Customer customer, final Response response) {
+            public void success(final BaseResponse<Customer> customerResp, final Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
-                if (customer == null) {
+                if (customerResp == null || customerResp.data == null) {
                     crolView.showMsg("获取数据失败");
                     return;
                 }
-                crolView.getDataSuccessEmbl(customer);
+                crolView.getDataSuccessEmbl(customerResp.data);
             }
 
             @Override
@@ -164,25 +162,25 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void showEditPopu(Activity mActivity) {
-        boolean isDelete = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DELETING);
-        boolean isPublic = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DUMPING);
-
-        ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
-        if (isDelete)
-            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    crolView.setPopViewEmbl(true, "你确定要删除客户?");
-                }
-            });
-        if (isPublic)
-            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    crolView.setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
-                }
-            });
-        dialog.show();
+//        boolean isDelete = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DELETING);
+//        boolean isPublic = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_DUMPING);
+//
+//        ActionSheetDialog dialog = new ActionSheetDialog(mActivity).builder();
+//        if (isDelete)
+//            dialog.addSheetItem("删除", ActionSheetDialog.SheetItemColor.Red, new ActionSheetDialog.OnSheetItemClickListener() {
+//                @Override
+//                public void onClick(int which) {
+//                    crolView.setPopViewEmbl(true, "你确定要删除客户?");
+//                }
+//            });
+//        if (isPublic)
+//            dialog.addSheetItem("投入公海", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+//                @Override
+//                public void onClick(int which) {
+//                    crolView.setPopViewEmbl(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+//                }
+//            });
+//        dialog.show();
     }
 
     /**

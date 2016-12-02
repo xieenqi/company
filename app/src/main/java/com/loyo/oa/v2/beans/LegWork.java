@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.beans;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 
 import java.io.Serializable;
 import java.util.ArrayList;

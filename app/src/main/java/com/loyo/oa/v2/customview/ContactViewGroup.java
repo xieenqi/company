@@ -19,7 +19,7 @@ import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.setting.EditUserMobileActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.tool.Utils;
 import java.lang.annotation.Retention;
@@ -216,7 +216,8 @@ public class ContactViewGroup extends LinearLayout {
      * @param id     视图id
      * @param parent 视图父容器
      */
-    public void bindView(final int id, final ViewGroup parent, boolean isMyUser, boolean isMber, boolean isRoot, boolean isLock) {
+    public void bindView(final int id, final ViewGroup parent,
+                         boolean canEdit) {
         setId(id);
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -235,19 +236,9 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView default_ = (ImageView) findViewById(R.id.img_default);
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
-            /*是否为公海客户*/
-            if (!isLock) {
-                edit.setVisibility(View.GONE);
-                del.setVisibility(View.GONE);
-                default_.setVisibility(View.GONE);
-                /*判断是否有操作权限*/
-            } else if (!isMyUser || isMber) {
-                if (!isRoot) {
-                    edit.setVisibility(View.GONE);
-                    del.setVisibility(View.GONE);
-                    default_.setVisibility(View.GONE);
-                }
-            }
+            edit.setVisibility( canEdit?View.VISIBLE: View.GONE);
+            del.setVisibility( canEdit?View.VISIBLE: View.GONE);
+            default_.setVisibility( canEdit?View.VISIBLE: View.GONE);
 
             /*手机ui*/
             LinearLayout layout_phone1 = (LinearLayout) findViewById(R.id.layout_phone1);
