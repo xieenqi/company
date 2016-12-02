@@ -251,6 +251,10 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     @Subscribe
     public void onFollowUpRushEvent(FollowUpRushEvent event){
         LogUtil.dee("onFollowUpRushEvent");
+        msgAudiomMenu = null;
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        layout_bottom_menu.removeAllViews();
+        layout_bottom_menu.addView(msgAudiomMenu);
         getData(false);
     }
 

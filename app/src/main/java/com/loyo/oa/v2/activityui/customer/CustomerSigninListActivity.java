@@ -49,7 +49,7 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerSigninListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2,SigninNewListView,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack,View.OnClickListener {
+public class CustomerSigninListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     private ViewGroup layout_back;
     private TextView tv_title;
@@ -89,7 +89,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     @Override
     public void onPause() {
         super.onPause();
-        if(null != voiceView)
+        if (null != voiceView)
             audioPlayer.audioPause(voiceView);
     }
 
@@ -114,7 +114,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         getData(true);
     }
 
-    private void initView(){
+    private void initView() {
         mCustomer = (Customer) getIntent().getSerializableExtra("mCustomer");
         mPresenter = new SigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(this);
@@ -132,7 +132,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this,uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
 //        setTouchView(NO_SCROLL);
@@ -144,11 +144,11 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
                         mCustomer.state, CustomerAction.VISIT);
         if (!canAdd) {
             layout_add.setVisibility(View.GONE);
-        }else{
+        } else {
             layout_add.setOnTouchListener(Global.GetTouch());
-            Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
+            Utils.btnSpcHideForListViewCus(mContext, listView.getRefreshableView(),
                     layout_add,
-                    layout_bottom_menu,msgAudiomMenu.getEditComment());
+                    layout_bottom_menu, msgAudiomMenu.getEditComment());
         }
         getData(false);
     }
@@ -163,7 +163,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new CustomerSigninNewListAdapter(mContext, listModel, this,this);
+            mAdapter = new CustomerSigninNewListAdapter(mContext, listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -198,6 +198,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
+
     /**
      * 评论语音
      */
@@ -206,14 +207,18 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         map.put("bizzId", listModel.get(commentPosition).id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
-        map.put("audioInfo",record);//语音信息
+        map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
 
     @Subscribe
-    public void onSigninNewRushEvent(SigninNewRushEvent event){
+    public void onSigninNewRushEvent(SigninNewRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
+        msgAudiomMenu = null;
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        layout_bottom_menu.removeAllViews();
+        layout_bottom_menu.addView(msgAudiomMenu);
         getData(false);
     }
 
@@ -270,7 +275,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      */
     @Override
     public void commentSuccessEmbl() {
-        if(canAdd){
+        if (canAdd) {
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
@@ -281,11 +286,11 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
 
     /**
      * 获取列表数据成
-     * */
+     */
     @Override
     public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
         listView.onRefreshComplete();
-        if(isPullOrDown){
+        if (isPullOrDown) {
             listModel.clear();
         }
         mPagination = paginationX.data;
@@ -295,7 +300,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
 
     /**
      * 获取列表数据失败
-     * */
+     */
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
@@ -303,11 +308,11 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
 
             /*新建*/
             case R.id.layout_add:
-                if (! PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
+                if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                 } else {
                     Bundle b = new Bundle();
@@ -344,7 +349,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         }
 
         audioPlayer.initPlayer();
-        if(audioPlayer.isPlaying()){
+        if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
@@ -357,7 +362,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
