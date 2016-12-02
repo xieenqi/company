@@ -479,7 +479,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*销售机会*/
             case R.id.ll_sale:
-                bundle.putBoolean("isMyUser", isMyUser);
+                boolean canAddSaleOpportunity = mCustomer != null &&
+                        PermissionManager.getInstance().hasCustomerAuthority(
+                                mCustomer.relationState,
+                                mCustomer.state,
+                                CustomerAction.SALE_OPPORTUNITY_ADD
+                        );
+                bundle.putBoolean("canAdd", canAddSaleOpportunity);
                 bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = SaleManageActivity.class;
