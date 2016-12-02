@@ -18,7 +18,6 @@ import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activityui.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.activityui.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.SaleDetailContract;
 import com.loyo.oa.v2.activityui.sale.presenter.SaleDetailPresenterImpl;
@@ -319,7 +318,8 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 &&
                 (100 != mSaleDetails.prob                                         /*未赢单*/
                         || (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5 /*赢单未通过*/
-                        && mSaleDetails.wfState != 0) /*赢单需要审核*/
+                        && mSaleDetails.wfState != 0 /*赢单需要审核*/
+                        && mSaleDetails.wfState!=1 && mSaleDetails.wfState!=2  ) // 待审核,审核中
                 )
                 &&
                 (MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/
@@ -333,7 +333,8 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 &&
                 (100 != mSaleDetails.prob                                         /*未赢单*/
                         || (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5/*赢单未通过*/
-                        && mSaleDetails.wfState != 0) /*赢单需要审核*/
+                        && mSaleDetails.wfState != 0 /*赢单需要审核*/
+                        && mSaleDetails.wfState!=1 && mSaleDetails.wfState!=2  ) // 待审核,审核中
                 )
                 && MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/;
         return canEdit;
