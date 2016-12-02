@@ -67,6 +67,17 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         lv_notice.getRefreshableView().setLayoutManager(layoutManager);
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
+
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                loadingData();
+            }
+        });
+        loadingData();
+    }
+
+    private void loadingData() {
         ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
@@ -169,5 +180,15 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     @Override
     public void refreshCmpl() {
         lv_notice.onRefreshComplete();
+    }
+
+    @Override
+    public void emptyData() {
+        ll_loading.setStatus(LoadingLayout.Empty);
+    }
+
+    @Override
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 }

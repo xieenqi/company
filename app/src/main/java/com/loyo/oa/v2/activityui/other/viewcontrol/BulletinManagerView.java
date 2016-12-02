@@ -1,12 +1,13 @@
 package com.loyo.oa.v2.activityui.other.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.common.BaseView;
 
 /**
  * Created by yyy on 16/10/10.
  */
 
-public interface BulletinManagerView extends BaseView{
+public interface BulletinManagerView extends BaseView {
 
     /*新建权限通过*/
     void permissionSuccess();
@@ -16,4 +17,8 @@ public interface BulletinManagerView extends BaseView{
 
     /*停止刷新*/
     void refreshCmpl();
+
+    void emptyData();
+
+    LoadingLayout getLoadingLayout();
 }

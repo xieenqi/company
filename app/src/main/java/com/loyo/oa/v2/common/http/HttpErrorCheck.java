@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.common.DialogHelp;
@@ -124,6 +125,54 @@ public class HttpErrorCheck {
         }
     }
 
+    public static void checkError(RetrofitError error, LoadingLayout loadingLayout) {
+        DialogHelp.cancelLoading();
+        LogUtil.d("网络异常" + error.getMessage());
+        LogUtil.d("error接口URL：" + error.getUrl());
+
+        try {
+            String msg = Utils.
+                    convertStreamToString(error.
+                            getResponse()
+                            .getBody()
+                            .in());
+            LogUtil.d("error获得的：", msg);
+            JSONObject job = new JSONObject(msg);
+            if (500 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (401 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (404 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (406 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+                //到侧边栏 退出系统到登录界面
+                Intent in = new Intent();
+                in.setAction(ExtraAndResult.ACTION_USER_VERSION);
+                in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
+                LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
+            } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                Toast("请检查您的网络连接");
+            } else {
+                String errorInfo = job.getString("error");
+                Toast(errorInfo);
+            }
+            LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            LogUtil.d("Body空err:" + error.getUrl());
+            e.printStackTrace();
+            loadingLayout.setStatus(LoadingLayout.No_Network);
+            Toast("连接服务器失败");
+        } catch (JSONException e) {
+            LogUtil.d("JSON异常err:" + error.getUrl());
+            loadingLayout.setStatus(LoadingLayout.Error);
+            loadingLayout.setErrorText("服务端数据异常");
+            e.printStackTrace();
+        }
+    }
+
     public static void checkResponse(String tag, Response response) {
         DialogHelp.cancelLoading();
         try {
@@ -172,13 +221,11 @@ public class HttpErrorCheck {
             case 2:
                 Toast("请求参数错误");
                 break;
-            default:
-            {
+            default: {
                 String msg;
                 if (!TextUtils.isEmpty(data.errmsg)) {
                     msg = data.errmsg;
-                }
-                else {
+                } else {
                     msg = "服务器出错";
                 }
                 if (data.errcode != 0) {
