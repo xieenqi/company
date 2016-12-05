@@ -133,15 +133,18 @@ public class HaitMyActivity extends BaseLoadingActivity {
                             // mDiscuss = discuss;
                             if (isTopAdd) {
                                 adapter.cleanData();
-                                if (discuss.getRecords() != null && !(discuss.getRecords().size() > 0))
+                                if (discuss.getRecords() != null && !(discuss.getRecords().size() > 0)) {
                                     ll_loading.setStatus(LoadingLayout.Empty);
+                                } else {
+                                    ll_loading.setStatus(LoadingLayout.Success);
+                                }
                             }
                             adapter.updataList(discuss.getRecords());
                         } else {
                             Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
                         }
                         lv_myDiscuss.onRefreshComplete();
-                        ll_loading.setStatus(LoadingLayout.Success);
+
                     }
 
                     @Override

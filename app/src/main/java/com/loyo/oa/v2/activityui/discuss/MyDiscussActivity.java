@@ -42,7 +42,6 @@ public class MyDiscussActivity extends BaseLoadingActivity implements View.OnCli
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
             adapter.updataList((ArrayList<HttpDiscussItem>) msg.obj);
-            ll_loading.setStatus(LoadingLayout.Success);
         }
     };
 

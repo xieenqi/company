@@ -52,8 +52,11 @@ public class MyDisscussPControl implements MyDiscussPersenter {
                             if (isTopAdd) {
                                 listData = null;
                                 listData = discuss.getRecords();
-                                if (listData != null && !(listData.size() > 0))
+                                if (listData != null && !(listData.size() > 0)) {
                                     vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+                                } else {
+                                    vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+                                }
                             } else {
                                 listData.addAll(discuss.getRecords());
                             }

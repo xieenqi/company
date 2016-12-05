@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -43,6 +44,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -67,7 +69,7 @@ import retrofit.client.Response;
  * create by libo 2016/03/10
  */
 
-public class DiscussDetialActivity extends BaseActivity implements View.OnLayoutChangeListener, View.OnClickListener {
+public class DiscussDetialActivity extends BaseLoadingActivity implements View.OnLayoutChangeListener, View.OnClickListener {
 
     private static final char SCANNER_HAIT_TRIM = '\u2005';
     private final List<HaitHelper.SelectUser> mHaitSelectUsers = new ArrayList<>(); // 选择用于艾特的用户列表
@@ -123,10 +125,19 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE /*| WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN*/);
-        setContentView(R.layout.activity_discuss_det);
         initData();
         initView();
         initListener();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_discuss_det);
+    }
+
+    @Override
+    public void getPageData() {
+        loadMessage(true);
     }
 
     private void initData() {
@@ -188,7 +199,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
 
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
         bindDiscussion();
-        loadMessage(true);
+        getPageData();
     }
 
     private void assignViews() {
@@ -328,7 +339,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
      * @param isPull 是否是上拉
      */
     private void loadMessage(final boolean isPull) {
-        showLoading("");
+//        showLoading("");
         HashMap<String, Object> body = new HashMap<>();
         body.put("pageIndex", pageIndex + "");
         body.put("pageSize", 5);
@@ -345,17 +356,23 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                 if (isPull) {
                     mPageDiscussion.getRecords().clear();
                     mPageDiscussion.getRecords().addAll(0, d.getRecords());
+                    if (d != null && d.getRecords().size() == 0) {
+                        ll_loading.setStatus(LoadingLayout.Empty);
+                    } else {
+                        ll_loading.setStatus(LoadingLayout.Success);
+                    }
                 } else {
                     mPageDiscussion.getRecords().addAll(0, d.getRecords());
                 }
                 bindDiscussion();
                 lv_notice.onRefreshComplete();
+
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 lv_notice.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
                 super.failure(error);
             }
         });

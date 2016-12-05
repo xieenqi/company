@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.other.presenter.Impl;
 import android.app.Activity;
 import android.content.Context;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.NoticeAdapter2;
@@ -64,8 +65,11 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
                     if (isTopAdd) {
                         bulletins.clear();
-                        if (lstData_bulletin_current != null && !(lstData_bulletin_current.size() > 0))
+                        if (lstData_bulletin_current != null && !(lstData_bulletin_current.size() > 0)) {
                             crolView.emptyData();
+                        } else {
+                            crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
+                        }
                     }
                     bulletins.addAll(lstData_bulletin_current);
                     crolView.bindListData();
@@ -77,7 +81,7 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error,crolView.getLoadingLayout());
+                HttpErrorCheck.checkError(error, crolView.getLoadingLayout());
                 super.failure(error);
                 crolView.refreshCmpl();
             }
