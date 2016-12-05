@@ -332,6 +332,9 @@ public class HttpErrorCheck {
     private static void checkResponseError(String result,LoadingLayout loadingLayout) throws JsonSyntaxException {
         BaseBean data = MainApp.gson.fromJson(result, BaseBean.class);
         switch (data.errcode) {
+            case 0:
+                loadingLayout.setStatus(LoadingLayout.Success);
+                break;
             case 1:
                 loadingLayout.setStatus(LoadingLayout.No_Network);
                 loadingLayout.setNoNetworkText("非常抱歉,服务器错误");

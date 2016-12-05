@@ -10,6 +10,7 @@ import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -64,7 +65,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     private String statusKey = "";
 
     private ArrayList<ClueListItem> listData = new ArrayList<>();
-    private ViewStub emptyView;
+    private LoadingLayout ll_loading;
     private PullToRefreshListView lv_list;
     private TeamClueAdapter adapter;
     private View mView;
@@ -83,11 +84,18 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initView(View view) {
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        lv_list.setEmptyView(emptyView);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getData();
+            }
+        });
 
         /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,8 +133,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                 == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "本部门";
-        }
-        else {
+        } else {
             title = "我";
             depts.add(OrganizationFilterModel.selfDepartment());
         }
@@ -152,18 +159,15 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                     if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
                         xPath = model.getKey();
                         userId = "";
-                    }
-                    else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
+                    } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
                         xPath = "";
                         userId = model.getKey();
                     }
-                }
-                else if (menuIndex == 1) { // TimeFilterModel
+                } else if (menuIndex == 1) { // TimeFilterModel
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
-                }
-                else if (menuIndex == 2) { // ClueStatusFilterModel
+                } else if (menuIndex == 2) { // ClueStatusFilterModel
                     statusKey = key;
                 }
                 isPullDown = true;
@@ -219,12 +223,12 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的线索列表：", response);
+                HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
                 if (null == clueList.data || clueList.data.records == null) {
                     if (isPullDown && listData.size() > 0) {
                         listData.clear();
                     } else {
-                        Toast("没有相关数据");
+//                        Toast("没有相关数据");
                         return;
                     }
                 } else {
@@ -244,6 +248,8 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
 //                        listData.addAll(clueList.data.records);
 //                    }
                     adapter.setData(listData);
+                    if (listData.size() == 0)
+                        ll_loading.setStatus(LoadingLayout.Empty);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -252,7 +258,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void failure(RetrofitError error) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }

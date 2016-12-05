@@ -188,9 +188,11 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                         listData.addAll(clueList.data.records);
                     } else {
                         listData = clueList.data.records;
-                        ll_loading.setStatus(listData.size() == 0 ? LoadingLayout.Empty : LoadingLayout.Success);
+
                     }
                     adapter.setData(listData);
+                    if (listData.size() == 0)
+                        ll_loading.setStatus(LoadingLayout.Empty);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
