@@ -65,16 +65,18 @@ public class BulletinManagerPresenterImpl implements BulletinManagerPresenter {
 
                     if (isTopAdd) {
                         bulletins.clear();
-                        if (lstData_bulletin_current != null && !(lstData_bulletin_current.size() > 0)) {
-                            crolView.emptyData();
-                        } else {
-                            crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
-                        }
                     }
                     bulletins.addAll(lstData_bulletin_current);
                     crolView.bindListData();
+                    crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
                 } else {
-                    Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                    if (pagination != null && pagination.getRecords() != null && pagination.getRecords().size() == 0 && isTopAdd) {
+                        crolView.emptyData();
+                    } else {
+                        crolView.getLoadingLayout().setStatus(LoadingLayout.Success);
+                        Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                    }
+
                 }
                 crolView.refreshCmpl();
             }

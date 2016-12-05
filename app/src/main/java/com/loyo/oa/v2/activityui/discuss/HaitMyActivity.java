@@ -130,18 +130,18 @@ public class HaitMyActivity extends BaseLoadingActivity {
                     public void success(final PaginationX<HttpMyDiscussItem> discuss, final Response response) {
                         HttpErrorCheck.checkResponse(" 【@我的】讨论数据： ", response);
                         if (!PaginationX.isEmpty(discuss)) {
-                            // mDiscuss = discuss;
                             if (isTopAdd) {
                                 adapter.cleanData();
-                                if (discuss.getRecords() != null && !(discuss.getRecords().size() > 0)) {
-                                    ll_loading.setStatus(LoadingLayout.Empty);
-                                } else {
-                                    ll_loading.setStatus(LoadingLayout.Success);
-                                }
                             }
                             adapter.updataList(discuss.getRecords());
+                            ll_loading.setStatus(LoadingLayout.Success);
                         } else {
-                            Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            if (discuss != null && discuss.getRecords() != null && discuss.getRecords().size() == 0 && isTopAdd) {
+                                ll_loading.setStatus(LoadingLayout.Empty);
+                            } else {
+                                ll_loading.setStatus(LoadingLayout.Success);
+                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            }
                         }
                         lv_myDiscuss.onRefreshComplete();
 

@@ -11,6 +11,7 @@ import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -63,7 +64,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
 
     /* View */
     private Button btn_add;
-    private ViewStub emptyView;
+    private LoadingLayout ll_loading;
     private PullToRefreshListView lv_list;
     private MyClueAdapter adapter;
     private DropDownMenu filterMenu;
@@ -100,8 +101,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
-                }
-                else if (menuIndex == 1) { // ClueStatusFilterModel
+                } else if (menuIndex == 1) { // ClueStatusFilterModel
                     statusKey = key;
                 }
                 isPullDown = true;
@@ -115,11 +115,19 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getData();
+            }
+        });
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        lv_list.setEmptyView(emptyView);
+//        lv_list.setEmptyView(emptyView);
         /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -137,7 +145,6 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         lv_list.setAdapter(adapter);
         getData();
         Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
-
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
     }
 
@@ -175,12 +182,13 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的线索列表：", response);
+                HttpErrorCheck.checkResponse("我的线索列表：", response,ll_loading);
                 try {
                     if (!isPullDown) {
                         listData.addAll(clueList.data.records);
                     } else {
                         listData = clueList.data.records;
+                        ll_loading.setStatus(listData.size() == 0 ? LoadingLayout.Empty : LoadingLayout.Success);
                     }
                     adapter.setData(listData);
                 } catch (NullPointerException e) {
@@ -191,7 +199,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void failure(RetrofitError error) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }
