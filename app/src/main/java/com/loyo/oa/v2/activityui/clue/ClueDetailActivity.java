@@ -243,8 +243,6 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         if (clueId == null) {
             return;
         }
-
-//        showLoading("");
         RestAdapterFactory.getInstance()
                 .build(Config_project.API_URL_CUSTOMER())
                 .create(IClue.class)
@@ -252,11 +250,6 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
                     @Override
                     public void success(BaseBeanT<ClueDetailWrapper.ClueDetail> detail, Response response) {
                         HttpErrorCheck.checkResponse("线索详情：", response, ll_loading);
-//                        if (detail.errcode != 0) {
-//                            Toast("没有获取到数据");
-//                            onBackPressed();
-//                        } else {
-//                        }
                         data = detail.data;
                         bindData();
                     }
