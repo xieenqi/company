@@ -84,7 +84,7 @@ public class RecordUtils {
 
     private vendor.omrecorder.AudioSource mic() {
         return new vendor.omrecorder.AudioSource.Smart(MediaRecorder.AudioSource.MIC, AudioFormat.ENCODING_PCM_16BIT,
-                AudioFormat.CHANNEL_IN_MONO, 44100);
+                AudioFormat.CHANNEL_IN_MONO, 8000);
     }
 
 
