@@ -57,7 +57,6 @@ public class OrderSearchActivity extends BaseLoadingActivity implements PullToRe
     private ArrayList<OrderListItem> listData = new ArrayList<>();
     private CommonSearchAdapter adapter;
     private LayoutInflater mInflater;
-    private ViewStub emptyView;
     private int fromPage;
     private int page = 1;
     private boolean isPullDown = true;
@@ -86,7 +85,6 @@ public class OrderSearchActivity extends BaseLoadingActivity implements PullToRe
         Bundle mBundle = getIntent().getExtras();
         fromPage = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
         mInflater = LayoutInflater.from(this);
-        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +134,6 @@ public class OrderSearchActivity extends BaseLoadingActivity implements PullToRe
 
         ListView expandableListView = expandableListView_search.getRefreshableView();
         adapter = new CommonSearchAdapter();
-        expandableListView.setEmptyView(emptyView);
         expandableListView.setAdapter(adapter);
 
         /**列表监听器*/
