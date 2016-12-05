@@ -192,7 +192,7 @@ public class HttpErrorCheck {
         }
     }
     public static void checkResponse(String tag, Response response,LoadingLayout loadingLayout) {
-        DialogHelp.cancelLoading();
+//        DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(tag + " 接口成功result：" + result);

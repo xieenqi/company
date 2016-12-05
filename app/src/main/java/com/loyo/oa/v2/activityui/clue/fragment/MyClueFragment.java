@@ -127,7 +127,6 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-//        lv_list.setEmptyView(emptyView);
         /*列表监听*/
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -135,13 +134,13 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
                 mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                 mIntent.putExtra(ExtraAndResult.EXTRA_ID, /* 线索id */listData.get(position - 1).id);
-                mIntent.setClass(getActivity(), ClueDetailActivity.class);
-                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
-                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                mIntent.setClass(mActivity, ClueDetailActivity.class);
+                startActivityForResult(mIntent, mActivity.RESULT_FIRST_USER);
+                mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
             }
         });
-        adapter = new MyClueAdapter(getActivity());
+        adapter = new MyClueAdapter(mActivity);
         lv_list.setAdapter(adapter);
         getData();
         Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
@@ -156,9 +155,9 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             case R.id.btn_add:
 
                 mIntent = new Intent();
-                mIntent.setClass(getActivity(), ClueAddActivity.class);
-                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
-                getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                mIntent.setClass(mActivity, ClueAddActivity.class);
+                startActivityForResult(mIntent, mActivity.RESULT_FIRST_USER);
+                mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
 
                 break;
             default:
@@ -182,7 +181,7 @@ public class MyClueFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的线索列表：", response,ll_loading);
+                HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
                 try {
                     if (!isPullDown) {
                         listData.addAll(clueList.data.records);

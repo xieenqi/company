@@ -1,576 +1,574 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <!-- Navigation Bar -->
-    <include layout="@layout/include_common_title_edit"/>
+    <include layout="@layout/include_common_title_edit" />
 
-    <!-- 列表 -->
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <com.library.module.widget.loading.LoadingLayout
+        android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:scrollbars="none">
-
-        <!-- 列表内容 -->
-        <LinearLayout
+        app:isFirstVisible="true">
+        <!-- 列表 -->
+        <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:scrollbars="none">
 
-            <!-- 分区一：姓名，公司名称，线索状态 -->
+            <!-- 列表内容 -->
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- 分区一 -> 姓名 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:layout_marginRight="@dimen/margin_other_view"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:minWidth="@dimen/dimen_60"
-                        android:text="姓名"/>
-
-                    <TextView
-                        android:id="@+id/tv_section1_username"
-                        style="@style/text_item2"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical"
-                        android:hint=""
-                        android:textColor="@color/text99"
-                        />
-                </LinearLayout>
-
-                <include layout="@layout/include_solid_line_left"/>
-
-                <!-- 分区一 -> 公司名称 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/view_h_title"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:layout_marginRight="@dimen/margin_other_view"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:minWidth="@dimen/dimen_60"
-                        android:text="公司名称"/>
-
-                    <TextView
-                        android:id="@+id/tv_section1_company_name"
-                        style="@style/text_item2"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical"
-                        android:hint=""
-                        android:singleLine = 'false'
-                        android:textColor="@color/text99"
-                        />
-                </LinearLayout>
-
-                <include layout="@layout/include_solid_line_left"/>
-
-                <!-- 分区一 -> 线索状态 -->
-                <LinearLayout
-                    android:id="@+id/ll_status"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:minWidth="@dimen/dimen_60"
-                        android:text="线索状态"/>
-
-                    <TextView
-                        android:id="@+id/tv_status"
-                        style="@style/text_item2"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical"
-                        android:hint=""
-                        android:textColor="@color/text99"
-                        />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <include layout="@layout/include_solid_line15"/>
-
-
-            <!-- 分区二 -> 跟进动态 -->
-            <RelativeLayout
-                android:id="@+id/ll_section2_visit"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_48"
-                android:layout_marginLeft="@dimen/margin_other_view">
-
-                <TextView
-                    android:id="@+id/tv_visit_title"
-                    style="@style/text_item1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="跟进动态"/>
-
-                <TextView
-                    android:id="@+id/tv_visit_number"
-                    style="@style/text_item1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_12"
-                    android:layout_toRightOf="@+id/tv_visit_title"
-                    android:gravity="center"
-                    android:text="(0)"
-                    android:textColor="@color/text99"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/dimen_4"
-                    android:src="@drawable/right_arrow"/>
-            </RelativeLayout>
-
-            <include layout="@layout/include_solid_line_left"/>
-            <!-- 分区二 -> 最近跟进 -->
-            <LinearLayout
-                android:id="@+id/ll_track"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_10"
-                android:layout_marginLeft="@dimen/margin_other_view"
-                android:layout_marginRight="@dimen/margin_other_view"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_track_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text33"
-                    android:textSize="@dimen/text_sp16"/>
-
-
-                <TextView
-                    android:id="@+id/tv_track_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12"/>
-
-            </LinearLayout>
-
-            <include layout="@layout/include_solid_line15"/>
-
-            <!-- 分区三：手机，座机，地区，线索来源，备注 -->
-            <LinearLayout
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- 分区三 -> 手机 -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_48"
-                    android:layout_marginLeft="@dimen/margin_other_view">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_48"
-                        android:layout_toLeftOf="@+id/layout_action"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/text_item1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="手机"/>
-
-                        <TextView
-                            android:id="@+id/tv_contact_mobile"
-                            style="@style/text_item1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/dimen_40"
-                            android:gravity="center"
-                            android:textColor="@color/text99"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:id="@+id/ll_sms"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="20dp"
-                                android:src="@drawable/icon_contacts_send_sms"/>
-
-                        </LinearLayout>
-
-                        <!-- 分割线 -->
-                        <View
-                            android:layout_width="0.5dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="@dimen/dimen_15"
-                            android:layout_marginTop="@dimen/dimen_15"
-                            android:background="@color/lineCC"
-                            />
-
-                        <LinearLayout
-                            android:id="@+id/ll_call"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="20dp"
-                                android:src="@drawable/icon_contacts_call"/>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <include layout="@layout/include_solid_line_left"/>
-
-                <!-- 分区三 -> 座机 -->
-                <RelativeLayout
+                <!-- 分区一：姓名，公司名称，线索状态 -->
+                <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="@dimen/dimen_48"
-                    android:layout_marginLeft="@dimen/margin_other_view">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                    <!-- 分区一 -> 姓名 -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_48"
+                        android:layout_height="@dimen/view_h_title"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:layout_marginRight="@dimen/margin_other_view"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
                             style="@style/text_item1"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="座机"/>
+                            android:layout_height="fill_parent"
+                            android:minWidth="@dimen/dimen_60"
+                            android:text="姓名" />
 
                         <TextView
-                            android:id="@+id/tv_contact_wiretel"
-                            style="@style/text_item1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/dimen_40"
-                            android:gravity="center"
-                            android:textColor="@color/text99"/>
+                            android:id="@+id/tv_section1_username"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical"
+                            android:hint=""
+                            android:textColor="@color/text99" />
                     </LinearLayout>
 
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <!-- 分区一 -> 公司名称 -->
                     <LinearLayout
-                        android:id="@+id/ll_wiretel_call"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:layout_marginRight="@dimen/margin_other_view"
                         android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:minHeight="@dimen/view_h_title"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:minWidth="@dimen/dimen_60"
+                            android:text="公司名称" />
+
+                        <TextView
+                            android:id="@+id/tv_section1_company_name"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical"
+                            android:hint=""
+                            android:singleLine='false'
+                            android:textColor="@color/text99" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <!-- 分区一 -> 线索状态 -->
+                    <LinearLayout
+                        android:id="@+id/ll_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_h_title"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:minWidth="@dimen/dimen_60"
+                            android:text="线索状态" />
+
+                        <TextView
+                            android:id="@+id/tv_status"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical"
+                            android:hint=""
+                            android:textColor="@color/text99" />
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="20dp"
-                            android:src="@drawable/icon_contacts_call"/>
+                            android:layout_height="match_parent"
+                            android:scaleType="center"
+                            android:src="@drawable/right_arrow" />
                     </LinearLayout>
+
+                </LinearLayout>
+
+                <include layout="@layout/include_solid_line15" />
+
+
+                <!-- 分区二 -> 跟进动态 -->
+                <RelativeLayout
+                    android:id="@+id/ll_section2_visit"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_48"
+                    android:layout_marginLeft="@dimen/margin_other_view">
+
+                    <TextView
+                        android:id="@+id/tv_visit_title"
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="跟进动态" />
+
+                    <TextView
+                        android:id="@+id/tv_visit_number"
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_12"
+                        android:layout_toRightOf="@+id/tv_visit_title"
+                        android:gravity="center"
+                        android:text="(0)"
+                        android:textColor="@color/text99" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dimen_4"
+                        android:src="@drawable/right_arrow" />
                 </RelativeLayout>
 
-                <include layout="@layout/include_solid_line_left"/>
-
-                <!-- 分区三 -> 地区 -->
+                <include layout="@layout/include_solid_line_left" />
+                <!-- 分区二 -> 最近跟进 -->
                 <LinearLayout
-                    android:id="@+id/layout_clue_region"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:minWidth="@dimen/dimen_60"
-                        android:text="地区"/>
-
-                    <TextView
-                        android:id="@+id/tv_clue_region"
-                        style="@style/text_item2"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical"
-                        android:hint=""
-                        android:textColor="@color/text99"
-                        />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
-                </LinearLayout>
-
-                <include layout="@layout/include_solid_line_left"/>
-
-
-                <!-- 分区三 -> 地区 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/ll_track"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_10"
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginRight="@dimen/margin_other_view"
-                    android:gravity="center_vertical"
-                    android:minHeight="@dimen/view_h_title"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
-                        style="@style/text_item1"
+                        android:id="@+id/tv_track_content"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:minWidth="@dimen/dimen_60"
-                        android:text="详细地址"/>
-
-                    <TextView
-                        android:id="@+id/tv_address"
-                        style="@style/text_item2"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical"
-                        android:hint=""
-                        android:singleLine="false"
-                        android:textColor="@color/text99"
-                        />
-
-                </LinearLayout>
-
-                <include layout="@layout/include_solid_line_left"/>
-                <!-- 分区三 -> 线索来源 -->
-                <LinearLayout
-                    android:id="@+id/layout_clue_source"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:minWidth="@dimen/dimen_60"
-                        android:text="线索来源"/>
-
-                    <TextView
-                        android:id="@+id/tv_section3_clue_source"
-                        style="@style/text_item2"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical"
-                        android:hint=""
-                        android:textColor="@color/text99"
-                        />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
-                </LinearLayout>
-
-                <include layout="@layout/include_solid_line_left"/>
-
-                <!-- 分区三 -> 备注 -->
-                <LinearLayout
-                    android:id="@+id/layout_clue_note"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/view_h_title"
-                    android:layout_marginLeft="@dimen/margin_other_view"
-                    android:layout_marginRight="@dimen/margin_other_view"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:minWidth="@dimen/dimen_60"
-                        android:text="备注"/>
-
-                    <TextView
-                        android:id="@+id/tv_clue_note"
-                        style="@style/text_item2"
-                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical"
-                        android:hint=""
-                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp16" />
+
+
+                    <TextView
+                        android:id="@+id/tv_track_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
                         android:textColor="@color/text99"
-                        />
+                        android:textSize="@dimen/text_sp12" />
+
                 </LinearLayout>
 
+                <include layout="@layout/include_solid_line15" />
+
+                <!-- 分区三：手机，座机，地区，线索来源，备注 -->
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- 分区三 -> 手机 -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_48"
+                        android:layout_marginLeft="@dimen/margin_other_view">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dimen_48"
+                            android:layout_toLeftOf="@+id/layout_action"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/text_item1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="手机" />
+
+                            <TextView
+                                android:id="@+id/tv_contact_mobile"
+                                style="@style/text_item1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="@dimen/dimen_40"
+                                android:gravity="center"
+                                android:textColor="@color/text99" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_action"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/ll_sms"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/icon_contacts_send_sms" />
+
+                            </LinearLayout>
+
+                            <!-- 分割线 -->
+                            <View
+                                android:layout_width="0.5dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="@dimen/dimen_15"
+                                android:layout_marginTop="@dimen/dimen_15"
+                                android:background="@color/lineCC" />
+
+                            <LinearLayout
+                                android:id="@+id/ll_call"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/icon_contacts_call" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <!-- 分区三 -> 座机 -->
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="@dimen/dimen_48"
+                        android:layout_marginLeft="@dimen/margin_other_view">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dimen_48"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/text_item1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="座机" />
+
+                            <TextView
+                                android:id="@+id/tv_contact_wiretel"
+                                style="@style/text_item1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="@dimen/dimen_40"
+                                android:gravity="center"
+                                android:textColor="@color/text99" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_wiretel_call"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:src="@drawable/icon_contacts_call" />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <!-- 分区三 -> 地区 -->
+                    <LinearLayout
+                        android:id="@+id/layout_clue_region"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_h_title"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:minWidth="@dimen/dimen_60"
+                            android:text="地区" />
+
+                        <TextView
+                            android:id="@+id/tv_clue_region"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical"
+                            android:hint=""
+                            android:textColor="@color/text99" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:scaleType="center"
+                            android:src="@drawable/right_arrow" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
+
+                    <!-- 分区三 -> 地区 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:layout_marginRight="@dimen/margin_other_view"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/view_h_title"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:minWidth="@dimen/dimen_60"
+                            android:text="详细地址" />
+
+                        <TextView
+                            android:id="@+id/tv_address"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical"
+                            android:hint=""
+                            android:singleLine="false"
+                            android:textColor="@color/text99" />
+
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+                    <!-- 分区三 -> 线索来源 -->
+                    <LinearLayout
+                        android:id="@+id/layout_clue_source"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_h_title"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:minWidth="@dimen/dimen_60"
+                            android:text="线索来源" />
+
+                        <TextView
+                            android:id="@+id/tv_section3_clue_source"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical"
+                            android:hint=""
+                            android:textColor="@color/text99" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:scaleType="center"
+                            android:src="@drawable/right_arrow" />
+                    </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left" />
+
+                    <!-- 分区三 -> 备注 -->
+                    <LinearLayout
+                        android:id="@+id/layout_clue_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:layout_marginRight="@dimen/margin_other_view"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/view_h_title"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/text_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:minWidth="@dimen/dimen_60"
+                            android:text="备注" />
+
+                        <TextView
+                            android:id="@+id/tv_clue_note"
+                            style="@style/text_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical"
+                            android:hint=""
+                            android:singleLine="false"
+                            android:textColor="@color/text99" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <include layout="@layout/include_solid_line15" />
+
+                <!-- 分区四：负责人，创建人及相关时间 -->
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    android:layout_marginLeft="@dimen/dimen_14"
+                    android:layout_marginRight="@dimen/dimen_14"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:orientation="vertical">
+
+                    <!-- 分区四 -> 负责人 -->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="负责人: "
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp14" />
+
+                        <TextView
+                            android:id="@+id/tv_responsible_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp14" />
+
+                    </LinearLayout>
+
+                    <!-- 分区四 -> 创建人 -->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_4"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="创建人: "
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp14" />
+
+                        <TextView
+                            android:id="@+id/tv_creator_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp14" />
+
+                    </LinearLayout>
+
+                    <!-- 分区四 -> 创建时间 -->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_4"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="创建时间: "
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp14" />
+
+                        <TextView
+                            android:id="@+id/tv_create_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp14" />
+
+                    </LinearLayout>
+
+                    <!-- 分区四 -> 更新时间 -->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_4"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="更新时间: "
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp14" />
+
+                        <TextView
+                            android:id="@+id/tv_update_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp14" />
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
-
-            <include layout="@layout/include_solid_line15"/>
-
-            <!-- 分区四：负责人，创建人及相关时间 -->
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_10"
-                android:layout_marginLeft="@dimen/dimen_14"
-                android:layout_marginRight="@dimen/dimen_14"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:orientation="vertical">
-
-                <!-- 分区四 -> 负责人 -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="负责人: "
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
-
-                    <TextView
-                        android:id="@+id/tv_responsible_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
-
-                </LinearLayout>
-
-                <!-- 分区四 -> 创建人 -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_4"
-                    android:orientation="horizontal"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="创建人: "
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
-
-                    <TextView
-                        android:id="@+id/tv_creator_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
-
-                </LinearLayout>
-
-                <!-- 分区四 -> 创建时间 -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_4"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="创建时间: "
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
-
-                    <TextView
-                        android:id="@+id/tv_create_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
-
-                </LinearLayout>
-
-                <!-- 分区四 -> 更新时间 -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_4"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="更新时间: "
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
-
-                    <TextView
-                        android:id="@+id/tv_update_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14"/>
-
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </com.library.module.widget.loading.LoadingLayout>
 </LinearLayout>
