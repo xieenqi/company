@@ -20,6 +20,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
+import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
@@ -47,7 +48,7 @@ import java.util.ArrayList;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * 【我的跟进列表】adapter
+ * 【客户下的拜访】adapter
  * Created by yyy on 16/11/12.
  */
 
@@ -55,7 +56,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<SigninNewListModel> listModel;
-    private SigninNewListView viewCrol;
+    private CustomerSigninNewListView viewCrol;
     private AudioPlayCallBack audioPlayCallBack;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格图片 */
@@ -63,7 +64,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
     private ListOrDetailsAudioAdapter audioAdapter;        /* 录音语音 */
     private ListOrDetailsOptionsAdapter optionAdapter;     /* 文件区域 */
 
-    public CustomerSigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, SigninNewListView viewCrol, AudioPlayCallBack audioPlayCallBack) {
+    public CustomerSigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, CustomerSigninNewListView viewCrol, AudioPlayCallBack audioPlayCallBack) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;
@@ -116,11 +117,12 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         }
 
         holder.iv_comment.setOnTouchListener(Global.GetTouch());
-        ImageLoader.getInstance().displayImage(signinNewListModel.creator.avatar, holder.iv_heading);
-        holder.tv_name.setText(signinNewListModel.creator.name);
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.address);
         holder.tv_create_time.setText(DateTool.getDiffTime(signinNewListModel.createdAt));
+        holder.tv_name.setText(signinNewListModel.creator.name);
+        ImageLoader.getInstance().displayImage(signinNewListModel.creator.avatar, holder.iv_heading);
+
 
         /** 偏差距离,当未知显示红色 */
         if(signinNewListModel.distance.equals("未知")){
@@ -229,7 +231,7 @@ public class CustomerSigninNewListAdapter extends BaseAdapter {
         holder.iv_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewCrol.commentEmbl(position);
+                viewCrol.commentEmbl(signinNewListModel.id);
             }
         });
 

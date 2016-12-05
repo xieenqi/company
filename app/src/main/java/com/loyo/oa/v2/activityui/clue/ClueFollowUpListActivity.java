@@ -10,9 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpGroupAdapter;
 import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpListAdapter;
-import com.loyo.oa.v2.activityui.clue.bean.ClueFollowUpListModel;
-import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
+import com.loyo.oa.v2.activityui.clue.model.ClueFollowUpListModel;
+import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.clue.presenter.impl.ClueFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
@@ -60,6 +62,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
     private boolean isMyUser;
     private boolean isPullOrDown;
     private boolean isChanged;
+    private String id;
     private Customer customer;
 
     private String name, responsorName;
@@ -72,14 +75,13 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
     private AudioPlayer audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
-    private int commentPosition;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
     private ClueFollowUpListPresenter mPresenter;
-    private ClueFollowUpListAdapter mAdapter;
+    private ClueFollowUpGroupAdapter mAdapter;
 
-    private ArrayList<ClueFollowUpListModel> listModel = new ArrayList<>();
-    private PaginationX<ClueFollowUpListModel> mPagination = new PaginationX<>(20);
+    private ArrayList<ClueFollowGroupModel> listModel = new ArrayList<>();
+    private PaginationX<ClueFollowGroupModel> mPagination = new PaginationX<>(20);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,11 +209,6 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
 
             /*新建*/
             case R.id.layout_add:
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable(Customer.class.getName(), customer);
-//                bundle.putInt(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
-//                app.startActivityForResult(this, DynamicAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
-
                 ClueListItem item = new ClueListItem();
                 item.id = clueId;
                 item.companyName = name;
@@ -230,7 +227,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new ClueFollowUpListAdapter(mContext, listModel, this, this);
+            mAdapter = new ClueFollowUpGroupAdapter(mContext, listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -243,7 +240,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      */
     private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", id);
         map.put("title", content);
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
@@ -256,7 +253,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      */
     private void requestComment(Record record) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
@@ -294,8 +291,8 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      * 点击评论回调
      */
     @Override
-    public void commentEmbl(int position) {
-        commentPosition = position;
+    public void commentEmbl(String id) {
+        this.id = id;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         layout_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
@@ -340,7 +337,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      * 获取列表数据成
      */
     @Override
-    public void getListDataSuccesseEmbl(PaginationX<ClueFollowUpListModel> paginationX) {
+    public void getListDataSuccesseEmbl(PaginationX<ClueFollowGroupModel> paginationX) {
         listView.onRefreshComplete();
         if (isPullOrDown) {
             listModel.clear();

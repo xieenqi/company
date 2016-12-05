@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.customer.presenter.impl;
 
+import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.SigninListFragPresenter;
+import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signinnew.presenter.SelfSigninListFragPresenter;
 import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
@@ -24,9 +26,9 @@ import retrofit.client.Response;
 
 public class SigninListFragPresenterImpl implements SigninListFragPresenter {
 
-    private SigninNewListView crolView;
+    private CustomerSigninNewListView crolView;
 
-    public SigninListFragPresenterImpl(SigninNewListView crolView){
+    public SigninListFragPresenterImpl(CustomerSigninNewListView crolView){
         this.crolView = crolView;
     }
 
@@ -75,9 +77,9 @@ public class SigninListFragPresenterImpl implements SigninListFragPresenter {
      * */
     @Override
     public void getListData(HashMap<String, Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getCustomerSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getCustomerSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewGroupModel>>>() {
             @Override
-            public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
+            public void success(BaseBeanT<PaginationX<SigninNewGroupModel>> paginationX, Response response) {
                 HttpErrorCheck.checkResponse("客户下拜访", response);
                 crolView.getListDataSuccesseEmbl(paginationX);
             }

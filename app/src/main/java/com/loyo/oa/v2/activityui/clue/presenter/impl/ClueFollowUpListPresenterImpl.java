@@ -2,7 +2,8 @@ package com.loyo.oa.v2.activityui.clue.presenter.impl;
 
 import android.content.Context;
 
-import com.loyo.oa.v2.activityui.clue.bean.ClueFollowUpListModel;
+import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
+import com.loyo.oa.v2.activityui.clue.model.ClueFollowUpListModel;
 import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -77,9 +78,9 @@ public class ClueFollowUpListPresenterImpl implements ClueFollowUpListPresenter 
      */
     @Override
     public void getListData(HashMap<String, Object> map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).followUp(map, new RCallback<PaginationX<ClueFollowUpListModel>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).followUp(map, new RCallback<PaginationX<ClueFollowGroupModel>>() {
             @Override
-            public void success(PaginationX<ClueFollowUpListModel> paginationX, Response response) {
+            public void success(PaginationX<ClueFollowGroupModel> paginationX, Response response) {
                 HttpErrorCheck.checkResponse("线索下跟进列表", response);
                 if (paginationX != null && paginationX.getRecords() != null)
                     crolView.getListDataSuccesseEmbl(paginationX);

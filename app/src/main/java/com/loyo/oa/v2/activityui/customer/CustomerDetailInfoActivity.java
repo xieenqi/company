@@ -161,11 +161,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 mCustomer.state, CustomerAction.DELETE);
         boolean canDump = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.DUMP);
-        boolean canPickin = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+        boolean canPickIn = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.PICK_IN);
+        boolean needPickIn = canPickIn && mCustomer.state == Customer.DumpedCustomer;
         img_title_right.setVisibility((!canDelete && !canDump)?View.GONE : View.VISIBLE);
-        img_public.setEnabled(canPickin);
-        img_public.setVisibility(canPickin?View.VISIBLE : View.GONE);
+        img_public.setEnabled(needPickIn);
+        img_public.setVisibility(needPickIn?View.VISIBLE : View.GONE);
 
         boolean canVisit = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.VISIT);

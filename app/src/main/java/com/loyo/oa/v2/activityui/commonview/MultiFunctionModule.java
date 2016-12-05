@@ -230,7 +230,7 @@ public class MultiFunctionModule extends LinearLayout {
     private void completeRecord() {
         voice.stopRecord();
         if (!isRecordCancle && isEffective && recordTime > 1) {
-            callbackComplete.recordComplete(voice.getOutPath(), recordTime + "");
+            callbackComplete.recordComplete(voice.getOutPath(), (recordTime > 60 ? 60 : recordTime) + "");
             //恢复默认录音状态是键盘
             ll_record_keyboard.setTag(false);
             setIsRecording(false);

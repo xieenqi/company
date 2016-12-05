@@ -27,6 +27,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
+import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -36,6 +37,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -155,12 +157,14 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         List<DBDepartment> depts = new ArrayList<>();
         String title = "部门";
         //为超管或权限为全公司 展示全公司成员
-        if (permission != null && permission.dataRange == Permission.COMPANY) {
+        if (PermissionManager.getInstance().dataRange(BusinessOperation.WORKSHEET_MANAGEMENT)
+                == Permission.COMPANY) {
             depts.addAll(OrganizationManager.shareManager().allDepartments());
             title = "全公司";
         }
         //权限为部门 展示我的部门
-        else if (permission != null && permission.dataRange == Permission.TEAM) {
+        else if (PermissionManager.getInstance().dataRange(BusinessOperation.WORKSHEET_MANAGEMENT)
+                == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "本部门";
         }
