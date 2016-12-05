@@ -150,10 +150,10 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         msgAudiomMenu = new MsgAudiomMenu(mContext, this,uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        canAdd = mCustomer!=null&&
+        canAdd = mCustomer!=null&& mCustomer.state==Customer.NormalCustomer &&
                 PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                         mCustomer.state, CustomerAction.FOLLOWUP_ADD);
-        if (canAdd) {
+        if (!canAdd) {
             layout_add.setVisibility(View.GONE);
         }else{
             Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
