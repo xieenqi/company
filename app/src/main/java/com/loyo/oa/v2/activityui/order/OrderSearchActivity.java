@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.OrderList;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
@@ -28,6 +29,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -44,7 +46,7 @@ import retrofit.client.Response;
  * 【订单搜索】
  */
 
-public class OrderSearchActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback<OrderList> {
+public class OrderSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, Callback<OrderList> {
 
     public static final int TEAM_SALE_SEARCH = 20;//团队搜索
     public static final int MY_SALE_SEARCH = 30;//我的搜索
@@ -64,8 +66,17 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_search);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_public_search);
+    }
+
+    @Override
+    public void getPageData() {
+        doSearch();
     }
 
     /**
@@ -141,8 +152,8 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshLi
                 hideInputKeyboard(edt_search);
             }
         });
-
         showInputKeyboard(edt_search);
+        ll_loading.setStatus(LoadingLayout.Success);//此处是进入页面不需要请求接口
     }
 
     /**
@@ -173,7 +184,8 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshLi
     @Override
     public void success(OrderList orderList, Response response) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkResponse("订单搜索列表：", response);
+        HttpErrorCheck.checkResponse("订单搜索列表：", response, ll_loading);
+        ll_loading.setStatus(LoadingLayout.Success);
         try {
             if (!isPullDown) {
                 if (orderList.records != null && orderList.records.size() == 0)
@@ -183,6 +195,8 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshLi
                 listData = orderList.records;
             }
             adapter.setAdapter();
+            if (listData.size() == 0)
+                ll_loading.setStatus(LoadingLayout.Empty);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -191,7 +205,7 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshLi
     @Override
     public void failure(RetrofitError error) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkError(error);
+        HttpErrorCheck.checkError(error, ll_loading);
     }
 
 
