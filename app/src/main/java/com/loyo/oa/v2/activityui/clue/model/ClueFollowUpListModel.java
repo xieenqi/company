@@ -1,7 +1,6 @@
-package com.loyo.oa.v2.activityui.clue.bean;
+package com.loyo.oa.v2.activityui.clue.model;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
-import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
 import com.loyo.oa.v2.activityui.signinnew.model.CommentModel;
 

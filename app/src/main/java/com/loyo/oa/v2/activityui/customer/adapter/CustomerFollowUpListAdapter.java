@@ -267,7 +267,7 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         holder.iv_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewCrol.commentEmbl(position);
+                viewCrol.commentEmbl(followUpListModel.id);
             }
         });
 

@@ -1,8 +1,7 @@
 package com.loyo.oa.v2.activityui.clue.viewcontrol;
 
-import com.loyo.oa.v2.activityui.clue.bean.ClueFollowUpListModel;
-import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
-import com.loyo.oa.v2.beans.BaseBeanT;
+import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
+import com.loyo.oa.v2.activityui.clue.model.ClueFollowUpListModel;
 import com.loyo.oa.v2.beans.PaginationX;
 
 /**
@@ -12,7 +11,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 public interface ClueFollowUpListView {
 
     /*评论操作*/
-    void commentEmbl(int position);
+    void commentEmbl(String id);
 
     /*删除附件操作*/
     void deleteCommentEmbl(String id);
@@ -24,7 +23,7 @@ public interface ClueFollowUpListView {
     void commentSuccessEmbl();
 
     /*获取列表数据成功*/
-    void getListDataSuccesseEmbl(PaginationX<ClueFollowUpListModel> paginationX);
+    void getListDataSuccesseEmbl(PaginationX<ClueFollowGroupModel> paginationX);
 
     /*获取列表数据失败*/
     void getListDataErrorEmbl();

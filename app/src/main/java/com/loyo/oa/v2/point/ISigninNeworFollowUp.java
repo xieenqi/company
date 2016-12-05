@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.point;
 
 
+import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
+import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
@@ -33,7 +35,7 @@ public interface ISigninNeworFollowUp {
      * 客户下 拜访数据
      */
     @GET("/visit/m/bycustId/")
-    void getCustomerSignin(@QueryMap Map<String, Object> params, Callback<BaseBeanT<PaginationX<SigninNewListModel>>> cb);
+    void getCustomerSignin(@QueryMap Map<String, Object> params, Callback<BaseBeanT<PaginationX<SigninNewGroupModel>>> cb);
 
     /**
      * 我的拜访数据
@@ -71,8 +73,8 @@ public interface ISigninNeworFollowUp {
     /**
      * 客户下的跟进数据
      */
-    @GET("/saleactivity/mobile/{id}/")
-    void getCustomerFollowUpList(@Path("id") String id,@QueryMap Map<String, Object> params, Callback<PaginationX<FollowUpListModel>> cb);
+    @GET("/saleactivity/{id}/")
+    void getCustomerFollowUpList(@Path("id") String id,@QueryMap Map<String, Object> params, Callback<PaginationX<FollowUpGroupModel>> cb);
 
     /**
      * 拜访详情数据

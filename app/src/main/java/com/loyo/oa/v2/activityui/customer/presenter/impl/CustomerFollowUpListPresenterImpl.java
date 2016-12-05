@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.customer.presenter.impl;
 
 import android.content.Context;
 
+import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
@@ -78,9 +79,9 @@ public class CustomerFollowUpListPresenterImpl implements CustomerFollowUpListPr
      */
     @Override
     public void getListData(HashMap<String, Object> map, String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getCustomerFollowUpList(id, map, new RCallback<PaginationX<FollowUpListModel>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getCustomerFollowUpList(id, map, new RCallback<PaginationX<FollowUpGroupModel>>() {
             @Override
-            public void success(PaginationX<FollowUpListModel> paginationX, Response response) {
+            public void success(PaginationX<FollowUpGroupModel> paginationX, Response response) {
                 HttpErrorCheck.checkResponse("客户下的跟进", response);
                 if (paginationX != null && paginationX.getRecords() != null)
                     crolView.getListDataSuccesseEmbl(paginationX);

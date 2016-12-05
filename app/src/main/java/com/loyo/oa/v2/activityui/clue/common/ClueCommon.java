@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.activityui.clue.common;
 
-import com.loyo.oa.v2.activityui.clue.bean.IdName;
-import com.loyo.oa.v2.activityui.clue.bean.SourcesData;
+import com.loyo.oa.v2.activityui.clue.model.IdName;
+import com.loyo.oa.v2.activityui.clue.model.SourcesData;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

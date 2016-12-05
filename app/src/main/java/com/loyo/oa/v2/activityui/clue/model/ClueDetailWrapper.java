@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.clue.bean;
+package com.loyo.oa.v2.activityui.clue.model;
 
 import com.loyo.oa.v2.beans.BaseBean;
 import com.loyo.oa.v2.beans.SaleActivity;

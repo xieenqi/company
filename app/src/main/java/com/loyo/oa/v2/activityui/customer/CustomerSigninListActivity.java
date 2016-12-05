@@ -14,9 +14,12 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewGroupAdapter;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewListAdapter;
+import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.SigninListFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.SigninListFragPresenterImpl;
+import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
 import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
@@ -49,7 +52,7 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerSigninListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class CustomerSigninListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     private ViewGroup layout_back;
     private TextView tv_title;
@@ -60,10 +63,11 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     private boolean canAdd;
     private boolean isPullOrDown;
     private boolean isChanged;
+    private String id;
 
-    private PaginationX<SigninNewListModel> mPagination = new PaginationX<>(20);
-    private ArrayList<SigninNewListModel> listModel = new ArrayList<>();
-    private CustomerSigninNewListAdapter mAdapter;
+    private PaginationX<SigninNewGroupModel> mPagination = new PaginationX<>(20);
+    private ArrayList<SigninNewGroupModel> listModel = new ArrayList<>();
+    private CustomerSigninNewGroupAdapter mAdapter;
 
 
     /*录音 评论 播放相关*/
@@ -163,7 +167,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new CustomerSigninNewListAdapter(mContext, listModel, this, this);
+            mAdapter = new CustomerSigninNewGroupAdapter(mContext, listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -191,7 +195,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      */
     private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", id);
         map.put("title", content);
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
@@ -204,7 +208,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      */
     private void requestComment(Record record) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
@@ -242,8 +246,8 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      * 点击评论回调
      */
     @Override
-    public void commentEmbl(int position) {
-        commentPosition = position;
+    public void commentEmbl(String id) {
+        this.id = id;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         layout_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
@@ -288,7 +292,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
      * 获取列表数据成
      */
     @Override
-    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewListModel>> paginationX) {
+    public void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewGroupModel>> paginationX) {
         listView.onRefreshComplete();
         if (isPullOrDown) {
             listModel.clear();

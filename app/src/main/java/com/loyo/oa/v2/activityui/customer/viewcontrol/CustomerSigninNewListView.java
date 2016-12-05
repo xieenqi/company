@@ -1,15 +1,18 @@
 package com.loyo.oa.v2.activityui.customer.viewcontrol;
 
-import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
-import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
+/**
+ * Created by loyo_dev1 on 16/12/5.
+ */
+
+import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 
 /**
- * Created by loyo_dev1 on 16/11/23.
+ * Created by yyy on 16/11/14.
  */
 
-public interface CustomerFollowUpListView {
+public interface CustomerSigninNewListView {
 
     /*评论操作*/
     void commentEmbl(String id);
@@ -24,7 +27,7 @@ public interface CustomerFollowUpListView {
     void commentSuccessEmbl();
 
     /*获取列表数据成功*/
-    void getListDataSuccesseEmbl(PaginationX<FollowUpGroupModel> paginationX);
+    void getListDataSuccesseEmbl(BaseBeanT<PaginationX<SigninNewGroupModel>> paginationX);
 
     /*获取列表数据失败*/
     void getListDataErrorEmbl();

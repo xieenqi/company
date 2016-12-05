@@ -14,8 +14,10 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
+import com.loyo.oa.v2.activityui.customer.adapter.CustomerFollowUpGroupAdapter;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerFollowUpListAdapter;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.CustomerFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.CustomerFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerFollowUpListView;
@@ -61,6 +63,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     private boolean canAdd;
     private boolean isPullOrDown;
     private boolean isChanged;
+    private String id;
 
     /*录音 评论 播放相关*/
     private LinearLayout layout_bottom_voice;
@@ -69,14 +72,13 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     private AudioPlayer audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
-    private int commentPosition;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
     private CustomerFollowUpListPresenter mPresenter;
-    private CustomerFollowUpListAdapter mAdapter;
+    private CustomerFollowUpGroupAdapter mAdapter;
 
-    private ArrayList<FollowUpListModel> listModel = new ArrayList<>();
-    private PaginationX<FollowUpListModel> mPagination = new PaginationX<>(20);
+    private ArrayList<FollowUpGroupModel> listModel = new ArrayList<>();
+    private PaginationX<FollowUpGroupModel> mPagination = new PaginationX<>(20);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,7 +217,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new CustomerFollowUpListAdapter(mContext, listModel, this,this);
+            mAdapter = new CustomerFollowUpGroupAdapter(mContext, listModel, this,this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -228,7 +230,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      */
     private void requestComment(String content) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", id);
         map.put("title", content);
         map.put("commentType", 1); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
@@ -240,7 +242,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      */
     private void requestComment(Record record) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizzId", listModel.get(commentPosition).id);
+        map.put("bizzId", id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
         map.put("audioInfo",record);//语音信息
@@ -278,8 +280,8 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      * 点击评论回调
      */
     @Override
-    public void commentEmbl(int position) {
-        commentPosition = position;
+    public void commentEmbl(String id) {
+        this.id = id;
         layout_bottom_menu.setVisibility(View.VISIBLE);
         layout_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
@@ -321,10 +323,10 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     }
 
     /**
-     * 获取列表数据成
+     * 获取列表数据成功
      * */
     @Override
-    public void getListDataSuccesseEmbl(PaginationX<FollowUpListModel> paginationX) {
+    public void getListDataSuccesseEmbl(PaginationX<FollowUpGroupModel> paginationX) {
         if(isPullOrDown){
             listModel.clear();
         }

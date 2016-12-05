@@ -13,7 +13,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.activityui.clue.ClueTypeEnum;
 import com.loyo.oa.v2.activityui.clue.adapter.MyClueAdapter;
-import com.loyo.oa.v2.activityui.clue.bean.ClueListItem;
+import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.followup.persenter.DynamicSelectCustomerAndCuleFragmentPCersener;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;

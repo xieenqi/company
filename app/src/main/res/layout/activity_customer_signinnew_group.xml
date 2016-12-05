@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_timegroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EDEDED"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:gravity="center_vertical"
+            android:src="@drawable/bg_view_blue_circle" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_30"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="今天"
+            android:textColor="@color/text99"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <com.loyo.oa.v2.customview.CustomerListView
+        android:id="@+id/layout_listview"
+        android:layout_marginRight="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#00000000"
+        android:dividerHeight="3dp"
+        />
+
+</LinearLayout>
