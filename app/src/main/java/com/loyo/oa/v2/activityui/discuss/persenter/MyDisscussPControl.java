@@ -52,17 +52,18 @@ public class MyDisscussPControl implements MyDiscussPersenter {
                             if (isTopAdd) {
                                 listData = null;
                                 listData = discuss.getRecords();
-                                if (listData != null && !(listData.size() > 0)) {
-                                    vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
-                                } else {
-                                    vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
-                                }
                             } else {
                                 listData.addAll(discuss.getRecords());
                             }
                             bindPageData(listData);
+                            vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
                         } else {
-                            Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            if (isTopAdd) {
+                                vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+                            } else {
+                                vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            }
                         }
                         vControl.hideProgress();
                     }

@@ -349,23 +349,23 @@ public class DiscussDetialActivity extends BaseLoadingActivity implements View.O
             @Override
             public void success(final PaginationX<HttpDiscussDet> d, final Response response) {
                 HttpErrorCheck.checkResponse("讨论详情：", response);
-                if (d == null || d.getRecords().size() == 0) {
-                    Toast("没有更多信息");
-                }
+//                if (d == null || d.getRecords().size() == 0) {
+//                    Toast("没有更多信息");
+//                }
                 Collections.reverse(d.getRecords());
                 if (isPull) {
                     mPageDiscussion.getRecords().clear();
                     mPageDiscussion.getRecords().addAll(0, d.getRecords());
-                    if (d != null && d.getRecords().size() == 0) {
-                        ll_loading.setStatus(LoadingLayout.Empty);
-                    } else {
-                        ll_loading.setStatus(LoadingLayout.Success);
-                    }
                 } else {
                     mPageDiscussion.getRecords().addAll(0, d.getRecords());
                 }
                 bindDiscussion();
                 lv_notice.onRefreshComplete();
+                if (d != null && d.getRecords().size() == 0 && isPull) {
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                } else {
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
 
             }
 
