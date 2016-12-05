@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceManagerActivity_;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.ValidateInfo;
+import com.loyo.oa.v2.activityui.commonview.LoadStatusView;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
 import com.loyo.oa.v2.activityui.home.adapter.AdapterHomeItem;
@@ -251,8 +252,6 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent mIntent = new Intent(getActivity(), SweetAlertDialogActivity.class);
-                startActivity(mIntent);*/
                 showMoreWindow(v);
             }
         });

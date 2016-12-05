@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpListAdapter;
 import com.loyo.oa.v2.activityui.clue.bean.ClueFollowUpListModel;
@@ -46,7 +47,7 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class ClueFollowUpListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2,ClueFollowUpListView,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack, View.OnClickListener{
+public class ClueFollowUpListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, ClueFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     public static final int ACTIVITIES_ADD = 101;
 
@@ -90,8 +91,8 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
     @Override
     public void onPause() {
         super.onPause();
-        if(null != voiceView)
-        audioPlayer.audioPause(voiceView);
+        if (null != voiceView)
+            audioPlayer.audioPause(voiceView);
     }
 
 
@@ -130,9 +131,9 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         }
     }
 
-    private void initView(){
+    private void initView() {
         getIntenData();
-        mPresenter = new ClueFollowUpListPresenterImpl(this,mContext);
+        mPresenter = new ClueFollowUpListPresenterImpl(this, mContext);
         audioPlayer = new AudioPlayer(this);
         audioPlayer.initPlayer();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
@@ -150,7 +151,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this,uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
         if (!isMyUser) {
@@ -160,9 +161,9 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("跟进动态");
 
-        Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
+        Utils.btnSpcHideForListViewCus(mContext, listView.getRefreshableView(),
                 layout_add,
-                layout_bottom_menu,msgAudiomMenu.getEditComment());
+                layout_bottom_menu, msgAudiomMenu.getEditComment());
 
         getData(false);
     }
@@ -197,7 +198,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
             /*返回*/
             case R.id.layout_back:
@@ -229,7 +230,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new ClueFollowUpListAdapter(mContext, listModel, this,this);
+            mAdapter = new ClueFollowUpListAdapter(mContext, listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -249,6 +250,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
+
     /**
      * 评论语音
      */
@@ -257,14 +259,18 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         map.put("bizzId", listModel.get(commentPosition).id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
-        map.put("audioInfo",record);//语音信息
+        map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
 
     @Subscribe
-    public void onFollowUpRushEvent(FollowUpRushEvent event){
+    public void onFollowUpRushEvent(FollowUpRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
+        msgAudiomMenu = null;
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
+        layout_bottom_menu.removeAllViews();
+        layout_bottom_menu.addView(msgAudiomMenu);
         getData(false);
     }
 
@@ -321,7 +327,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      */
     @Override
     public void commentSuccessEmbl() {
-        if(isMyUser){
+        if (isMyUser) {
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
@@ -332,11 +338,11 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
 
     /**
      * 获取列表数据成
-     * */
+     */
     @Override
     public void getListDataSuccesseEmbl(PaginationX<ClueFollowUpListModel> paginationX) {
         listView.onRefreshComplete();
-        if(isPullOrDown){
+        if (isPullOrDown) {
             listModel.clear();
         }
         mPagination = paginationX;
@@ -346,7 +352,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
 
     /**
      * 获取列表数据失败
-     * */
+     */
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
@@ -374,7 +380,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         }
 
         audioPlayer.initPlayer();
-        if(audioPlayer.isPlaying()){
+        if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
@@ -387,7 +393,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;

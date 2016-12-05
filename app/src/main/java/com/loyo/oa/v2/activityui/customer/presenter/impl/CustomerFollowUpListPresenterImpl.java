@@ -28,14 +28,14 @@ public class CustomerFollowUpListPresenterImpl implements CustomerFollowUpListPr
     private CustomerFollowUpListView crolView;
     private Context mContext;
 
-    public CustomerFollowUpListPresenterImpl(CustomerFollowUpListView crolView, Context mContext){
+    public CustomerFollowUpListPresenterImpl(CustomerFollowUpListView crolView, Context mContext) {
         this.crolView = crolView;
         this.mContext = mContext;
     }
 
     /**
      * 删除评论
-     * */
+     */
     @Override
     public void deleteComment(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
@@ -55,9 +55,9 @@ public class CustomerFollowUpListPresenterImpl implements CustomerFollowUpListPr
 
     /**
      * 发送评论
-     * */
+     */
     @Override
-    public void requestComment(HashMap<String,Object> map) {
+    public void requestComment(HashMap<String, Object> map) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
@@ -75,14 +75,15 @@ public class CustomerFollowUpListPresenterImpl implements CustomerFollowUpListPr
 
     /**
      * 获取列表数据
-     * */
+     */
     @Override
-    public void getListData(HashMap<String,Object> map,String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getCustomerFollowUpList(id,map, new RCallback<PaginationX<FollowUpListModel>>() {
+    public void getListData(HashMap<String, Object> map, String id) {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getCustomerFollowUpList(id, map, new RCallback<PaginationX<FollowUpListModel>>() {
             @Override
             public void success(PaginationX<FollowUpListModel> paginationX, Response response) {
                 HttpErrorCheck.checkResponse("客户下的跟进", response);
-                crolView.getListDataSuccesseEmbl(paginationX);
+                if (paginationX != null && paginationX.getRecords() != null)
+                    crolView.getListDataSuccesseEmbl(paginationX);
             }
 
             @Override

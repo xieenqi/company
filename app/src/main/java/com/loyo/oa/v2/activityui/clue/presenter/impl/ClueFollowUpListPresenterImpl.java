@@ -27,14 +27,14 @@ public class ClueFollowUpListPresenterImpl implements ClueFollowUpListPresenter 
     private ClueFollowUpListView crolView;
     private Context mContext;
 
-    public ClueFollowUpListPresenterImpl(ClueFollowUpListView crolView, Context mContext){
+    public ClueFollowUpListPresenterImpl(ClueFollowUpListView crolView, Context mContext) {
         this.crolView = crolView;
         this.mContext = mContext;
     }
 
     /**
      * 删除评论
-     * */
+     */
     @Override
     public void deleteComment(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
@@ -54,9 +54,9 @@ public class ClueFollowUpListPresenterImpl implements ClueFollowUpListPresenter 
 
     /**
      * 发送评论
-     * */
+     */
     @Override
-    public void requestComment(HashMap<String,Object> map) {
+    public void requestComment(HashMap<String, Object> map) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
@@ -74,14 +74,15 @@ public class ClueFollowUpListPresenterImpl implements ClueFollowUpListPresenter 
 
     /**
      * 获取列表数据
-     * */
+     */
     @Override
-    public void getListData(HashMap<String,Object> map) {
+    public void getListData(HashMap<String, Object> map) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class).followUp(map, new RCallback<PaginationX<ClueFollowUpListModel>>() {
             @Override
             public void success(PaginationX<ClueFollowUpListModel> paginationX, Response response) {
                 HttpErrorCheck.checkResponse("线索下跟进列表", response);
-                crolView.getListDataSuccesseEmbl(paginationX);
+                if (paginationX != null && paginationX.getRecords() != null)
+                    crolView.getListDataSuccesseEmbl(paginationX);
             }
 
             @Override
