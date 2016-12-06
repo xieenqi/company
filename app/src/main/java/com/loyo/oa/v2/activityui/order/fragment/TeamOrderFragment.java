@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -53,7 +54,7 @@ import retrofit.client.Response;
 public class TeamOrderFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
 
-    private ViewStub emptyView;
+    private LoadingLayout ll_loading;
     private PullToRefreshListView lv_list;
     private TeamOrderAdapter adapter;
     private DropDownMenu filterMenu;
@@ -80,11 +81,10 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void initView(View view) {
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        lv_list.setEmptyView(emptyView);
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -99,9 +99,18 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
         adapter = new TeamOrderAdapter(app);
         lv_list.setAdapter(adapter);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                getPageData();
+            }
+        });
+        getPageData();
+    }
 
-        getData();
-
+    private void getPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
+        onPullDownToRefresh(lv_list);
     }
 
     private void loadFilterOptions() {
@@ -119,8 +128,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                 == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "本部门";
-        }
-        else {
+        } else {
             title = "我";
             depts.add(OrganizationFilterModel.selfDepartment());
         }
@@ -149,21 +157,17 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                     if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
                         xPath = model.getKey();
                         userId = "";
-                    }
-                    else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
+                    } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
                         xPath = "";
                         userId = model.getKey();
                     }
-                }
-                else if (menuIndex == 1) { //
+                } else if (menuIndex == 1) { //
                     statusType = key;
-                }
-                else if (menuIndex == 2) { //
-                    CommonSortType type = ((CommonSortTypeMenuModel)model).type;
+                } else if (menuIndex == 2) { //
+                    CommonSortType type = ((CommonSortTypeMenuModel) model).type;
                     if (type == CommonSortType.AMOUNT) {
                         field = "dealMoney";
-                    }
-                    else if (type == CommonSortType.CREATE) {
+                    } else if (type == CommonSortType.CREATE) {
                         field = "createdAt";
                     }
                 }
@@ -192,11 +196,14 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void success(OrderList orderlist, Response response) {
                 HttpErrorCheck.checkResponse("团队订单列表：", response);
+                ll_loading.setStatus(LoadingLayout.Success);
                 lv_list.onRefreshComplete();
                 if (!isPullDown) {
                     listData.addAll(orderlist.records);
                 } else {
                     listData = orderlist.records;
+                    if (listData.size() == 0)
+                        ll_loading.setStatus(LoadingLayout.Empty);
                 }
                 adapter.setData(listData);
             }
@@ -204,7 +211,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void failure(RetrofitError error) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }

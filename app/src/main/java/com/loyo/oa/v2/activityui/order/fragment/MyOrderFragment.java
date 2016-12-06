@@ -11,6 +11,7 @@ import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -52,7 +53,7 @@ import retrofit.client.Response;
 public class MyOrderFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private Button btn_add;
-    private ViewStub emptyView;
+    private LoadingLayout ll_loading;
     private PullToRefreshListView lv_list;
     private MyOrderAdapter adapter;
     private DropDownMenu filterMenu;
@@ -81,11 +82,9 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         lv_list.setMode(PullToRefreshBase.Mode.BOTH);
         lv_list.setOnRefreshListener(this);
-        lv_list.setEmptyView(emptyView);
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -96,12 +95,23 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                getPageData();
+            }
+        });
         adapter = new MyOrderAdapter(app);
         lv_list.setAdapter(adapter);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-
-        getData();
+        getPageData();
         Utils.btnHideForListView(lv_list.getRefreshableView(), btn_add);
+    }
+
+    private void getPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
+        getData();
     }
 
     private void loadFilterOptions() {
@@ -126,13 +136,11 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
 
                 if (menuIndex == 0) { //
                     statusType = key;
-                }
-                else if (menuIndex == 1) { //
-                    CommonSortType type = ((CommonSortTypeMenuModel)model).type;
+                } else if (menuIndex == 1) { //
+                    CommonSortType type = ((CommonSortTypeMenuModel) model).type;
                     if (type == CommonSortType.AMOUNT) {
                         field = "dealMoney";
-                    }
-                    else if (type == CommonSortType.CREATE) {
+                    } else if (type == CommonSortType.CREATE) {
                         field = "createdAt";
                     }
                 }
@@ -170,11 +178,14 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void success(OrderList orderlist, Response response) {
                 lv_list.onRefreshComplete();
+                ll_loading.setStatus(LoadingLayout.Success);
                 HttpErrorCheck.checkResponse("我的订单列表：", response);
                 if (!isPullDown) {
                     listData.addAll(orderlist.records);
                 } else {
                     listData = orderlist.records;
+                    if(listData.size()==0)
+                        ll_loading.setStatus(LoadingLayout.Empty);
                 }
                 adapter.setData(listData);
             }
@@ -182,7 +193,7 @@ public class MyOrderFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void failure(RetrofitError error) {
                 lv_list.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error,ll_loading);
             }
         });
     }

@@ -57,7 +57,6 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
     private CommonSearchAdapter adapter;
     private Bundle mBundle;
     private LayoutInflater mInflater;
-    private ViewStub emptyView;
 
     private int fromPage;
     private int page = 1;
@@ -94,7 +93,6 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
         isSelect = mBundle.getBoolean("isSelect", false);
         isResult = mBundle.getBoolean("isResult", false);
         mInflater = LayoutInflater.from(this);
-        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +142,6 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
 
         ListView expandableListView = expandableListView_search.getRefreshableView();
         adapter = new CommonSearchAdapter();
-        expandableListView.setEmptyView(emptyView);
         expandableListView.setAdapter(adapter);
 
         /**列表监听器*/
@@ -210,13 +207,14 @@ public class ClueSearchActivity extends BaseLoadingActivity implements PullToRef
                     Toast("没有更多的数据了");
                 listData.addAll(clueList.data.records);
             } else {
+                if (clueList.data.records == null)
+                    ll_loading.setStatus(LoadingLayout.Empty);
                 listData = clueList.data.records;
             }
             adapter.setAdapter();
-            if (listData.size() == 0)
-                ll_loading.setStatus(LoadingLayout.Empty);
         } catch (NullPointerException e) {
             e.printStackTrace();
+
         }
     }
 
