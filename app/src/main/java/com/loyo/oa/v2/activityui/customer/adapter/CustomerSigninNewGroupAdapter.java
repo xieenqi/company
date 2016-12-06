@@ -72,7 +72,7 @@ public class CustomerSigninNewGroupAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tv_title.setText(DateTool.getDiffTime(Long.parseLong(groupModel.timeStamp)));
+        holder.tv_title.setText(DateTool.getDiffNoMs(Long.parseLong(groupModel.timeStamp)));
         if(null != groupModel.activities && groupModel.activities.size() >0){
             mAdapter = new CustomerSigninNewListAdapter(mContext, groupModel.activities, crolView, audioCb);
             holder.layout_listview.setAdapter(mAdapter);
