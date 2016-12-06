@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_title"/>
-    <LinearLayout
-        android:id="@+id/ll_state_baebae"
+    <include layout="@layout/include_title" />
+    <!--<LinearLayout-->
+    <!--android:id="@+id/ll_state_baebae"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:visibility="gone"-->
+    <!--&gt;-->
+    <!--<include layout="@layout/item_layout_baebae"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<ViewStub-->
+    <!--android:id="@+id/vs_nodata"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:inflatedId="@+id/layout_nodata"-->
+    <!--android:layout="@layout/item_layout_nodata"/>-->
+    <com.library.module.widget.loading.LoadingLayout
+        android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        >
-        <include layout="@layout/item_layout_baebae"/>
-    </LinearLayout>
-
-    <ViewStub
-        android:id="@+id/vs_nodata"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inflatedId="@+id/layout_nodata"
-        android:layout="@layout/item_layout_nodata"/>
-
-    <ListView
-        android:id="@+id/lv_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/white"
-        android:divider="@null"
-        android:scrollbars="none"
-        />
+        app:isFirstVisible="true">
+
+        <ListView
+            android:id="@+id/lv_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:divider="@null"
+            android:scrollbars="none" />
+    </com.library.module.widget.loading.LoadingLayout>
 
     <LinearLayout
         android:id="@+id/ll_add"
@@ -42,17 +47,19 @@
         android:background="@color/activity_bg"
         android:gravity="center"
         android:minHeight="@dimen/dimen_48"
-        android:orientation="horizontal"
-        >
+        android:orientation="vertical">
+
+        <include layout="@layout/include_solid_line" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:drawableLeft="@drawable/icon_common_add"
             android:drawablePadding="@dimen/dimen_5"
             android:gravity="center"
             android:text="新增回款计划"
             android:textColor="@color/title_bg1"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
     </LinearLayout>
 </LinearLayout>
