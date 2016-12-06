@@ -26,6 +26,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
 import com.loyo.oa.v2.activityui.customer.model.HttpAddCustomer;
@@ -41,6 +42,7 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
+import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
@@ -115,6 +117,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private TextView tv_call_name1;
     private TextView tv_call_name2;
     private TextView tv_call_name3;
+    private TextView tv_district;
 
     private EditText edt_contract_tel1;
     private EditText edt_contract_tel2;
@@ -140,7 +143,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private LinearLayout layout_more;
     private LinearLayout containerOp; //选填动态字段容器
     private LinearLayout containerRe; //必填动态字段容器
+    private LinearLayout ll_district;
 
+    private CustomerRegional regional = new CustomerRegional();
     private EditText edit_address_details;
     private ImageGridViewAdapter imageGridViewAdapter;
     private ArrayList<Contact> mContacts = new ArrayList<>();
@@ -210,6 +215,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         tv_call_name1 = (TextView) findViewById(R.id.tv_call_name1);
         tv_call_name2 = (TextView) findViewById(R.id.tv_call_name2);
         tv_call_name3 = (TextView) findViewById(R.id.tv_call_name3);
+        tv_district = (TextView) findViewById(R.id.tv_district);
 
         edt_contract_tel1 = (EditText) findViewById(R.id.edt_contract_tel1);
         edt_contract_tel2 = (EditText) findViewById(R.id.edt_contract_tel2);
@@ -233,6 +239,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         layout_more = (LinearLayout) findViewById(R.id.layout_more);
         containerOp = (LinearLayout) findViewById(R.id.layout_customer_optional_info);
         containerRe = (LinearLayout) findViewById(R.id.layout_customer_required_info);
+        ll_district = (LinearLayout) findViewById(R.id.layout_customer_district);
 
         layout_more.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -398,7 +405,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
             R.id.layout_customer_label, R.id.img_refresh_address, R.id.iv_phone_insert1,
-            R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx, R.id.layout_more})
+            R.id.iv_phone_insert2, R.id.iv_call_insert1, R.id.iv_call_insert2, R.id.tv_gscx, R.id.layout_more,
+            R.id.layout_customer_district})
     public void onClick(final View v) {
         switch (v.getId()) {
 
@@ -437,6 +445,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 iv_call_insert2.setVisibility(View.INVISIBLE);
                 ll_call_layout3.setVisibility(View.VISIBLE);
                 break;
+
+            /*地区*/
+            case R.id.layout_customer_district:
+                loadAreaCodeTable();
+                break;
+
 
             /*刷新地址*/
             case R.id.img_refresh_address:
@@ -546,6 +560,29 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * 显示地区选择Dialog
+     */
+    void loadAreaCodeTable() {
+        String[] cityValue = null;
+        if (!tv_district.getText().toString().isEmpty()) {
+            cityValue = tv_district.getText().toString().split(" ");
+        }
+        final SelectCityView selectCityView = new SelectCityView(this, cityValue);
+        selectCityView.setCanceledOnTouchOutside(true);
+        selectCityView.show();
+        selectCityView.setOnclickselectCity(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                String[] cityArr = selectCityView.getResult();
+                tv_district.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2]);
+                regional.province = cityArr[0];
+                regional.city = cityArr[1];
+                regional.county = cityArr[2];
+                selectCityView.dismiss();
+            }
+        });
+    }
 
     void setContract(final Contact c) {
         if (c == null) return;
@@ -683,6 +720,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("wiretelGroup", wiretelGroup);
         map.put("extDatas", extDatas);
         map.put("summary", memo);
+        map.put("regional", regional);
 
         LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {

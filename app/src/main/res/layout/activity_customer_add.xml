@@ -617,7 +617,42 @@
                 android:layout_marginTop="@dimen/dimen_20"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:visibility="gone" />
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/layout_customer_district"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/dimen_4">
+
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:minWidth="@dimen/dimen_80"
+                        android:text="地        区" />
+
+                    <TextView
+                        android:id="@+id/tv_district"
+                        style="@style/text_item2"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:textColor="@color/suodesilei" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow" />
+                </LinearLayout>
+                <include layout="@layout/include_solid_line_left" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

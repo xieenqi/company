@@ -50,6 +50,8 @@ public class DateTool {
      */
     public static final String DATE_FORMATE_AT_MINUTES = "yyyy-MM-dd HH:mm";
 
+    public static final String DATE_FORMATE_NO_MI = "yyyy-MM-dd";
+
     /**
      * dd-MM-yyyy, hh:mm
      */
@@ -60,14 +62,20 @@ public class DateTool {
     public static final String DATE_FORMATE_HOUR_MINUTE = "HH:mm";
 
     public static final String DATE_FORMATE_SPLITE_BY_POINT = "yyyy.MM.dd HH:mm";
-    //MM-dd HH:mm
+
     public static final String DATE_FORMATE_HOUR_YEAR = "MM-dd HH:mm";
+
+    public static final String DATE_FORMATE = "MM-dd";
+
     public static Calendar calendar;
 
 
     static SimpleDateFormat FORMATE_HOUR_MINUTE = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
     static SimpleDateFormat FORMATE_HOUR_YEAR = new SimpleDateFormat(DATE_FORMATE_HOUR_YEAR, Locale.getDefault());
     static SimpleDateFormat FORMATE_AT_MINUTES = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES, Locale.getDefault());
+
+    static SimpleDateFormat FORMATE_YEAR_MO_MI = new SimpleDateFormat(DATE_FORMATE_NO_MI, Locale.getDefault());
+    static SimpleDateFormat FORMATE_YEAR_MO = new SimpleDateFormat(DATE_FORMATE, Locale.getDefault());
 
     protected DateTool() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -189,6 +197,35 @@ public class DateTool {
         cal.setTime(date);
         return cal.get(Calendar.DAY_OF_WEEK);
 
+    }
+
+    /**
+     * 时间大致表达,没有时分秒
+     *
+     * @param seconds 日期
+     * @return 时差的大致表达形式
+     */
+    public static String getDiffNoMs(long seconds) {
+        String result = "--";
+        // 今天午夜00:00:00的毫秒数-日期毫秒数
+        long millis = Long.valueOf("" + seconds) * 1000;
+
+        long morning = getCurrentMoringMillis() + DAY_MILLIS;
+        long diffTime = morning - millis;
+        // 一天内
+        if (diffTime < 0) {
+            result = FORMATE_YEAR_MO.format(new Date(millis));
+        } else if (diffTime <= DAY_MILLIS) {
+            result = "今天  ";
+        } else if (diffTime <= 2 * DAY_MILLIS) {// 昨天
+            result = "昨天  ";
+        } else if (diffTime <= 365 * DAY_MILLIS) {// 一年内
+            result = FORMATE_YEAR_MO.format(new Date(millis));
+        } else {
+            result = FORMATE_YEAR_MO_MI.format(new Date(millis));
+        }
+
+        return result;
     }
 
     /**
