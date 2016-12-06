@@ -61,7 +61,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -472,32 +471,34 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      */
     private void showLeaveDialog() {
 
-        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                dismissSweetAlert();
-            }
-        }, new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                dismissSweetAlert();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
-                if (owner != null) {
-                    NewUser ownerUser = new NewUser();
-                    ownerUser.setAvatar(owner.getAvatar());
-                    ownerUser.setId(owner.getId());
-                    ownerUser.setName(owner.getName());
-                    StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(ownerUser);
-                    bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
-                }
-                bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
-                Intent intent = new Intent();
-                intent.setClass(CustomerInfoActivity.this, ContactPickerActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        },"提示",getString(R.string.app_userdetalis_message));
+//        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                dismissSweetAlert();
+//            }
+//        }, new SweetAlertDialog.OnSweetClickListener() {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                dismissSweetAlert();
+//
+//            }
+//        },"提示",getString(R.string.app_userdetalis_message));
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+        if (owner != null) {
+            NewUser ownerUser = new NewUser();
+            ownerUser.setAvatar(owner.getAvatar());
+            ownerUser.setId(owner.getId());
+            ownerUser.setName(owner.getName());
+            StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(ownerUser);
+            bundle.putSerializable(ContactPickerActivity.STAFF_COLLECTION_KEY, collection);
+        }
+        bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, FinalVariables.PICK_RESPONSIBLE_USER_REQUEST);
+        Intent intent = new Intent();
+        intent.setClass(CustomerInfoActivity.this, ContactPickerActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     /**
