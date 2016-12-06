@@ -50,7 +50,6 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
     private TextView tv_send_message;
     private MsgAudioMenuCallBack callBack;
     private String UUID;
-    private SoundPoolUtils sp;
 
     public interface MsgAudioMenuCallBack {
         void sendMsg(EditText editText);
@@ -64,7 +63,6 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
             switch (msg.what) {
                 case AliOSSManager.OSS_SUCCESS:
                     callBack.sebdRecordInfo((Record) msg.obj);
-                    sp.playRecordSengSuccess();
                     break;
                 case AliOSSManager.OSS_ERROR1:
                     Global.Toast("连接异常");
@@ -82,8 +80,6 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
         this.mContext = context;
         this.UUID = UUID;
         this.addView(initView());
-        sp = SoundPoolUtils.getInstanc();
-        sp.initRecordSengSuccess();
     }
 
     public View initView() {
