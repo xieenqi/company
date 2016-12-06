@@ -18,6 +18,7 @@ import com.loyo.oa.dropdownmenu.filtermenu.WorksheetStatusMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.WorksheetTemplateMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetDetailActivity;
@@ -27,16 +28,15 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetListWrapper;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.activityui.worksheet.common.WorksheetConfig;
 import com.loyo.oa.v2.activityui.worksheet.event.WorksheetChangeEvent;
-import com.loyo.oa.v2.permission.BusinessOperation;
-import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.GroupsData;
 import com.loyo.oa.v2.common.fragment.BaseGroupsDataFragment;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
+import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.permission.Permission;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.Config_project;
@@ -73,7 +73,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     private DropDownMenu filterMenu;
 
     private Intent mIntent;
-    private Permission permission;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +101,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_team_worksheet, null);
             groupsData = new GroupsData();
-            permission = (Permission) getArguments().getSerializable("permission");
             initView(mView);
             loadFilterOptions();
         }

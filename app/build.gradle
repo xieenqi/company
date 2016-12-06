@@ -30,7 +30,13 @@ android {
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
-            res.srcDirs = ['src/main/res', 'src/main/res-photo-picker', 'src/main/res-smooth-checkbox']
+            res.srcDirs = ['src/main/res',
+                           'src/main/res-photo-picker',
+                           'src/main/res-smooth-checkbox',
+                           'src/main/res/customer',
+                           'src/main/res/saleopportunity',
+                           'src/main/res/setting',
+                           'src/main/res/worksheet']
         }
     }
     signingConfigs {
@@ -106,7 +112,7 @@ android {
 //    }
 
     ext {
-          supportLibVersion = "24.2.1"
+        supportLibVersion = "24.2.1"
     }
 
     dependencies {

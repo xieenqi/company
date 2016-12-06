@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="49dp"
+    android:layout_height="45dp"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
@@ -14,8 +14,9 @@
         android:maxLines="1"
         android:gravity="start|center_vertical"
         android:text="@string/app_content"
-        android:paddingLeft="@dimen/dimen_20"
-        android:textSize="15sp"
+        android:textColor="@color/text33"
+        android:paddingLeft="@dimen/dimen_14"
+        android:textSize="13sp"
         android:background="@color/department_cell_bg"/>
 
 </LinearLayout>

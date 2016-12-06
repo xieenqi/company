@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/text33"
-                android:textSize="@dimen/text_sp15"
+                android:textSize="@dimen/text_sp14"
                 />
 
             <TextView
@@ -34,14 +34,14 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="@color/title_bg1"
-                android:textSize="@dimen/text_sp15"
+                android:textSize="@dimen/text_sp14"
                 />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_3"
+            android:layout_marginTop="@dimen/dimen_8"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -58,7 +58,7 @@
                 android:layout_weight="1"
                 android:text=""
                 android:textColor="@color/text99"
-                android:textSize="@dimen/text_sp12"
+                android:textSize="@dimen/text_sp13"
                 />
         </LinearLayout>
     </LinearLayout>
