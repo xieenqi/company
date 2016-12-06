@@ -174,6 +174,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private double laPosition;//当前位置的经纬度
     private double loPosition;
 
+    private boolean cusMemo = false; //简介权限
     private boolean cusGuys = false;  //联系人权限
     private boolean cusPhone = false; //手机权限
     private boolean cusMobile = false;//座机权限
@@ -505,7 +506,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else if (TextUtils.isEmpty(customerContract) && cusGuys) {
                     Toast("请输入联系人姓名!");
                     return;
-                } else if(TextUtils.isEmpty(memo)){
+                } else if(TextUtils.isEmpty(memo) && cusMemo){
                     Toast("请填写客户简介!");
                     return;
                 } else if (!testDynamicword()) {
@@ -585,6 +586,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     } else if (customerJur.label.contains("客户地址") && customerJur.required) {
                         cusDetialAdress = true;//详细地址必填
                         edit_address_details.setHint("请输入客户详细地址(必填)");
+                    } else if (customerJur.label.contains("简介") && customerJur.required){
+                        cusMemo = true;
+                        edt_content.setHint("客户简介(必填)");
                     }
                 }
                 initExtra(true);
@@ -613,17 +617,19 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         extDatas.addAll(RextDatasModel);
         extDatas.addAll(OpextDatasModel);
 
+        LogUtil.dee("extDatas:"+MainApp.gson.toJson(extDatas));
+
         if (extDatas != null) {
             for (ExtraData ext : extDatas) {
                 try {
                     if (ext.getProperties().isRequired() && ext.getProperties().isEnabled()) {
-                        LogUtil.d("动态字段必填:" + ext.getProperties().isRequired());
                         if (ext.getVal().isEmpty() || null == ext.getVal()) {
                             return false;
                         }
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
+                    return false;
                 }
             }
         }
