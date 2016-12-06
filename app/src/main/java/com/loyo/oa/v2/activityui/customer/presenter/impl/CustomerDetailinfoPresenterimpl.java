@@ -128,7 +128,8 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
             public void success(final BaseResponse<Customer> customerResp, final Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
                 if (customerResp == null || customerResp.data == null) {
-                    crolView.showMsg("获取数据失败");
+//                    crolView.showMsg("获取数据失败");
+                    crolView.getDataErrorEmle();
                     return;
                 }
                 crolView.getDataSuccessEmbl(customerResp.data);

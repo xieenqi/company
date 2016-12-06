@@ -42,14 +42,18 @@ public class DialogHelp {
      * 成功
      * */
     public static void successStatusLoad(){
-        loadStatusDialog.animSuccessEmbl();
+        if (loadingDialog != null) {
+            loadStatusDialog.animSuccessEmbl();
+        }
     }
 
     /**
      * 失败
      * */
     public static void errorStatusLoading(){
-        loadStatusDialog.animErrorEmbl();
+        if (loadStatusDialog != null) {
+            loadStatusDialog.animErrorEmbl();
+        }
     }
 
     /**

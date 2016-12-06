@@ -43,7 +43,6 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
     private RecordUploadingCallback recordUploadingCallback;
     private RecordUtils rs;
     private boolean isPlay;
-    SoundPoolUtils sp;
     Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -52,7 +51,6 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
                 case AliOSSManager.OSS_SUCCESS:
                     pb_progress.setVisibility(GONE);
                     recordUploadingCallback.Success((Record) msg.obj);
-                    sp.playRecordSengSuccess();
                     break;
                 case AliOSSManager.OSS_ERROR1:
                     Global.Toast("连接异常");
@@ -78,8 +76,6 @@ public class CommonRecordItem extends LinearLayout implements View.OnClickListen
         this.recordUploadingCallback = recordUploadingCallback;
         this.setTag(path);
         initView();
-        sp = SoundPoolUtils.getInstanc();
-        sp.initRecordSengSuccess();
     }
 
     public CommonRecordItem(Context context, AttributeSet attrs) {

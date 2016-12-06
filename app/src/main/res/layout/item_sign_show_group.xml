@@ -2,25 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/activity_bg"
-              android:gravity="center_vertical">
+              android:gravity="center_vertical"
+              android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/img_time_point"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_marginLeft="@dimen/dimen_14"
-        android:gravity="center_vertical"
-        android:src="@drawable/task_time_point"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+        <ImageView
+            android:id="@+id/img_time_point"
+            android:layout_width="7dp"
+            android:layout_height="7dp"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:gravity="center_vertical"
+            android:src="@drawable/task_time_point"/>
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/dimen_30"
-        android:layout_marginLeft="10dp"
-        android:gravity="center_vertical"
-        android:text="今天"
-        android:textColor="@color/text99"
-        android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_30"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:text="今天"
+            android:textColor="@color/text99"
+            android:textSize="13sp"/>
+    </LinearLayout>
 
+    <include layout="@layout/include_solid_line"/>
 </LinearLayout>

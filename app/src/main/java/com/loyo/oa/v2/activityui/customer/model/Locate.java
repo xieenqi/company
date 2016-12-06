@@ -22,4 +22,9 @@ public class Locate implements Serializable {
         this.loc = loc;
     }
 
+    public boolean validatedLocation() {
+        return loc.length > 1
+                && !(loc[0] == 0.0 && loc[1] == -90.0);
+    }
+
 }
