@@ -34,6 +34,7 @@ import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -51,7 +52,7 @@ import retrofit.client.Response;
  * 【事件详情】页面
  * Created by xeq on 16/8/30.
  */
-public class EventDetailActivity extends BaseActivity implements View.OnClickListener {
+public class EventDetailActivity extends BaseLoadingActivity implements View.OnClickListener {
 
     private static String PICK_USER_SESSION = "com.loyo.EventDetailActivity.PICK_USER_SESSION";
 
@@ -127,9 +128,18 @@ public class EventDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_detial);
         getIntentData();
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_event_detial);
+    }
+
+    @Override
+    public void getPageData() {
+        getData();
     }
 
     private void getIntentData() {
@@ -165,8 +175,7 @@ public class EventDetailActivity extends BaseActivity implements View.OnClickLis
         tv_endTime = (TextView) findViewById(R.id.tv_endTime);
         tv_day = (TextView) findViewById(R.id.tv_day);
         ll_handleInfoList = (LinearLayout) findViewById(R.id.ll_handleInfoList);
-        showLoading("");
-        getData();
+        getPageData();
     }
 
     private void setRoleinit() {
@@ -192,7 +201,7 @@ public class EventDetailActivity extends BaseActivity implements View.OnClickLis
                 getEventDetail(eventId, map, new Callback<BaseBeanT<EventDetail>>() {
                     @Override
                     public void success(BaseBeanT<EventDetail> o, Response response) {
-                        HttpErrorCheck.checkResponse("事件详细：", response);
+                        HttpErrorCheck.checkResponse("事件详细：", response,ll_loading);
                         mData = o.data;
                         actions = actionsForRole(mData, getRoleForEvent(mData));
                         bindData();
@@ -200,7 +209,7 @@ public class EventDetailActivity extends BaseActivity implements View.OnClickLis
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
 
