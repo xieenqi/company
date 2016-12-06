@@ -10,6 +10,7 @@ import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -59,7 +60,6 @@ import retrofit.client.Response;
 public class ResponsableWorksheetFragment extends BaseGroupsDataFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private Button btn_add;
-    private ViewStub emptyView;
     private DropDownMenu filterMenu;
 
     private String statusParam = "";  /* 工单状态Param */
@@ -67,12 +67,13 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
     private Intent mIntent;
     private View mView;
+    private LoadingLayout ll_loading;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    public void finishEvent(WorksheetEvent event){
+    public void finishEvent(WorksheetEvent event) {
         Bundle bd = new Bundle();
         bd.putString(ExtraAndResult.CC_USER_ID, event.id /*事件id*/);
         bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
@@ -116,17 +117,20 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     }
 
     private void initView(View view) {
-
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
-
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
-
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getData();
+            }
+        });
         mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
         mExpandableListView.setOnRefreshListener(this);
-        mExpandableListView.setEmptyView(emptyView);
-
         setupExpandableListView(
                 new ExpandableListView.OnGroupClickListener() {
                     @Override
@@ -139,8 +143,8 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
                     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                         mIntent = new Intent();
 
-                        WorksheetEvent wse =(WorksheetEvent) groupsData.get(groupPosition, childPosition);
-                        String wsId = wse.wsId != null? wse.wsId:wse.workSheetId;
+                        WorksheetEvent wse = (WorksheetEvent) groupsData.get(groupPosition, childPosition);
+                        String wsId = wse.wsId != null ? wse.wsId : wse.workSheetId;
 
                         mIntent.putExtra(ExtraAndResult.EXTRA_ID, wsId);
                         mIntent.setClass(getActivity(), WorksheetDetailActivity.class);
@@ -153,11 +157,9 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
         initAdapter();
         expand();
 
-        Utils.btnHideForListView(expandableListView,btn_add);
+        Utils.btnHideForListView(expandableListView, btn_add);
 
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-
-        showLoading("加载中...");
         getData();
     }
 
@@ -179,8 +181,7 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
 
                 if (menuIndex == 0) {
                     statusParam = key;
-                }
-                else if (menuIndex == 1) {
+                } else if (menuIndex == 1) {
                     typeParam = key;
                 }
                 refresh();
@@ -199,13 +200,13 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
     public void refresh() {
         isPullDown = true;
         page = 1;
-        showLoading("");
+        ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
 
 
     @Override
-    protected  void getData() {
+    protected void getData() {
 
 //        * templateId  工单类型id
 //        * status      1:待分派 2:处理中 3:待审核 4:已完成 5:意外中止
@@ -231,20 +232,20 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
             @Override
             public void success(WorksheetEventListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
+                HttpErrorCheck.checkResponse("我负责的工单列表：", response, ll_loading);
 
                 if (isPullDown) {
                     groupsData.clear();
+                    if (listWrapper != null && listWrapper.isEmpty())
+                        ll_loading.setStatus(LoadingLayout.Empty);
                 }
                 loadData(listWrapper.data.records);
-                mExpandableListView.setEmptyView(emptyView);
-
-                HttpErrorCheck.checkResponse("我负责的工单列表：", response);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
 
@@ -256,11 +257,10 @@ public class ResponsableWorksheetFragment extends BaseGroupsDataFragment impleme
             groupsData.addItem(iterator.next());
         }
         groupsData.sort();
-        try{
+        try {
             adapter.notifyDataSetChanged();
             expand();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
     }

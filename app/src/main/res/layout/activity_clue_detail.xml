@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
@@ -11,7 +10,7 @@
     <!-- Navigation Bar -->
     <include layout="@layout/include_common_title_edit" />
 
-    <com.library.module.widget.loading.LoadingLayout
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
