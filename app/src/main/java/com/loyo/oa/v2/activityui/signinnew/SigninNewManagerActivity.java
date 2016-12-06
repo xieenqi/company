@@ -101,7 +101,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         rotateAnimation = initArrowAnimation();
         getStageData();
     }
-
+//TODO  基本不变是数据需要优化一下不是每次都拉取
     /**
      * 获取客户标签 筛选menu
      */

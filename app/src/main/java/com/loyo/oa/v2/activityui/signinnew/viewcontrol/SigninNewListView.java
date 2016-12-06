@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.signinnew.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -27,5 +28,7 @@ public interface SigninNewListView {
 
     /*获取列表数据失败*/
     void getListDataErrorEmbl();
+
+    LoadingLayout getLoadingView();
 
 }

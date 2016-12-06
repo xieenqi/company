@@ -25,13 +25,13 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
 
     private SigninNewListView crolView;
 
-    public SelfSigninListFragPresenterImpl(SigninNewListView crolView){
+    public SelfSigninListFragPresenterImpl(SigninNewListView crolView) {
         this.crolView = crolView;
     }
 
     /**
      * 删除评论
-     * */
+     */
     @Override
     public void deleteComment(String id) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
@@ -51,9 +51,9 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
 
     /**
      * 发送评论
-     * */
+     */
     @Override
-    public void requestComment(HashMap<String,Object> map) {
+    public void requestComment(HashMap<String, Object> map) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
@@ -74,13 +74,13 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).selfSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
-                HttpErrorCheck.checkResponse("我的拜访", response);
+                HttpErrorCheck.checkResponse("我的拜访", response, crolView.getLoadingView());
                 crolView.getListDataSuccesseEmbl(paginationX);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, crolView.getLoadingView());
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }
