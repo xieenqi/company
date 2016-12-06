@@ -34,7 +34,7 @@ android {
                            'src/main/res-photo-picker',
                            'src/main/res-smooth-checkbox',
                            'src/main/res_loyo/customer',
-                           'src/main/res_loyo/saleopprotunity',
+                           'src/main/res_loyo/saleopportunity',
                            'src/main/res_loyo/setting',
                            'src/main/res_loyo/worksheet']
         }
