@@ -18,4 +18,15 @@ public class WorksheetListWrapper extends BaseBean {
         public int totalRecords;
         public ArrayList<Worksheet> records;
     }
+
+    public boolean isEmpty() {
+        if (data == null) {
+            return true;
+        } else if (data.records == null) {
+            return true;
+        } else if (data.records.size() == 0) {
+            return true;
+        }
+        return false;
+    }
 }
