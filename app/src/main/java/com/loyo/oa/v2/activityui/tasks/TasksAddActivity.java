@@ -307,8 +307,8 @@ public class TasksAddActivity extends BaseActivity {
 
     void requestCommitTask() {
         if (pickPhots.size() == 0) {
-            //showLoading("正在提交");
-            showDialogLoading(false);
+            showLoading("正在提交");
+            //showDialogLoading(false);
         }
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
@@ -348,7 +348,8 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkCommitSus(response);
+                //HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkResponse(response);
                 //不需要保存
                 cancelLoading();
                 isSave = false;
@@ -363,7 +364,8 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
+                //HttpErrorCheck.checkCommitEro(error);
+                HttpErrorCheck.checkError(error);
             }
         });
     }
