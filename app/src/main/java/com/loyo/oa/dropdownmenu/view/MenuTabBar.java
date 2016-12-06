@@ -30,7 +30,7 @@ public class MenuTabBar extends LinearLayout {
     /* 分割线 */
     private Paint mDividerPaint;
     private int mDividerColor = 0xFFd2d2d2; // 分割线颜色
-    private int mDividerPadding = 13;       // 分割线距离上下padding
+    private int mDividerPadding = 8;        // 分割线距离上下padding
 
     /* 上下两条线 */
     private Paint mLinePaint;
@@ -39,7 +39,7 @@ public class MenuTabBar extends LinearLayout {
 
 
     private int mTabTextSize = 15; // 指针文字的大小,sp
-    private int mTabDefaultColor = 0xFF333333; // 未选中默认颜色
+    private int mTabDefaultColor = 0xFF666666; // 未选中默认颜色
     private int mTabSelectedColor = 0xFF008DF2; // 指针选中颜色
     private int drawableRight = 10;
 

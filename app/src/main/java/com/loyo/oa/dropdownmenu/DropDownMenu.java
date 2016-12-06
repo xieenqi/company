@@ -83,7 +83,7 @@ public class DropDownMenu extends RelativeLayout implements View.OnClickListener
         /* 1.顶部筛选条 */
         headerTabBar = new MenuTabBar(getContext());
         headerTabBar.setId(R.id.drop_menu_header);
-        addView(headerTabBar, -1, UIUtil.dp(getContext(), 50));
+        addView(headerTabBar, -1, UIUtil.dp(getContext(), 45));
 
         LayoutParams params = new LayoutParams(-1, -1);
         params.addRule(BELOW, R.id.drop_menu_header);
