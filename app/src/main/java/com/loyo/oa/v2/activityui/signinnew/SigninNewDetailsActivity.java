@@ -47,6 +47,7 @@ import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -67,7 +68,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class SigninNewDetailsActivity extends BaseActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
+public class SigninNewDetailsActivity extends BaseLoadingActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
     private ScrollView layout_scrollview;
@@ -128,8 +129,17 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signinnew_details);
         initUI();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_signinnew_details);
+    }
+
+    @Override
+    public void getPageData() {
+        requestDetails();
     }
 
     @Override
@@ -141,7 +151,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
     @Override
     public void onPause() {
         super.onPause();
-        if(null != voiceView)
+        if (null != voiceView)
             audioPlayer.audioPause(voiceView);
     }
 
@@ -232,7 +242,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
-        requestDetails();
+        getPageData();
     }
 
     /**
@@ -331,7 +341,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         /** 设置@ */
         if (null != mSigninDelModel.atNameAndDepts && !TextUtils.isEmpty(mSigninDelModel.atNameAndDepts)) {
             tv_toast.setVisibility(View.VISIBLE);
-            tv_toast.setText("@"+mSigninDelModel.atNameAndDepts);
+            tv_toast.setText("@" + mSigninDelModel.atNameAndDepts);
         }
 
         /** 设置联系人 */
@@ -446,13 +456,13 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
      * 获取详情数据
      */
     private void requestDetails() {
-        showLoading("");
+//        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getSigninDetails(id, map, new RCallback<BaseBeanT<SigninNewListModel>>() {
             @Override
             public void success(BaseBeanT<SigninNewListModel> signinNewListModel, Response response) {
-                HttpErrorCheck.checkResponse("拜访详情", response);
+                HttpErrorCheck.checkResponse("拜访详情", response, ll_loading);
                 mSigninDelModel = signinNewListModel.data;
                 if (mSigninDelModel == null) {
                     Toast("没有获取到数据");
@@ -464,7 +474,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
                 super.failure(error);
             }
         });
@@ -536,7 +546,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        if(audioPlayer.isPlaying()){
+        if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
@@ -549,7 +559,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;
