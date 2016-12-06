@@ -558,7 +558,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             case R.id.img_refresh_address:
                 mBundle = new Bundle();
                 mBundle.putInt("page", MapModifyView.CUSTOMER_DETAILS_PAGE);
-                if (null != mCustomer.position && mCustomer.position.loc.length > 0) {
+                if (null != mCustomer.position && mCustomer.position.validatedLocation()) {
                     mBundle.putDoubleArray("loc", mCustomer.position.loc);
                     mBundle.putString("address", mCustomer.position.addr);
                 }

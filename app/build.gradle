@@ -33,10 +33,10 @@ android {
             res.srcDirs = ['src/main/res',
                            'src/main/res-photo-picker',
                            'src/main/res-smooth-checkbox',
-                           'src/main/res/customer',
-                           'src/main/res/saleopportunity',
-                           'src/main/res/setting',
-                           'src/main/res/worksheet']
+                           'src/main/res_loyo/customer',
+                           'src/main/res_loyo/saleopportunity',
+                           'src/main/res_loyo/setting',
+                           'src/main/res_loyo/worksheet']
         }
     }
     signingConfigs {
