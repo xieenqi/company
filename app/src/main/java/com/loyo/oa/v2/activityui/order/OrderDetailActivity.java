@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
@@ -30,6 +31,7 @@ import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -46,7 +48,7 @@ import retrofit.client.Response;
 /**
  * 【订单详情】页面
  */
-public class OrderDetailActivity extends BaseActivity implements View.OnClickListener {
+public class OrderDetailActivity extends BaseLoadingActivity implements View.OnClickListener {
 
     private LinearLayout img_title_left, ll_extra, ll_product, ll_record, ll_enclosure, ll_plan, ll_wflayout;
     private RelativeLayout img_title_right;
@@ -100,9 +102,18 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_detail);
         getIntentData();
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_order_detail);
+    }
+
+    @Override
+    public void getPageData() {
+        getData();
     }
 
     @Subscribe
@@ -165,7 +176,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        getData();
+        getPageData();
     }
 
     @Override
@@ -178,7 +189,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 functionBuuton();
                 break;
             case R.id.tv_customer://跳转到相关客户
-                if (! PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT)) {
+                if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }
@@ -244,23 +255,23 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
 
                 mBundle = new Bundle();
                 mBundle.putSerializable(ExtraAndResult.EXTRA_OBJ, mData);
-                mBundle.putBoolean(ExtraAndResult.EXTRA_BOOLEAN,canAddWorksheet);
-                mBundle.putInt(ExtraAndResult.EXTRA_ID,mData.status);
+                mBundle.putBoolean(ExtraAndResult.EXTRA_BOOLEAN, canAddWorksheet);
+                mBundle.putInt(ExtraAndResult.EXTRA_ID, mData.status);
                 app.startActivityForResult(this, OrderWorksheetsActivity.class, MainApp.ENTER_TYPE_RIGHT, 102, mBundle);
                 break;
         }
     }
 
     private void getData() {
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .getSaleDetails(orderId, new Callback<OrderDetail>() {
                     @Override
                     public void success(OrderDetail orderdetail, Response response) {
                         HttpErrorCheck.checkResponse("订单详情", response);
+                        ll_loading.setStatus(LoadingLayout.Success);
                         if (null == orderdetail) {
-                            Toast("没有获取到数据");
-                            onBackPressed();
+                            ll_loading.setStatus(LoadingLayout.No_Network);
+                            ll_loading.setNoNetworkText("没有获取到数据");
                             return;
                         }
                         mData = orderdetail;
@@ -269,8 +280,8 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        onBackPressed();
+                        HttpErrorCheck.checkError(error,ll_loading);
+//                        onBackPressed();
                     }
                 });
     }
@@ -399,7 +410,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                             dismissSweetAlert();
                             deleteOrder();
                         }
-                    },"提示","删除不可恢复\n确定删除？");
+                    }, "提示", "删除不可恢复\n确定删除？");
                 }
             });
         dialog.show();
