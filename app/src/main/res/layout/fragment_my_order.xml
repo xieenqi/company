@@ -6,21 +6,22 @@
     android:background="@color/activity_bg"
     android:orientation="vertical">
 
-    <com.library.module.widget.loading.LoadingLayout
-        android:id="@+id/ll_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:isFirstVisible="true">
 
-        <com.loyo.oa.dropdownmenu.DropDownMenu
-            android:id="@+id/drop_down_menu"
+    <com.loyo.oa.dropdownmenu.DropDownMenu
+        android:id="@+id/drop_down_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <FrameLayout
-                android:id="@+id/filter_content_view"
+            <com.library.module.widget.loading.LoadingLayout
+                android:id="@+id/ll_loading"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:isFirstVisible="true">
 
                 <com.loyo.oa.pulltorefresh.PullToRefreshListView
                     android:id="@+id/lv_list"
@@ -36,17 +37,18 @@
                     android:headerDividersEnabled="true"
                     android:scrollbars="none"
                     android:smoothScrollbar="true" />
+            </com.library.module.widget.loading.LoadingLayout>
 
-                <Button
-                    android:id="@+id/btn_add"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="3dp"
-                    android:background="@drawable/bg_btn_circle"
-                    android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_btn_circle"
+                android:textColor="@color/white" />
 
-            </FrameLayout>
-        </com.loyo.oa.dropdownmenu.DropDownMenu>
-    </com.library.module.widget.loading.LoadingLayout>
+        </FrameLayout>
+    </com.loyo.oa.dropdownmenu.DropDownMenu>
+
 </LinearLayout>

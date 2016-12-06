@@ -57,7 +57,7 @@ import retrofit.client.Response;
 public class TeamClueFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private int page = 1;
-    private boolean isPullDown = true, isKind;
+    private boolean isPullDown = true;
     private String xPath = "";
     private String userId = "";
     private String field = "";
@@ -224,6 +224,8 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
             public void success(ClueList clueList, Response response) {
                 lv_list.onRefreshComplete();
                 HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
+                if (isPullDown && clueList.data.records == null)
+                    ll_loading.setStatus(LoadingLayout.Empty);
                 if (null == clueList.data || clueList.data.records == null) {
                     if (isPullDown && listData.size() > 0) {
                         listData.clear();
@@ -237,22 +239,7 @@ public class TeamClueFragment extends BaseFragment implements View.OnClickListen
                     }
                     listData.addAll(clueList.data.records);
                 }
-                try {
-//                    if (isPullDown) {
-//                        listData.clear();
-//                    }
-//                    if (null == clueList.data.records) {
-//                        listData.clear();
-//                        Toast("没有相关数据");
-//                    } else {
-//                        listData.addAll(clueList.data.records);
-//                    }
-                    adapter.setData(listData);
-                    if (listData.size() == 0)
-                        ll_loading.setStatus(LoadingLayout.Empty);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
+                adapter.setData(listData);
             }
 
             @Override

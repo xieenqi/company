@@ -5,59 +5,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.library.module.widget.loading.LoadingLayout
-        android:id="@+id/ll_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:isFirstVisible="true">
 
-        <com.loyo.oa.dropdownmenu.DropDownMenu
-            android:id="@+id/drop_down_menu"
+    <com.loyo.oa.dropdownmenu.DropDownMenu
+        android:id="@+id/drop_down_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <FrameLayout
-                android:id="@+id/filter_content_view"
+            <com.library.module.widget.loading.LoadingLayout
+                android:id="@+id/ll_loading"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <!--<RelativeLayout-->
-                <!--android:id="@+id/re_nodata"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:background="@color/white"-->
-                <!--android:gravity="center"-->
-                <!--android:visibility="gone">-->
-
-                <!--<LinearLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="center"-->
-                <!--android:orientation="vertical">-->
-
-                <!--<ImageView-->
-                <!--android:layout_width="80dp"-->
-                <!--android:layout_height="80dp"-->
-                <!--android:layout_marginBottom="22dp"-->
-                <!--android:src="@drawable/img_nodata"/>-->
-
-                <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="没有相关数据"-->
-                <!--android:textColor="#878787"-->
-                <!--android:textSize="18sp"/>-->
-
-                <!--</LinearLayout>-->
-
-                <!--</RelativeLayout>-->
-
-                <!--<ViewStub-->
-                <!--android:id="@+id/vs_nodata"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:inflatedId="@+id/layout_nodata"-->
-                <!--android:layout="@layout/item_layout_nodata"/>-->
+                android:layout_height="match_parent"
+                app:isFirstVisible="true">
 
                 <com.loyo.oa.pulltorefresh.PullToRefreshListView
                     android:id="@+id/lv_list"
@@ -73,17 +36,18 @@
                     android:headerDividersEnabled="true"
                     android:scrollbars="none"
                     android:smoothScrollbar="true" />
+            </com.library.module.widget.loading.LoadingLayout>
 
-                <Button
-                    android:id="@+id/btn_add"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="3dp"
-                    android:background="@drawable/bg_btn_circle"
-                    android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_btn_circle"
+                android:textColor="@color/white" />
 
-            </FrameLayout>
-        </com.loyo.oa.dropdownmenu.DropDownMenu>
-    </com.library.module.widget.loading.LoadingLayout>
+        </FrameLayout>
+    </com.loyo.oa.dropdownmenu.DropDownMenu>
+
 </LinearLayout>
