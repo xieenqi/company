@@ -344,6 +344,11 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         listView.onRefreshComplete();
     }
 
+    @Override
+    public ViewGroup getBottomMenuLayout() {
+        return layout_bottom_menu;
+    }
+
     /**
      * 列表播放语音回调
      */
