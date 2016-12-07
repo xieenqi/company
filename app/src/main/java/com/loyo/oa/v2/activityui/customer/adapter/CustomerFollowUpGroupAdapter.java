@@ -35,15 +35,15 @@ public class CustomerFollowUpGroupAdapter extends BaseAdapter {
     private AudioPlayCallBack audioCb;
     private CustomerFollowUpListView crolView;
     private FollowUpGroupModel groupModel;
+    private LayoutInflater mInflater;
 
-
-    public CustomerFollowUpGroupAdapter(Context context,ArrayList<FollowUpGroupModel> listModel, AudioPlayCallBack audioCb, CustomerFollowUpListView crolView) {
+    public CustomerFollowUpGroupAdapter(Context context, ArrayList<FollowUpGroupModel> listModel, AudioPlayCallBack audioCb, CustomerFollowUpListView crolView) {
 
         this.listModel = listModel;
         this.mContext = context;
         this.audioCb = audioCb;
         this.crolView = crolView;
-
+        mInflater = LayoutInflater.from(mContext);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CustomerFollowUpGroupAdapter extends BaseAdapter {
         groupModel = listModel.get(position);
         if (null == convertView) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_customer_followup_group, null);
+            convertView = mInflater.inflate(R.layout.activity_customer_followup_group, null);
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
             holder.layout_listview = (CustomerListView) convertView.findViewById(R.id.layout_listview);
             holder.layout_timegroup = (LinearLayout) convertView.findViewById(R.id.layout_timegroup);
@@ -75,10 +75,12 @@ public class CustomerFollowUpGroupAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tv_title.setText(DateTool.getDiffNoMs(Long.parseLong(groupModel.timeStamp)));
-        if(null != groupModel.activities && groupModel.activities.size() >0){
-            mAdapter = new CustomerFollowUpListAdapter(mContext, groupModel.activities, crolView, audioCb);
-            holder.layout_listview.setAdapter(mAdapter);
+        if (crolView.getBottomMenuLayout().getVisibility() == View.GONE) {
+            holder.tv_title.setText(DateTool.getDiffNoMs(Long.parseLong(groupModel.timeStamp)));
+            if (null != groupModel.activities && groupModel.activities.size() > 0) {
+                mAdapter = new CustomerFollowUpListAdapter(mContext, groupModel.activities, crolView, audioCb);
+                holder.layout_listview.setAdapter(mAdapter);
+            }
         }
         return convertView;
     }

@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.customer.viewcontrol;
 
+import android.view.ViewGroup;
+
 import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -28,5 +30,7 @@ public interface CustomerFollowUpListView {
 
     /*获取列表数据失败*/
     void getListDataErrorEmbl();
+
+    ViewGroup getBottomMenuLayout();
 
 }

@@ -311,6 +311,11 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     }
 
     @Override
+    public ViewGroup getBottomMenuLayout() {
+        return layout_bottom_menu;
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
 

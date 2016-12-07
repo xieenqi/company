@@ -82,7 +82,7 @@ public class TeamCustomerAdapter extends BaseAdapter {
         layout3.setVisibility(View.VISIBLE);
 
         img1.setImageResource(R.drawable.icon_customer_tag);
-        img2.setImageResource(R.drawable.icon_follow_up_creator);
+        img2.setImageResource(R.drawable.icon_customer_responder);
         img3.setImageResource(R.drawable.icon_customer_follow_time);
 
         String responser = null == customer.owner || null == customer.owner ? "" : customer.owner.name;

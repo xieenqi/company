@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.clue.viewcontrol;
 
+import android.view.ViewGroup;
+
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowUpListModel;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -27,5 +29,7 @@ public interface ClueFollowUpListView {
 
     /*获取列表数据失败*/
     void getListDataErrorEmbl();
+
+    ViewGroup getBottomMenuLayout();
 
 }
