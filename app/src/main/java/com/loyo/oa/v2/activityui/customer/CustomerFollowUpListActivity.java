@@ -78,6 +78,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     private CustomerFollowUpGroupAdapter mAdapter;
 
     private ArrayList<FollowUpGroupModel> listModel = new ArrayList<>();
+    private ArrayList<FollowUpGroupModel> viewModel = new ArrayList<>();
     private PaginationX<FollowUpGroupModel> mPagination = new PaginationX<>(20);
 
     @Override
@@ -332,6 +333,15 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         }
         mPagination = paginationX;
         listModel.addAll(paginationX.getRecords());
+        String dateIndex = "";
+        for(int i = 0;i<listModel.size();i++){
+            FollowUpGroupModel model = listModel.get(i);
+            if(dateIndex.equals(model.date)){
+                listModel.get(i-1).activities.addAll(model.activities);
+                listModel.remove(model);
+            }
+            dateIndex = model.date;
+        }
         bindData();
         listView.onRefreshComplete();
     }

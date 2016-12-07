@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewGroupAdapter;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewListAdapter;
+import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.SigninListFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.SigninListFragPresenterImpl;
@@ -299,6 +300,15 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
+        String dateIndex = "";
+        for(int i = 0;i<listModel.size();i++){
+            SigninNewGroupModel model = listModel.get(i);
+            if(dateIndex.equals(model.date)){
+                listModel.get(i-1).activities.addAll(model.activities);
+                listModel.remove(model);
+            }
+            dateIndex = model.date;
+        }
         bindData();
     }
 

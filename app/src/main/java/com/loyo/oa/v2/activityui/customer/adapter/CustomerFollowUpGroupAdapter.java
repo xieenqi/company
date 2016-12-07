@@ -36,8 +36,7 @@ public class CustomerFollowUpGroupAdapter extends BaseAdapter {
     private CustomerFollowUpListView crolView;
     private FollowUpGroupModel groupModel;
 
-
-    public CustomerFollowUpGroupAdapter(Context context,ArrayList<FollowUpGroupModel> listModel, AudioPlayCallBack audioCb, CustomerFollowUpListView crolView) {
+    public CustomerFollowUpGroupAdapter(Context context, ArrayList<FollowUpGroupModel> listModel, AudioPlayCallBack audioCb, CustomerFollowUpListView crolView) {
 
         this.listModel = listModel;
         this.mContext = context;
@@ -75,11 +74,14 @@ public class CustomerFollowUpGroupAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
         holder.tv_title.setText(DateTool.getDiffNoMs(Long.parseLong(groupModel.timeStamp)));
-        if(null != groupModel.activities && groupModel.activities.size() >0){
+
+        if (null != groupModel.activities && groupModel.activities.size() > 0) {
             mAdapter = new CustomerFollowUpListAdapter(mContext, groupModel.activities, crolView, audioCb);
             holder.layout_listview.setAdapter(mAdapter);
         }
+
         return convertView;
     }
 
