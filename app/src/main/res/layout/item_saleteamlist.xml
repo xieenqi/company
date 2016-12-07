@@ -42,7 +42,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_saleteam_dollar" />
+            android:background="@drawable/icon_sale_opportunity_cash" />
 
         <TextView
             android:id="@+id/sale_teamlist_guess"
@@ -80,7 +80,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_saleteam_user" />
+            android:background="@drawable/icon_saleopportunity_responder" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -60,8 +60,8 @@
 
                 <ImageView
                     android:id="@+id/img_1"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_customer_tag" />
 
@@ -88,8 +88,8 @@
 
                 <ImageView
                     android:id="@+id/img_2"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_customer_tag" />
 
@@ -116,8 +116,8 @@
 
                 <ImageView
                     android:id="@+id/img_3"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:layout_gravity="center_vertical"
                     android:scaleType="centerInside" />
 

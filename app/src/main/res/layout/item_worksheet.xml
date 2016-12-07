@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dimen_7"
-                android:src="@drawable/icon_follow_up_creator" />
+                android:src="@drawable/icon_worksheet_creator" />
 
             <TextView
                 android:id="@+id/tv_creator_show"
