@@ -42,14 +42,14 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_saleteam_dollar" />
+            android:background="@drawable/icon_sale_opportunity_cash" />
 
         <TextView
             android:id="@+id/sale_teamlist_guess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/dimen_5"
+            android:layout_marginLeft="@dimen/dimen_6"
             android:text="预估销售金额:"
             android:textColor="@color/text99"
             android:textSize="@dimen/text_sp13" />
@@ -80,13 +80,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_saleteam_user" />
+            android:background="@drawable/icon_saleopportunity_responder" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/dimen_3"
+            android:layout_marginLeft="@dimen/dimen_6"
             android:text="负责人:"
             android:textColor="@color/text99"
             android:textSize="@dimen/text_sp13" />
