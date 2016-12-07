@@ -50,6 +50,7 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
     private TextView tv_send_message;
     private MsgAudioMenuCallBack callBack;
     private String UUID;
+    private InputMethodManager imm;
 
     public interface MsgAudioMenuCallBack {
         void sendMsg(EditText editText);
@@ -115,6 +116,7 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
             }
         });
         initMultiFunctionModule();
+        imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         return mView;
     }
 
@@ -236,7 +238,6 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
      * 关闭软键盘
      */
     public void hideInputKeyboard(EditText et) {
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
@@ -244,12 +245,10 @@ public class MsgAudiomMenu extends RelativeLayout implements View.OnClickListene
      * 手动 显示软键盘
      */
     public void showInputKeyboard(final EditText view) {
-        final InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        final Handler handler = new Handler();
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                handler.post(new Runnable() {
+                mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         if (imm != null) {
