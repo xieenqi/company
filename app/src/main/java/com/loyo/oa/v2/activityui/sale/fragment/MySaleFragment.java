@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -56,12 +57,12 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
     private View mView;
     private Button btn_add;
-    private Intent mIntent;
     private PullToRefreshListView listView;
     private AdapterMySaleList adapter;
     private DropDownMenu filterMenu;
     private ArrayList<SaleStage> mSaleStages;
     private MySaleFrgmentPresenterImpl mPersenter;
+    private LoadingLayout ll_loading;
 
     @Nullable
     @Override
@@ -82,13 +83,19 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(click);
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                mPersenter.getData();
+            }
+        });
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
-        listView.setEmptyView((ViewStub) view.findViewById(R.id.vs_nodata));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mIntent = new Intent();
+                Intent mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                 mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
                 mIntent.setClass(getActivity(), SaleDetailsActivity.class);
@@ -149,6 +156,12 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
             adapter.setData(recordData);
         }
     }
+
+    @Override
+    public LoadingLayout getLoadingUI() {
+        return ll_loading;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -172,7 +185,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
                 //新建机会
                 case R.id.btn_add:
-                    mIntent = new Intent();
+                    Intent  mIntent = new Intent();
                     mIntent.setClass(getActivity(), AddMySaleActivity.class);
                     startActivityForResult(mIntent, mActivity.RESULT_FIRST_USER);
                     mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
