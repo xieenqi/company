@@ -6,6 +6,7 @@ import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.setting.adapter.AdapterSystemMessage;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
@@ -15,6 +16,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -29,20 +31,28 @@ import retrofit.client.Response;
  * Created by xeq on 16/11/7.
  */
 
-public class SystemMessageActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, SystemMessageVControl {
+public class SystemMessageActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, SystemMessageVControl {
 
     private LinearLayout ll_back;
     private TextView tv_title, tv_add;
     private PullToRefreshListView lv_list;
-    private ViewStub emptyView;
     private SystemMessagePControl pControl;
     private AdapterSystemMessage adapterSystemMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_system_message);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_system_message);
+    }
+
+    @Override
+    public void getPageData() {
+        pControl.getPageData(1);
     }
 
     private void initView() {
@@ -50,7 +60,6 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_add = (TextView) findViewById(R.id.tv_add);
         lv_list = (PullToRefreshListView) findViewById(R.id.lv_list);
-        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
         tv_title.setText("系统消息");
         tv_add.setText("全部已读");
         ll_back.setOnClickListener(click);
@@ -60,8 +69,6 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
         adapterSystemMessage = new AdapterSystemMessage(this);
         lv_list.setAdapter(adapterSystemMessage);
         pControl = new SystemMessagePControl(this);
-//        AnimationDrawable mAnimationDrawable = (AnimationDrawable) findViewById(R.id.iv_loading).getBackground();
-//        mAnimationDrawable.start();
     }
 
     @Override
@@ -122,7 +129,7 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
 
     @Override
     public void setEmptyView() {
-        lv_list.setEmptyView(emptyView);
+        ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     @Override
@@ -133,5 +140,10 @@ public class SystemMessageActivity extends BaseActivity implements PullToRefresh
     @Override
     public void bindingView(List<SystemMessageItem> data) {
         adapterSystemMessage.setData(data);
+    }
+
+    @Override
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 }
