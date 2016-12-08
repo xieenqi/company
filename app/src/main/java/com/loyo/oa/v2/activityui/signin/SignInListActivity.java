@@ -97,7 +97,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
      */
     @Click(R.id.layout_add)
     void createNewSignIn() {
-        if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
+        if (! PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
             sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
         } else {
             Bundle b = new Bundle();
@@ -123,7 +123,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int i, final long l) {
-                if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
+                if (! PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }

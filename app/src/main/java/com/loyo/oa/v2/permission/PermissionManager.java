@@ -73,6 +73,11 @@ public class PermissionManager {
         return true;
     }
 
+    public boolean nonePermission(@BusinessOperation.Type String module) {
+        return ! hasPermission(module);
+    }
+
+
     public boolean teamPermission(@BusinessOperation.Type String module) {
         if (hasSuperPriority()) {
             return true;

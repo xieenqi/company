@@ -188,7 +188,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
             //跳转订单
             case R.id.tv_related_order:
-                if (PermissionManager.getInstance().hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
+                if (! PermissionManager.getInstance().hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }
