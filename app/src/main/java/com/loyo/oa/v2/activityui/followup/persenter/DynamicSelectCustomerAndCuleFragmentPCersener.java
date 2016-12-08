@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.followup.persenter;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.DynamicSelectCustomerAndCuleFragmentVControl;
@@ -64,7 +65,6 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
      * 获取我的客户的数据
      */
     private void getCustomerData() {
-        vControl.showProgress("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", pageCus);
         params.put("pageSize", 15);
@@ -72,13 +72,13 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
         RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_MY).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> result, Response response) {
-                        HttpErrorCheck.checkResponse("我的客户", response);
+                        HttpErrorCheck.checkResponse("我的客户", response, vControl.getLoadingLayout());
                         if (null == result.records || result.records.size() == 0) {
                             if (isPullCus) {
                                 vControl.showMsg("没有更多数据了!");
                             } else {
                                 mCustomers.clear();
-//                                vControl.setEmptyView();
+                                vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
                             }
                             vControl.getDataComplete();
                         } else {
@@ -96,7 +96,7 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
                     @Override
                     public void failure(RetrofitError error) {
                         vControl.getDataComplete();
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
                     }
                 }
         );
@@ -113,14 +113,14 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
                 create(IClue.class).getMyCluelist(map, new Callback<ClueList>() {
             @Override
             public void success(ClueList clueList, Response response) {
-                HttpErrorCheck.checkResponse("我的线索列表：", response);
+                HttpErrorCheck.checkResponse("我的线索列表：", response, vControl.getLoadingLayout());
                 ArrayList<ClueListItem> data = clueList.data.records;
                 if (null == data || data.size() == 0) {
                     if (isPullClue) {
                         vControl.showMsg("没有更多数据了!");
                     } else {
                         mCule.clear();
-//                                vControl.setEmptyView();
+                        vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
                     }
                     vControl.getDataComplete();
                 } else {
@@ -138,7 +138,7 @@ public class DynamicSelectCustomerAndCuleFragmentPCersener implements DynamicSel
             @Override
             public void failure(RetrofitError error) {
                 vControl.getDataComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
             }
         });
     }
