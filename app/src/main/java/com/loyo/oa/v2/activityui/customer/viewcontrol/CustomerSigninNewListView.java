@@ -4,6 +4,8 @@ package com.loyo.oa.v2.activityui.customer.viewcontrol;
  * Created by loyo_dev1 on 16/12/5.
  */
 
+import android.view.ViewGroup;
+
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -31,5 +33,7 @@ public interface CustomerSigninNewListView {
 
     /*获取列表数据失败*/
     void getListDataErrorEmbl();
+
+    ViewGroup getBottomMenuLayout();
 
 }

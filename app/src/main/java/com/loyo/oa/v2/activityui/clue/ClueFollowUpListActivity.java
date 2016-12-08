@@ -365,6 +365,11 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         listView.onRefreshComplete();
     }
 
+    @Override
+    public ViewGroup getBottomMenuLayout() {
+        return layout_bottom_menu;
+    }
+
     /**
      * 列表播放语音回调
      */

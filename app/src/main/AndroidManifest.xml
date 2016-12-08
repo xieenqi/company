@@ -469,17 +469,17 @@
             android:name=".activityui.customer.CustomerSigninListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateUnspecified" />
         <activity
             android:name=".activityui.customer.CustomerFollowUpListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateUnspecified" />
         <activity
             android:name=".activityui.clue.ClueFollowUpListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateUnspecified" />
 
         <activity
             android:name=".activityui.tasks.TaskModelSelectManageActivity_"
