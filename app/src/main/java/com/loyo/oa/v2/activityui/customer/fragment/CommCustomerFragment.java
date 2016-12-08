@@ -176,7 +176,6 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent();
                 intent.putExtra("Id", mCustomers.get(position - 1).getId());
-                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_COMM);
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                 startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
                 mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);

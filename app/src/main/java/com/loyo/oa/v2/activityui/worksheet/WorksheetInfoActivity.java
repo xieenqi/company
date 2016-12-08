@@ -9,6 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
@@ -54,6 +56,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
             tv_Assignment_name,  /*分派人*/
             tv_boom,             /*触发方式*/
             tv_related_order,    /*关联订单*/
+            tv_related_customer,/*对应客户*/
             tv_responsible_name, /*负责人*/
             tv_assignment_time,  /*分派时间*/
             tv_finish_time,      /*完成时间*/
@@ -89,6 +92,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         tv_Assignment_name = (TextView) findViewById(R.id.tv_Assignment_name);
         tv_boom = (TextView) findViewById(R.id.tv_boom);
         tv_related_order = (TextView) findViewById(R.id.tv_related_order);
+        tv_related_customer = (TextView) findViewById(R.id.tv_related_customer);
         tv_responsible_name = (TextView) findViewById(R.id.tv_responsible_name);
         tv_assignment_time = (TextView) findViewById(R.id.tv_assignment_time);
         tv_finish_time = (TextView) findViewById(R.id.tv_finish_time);
@@ -105,6 +109,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
         img_title_left.setOnClickListener(this);
         tv_related_order.setOnClickListener(this);
+        tv_related_customer.setOnClickListener(this);
         tv_title_1.setText("工单信息");
         requestData();
     }
@@ -121,6 +126,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         tv_commit_info.setText(mWorksheetInfo.data.creatorName + " " + DateTool.getDiffTime(mWorksheetInfo.data.createdAt) + " 提交");
         tv_track_content.setText(mWorksheetInfo.data.content);
         tv_related_order.setText(mWorksheetInfo.data.orderName);
+        tv_related_customer.setText(mWorksheetInfo.data.customerName);
         tv_responsible_name.setText(mWorksheetInfo.data.responsorNames);
 
         if (mWorksheetInfo.data.confirmedAt != 0) {
@@ -188,7 +194,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
             //跳转订单
             case R.id.tv_related_order:
-                if (PermissionManager.getInstance().hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
+                if (!PermissionManager.getInstance().hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
                 }
@@ -201,8 +207,15 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
             case R.id.img_title_left:
                 onBackPressed();
                 break;
-
-            default:
+            //跳转客户详情
+            case R.id.tv_related_customer:
+                if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT)) {
+                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                    return;
+                }
+                mBundle = new Bundle();
+                mBundle.putString("Id", mWorksheetInfo.data.customerId);
+                app.startActivity(this, CustomerDetailInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 break;
         }
     }

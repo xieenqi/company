@@ -272,7 +272,6 @@ public class SigninNewListAdapter extends BaseAdapter {
 
                 Intent intent = new Intent();
                 intent.putExtra("Id", signinNewListModel.customerId);
-                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MMP);
                 intent.putExtra(ExtraAndResult.EXTRA_OBJ,true);
                 intent.setClass(mContext, CustomerDetailInfoActivity_.class);
                 mContext.startActivity(intent);

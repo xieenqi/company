@@ -80,8 +80,8 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     Customer mCustomer;
     @Extra("Id")
     String id;
-    @Extra(ExtraAndResult.EXTRA_TYPE)
-    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户" 5.游客
+//    @Extra(ExtraAndResult.EXTRA_TYPE)  弃用了
+//    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户" 5.游客
     public boolean isPutOcen;
     public boolean isEdit;
     public boolean canEdit;
@@ -96,7 +96,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
     @AfterViews
     void initViews() {
-//        setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
         showLoading("", false);
 
