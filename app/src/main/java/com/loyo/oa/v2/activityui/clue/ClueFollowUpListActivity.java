@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.clue.presenter.ClueFollowUpListPresenter;
 import com.loyo.oa.v2.activityui.clue.presenter.impl.ClueFollowUpListPresenterImpl;
 import com.loyo.oa.v2.activityui.clue.viewcontrol.ClueFollowUpListView;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
+import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
@@ -344,6 +345,15 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         }
         mPagination = paginationX;
         listModel.addAll(paginationX.getRecords());
+        String dateIndex = "";
+        for(int i = 0;i<listModel.size();i++){
+            ClueFollowGroupModel model = listModel.get(i);
+            if(dateIndex.equals(model.date)){
+                listModel.get(i-1).activities.addAll(model.activities);
+                listModel.remove(model);
+            }
+            dateIndex = model.date;
+        }
         bindData();
     }
 

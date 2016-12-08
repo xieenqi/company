@@ -70,6 +70,7 @@ import retrofit.client.Response;
 public class DiscussDetialActivity extends BaseActivity implements View.OnLayoutChangeListener, View.OnClickListener {
 
     private static final char SCANNER_HAIT_TRIM = '\u2005';
+    public static final String REQUEST_GET_USER = "com.loyo.oa.DiscussDetialActivity.GET_USER";
     private final List<HaitHelper.SelectUser> mHaitSelectUsers = new ArrayList<>(); // 选择用于艾特的用户列表
 
     private PullToRefreshRecycleView lv_notice;
@@ -526,6 +527,9 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
      */
     @Subscribe
     public void onContactPicked(ContactPickedEvent event) {
+        if (! REQUEST_GET_USER.equals(event.request)) {
+            return;
+        }
         StaffMemberCollection collection = event.data;
         NewUser user = Compat.convertStaffCollectionToNewUser(collection);
         if (user == null) {
@@ -621,6 +625,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
         private void toSelectUserByHait() {
             Bundle bundle = new Bundle();
             bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
+            bundle.putSerializable(ContactPickerActivity.REQUEST_KEY, REQUEST_GET_USER);
             Intent intent = new Intent();
             intent.setClass(DiscussDetialActivity.this, ContactPickerActivity.class);
             intent.putExtras(bundle);
