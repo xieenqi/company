@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -59,11 +60,9 @@ import java.util.List;
  * 【团队跟进】列表
  * Created by yyy on 16/6/1.
  */
-public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
+public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, FollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
     private View mView;
-    private Button btn_add;
-    private ViewStub emptyView;
     private TextView voiceView;
     private PullToRefreshListView listView;
     private ArrayList<FollowFilter> mTags;
@@ -71,8 +70,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private LinearLayout layout_bottom_menu;
 
     private String menuTimekey = "";        /*时间*/
-    private String menuChoskey = "", method, typeId, activityType; /*筛选*/
-    private String menuGuykey = "";         /*人员*/
+    private String method, typeId; /*筛选*/
 
     private String userId = "";
     private String xPath = "";
@@ -93,6 +91,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     private AudioPlayer audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
+    private LoadingLayout ll_loading;
 
 
     @SuppressLint("InflateParams")
@@ -110,7 +109,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void onPause() {
         super.onPause();
-        if(null != voiceView)
+        if (null != voiceView)
             audioPlayer.audioPause(voiceView);
     }
 
@@ -138,6 +137,14 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void initView(View view) {
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                getData(false);
+            }
+        });
         mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         for (int i = 0; i < mTags.size(); i++) {//过滤掉跟进方式
             if (mTags.get(i).fieldName.contains("activity")) {
@@ -147,20 +154,14 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();
-        btn_add = (Button) view.findViewById(R.id.btn_add);
-        emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
 
         layout_bottom_menu = (LinearLayout) view.findViewById(R.id.layout_bottom_menu);
         layout_bottom_voice = (LinearLayout) view.findViewById(R.id.layout_bottom_voice);
 
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
-        listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
-
-        btn_add.setOnClickListener(this);
-        btn_add.setOnTouchListener(Global.GetTouch());
 
         msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
@@ -221,27 +222,22 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                             HashMap<String, MenuModel> map = (HashMap<String, MenuModel>) userInfo;
                             MenuModel field1 = map.get("method");
                             MenuModel field2 = map.get("typeId");
-//                            MenuModel field3 = map.get("activityType");
                             method = field1.getKey();
                             typeId = field2.getKey();
-//                            activityType = field3.getKey();
                         } else {
                             method = "";
                             typeId = "";
-//                            activityType = "";
                         }
                         break;
 
                     /*人员*/
                     case 2: {
                         MenuModel model = selectedModels.get(0);
-                        //menuGuykey = model.getKey();
                         if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
                             LogUtil.dee("xPath");
                             xPath = model.getKey();
                             userId = "";
-                        }
-                        else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
+                        } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
                             LogUtil.dee("userId");
                             xPath = "";
                             userId = model.getKey();
@@ -301,7 +297,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            showLoading("");
+            ll_loading.setStatus(LoadingLayout.Loading);
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", userId);
@@ -309,7 +305,6 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         map.put("timeType", menuTimekey); //时间查询
         map.put("method", method);        //跟进类型0:全部 1:线索 2:客户
         map.put("typeId", typeId);
-//        map.put("activityType", activityType);//没有这项团队不做筛选了
         map.put("split", true);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
@@ -324,7 +319,6 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     public void commentEmbl(int position) {
         commentPosition = position;
         layout_bottom_menu.setVisibility(View.VISIBLE);
-        btn_add.setVisibility(View.GONE);
         msgAudiomMenu.commentEmbl();
     }
 
@@ -378,6 +372,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
+        if (isPullOrDown && listModel.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     /**
@@ -389,16 +385,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-
-            //新建跟进
-            case R.id.btn_add:
-
-                break;
-
-        }
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 
     /**
@@ -437,7 +425,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         }
 
         audioPlayer.initPlayer();
-        if(audioPlayer.isPlaying()){
+        if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
@@ -450,7 +438,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;

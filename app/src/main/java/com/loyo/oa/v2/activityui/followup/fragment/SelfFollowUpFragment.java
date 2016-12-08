@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -45,7 +47,9 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +63,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private View mView;
     private Button btn_add;
-    private ViewStub emptyView;
     private TextView voiceView;
     private DropDownMenu filterMenu;
     private PullToRefreshListView listView;
@@ -86,6 +89,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private AudioPlayer audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
+    private LoadingLayout ll_loading;
 
 
     @SuppressLint("InflateParams")
@@ -130,18 +134,24 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void initView(View view) {
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                getData(false);
+            }
+        });
         mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();
         btn_add = (Button) view.findViewById(R.id.btn_add);
-        emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
 
         layout_bottom_menu = (LinearLayout) view.findViewById(R.id.layout_bottom_menu);
         layout_bottom_voice = (LinearLayout) view.findViewById(R.id.layout_bottom_voice);
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
-        listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
         btn_add.setOnClickListener(this);
@@ -247,7 +257,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            showLoading("");
+            ll_loading.setStatus(LoadingLayout.Loading);
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", MainApp.user.id);//我的传id,团队则空着
@@ -338,6 +348,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
+        if (isPullOrDown && listModel.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     /**
@@ -346,6 +358,11 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
+    }
+
+    @Override
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 
 

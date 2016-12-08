@@ -12,61 +12,66 @@
         <FrameLayout
             android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:id="@+id/re_nodata"
+            <!--<RelativeLayout-->
+            <!--android:id="@+id/re_nodata"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/white"-->
+            <!--android:gravity="center"-->
+            <!--android:visibility="gone">-->
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<ImageView-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:layout_marginBottom="22dp"-->
+            <!--android:src="@drawable/img_nodata" />-->
+
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="没有相关数据"-->
+            <!--android:textColor="#878787"-->
+            <!--android:textSize="18sp" />-->
+
+            <!--</LinearLayout>-->
+
+            <!--</RelativeLayout>-->
+
+            <!--<ViewStub-->
+            <!--android:id="@+id/vs_nodata"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:inflatedId="@+id/layout_nodata"-->
+            <!--android:layout="@layout/item_layout_nodata" />-->
+            <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/ll_loading"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:gravity="center"
-                android:visibility="gone">
+                app:isFirstVisible="false">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_marginBottom="22dp"
-                        android:src="@drawable/img_nodata" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="没有相关数据"
-                        android:textColor="#878787"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <ViewStub
-                android:id="@+id/vs_nodata"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inflatedId="@+id/layout_nodata"
-                android:layout="@layout/item_layout_nodata" />
-
-            <com.loyo.oa.pulltorefresh.PullToRefreshListView
-                android:id="@+id/lv_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:cacheColorHint="#00000000"
-                android:drawSelectorOnTop="true"
-                android:fadingEdge="none"
-                android:divider="@null"
-                android:fastScrollEnabled="false"
-                android:footerDividersEnabled="true"
-                android:headerDividersEnabled="true"
-                android:scrollbars="none"
-                android:smoothScrollbar="true" />
+                <com.loyo.oa.pulltorefresh.PullToRefreshListView
+                    android:id="@+id/lv_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:cacheColorHint="#00000000"
+                    android:divider="@null"
+                    android:drawSelectorOnTop="true"
+                    android:fadingEdge="none"
+                    android:fastScrollEnabled="false"
+                    android:footerDividersEnabled="true"
+                    android:headerDividersEnabled="true"
+                    android:scrollbars="none"
+                    android:smoothScrollbar="true" />
+            </com.library.module.widget.loading.LoadingLayout>
 
             <Button
                 android:id="@+id/btn_add"
@@ -86,8 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
-        android:visibility="gone">
-    </LinearLayout>
+        android:visibility="gone"></LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_bottom_voice"
@@ -95,7 +99,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
-        android:visibility="gone">
-    </LinearLayout>
+        android:visibility="gone"></LinearLayout>
 
 </RelativeLayout>
