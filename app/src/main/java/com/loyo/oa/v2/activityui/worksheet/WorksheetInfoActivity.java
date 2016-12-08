@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorkSheetListNestingAdapter;
 import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetInfo;
@@ -210,9 +209,9 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
             //跳转客户详情
             case R.id.tv_related_customer:
                 if (!PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT)) {
-                    sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
-                    return;
-                }
+                sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
+                return;
+            }
                 mBundle = new Bundle();
                 mBundle.putString("Id", mWorksheetInfo.data.customerId);
                 app.startActivity(this, CustomerDetailInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
