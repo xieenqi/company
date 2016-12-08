@@ -202,7 +202,6 @@ public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity
                     case CUSTOMER_MANAGE:
                         mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
                         mIntent.putExtra("Id", lstData.get(position - 2).getId());
-                        mIntent.putExtra(ExtraAndResult.EXTRA_TYPE, customerType);
                         startActivity(mIntent);
                         break;
                     //任务管理

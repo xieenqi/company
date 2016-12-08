@@ -302,7 +302,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                     if (MainApp.jpushData.jumpType == HttpJpushNotification.JumpType.NUONE.getValue()) {
                         intent.setClass(MainHomeActivity.this, CustomerDetailInfoActivity_.class);
                         intent.putExtra("Id", MainApp.jpushData.buzzId);
-                        intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
+//                        intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
                         startActivity(intent);
                     } else {
                         intent.setClass(MainHomeActivity.this, CustomerManagerActivity.class);

@@ -21,6 +21,8 @@ public class WorksheetInfo extends BaseBean{
     public String dispatcherId;
     public String dispatcherName;
     public String responsorNames;
+    public String customerId;
+    public String customerName;
 
     public ArrayList<Attachment> attachment = new ArrayList<>();
     public String creatorId;

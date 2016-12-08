@@ -203,7 +203,6 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                 } else {
                     Intent intent = new Intent();
                     intent.putExtra("Id", mCustomers.get(position - 1).getId());
-                    intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
                     intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                     startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
                     mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);

@@ -41,7 +41,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
         Intent intent = new Intent();
         intent.setClass(mContext, CustomerDetailInfoActivity_.class);
-        intent.putExtra("Customer", adapter.getItem(position));
+        intent.putExtra("Id", adapter.getItem(position).getId());
         startActivity(intent);
     }
 

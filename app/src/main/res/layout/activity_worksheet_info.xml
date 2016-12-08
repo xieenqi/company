@@ -173,7 +173,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="关联订单 : "
+                            android:text="对应订单 : "
                             android:textColor="@color/text66"
                             android:textSize="@dimen/text_sp14" />
 
@@ -186,6 +186,28 @@
 
                     </LinearLayout>
 
+                    <!-- 关联客户 -->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="对应客户 : "
+                            android:textColor="@color/text66"
+                            android:textSize="@dimen/text_sp14" />
+
+                        <TextView
+                            android:id="@+id/tv_related_customer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/title_bg1"
+                            android:textSize="@dimen/text_sp14" />
+
+                    </LinearLayout>
                     <!-- 事件负责人 -->
                     <LinearLayout
                         android:layout_width="fill_parent"

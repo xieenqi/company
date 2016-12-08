@@ -672,7 +672,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")) {
                     intent.putExtra("delete", true);
                 } else {
-                    if (mWfInstance.status == WfInstance.STATUS_NEW) {
+                    if (mWfInstance.status == WfInstance.STATUS_NEW||mWfInstance.status == WfInstance.STATUS_ABORT) {
                         intent.putExtra("delete", true);
                     }
                     intent.putExtra("edit", true);

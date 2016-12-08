@@ -81,7 +81,6 @@ public class RestAdapterFactory {
                     request.addHeader("LoyoVersionName", Global.getVersionName());
                     request.addHeader("LoyoVersionCode", "2016120501");
                     //request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-                    LogUtil.dee("LoyoVersionCode:"+String.valueOf(Global.getVersion()));
 
                 }
             };

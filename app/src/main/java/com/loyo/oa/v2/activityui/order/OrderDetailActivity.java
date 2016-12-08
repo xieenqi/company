@@ -195,7 +195,6 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
                 }
                 Intent intent = new Intent();
                 intent.putExtra("Id", mData.customerId);
-                intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
                 intent.setClass(OrderDetailActivity.this, CustomerDetailInfoActivity_.class);
                 startActivityForResult(intent, 2);
                 overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);

@@ -82,6 +82,7 @@ public class CustomerFollowUpGroupAdapter extends BaseAdapter {
                 holder.layout_listview.setAdapter(mAdapter);
             }
         }
+
         return convertView;
     }
 
