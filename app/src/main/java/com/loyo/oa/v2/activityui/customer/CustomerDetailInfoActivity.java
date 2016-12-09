@@ -261,6 +261,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     /**

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -36,6 +37,7 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -50,7 +52,7 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerFollowUpListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2,CustomerFollowUpListView,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack, View.OnClickListener{
+public class CustomerFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2,CustomerFollowUpListView,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack, View.OnClickListener{
 
     public static final int ACTIVITIES_ADD = 101;
 
@@ -84,8 +86,17 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_follow);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_customer_follow);
+    }
+
+    @Override
+    public void getPageData() {
+        getData(false);
     }
 
     @Override
@@ -164,7 +175,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
 
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("跟进动态");
-        getData(false);
+        getPageData();
     }
 
     /**
@@ -172,7 +183,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            showLoading("");
+            ll_loading.setStatus(LoadingLayout.Loading);
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);
@@ -223,6 +234,7 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
         } else {
             mAdapter.notifyDataSetChanged();
         }
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
 
@@ -357,6 +369,11 @@ public class CustomerFollowUpListActivity extends BaseActivity implements PullTo
     @Override
     public ViewGroup getBottomMenuLayout() {
         return layout_bottom_menu;
+    }
+
+    @Override
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 
     /**

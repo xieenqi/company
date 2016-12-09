@@ -105,7 +105,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
                 getMembersRoot(new RCallback<MembersRoot>() {
                     @Override
                     public void success(MembersRoot membersRoot, Response response) {
-                        HttpErrorCheck.checkResponse("参与人权限", response,crolView.getLoadigLayout());
+                        HttpErrorCheck.checkResponse("参与人权限", response);
                         crolView.getMembersRootEmbl(membersRoot);
                     }
 
