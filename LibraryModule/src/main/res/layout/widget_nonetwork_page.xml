@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:visibility="gone"
-   >
+    android:visibility="gone">
 
     <ImageView
         android:id="@+id/no_network_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
+        android:layout_marginTop="35dp" />
 
     <TextView
         android:id="@+id/no_network_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:textColor="@color/base_text_color_light"
-        />
+        android:textColor="@color/base_text_color_light" />
 
     <TextView
         android:id="@+id/no_network_reload_btn"
@@ -32,8 +29,7 @@
         android:paddingLeft="18dp"
         android:paddingRight="18dp"
         android:paddingTop="6dp"
-        android:textColor="@color/blue"
-        />
+        android:textColor="@color/blue" />
 
 
 </LinearLayout>
