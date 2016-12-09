@@ -222,6 +222,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         //只有登录进来才加载loading
         if ("openOne".equals(SharedUtil.get(app, ExtraAndResult.APP_START))) {
             showLoading("");
+            SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.APP_START, " ");
         }
         adapter = new AdapterHomeItem(mActivity);
         listView.setAdapter(adapter);
