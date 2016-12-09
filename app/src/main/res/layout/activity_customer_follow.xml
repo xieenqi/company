@@ -6,15 +6,9 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <include
         android:id="@+id/layout_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/title_bg1"
-        android:orientation="vertical">
-
-        <include layout="@layout/include_common_title_2" />
-    </LinearLayout>
+        layout="@layout/include_common_title_2" />
 
     <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ll_loading"
