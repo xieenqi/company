@@ -52,7 +52,7 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2,CustomerFollowUpListView,MsgAudiomMenu.MsgAudioMenuCallBack,AudioPlayCallBack, View.OnClickListener{
+public class CustomerFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, CustomerFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     public static final int ACTIVITIES_ADD = 101;
 
@@ -102,7 +102,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     @Override
     public void onPause() {
         super.onPause();
-        if(null != voiceView)
+        if (null != voiceView)
             audioPlayer.audioPause(voiceView);
     }
 
@@ -130,18 +130,18 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         getData(true);
     }
 
-    private void initView(){
+    private void initView() {
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             mCustomer = (Customer) bundle.getSerializable("mCustomer");
         }
 
-        if(null == mCustomer){
+        if (null == mCustomer) {
             Toast("参数异常");
             finish();
         }
 
-        mPresenter = new CustomerFollowUpListPresenterImpl(this,mContext);
+        mPresenter = new CustomerFollowUpListPresenterImpl(this, mContext);
         audioPlayer = new AudioPlayer(this);
         audioPlayer.initPlayer();
         layout_back = (ViewGroup) findViewById(R.id.layout_back);
@@ -159,18 +159,18 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        msgAudiomMenu = new MsgAudiomMenu(mContext, this,uuid);
+        msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
 
-        canAdd = mCustomer!=null&& mCustomer.state==Customer.NormalCustomer &&
+        canAdd = mCustomer != null && mCustomer.state == Customer.NormalCustomer &&
                 PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                         mCustomer.state, CustomerAction.FOLLOWUP_ADD);
         if (!canAdd) {
             layout_add.setVisibility(View.GONE);
-        }else{
-            Utils.btnSpcHideForListViewCus(mContext,listView.getRefreshableView(),
+        } else {
+            Utils.btnSpcHideForListViewCus(mContext, listView.getRefreshableView(),
                     layout_add,
-                    layout_bottom_menu,msgAudiomMenu.getEditComment());
+                    layout_bottom_menu, msgAudiomMenu.getEditComment());
         }
 
         tv_title.setVisibility(View.VISIBLE);
@@ -190,7 +190,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isPullOrDown ? listModel.size() >= 5 ? listModel.size() : 5 : 5);
         LogUtil.dee("发送数据:" + MainApp.gson.toJson(map));
-        mPresenter.getListData(map,mCustomer.id);
+        mPresenter.getListData(map, mCustomer.id);
     }
 
     @Override
@@ -206,7 +206,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
             /*返回*/
             case R.id.layout_back:
@@ -229,12 +229,14 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new CustomerFollowUpGroupAdapter(mContext, listModel, this,this);
+            mAdapter = new CustomerFollowUpGroupAdapter(mContext, listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }
         ll_loading.setStatus(LoadingLayout.Success);
+        if (isPullOrDown && listModel.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
 
@@ -250,6 +252,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
+
     /**
      * 评论语音
      */
@@ -258,13 +261,13 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
         map.put("bizzId", id);
         map.put("commentType", 2); //1文本 2语音
         map.put("bizzType", 1);   //1拜访 2跟进
-        map.put("audioInfo",record);//语音信息
+        map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
 
     @Subscribe
-    public void onFollowUpRushEvent(FollowUpRushEvent event){
+    public void onFollowUpRushEvent(FollowUpRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
@@ -326,7 +329,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
      */
     @Override
     public void commentSuccessEmbl() {
-        if(canAdd){
+        if (canAdd) {
             layout_add.setVisibility(View.VISIBLE);
         }
         layout_bottom_menu.setVisibility(View.GONE);
@@ -337,19 +340,19 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
 
     /**
      * 获取列表数据成功
-     * */
+     */
     @Override
     public void getListDataSuccesseEmbl(PaginationX<FollowUpGroupModel> paginationX) {
-        if(isPullOrDown){
+        if (isPullOrDown) {
             listModel.clear();
         }
         mPagination = paginationX;
         listModel.addAll(paginationX.getRecords());
         String dateIndex = "";
-        for(int i = 0;i<listModel.size();i++){
+        for (int i = 0; i < listModel.size(); i++) {
             FollowUpGroupModel model = listModel.get(i);
-            if(dateIndex.equals(model.date)){
-                listModel.get(i-1).activities.addAll(model.activities);
+            if (dateIndex.equals(model.date)) {
+                listModel.get(i - 1).activities.addAll(model.activities);
                 listModel.remove(model);
             }
             dateIndex = model.date;
@@ -360,7 +363,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
 
     /**
      * 获取列表数据失败
-     * */
+     */
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
@@ -395,7 +398,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
                 MainApp.getMainApp().stopAnim(lastView);
         }
         audioPlayer.initPlayer();
-        if(audioPlayer.isPlaying()){
+        if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
@@ -408,7 +411,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;

@@ -99,6 +99,8 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
 
     @Override
     public void getPageData() {
+        isPullOrDown = true;
+        mPagination.setPageIndex(1);
         getData(false);
     }
 
