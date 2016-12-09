@@ -80,7 +80,6 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @ViewById
     LoadingLayout ll_loading;
 
-    /*之前由传过来的Customer获取客户ID，改为直接把客户ID传过来*/
     Customer mCustomer;
     @Extra("Id")
     String id;
@@ -101,13 +100,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @AfterViews
     void initViews() {
         tv_title_1.setText("客户详情");
-//        showLoading("", false);
         ll_loading.setStatus(LoadingLayout.Loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
             public void onReload(View v) {
                 ll_loading.setStatus(LoadingLayout.Loading);
-//                getPageData();
+                mPresenter.getData(id);
             }
         });
         layout_wirete = (RelativeLayout) findViewById(R.id.layout_wirete);
@@ -312,7 +310,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 startActivity(mIntent);
                 break;
 
-            /*拜访*/
+            /*快捷拜访*/
             case R.id.layout_sign:
                 mIntent = new Intent(CustomerDetailInfoActivity.this, SignInActivity.class);
                 mIntent.putExtra("data", mCustomer);
@@ -344,7 +342,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
             /*客户信息*/
             case R.id.layout_customer_info:
-                bundle.putSerializable("Customer", mCustomer);
+                bundle.putSerializable("CustomerId", mCustomer.getId());
                 bundle.putBoolean("canEdit", canEdit);
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
