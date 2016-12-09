@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -76,11 +77,14 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             tv_follow_content, tv_follow_crecter_type, tv_contact_Number, tv_sale_count, tv_order_count;
     @ViewById
     ImageView img_public;
+    @ViewById
+    LoadingLayout ll_loading;
+
     /*之前由传过来的Customer获取客户ID，改为直接把客户ID传过来*/
     Customer mCustomer;
     @Extra("Id")
     String id;
-//    @Extra(ExtraAndResult.EXTRA_TYPE)  弃用了
+    //    @Extra(ExtraAndResult.EXTRA_TYPE)  弃用了
 //    public int customerType;//"1,我负责的", "2,我参与的", "3,团队客户","4.公海客户" 5.游客
     public boolean isPutOcen;
     public boolean isEdit;
@@ -97,8 +101,15 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @AfterViews
     void initViews() {
         tv_title_1.setText("客户详情");
-        showLoading("", false);
-
+//        showLoading("", false);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+//                getPageData();
+            }
+        });
         layout_wirete = (RelativeLayout) findViewById(R.id.layout_wirete);
         layout_phone = (RelativeLayout) findViewById(R.id.layout_phone);
         layout_gj = (LinearLayout) findViewById(R.id.layout_gj);
@@ -114,15 +125,13 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
         if (PermissionManager.getInstance().hasPermission(BusinessOperation.VISIT_TIMELINE)) {
             layout_gj.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             layout_gj.setVisibility(View.GONE);
         }
 
         if (PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_VISIT)) {
             layout_sign.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             layout_sign.setVisibility(View.GONE);
         }
     }
@@ -144,7 +153,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             return;
         }
 
-        if (! PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
+        if (!PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.PREVIEW)) {
             sweetAlertDialogView.alertMessageClick(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
@@ -163,18 +172,18 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
         boolean canPickIn = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.PICK_IN);
         boolean needPickIn = canPickIn && mCustomer.state == Customer.DumpedCustomer;
-        img_title_right.setVisibility((!canDelete && !canDump)?View.GONE : View.VISIBLE);
+        img_title_right.setVisibility((!canDelete && !canDump) ? View.GONE : View.VISIBLE);
         img_public.setEnabled(needPickIn);
-        img_public.setVisibility(needPickIn?View.VISIBLE : View.GONE);
+        img_public.setVisibility(needPickIn ? View.VISIBLE : View.GONE);
 
         boolean canVisit = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.VISIT);
-        layout_sign.setVisibility(canVisit?View.VISIBLE : View.GONE);
+        layout_sign.setVisibility(canVisit ? View.VISIBLE : View.GONE);
 
         boolean canFollowup = PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                 mCustomer.state, CustomerAction.FOLLOWUP_ADD);
-        layout_gj.setVisibility(canFollowup?View.VISIBLE : View.GONE);
-        if (! canVisit && ! canFollowup) {
+        layout_gj.setVisibility(canFollowup ? View.VISIBLE : View.GONE);
+        if (!canVisit && !canFollowup) {
             layout_menu.setVisibility(View.GONE);
         }
 
@@ -363,7 +372,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             case R.id.layout_contact:
                 try {
                     bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
-                    boolean canEdit = mCustomer!=null &&
+                    boolean canEdit = mCustomer != null &&
                             PermissionManager.getInstance().hasCustomerAuthority(mCustomer.relationState,
                                     mCustomer.state, CustomerAction.CONTACT_ADD);
                     bundle.putBoolean("canEdit", canEdit);
@@ -455,7 +464,7 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
                 break;
             /*订单管理*/
             case R.id.ll_order:
-                boolean canAddOrder= mCustomer != null &&
+                boolean canAddOrder = mCustomer != null &&
                         PermissionManager.getInstance().hasCustomerAuthority(
                                 mCustomer.relationState,
                                 mCustomer.state,
@@ -621,6 +630,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     @Override
     public void setPopViewEmbl(boolean mespray, String message) {
         setPopView(mespray, message);
+    }
+
+    @Override
+    public LoadingLayout getLoadigLayout() {
+        return ll_loading;
     }
 
     @Override
