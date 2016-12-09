@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +19,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Player;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -97,6 +97,18 @@ public class AudioPlayer extends LinearLayout implements View.OnClickListener{
      * 初始化Player
      * */
     public void initPlayer(){
+
+        // Add by Ethan on 2016/12/08 临时处理
+        // TODO: 2016/12/8
+
+        if (player != null) {
+            player.stop();
+        }
+
+        if (musicProgress != null) {
+            musicProgress.setOnSeekBarChangeListener(null);
+        }
+
         player = new Player(musicProgress);
         musicProgress.setOnSeekBarChangeListener(new SeekBarChangeEvent());
         player.mediaPlayer.setOnCompletionListener(new PlayerComplte());
