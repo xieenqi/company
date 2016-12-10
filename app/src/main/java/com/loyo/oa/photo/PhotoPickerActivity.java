@@ -99,7 +99,9 @@ public class PhotoPickerActivity extends AppCompatActivity {
 
         int total = selectedItemCount + (isCheck ? -1 : 1);
 
-        menuDoneItem.setEnabled(total > 0);
+        if (menuDoneItem != null) {
+          menuDoneItem.setEnabled(total > 0);
+        }
 
         if (maxCount <= 1) {
           List<String> photos = pickerFragment.getPhotoGridAdapter().getSelectedPhotos();
