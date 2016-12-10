@@ -146,7 +146,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
             public void onReload(View v) {
-                getData(false);
+                initPageData();
             }
         });
         btn_add = (Button) view.findViewById(R.id.btn_add);
@@ -230,13 +230,16 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
                         }
                         break;
                 }
-                isPullOrDown = true;
-                getData(false);
+                initPageData();
             }
         });
+        initPageData();
+    }
+    private void initPageData() {
+        mPagination.setPageIndex(1);
+        isPullOrDown = true;
         getData(false);
     }
-
     /**
      * 数据绑定
      */

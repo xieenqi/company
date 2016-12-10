@@ -94,6 +94,8 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
 
     @Override
     public void getPageData() {
+        isPullOrDown = true;
+        mPagination.setPageIndex(1);
         getData(false);
     }
 

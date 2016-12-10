@@ -140,11 +140,11 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
             public void onReload(View v) {
-                getData(false);
+                initPageData();
             }
         });
 //        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
-        mTags= FolloUpConfig.getFolloUpStageCache();
+        mTags = FolloUpConfig.getFolloUpStageCache();
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();
@@ -208,12 +208,20 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                         }
                         break;
                 }
-                isPullOrDown = true;
-                getData(false);
+                initPageData();
             }
         });
+        initPageData();
+    }
+
+
+    private void initPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
+        mPagination.setPageIndex(1);
+        isPullOrDown = true;
         getData(false);
     }
+
 
     /**
      * 数据绑定

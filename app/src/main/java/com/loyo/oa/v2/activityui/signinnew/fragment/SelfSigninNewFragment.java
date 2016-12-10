@@ -65,7 +65,7 @@ import java.util.List;
 public class SelfSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
-//    private ArrayList<Tag> mTags;
+    //    private ArrayList<Tag> mTags;
     private TextView voiceView;
     private DropDownMenu filterMenu;
     private String menuTimekey = "0";        /*时间*/
@@ -157,7 +157,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
             public void onReload(View v) {
-                getData(false);
+                initPageData();
             }
         });
         btn_add = (Button) view.findViewById(R.id.btn_add);
@@ -260,10 +260,15 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
                         filterMenu.headerTabBar.setTitleAtPosition(model.getValue(), menuIndex);
                         break;
                 }
-                isPullOrDown = true;
-                getData(false);
+                initPageData();
             }
         });
+        initPageData();
+    }
+
+    private void initPageData() {
+        mPagination.setPageIndex(1);
+        isPullOrDown = true;
         getData(false);
     }
 

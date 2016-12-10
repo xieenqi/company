@@ -63,7 +63,7 @@ public class MyDiscussActivity extends BaseLoadingActivity implements View.OnCli
 
     @Override
     public void getPageData() {
-        pControl.getPageData();
+        pControl.onPullDown();
     }
 
     private void initView() {

@@ -94,7 +94,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
             @Override
             public void onReload(View v) {
                 ll_loading.setStatus(LoadingLayout.Loading);
-                getData();
+                onPullDownToRefresh(listView);
             }
         });
         customer_type = getArguments().getInt("type");
@@ -103,7 +103,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 //        showLoading("");
-        getData();
+        onPullDownToRefresh(listView);
 //        DialogHelp.cancelLoading();
     }
 
@@ -178,7 +178,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
                         ll_loading.setStatus(LoadingLayout.Success);
-                        if(isPullUp&&mCustomers.size()==0)
+                        if(!isPullUp&&mCustomers.size()==0)
                             ll_loading.setStatus(LoadingLayout.Empty);
                     }
 
