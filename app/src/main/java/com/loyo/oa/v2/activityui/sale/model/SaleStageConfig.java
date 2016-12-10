@@ -24,9 +24,9 @@ public class SaleStageConfig {
             @Override
             public void success(ArrayList<SaleStage> result, Response response) {
                 HttpErrorCheck.checkResponse("销售机会 config销售阶段:", response);
-                    String json = MainApp.gson.toJson(result);
-                    SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE);
-                    SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE, json);
+                String json = MainApp.gson.toJson(result);
+                SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE);
+                SharedUtil.put(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE, json);
             }
 
             @Override
@@ -36,8 +36,8 @@ public class SaleStageConfig {
     }
 
     /* 读取缓存 */
-    public static ArrayList<SaleStage>  getSaleStageCache() {
-        ArrayList<SaleStage>  result =
+    public static ArrayList<SaleStage> getSaleStageCache() {
+        ArrayList<SaleStage> result =
                 MainApp.getMainApp().gson.fromJson(
                         SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE),
                         new TypeToken<ArrayList<SaleStage>>() {
@@ -48,11 +48,8 @@ public class SaleStageConfig {
 
     // TODO:  增加网络获取的回调
     /* 读取缓存，如果没有缓冲，从网络获取 */
-    public static ArrayList<SaleStage>  getSaleStage(boolean fetchIfEmpty) {
-        ArrayList<SaleStage>  result = null;
-        String json = SharedUtil.get(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE);
-        result = MainApp.getMainApp().gson.fromJson(json, new TypeToken<ArrayList<SaleStage> >() {
-        }.getType());
+    public static ArrayList<SaleStage> getSaleStage(boolean fetchIfEmpty) {
+        ArrayList<SaleStage> result = getSaleStageCache();
 
         if (fetchIfEmpty && result == null) {
             getSaleStage();

@@ -33,6 +33,7 @@ import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.event.EditCustomerRushEvent;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.customer.presenter.MyCustomerFragPresenter;
@@ -144,7 +145,8 @@ public class MyMemberFragment extends BaseFragment implements PullToRefreshBase.
                 getData();
             }
         });
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+        mTags = CustomerTageConfig.getTageCache();
         btn_add = (Button) view.findViewById(R.id.btn_add);
         nearTv = (TextView) view.findViewById(R.id.tv_near_customers);
         nearLayout = (ViewGroup) view.findViewById(R.id.layout_near_customers);

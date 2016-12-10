@@ -37,6 +37,7 @@ public class ExtraAndResult {
     public static final String WORKSHEET_TYPES = "worksheet_types";
     public static final String SALE_STAGE = "sale_stage";
     public static final String FOLLOW_UP_STAGE = "follow_up_stage";
+    public static final String CUSTOMER_TAGE = "customer_tage";
 
     public static final String HOME_ITEM = "home_item";
 

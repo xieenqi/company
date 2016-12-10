@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.activityui.other.model.User;
@@ -132,6 +133,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     initService();
                     SaleStageConfig.getSaleStage();
                     FolloUpConfig.getFolloUpStage();
+                    CustomerTageConfig.getTage();
                 } else {
                     Toast("请检查您的网络连接");
                 }

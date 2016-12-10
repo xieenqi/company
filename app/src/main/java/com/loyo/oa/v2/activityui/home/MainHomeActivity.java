@@ -17,6 +17,7 @@ import com.loyo.oa.upload.alioss.AliOSSManager;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
+import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
 import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
@@ -86,6 +87,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
         SaleStageConfig.getSaleStage();
         FolloUpConfig.getFolloUpStage();
+        CustomerTageConfig.getTage();
     }
 
 

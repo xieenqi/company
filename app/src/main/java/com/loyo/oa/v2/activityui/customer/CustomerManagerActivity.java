@@ -120,10 +120,10 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private int mIndex = -1, jumpType;
     private float mRotation = 0;
 
-    private ArrayList<Tag> mTags;
-    private ArrayList<Tag> mTags1;
-    private ArrayList<Tag> mTags2;
-    private ArrayList<Tag> mTags3;
+//    private ArrayList<Tag> mTags;
+//    private ArrayList<Tag> mTags1;
+//    private ArrayList<Tag> mTags2;
+//    private ArrayList<Tag> mTags3;
     public boolean publicOrTeam;
     private List<BaseFragment> fragments = new ArrayList<>();
     private String[] SaleItemStatus = new String[]{"我负责的", "我参与的", "公海客户"};
@@ -136,58 +136,58 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         initView();
     }
 
-    /**
-     * 获取客户标签 筛选menu
-     */
-    public void getStageData() {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                GetTags(new RCallback<ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>>() {
-                    @Override
-                    public void success(ArrayList<Tag> tags, Response response) {
-                        HttpErrorCheck.checkResponse("客户标签：", response);
-                        mTags = tags;
-                        try {
-                            cloneMdata(tags);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        initTitleItem();
-                        try {
-                            initChildren();
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                            Toast("没有获取到权限数据，请重新拉去后再试");
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
+//    /**
+//     * 获取客户标签 筛选menu
+//     */
+//    public void getStageData() {
+//        showLoading("");
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+//                GetTags(new RCallback<ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>>() {
+//                    @Override
+//                    public void success(ArrayList<Tag> tags, Response response) {
+//                        HttpErrorCheck.checkResponse("客户标签：", response);
+//                        mTags = tags;
+//                        try {
+//                            cloneMdata(tags);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        } catch (ClassNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
+//                        initTitleItem();
+//                        try {
+//                            initChildren();
+//                        } catch (NullPointerException e) {
+//                            e.printStackTrace();
+//                            Toast("没有获取到权限数据，请重新拉去后再试");
+//                            finish();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
+//    }
 
     private void getIentenData() {
         //主要是推送过来
         jumpType = getIntent().getIntExtra(ExtraAndResult.EXTRA_TYPE, 0);
     }
-
-    /**
-     * 深克隆筛选数据
-     */
-    private void cloneMdata(ArrayList<Tag> tags) throws IOException, ClassNotFoundException {
-        mTags1 = new ArrayList<>(tags.size());
-        mTags2 = new ArrayList<>(tags.size());
-        mTags3 = new ArrayList<>(tags.size());
-
-        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
-        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
-        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
-    }
+//
+//    /**
+//     * 深克隆筛选数据
+//     */
+//    private void cloneMdata(ArrayList<Tag> tags) throws IOException, ClassNotFoundException {
+//        mTags1 = new ArrayList<>(tags.size());
+//        mTags2 = new ArrayList<>(tags.size());
+//        mTags3 = new ArrayList<>(tags.size());
+//
+//        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
+//        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
+//        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
+//    }
 
     private void initView() {
 
@@ -216,7 +216,9 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
             layout_title_action.setOnTouchListener(Global.GetTouch());
         }
         rotateAnimation = initArrowAnimation();
-        getStageData();
+//        getStageData();
+        initTitleItem();
+        initChildren();
     }
 
     void initTitleItem() {
@@ -241,19 +243,19 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
             BaseFragment fragment = null;
             if ("我负责的".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
-                b.putSerializable("tag", mTags1);
+//                b.putSerializable("tag", mTags1);
                 fragment = (BaseFragment) Fragment.instantiate(this, MyResponFragment.class.getName(), b);
             } else if ("我参与的".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
-                b.putSerializable("tag", mTags1);
+//                b.putSerializable("tag", mTags1);
                 fragment = (BaseFragment) Fragment.instantiate(this, MyMemberFragment.class.getName(), b);
             } else if ("团队客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
-                b.putSerializable("tag", mTags2);
+//                b.putSerializable("tag", mTags2);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamCustomerFragment.class.getName(), b);
             } else if ("公海客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
-                b.putSerializable("tag", mTags3);
+//                b.putSerializable("tag", mTags3);
                 fragment = (BaseFragment) Fragment.instantiate(this, CommCustomerFragment.class.getName(), b);
             }
             fragments.add(fragment);
