@@ -63,7 +63,7 @@ import java.util.List;
 public class TeamSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 //    private ArrayList<Tag> mTags;
-    private String menuTimekey = "0、";        /*时间*/
+    private String menuTimekey = "0";        /*时间*/
     private String menuSortkey = "0";        /*排序*/
     private String departmentId = "";        /*部门id*/
     private String userId = "";              /*userid*/

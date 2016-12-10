@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
@@ -43,7 +44,6 @@ import retrofit.client.Response;
 public class NearCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
-    private ViewStub emptyView;
     private PullToRefreshListView listView;
     private NearCustomerAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
@@ -59,6 +59,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
     private int customer_type;
     private int page = 1;
     private boolean isPullUp = false;
+    private LoadingLayout ll_loading;
 
     @Nullable
     @Override
@@ -87,16 +88,23 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void initView(View view) {
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getData();
+            }
+        });
         customer_type = getArguments().getInt("type");
         position = getArguments().getString("position");
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
-        listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
-        showLoading("");
+//        showLoading("");
         getData();
-        DialogHelp.cancelLoading();
+//        DialogHelp.cancelLoading();
     }
 
 
@@ -169,11 +177,14 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
                         }
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        if(isPullUp&&mCustomers.size()==0)
+                            ll_loading.setStatus(LoadingLayout.Empty);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,ll_loading);
                         listView.onRefreshComplete();
                     }
                 }

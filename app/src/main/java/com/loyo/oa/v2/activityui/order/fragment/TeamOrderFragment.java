@@ -171,6 +171,7 @@ public class TeamOrderFragment extends BaseFragment implements View.OnClickListe
                         field = "createdAt";
                     }
                 }
+                ll_loading.setStatus(LoadingLayout.Loading);
                 isPullDown = true;
                 page = 1;
                 getData();
