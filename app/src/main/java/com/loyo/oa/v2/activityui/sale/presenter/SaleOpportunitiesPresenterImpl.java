@@ -22,7 +22,7 @@ public class SaleOpportunitiesPresenterImpl implements SaleOpportunitiesContract
 
     @Override
     public void getPageData(Object... pag) {
-        mModle.getStageData();
+//        mModle.getStageData();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SaleOpportunitiesPresenterImpl implements SaleOpportunitiesContract
 
     @Override
     public void sendPageData(Object obj) {
-        mView.setSaleStgesData((ArrayList<SaleStage>) obj);
+//        mView.setSaleStgesData((ArrayList<SaleStage>) obj);
     }
 
     @Override

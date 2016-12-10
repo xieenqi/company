@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.sale.adapter.AdapterMySaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activityui.sale.contract.MySaleFrgmentContract;
+import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.activityui.sale.presenter.MySaleFrgmentPresenterImpl;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -78,7 +79,8 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
     }
 
     private void initView(View view) {
-        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
+//        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
+        mSaleStages= SaleStageConfig.getSaleStageCache();
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());

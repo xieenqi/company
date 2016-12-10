@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.order.OrderDetailActivity;
 import com.loyo.oa.v2.activityui.other.BulletinManagerActivity_;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.activityui.signinnew.SigninNewDetailsActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
@@ -82,6 +83,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
                 /* 初始化AliOSSManager */
         AliOSSManager.getInstance().initWithContext(getApplicationContext());
         OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
+        SaleStageConfig.getSaleStage();
     }
 
 

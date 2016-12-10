@@ -26,6 +26,7 @@ import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeam;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activityui.sale.contract.TeamSaleFragmentContract;
+import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.activityui.sale.presenter.TeamSaleFragmentPresenterImpl;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.db.OrganizationManager;
@@ -87,7 +88,8 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
     }
 
     public void initView(View view) {
-        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
+//        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
+        mSaleStages= SaleStageConfig.getSaleStageCache();
         ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
         ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override

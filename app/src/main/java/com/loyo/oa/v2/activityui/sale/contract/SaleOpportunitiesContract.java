@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public interface SaleOpportunitiesContract {
     interface View extends BaseView{
-        void setSaleStgesData(ArrayList<SaleStage> saleStages);
+//        void setSaleStgesData(ArrayList<SaleStage> saleStages);
         void closePageView();
     }
 

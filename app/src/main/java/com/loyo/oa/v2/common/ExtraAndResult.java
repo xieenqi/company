@@ -35,6 +35,7 @@ public class ExtraAndResult {
     public static final String WELCOM_KEY = "welcom_key";
     public static final String SOURCES_DATA = "sources_data";
     public static final String WORKSHEET_TYPES = "worksheet_types";
+    public static final String SALE_STAGE = "sale_stage";
 
     public static final String HOME_ITEM = "home_item";
 

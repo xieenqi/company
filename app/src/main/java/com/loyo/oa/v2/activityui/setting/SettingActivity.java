@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.activityui.other.model.User;
+import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.activityui.setting.persenter.SettingPControl;
 import com.loyo.oa.v2.activityui.setting.viewcontrol.SettingVControl;
 import com.loyo.oa.v2.application.MainApp;
@@ -128,6 +129,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     showLoading("正在更新组织架构，请稍等", false);
                     rushHomeData();
                     initService();
+                    SaleStageConfig.getSaleStage();
                 } else {
                     Toast("请检查您的网络连接");
                 }
