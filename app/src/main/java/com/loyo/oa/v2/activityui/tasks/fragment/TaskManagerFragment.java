@@ -134,7 +134,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<TaskRecord> 
                 else if (menuIndex == 1) {
                     statusParam = key;
                 }
-                onPullDownToRefresh(mExpandableListView);
+                refreshData();
             }
         });
     }

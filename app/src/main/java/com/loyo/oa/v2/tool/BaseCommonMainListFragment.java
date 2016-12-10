@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
@@ -34,7 +35,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.tool.json
- * 描述 :项目、任务、报告、审批的统一界面
+ * 描述 :项目、任务、报告  的统一界面
  * 作者 : ykb
  * 时间 : 15/9/7.
  */
@@ -50,7 +51,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     protected LayoutInflater mInflater;
     protected TextView tv_title_1;
     protected DropDownMenu filterMenu;
-    private ViewStub emptyView;
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
     protected PaginationX<T> pagination = new PaginationX<T>(20);
@@ -58,6 +58,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     protected ArrayList<T> lstData = new ArrayList<>();
     protected PullToRefreshExpandableListView mExpandableListView;
     protected boolean isTopAdd = true;
+    private LoadingLayout ll_loading;
 
     @Override
     public void onAttach(Activity activity) {
@@ -68,7 +69,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GetData();
+//        GetData();
     }
 
 //    private Runnable UiRunner = new Runnable() {
@@ -96,8 +97,15 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_base_new, container, false);
             filterMenu = (DropDownMenu) mView.findViewById(R.id.drop_down_menu);
-            emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
-
+            ll_loading = (LoadingLayout) mView.findViewById(R.id.ll_loading);
+            ll_loading.setStatus(LoadingLayout.Loading);
+            ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+                @Override
+                public void onReload(View v) {
+                    ll_loading.setStatus(LoadingLayout.Loading);
+                    onPullDownToRefresh(mExpandableListView);
+                }
+            });
             tv_title_1 = (TextView) mView.findViewById(R.id.tv_title_1);
             tv_title_1.setText(GetTitle());
 
@@ -121,7 +129,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
             mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
             mExpandableListView.setOnRefreshListener(this);
-            mExpandableListView.setEmptyView(emptyView);
 
             mView.findViewById(R.id.img_title_right).setOnTouchListener(Global.GetTouch());
             mView.findViewById(R.id.img_title_right).setOnClickListener(new View.OnClickListener() {
@@ -134,7 +141,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
             initTab();
             init();
         }
-
+        onPullDownToRefresh(mExpandableListView);
         return mView;
     }
 
@@ -230,13 +237,15 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
         changeAdapter();
         expand();
-
+        ll_loading.setStatus(LoadingLayout.Success);
+        if (isTopAdd && lstData.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
 
     }
 
     @Override
     public void failure(RetrofitError error) {
-        HttpErrorCheck.checkError(error);
+        HttpErrorCheck.checkError(error, ll_loading);
         mExpandableListView.onRefreshComplete();
     }
 
@@ -292,4 +301,9 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
      * 初始化筛选tabs
      */
     public abstract void initTab();
+
+    public void refreshData(){
+        ll_loading.setStatus(LoadingLayout.Loading);
+        onPullDownToRefresh(mExpandableListView);
+    }
 }
