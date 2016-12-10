@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.sale.bean.ActionCode;
 import com.loyo.oa.v2.activityui.sale.bean.SaleFild;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
+import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -124,20 +125,21 @@ public class SaleStageActivity extends BaseActivity {
      * 获取销售阶段 数据
      */
     public void getData() {
-        showLoading("");//HttpSaleBuild.buildSale().
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(ISale.class).getSaleStage(new Callback<ArrayList<SaleStage>>() {
-            @Override
-            public void success(ArrayList<SaleStage> saleStage, Response response) {
-                HttpErrorCheck.checkResponse("销售阶段", response);
-                adapterStage.setData(saleStage);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+//        showLoading("");//HttpSaleBuild.buildSale().
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+//                create(ISale.class).getSaleStage(new Callback<ArrayList<SaleStage>>() {
+//            @Override
+//            public void success(ArrayList<SaleStage> saleStage, Response response) {
+//                HttpErrorCheck.checkResponse("销售阶段", response);
+//                adapterStage.setData(saleStage);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+        adapterStage.setData(SaleStageConfig.getSaleStageCache());
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.sale.contract;
 
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.common.BaseView;
 import com.loyo.oa.v2.common.base.BasePersenter;
 

@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.activityui.sale.model;
 
 import com.google.gson.reflect.TypeToken;
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
+import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

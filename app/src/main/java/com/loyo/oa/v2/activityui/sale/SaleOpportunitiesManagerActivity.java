@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
 import com.loyo.oa.v2.activityui.sale.fragment.MySaleFragment;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;

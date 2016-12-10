@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
@@ -18,12 +19,32 @@
         <include layout="@layout/include_common_title_2" />
     </LinearLayout>
 
-    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
+        android:id="@+id/layout_add"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_45"
+        android:layout_alignParentBottom="true"
+        android:background="@color/activity_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/view_h_title"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/icon_common_add"
+            android:drawablePadding="@dimen/dimen_3"
+            android:gravity="center"
+            android:text="新增联系人"
+            android:textColor="@color/title_bg1" />
+    </RelativeLayout>
+
+    <com.library.module.widget.loading.LoadingLayout
         android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/title_top"
-        app:isFirstVisible="true">
+        app:isFirstVisible="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -42,22 +63,4 @@
 
         </ScrollView>
     </com.library.module.widget.loading.LoadingLayout>
-
-    <RelativeLayout
-        android:id="@+id/layout_add"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_45"
-        android:layout_alignParentBottom="true"
-        android:background="@color/activity_bg">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/view_h_title"
-            android:layout_centerInParent="true"
-            android:drawableLeft="@drawable/icon_common_add"
-            android:drawablePadding="@dimen/dimen_3"
-            android:gravity="center"
-            android:text="新增联系人"
-            android:textColor="@color/title_bg1" />
-    </RelativeLayout>
 </RelativeLayout>

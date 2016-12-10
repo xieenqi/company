@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.sale.presenter;
 
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
 import com.loyo.oa.v2.activityui.sale.model.SaleOpportunitiesModelImpl;
 
