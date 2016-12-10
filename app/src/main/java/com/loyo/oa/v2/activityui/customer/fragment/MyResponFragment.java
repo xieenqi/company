@@ -174,6 +174,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                 } else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
                 }
+                ll_loading.setStatus(LoadingLayout.Loading);
                 isPullUp = false;
                 page = 1;
                 getData();

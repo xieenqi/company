@@ -154,6 +154,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
                 else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
                 }
+                ll_loading.setStatus(LoadingLayout.Loading);
                 isPullUp = false;
                 page = 1;
                 getData();
