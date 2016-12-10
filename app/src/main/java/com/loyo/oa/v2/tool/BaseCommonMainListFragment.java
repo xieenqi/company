@@ -66,11 +66,11 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         mInflater = LayoutInflater.from(activity);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        GetData();
-    }
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+////        GetData();
+//    }
 
 //    private Runnable UiRunner = new Runnable() {
 //        @Override

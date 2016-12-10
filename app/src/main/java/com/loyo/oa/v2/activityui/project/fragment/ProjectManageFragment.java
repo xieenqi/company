@@ -49,7 +49,6 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
     @Override
     public void GetData() {
-//        showLoading("");
         if (lstData == null) {
             lstData = new ArrayList<>();
         }
