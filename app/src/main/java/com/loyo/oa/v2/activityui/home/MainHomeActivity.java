@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.discuss.HaitMyActivity;
 import com.loyo.oa.v2.activityui.followup.FollowUpDetailsActivity;
+import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.home.cusview.SlidingMenu;
 import com.loyo.oa.v2.activityui.home.fragment.HomeFragment;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
@@ -84,6 +85,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         AliOSSManager.getInstance().initWithContext(getApplicationContext());
         OrganizationManager.shareManager().loadOrganizitionDataToMemoryCache();
         SaleStageConfig.getSaleStage();
+        FolloUpConfig.getFolloUpStage();
     }
 
 

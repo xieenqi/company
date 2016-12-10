@@ -27,6 +27,7 @@ import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
+import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
@@ -142,7 +143,8 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                 getData(false);
             }
         });
-        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
+//        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
+        mTags= FolloUpConfig.getFolloUpStageCache();
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();

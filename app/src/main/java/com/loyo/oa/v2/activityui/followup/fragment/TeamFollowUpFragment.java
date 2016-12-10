@@ -28,6 +28,7 @@ import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
+import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.persenter.FollowUpFragPresenter;
@@ -145,7 +146,8 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
                 getData(false);
             }
         });
-        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
+//        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
+        mTags= FolloUpConfig.getFolloUpStageCache();
         for (int i = 0; i < mTags.size(); i++) {//过滤掉跟进方式
             if (mTags.get(i).fieldName.contains("activity")) {
                 mTags.remove(i);

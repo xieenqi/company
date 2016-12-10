@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by EthanGong on 16/8/30.
- */
 public class SaleStageConfig {
 
     /* 从网络获取 */
@@ -65,7 +62,7 @@ public class SaleStageConfig {
     }
 
     /* 清除缓存 */
-    private static void clearWorksheetTypes() {
+    private static void clearSaleStage() {
         SharedUtil.remove(MainApp.getMainApp(), ExtraAndResult.SALE_STAGE);
     }
 }

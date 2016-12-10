@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.home.fragment.MenuFragment;
 import com.loyo.oa.v2.activityui.other.model.User;
 import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
@@ -130,6 +131,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     rushHomeData();
                     initService();
                     SaleStageConfig.getSaleStage();
+                    FolloUpConfig.getFolloUpStage();
                 } else {
                     Toast("请检查您的网络连接");
                 }
