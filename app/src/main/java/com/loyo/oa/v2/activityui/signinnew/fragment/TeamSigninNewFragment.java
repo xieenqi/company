@@ -62,8 +62,8 @@ import java.util.List;
  */
 public class TeamSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
-    private ArrayList<Tag> mTags;
-    private String menuTimekey = "0";        /*时间*/
+//    private ArrayList<Tag> mTags;
+    private String menuTimekey = "0、";        /*时间*/
     private String menuSortkey = "0";        /*排序*/
     private String departmentId = "";        /*部门id*/
     private String userId = "";              /*userid*/
@@ -138,7 +138,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
         mPresenter = new TeamSigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();

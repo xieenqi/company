@@ -65,7 +65,7 @@ import java.util.List;
 public class SelfSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
-    private ArrayList<Tag> mTags;
+//    private ArrayList<Tag> mTags;
     private TextView voiceView;
     private DropDownMenu filterMenu;
     private String menuTimekey = "0";        /*时间*/
@@ -149,7 +149,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
         mPresenter = new SelfSigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();
