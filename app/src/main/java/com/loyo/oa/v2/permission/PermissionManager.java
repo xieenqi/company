@@ -1,7 +1,12 @@
 package com.loyo.oa.v2.permission;
 
+import android.text.TextUtils;
+
+import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.tool.SharedUtil;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -32,6 +37,9 @@ import static com.loyo.oa.v2.permission.CustomerAuthority.RESPONSIBLE_PERSON_LEV
  * Created by EthanGong on 2016/11/28.
  */
 public class PermissionManager {
+
+    private final static String KEY_CACHE_MAP = "com.loyo.oa.KEY_CACHE_MAP";
+
     private static PermissionManager ourInstance = new PermissionManager();
 
     public static PermissionManager getInstance() {
@@ -43,11 +51,41 @@ public class PermissionManager {
     private MembersRoot crmConfigMemberEdit;
 
     private PermissionManager() {
+        loadMapFromCache();
+    }
+
+    private void saveMapToCache(HashMap<String, Permission> map) {
+        String jsonMap = MainApp.gson.toJson(map);
+        if (!TextUtils.isEmpty(jsonMap)) {
+            SharedUtil.remove(MainApp.getMainApp(), KEY_CACHE_MAP);
+            SharedUtil.put(MainApp.getMainApp(), KEY_CACHE_MAP, jsonMap);
+        }
+    }
+
+    private void loadMapFromCache() {
+        String jsonMap = SharedUtil.get(MainApp.getMainApp(), KEY_CACHE_MAP);
+        if (TextUtils.isEmpty(jsonMap)) {
+            return;
+        }
+        try {
+            HashMap<String, Permission> map =
+                    MainApp.getMainApp().gson.fromJson(jsonMap,
+                            new TypeToken<HashMap<String, Permission>>() {
+                            }.getType());
+            if (map == null) {
+                return;
+            }
+            data = map;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public PermissionManager init(HashMap<String, Permission> map) {
         if (map != null) {
             data = map;
+            saveMapToCache(map);
         }
         return this;
     }
