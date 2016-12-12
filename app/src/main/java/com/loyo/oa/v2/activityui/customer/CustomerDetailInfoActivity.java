@@ -285,6 +285,12 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
             R.id.layout_visit, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call,
             R.id.ll_sale, R.id.ll_order, R.id.layout_gj, R.id.layout_sign, R.id.iv_select_tag})
     void onClick(final View view) {
+
+        if (mCustomer == null) {
+            finish();
+            return;
+        }
+
         Bundle bundle = new Bundle();
         Intent mIntent;
         Class<?> _class = null;
