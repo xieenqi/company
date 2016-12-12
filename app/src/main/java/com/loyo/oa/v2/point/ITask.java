@@ -60,9 +60,13 @@ public interface ITask {
     @POST("/task")
     void create(@Body HashMap<String, Object> body, retrofit.Callback<Task> cb);
 
-    /*更新任务*/
+    /*更新任务 弃用*/
     @PUT("/task/{Id}")
     Observable<Task> update(@Path("Id") String Id, @Body HashMap<String, Object> body);
+
+    /*更新任务*/
+    @PUT("/task/{Id}")
+    void updateTask(@Path("Id") String Id, @Body HashMap<String, Object> body,RCallback<Task> callback);
 
     /*修改参与人*/
     @PUT("/task/{Id}")

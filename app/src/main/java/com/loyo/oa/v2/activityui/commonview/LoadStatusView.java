@@ -119,7 +119,6 @@ public class LoadStatusView extends Dialog{
         image.setBackgroundDrawable(sucsAnim);
         sucsAnim.start();
         text.setText("提交成功!");
-        dismiss();
     }
 
     /*失败动画*/
@@ -134,6 +133,5 @@ public class LoadStatusView extends Dialog{
         image.setBackgroundDrawable(erroAnim);
         erroAnim.start();
         text.setText("提交失败!");
-        dismiss();
     }
 }
