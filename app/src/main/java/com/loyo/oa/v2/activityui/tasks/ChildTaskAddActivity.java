@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.tasks;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -260,6 +261,7 @@ public class ChildTaskAddActivity extends BaseActivity {
         mChildTask.setTitle(et_child_add_content.getText().toString());
         mChildTask.setResponsiblePerson(newUser);
 
+        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("content", mChildTask.getTitle());
         map.put("responsiblePerson", mChildTask.getResponsiblePerson());
@@ -267,19 +269,22 @@ public class ChildTaskAddActivity extends BaseActivity {
         MainApp.getMainApp().getRestAdapter().create(ICheckPoint.class).createChildTask(mTask.getId(), map, new RCallback<TaskCheckPoint>() {
             @Override
             public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
-                Toast("创建子任务成功");
-                mChildTask = taskCheckPoint;
-                Intent intent = new Intent();
-                intent.putExtra("childTask", taskCheckPoint);
-                MainApp.getMainApp().finishActivity(ChildTaskAddActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
-                LogUtil.d(" 添加子任务： "+response.getUrl());
+                HttpErrorCheck.checkCommitSus(response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        mChildTask = taskCheckPoint;
+                        Intent intent = new Intent();
+                        intent.putExtra("childTask", taskCheckPoint);
+                        MainApp.getMainApp().finishActivity(ChildTaskAddActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("创建子任务失败");
-                LogUtil.d("LOG","创建子任务失败"+error.getMessage());
+                HttpErrorCheck.checkCommitEro(error);
                 super.failure(error);
             }
         });

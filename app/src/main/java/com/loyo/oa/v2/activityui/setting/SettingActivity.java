@@ -185,6 +185,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading("");
     }

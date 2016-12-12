@@ -95,6 +95,11 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
     }
 

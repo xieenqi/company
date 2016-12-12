@@ -218,6 +218,11 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading(message);
     }

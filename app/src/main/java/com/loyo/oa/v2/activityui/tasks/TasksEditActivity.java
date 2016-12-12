@@ -495,7 +495,7 @@ public class TasksEditActivity extends BaseActivity {
     }
 
     void requestCommitTask(String title,String content){
-        showDialogLoading(false);
+        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
@@ -531,6 +531,7 @@ public class TasksEditActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        cancelStatusLoading();
                         task.setViewed(true);
                         Intent intent = new Intent();
                         intent.putExtra("data", task);

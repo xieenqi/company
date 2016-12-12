@@ -95,6 +95,11 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
 //        showLoading("");
     }

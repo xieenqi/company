@@ -133,6 +133,11 @@ public class MyDiscussActivity extends BaseLoadingActivity implements View.OnCli
 
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String msg) {
         showLoading(msg);
     }

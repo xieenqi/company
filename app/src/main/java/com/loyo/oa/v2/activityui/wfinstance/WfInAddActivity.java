@@ -299,6 +299,11 @@ public class WfInAddActivity extends BaseActivity implements WfinAddView {
     }
 
     @Override
+    public void showStatusProgress() {
+        showStatusLoading(false);
+    }
+
+    @Override
     public void showProgress(String msg) {
         showLoading(msg);
     }
