@@ -721,7 +721,6 @@ public class TasksInfoActivity extends BaseActivity {
      * 获取任务信息【子任务等】
      */
     void getTask() {
-//        showLoading("");
         if (TextUtils.isEmpty(mTaskId)) {
             Toast("参数不完整");
             finish();

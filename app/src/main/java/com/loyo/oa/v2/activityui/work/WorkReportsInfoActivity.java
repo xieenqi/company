@@ -17,6 +17,7 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
@@ -114,6 +115,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
     TextView tv_crm;
     @ViewById
     GridView info_gridview_workreports;
+    @ViewById
+    LoadingLayout ll_loading;
 
     @Extra(ExtraAndResult.EXTRA_ID)
     String workReportId;//推送的id
@@ -146,9 +149,15 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     @AfterViews
     void init() {
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getDataWorkReport();
+            }
+        });
         initUI();
-//        setTouchView(R.id.layout_touch);
-
         getDataWorkReport();
     }
 
@@ -161,7 +170,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             finish();
             return;
         }
-        showLoading("");
         app.getRestAdapter().create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport _workReport, final Response response) {
@@ -173,7 +181,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
                 finish();
             }
         });
@@ -336,6 +344,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
 
         }
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
 
