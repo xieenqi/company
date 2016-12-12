@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpGroupAdapter;
 import com.loyo.oa.v2.activityui.clue.adapter.ClueFollowUpListAdapter;
@@ -36,6 +37,7 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -50,7 +52,7 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class ClueFollowUpListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, ClueFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class ClueFollowUpListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, ClueFollowUpListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     public static final int ACTIVITIES_ADD = 101;
 
@@ -87,8 +89,17 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_follow);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_customer_follow);
+    }
+
+    @Override
+    public void getPageData() {
+        getData(false);
     }
 
     @Override
@@ -168,7 +179,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
                 layout_add,
                 layout_bottom_menu, msgAudiomMenu.getEditComment());
 
-        getData(false);
+        getPageData();
     }
 
     /**
@@ -176,7 +187,7 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            showLoading("");
+            ll_loading.setStatus(LoadingLayout.Loading);
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("salesId", clueId);
@@ -346,15 +357,18 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
         mPagination = paginationX;
         listModel.addAll(paginationX.getRecords());
         String dateIndex = "";
-        for(int i = 0;i<listModel.size();i++){
+        for (int i = 0; i < listModel.size(); i++) {
             ClueFollowGroupModel model = listModel.get(i);
-            if(dateIndex.equals(model.date)){
-                listModel.get(i-1).activities.addAll(model.activities);
+            if (dateIndex.equals(model.date)) {
+                listModel.get(i - 1).activities.addAll(model.activities);
                 listModel.remove(model);
             }
             dateIndex = model.date;
         }
         bindData();
+        ll_loading.setStatus(LoadingLayout.Success);
+        if (isPullOrDown && listModel.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     /**
@@ -368,6 +382,11 @@ public class ClueFollowUpListActivity extends BaseActivity implements PullToRefr
     @Override
     public ViewGroup getBottomMenuLayout() {
         return layout_bottom_menu;
+    }
+
+    @Override
+    public LoadingLayout getLoading() {
+        return ll_loading;
     }
 
     /**

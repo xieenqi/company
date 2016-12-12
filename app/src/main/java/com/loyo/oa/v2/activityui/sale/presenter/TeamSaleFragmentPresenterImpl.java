@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.sale.presenter;
 
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activityui.sale.contract.TeamSaleFragmentContract;
@@ -33,16 +34,23 @@ public class TeamSaleFragmentPresenterImpl implements TeamSaleFragmentContract.P
 
     @Override
     public void getData() {
+        getLoadingView().setStatus(LoadingLayout.Loading);
         pullDown();
     }
 
     @Override
     public void getScreenData(String stageId, String sortType, String xPath, String userId) {
+        getLoadingView().setStatus(LoadingLayout.Loading);
         this.stageId = stageId;
         this.sortType = sortType;
         this.xPath = xPath;
         this.userId = userId;
         pullDown();
+    }
+
+    @Override
+    public LoadingLayout getLoadingView() {
+        return mView.getLoadingUI();
     }
 
     @Override
@@ -66,6 +74,7 @@ public class TeamSaleFragmentPresenterImpl implements TeamSaleFragmentContract.P
                 mView.showMsg("没有更多数据了!");
             } else {
                 mData.clear();
+                getLoadingView().setStatus(LoadingLayout.Empty);
             }
         } else {
             if (isPullUp) {

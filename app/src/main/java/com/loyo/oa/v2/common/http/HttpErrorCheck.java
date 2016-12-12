@@ -191,7 +191,22 @@ public class HttpErrorCheck {
             e.printStackTrace();
         }
     }
-
+    public static void checkResponse(String tag, Response response,LoadingLayout loadingLayout) {
+//        DialogHelp.cancelLoading();
+        try {
+            String result = Utils.convertStreamToString(response.getBody().in());
+            LogUtil.d(tag + " 接口成功result：" + result);
+            LogUtil.d(tag + " 接口成功URL：" + response.getUrl());
+            checkResponseError(result,loadingLayout);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            LogUtil.d("Body空response:" + response.getUrl());
+            e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+    }
     public static void checkResponse(Response response) {
         DialogHelp.cancelLoading();
         try {
@@ -308,6 +323,38 @@ public class HttpErrorCheck {
                 }
             }
         }
-
+    }
+    /**
+     * 检查response 的错误信息
+     *
+     * @param result
+     */
+    private static void checkResponseError(String result,LoadingLayout loadingLayout) throws JsonSyntaxException {
+        BaseBean data = MainApp.gson.fromJson(result, BaseBean.class);
+        switch (data.errcode) {
+            case 0:
+                loadingLayout.setStatus(LoadingLayout.Success);
+                break;
+            case 1:
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText("非常抱歉,服务器错误");
+                break;
+            case 2:
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText("请求参数错误");
+                break;
+            default: {
+                String msg;
+                if (!TextUtils.isEmpty(data.errmsg)) {
+                    msg = data.errmsg;
+                } else {
+                    msg = "服务器出错";
+                }
+                if (data.errcode != 0) {
+                    loadingLayout.setStatus(LoadingLayout.No_Network);
+                    loadingLayout.setNoNetworkText(msg);
+                }
+            }
+        }
     }
 }

@@ -64,7 +64,7 @@ public class AttendanceDetailsPresenterImpl implements AttendanceDetailsPresente
      * */
     @Override
     public void getData(String attendanceId) {
-        DialogHelp.showLoading(mActivity, "请稍后", true);
+//        DialogHelp.showLoading(mActivity, "请稍后", true);
         MainApp.getMainApp().getRestAdapter().create(IAttendance.class).getAttendancesDetial(attendanceId, new RCallback<HttpAttendanceDetial>() {
             @Override
             public void success(final HttpAttendanceDetial mDetails, final Response response) {
@@ -74,7 +74,7 @@ public class AttendanceDetailsPresenterImpl implements AttendanceDetailsPresente
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error,crolView.getLoading());
                 super.failure(error);
             }
         });

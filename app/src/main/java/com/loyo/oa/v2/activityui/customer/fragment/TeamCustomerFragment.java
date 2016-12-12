@@ -12,6 +12,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -27,6 +28,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.TeamCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
@@ -64,7 +66,6 @@ import retrofit.client.Response;
 public class TeamCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
-    private ViewStub emptyView;
     private TextView nearTv;
     private ViewGroup nearLayout;
     private NearCount nearCount;
@@ -83,6 +84,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     private String position;
     private int page = 1;
     private boolean isPullUp = false;
+    private LoadingLayout ll_loading;
 
 
     @Nullable
@@ -113,21 +115,25 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                getRefershData();
+            }
+        });
+//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+        mTags = CustomerTageConfig.getTageCache();
         nearTv = (TextView) view.findViewById(R.id.tv_near_customers);
         nearLayout = (ViewGroup) view.findViewById(R.id.layout_near_customers);
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
-        listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
         nearLayout.setOnClickListener(click);
         nearLayout.setOnTouchListener(Global.GetTouch());
 
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-
-        showLoading("");
-        getData();
+        getRefershData();
     }
 
     private void loadFilterOptions() {
@@ -145,8 +151,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                 == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "本部门";
-        }
-        else {
+        } else {
             title = "我";
             depts.add(OrganizationFilterModel.selfDepartment());
         }
@@ -172,13 +177,11 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                     if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
                         departmentId = model.getKey();
                         userId = "";
-                    }
-                    else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
+                    } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
                         departmentId = "";
                         userId = model.getKey();
                     }
-                }
-                else if (menuIndex == 1) { // TimeFilterModel
+                } else if (menuIndex == 1) { // TimeFilterModel
                     MenuModel model = selectedModels.get(0);
                     String key = model.getKey();
                     String value = model.getValue();
@@ -186,8 +189,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
-                }
-                else if (menuIndex == 2) { // TagFilter
+                } else if (menuIndex == 2) { // TagFilter
                     tagsParams = userInfo.toString();
                 }
                 getRefershData();
@@ -196,9 +198,9 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     }
 
 
-        /**
-         * 显示附近客户
-         */
+    /**
+     * 显示附近客户
+     */
 
     private void showNearCustomersView() {
         nearLayout.setVisibility(View.VISIBLE);
@@ -251,6 +253,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
     }
 
     private void getRefershData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
         page = 1;
         isPullUp = false;
         getData();
@@ -272,7 +275,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_TEAM).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        HttpErrorCheck.checkResponse("客户列表", response);
+                        HttpErrorCheck.checkResponse("团队客户列表", response, ll_loading);
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);
@@ -299,7 +302,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         listView.onRefreshComplete();
                     }
                 }
@@ -317,7 +320,8 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         } else {
             adapter.notifyDataSetChanged();
         }
-
+        if (!isPullUp && mCustomers.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
         /**
          * 列表监听 进入客户详情页面
          * */

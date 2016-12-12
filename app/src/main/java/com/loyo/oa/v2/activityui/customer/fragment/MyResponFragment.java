@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -30,6 +31,7 @@ import com.loyo.oa.v2.activityui.customer.MyContactMailList;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.MyCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.customer.presenter.MyCustomerFragPresenter;
@@ -71,7 +73,6 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
     private Intent mIntent;
     private View mView;
     private Button btn_add;
-    private ViewStub emptyView;
     private TextView nearTv;
     private ViewGroup nearLayout;
     private NearCount nearCount;
@@ -89,6 +90,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private ArrayList<Tag> mTags;
+    private LoadingLayout ll_loading;
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -119,17 +121,23 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getData();
+            }
+        });
+//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+        mTags = CustomerTageConfig.getTageCache();
 
         btn_add = (Button) view.findViewById(R.id.btn_add);
         nearTv = (TextView) view.findViewById(R.id.tv_near_customers);
-        emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
-
         nearLayout = (ViewGroup) view.findViewById(R.id.layout_near_customers);
 
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
-        listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
         nearLayout.setOnClickListener(click);
@@ -139,8 +147,6 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
         btn_add.setOnTouchListener(Global.GetTouch());
 
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-
-        showLoading("");
         getData();
         mPresenter = new MyCustomerFragPresenterImpl(getActivity(), this);
         Utils.btnHideForListView(listView.getRefreshableView(), btn_add);
@@ -165,10 +171,10 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
                     String[] keys = key.split(" ");
                     field = keys[0];
                     order = keys[1];
-                }
-                else if (menuIndex == 1) { // TagFilter
+                } else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
                 }
+                ll_loading.setStatus(LoadingLayout.Loading);
                 isPullUp = false;
                 page = 1;
                 getData();
@@ -187,7 +193,8 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
         } else {
             adapter.notifyDataSetChanged();
         }
-
+        if (!isPullUp && mCustomers.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
         /**
          * 列表监听 进入客户详情页面
          * */
@@ -272,7 +279,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
         RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_RESPON).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        HttpErrorCheck.checkResponse("我负责的", response);
+                        HttpErrorCheck.checkResponse("我负责的", response, ll_loading);
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);
@@ -299,7 +306,7 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         listView.onRefreshComplete();
                     }
                 }
@@ -331,12 +338,11 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
 
     /**
      * 刷新列表回调
-     * */
+     */
     @Subscribe
-    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event){
+    public void onMyCustomerListRushEvent(MyCustomerListRushEvent event) {
         getData();
     }
-
 
 
     /**
@@ -347,8 +353,8 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
         popupWindow.dismiss();
         Intent mIntent = new Intent();
         mIntent.setClass(getActivity(), MyContactMailList.class);
-        mIntent.putExtra(ExtraAndResult.EXTRA_NAME,2);
-        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ,false);
+        mIntent.putExtra(ExtraAndResult.EXTRA_NAME, 2);
+        mIntent.putExtra(ExtraAndResult.EXTRA_OBJ, false);
         startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
     }
 

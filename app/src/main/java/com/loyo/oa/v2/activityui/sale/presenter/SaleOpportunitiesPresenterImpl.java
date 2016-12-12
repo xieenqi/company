@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.sale.presenter;
 
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
 import com.loyo.oa.v2.activityui.sale.model.SaleOpportunitiesModelImpl;
 
@@ -22,7 +21,7 @@ public class SaleOpportunitiesPresenterImpl implements SaleOpportunitiesContract
 
     @Override
     public void getPageData(Object... pag) {
-        mModle.getStageData();
+//        mModle.getStageData();
     }
 
     @Override
@@ -32,7 +31,7 @@ public class SaleOpportunitiesPresenterImpl implements SaleOpportunitiesContract
 
     @Override
     public void sendPageData(Object obj) {
-        mView.setSaleStgesData((ArrayList<SaleStage>) obj);
+//        mView.setSaleStgesData((ArrayList<SaleStage>) obj);
     }
 
     @Override

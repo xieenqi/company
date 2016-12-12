@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ExpandableListView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.OrderDetail;
 import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
@@ -25,8 +26,10 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
@@ -41,22 +44,17 @@ import retrofit.client.Response;
  * 【工单搜索】
  */
 
-public class OrderWorksheetsActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class OrderWorksheetsActivity extends BaseLoadingActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private PullToRefreshExpandableListView expandableListView;
-    private ViewStub emptyView;
     private ViewGroup layout_add;
-
     private OrderDetail detail;
     private int page = 1;
     private int status;
     private boolean isPullDown = true;
     private Bundle mBundle;
     protected GroupsData groupsData;
-
     private BaseGroupsDataAdapter adapter;
-    private LayoutInflater mInflater;
-
     boolean isMyUser;
     boolean canAddWorksheet;
 
@@ -64,11 +62,10 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_order_worksheet);
         groupsData = new GroupsData();
         mBundle = getIntent().getExtras();
-        detail = ( OrderDetail) mBundle.getSerializable(ExtraAndResult.EXTRA_OBJ);
-        canAddWorksheet = (boolean)mBundle.getBoolean(ExtraAndResult.EXTRA_BOOLEAN);
+        detail = (OrderDetail) mBundle.getSerializable(ExtraAndResult.EXTRA_OBJ);
+        canAddWorksheet = (boolean) mBundle.getBoolean(ExtraAndResult.EXTRA_BOOLEAN);
         status = mBundle.getInt(ExtraAndResult.EXTRA_ID);
         if (detail == null || detail.id == null) {
             Toast("参数错误");
@@ -76,6 +73,16 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
         }
 
         initView();
+        getPageData();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.layout_order_worksheet);
+    }
+
+    @Override
+    public void getPageData() {
         getData();
     }
 
@@ -91,9 +98,6 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
      */
     void initView() {
         setTitle("工单");
-
-        mInflater = LayoutInflater.from(this);
-        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,15 +117,15 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
 
         layout_add.setOnClickListener(this);
 
-        expandableListView = (PullToRefreshExpandableListView)findViewById(R.id.expandableListView);
+        expandableListView = (PullToRefreshExpandableListView) findViewById(R.id.expandableListView);
         expandableListView.setMode(PullToRefreshBase.Mode.BOTH);
         expandableListView.setOnRefreshListener(this);
 
         ExpandableListView innerListView = expandableListView.getRefreshableView();
-        if(status == 1){
-            adapter = new WorksheetListAdapter(this, groupsData,true,true);
-        }else{
-            adapter = new WorksheetListAdapter(this, groupsData,false,true);
+        if (status == 1) {
+            adapter = new WorksheetListAdapter(this, groupsData, true, true);
+        } else {
+            adapter = new WorksheetListAdapter(this, groupsData, false, true);
         }
 
         innerListView.setAdapter(adapter);
@@ -135,12 +139,12 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                if(status == 1){
+                if (status == 1) {
                     sweetAlertDialogView.alertIcon(null, "订单未通过审核,无法查看工单详情!");
-                }else{
+                } else {
                     Intent mIntent = new Intent(getApplicationContext(), WorksheetDetailActivity.class);
                     String wsId = null;
-                    Worksheet ws =(Worksheet) groupsData.get(groupPosition, childPosition);
+                    Worksheet ws = (Worksheet) groupsData.get(groupPosition, childPosition);
                     wsId = ws.id;
                     if (wsId == null) {
                         wsId = "";
@@ -153,7 +157,7 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
         });
     }
 
-    protected  void getData() {
+    protected void getData() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 15);
@@ -164,18 +168,19 @@ public class OrderWorksheetsActivity extends BaseActivity implements View.OnClic
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 expandableListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的工单列表：", response);
+                HttpErrorCheck.checkResponse("我的工单列表：", response, ll_loading);
                 if (isPullDown) {
                     groupsData.clear();
+                    if (listWrapper != null && listWrapper.isEmpty())
+                        ll_loading.setStatus(LoadingLayout.Empty);
                 }
                 loadData(listWrapper.data.records);
-                expandableListView.setEmptyView(emptyView);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 expandableListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }

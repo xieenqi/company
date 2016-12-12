@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
+
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -23,6 +25,7 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.adapter.CommCustomerAdapter;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
+import com.loyo.oa.v2.activityui.customer.model.CustomerTageConfig;
 import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -52,12 +55,10 @@ import retrofit.client.Response;
 public class CommCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
-    private Button btn_add;
-    private ViewStub emptyView;
     private PullToRefreshListView listView;
     private CommCustomerAdapter adapter;
     private DropDownMenu filterMenu;
-
+    private Button btn_add;
     private String field = "lastActAt";
     private String order = "desc";
     private String tagsParams = "";
@@ -67,6 +68,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private ArrayList<Tag> mTags;
+    private LoadingLayout ll_loading;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -109,20 +111,23 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
-
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getData();
+            }
+        });
         btn_add = (Button) view.findViewById(R.id.btn_add);
-
-        emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
+        btn_add.setVisibility(View.GONE);
+//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+        mTags = CustomerTageConfig.getTageCache();
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
-        listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
-
-        btn_add.setVisibility(View.GONE);
-
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-        showLoading("");
         getData();
     }
 
@@ -149,6 +154,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
                 else if (menuIndex == 1) { // TagFilter
                     tagsParams = userInfo.toString();
                 }
+                ll_loading.setStatus(LoadingLayout.Loading);
                 isPullUp = false;
                 page = 1;
                 getData();
@@ -167,7 +173,8 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         } else {
             adapter.notifyDataSetChanged();
         }
-
+        if (!isPullUp && mCustomers.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
         /**
          * 列表监听 进入客户详情页面
          * */
@@ -198,7 +205,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
         RestAdapterFactory.getInstance().build(FinalVariables.QUERY_CUSTOMERS_PUBLIC).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        HttpErrorCheck.checkResponse("客户列表", response);
+                        HttpErrorCheck.checkResponse("客户列表", response,ll_loading);
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);
@@ -225,7 +232,7 @@ public class CommCustomerFragment extends BaseFragment implements PullToRefreshB
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,ll_loading);
                         listView.onRefreshComplete();
                     }
                 }

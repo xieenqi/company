@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.followup.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -28,4 +29,5 @@ public interface FollowUpListView {
     /*获取列表数据失败*/
     void getListDataErrorEmbl();
 
+    LoadingLayout getLoadingLayout();
 }

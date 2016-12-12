@@ -49,7 +49,6 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
     @Override
     public void GetData() {
-        showLoading("");
         if (lstData == null) {
             lstData = new ArrayList<>();
         }
@@ -96,7 +95,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
                 else if (menuIndex == 1) {
                     statusParam = key;
                 }
-                onPullDownToRefresh(mExpandableListView);
+                refreshData();
             }
         });
     }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
@@ -16,6 +17,7 @@ import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninSelectCustomerVControl
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.UMengTools;
 
@@ -26,7 +28,7 @@ import java.util.ArrayList;
  * Created by xeq on 16/11/15.
  */
 
-public class SigninSelectCustomerActivity extends BaseActivity implements View.OnClickListener,
+public class SigninSelectCustomerActivity extends BaseLoadingActivity implements View.OnClickListener,
         PullToRefreshBase.OnRefreshListener2, SigninSelectCustomerVControl {
     private static final int SEARCH_CUSTOMER = 100;
     private static final int CREAT_CUSTOMER = 200;
@@ -37,9 +39,18 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin_select_customer);
         pControl = new SigninSelectCustomerPControl(this);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_signin_select_customer);
+    }
+
+    @Override
+    public void getPageData() {
+        getLocationData();
     }
 
     private void initView() {
@@ -67,14 +78,14 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
                 onBackPressed();
             }
         });
-        getLocationData();
+        getPageData();
     }
 
     private void getLocationData() {
         Intent intent = getIntent();
         double lon = intent.getDoubleExtra("lon", -1);
         double lat = intent.getDoubleExtra("lat", -1);
-        if(lat==-1||lon==-1){
+        if (lat == -1 || lon == -1) {
             Toast("没有有效的定位信息");
             onBackPressed();
         }
@@ -160,5 +171,10 @@ public class SigninSelectCustomerActivity extends BaseActivity implements View.O
     @Override
     public void bindData(ArrayList<SigninSelectCustomer> data) {
         adapter.setData(data);
+    }
+
+    @Override
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 }

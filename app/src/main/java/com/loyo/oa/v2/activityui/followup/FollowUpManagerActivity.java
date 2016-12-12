@@ -19,6 +19,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
 import com.loyo.oa.v2.activityui.followup.fragment.SelfFollowUpFragment;
 import com.loyo.oa.v2.activityui.followup.fragment.TeamFollowUpFragment;
+import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -62,10 +63,10 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
     private List<BaseFragment> fragments = new ArrayList<>();
     private String[] SaleItemStatus = new String[]{"我的跟进"};
 
-    private ArrayList<FollowFilter> mTags;
-    private ArrayList<FollowFilter> mTags1;
-    private ArrayList<FollowFilter> mTags2;
-    private ArrayList<FollowFilter> mTags3;
+//    private ArrayList<FollowFilter> mTags;
+//    private ArrayList<FollowFilter> mTags1;
+//    private ArrayList<FollowFilter> mTags2;
+//    private ArrayList<FollowFilter> mTags3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,56 +100,59 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
         }
 
         rotateAnimation = initArrowAnimation();
-        getStageData();
+        FolloUpConfig.getFolloUpStage(true);
+        initTitleItem();
+        initChildren();
+//        getStageData();
     }
 
-    /**
-     * 获取客户标签 筛选menu
-     */
-    public void getStageData() {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).
-                getFollupFilters(new RCallback<ArrayList<FollowFilter>>() {
-                    @Override
-                    public void success(ArrayList<FollowFilter> tags, Response response) {
-                        HttpErrorCheck.checkResponse("跟进 赛选 ：", response);
-                        mTags = tags;
-                        try {
-                            cloneMdata(tags);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        initTitleItem();
-                        try {
-                            initChildren();
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                            Toast("没有获取到权限数据，请重新拉去后再试");
-                            finish();
-                        }
-                    }
+//    /**
+//     * 获取客户标签 筛选menu
+//     */
+//    public void getStageData() {
+//        showLoading("");
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).
+//                getFollupFilters(new RCallback<ArrayList<FollowFilter>>() {
+//                    @Override
+//                    public void success(ArrayList<FollowFilter> tags, Response response) {
+//                        HttpErrorCheck.checkResponse("跟进 赛选 ：", response);
+//                        mTags = tags;
+//                        try {
+//                            cloneMdata(tags);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        } catch (ClassNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
+//                        initTitleItem();
+//                        try {
+//                            initChildren();
+//                        } catch (NullPointerException e) {
+//                            e.printStackTrace();
+//                            Toast("没有获取到权限数据，请重新拉去后再试");
+//                            finish();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
+//    }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
-    /**
-     * 深克隆筛选数据
-     */
-    private void cloneMdata(ArrayList<FollowFilter> tags) throws IOException, ClassNotFoundException {
-        mTags1 = new ArrayList<>(tags.size());
-        mTags2 = new ArrayList<>(tags.size());
-        mTags3 = new ArrayList<>(tags.size());
-
-        mTags1 = (ArrayList<FollowFilter>) Utils.deepCopyT(mTags);
-        mTags2 = (ArrayList<FollowFilter>) Utils.deepCopyT(mTags);
-        mTags3 = (ArrayList<FollowFilter>) Utils.deepCopyT(mTags);
-    }
+//    /**
+//     * 深克隆筛选数据
+//     */
+//    private void cloneMdata(ArrayList<FollowFilter> tags) throws IOException, ClassNotFoundException {
+//        mTags1 = new ArrayList<>(tags.size());
+////        mTags2 = new ArrayList<>(tags.size());
+////        mTags3 = new ArrayList<>(tags.size());
+//
+//        mTags1 = (ArrayList<FollowFilter>) Utils.deepCopyT(mTags);
+////        mTags2 = (ArrayList<FollowFilter>) Utils.deepCopyT(mTags);
+////        mTags3 = (ArrayList<FollowFilter>) Utils.deepCopyT(mTags);
+//    }
 
     void initTitleItem() {
         CustomerCategoryAdapter TitleItemAdapter = new CustomerCategoryAdapter(this, Arrays.asList(SaleItemStatus));
@@ -172,11 +176,11 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
             BaseFragment fragment = null;
             if ("我的跟进".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
-                b.putSerializable("tag", mTags1);
+//                b.putSerializable("tag", mTags1);
                 fragment = (BaseFragment) Fragment.instantiate(this, SelfFollowUpFragment.class.getName(), b);
             } else if ("团队跟进".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
-                b.putSerializable("tag", mTags1);
+//                b.putSerializable("tag", mTags1);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamFollowUpFragment.class.getName(), b);
             }
             fragments.add(fragment);

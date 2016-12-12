@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.discuss.persenter;
 import android.os.Handler;
 import android.os.Message;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.HttpDiscussItem;
 import com.loyo.oa.v2.activityui.discuss.viewcontrol.MyDisscussVControl;
@@ -28,7 +29,6 @@ import retrofit.client.Response;
 public class MyDisscussPControl implements MyDiscussPersenter {
     private boolean isTopAdd = false;
     private int pageIndex = 1;
-    private boolean isfirst = true;
     private ArrayList<HttpDiscussItem> listData = new ArrayList<>();
     private MyDisscussVControl vControl;
     private Handler handler;
@@ -40,8 +40,6 @@ public class MyDisscussPControl implements MyDiscussPersenter {
 
     @Override
     public void getPageData(Object... pag) {
-        if (isfirst)
-            vControl.showProgress("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex + "");
         map.put("pageSize", "10");
@@ -58,20 +56,25 @@ public class MyDisscussPControl implements MyDiscussPersenter {
                                 listData.addAll(discuss.getRecords());
                             }
                             bindPageData(listData);
+                            vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
                         } else {
-                            Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            if (isTopAdd) {
+                                vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
+                            } else {
+                                vControl.getLoadingLayout().setStatus(LoadingLayout.Success);
+                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            }
                         }
                         vControl.hideProgress();
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
                         super.failure(error);
                         vControl.hideProgress();
                     }
                 });
-        isfirst = false;
     }
 
     @Override

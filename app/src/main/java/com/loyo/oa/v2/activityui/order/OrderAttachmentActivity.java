@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.photo.PhotoPicker;
 import com.loyo.oa.upload.UploadController;
 import com.loyo.oa.upload.UploadControllerCallback;
@@ -23,6 +24,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -41,7 +43,7 @@ import retrofit.client.Response;
  * 【订单附件】
  * Created by yyy on 16/8/2.
  */
-public class OrderAttachmentActivity extends BaseActivity implements View.OnClickListener, UploadControllerCallback {
+public class OrderAttachmentActivity extends BaseLoadingActivity implements View.OnClickListener, UploadControllerCallback {
 
     private ArrayList<User> mUserList;
     private String uuid = StringUtil.getUUID();
@@ -50,6 +52,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     private boolean isOver;         //当前业务已经结束
     private boolean isPic = false;
     private boolean isAdd;          //操作权限
+    private boolean isCreat;//是否要创建附件
 
     private LinearLayout img_title_left;
     private TextView tv_title;
@@ -67,10 +70,19 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_attachment);
         controller = new UploadController(this, 9);
         controller.setObserver(this);
         initUI();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_order_attachment);
+    }
+
+    @Override
+    public void getPageData() {
+        getAttachments();
     }
 
     public void initUI() {
@@ -84,6 +96,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
                 uuid = mIntent.getStringExtra("uuid");
                 isPic = true;
             }
+            isCreat = bizType == 0 ? false : true;//biztype有值就是要创建上传附件的
         }
 
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
@@ -95,13 +108,14 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
         img_title_left.setOnTouchListener(Global.GetTouch());
         tv_upload.setOnClickListener(this);
         img_title_left.setOnClickListener(this);
-
         if (!isAdd) {
             // tv_upload.setVisibility(View.GONE);
         }
 
-        if (isPic) {
-            getAttachments();
+        if (isPic && !isCreat) {
+            getPageData();
+        } else if (isCreat) {//上传附件就取消loading
+            ll_loading.setStatus(LoadingLayout.Success);
         }
     }
 
@@ -146,24 +160,25 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
      * 获取附件列表信息
      */
     void getAttachments() {
-
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
                 HttpErrorCheck.checkResponse("获取附件", response);
+                ll_loading.setStatus(LoadingLayout.Success);
                 mListAttachment = attachments;
                 attachmentCount = attachments.size();
                 bindAttachment();
                 controller.removeAllTask();
+                if (attachmentCount == 0)
+                    ll_loading.setStatus(LoadingLayout.Empty);
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
                 controller.removeAllTask();
-                finish();
+//                finish();
             }
         });
     }
@@ -272,7 +287,7 @@ public class OrderAttachmentActivity extends BaseActivity implements View.OnClic
         cancelLoading();
 
         // TODO: 上传失败提醒
-        if (taskList.size() >0) {
+        if (taskList.size() > 0) {
             postAttaData();
         }
     }

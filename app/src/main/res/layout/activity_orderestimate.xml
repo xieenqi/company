@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                android:orientation="vertical"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/ll_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-        <include layout="@layout/include_title"/>
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/include_title" />
     </LinearLayout>
 
     <LinearLayout
@@ -20,31 +20,27 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_title"
         android:background="@color/title_bg1"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_10"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:gravity="center"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/estimate_page_string1"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_sp13"
-                    />
+                    android:textSize="@dimen/text_sp13" />
 
                 <com.loyo.oa.v2.customview.CustomTextView
                     android:id="@+id/tv_dealprice"
@@ -57,24 +53,21 @@
                     android:singleLine="true"
                     android:text="￥0"
                     android:textColor="@color/white"
-                    android:textSize="9sp"
-                    />
+                    android:textSize="9sp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                />
+                android:background="@color/white" />
 
             <LinearLayout
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:gravity="center"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_rate_payment"
@@ -82,8 +75,7 @@
                     android:layout_height="wrap_content"
                     android:text="已回款"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_sp13"
-                    />
+                    android:textSize="@dimen/text_sp13" />
 
                 <com.loyo.oa.v2.customview.CustomTextView
                     android:id="@+id/tv_totalprice"
@@ -96,8 +88,7 @@
                     android:singleLine="true"
                     android:text="￥0"
                     android:textColor="@color/white"
-                    android:textSize="9sp"
-                    />
+                    android:textSize="9sp" />
 
             </LinearLayout>
 
@@ -109,8 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10"
             android:layout_marginTop="@dimen/dimen_20"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
 
             <LinearLayout
@@ -118,16 +108,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:gravity="center"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/estimate_page_string2"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_sp13"
-                    />
+                    android:textSize="@dimen/text_sp13" />
 
                 <com.loyo.oa.v2.customview.CustomTextView
                     android:id="@+id/tv_aleryprice"
@@ -140,32 +128,28 @@
                     android:singleLine="true"
                     android:text="￥0"
                     android:textColor="@color/white"
-                    android:textSize="9sp"
-                    />
+                    android:textSize="9sp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                />
+                android:background="@color/white" />
 
             <LinearLayout
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:gravity="center"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/estimate_page_string3"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_sp13"
-                    />
+                    android:textSize="@dimen/text_sp13" />
 
                 <com.loyo.oa.v2.customview.CustomTextView
                     android:id="@+id/tv_faileprice"
@@ -178,25 +162,28 @@
                     android:singleLine="true"
                     android:text="￥0"
                     android:textColor="@color/white"
-                    android:textSize="9sp"
-                    />
+                    android:textSize="9sp" />
 
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-
-    <ListView
-        android:id="@+id/lv_listview"
+    <com.library.module.widget.loading.LoadingLayout
+        android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_add"
         android:layout_below="@+id/ll_restimate"
-        android:listSelector="@android:color/transparent"
-        android:divider="@color/white"
-        android:scrollbars="none"
-        >
-    </ListView>
+        app:isFirstVisible="true">
+
+        <ListView
+            android:id="@+id/lv_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/white"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none" />
+    </com.library.module.widget.loading.LoadingLayout>
 
     <LinearLayout
         android:id="@+id/ll_add"
@@ -206,16 +193,14 @@
         android:background="@color/activity_bg"
         android:gravity="center"
         android:minHeight="@dimen/dimen_48"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="5dp"
-            android:background="@drawable/icon_common_add"
-            />
+            android:background="@drawable/icon_common_add" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -224,7 +209,7 @@
             android:layout_gravity="center"
             android:text="新增回款记录"
             android:textColor="@color/title_bg1"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
     </LinearLayout>
 
 </RelativeLayout>

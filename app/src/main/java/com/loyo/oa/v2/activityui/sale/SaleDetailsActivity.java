@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
@@ -30,6 +31,7 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -48,7 +50,7 @@ import retrofit.client.Response;
  * 【机会详情】
  * Created by yyy on 16/5/19.
  */
-public class SaleDetailsActivity extends BaseActivity implements View.OnClickListener, SaleDetailContract.View {
+public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnClickListener, SaleDetailContract.View {
 
     private LinearLayout img_title_left;
     private LinearLayout layout_losereson;
@@ -89,10 +91,19 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_saledetails);
         mPersenter = new SaleDetailPresenterImpl(this);
         setTitle("机会详情");
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_saledetails);
+    }
+
+    @Override
+    public void getPageData() {
+        mPersenter.getPageData(selectId);
     }
 
     public void initView() {
@@ -126,7 +137,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         Global.SetTouchView(ll_stage, ll_product, img_title_right, img_title_left, iv_wfstatus);
         iv_wfstatus.setOnClickListener(this);
         getIntenData();
-        mPersenter.getPageData(selectId);
+        getPageData();
     }
 
     private void getIntenData() {
@@ -168,7 +179,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         ll_product.setEnabled(true);
 
         boolean showActionsheet = getEditPriority() || canGenerateOrder();
-        img_title_right.setVisibility(showActionsheet?View.VISIBLE: View.INVISIBLE);
+        img_title_right.setVisibility(showActionsheet ? View.VISIBLE : View.INVISIBLE);
 
         //已通过的审批 任何人都不能删除
         if (mSaleDetails.wfState == 0 && mSaleDetails.prob == 100) {
@@ -314,7 +325,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 (100 != mSaleDetails.prob                                         /*未赢单*/
                         || (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5 /*赢单未通过*/
                         && mSaleDetails.wfState != 0 /*赢单需要审核*/
-                        && mSaleDetails.wfState!=1 && mSaleDetails.wfState!=2  ) // 待审核,审核中
+                        && mSaleDetails.wfState != 1 && mSaleDetails.wfState != 2) // 待审核,审核中
                 )
                 &&
                 (MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/
@@ -329,7 +340,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 (100 != mSaleDetails.prob                                         /*未赢单*/
                         || (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5/*赢单未通过*/
                         && mSaleDetails.wfState != 0 /*赢单需要审核*/
-                        && mSaleDetails.wfState!=1 && mSaleDetails.wfState!=2  ) // 待审核,审核中
+                        && mSaleDetails.wfState != 1 && mSaleDetails.wfState != 2) // 待审核,审核中
                 )
                 && MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/;
         return canEdit;
@@ -341,7 +352,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 (100 == mSaleDetails.prob                                         /*未赢单*/
                         && (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5/*赢单未通过*/
                         && mSaleDetails.wfState != 0 /*赢单需要审核*/
-                        && mSaleDetails.wfState!=1 && mSaleDetails.wfState!=2  ) // 待审核,审核中
+                        && mSaleDetails.wfState != 1 && mSaleDetails.wfState != 2) // 待审核,审核中
                 )
                 && MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/;
         return canEdit;
@@ -509,5 +520,10 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void editSaleStageSuccessUI() {
         mPersenter.getPageData(selectId);
+    }
+
+    @Override
+    public LoadingLayout getLoadingUI() {
+        return ll_loading;
     }
 }

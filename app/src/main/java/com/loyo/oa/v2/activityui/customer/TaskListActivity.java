@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.R;
@@ -53,6 +54,8 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     @ViewById
     ViewGroup layout_add;
     @ViewById
+    LoadingLayout ll_loading;
+    @ViewById
     TextView tv_title;
     @ViewById(R.id.listView_tasks)
     PullToRefreshExpandableListView lv;
@@ -70,18 +73,26 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
 
     @AfterViews
     void initViews() {
-//        setTouchView(NO_SCROLL);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                isTopAdd = true;
+                getData();
+            }
+        });
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("任务管理");
         layout_back.setOnTouchListener(Global.GetTouch());
-        layout_add.setVisibility(canAdd?View.VISIBLE:View.GONE);
-
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
         layout_add.setOnTouchListener(Global.GetTouch());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        isTopAdd = true;
         getData();
     }
 
@@ -100,7 +111,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      */
     @Click(R.id.layout_add)
     void createNewTask() {
-        if (! PermissionManager.getInstance().hasPermission(BusinessOperation.TASK)) {
+        if (!PermissionManager.getInstance().hasPermission(BusinessOperation.TASK)) {
             sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
         } else {
             Bundle b = new Bundle();
@@ -128,7 +139,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             lv.getRefreshableView().setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
-                    if (! PermissionManager.getInstance().hasPermission(BusinessOperation.TASK)) {
+                    if (!PermissionManager.getInstance().hasPermission(BusinessOperation.TASK)) {
                         sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                         return false;
                     }
@@ -157,7 +168,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      * 获取列表
      */
     private void getData() {
-        showLoading("");
+//        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("startAt", "2014-01-01");
         map.put("endAt", DateTool.getEndAt_ofDay(app.df5));
@@ -170,13 +181,15 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             @Override
             public void onCompleted() {
                 lv.onRefreshComplete();
-                cancelLoading();
+//                ll_loading.setStatus(LoadingLayout.Success);
+//                cancelLoading();
             }
 
             @Override
             public void onError(final Throwable e) {
                 lv.onRefreshComplete();
-                cancelLoading();
+                ll_loading.setStatus(LoadingLayout.Success);
+//                cancelLoading();
             }
 
             @Override
@@ -189,7 +202,9 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
                 tasks.addAll(paginationX.getRecords());
                 pagingGroupDatas = PagingGroupData_.convertGroupData(tasks);
                 bindData();
-                cancelLoading();
+                ll_loading.setStatus(LoadingLayout.Success);
+                if (isTopAdd && paginationX.getRecords().size() == 0)
+                    ll_loading.setStatus(LoadingLayout.Empty);
             }
         });
     }

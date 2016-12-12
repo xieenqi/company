@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.customer.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.BaseView;
@@ -27,4 +28,6 @@ public interface CustomerDetailinfoView extends BaseView{
 
     /*弹出通用提示框操作*/
     void setPopViewEmbl(boolean mespray,String message);
+
+    LoadingLayout getLoadigLayout();
 }

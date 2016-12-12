@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.attendance.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceDetial;
 
@@ -19,4 +20,6 @@ public interface AttendanceDetailsView {
 
     /*初始化详情数据*/
     void initDetails(HttpAttendanceDetial mAttendanceDetails);
+
+    LoadingLayout getLoading();
 }

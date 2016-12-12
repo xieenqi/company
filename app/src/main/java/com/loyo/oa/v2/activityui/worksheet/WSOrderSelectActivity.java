@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -28,6 +29,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -44,30 +46,35 @@ import retrofit.client.Response;
  * 【订单选择】
  */
 
-public class WSOrderSelectActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
+public class WSOrderSelectActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2 {
 
     private EditText edt_search;
     private ImageView iv_clean;
     private PullToRefreshListView pullToRefreshListView;
-    private ViewStub emptyView;
 
     private WorksheetListType searchType;
     private int page = 1;
     private boolean isPullDown = true;
     private Bundle mBundle;
     private String strSearch;
-    protected ArrayList<WorksheetOrder> listData;
+    protected ArrayList<WorksheetOrder> listData = new ArrayList<>();
 
     private OrderSearchAdapter adapter;
-
-    private LayoutInflater mInflater;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_search); // activity_public_search
         initView();
+        getPageData();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_public_search); // activity_public_search
+    }
+
+    @Override
+    public void getPageData() {
         doSearch();
     }
 
@@ -77,9 +84,6 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
     void initView() {
         mBundle = getIntent().getExtras();
         searchType = (WorksheetListType) mBundle.getSerializable(ExtraAndResult.EXTRA_TYPE);
-        mInflater = LayoutInflater.from(this);
-        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
-
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,10 +127,9 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
         });
         edt_search.requestFocus();
 
-        pullToRefreshListView = (PullToRefreshListView)findViewById(R.id.expandableListView_search);
+        pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         pullToRefreshListView.setOnRefreshListener(this);
-        pullToRefreshListView.setEmptyView(emptyView);
 
         ListView innerListView = pullToRefreshListView.getRefreshableView();
         adapter = new OrderSearchAdapter();
@@ -136,7 +139,7 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                WorksheetOrder order = (WorksheetOrder) adapter.getItem(position-1);
+                WorksheetOrder order = (WorksheetOrder) adapter.getItem(position - 1);
                 Intent intent = new Intent();
                 intent.putExtra(ExtraAndResult.EXTRA_OBJ, order);
                 app.finishActivity(WSOrderSelectActivity.this, MainApp.ENTER_TYPE_LEFT, 0, intent);
@@ -153,7 +156,7 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
         getData();
     }
 
-    protected  void getData() {
+    protected void getData() {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
@@ -167,15 +170,14 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
             @Override
             public void success(WorksheetOrderListWrapper listWrapper, Response response) {
                 pullToRefreshListView.onRefreshComplete();
-                HttpErrorCheck.checkResponse("我的工单列表：", response);
+                HttpErrorCheck.checkResponse("我的工单列表：", response, ll_loading);
                 loadData(listWrapper.data.records);
-                pullToRefreshListView.setEmptyView(emptyView);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 pullToRefreshListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }
@@ -193,8 +195,8 @@ public class WSOrderSelectActivity extends BaseActivity implements PullToRefresh
         if (list != null) {
             listData.addAll(list);
         }
-
-//        listData.addAll(WorksheetOrder.testData());
+        if (listData.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -104,11 +105,11 @@ public class LoadingLayout extends FrameLayout {
     }
 
     private void build() {
-
-        loadingPage = LayoutInflater.from(mContext).inflate(loadingLayoutId, null);
-        errorPage = LayoutInflater.from(mContext).inflate(R.layout.widget_error_page, null);
-        emptyPage = LayoutInflater.from(mContext).inflate(R.layout.widget_empty_page, null);
-        networkPage = LayoutInflater.from(mContext).inflate(R.layout.widget_nonetwork_page, null);
+        LayoutInflater inflate = LayoutInflater.from(mContext);
+        loadingPage = inflate.inflate(loadingLayoutId, null);
+        errorPage = inflate.inflate(R.layout.widget_error_page, null);
+        emptyPage = inflate.inflate(R.layout.widget_empty_page, null);
+        networkPage = inflate.inflate(R.layout.widget_nonetwork_page, null);
 
         errorText = Utils.findViewById(errorPage, R.id.error_text);
         emptyText = Utils.findViewById(emptyPage, R.id.empty_text);

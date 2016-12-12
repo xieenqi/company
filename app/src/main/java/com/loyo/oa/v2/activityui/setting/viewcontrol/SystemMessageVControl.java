@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.setting.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.setting.bean.SystemMessageItem;
 import com.loyo.oa.v2.common.BaseView;
 
@@ -16,4 +17,6 @@ public interface SystemMessageVControl extends BaseView {
     void getDataComplete();
 
     void bindingView(List<SystemMessageItem> data);
+
+    LoadingLayout getLoadingLayout();
 }

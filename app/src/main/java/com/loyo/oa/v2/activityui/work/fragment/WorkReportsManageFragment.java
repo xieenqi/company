@@ -78,7 +78,6 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
     @Override
     public void GetData() {
-        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
@@ -141,7 +140,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
                 else if (menuIndex == 2) {
                     categoryParam = key;
                 }
-                onPullDownToRefresh(mExpandableListView);
+                refreshData();
             }
         });
     }

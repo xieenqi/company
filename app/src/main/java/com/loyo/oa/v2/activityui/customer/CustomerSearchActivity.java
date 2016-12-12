@@ -23,7 +23,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
+//    @Override
     protected void openDetail(final int position) {
 
         boolean customerAuth = PermissionManager.getInstance().hasPermission(BusinessOperation.CUSTOMER_MANAGEMENT);

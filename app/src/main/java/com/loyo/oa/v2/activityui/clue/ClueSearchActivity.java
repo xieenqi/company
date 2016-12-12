@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueList;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
@@ -27,6 +28,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -44,7 +46,7 @@ import retrofit.client.Response;
  * Create by yyy on 16/08/23
  */
 
-public class ClueSearchActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback<ClueList> {
+public class ClueSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, Callback<ClueList> {
 
 
     private String strSearch;
@@ -55,7 +57,6 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
     private CommonSearchAdapter adapter;
     private Bundle mBundle;
     private LayoutInflater mInflater;
-    private ViewStub emptyView;
 
     private int fromPage;
     private int page = 1;
@@ -66,8 +67,21 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_search);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_public_search);
+    }
+
+    @Override
+    public void getPageData() {
+        if (isSelect) {
+            doSearch();
+        } else {
+            ll_loading.setStatus(LoadingLayout.Success);
+        }
     }
 
     /**
@@ -79,7 +93,6 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
         isSelect = mBundle.getBoolean("isSelect", false);
         isResult = mBundle.getBoolean("isResult", false);
         mInflater = LayoutInflater.from(this);
-        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +142,6 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
 
         ListView expandableListView = expandableListView_search.getRefreshableView();
         adapter = new CommonSearchAdapter();
-        expandableListView.setEmptyView(emptyView);
         expandableListView.setAdapter(adapter);
 
         /**列表监听器*/
@@ -157,8 +169,7 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
                 hideInputKeyboard(edt_search);
             }
         });
-        if (isSelect)
-            doSearch();
+        getPageData();
     }
 
     /**
@@ -189,23 +200,28 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
     @Override
     public void success(ClueList clueList, Response response) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkResponse("我的线索列表：", response);
+        HttpErrorCheck.checkResponse("我的线索列表：", response, ll_loading);
         try {
             if (!isPullDown) {
+                if (clueList.data.records == null)
+                    Toast("没有更多的数据了");
                 listData.addAll(clueList.data.records);
             } else {
+                if (clueList.data.records == null)
+                    ll_loading.setStatus(LoadingLayout.Empty);
                 listData = clueList.data.records;
             }
             adapter.setAdapter();
         } catch (NullPointerException e) {
             e.printStackTrace();
+
         }
     }
 
     @Override
     public void failure(RetrofitError error) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkError(error);
+        HttpErrorCheck.checkError(error, ll_loading);
     }
 
 
@@ -254,7 +270,7 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
             ClueListItem clueListItem = listData.get(position);
             Holder holder = null;
             if (convertView == null) {
-                convertView = LayoutInflater.from(ClueSearchActivity.this).inflate(R.layout.item_teamclue, null);
+                convertView = mInflater.inflate(R.layout.item_teamclue, null);
                 holder = new Holder();
                 holder.tv_company_name = (TextView) convertView.findViewById(R.id.tv_company_name);
                 holder.tv_customer = (TextView) convertView.findViewById(R.id.tv_customer);

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.customer.viewcontrol;
 
 import android.view.ViewGroup;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -32,5 +33,7 @@ public interface CustomerFollowUpListView {
     void getListDataErrorEmbl();
 
     ViewGroup getBottomMenuLayout();
+
+    LoadingLayout getLoadingLayout();
 
 }

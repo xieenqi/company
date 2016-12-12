@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -61,7 +62,7 @@ import java.util.List;
  */
 public class TeamSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
-    private ArrayList<Tag> mTags;
+//    private ArrayList<Tag> mTags;
     private String menuTimekey = "0";        /*时间*/
     private String menuSortkey = "0";        /*排序*/
     private String departmentId = "";        /*部门id*/
@@ -91,6 +92,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     private AudioPlayer audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
+    private LoadingLayout ll_loading;
 
 
     @SuppressLint("InflateParams")
@@ -136,10 +138,17 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
+//        mTags = (ArrayList<Tag>) getArguments().getSerializable("tag");
         mPresenter = new TeamSigninListFragPresenterImpl(this);
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                initPageData();
+            }
+        });
         btn_add = (Button) view.findViewById(R.id.btn_add);
         emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
@@ -221,13 +230,16 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
                         }
                         break;
                 }
-                isPullOrDown = true;
-                getData(false);
+                initPageData();
             }
         });
+        initPageData();
+    }
+    private void initPageData() {
+        mPagination.setPageIndex(1);
+        isPullOrDown = true;
         getData(false);
     }
-
     /**
      * 数据绑定
      */
@@ -271,7 +283,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            showLoading("");
+            ll_loading.setStatus(LoadingLayout.Loading);
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("timeType", Integer.parseInt(menuTimekey));
@@ -339,6 +351,8 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         listView.onRefreshComplete();
         if (isPullOrDown) {
             listModel.clear();
+            if (paginationX != null && PaginationX.isEmpty(paginationX.data))
+                ll_loading.setStatus(LoadingLayout.Empty);
         }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
@@ -351,6 +365,11 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
+    }
+
+    @Override
+    public LoadingLayout getLoadingView() {
+        return ll_loading;
     }
 
     @Override

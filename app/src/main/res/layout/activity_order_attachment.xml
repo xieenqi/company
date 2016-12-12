@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:fitsSystemWindows="true"
-              android:clipToPadding="true"
-              android:background="@color/white"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_common_title"/>
+    <include layout="@layout/include_common_title" />
 
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        >
+        android:layout_height="fill_parent">
 
-        <com.loyo.oa.v2.customview.swipelistview.SwipeListView
-            android:id="@+id/listView_attachment"
-            xmlns:swipe="http://schemas.android.com/apk/res-auto"
+        <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ll_loading"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/tv_upload"
-            android:layout_alignParentTop="true"
-            android:divider="@null"
-            android:listSelector="#00000000"
-            swipe:swipeActionLeft="reveal"
-            swipe:swipeActionRight="reveal"
-            swipe:swipeAnimationTime="150"
-            swipe:swipeBackView="@+id/back"
-            swipe:swipeCloseAllItemsWhenMoveList="true"
-            swipe:swipeFrontView="@+id/front"
-            swipe:swipeMode="left"
-            swipe:swipeOffsetLeft="300dp"
-            swipe:swipeOffsetRight="0dp"
-            swipe:swipeOpenOnLongPress="false"/>
+            android:layout_height="match_parent"
+            app:isFirstVisible="true">
+
+            <com.loyo.oa.v2.customview.swipelistview.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/listView_attachment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tv_upload"
+                android:layout_alignParentTop="true"
+                android:divider="@null"
+                android:listSelector="#00000000"
+                swipe:swipeActionLeft="reveal"
+                swipe:swipeActionRight="reveal"
+                swipe:swipeAnimationTime="150"
+                swipe:swipeBackView="@+id/back"
+                swipe:swipeCloseAllItemsWhenMoveList="true"
+                swipe:swipeFrontView="@+id/front"
+                swipe:swipeMode="left"
+                swipe:swipeOffsetLeft="300dp"
+                swipe:swipeOffsetRight="0dp"
+                swipe:swipeOpenOnLongPress="false" />
+        </com.library.module.widget.loading.LoadingLayout>
 
         <TextView
             android:id="@+id/tv_upload"
@@ -44,7 +49,6 @@
             android:drawablePadding="@dimen/dimen_5"
             android:gravity="center"
             android:text="附件上传"
-            android:textColor="@color/title_bg1"
-            />
+            android:textColor="@color/title_bg1" />
     </RelativeLayout>
 </LinearLayout>

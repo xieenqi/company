@@ -38,8 +38,7 @@
         <com.loyo.oa.v2.customview.CustomRecyclerView
             android:id="@+id/recy_data_select"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_60"
-            />
+            android:layout_height="@dimen/dimen_60" />
 
 
         <LinearLayout
@@ -201,14 +200,21 @@
             </LinearLayout>
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/listView_attendance"
+        <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ll_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:clickable="false"
-            android:divider="@null"
-            android:listSelector="@android:color/transparent"></ListView>
+            app:isFirstVisible="true">
+
+            <ListView
+                android:id="@+id/listView_attendance"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:clickable="false"
+                android:divider="@null"
+                android:listSelector="@android:color/transparent" />
+        </com.library.module.widget.loading.LoadingLayout>
     </LinearLayout>
 
     <Button

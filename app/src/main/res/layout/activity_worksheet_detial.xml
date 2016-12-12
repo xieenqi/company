@@ -1,169 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_common_title_edit"/>
+    <include layout="@layout/include_common_title_edit" />
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="none">
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:isFirstVisible="true">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:layout_height="fill_parent"
+            android:scrollbars="none">
 
             <LinearLayout
-                android:id="@+id/ll_wran"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#9dcffa"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_5"
-                    android:src="@drawable/icon_warn"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="26dp"
-                    android:gravity="center"
-                    android:text="工单完成分派后生效，请立即分派"
-                    android:textColor="@color/white"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_worksheet_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/dimen_8"
-                android:paddingLeft="@dimen/margin_other_view"
-                android:paddingTop="@dimen/dimen_10"
-                >
+                android:background="@color/white"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/ll_wran"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:background="#9dcffa"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dimen_5"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tv_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dimen_10"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:singleLine="false"
-                            android:text=""
-                            android:textColor="@color/text33"
-                            android:textSize="@dimen/text_sp16"/>
-
-                        <TextView
-                            android:id="@+id/tv_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:paddingLeft="@dimen/dimen_2"
-                            android:paddingRight="@dimen/dimen_2"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_sp11"
-                            />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tv_assignment"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="分派人:"
+                        android:layout_marginRight="@dimen/dimen_5"
+                        android:src="@drawable/icon_warn" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:gravity="center"
+                        android:text="工单完成分派后生效，请立即分派"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_worksheet_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dimen_8"
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingTop="@dimen/dimen_10">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dimen_5"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/dimen_10"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:singleLine="false"
+                                android:text=""
+                                android:textColor="@color/text33"
+                                android:textSize="@dimen/text_sp16" />
+
+                            <TextView
+                                android:id="@+id/tv_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:paddingLeft="@dimen/dimen_2"
+                                android:paddingRight="@dimen/dimen_2"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_sp11" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_assignment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="分派人:"
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp12" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_4"
+                        android:src="@drawable/right_arrow" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="@color/activity_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/margin_other_view">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="完成度"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12"/>
+                        android:textSize="@dimen/text_sp12" />
+
+                    <TextView
+                        android:id="@+id/tv_complete_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text=""
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp12" />
+
+                    <TextView
+                        android:id="@+id/tv_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="批量分派"
+                        android:textColor="@color/red1"
+                        android:textSize="@dimen/text_sp12"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_events"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_4"
-                    android:src="@drawable/right_arrow"/>
+                    android:orientation="vertical" />
+
+                <Button
+                    android:id="@+id/bt_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_45"
+                    android:layout_margin="@dimen/margin_other_view"
+                    android:background="@drawable/round_bg_shpe"
+                    android:text="确认完成"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:background="@color/activity_bg"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/margin_other_view"
-                android:paddingRight="@dimen/margin_other_view"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="完成度"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12"/>
-
-                <TextView
-                    android:id="@+id/tv_complete_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text=""
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12"/>
-
-                <TextView
-                    android:id="@+id/tv_setting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="批量分派"
-                    android:textColor="@color/red1"
-                    android:textSize="@dimen/text_sp12"
-                    android:visibility="invisible"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_events"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-
-            <Button
-                android:id="@+id/bt_confirm"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_45"
-                android:layout_margin="@dimen/margin_other_view"
-                android:background="@drawable/round_bg_shpe"
-                android:text="确认完成"
-                android:textColor="@color/white"
-                android:visibility="gone"/>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </com.library.module.widget.loading.LoadingLayout>
 </LinearLayout>
