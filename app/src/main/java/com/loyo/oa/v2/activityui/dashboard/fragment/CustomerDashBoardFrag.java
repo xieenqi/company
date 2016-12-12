@@ -6,8 +6,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
+
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -15,15 +21,16 @@ import me.itangqi.waveloadingview.WaveLoadingView;
  * Created by yyy on 16/12/9.
  */
 
-public class CustomerDashBoardFrag extends BaseFragment{
+public class CustomerDashBoardFrag extends BaseFragment implements View.OnClickListener {
 
     private View mView;
-    private WaveLoadingView mWaveLoadingView1,mWaveLoadingView2;
+    private WaveLoadingView mWaveLoadingView1, mWaveLoadingView2;
+    private LinearLayout ll_dashboard_cus_followup;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(null == mView){
+        if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_customer_dashboard, container, false);
         }
         initUi();
@@ -31,8 +38,7 @@ public class CustomerDashBoardFrag extends BaseFragment{
     }
 
 
-
-    private void initUi(){
+    private void initUi() {
 
         mWaveLoadingView1 = (WaveLoadingView) mView.findViewById(R.id.waveLoadingView1);
         mWaveLoadingView2 = (WaveLoadingView) mView.findViewById(R.id.waveLoadingView2);
@@ -63,6 +69,17 @@ public class CustomerDashBoardFrag extends BaseFragment{
         mWaveLoadingView2.setAmplitudeRatio(60);
         mWaveLoadingView2.setTopTitleStrokeWidth(3);
         mWaveLoadingView2.setCenterTitle("29%");
+        ll_dashboard_cus_followup = (LinearLayout) mView.findViewById(R.id.ll_dashboard_cus_followup);
+        ll_dashboard_cus_followup.setOnClickListener(this);
+        Global.SetTouchView(ll_dashboard_cus_followup);
+    }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_dashboard_cus_followup:
+                app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, new Bundle());
+                break;
+        }
     }
 }

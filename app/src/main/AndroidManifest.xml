@@ -533,6 +533,11 @@
             android:theme="@style/Theme.IOSched"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
+            android:name=".activityui.dashboard.DashboardDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
             android:name=".activityui.customer.CustomerManagerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />

@@ -21,6 +21,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/ll_dashboard_cus_followup"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_65"
                     android:orientation="horizontal">
