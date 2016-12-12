@@ -5,8 +5,8 @@ package com.loyo.oa.v2.activityui.attendance.model;
  */
 public class DataSelect {
 
-    public String top;
-    public String bottom;
+    public String top;//年份
+    public String bottom;//月份
     public String yearMonDay;
     public String mapOftime;
 
