@@ -11,12 +11,9 @@ import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
 import com.loyo.oa.dropdownmenu.filtermenu.CommonSortType;
 import com.loyo.oa.dropdownmenu.filtermenu.CommonSortTypeMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.DashboardFilterTimeModel;
-import com.loyo.oa.dropdownmenu.filtermenu.DashboardSortType;
 import com.loyo.oa.dropdownmenu.filtermenu.DashboardSortTypeMenuModel;
-import com.loyo.oa.dropdownmenu.filtermenu.OrderStatusMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
-import com.loyo.oa.dropdownmenu.model.MenuListType;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.db.OrganizationManager;
@@ -68,6 +65,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     private void loadFilterOptions() {
         List<DBDepartment> depts = new ArrayList<>();
         String title = "部门";
+        //TODO 数据权限具体调整
         //为超管或权限为全公司 展示全公司成员
         if (PermissionManager.getInstance().dataRange(BusinessOperation.ORDER_MANAGEMENT)
                 == Permission.COMPANY) {
