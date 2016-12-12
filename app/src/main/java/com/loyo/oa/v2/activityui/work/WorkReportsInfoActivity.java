@@ -182,7 +182,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error, ll_loading);
-                finish();
+//                finish();
             }
         });
     }
