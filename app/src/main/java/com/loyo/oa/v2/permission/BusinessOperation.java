@@ -17,9 +17,9 @@ public class BusinessOperation {
     public final static String WORK_REPORT           = "0203";  /* 工作报告 */
     public final static String APPROVAL_PROCESS      = "0204";  /* 审批流程 */
     public final static String CUSTOMER_MANAGEMENT   = "0205";  /* 客户管理 */
-    // 0207    /* 增量/存量 */
-    // 0208    /* 跟进统计 */
-    // 0209    /* 业绩看板 */
+    public final static String AUGMENTER_STOCK       = "0207";  /* 增量/存量 */
+    public final static String FOLLOWUP_STATISTICS   = "0208";  /* 跟进统计 */
+    public final static String RESULTS_LOOK          = "0209";  /* 业绩看板 */
     // 0210    /* 产品管理 */
     public final static String ATTENDANCE_MANAGEMENT = "0211";  /* 考勤管理 */
     public final static String LOCATION_TRACKING     = "0212";  /* 轨迹定位 */

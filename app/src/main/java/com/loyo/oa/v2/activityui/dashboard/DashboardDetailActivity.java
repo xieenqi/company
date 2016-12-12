@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.dashboard;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
@@ -35,6 +36,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
 
     private LinearLayout ll_back;
     private DropDownMenu filterMenu;
+    private TextView tv_title;
 
 
     @Override
@@ -54,12 +56,14 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
     }
 
     private void initView() {
+        tv_title = (TextView) findViewById(R.id.tv_title);
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_back.setOnClickListener(this);
         filterMenu = (DropDownMenu) findViewById(R.id.drop_down_menu);
 
         ll_loading.setStatus(LoadingLayout.Success);
         loadFilterOptions();
+        tv_title.setText("仪表盘");
     }
 
     private void loadFilterOptions() {
@@ -67,13 +71,13 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         String title = "部门";
         //TODO 数据权限具体调整
         //为超管或权限为全公司 展示全公司成员
-        if (PermissionManager.getInstance().dataRange(BusinessOperation.ORDER_MANAGEMENT)
+        if (PermissionManager.getInstance().dataRange(BusinessOperation.FOLLOWUP_STATISTICS)
                 == Permission.COMPANY) {
             depts.addAll(OrganizationManager.shareManager().allDepartments());
             title = "全公司";
         }
         //权限为部门 展示我的部门
-        else if (PermissionManager.getInstance().dataRange(BusinessOperation.ORDER_MANAGEMENT)
+        else if (PermissionManager.getInstance().dataRange(BusinessOperation.FOLLOWUP_STATISTICS)
                 == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "本部门";

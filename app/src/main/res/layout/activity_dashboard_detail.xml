@@ -6,7 +6,9 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
-<include layout="@layout/include_title"/>
+
+    <include layout="@layout/include_title" />
+
     <com.loyo.oa.dropdownmenu.DropDownMenu
         android:id="@+id/drop_down_menu"
         android:layout_width="match_parent"
