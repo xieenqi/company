@@ -17,6 +17,7 @@
     <color name="redE8">#e85840</color>
     <color name="side_bar_text">#0070ff</color>
     <color name="colorPrimaryDark">#303F9F</color>
+    <color name="dashBoradbg">#5CB6FC</color>
 
     <!-- 销售统计 进度条 的背景颜色-->
     <color name="progress_bj">#f4f8fe</color>
