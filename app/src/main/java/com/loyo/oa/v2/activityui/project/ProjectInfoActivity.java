@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.tasks.TasksInfoActivity;
@@ -73,6 +74,9 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     TextView tv_project_extra;
     @ViewById
     ImageView img_project_status;
+    @ViewById
+    LoadingLayout ll_loading;
+
     @Extra("projectId")
     String projectId;
     HttpProject project;
@@ -91,6 +95,14 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         setTouchView(-1);
         img_title_right.setEnabled(false);
         tv_title_1.setText("项目详情");
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getProject();
+            }
+        });
         getProject();
     }
 
@@ -98,11 +110,9 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 获取项目 详细数据
      */
     private void getProject() {
-        DialogHelp.showLoading(this, "", true);
         app.getRestAdapter().create(IProject.class).getProjectById(projectId, keyType, new RCallback<HttpProject>() {
             @Override
             public void success(final HttpProject _project, final Response response) {
-                DialogHelp.cancelLoading();
                 HttpErrorCheck.checkResponse("项目详情 ", response);
                 project = _project;
                 img_title_right.setEnabled(true);
@@ -112,8 +122,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                DialogHelp.cancelLoading();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
     }
@@ -238,7 +247,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 img_title_right.setVisibility(View.GONE);
             }
         }
-
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     /**
