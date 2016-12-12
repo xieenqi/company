@@ -160,9 +160,9 @@ public class TasksInfoActivity extends BaseActivity {
     public static TasksInfoActivity instance = null;
     public ArrayList<TextView> taskChildView = new ArrayList<>();
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
-    public ArrayList<NewUser> requestDepts = new ArrayList<>();
-    public ArrayList<User> aboutDepts = new ArrayList<>();
-    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
+//    public ArrayList<NewUser> requestDepts = new ArrayList<>();
+//    public ArrayList<User> aboutDepts = new ArrayList<>();
+//    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
 
     //    public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
