@@ -11,6 +11,7 @@ import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.activityui.wfinstance.WfinstanceInfoActivity_;
@@ -35,18 +36,18 @@ import java.util.ArrayList;
  * 【我提交的】
  * Restruture by yyy on 16/10/17
  */
-public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2,WfinMySubmitView{
+public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2, WfinMySubmitView {
 
     private WfinMySubmitPresenter mPresenter;
     private WflnstanceMySubmitAdapter mAdapter;
     private PullToRefreshExpandableListView expandableListView;
     private Button btn_add;
     protected com.loyo.oa.dropdownmenu.DropDownMenu filterMenu;
-    private ViewStub emptyView;
 
     private int page = 1;
     private boolean isTopAdd = false;
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
+    private LoadingLayout ll_loading;
 
     @Override
     public void onAttach(Activity activity) {
@@ -62,21 +63,30 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     }
 
     private void initView(View view) {
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                onPullDownToRefresh(expandableListView);
+            }
+        });
         expandableListView = (PullToRefreshExpandableListView) view.findViewById(R.id.expandableListView);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         filterMenu = (com.loyo.oa.dropdownmenu.DropDownMenu) view.findViewById(R.id.drop_down_menu);
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
         expandableListView.setOnRefreshListener(this);
-        expandableListView.setEmptyView(emptyView);
-        page = 1;
-        isTopAdd = true;
-        mPresenter = new WfinMySubmitPresenterImpl(getActivity(),this,filterMenu);
+
+        mPresenter = new WfinMySubmitPresenterImpl(getActivity(), this, filterMenu);
         mPresenter.loadFilterOptions();
         initList();
         initAdapter();
-        mPresenter.getApproveWfInstancesList(page,isTopAdd);
+//        page = 1;
+//        isTopAdd = true;
+//        mPresenter.getApproveWfInstancesList(page, isTopAdd);
+        onPullDownToRefresh(expandableListView);
     }
 
     @Override
@@ -100,12 +110,12 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     private void initList() {
         ExpandableListView mListView = expandableListView.getRefreshableView();
         initAdapter();
-        mPresenter.initListView(mListView,btn_add);
+        mPresenter.initListView(mListView, btn_add);
     }
 
     /**
      * 初始化Adapter
-     * */
+     */
     public void initAdapter() {
         mAdapter = new WflnstanceMySubmitAdapter(mActivity);
         expandableListView.getRefreshableView().setAdapter(mAdapter);
@@ -121,36 +131,37 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     }
 
     /**
-     * 上拉加载回调
-     * */
+     * 下拉刷新回调
+     */
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         isTopAdd = true;
         page = 1;
-        mPresenter.getApproveWfInstancesList(page,isTopAdd);
+        mPresenter.getApproveWfInstancesList(page, isTopAdd);
     }
 
     /**
-     * 下拉刷新回调
-     * */
+     * 上拉加载回调
+     */
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isTopAdd = false;
         page++;
-        mPresenter.getApproveWfInstancesList(page,isTopAdd);
+        mPresenter.getApproveWfInstancesList(page, isTopAdd);
     }
 
     /**
      * 刷新下拉数据
-     * */
+     */
     @Override
     public void setPullDownToRefresh() {
+        ll_loading.setStatus(LoadingLayout.Loading);
         onPullDownToRefresh(expandableListView);
     }
 
     /**
      * 停止下拉数据
-     * */
+     */
     @Override
     public void setListRefreshComplete() {
         expandableListView.onRefreshComplete();
@@ -158,16 +169,19 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
 
     /**
      * 数据绑定
-     * */
+     */
     @Override
     public void bindListData(ArrayList<WflnstanceItemData> datas) {
         mAdapter.setData(datas);
         expand(datas);
+        ll_loading.setStatus(LoadingLayout.Success);
+        if(isTopAdd&&datas.size()==0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     /**
      * 跳转Item操作
-     * */
+     */
     @Override
     public void openItemEmbl(int groupPosition, int childPosition) {
         WflnstanceListItem item = (WflnstanceListItem) mAdapter.getChild(groupPosition, childPosition);
@@ -179,6 +193,11 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+    }
+
+    @Override
+    public LoadingLayout getLoading() {
+        return ll_loading;
     }
 
     @Override
@@ -198,12 +217,12 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
 
     /**
      * Ui刷新回调
-     * */
+     */
     @Subscribe
-    public void onRushListData(BizForm bizForm){
+    public void onRushListData(BizForm bizForm) {
         isTopAdd = true;
         page = 1;
-        mPresenter.getApproveWfInstancesList(page,isTopAdd);
+        mPresenter.getApproveWfInstancesList(page, isTopAdd);
     }
 
 /*    @Override

@@ -97,7 +97,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
      * */
     @Override
     public void getApproveWfInstancesList(int page, final boolean isTopAdd) {
-        crolView.showProgress("");
+//        crolView.showProgress("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 20);
@@ -130,7 +130,7 @@ public class WfinMyApprovePresenterImpl implements WfinMyApprovePresenter{
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,crolView.getLoading());
                         crolView.setListRefreshComplete();
                     }
                 });

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.wfinstance.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.wfinstance.bean.WflnstanceItemData;
 import com.loyo.oa.v2.common.BaseView;
 
@@ -22,4 +23,6 @@ public interface WfinMySubmitView extends BaseView{
 
     /*跳转操作*/
     void openItemEmbl(int groupPosition, int childPosition);
+
+    LoadingLayout getLoading();
 }
