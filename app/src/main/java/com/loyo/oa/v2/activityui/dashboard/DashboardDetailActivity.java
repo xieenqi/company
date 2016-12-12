@@ -16,4 +16,14 @@ public class DashboardDetailActivity extends BaseLoadingActivity{
         super.onCreate(savedInstanceState);
 
     }
+
+    @Override
+    public void setLayoutView() {
+
+    }
+
+    @Override
+    public void getPageData() {
+
+    }
 }
