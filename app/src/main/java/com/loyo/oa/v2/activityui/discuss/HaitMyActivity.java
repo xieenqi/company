@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.common.utils.GlideCircleTransform;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshRecyclerView2;
@@ -27,6 +28,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
@@ -42,12 +44,12 @@ import retrofit.client.Response;
 /**
  * @我的界面 create by libo 2016/03/10
  */
-public class HaitMyActivity extends BaseActivity {
+public class HaitMyActivity extends BaseLoadingActivity {
 
     private PullToRefreshRecyclerView2 lv_myDiscuss;
-    private LinearLayout img_title_left;
-    private ImageView img_back;
-    private TextView tv_back;
+    //    private LinearLayout img_title_left;
+//    private ImageView img_back;
+//    private TextView tv_back;
     private LinearLayout layout_back;
     private TextView tv_title1;
     private LinearLayoutManager linearLayoutManager;
@@ -60,9 +62,18 @@ public class HaitMyActivity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hait);
         initView();
         initListener();
+        getPageData();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_hait);
+    }
+
+    @Override
+    public void getPageData() {
         getData();
     }
 
@@ -77,9 +88,9 @@ public class HaitMyActivity extends BaseActivity {
     }
 
     private void assignViews() {
-        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
-        img_back = (ImageView) findViewById(R.id.img_back);
-        tv_back = (TextView) findViewById(R.id.tv_back);
+//        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
+//        img_back = (ImageView) findViewById(R.id.img_back);
+//        tv_back = (TextView) findViewById(R.id.tv_back);
         layout_back = (LinearLayout) findViewById(R.id.img_title_left);
         tv_title1 = (TextView) findViewById(R.id.tv_title_1);
         lv_myDiscuss = (PullToRefreshRecyclerView2) findViewById(R.id.lv_myDiscuss);
@@ -110,7 +121,6 @@ public class HaitMyActivity extends BaseActivity {
     }
 
     private void getData() {
-        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex + "");
         map.put("pageSize", "20");
@@ -120,20 +130,26 @@ public class HaitMyActivity extends BaseActivity {
                     public void success(final PaginationX<HttpMyDiscussItem> discuss, final Response response) {
                         HttpErrorCheck.checkResponse(" 【@我的】讨论数据： ", response);
                         if (!PaginationX.isEmpty(discuss)) {
-                            // mDiscuss = discuss;
                             if (isTopAdd) {
                                 adapter.cleanData();
                             }
                             adapter.updataList(discuss.getRecords());
+                            ll_loading.setStatus(LoadingLayout.Success);
                         } else {
-                            Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            if (discuss != null && discuss.getRecords() != null && discuss.getRecords().size() == 0 && isTopAdd) {
+                                ll_loading.setStatus(LoadingLayout.Empty);
+                            } else {
+                                ll_loading.setStatus(LoadingLayout.Success);
+                                Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            }
                         }
                         lv_myDiscuss.onRefreshComplete();
+
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         super.failure(error);
                         lv_myDiscuss.onRefreshComplete();
                     }
@@ -187,7 +203,8 @@ public class HaitMyActivity extends BaseActivity {
             holder.openItem(datas.get(position));
         }
 
-        @Override public void onViewRecycled(HaitViewHolder holder) {
+        @Override
+        public void onViewRecycled(HaitViewHolder holder) {
             super.onViewRecycled(holder);
             Glide.clear(holder.iv_avatar);
         }

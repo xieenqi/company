@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/activity_bg"
-                android:clipToPadding="true"
-                android:fitsSystemWindows="true"
-                android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/contact_manage_top"
@@ -14,27 +15,9 @@
         android:layout_alignParentTop="true"
         android:background="@color/title_bg1"
         android:orientation="vertical">
-        <include layout="@layout/include_common_title_2"/>
+
+        <include layout="@layout/include_common_title_2" />
     </LinearLayout>
-
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_add"
-        android:layout_below="@+id/contact_manage_top"
-        android:background="@color/white"
-        >
-
-        <LinearLayout
-            android:id="@+id/layout_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:divider="@null"
-            android:orientation="vertical"/>
-
-    </ScrollView>
 
     <RelativeLayout
         android:id="@+id/layout_add"
@@ -51,6 +34,33 @@
             android:drawablePadding="@dimen/dimen_3"
             android:gravity="center"
             android:text="新增联系人"
-            android:textColor="@color/title_bg1"/>
+            android:textColor="@color/title_bg1" />
     </RelativeLayout>
+
+    <com.library.module.widget.loading.LoadingLayout
+        android:id="@+id/ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:isFirstVisible="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/layout_add"
+            android:layout_below="@+id/contact_manage_top"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:id="@+id/layout_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:divider="@null"
+                android:orientation="vertical" />
+
+        </ScrollView>
+    </com.library.module.widget.loading.LoadingLayout>
 </RelativeLayout>

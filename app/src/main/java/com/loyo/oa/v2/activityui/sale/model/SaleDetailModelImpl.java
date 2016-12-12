@@ -32,14 +32,14 @@ public class SaleDetailModelImpl implements SaleDetailContract.Model {
                 .getSaleDetails(selectId, new RCallback<SaleDetails>() {
                     @Override
                     public void success(SaleDetails saleDetails, Response response) {
-                        HttpErrorCheck.checkResponse("机会详情", response);
+                        HttpErrorCheck.checkResponse("机会详情", response, mPersenter.getLoadingView());
                         mPersenter.bindPageData(saleDetails);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        mPersenter.closePge();
+                        HttpErrorCheck.checkError(error, mPersenter.getLoadingView());
+//                        mPersenter.closePge();
                     }
                 });
     }

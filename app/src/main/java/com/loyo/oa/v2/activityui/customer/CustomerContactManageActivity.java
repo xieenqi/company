@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
@@ -52,6 +54,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     LinearLayout layout_container;
     @ViewById
     ViewGroup layout_add;
+    @ViewById
+    LoadingLayout ll_loading;
+
     @Extra(ExtraAndResult.EXTRA_ID)
     String customerId;
     @Extra("canEdit")
@@ -68,9 +73,15 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     @AfterViews
     void initViews() {
-
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getContactsFields();
+            }
+        });
         layout_add.setVisibility(canEdit?View.VISIBLE:View.GONE);
-//        setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("联系人详情");
         layout_back.setOnTouchListener(Global.GetTouch());
@@ -82,7 +93,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 获取最新 左侧动态字段
      */
     private void getContactsFields() {
-        showLoading("");
+//        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getContactsField(new RCallback<ArrayList<ContactLeftExtras>>() {
                     @Override
@@ -95,7 +106,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     @Override
                     public void failure(RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
     }
@@ -107,7 +118,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerContacts(customerId, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse("联系人详情：", response);
+                HttpErrorCheck.checkResponse("联系人详情：", response,ll_loading);
                 customerContact = customer;
                 initData();
             }
@@ -115,7 +126,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error,ll_loading);
             }
         });
     }
@@ -127,6 +138,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     private void initData() {
         if (null == leftExtrases || null == customerContact || null == customerContact.contacts
                 || customerContact.contacts.isEmpty()) {
+            ll_loading.setStatus(LoadingLayout.Empty);
             return;
         }
 

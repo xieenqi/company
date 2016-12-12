@@ -71,13 +71,13 @@ public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresen
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).teamSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
-                HttpErrorCheck.checkResponse("团队拜访", response);
+                HttpErrorCheck.checkResponse("团队拜访", response,crolView.getLoadingView());
                 crolView.getListDataSuccesseEmbl(paginationX);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error,crolView.getLoadingView());
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

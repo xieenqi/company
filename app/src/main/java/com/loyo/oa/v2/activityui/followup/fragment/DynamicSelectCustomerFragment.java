@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.followup.DynamicAddActivity;
@@ -38,6 +39,7 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
     private PullToRefreshListView lv_list;
     private DynamicSelectCustomerAndCuleFragmentPCersener pCersener;
     private MyCustomerAdapter adapter;
+    private LoadingLayout ll_loading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,15 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
     }
 
     private void initView(View view) {
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                pCersener.getPageData();
+            }
+        });
         pCersener = new DynamicSelectCustomerAndCuleFragmentPCersener(this, DynamicSelectCustomerAndCuleFragmentPCersener.SELECT_CUSTOMER);
         ll_search = (LinearLayout) view.findViewById(R.id.ll_search);
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
@@ -85,9 +96,7 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
 
     @Override
     public void showProgress(String message) {
-//        lv_list.setRefreshing();
-//        lv_list.setShowViewWhileRefreshing(true);
-        showLoading("");
+//        showLoading("");
     }
 
     @Override
@@ -112,7 +121,7 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent mIntent = new Intent(mActivity, DynamicAddActivity.class);
                 mIntent.putExtra(ExtraAndResult.DYNAMIC_ADD_ACTION, ExtraAndResult.DYNAMIC_ADD_CUSTOMER);
-                mIntent.putExtra(Customer.class.getName(), adapter.getItemData(position-1));
+                mIntent.putExtra(Customer.class.getName(), adapter.getItemData(position - 1));
                 startActivity(mIntent);
                 getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 mActivity.finish();
@@ -128,6 +137,11 @@ public class DynamicSelectCustomerFragment extends BaseFragment implements Dynam
     @Override
     public void getDataComplete() {
         lv_list.onRefreshComplete();
+    }
+
+    @Override
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 
     @Override

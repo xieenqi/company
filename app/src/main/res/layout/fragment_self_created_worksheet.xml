@@ -3,42 +3,43 @@
     xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <com.loyo.oa.dropdownmenu.DropDownMenu
         android:id="@+id/drop_down_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <FrameLayout
             android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white">
 
-            <ViewStub
-                android:id="@+id/vs_nodata"
+            <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/ll_loading"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inflatedId="@+id/layout_nodata"
-                android:layout="@layout/item_layout_nodata"/>
+                app:isFirstVisible="true">
 
-            <com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView
-                android:id="@+id/expandableListView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="false"
-                android:cacheColorHint="#00000000"
-                android:divider="@null"
-                android:drawSelectorOnTop="false"
-                android:fadingEdge="none"
-                android:fastScrollEnabled="false"
-                android:footerDividersEnabled="true"
-                android:groupIndicator="@null"
-                android:headerDividersEnabled="true"
-                android:orientation="vertical"
-                android:scrollbars="none"
-                android:smoothScrollbar="true"
-                ptr:ptrMode="both"/>
+                <com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView
+                    android:id="@+id/expandableListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:animateLayoutChanges="false"
+                    android:cacheColorHint="#00000000"
+                    android:divider="@null"
+                    android:drawSelectorOnTop="false"
+                    android:fadingEdge="none"
+                    android:fastScrollEnabled="false"
+                    android:footerDividersEnabled="true"
+                    android:groupIndicator="@null"
+                    android:headerDividersEnabled="true"
+                    android:orientation="vertical"
+                    android:scrollbars="none"
+                    android:smoothScrollbar="true"
+                    ptr:ptrMode="both" />
+            </com.library.module.widget.loading.LoadingLayout>
 
             <Button
                 android:id="@+id/btn_add"
@@ -47,7 +48,7 @@
                 android:layout_gravity="bottom|center"
                 android:layout_marginBottom="3dp"
                 android:background="@drawable/bg_btn_circle"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
         </FrameLayout>
     </com.loyo.oa.dropdownmenu.DropDownMenu>

@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:ptr="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:clipToPadding="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <include layout="@layout/include_common_title_2" />
+
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_loading"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/title_bg1"
-        android:orientation="vertical">
-
-        <include layout="@layout/include_common_title_2"/>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:isFirstVisible="true">
 
         <com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView
             android:id="@+id/listView_tasks"
@@ -38,40 +34,38 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/dimen_45"
             android:smoothScrollbar="true"
-            ptr:ptrMode="both"/>
+            ptr:ptrMode="both" />
+    </com.library.module.widget.loading.LoadingLayout>
 
-        <RelativeLayout
-            android:id="@+id/layout_add"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_45"
-            android:layout_alignParentBottom="true"
-            android:background="@color/activity_bg">
+    <RelativeLayout
+        android:id="@+id/layout_add"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_45"
+        android:layout_alignParentBottom="true"
+        android:background="@color/activity_bg">
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal"
-                >
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/icon_common_add" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/icon_common_add"
-                    />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="新建任务"
+                android:textColor="@color/title_bg1"
+                android:textSize="15sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="新建任务"
-                    android:textColor="@color/title_bg1"
-                    android:textSize="15sp"/>
-
-            </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

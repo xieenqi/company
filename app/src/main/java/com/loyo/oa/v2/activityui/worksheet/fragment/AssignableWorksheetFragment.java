@@ -10,6 +10,7 @@ import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -54,7 +55,6 @@ import retrofit.client.Response;
 public class AssignableWorksheetFragment extends BaseGroupsDataFragment implements View.OnClickListener {
 
     private Button btn_add;
-    private ViewStub emptyView;
     private DropDownMenu filterMenu;
 
     private String statusParam = "";  /* 工单状态Param */
@@ -62,6 +62,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
 
     private Intent mIntent;
     private View mView;
+    private LoadingLayout ll_loading;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,13 +95,17 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
-
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
-
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getData();
+            }
+        });
         mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
         mExpandableListView.setOnRefreshListener(this);
-        //mExpandableListView.setEmptyView(emptyView);
-
         setupExpandableListView(
                 new ExpandableListView.OnGroupClickListener() {
                     @Override
@@ -128,8 +133,6 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
 
         Utils.btnHideForListView(expandableListView,btn_add);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-
-        showLoading("加载中...");
         getData();
     }
 
@@ -190,19 +193,20 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
+                HttpErrorCheck.checkResponse("我分派的的工单列表：", response,ll_loading);
 
                 if (isPullDown) {
                     groupsData.clear();
+                    if (listWrapper != null && listWrapper.isEmpty())
+                        ll_loading.setStatus(LoadingLayout.Empty);
                 }
                 loadData(listWrapper.data.records);
-                mExpandableListView.setEmptyView(emptyView);
-                HttpErrorCheck.checkResponse("我的工单列表：", response);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error,ll_loading);
             }
         });
 
@@ -211,7 +215,7 @@ public class AssignableWorksheetFragment extends BaseGroupsDataFragment implemen
     public void refresh() {
         isPullDown = true;
         page = 1;
-        showLoading("");
+        ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
 

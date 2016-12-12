@@ -101,7 +101,6 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void getMembersRoot() {
-        crolView.showProgress("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getMembersRoot(new RCallback<MembersRoot>() {
                     @Override
@@ -113,7 +112,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
                     @Override
                     public void failure(RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,crolView.getLoadigLayout());
                     }
                 });
     }
@@ -203,7 +202,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
         callPhonePopView.businessPhone(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callReturn(phone,callType,name);
+                callReturn(phone, callType, name);
                 callPhonePopView.dismiss();
             }
         });
@@ -278,7 +277,7 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
         crolView.showProgress("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("customerId", customerId);
-        map.put("contactId",contactId);
+        map.put("contactId", contactId);
         map.put("type", callType);
         map.put("mobile", phone);
         LogUtil.dee("请求回拨发送数据：" + MainApp.gson.toJson(map));

@@ -57,14 +57,14 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
     private float mRotation = 0;
-    public boolean publicOrTeam;
+//    public boolean publicOrTeam;
 
     private List<BaseFragment> fragments = new ArrayList<>();
     private String[] SaleItemStatus = new String[]{"我的拜访"};
-    private ArrayList<Tag> mTags;
-    private ArrayList<Tag> mTags1;
-    private ArrayList<Tag> mTags2;
-    private ArrayList<Tag> mTags3;
+//    private ArrayList<Tag> mTags;
+//    private ArrayList<Tag> mTags1;
+//    private ArrayList<Tag> mTags2;
+//    private ArrayList<Tag> mTags3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,56 +99,59 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
         }
 
         rotateAnimation = initArrowAnimation();
-        getStageData();
+//        getStageData();
+        initTitleItem();
+        initChildren();
     }
+//TODO  基本不变是数据需要优化一下不是每次都拉取
+//
+//    /**
+//     * 获取客户标签 筛选menu
+//     */
+//    public void getStageData() {
+//        showLoading("");
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+//                GetTags(new RCallback<ArrayList<Tag>>() {
+//                    @Override
+//                    public void success(ArrayList<Tag> tags, Response response) {
+//                        HttpErrorCheck.checkResponse("客户标签：", response);
+//                        mTags = tags;
+////                        try {
+//////                            cloneMdata(tags);
+////                        } catch (IOException e) {
+////                            e.printStackTrace();
+////                        } catch (ClassNotFoundException e) {
+////                            e.printStackTrace();
+////                        }
+//                        initTitleItem();
+//                        try {
+//                            initChildren();
+//                        } catch (NullPointerException e) {
+//                            e.printStackTrace();
+//                            Toast("没有获取到权限数据，请重新拉去后再试");
+//                            finish();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        HttpErrorCheck.checkError(error);
+//                    }
+//                });
+//    }
 
-    /**
-     * 获取客户标签 筛选menu
-     */
-    public void getStageData() {
-        showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                GetTags(new RCallback<ArrayList<Tag>>() {
-                    @Override
-                    public void success(ArrayList<Tag> tags, Response response) {
-                        HttpErrorCheck.checkResponse("客户标签：", response);
-                        mTags = tags;
-                        try {
-                            cloneMdata(tags);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        initTitleItem();
-                        try {
-                            initChildren();
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                            Toast("没有获取到权限数据，请重新拉去后再试");
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
-    /**
-     * 深克隆筛选数据
-     */
-    private void cloneMdata(ArrayList<Tag> tags) throws IOException, ClassNotFoundException {
-        mTags1 = new ArrayList<>(tags.size());
-        mTags2 = new ArrayList<>(tags.size());
-        mTags3 = new ArrayList<>(tags.size());
-
-        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
-        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
-        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
-    }
+//    /**
+//     * 深克隆筛选数据
+//     */
+//    private void cloneMdata(ArrayList<Tag> tags) throws IOException, ClassNotFoundException {
+//        mTags1 = new ArrayList<>(tags.size());
+//        mTags2 = new ArrayList<>(tags.size());
+//        mTags3 = new ArrayList<>(tags.size());
+//
+//        mTags1 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
+//        mTags2 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
+//        mTags3 = (ArrayList<com.loyo.oa.v2.activityui.other.model.Tag>) Utils.deepCopyT(mTags);
+//    }
 
     void initTitleItem() {
         CustomerCategoryAdapter TitleItemAdapter = new CustomerCategoryAdapter(this, Arrays.asList(SaleItemStatus));
@@ -172,11 +175,11 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
             BaseFragment fragment = null;
             if ("我的拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
-                b.putSerializable("tag", mTags1);
+//                b.putSerializable("tag", mTags1);
                 fragment = (BaseFragment) Fragment.instantiate(this, SelfSigninNewFragment.class.getName(), b);
             } else if ("团队拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
-                b.putSerializable("tag", mTags1);
+//                b.putSerializable("tag", mTags1);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamSigninNewFragment.class.getName(), b);
             }
             fragments.add(fragment);

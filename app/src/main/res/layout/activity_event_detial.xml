@@ -9,161 +9,168 @@
 
     <include layout="@layout/include_title" />
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/layout_bottom"
-        android:layout_below="@+id/layout_head"
-        android:scrollbars="none">
+    <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:isFirstVisible="true">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
-
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/layout_bottom"
+            android:layout_below="@+id/layout_head"
+            android:scrollbars="none">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_other_view"
-                    android:text=""
-                    android:textColor="@color/text33"
-                    android:textSize="@dimen/text_sp14" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_5"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_other_view"
+                        android:text=""
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp14" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_5"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:layout_marginRight="@dimen/margin_other_view"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_startTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/dimen_8"
+                            android:gravity="center_vertical|left"
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp12" />
+
+                        <TextView
+                            android:id="@+id/tv_endTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/dimen_8"
+                            android:gravity="center_vertical|left"
+                            android:textColor="@color/text99"
+                            android:textSize="@dimen/text_sp12" />
+
+                        <TextView
+                            android:id="@+id/tv_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dimen_2"
+                            android:paddingRight="@dimen/dimen_2"
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_sp11" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <include layout="@layout/include_solid_line_left" />
+
+                <TextView
+                    android:id="@+id/tv_responsor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginRight="@dimen/margin_other_view"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="负责人："
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp14" />
 
-                    <TextView
-                        android:id="@+id/tv_startTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/dimen_8"
-                        android:gravity="center_vertical|left"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                <TextView
+                    android:id="@+id/tv_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:layout_marginRight="@dimen/margin_other_view"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="限时："
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp14" />
 
-                    <TextView
-                        android:id="@+id/tv_endTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/dimen_8"
-                        android:gravity="center_vertical|left"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                <TextView
+                    android:id="@+id/tv_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:layout_marginRight="@dimen/margin_other_view"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="触发方式："
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp14" />
 
-                    <TextView
-                        android:id="@+id/tv_status"
-                        android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tv_worksheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:layout_marginRight="@dimen/margin_other_view"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="所属工单："
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp14" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_15"
+                    android:background="#F2F2F2" />
+
+                <LinearLayout
+                    android:id="@+id/ll_handleInfoList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/activity_bg" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn_complete1"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:paddingLeft="@dimen/dimen_2"
-                        android:paddingRight="@dimen/dimen_2"
-                        android:text=""
+                        android:layout_margin="@dimen/margin_other_view"
+                        android:background="@drawable/bg_blue_rect"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_sp11" />
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btn_complete2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_other_view"
+                        android:background="@drawable/bg_blue_rect"
+                        android:textColor="@color/white"
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
-
-            <include layout="@layout/include_solid_line_left" />
-
-            <TextView
-                android:id="@+id/tv_responsor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_other_view"
-                android:layout_marginRight="@dimen/margin_other_view"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:text="负责人："
-                android:textColor="@color/text33"
-                android:textSize="@dimen/text_sp14" />
-
-            <TextView
-                android:id="@+id/tv_day"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_other_view"
-                android:layout_marginRight="@dimen/margin_other_view"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:text="限时："
-                android:textColor="@color/text33"
-                android:textSize="@dimen/text_sp14" />
-
-            <TextView
-                android:id="@+id/tv_type"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_other_view"
-                android:layout_marginRight="@dimen/margin_other_view"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:text="触发方式："
-                android:textColor="@color/text33"
-                android:textSize="@dimen/text_sp14" />
-
-            <TextView
-                android:id="@+id/tv_worksheet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_10"
-                android:layout_marginLeft="@dimen/margin_other_view"
-                android:layout_marginRight="@dimen/margin_other_view"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:text="所属工单："
-                android:textColor="@color/text33"
-                android:textSize="@dimen/text_sp14" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_15"
-                android:background="#F2F2F2" />
-
-            <LinearLayout
-                android:id="@+id/ll_handleInfoList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/activity_bg" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/btn_complete1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_other_view"
-                    android:background="@drawable/bg_blue_rect"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/btn_complete2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_other_view"
-                    android:background="@drawable/bg_blue_rect"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </com.library.module.widget.loading.LoadingLayout>
 </LinearLayout>

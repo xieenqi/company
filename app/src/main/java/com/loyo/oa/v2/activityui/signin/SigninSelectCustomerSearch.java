@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -21,6 +22,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
@@ -37,31 +39,39 @@ import retrofit.client.Response;
  * 新建拜访 [搜索客户选择]
  * Created by yyy on 15/12/24.
  */
-public class SigninSelectCustomerSearch extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, View.OnClickListener {
+public class SigninSelectCustomerSearch extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, View.OnClickListener {
 
     protected String strSearch;
     protected EditText edt_search;
-    protected View vs_nodata;
     protected PullToRefreshListView expandableListView_search;
     protected ArrayList<SigninSelectCustomer> lstData = new ArrayList<>();
     protected CommonSearchAdapter adapter;
-    private Customer customer;
-    private String position;
+    //    private Customer customer;
+//    private String position;
     private Context mContext;
-    private boolean isTopAdd = true, isOpenOne = true, isSignin = false;
+    private boolean isTopAdd = true, isSignin = false;
     private int page = 1;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_search);
         mContext = this;
         initView();
     }
 
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_public_search);
+    }
+
+    @Override
+    public void getPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
+        doSearch();
+    }
+
     public void initView() {
         isSignin = getIntent().getBooleanExtra("isSignin", false);//是否初始化第一页
-        vs_nodata = findViewById(R.id.vs_nodata);
         findViewById(R.id.img_title_left).setOnClickListener(this);
         findViewById(R.id.iv_clean).setOnClickListener(this);
         edt_search = (EditText) findViewById(R.id.edt_search);
@@ -94,8 +104,11 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
                 returnData(position - 1);
             }
         });
-        if (!isSignin)
+        if (!isSignin) {
             dataRequestvoid();
+        } else {
+            ll_loading.setStatus(LoadingLayout.Success);
+        }
     }
 
     @Override
@@ -114,10 +127,6 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
      * 请求体
      */
     void dataRequestvoid() {
-        if (isOpenOne) {
-            showLoading("请稍后");
-            isOpenOne = false;
-        }
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 20);
@@ -126,7 +135,7 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
                 signinSearchCutomer(params, new Callback<BaseBeanT<PaginationX<SigninSelectCustomer>>>() {
                     @Override
                     public void success(final BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX, final Response response) {
-                        HttpErrorCheck.checkResponse("拜访搜索选择客户:", response);
+                        HttpErrorCheck.checkResponse("拜访搜索选择客户:", response, ll_loading);
                         expandableListView_search.onRefreshComplete();
 //                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 //                        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -152,13 +161,12 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
                             }
                             lstData.addAll(lstDataTemp);
                         }
-                        vs_nodata.setVisibility(View.GONE);
                         changeAdapter();
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         expandableListView_search.onRefreshComplete();
                     }
                 });
@@ -187,7 +195,7 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
     }
 
     void showNoData() {
-        vs_nodata.setVisibility(View.VISIBLE);
+        ll_loading.setStatus(LoadingLayout.Empty);
     }
 
 
@@ -197,7 +205,7 @@ public class SigninSelectCustomerSearch extends BaseActivity implements PullToRe
             Customer cus = new Customer();
             cus.id = lstData.get(position).id;
             cus.name = lstData.get(position).name;
-            cus.contacts=lstData.get(position).contacts;
+            cus.contacts = lstData.get(position).contacts;
             intent.putExtra("data", cus);
         } else {//此处拜访选客户
             SigninSelectCustomer item = lstData.get(position);

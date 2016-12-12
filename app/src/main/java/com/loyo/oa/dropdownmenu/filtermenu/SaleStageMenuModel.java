@@ -3,7 +3,7 @@ package com.loyo.oa.dropdownmenu.filtermenu;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuListType;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
+import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 
 import java.util.ArrayList;
 import java.util.List;

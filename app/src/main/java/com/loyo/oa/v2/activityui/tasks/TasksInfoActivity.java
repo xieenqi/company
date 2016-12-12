@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -141,6 +142,9 @@ public class TasksInfoActivity extends BaseActivity {
     TextView tv_children_info;
     @ViewById
     Button btn_complete;
+    @ViewById
+    LoadingLayout ll_loading;
+
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id   ="56935898526f152260000016"
             String mTaskId;
     @Extra(ExtraAndResult.EXTRA_TYPE)
@@ -156,11 +160,11 @@ public class TasksInfoActivity extends BaseActivity {
     public static TasksInfoActivity instance = null;
     public ArrayList<TextView> taskChildView = new ArrayList<>();
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
-    public ArrayList<NewUser> requestDepts = new ArrayList<>();
-    public ArrayList<User> aboutDepts = new ArrayList<>();
-    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
+//    public ArrayList<NewUser> requestDepts = new ArrayList<>();
+//    public ArrayList<User> aboutDepts = new ArrayList<>();
+//    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
 
-//    public ArrayList<Department> deptSource = Common.getLstDepartment();
+    //    public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
     public LinearLayout item_tasks_sorece;
@@ -191,6 +195,14 @@ public class TasksInfoActivity extends BaseActivity {
 
     @AfterViews
     void init() {
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getTask();
+            }
+        });
         instance = this;
         getTask();
         initUI();
@@ -220,6 +232,7 @@ public class TasksInfoActivity extends BaseActivity {
             updateUI_task_sub_task();
             updateUIInTask();
         }
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     /**
@@ -543,11 +556,10 @@ public class TasksInfoActivity extends BaseActivity {
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
 
-        if (mTask.getBizExtData() != null){
+        if (mTask.getBizExtData() != null) {
             tv_discussion_count.setText("(" + mTask.getBizExtData().getDiscussCount() + ")");
             tv_attachment_count.setText("(" + mTask.getBizExtData().getAttachmentCount() + ")");
-        }
-        else { // Added By Ethan 2016-10-22 Android-任务管理：任务中数据为空，点击任务APP崩溃  ID： 1000408
+        } else { // Added By Ethan 2016-10-22 Android-任务管理：任务中数据为空，点击任务APP崩溃  ID： 1000408
             tv_discussion_count.setText("(0)");
             tv_attachment_count.setText("(0)");
         }
@@ -709,7 +721,6 @@ public class TasksInfoActivity extends BaseActivity {
      * 获取任务信息【子任务等】
      */
     void getTask() {
-        showLoading("");
         if (TextUtils.isEmpty(mTaskId)) {
             Toast("参数不完整");
             finish();
@@ -729,8 +740,8 @@ public class TasksInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
-                finish();
+                HttpErrorCheck.checkError(error,ll_loading);
+//                finish();
             }
         });
     }
@@ -1043,7 +1054,7 @@ public class TasksInfoActivity extends BaseActivity {
         if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             member = Compat.convertStaffCollectionToMembers(collection);
-            if (null == member || (member.users.size()==0 && member.depts.size()==0)) {
+            if (null == member || (member.users.size() == 0 && member.depts.size() == 0)) {
                 tv_toUsers.setText("无参与人");
             } else {
                 joinName = new StringBuffer();

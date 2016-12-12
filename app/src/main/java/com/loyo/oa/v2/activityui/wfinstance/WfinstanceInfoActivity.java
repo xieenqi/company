@@ -16,6 +16,7 @@ import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -122,6 +123,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
     //回款审批
     @ViewById
     LinearLayout ll_payment_layout, ll_payment_content;
+    @ViewById
+    LoadingLayout ll_loading;
+
     @Extra(ExtraAndResult.IS_UPDATE)
     boolean isUpdate;//是否需要刷新列表
     public final int MSG_DELETE_WFINSTANCE = 100;
@@ -147,6 +151,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @AfterViews
     void init() {
         super.setTitle("审批详情");
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getWfinstanceData();
+            }
+        });
         initUI();
         getWfinstanceData();
     }
@@ -182,7 +194,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
             finish();
             return;
         }
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance_current, final Response response) {
@@ -215,8 +226,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
-                finish();
+                HttpErrorCheck.checkError(error,ll_loading);
+//                finish();
             }
         });
     }
@@ -469,6 +480,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         initUI_listView_wfinstance();
         initUI_listView_workflowNodes();
         updateUI_layout_bottom();
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     /**

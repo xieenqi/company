@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:ptr="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:orientation="vertical">
-<!-- 我提交的 我审批的  -->
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:orientation="vertical">
+    <!-- 我提交的 我审批的  -->
     <com.loyo.oa.dropdownmenu.DropDownMenu
         android:id="@+id/drop_down_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <FrameLayout
             android:id="@+id/filter_content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <FrameLayout
+
+            <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/ll_loading"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:isFirstVisible="true">
 
                 <com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView
                     android:id="@+id/expandableListView"
@@ -34,50 +38,47 @@
                     android:orientation="vertical"
                     android:scrollbars="none"
                     android:smoothScrollbar="true"
-                    ptr:ptrMode="both"/>
+                    ptr:ptrMode="both" />
+            </com.library.module.widget.loading.LoadingLayout>
+            <!--<ViewStub-->
+            <!--android:id="@+id/vs_nodata"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:inflatedId="@+id/layout_nodata"-->
+            <!--android:layout="@layout/item_layout_nodata"/>-->
 
-                <ViewStub
-                    android:id="@+id/vs_nodata"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inflatedId="@+id/layout_nodata"
-                    android:layout="@layout/item_layout_nodata"/>
+            <!--<FrameLayout-->
+            <!--android:id="@+id/layout_category"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:paddingLeft="@dimen/dimen_70"-->
+            <!--android:paddingRight="@dimen/dimen_70"-->
+            <!--android:visibility="gone">-->
 
-                <FrameLayout
-                    android:id="@+id/layout_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:paddingLeft="@dimen/dimen_70"
-                    android:paddingRight="@dimen/dimen_70"
-                    android:visibility="gone">
+            <!--<ListView-->
+            <!--android:id="@+id/lv_wftype_category"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@drawable/round_bg_shpe"-->
+            <!--android:cacheColorHint="#00000000"-->
+            <!--android:choiceMode="singleChoice"-->
+            <!--android:divider="@color/lineCC"-->
+            <!--android:dividerHeight="@dimen/dimen_0.5"-->
+            <!--android:padding="@dimen/dimen_0.5"-->
+            <!--android:scrollbars="none">-->
+            <!--</ListView>-->
 
-                    <ListView
-                        android:id="@+id/lv_wftype_category"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/round_bg_shpe"
-                        android:cacheColorHint="#00000000"
-                        android:choiceMode="singleChoice"
-                        android:divider="@color/lineCC"
-                        android:dividerHeight="@dimen/dimen_0.5"
-                        android:padding="@dimen/dimen_0.5"
-                        android:scrollbars="none">
-                    </ListView>
+            <!--</FrameLayout>-->
 
-                </FrameLayout>
-
-                <Button
-                    android:id="@+id/btn_add"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="3dp"
-                    android:background="@drawable/bg_btn_circle"
-                    android:textColor="@color/white"/>
-
-            </FrameLayout>
-
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_btn_circle"
+                android:textColor="@color/white" />
         </FrameLayout>
 
     </com.loyo.oa.dropdownmenu.DropDownMenu>

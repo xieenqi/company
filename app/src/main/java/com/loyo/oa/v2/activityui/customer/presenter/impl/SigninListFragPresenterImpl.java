@@ -80,13 +80,13 @@ public class SigninListFragPresenterImpl implements SigninListFragPresenter {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getCustomerSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewGroupModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewGroupModel>> paginationX, Response response) {
-                HttpErrorCheck.checkResponse("客户下拜访", response);
+                HttpErrorCheck.checkResponse("客户下拜访", response,crolView.getLoading());
                 crolView.getListDataSuccesseEmbl(paginationX);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error,crolView.getLoading());
                 crolView.getListDataErrorEmbl();
                 super.failure(error);
             }

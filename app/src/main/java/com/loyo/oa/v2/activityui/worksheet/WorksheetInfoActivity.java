@@ -22,6 +22,7 @@ import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -35,7 +36,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/8/30.
  */
 
-public class WorksheetInfoActivity extends BaseActivity implements View.OnClickListener {
+public class WorksheetInfoActivity extends BaseLoadingActivity implements View.OnClickListener {
 
     /**
      * UI
@@ -76,15 +77,22 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_worksheet_info);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_worksheet_info);
+    }
+
+    @Override
+    public void getPageData() {
+        requestData();
     }
 
     private void initView() {
         mIntent = getIntent();
         id = mIntent.getStringExtra(ExtraAndResult.CC_USER_ID);
-        showLoading("");
-
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
@@ -110,7 +118,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         tv_related_order.setOnClickListener(this);
         tv_related_customer.setOnClickListener(this);
         tv_title_1.setText("工单信息");
-        requestData();
+        getPageData();
     }
 
     private void bindData() {
@@ -174,14 +182,14 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
                 getWorksheetInfo(id, new Callback<BaseBeanT<WorksheetInfo>>() {
                     @Override
                     public void success(BaseBeanT<WorksheetInfo> worksheetInfo, Response response) {
-                        HttpErrorCheck.checkResponse("获取工单信息：", response);
+                        HttpErrorCheck.checkResponse("获取工单信息：", response,ll_loading);
                         mWorksheetInfo = worksheetInfo;
                         bindData();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
     }

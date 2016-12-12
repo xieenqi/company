@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.discuss.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.common.BaseView;
 
 /**
@@ -7,5 +8,6 @@ import com.loyo.oa.v2.common.BaseView;
  */
 
 public interface MyDisscussVControl extends BaseView {
+    LoadingLayout getLoadingLayout();
 
 }

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.clue.viewcontrol;
 
 import android.view.ViewGroup;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowGroupModel;
 import com.loyo.oa.v2.activityui.clue.model.ClueFollowUpListModel;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -31,5 +32,7 @@ public interface ClueFollowUpListView {
     void getListDataErrorEmbl();
 
     ViewGroup getBottomMenuLayout();
+
+    LoadingLayout getLoading();
 
 }

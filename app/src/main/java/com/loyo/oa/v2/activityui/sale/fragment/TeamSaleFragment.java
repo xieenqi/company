@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -20,11 +21,12 @@ import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeam;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
+import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.TeamSaleFragmentContract;
+import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.activityui.sale.presenter.TeamSaleFragmentPresenterImpl;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.db.OrganizationManager;
@@ -65,6 +67,7 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
     private DropDownMenu filterMenu;
     private ArrayList<SaleStage> mSaleStages;
     private TeamSaleFragmentContract.Presenter mPresenter;
+    private LoadingLayout ll_loading;
 
 
     @Nullable
@@ -85,11 +88,18 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
     }
 
     public void initView(View view) {
-        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
+//        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
+        mSaleStages= SaleStageConfig.getSaleStageCache();
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                mPresenter.getData();
+            }
+        });
         listView = (PullToRefreshListView) view.findViewById(R.id.saleteam_list);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
-        listView.setEmptyView((ViewStub) view.findViewById(R.id.vs_nodata));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,7 +112,6 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
             }
         });
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-        showLoading("");
         mPresenter.getData();
     }
 
@@ -218,5 +227,10 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
         } else {
             adapterSaleTeam.setData(mData);
         }
+    }
+
+    @Override
+    public LoadingLayout getLoadingUI() {
+        return ll_loading;
     }
 }

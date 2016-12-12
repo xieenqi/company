@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:background="@color/activity_bg"
     android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
     <include
         android:id="@+id/layout_include"
-        layout="@layout/include_common_title"/>
+        layout="@layout/include_common_title" />
 
-    <FrameLayout
+    <com.library.module.widget.loading.LoadingLayout
+        android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:layout_above="@+id/layout_add"
-        android:layout_below="@+id/layout_include">
-
-        <ViewStub
-            android:id="@+id/vs_nodata"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inflatedId="@+id/layout_nodata"
-            android:layout="@layout/item_layout_nodata"/>
+        android:layout_below="@+id/layout_include"
+        app:isFirstVisible="true">
 
         <com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView
             android:id="@+id/expandableListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="true"
+            android:background="@color/white"
             android:cacheColorHint="#00000000"
             android:divider="@null"
             android:drawSelectorOnTop="false"
@@ -41,32 +37,31 @@
             android:orientation="vertical"
             android:scrollbars="none"
             android:smoothScrollbar="true"
-            ptr:ptrMode="both"/>
-    </FrameLayout>
+            ptr:ptrMode="both" />
+    </com.library.module.widget.loading.LoadingLayout>
 
     <RelativeLayout
         android:id="@+id/layout_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/activity_bg"
-        >
-        <include layout="@layout/include_solid_line"/>
+        android:background="@color/activity_bg">
+
+        <include layout="@layout/include_solid_line" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/icon_common_add"
-                />
+                android:background="@drawable/icon_common_add" />
 
             <TextView
                 android:id="@+id/tv_add"
@@ -75,7 +70,7 @@
                 android:gravity="center"
                 android:text="新建工单"
                 android:textColor="@color/title_bg1"
-                android:textSize="@dimen/text_sp15"/>
+                android:textSize="@dimen/text_sp15" />
         </LinearLayout>
 
     </RelativeLayout>

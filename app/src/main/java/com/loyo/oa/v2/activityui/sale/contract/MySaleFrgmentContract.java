@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.sale.contract;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.common.BaseView;
 import com.loyo.oa.v2.common.base.BasePersenter;
@@ -16,6 +17,8 @@ public interface MySaleFrgmentContract {
         void refreshComplete();
 
         void bindData(ArrayList<SaleRecord> recordData);
+
+        LoadingLayout getLoadingUI();
     }
 
     interface Presenter extends BasePersenter {
@@ -28,6 +31,8 @@ public interface MySaleFrgmentContract {
         void getData();
 
         void getScreenData(String stageId, String sortType);
+
+        LoadingLayout getLoadingView();
     }
 
     interface Model {

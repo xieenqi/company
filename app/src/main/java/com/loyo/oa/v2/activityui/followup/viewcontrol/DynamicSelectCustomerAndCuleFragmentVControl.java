@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.followup.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.BaseView;
@@ -17,6 +18,8 @@ public interface DynamicSelectCustomerAndCuleFragmentVControl extends BaseView {
     void bindClueData(ArrayList<ClueListItem> mClues);
 
     void getDataComplete();
+
+    LoadingLayout getLoadingLayout();
 }
 
 
