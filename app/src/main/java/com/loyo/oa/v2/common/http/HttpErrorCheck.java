@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.common.http;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -228,7 +229,7 @@ public class HttpErrorCheck {
 
 
     /**
-     * 所有提交,成功检查
+     * 所有提交,成功检查(2.7.4新版提交方案)
      * */
     public static void checkCommitSus(Response response) {
         DialogHelp.successStatusLoad();
@@ -248,13 +249,12 @@ public class HttpErrorCheck {
     }
 
     /**
-     * 所有提交,失败检查
+     * 所有提交,失败检查(2.7.4新版提交方案)
      * */
     public static void checkCommitEro(RetrofitError error) {
-        DialogHelp.cancelLoading();
+        DialogHelp.errorStatusLoading();
         LogUtil.d("网络异常" + error.getMessage());
         LogUtil.d("error接口URL：" + error.getUrl());
-
         try {
             String msg = Utils.
                     convertStreamToString(error.
@@ -293,6 +293,12 @@ public class HttpErrorCheck {
             LogUtil.d("JSON异常err:" + error.getUrl());
             Toast("服务端数据异常");
             e.printStackTrace();
+        }finally {
+            new Handler().postDelayed(new Runnable(){
+                public void run() {
+                    DialogHelp.cancelStatusLoading();
+                }
+            }, 1000);
         }
     }
 

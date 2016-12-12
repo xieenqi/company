@@ -92,6 +92,7 @@ public class BaseActivity extends Activity {
             customProgressDialog = new CustomProgressDialog(this);
             customProgressDialog.setCancelable(false);
         }
+
         registerBaseReceiver();
         // 创建状态栏的管理实例
         tintManager = new SystemBarTintManager(this);
@@ -405,7 +406,14 @@ public class BaseActivity extends Activity {
      * 展示带成功失败动画加载框
      * */
     public void showDialogLoading(boolean outTouch){
-        DialogHelp.showStatusLoading(mContext,outTouch);
+        DialogHelp.showStatusLoading(outTouch,this);
+    }
+
+    /**
+     * 关闭带成功失败动画加载框
+     * */
+    public void cancelDialogLoading(){
+        DialogHelp.cancelStatusLoading();
     }
 
     /**
