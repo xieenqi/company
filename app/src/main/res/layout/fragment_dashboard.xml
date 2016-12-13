@@ -90,7 +90,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/ll_dashboard_cus_followup"
+                    android:id="@+id/ll_dashboard_followup"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_65"
                     android:orientation="horizontal">
@@ -167,6 +167,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_dashboard_signin"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_65"
                     android:orientation="horizontal">
@@ -245,6 +246,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_dashboard_record"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_65"
                     android:orientation="horizontal">
@@ -449,6 +451,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/ll_dashboard_order_number"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
@@ -525,6 +528,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_dashboard_order_money"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"

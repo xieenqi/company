@@ -77,7 +77,7 @@ public enum DashborardType implements Serializable{
             return BusinessOperation.RESULTS_LOOK;
         }
     },
-    SALE_MONEY {
+    ORDER_MONEY {
         @Override
         public String getTitle() {
             return "订单金额";
