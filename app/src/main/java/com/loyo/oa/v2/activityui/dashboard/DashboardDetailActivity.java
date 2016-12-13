@@ -10,14 +10,14 @@ import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
-import com.loyo.oa.dropdownmenu.filtermenu.CommonSortType;
-import com.loyo.oa.dropdownmenu.filtermenu.CommonSortTypeMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.DashboardFilterTimeModel;
-import com.loyo.oa.dropdownmenu.filtermenu.DashboardSortTypeMenuModel;
 import com.loyo.oa.dropdownmenu.filtermenu.OrganizationFilterModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
+import com.loyo.oa.pulltorefresh.PullToRefreshBase;
+import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activityui.dashboard.adapter.DashboardDetailAdapter;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
 import com.loyo.oa.v2.db.OrganizationManager;
 import com.loyo.oa.v2.db.bean.DBDepartment;
@@ -33,12 +33,14 @@ import java.util.List;
  * Created by xeq on 16/12/12.
  */
 
-public class DashboardDetailActivity extends BaseLoadingActivity implements View.OnClickListener {
+public class DashboardDetailActivity extends BaseLoadingActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private LinearLayout ll_back;
     private DropDownMenu filterMenu;
     private TextView tv_title;
     private DashborardType type;
+    private DashboardDetailAdapter adapter;
+    private PullToRefreshListView lv_list;
 
 
     @Override
@@ -69,6 +71,11 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_back.setOnClickListener(this);
         filterMenu = (DropDownMenu) findViewById(R.id.drop_down_menu);
+        lv_list = (PullToRefreshListView) findViewById(R.id.lv_list);
+        lv_list.setMode(PullToRefreshBase.Mode.BOTH);
+        lv_list.setOnRefreshListener(this);
+        adapter = new DashboardDetailAdapter(this);
+        lv_list.setAdapter(adapter);
 
         ll_loading.setStatus(LoadingLayout.Success);
         loadFilterOptions();
@@ -95,7 +102,7 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             depts.add(OrganizationFilterModel.selfDepartment());
         }
         List<FilterModel> options = new ArrayList<>();
-        options.add("订单金额".equals(type.getTitle())?DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel():DashboardFilterTimeModel.getFilterModel());
+        options.add("订单金额".equals(type.getTitle()) ? DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel() : DashboardFilterTimeModel.getFilterModel());
         options.add(type.getSort());
         options.add(new OrganizationFilterModel(depts, title));
 
@@ -144,6 +151,16 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 onBackPressed();
                 break;
         }
+
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 
     }
 }
