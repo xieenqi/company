@@ -48,7 +48,7 @@
                 android:drawableBottom="@drawable/rb_home"
                 android:drawablePadding="@dimen/dimen_8"
                 android:gravity="center_horizontal"
-                android:text="仪表盘"
+                android:text="统计"
                 android:textColor="@drawable/color_text_table"
                 android:textSize="@dimen/text_sp18" />
 

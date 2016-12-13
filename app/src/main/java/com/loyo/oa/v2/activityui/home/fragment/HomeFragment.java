@@ -160,13 +160,13 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
                     mHomeApplicationFragment.setHomeFragment(HomeFragment.this);
                     return mHomeApplicationFragment;
                 case 1:
-                    if(mHomeDashboardFragment == null){
+                    /*if(mHomeDashboardFragment == null){
                         mHomeDashboardFragment = new HomeDashboardFragment();
-                    }
-                    /*if (mHomeStatisticsFragment == null) {
-                        mHomeStatisticsFragment = new HomeStatisticsFragment();
                     }*/
-                    return mHomeDashboardFragment;
+                    if (mHomeStatisticsFragment == null) {
+                        mHomeStatisticsFragment = new HomeStatisticsFragment();
+                    }
+                    return mHomeStatisticsFragment;
 
                 default:
                     return null;
