@@ -28,6 +28,19 @@ public class DashboardFilterTimeModel {
         return model;
     }
 
+    public static FilterModel getDashboardOrderMOneyFilterModel() {
+
+        List<MenuModel> list = new ArrayList<>();
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.TOMONTH2));
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.LASTMONTH2));
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.QUARTER));
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.LASQUARTER));
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.YEAR));
+        list.add(new MenuFilterByTimeModel(DynamicFilterByTime.LASYEAR));
+
+        FilterModel model = new FilterModel(list, DynamicFilterByTime.TOMONTH2.value, MenuListType.SINGLE_LIST_SINGLE_SEL);
+        return model;
+    }
 
     static private class MenuFilterByTimeModel implements MenuModel {
         private DynamicFilterByTime time;

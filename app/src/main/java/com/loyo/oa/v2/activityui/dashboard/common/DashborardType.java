@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activityui.dashboard.common;
 
+import com.loyo.oa.dropdownmenu.filtermenu.DashboardSortTypeMenuModel;
+import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.v2.permission.BusinessOperation;
 
 import java.io.Serializable;
@@ -9,7 +11,7 @@ import java.io.Serializable;
  * Created by xeq on 16/12/13.
  */
 
-public enum DashborardType implements Serializable{
+public enum DashborardType implements Serializable {
 
     CUS_FOLLOWUP {
         @Override
@@ -20,6 +22,11 @@ public enum DashborardType implements Serializable{
         @Override
         public String getaPermission() {
             return BusinessOperation.FOLLOWUP_STATISTICS;
+        }
+
+        @Override
+        public FilterModel getSort() {
+            return DashboardSortTypeMenuModel.getCusFolloupFilterModel();
         }
     },
     CUS_SIGNIN {
@@ -32,6 +39,11 @@ public enum DashborardType implements Serializable{
         public String getaPermission() {
             return BusinessOperation.FOLLOWUP_STATISTICS;
         }
+
+        @Override
+        public FilterModel getSort() {
+            return DashboardSortTypeMenuModel.getCusFolloupFilterModel();
+        }
     },
     CUS_CELL_RECORD {
         @Override
@@ -42,6 +54,11 @@ public enum DashborardType implements Serializable{
         @Override
         public String getaPermission() {
             return BusinessOperation.FOLLOWUP_STATISTICS;
+        }
+
+        @Override
+        public FilterModel getSort() {
+            return DashboardSortTypeMenuModel.getCusRecordFilterModel();
         }
     },
     SALE_FOLLOWUP {
@@ -54,6 +71,11 @@ public enum DashborardType implements Serializable{
         public String getaPermission() {
             return BusinessOperation.FOLLOWUP_STATISTICS;
         }
+
+        @Override
+        public FilterModel getSort() {
+            return DashboardSortTypeMenuModel.getSaleFolloupFilterModel();
+        }
     },
     SALE_CELL_RECORD {
         @Override
@@ -64,6 +86,11 @@ public enum DashborardType implements Serializable{
         @Override
         public String getaPermission() {
             return BusinessOperation.FOLLOWUP_STATISTICS;
+        }
+
+        @Override
+        public FilterModel getSort() {
+            return DashboardSortTypeMenuModel.getSaleRecordFilterModel();
         }
     },
     ORDER_NUMBER {
@@ -76,6 +103,11 @@ public enum DashborardType implements Serializable{
         public String getaPermission() {
             return BusinessOperation.RESULTS_LOOK;
         }
+
+        @Override
+        public FilterModel getSort() {
+            return DashboardSortTypeMenuModel.getOrderNumberFilterModel();
+        }
     },
     ORDER_MONEY {
         @Override
@@ -87,10 +119,44 @@ public enum DashborardType implements Serializable{
         public String getaPermission() {
             return BusinessOperation.RESULTS_LOOK;
         }
+
+        @Override
+        public FilterModel getSort() {
+            return DashboardSortTypeMenuModel.getOrderMoneyFilterModel();
+        }
+    },
+    COMMON {
+        @Override
+        public String getTitle() {
+            return tttle;
+        }
+
+        @Override
+        public String getaPermission() {
+            return permission;
+        }
+
+        @Override
+        public FilterModel getSort() {
+            return DashboardSortTypeMenuModel.getFilterModel();
+        }
     };
 
     public abstract String getTitle();
 
     public abstract String getaPermission();
+    public abstract FilterModel getSort();
+
+    String tttle;
+    String permission;
+
+    public void setTttle(String tttle) {
+        this.tttle = tttle;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
 
 }

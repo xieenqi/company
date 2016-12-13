@@ -95,8 +95,8 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
             depts.add(OrganizationFilterModel.selfDepartment());
         }
         List<FilterModel> options = new ArrayList<>();
-        options.add(DashboardFilterTimeModel.getFilterModel());
-        options.add(DashboardSortTypeMenuModel.getFilterModel());
+        options.add("订单金额".equals(type.getTitle())?DashboardFilterTimeModel.getDashboardOrderMOneyFilterModel():DashboardFilterTimeModel.getFilterModel());
+        options.add(type.getSort());
         options.add(new OrganizationFilterModel(depts, title));
 
         DefaultMenuAdapter adapter = new DefaultMenuAdapter(this, options);
@@ -109,30 +109,30 @@ public class DashboardDetailActivity extends BaseLoadingActivity implements View
                 String key = model.getKey();
                 String value = model.getValue();
                 filterMenu.headerTabBar.setTitleAtPosition(value, menuIndex);
-
-                if (menuIndex == 0) { //
-//                    statusType = key;
-                } else if (menuIndex == 1) { //
-                    CommonSortType type = ((CommonSortTypeMenuModel) model).type;
-                    if (type == CommonSortType.AMOUNT) {
-//                        field = "dealMoney";
-                    } else if (type == CommonSortType.CREATE) {
-//                        field = "createdAt";
-                    }
-                } else if (menuIndex == 2) { //
-                    // TODO:
-                    if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
-//                        xPath = model.getKey();
-//                        userId = "";
-                    } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
-//                        xPath = "";
-//                        userId = model.getKey();
-                    }
-                }
-//                ll_loading.setStatus(LoadingLayout.Loading);
-//                isPullDown = true;
-//                page = 1;
-//                getData();
+//
+//                if (menuIndex == 0) { //
+////                    statusType = key;
+//                } else if (menuIndex == 1) { //
+//                    CommonSortType type = ((CommonSortTypeMenuModel) model).type;
+//                    if (type == CommonSortType.AMOUNT) {
+////                        field = "dealMoney";
+//                    } else if (type == CommonSortType.CREATE) {
+////                        field = "createdAt";
+//                    }
+//                } else if (menuIndex == 2) { //
+//                    // TODO:
+//                    if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
+////                        xPath = model.getKey();
+////                        userId = "";
+//                    } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
+////                        xPath = "";
+////                        userId = model.getKey();
+//                    }
+//                }
+////                ll_loading.setStatus(LoadingLayout.Loading);
+////                isPullDown = true;
+////                page = 1;
+////                getData();
             }
         });
     }
