@@ -201,6 +201,11 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
     };
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading(message);
     }

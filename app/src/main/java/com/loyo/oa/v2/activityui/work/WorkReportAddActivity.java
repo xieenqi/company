@@ -641,15 +641,22 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport workReport, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
-                dealResult(workReport);
+                //HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkCommitSus(response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        dealResult(workReport);
+                    }
+                },1000);
+
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -661,15 +668,21 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport workReport, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-                dealResult(workReport);
+                //HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkCommitSus(response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        dealResult(workReport);
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -820,7 +833,8 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private void requestCommitWork() {
         if (pickPhots.size() == 0) {
-            showLoading("正在提交");
+            showStatusLoading(false);
+            //showLoading("正在提交");
         }
 
         bizExtData = new PostBizExtData();

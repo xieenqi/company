@@ -149,6 +149,11 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         Toast(message);
     }
 
+    @Override
+    public void showStatusProgress() {
+
+    }
+
     /**
      * 展示Loading
      */

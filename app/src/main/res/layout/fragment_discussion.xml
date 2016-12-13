@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <com.loyo.oa.pulltorefresh.PullToRefreshListView
-            android:id="@+id/lv_discussion"
+        <com.library.module.widget.loading.LoadingLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ll_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_discuss_action"
-            android:background="@color/activity_bg"
-            android:divider="@null"
-            android:paddingBottom="@dimen/dimen_8"
-            android:scrollbars="none"/>
+            app:isFirstVisible="true">
+
+            <com.loyo.oa.pulltorefresh.PullToRefreshListView
+                android:id="@+id/lv_discussion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/activity_bg"
+                android:divider="@null"
+                android:paddingBottom="@dimen/dimen_8"
+                android:scrollbars="none" />
+        </com.library.module.widget.loading.LoadingLayout>
 
         <LinearLayout
             android:id="@+id/layout_discuss_action"
@@ -36,13 +43,13 @@
                 android:maxLines="8"
                 android:paddingLeft="@dimen/dimen_16"
                 android:singleLine="false"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <View
                 android:layout_width="0.5dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
-                android:background="@color/lineCC"/>
+                android:background="@color/lineCC" />
 
             <TextView
                 android:id="@+id/tv_send"
@@ -51,7 +58,7 @@
                 android:gravity="center"
                 android:text="发送"
                 android:textColor="@color/title_bg1"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
         </LinearLayout>
 

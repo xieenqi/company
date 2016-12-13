@@ -405,14 +405,14 @@ public class BaseActivity extends Activity {
     /**
      * 展示带成功失败动画加载框
      * */
-    public void showDialogLoading(boolean outTouch){
+    public void showStatusLoading(boolean outTouch){
         DialogHelp.showStatusLoading(outTouch,this);
     }
 
     /**
      * 关闭带成功失败动画加载框
      * */
-    public void cancelDialogLoading(){
+    public void cancelStatusLoading(){
         DialogHelp.cancelStatusLoading();
     }
 

@@ -489,6 +489,11 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading(message);
     }

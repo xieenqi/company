@@ -492,6 +492,11 @@ public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnC
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading(message);
     }

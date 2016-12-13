@@ -302,6 +302,11 @@ public class ContactInfoEditActivity extends BaseActivity implements ContactInfo
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String msg) {
 
     }

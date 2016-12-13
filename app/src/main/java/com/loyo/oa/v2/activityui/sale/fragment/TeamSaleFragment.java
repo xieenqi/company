@@ -199,6 +199,11 @@ public class TeamSaleFragment extends BaseFragment implements PullToRefreshListV
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading(message);
     }

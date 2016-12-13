@@ -113,6 +113,11 @@ public class SystemMessageActivity extends BaseLoadingActivity implements PullTo
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading("");
     }
