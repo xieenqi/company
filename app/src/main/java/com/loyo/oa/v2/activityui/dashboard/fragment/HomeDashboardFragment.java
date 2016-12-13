@@ -8,19 +8,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
 import com.loyo.oa.v2.activityui.dashboard.adapter.StockListAdapter;
 import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.presenter.impl.HomeDashboardPresenterImpl;
+import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
+import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
+import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
+import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.tool.BaseFragment;
-
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -28,7 +30,7 @@ import me.itangqi.waveloadingview.WaveLoadingView;
  * Created by yyy on 16/12/9.
  */
 
-public class HomeDashboardFragment extends BaseFragment implements View.OnClickListener {
+public class HomeDashboardFragment extends BaseFragment implements View.OnClickListener,HomeDashBoardView {
 
     private View mView;
     private RadioButton rb_customer, rb_clue;
@@ -76,7 +78,7 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     private void initUI() {
 
-        mPresenter = new HomeDashboardPresenterImpl(getActivity());
+        mPresenter = new HomeDashboardPresenterImpl(mActivity,this);
         rb_customer = (RadioButton) mView.findViewById(R.id.rb_customer);
         rb_clue = (RadioButton) mView.findViewById(R.id.rb_clue);
         lv_stocklist = (CustomerListView) mView.findViewById(R.id.lv_stocklist);
@@ -116,7 +118,10 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+
+        String[] list = null;
+        switch (view.getId()){
+
 
             /*客户跟进*/
             case R.id.rb_customer:
@@ -130,18 +135,22 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
 
             /*客户线索筛选*/
             case R.id.ll_case1:
-
+                list = new String[]{"今天", "昨天", "本周", "上周", "本月", "上月", "取消"};
+                mPresenter.screenControlView(list,"选择时间");
                 break;
 
             /*增量存量筛选*/
             case R.id.ll_case2:
-
+                list = new String[]{"今天", "昨天", "本周", "上周", "本月", "上月", "取消"};
+                mPresenter.screenControlView(list,"选择时间");
                 break;
 
             /*数量金额筛选*/
             case R.id.ll_case3:
-
+                list = new String[]{"本月", "上月", "本季度", "上季度", "本年", "去年", "取消"};
+                mPresenter.screenControlView(list,"选择时间");
                 break;
+
             case R.id.ll_dashboard_followup:
                 Bundle bdFollowup = new Bundle();
                 bdFollowup.putSerializable("type", DashborardType.CUS_FOLLOWUP);
@@ -169,5 +178,30 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 break;
 
         }
+    }
+
+    @Override
+    public void setScreenVal(String val) {
+        Toast(val);
+    }
+
+    @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
+    public void showProgress(String message) {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void showMsg(String message) {
+
     }
 }

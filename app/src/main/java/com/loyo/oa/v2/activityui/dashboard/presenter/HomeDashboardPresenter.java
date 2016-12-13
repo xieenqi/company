@@ -10,4 +10,5 @@ public interface HomeDashboardPresenter {
 
     void initUi(WaveLoadingView wv1,WaveLoadingView wv2);
 
+    void screenControlView(String[] list,String title);
 }
