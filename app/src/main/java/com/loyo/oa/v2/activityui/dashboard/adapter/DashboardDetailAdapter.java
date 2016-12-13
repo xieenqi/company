@@ -33,12 +33,12 @@ public class DashboardDetailAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return position;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -54,6 +54,7 @@ public class DashboardDetailAdapter extends BaseAdapter {
             holder.view1 = convertView.findViewById(R.id.view1);
             holder.view2 = convertView.findViewById(R.id.view2);
 //            holder.item = (PercentRelativeLayout) convertView.findViewById(R.id.item);
+            convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
         }
