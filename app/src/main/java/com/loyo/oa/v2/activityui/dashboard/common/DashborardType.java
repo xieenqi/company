@@ -2,16 +2,18 @@ package com.loyo.oa.v2.activityui.dashboard.common;
 
 import com.loyo.oa.v2.permission.BusinessOperation;
 
+import java.io.Serializable;
+
 /**
  * 仪表盘的类型
  * Created by xeq on 16/12/13.
  */
 
-public enum DashborardType {
+public enum DashborardType implements Serializable{
 
     CUS_FOLLOWUP {
         @Override
-        public String getaTitle() {
+        public String getTitle() {
             return "跟进动态";
         }
 
@@ -22,7 +24,7 @@ public enum DashborardType {
     },
     CUS_SIGNIN {
         @Override
-        public String getaTitle() {
+        public String getTitle() {
             return "客户拜访";
         }
 
@@ -33,7 +35,7 @@ public enum DashborardType {
     },
     CUS_CELL_RECORD {
         @Override
-        public String getaTitle() {
+        public String getTitle() {
             return "电话录音";
         }
 
@@ -44,7 +46,7 @@ public enum DashborardType {
     },
     SALE_FOLLOWUP {
         @Override
-        public String getaTitle() {
+        public String getTitle() {
             return "跟进动态";
         }
 
@@ -55,7 +57,7 @@ public enum DashborardType {
     },
     SALE_CELL_RECORD {
         @Override
-        public String getaTitle() {
+        public String getTitle() {
             return "电话录音";
         }
 
@@ -66,7 +68,7 @@ public enum DashborardType {
     },
     ORDER_NUMBER {
         @Override
-        public String getaTitle() {
+        public String getTitle() {
             return "订单数量";
         }
 
@@ -77,7 +79,7 @@ public enum DashborardType {
     },
     SALE_MONEY {
         @Override
-        public String getaTitle() {
+        public String getTitle() {
             return "订单金额";
         }
 
@@ -87,7 +89,7 @@ public enum DashborardType {
         }
     };
 
-    public abstract String getaTitle();
+    public abstract String getTitle();
 
     public abstract String getaPermission();
 

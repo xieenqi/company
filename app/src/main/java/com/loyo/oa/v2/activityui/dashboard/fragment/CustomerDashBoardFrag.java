@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
+import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -78,7 +79,9 @@ public class CustomerDashBoardFrag extends BaseFragment implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_dashboard_cus_followup:
-                app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, new Bundle());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("type", DashborardType.CUS_FOLLOWUP);
+                app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 break;
         }
     }
