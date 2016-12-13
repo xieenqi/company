@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
+import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
+import com.loyo.oa.v2.customview.PaymentPopView;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -13,9 +15,11 @@ import me.itangqi.waveloadingview.WaveLoadingView;
 public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
 
     private Context mContext;
+    private HomeDashBoardView crolView;
 
-    public HomeDashboardPresenterImpl(Context mContext){
+    public HomeDashboardPresenterImpl(Context mContext,HomeDashBoardView crolView){
         this.mContext = mContext;
+        this.crolView = crolView;
     }
 
     @Override
@@ -46,5 +50,18 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
         wv2.setAmplitudeRatio(60);
         wv2.setTopTitleStrokeWidth(3);
         wv2.setCenterTitle("29%");
+    }
+
+    @Override
+    public void screenControlView(String[] list,String title) {
+        final PaymentPopView popViewKind = new PaymentPopView(mContext, list, title);
+        popViewKind.show();
+        popViewKind.setCanceledOnTouchOutside(true);
+        popViewKind.setCallback(new PaymentPopView.VaiueCallback() {
+            @Override
+            public void setValue(String value, int index) {
+                crolView.setScreenVal(value);
+            }
+        });
     }
 }
