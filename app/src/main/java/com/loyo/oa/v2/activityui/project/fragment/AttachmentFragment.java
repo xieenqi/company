@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentRightActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -60,6 +61,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     private int uploadSize;
     private int uploadNum;
     private boolean isOver;
+    private LoadingLayout ll_loading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,9 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * @param mListAttachment
      */
     private void bindAttachment(final ArrayList<Attachment> mListAttachment) {
+        ll_loading.setStatus(LoadingLayout.Success);
         if (ListUtil.IsEmpty(mListAttachment)) {
+                ll_loading.setStatus(LoadingLayout.Empty);
             return;
         }
         onLoadSuccess(mListAttachment.size());
@@ -150,6 +154,15 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_attachment, container, false);
+            ll_loading = (LoadingLayout) mView.findViewById(R.id.ll_loading);
+            ll_loading.setStatus(LoadingLayout.Loading);
+            ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+                @Override
+                public void onReload(View v) {
+                    ll_loading.setStatus(LoadingLayout.Loading);
+                    getData();
+                }
+            });
             mListViewAttachment = (SwipeListView) mView.findViewById(R.id.listView_attachment);
             layout_upload = (ViewGroup) mView.findViewById(R.id.layout_upload);
             layout_upload.setOnClickListener(this);
@@ -172,21 +185,24 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     private void getData() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).
                 getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(ArrayList<Attachment> attachments, Response response) {
-                LogUtil.dll(" 项目的附件获取数据： " + MainApp.gson.toJson(attachments));
-                if (null != attachments && !attachments.isEmpty()) {
-                    mAttachments = attachments;
-                    bindAttachment(mAttachments);
-                }
-            }
+                    @Override
+                    public void success(ArrayList<Attachment> attachments, Response response) {
+                        LogUtil.dll(" 项目的附件获取数据： " + MainApp.gson.toJson(attachments));
+                        if (null != attachments && !attachments.isEmpty()) {
+                            mAttachments = attachments;
+                            bindAttachment(mAttachments);
+                        }else {
+                            ll_loading.setStatus(LoadingLayout.Success);
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                        }
+                    }
 
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error, ll_loading);
+                        super.failure(error);
+                    }
+                });
     }
 
 
@@ -219,15 +235,15 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(File file){
-        if(uploadSize == 0){
+     */
+    private void newUploadAttachement(File file) {
+        if (uploadSize == 0) {
             DialogHelp.showLoading(getActivity(), "正在上传", true);
         }
         uploadSize++;
         TypedFile typedFile = new TypedFile("image/*", file);
         TypedString typedUuid = new TypedString(mProject.attachmentUUId);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType,typedFile,
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
                 new RCallback<Attachment>() {
                     @Override
                     public void success(final Attachment attachments, final Response response) {
@@ -294,7 +310,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                         return;
                     }
                     uploadSize = 0;
-                    uploadNum  = pickPhots.size();
+                    uploadNum = pickPhots.size();
                     for (ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(getActivity(), uri);
