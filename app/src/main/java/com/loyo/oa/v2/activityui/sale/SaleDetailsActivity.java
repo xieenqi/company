@@ -237,17 +237,17 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                     break;
                 case 4:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);
-                    winTime.setText(DateTool.timet(mSaleDetails.getWinTime() + "", "yyyy.MM.dd HH:mm"));
+                    winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTime(mSaleDetails.getWinTime()));
                     sale_wintime.setVisibility(View.VISIBLE);
                     break;
                 case 5:
                     iv_wfstatus.setImageResource(R.drawable.img_task_status_finish);
-                    winTime.setText(DateTool.timet(mSaleDetails.getWinTime() + "", "yyyy.MM.dd HH:mm"));
+                    winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTime(mSaleDetails.getWinTime()));
                     sale_wintime.setVisibility(View.VISIBLE);
                     break;
             }
         } else if (0 == mSaleDetails.wfState && mSaleDetails.stageName.contains("赢单")) {
-            winTime.setText(DateTool.timet(mSaleDetails.getUpdatedAt() + "", "yyyy.MM.dd HH:mm"));
+            winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTime(mSaleDetails.getUpdatedAt()));
             sale_wintime.setVisibility(View.VISIBLE);
         }
         //计算产品总金额

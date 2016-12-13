@@ -216,8 +216,10 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
 
          /*加班处理*/
         if (mAttendanceDetails.state == 5 && inOrOut == 3) {
-            String time = (DateTool.timet(mAttendanceDetails.extraWorkStartTime + "", DateTool.DATE_FORMATE_HOUR_YEAR)
-                    + "至" + DateTool.timet(mAttendanceDetails.extraWorkEndTime + "", DateTool.DATE_FORMATE_HOUR_YEAR));
+//            String time = (DateTool.timet(mAttendanceDetails.extraWorkStartTime + "", DateTool.DATE_FORMATE_HOUR_YEAR)
+//                    + "至" + DateTool.timet(mAttendanceDetails.extraWorkEndTime + "", DateTool.DATE_FORMATE_HOUR_YEAR));
+
+            String time= com.loyo.oa.common.utils.DateTool.getFriendlyTime(mAttendanceDetails.extraWorkStartTime ,true)+"-"+ com.loyo.oa.common.utils.DateTool.getFriendlyTime(mAttendanceDetails.extraWorkEndTime ,true);
             tv_info.setText("加班时间: " + time);
             tv_tag.setText("加班时长: "+overTime);
             tv_explain.setText("加班原因");

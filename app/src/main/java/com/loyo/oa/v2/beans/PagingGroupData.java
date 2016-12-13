@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.DateTool;
 
@@ -48,8 +49,10 @@ public class PagingGroupData<T extends BaseBeans> implements Serializable {
             @Override
             public int compare(T lhs, T rhs) {
 
-                long l = DateTool.getDateToTimestamp(lhs.getOrderStr(), app.df_api_get);
-                long r = DateTool.getDateToTimestamp(rhs.getOrderStr(), app.df_api_get);
+//                long l = DateTool.getDateToTimestamp(lhs.getOrderStr(), app.df_api_get);
+//                long r = DateTool.getDateToTimestamp(rhs.getOrderStr(), app.df_api_get);
+                long l= com.loyo.oa.common.utils.DateTool.getSecondStamp(lhs.getOrderStr());
+                long r= com.loyo.oa.common.utils.DateTool.getSecondStamp(rhs.getOrderStr());
 
                 return (r - l) > 0 ? 1 : 0;
             }
@@ -79,7 +82,8 @@ public class PagingGroupData<T extends BaseBeans> implements Serializable {
                 Calendar c = Calendar.getInstance();
                 gTime = app.df7.format(c.getTime());
             } else {
-                gTime = DateTool.getDate(item.getOrderStr(), app.df_api_get, app.df7);
+//                gTime = DateTool.getDate(item.getOrderStr(), app.df_api_get, app.df7);
+                gTime = com.loyo.oa.common.utils.DateTool.convertDate(item.getOrderStr(), DateFormatSet.daySdf);
 
                 if (gTime.equals(strToday)) {
                     gTime = "今天";

@@ -108,8 +108,9 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
             });
 
             dataSelectInit();
-            duration = DateTool.timet(dataSelects.get(0).mapOftime, "yyyy-MM-dd");
-            endAt = DateTool.getEndAt_ofDay();
+//            duration = DateTool.timet(dataSelects.get(0).mapOftime, "yyyy-MM-dd");
+            duration = com.loyo.oa.common.utils.DateTool.getDate(Long.parseLong(dataSelects.get(0).mapOftime));
+            endAt = com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis();
             onPullDownToRefresh(lv);
         }
         return mView;
@@ -121,9 +122,9 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     }
 
     public void dataSelectInit() {
-        int year = Integer.parseInt(DateTool.getNowTime("yyyy"));
+        int year = Integer.parseInt(com.loyo.oa.common.utils.DateTool.getYear());
 
-        dataSelects = DateTool.getYearAllofDay(2015, year);
+        dataSelects = com.loyo.oa.common.utils.DateTool.getYearMonthDay(2015, year);
         Collections.reverse(dataSelects);
         dataSelects.remove(dataSelects.size() - 1);
         windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
@@ -142,7 +143,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                 dataSelectAdapter.notifyDataSetChanged();
                 data_time_tv.setText(dataSelects.get(position).yearMonDay);
                 endAt = Long.valueOf(dataSelects.get(position).mapOftime);
-                duration = DateTool.timet(dataSelects.get(position).mapOftime, "yyyy-MM-dd");
+                duration = com.loyo.oa.common.utils.DateTool.getDate(Long.parseLong(dataSelects.get(position).mapOftime));
                 onPullDownToRefresh(lv);
                 defaultPosition = position;
             }
@@ -302,7 +303,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
             tv_name.setText(legWork.user.getName());
             tv_visit_num.setText("拜访次数 " + legWork.visitNum);
             tv_customer_num.setText("拜访客户数 " + legWork.customerNum);
-            //tv_time.setText(DateTool.getDiffTime(legWork.getCreatedAt() * 1000));
+            //tv_time.setText(DateTool.getFriendlyTime(legWork.getCreatedAt() * 1000));
 
             return view;
         }

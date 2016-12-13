@@ -269,7 +269,8 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
             holder.tv_company_name.setText(clueListItem.companyName);
             holder.tv_customer.setText(clueListItem.name);
             if (clueListItem.lastActAt != 0) {
-                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd HH:mm"));
+//                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd HH:mm"));
+                holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTime(clueListItem.lastActAt));
             } else {
                 holder.tv_time.setText("--");
             }

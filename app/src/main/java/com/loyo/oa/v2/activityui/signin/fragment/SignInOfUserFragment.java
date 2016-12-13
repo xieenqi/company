@@ -126,8 +126,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
     public void dataSelectInit(){
 
-        int year = Integer.parseInt(DateTool.getNowTime("yyyy"));
-        dataSelects = DateTool.getYearAllofDay(2015,year);
+        int year = Integer.parseInt(com.loyo.oa.common.utils.DateTool.getYear());
+        dataSelects = com.loyo.oa.common.utils.DateTool.getYearMonthDay(2015,year);
         Collections.reverse(dataSelects);
         dataSelects.remove(dataSelects.size() - 1);
         windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
@@ -164,10 +164,15 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      */
     private void initTimeStr(int position) {
 
-        String startTimestr = DateTool.timet(dataSelects.get(position).mapOftime, "yyyy-MM-dd")+" 00:00:00";
-        String endTimestr = DateTool.timet(dataSelects.get(position).mapOftime,"yyyy-MM-dd")+ " 23:59:59";
-        startTime = DateTool.getDataOne(startTimestr, DateTool.DATE_FORMATE_ALL);
-        endTime = DateTool.getDataOne(endTimestr,DateTool.DATE_FORMATE_ALL);
+//        String startTimestr = DateTool.timet(dataSelects.get(position).mapOftime, "yyyy-MM-dd")+" 00:00:00";
+//        String endTimestr = DateTool.timet(dataSelects.get(position).mapOftime,"yyyy-MM-dd")+ " 23:59:59";
+//        startTime = DateTool.getDataOne(startTimestr, DateTool.DATE_FORMATE_ALL);
+//        endTime = DateTool.getDataOne(endTimestr,DateTool.DATE_FORMATE_ALL);
+        long posTime=Long.parseLong(dataSelects.get(position).mapOftime);
+        String date=com.loyo.oa.common.utils.DateTool.getDate(posTime);//取得这一天的日期
+        //TODO 这里的时间格式化里面 'T' 是因为其他地方都有,统一构造,后面有时间整理
+        startTime= com.loyo.oa.common.utils.DateTool.getSecondStamp(date+"'T' 00:00:00")+"";//获取开始时间
+        endTime= com.loyo.oa.common.utils.DateTool.getSecondStamp(date+"'T' 23:59:59")+"";
     }
 
     @Override

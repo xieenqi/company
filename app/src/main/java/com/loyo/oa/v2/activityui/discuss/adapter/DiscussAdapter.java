@@ -71,7 +71,7 @@ public class DiscussAdapter extends BaseAdapter {
         }
         HttpDiscussItem info = datas.get(position);
         holder.tv_title.setText(info.title);
-        holder.tv_time.setText(info.newUpdatedAt != 0 ? DateTool.getDiffTime(info.newUpdatedAt) : info.updatedAt.substring(11, 19));
+        holder.tv_time.setText(info.newUpdatedAt != 0 ? com.loyo.oa.common.utils.DateTool.getFriendlyTime(info.newUpdatedAt,true) : info.updatedAt.substring(11, 19));
         holder.tv_content.setText(info.creator.name + ":" + info.content);
         holder.openItem(datas.get(position));
         return convertView;

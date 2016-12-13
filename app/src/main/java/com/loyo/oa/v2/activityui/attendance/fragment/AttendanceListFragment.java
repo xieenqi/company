@@ -178,10 +178,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      */
     public void DataSelectInit() {
 
-        int year = Integer.parseInt(DateTool.getNowTime("yyyy"));
+        int year = Integer.parseInt(com.loyo.oa.common.utils.DateTool.getYear());
 
         if (type == 2) {
-            dataSelects = DateTool.getYearAllofDay(2015, year);
+            dataSelects = com.loyo.oa.common.utils.DateTool.getYearMonthDay(2015, year);
             Collections.reverse(dataSelects);
             dataSelects.remove(dataSelects.size() - 1);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
@@ -192,7 +192,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             recyclerView.setAdapter(dataSelectAdapter);
             qtime = Integer.parseInt(dataSelects.get(0).mapOftime);
         } else {
-            dataSelects = DateTool.getYearAllofMonth(2015, year);
+            dataSelects = com.loyo.oa.common.utils.DateTool.getYearMonth(2015, year);
             Collections.reverse(dataSelects);
             windowW = Utils.getWindowHW(getActivity()).getDefaultDisplay().getWidth();
             data_time_tv.setText(dataSelects.get(0).yearMonDay);

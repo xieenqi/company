@@ -3,6 +3,7 @@ package com.loyo.oa.v2.customview;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -125,10 +126,14 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                 .setView(dateTimeLayout)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String timeFu = years + "." + String.format("%02d", (month + 1)) + "." + day + " " + hour + ":" + minutes;
+//                        String timeFu = years + "." + String.format("%02d", (month + 1)) + "." + day + " " + hour + ":" + minutes;
+
+                        long time= com.loyo.oa.common.utils.DateTool.getStamp(years,month,day,hour,minutes,0);
                         try {
-                            if (!isOver && Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy.MM.dd HH:mm"))
-                                    < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"))) {
+//                            if (!isOver && Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy.MM.dd HH:mm"))
+//                                    < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"))) {
+                            //TODO 这里点不可以直接提交,选择的日期没有秒,获取的当前日志包括秒,可以-60,就表示1秒内可以提交
+                            if (!isOver && time< com.loyo.oa.common.utils.DateTool.getStamp(true)) {
                                 Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
                             } else {
                                 listener.onDateTimeChanged(years, month, day, hour, minutes);

@@ -199,7 +199,7 @@ public class TrackRule implements Serializable {
             return false;
         }
 
-        int day_of_week = DateTool.get_DAY_OF_WEEK(new Date());
+        int day_of_week = com.loyo.oa.common.utils.DateTool.getWeek();
         day_of_week = day_of_week == 1 ? 7 : day_of_week - 1;
 
         boolean notNeedCheck = true; /* 当天是否设置轨迹规则， 是否需要打卡 */

@@ -22,7 +22,6 @@ import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsCommentAdapter;
 import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsGridViewAdapter;
@@ -248,7 +247,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         tv_name.setText(mFollowUpDelModel.creator.name);
         tv_contact.setText(mFollowUpDelModel.contactName);
         tv_customername.setText(mFollowUpDelModel.customerName);
-        tv_time.setText(DateTool.getDiffTime(mFollowUpDelModel.createAt));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(mFollowUpDelModel.createAt,true));
 
         /** 设置跟进内容 */
         if(null != mFollowUpDelModel.content && !TextUtils.isEmpty(mFollowUpDelModel.content)){
@@ -386,7 +385,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         /** 电话录音设置 */
         if(null != mFollowUpDelModel.audioUrl && !TextUtils.isEmpty(mFollowUpDelModel.audioUrl)){
             layout_phonely.setVisibility(View.VISIBLE);
-            tv_audio_length.setText(DateTool.stringForTime(mFollowUpDelModel.audioLength * 1000));
+            tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(mFollowUpDelModel.audioLength * 1000));
             int audioLength = mFollowUpDelModel.audioLength;
             if (audioLength > 0 && audioLength <= 60) {
                 iv_phone_call.setText("000");

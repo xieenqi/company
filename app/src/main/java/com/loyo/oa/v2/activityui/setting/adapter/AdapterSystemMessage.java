@@ -93,7 +93,7 @@ public class AdapterSystemMessage extends BaseAdapter {
 
         public void setContent(SystemMessageItem item) {
             tv_title.setText(item.title);
-            tv_time.setText(DateTool.getDiffTime(item.createdAt));
+            tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(item.createdAt,true));
             if (item.bizzType != null) {
                 iv_icon.setImageResource(item.bizzType.getIcon());
             }

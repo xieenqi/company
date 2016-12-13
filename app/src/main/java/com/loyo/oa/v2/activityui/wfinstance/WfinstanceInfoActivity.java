@@ -323,7 +323,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
         List<String> paymentList = new ArrayList<>();
         paymentList.add("对应订单：" + payment.orderTitle);
         paymentList.add("对应客户：" + payment.customerName);
-        paymentList.add("回款时间：" + DateTool.timet(payment.receivedAt + "", "yyyy.MM.dd"));
+//        paymentList.add("回款时间：" + DateTool.timet(payment.receivedAt + "", "yyyy.MM.dd"));
+        paymentList.add("回款时间：" + com.loyo.oa.common.utils.DateTool.getDate(payment.receivedAt));
         paymentList.add("回款金额：" + "￥" + payment.receivedMoney);
         paymentList.add("开票金额：" + "￥" + payment.billingMoney);
         paymentList.add("收款人：" + payment.payeeUser.name);

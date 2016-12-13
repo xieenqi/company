@@ -141,10 +141,14 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
                         endTimeDate = (String) map.get(endTimeArr.get(i));
                     }
                 }
-                startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
-                endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+//                startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+//                endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
 
-                if (startTimelong > endTimelong && startTimelong != endTimelong) {
+                startTimelong= com.loyo.oa.common.utils.DateTool.getMinuteStamp(startTimeDate);
+                endTimelong= com.loyo.oa.common.utils.DateTool.getMinuteStamp(endTimeDate);
+
+
+                if (startTimelong > endTimelong) {
                     crolView.showMsg("开始时间不能大于结束时间");
                     return;
                 }

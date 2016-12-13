@@ -174,8 +174,9 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         /*完成加班*/
         if (outKind == 2) {
             et_reason.setHint("请输入加班原因");
-            String time = (DateTool.timet(extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
-                    + "-" + DateTool.timet(serverTime + "", DateTool.DATE_FORMATE_TRANSACTION));
+//            String time = (DateTool.timet(extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
+//                    + "-" + DateTool.timet(serverTime + "", DateTool.DATE_FORMATE_TRANSACTION));
+            String time= com.loyo.oa.common.utils.DateTool.getFriendlyTime(extraWorkStartTime,true)+"-"+ com.loyo.oa.common.utils.DateTool.getFriendlyTime(serverTime,true);
             SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time_kind.setText(tvTimeName);
             tv_time.setText(builder);

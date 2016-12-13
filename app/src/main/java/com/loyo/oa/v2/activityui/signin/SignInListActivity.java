@@ -143,8 +143,9 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         }
         HashMap<String, Object> map = new HashMap<>();
         //        map.put("userId", 0);
-        map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
-        map.put("endAt", DateTool.getEndAt_ofDay() / 1000);
+//        map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+        map.put("startAt", com.loyo.oa.common.utils.DateTool.getDateStamp("2014-01-01") / 1000);
+        map.put("endAt", com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis() / 1000);
         map.put("customerId", mCustomer.getId());
         map.put("pageIndex", workPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);

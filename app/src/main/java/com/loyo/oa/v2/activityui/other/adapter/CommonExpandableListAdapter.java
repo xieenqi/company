@@ -22,7 +22,6 @@ import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.activityui.project.adapter.BasePagingGroupDataAdapter_;
 
@@ -166,7 +165,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 } else {
                     isOk = false;
                     textColor = R.color.text66;
-                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"));
+//                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(DateTool.DATE_FORMATE_SPLITE_BY_POINT), "yyyy.MM.dd HH:mm"));
+                    int nowTime = com.loyo.oa.common.utils.DateTool.getStamp(true);
                     if (nowTime > task.planendAt && task.status == Task.STATUS_PROCESSING) {
                         timeOut.setVisibility(View.VISIBLE);
                     } else {

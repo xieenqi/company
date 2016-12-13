@@ -23,7 +23,6 @@ import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
@@ -132,12 +131,12 @@ public class FollowUpListAdapter extends BaseAdapter {
         holder.tv_contact.setText(TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
         holder.tv_customer.setText(followUpListModel.customerName);
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# " + followUpListModel.typeName);
-        holder.tv_create_time.setText(DateTool.getDiffTime(followUpListModel.createAt));
+        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(followUpListModel.createAt,true));
 
         /** 电话录音设置 */
         if (null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)) {
             holder.layout_phonely.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(DateTool.stringForTime(followUpListModel.audioLength * 1000));
+            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(followUpListModel.audioLength * 1000));
             int audioLength = followUpListModel.audioLength;
             if (audioLength > 0 && audioLength <= 60) {
                 holder.iv_phone_call.setText("000");
@@ -164,7 +163,8 @@ public class FollowUpListAdapter extends BaseAdapter {
         /** 下次跟进时间 */
         if (followUpListModel.remindAt != 0) {
             holder.layout_lasttime.setVisibility(View.VISIBLE);
-            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt + "", "yyyy-MM-dd HH:mm"));
+//            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt + "", "yyyy-MM-dd HH:mm"));
+            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTime(followUpListModel.remindAt));
         } else {
             holder.layout_lasttime.setVisibility(View.GONE);
         }

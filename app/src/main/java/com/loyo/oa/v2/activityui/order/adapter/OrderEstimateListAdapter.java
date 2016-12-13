@@ -99,7 +99,7 @@ public class OrderEstimateListAdapter extends BaseAdapter {
         }
         int index = position + 1;
         holder.tv_titlenum.setText("回款记录" + index);
-        holder.tv_esttime.setText(DateTool.timet(mEstimateAdd.receivedAt + "", "yyyy.MM.dd"));
+        holder.tv_esttime.setText(com.loyo.oa.common.utils.DateTool.getDate(mEstimateAdd.receivedAt ));
         holder.tv_esttime_price.setText("￥" + mEstimateAdd.receivedMoney);
         holder.tv_price.setText("￥" + mEstimateAdd.billingMoney);
         holder.tv_payee.setText(mEstimateAdd.payeeUser.name);

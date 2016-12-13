@@ -23,7 +23,6 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by EthanGong on 16/9/1.
@@ -115,16 +114,16 @@ public class WorksheetEventCell extends LinearLayout {
 
         }
 
-        tv_time.setText(data.startTime == 0 ? "--" : DateTool.getDiffTime(data.startTime));
+        tv_time.setText(data.startTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getFriendlyTime(data.startTime,true));
         LogUtil.dee("endTime:" + data.endTime);
         LogUtil.dee("status:" + data.status);
         if (data.endTime != 0 && data.status != WorksheetEventStatus.UNACTIVATED) {
             //事件 已处理 待处理 标红
             if (data.isOvertime) {
-                tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止" + "(超时)");
+                tv_time2.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(data.endTime,true) + "截止" + "(超时)");
                 tv_time2.setTextColor(getResources().getColor(R.color.red1));
             } else {
-                tv_time2.setText(DateTool.getDiffTime(data.endTime) + "截止");
+                tv_time2.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(data.endTime,true) + "截止");
                 tv_time2.setTextColor(getResources().getColor(R.color.text99));
             }
         } else if (data.endTime == 0 || data.status == WorksheetEventStatus.UNACTIVATED) {

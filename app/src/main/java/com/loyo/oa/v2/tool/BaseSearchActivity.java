@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.*;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
@@ -524,7 +525,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 if (clueListItem.lastActAt == 0) {
                     time.setText("--");
                 } else {
-                    time.setText("跟进时间：" + DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd"));
+//                    time.setText("跟进时间：" + DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd"));
+                    time.setText("跟进时间：" + com.loyo.oa.common.utils.DateTool.getDate(clueListItem.lastActAt));
                 }
                 title.setText(clueListItem.name);
                 content.setText("公司名称" + clueListItem.companyName);

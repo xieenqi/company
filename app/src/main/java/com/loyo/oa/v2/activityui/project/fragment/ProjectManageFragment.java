@@ -62,7 +62,8 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         params.put("status", statusParam);
         params.put("type", typeParam);
         params.put("endAt", System.currentTimeMillis() / 1000);
-        params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+//        params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+        params.put("startAt", com.loyo.oa.common.utils.DateTool.getDateStamp("2014-01-01") / 1000);
         LogUtil.d(" 项目管理列表请求： " + MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
     }

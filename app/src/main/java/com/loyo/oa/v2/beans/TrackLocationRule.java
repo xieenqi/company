@@ -35,7 +35,7 @@ public class TrackLocationRule {
 
     public boolean weekdayEnable(Date date) {
 
-        int day_of_week = DateTool.get_DAY_OF_WEEK(date);
+        int day_of_week = com.loyo.oa.common.utils.DateTool.getWeek(date);
 
         /* Weekday从周日开始, 与定义的规则不同 */
         day_of_week = day_of_week == 1 ? 7 : day_of_week - 1;

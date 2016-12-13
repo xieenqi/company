@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,7 +153,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private long beginAt, endAt;
     private boolean isDelayed = false;
     private int mSelectType = WorkReport.DAY;
-    private int retroIndex;
+    private int retroIndex=1;//蛋疼的兼容原来的1序
     private int bizType = 1;
     private int uploadSize;
     private int uploadNum;
@@ -400,8 +401,8 @@ public class WorkReportAddActivity extends BaseActivity {
                         beginTime = beginAt / 1000;
                         endTime = endAt / 1000;
                     } else {
-                        beginTime = DateTool.getCurrentMoringMillis() / 1000;
-                        endTime = DateTool.getNextMoringMillis() / 1000;
+                        beginTime = com.loyo.oa.common.utils.DateTool.getCurrentDayBeginMillis() / 1000;
+                        endTime = com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
@@ -411,8 +412,8 @@ public class WorkReportAddActivity extends BaseActivity {
                         beginTime = weeksDialog.GetBeginandEndAt()[0] / 1000;
                         endTime = weeksDialog.GetBeginandEndAt()[1] / 1000;
                     } else {
-                        beginTime = DateTool.getBeginAt_ofWeek() / 1000;
-                        endTime = DateTool.getEndAt_ofWeek() / 1000;
+                        beginTime = com.loyo.oa.common.utils.DateTool.getCurrentWeekBeginMillis() / 1000;
+                        endTime = com.loyo.oa.common.utils.DateTool.getCurrentWeekEndMillis() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
@@ -422,8 +423,8 @@ public class WorkReportAddActivity extends BaseActivity {
                         beginTime = beginAt / 1000;
                         endTime = endAt / 1000;
                     } else {
-                        beginTime = DateTool.getBeginAt_ofMonthMills() / 1000;
-                        endTime = DateTool.getEndAt_ofMonth() / 1000;
+                        beginTime = com.loyo.oa.common.utils.DateTool.getCurrentMonthBeginMillis() / 1000;
+                        endTime = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis() / 1000;
                     }
                     openDynamic(beginTime + "", endTime + "");
                     break;
@@ -438,15 +439,16 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     @CheckedChange(R.id.rb1)
     void dayClick(final CompoundButton button, final boolean b) {
+        //TODO 这里好像有bug,如果是补签,会拉取签到那天的工作动态,代码分析出来的,没有数据未确认bug。——Mr.Jie
         if (!b) {
             return;
         }
         isDelayed = false;
         currentValue = pastSevenDay[0];
-        openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
+        openDynamic(com.loyo.oa.common.utils.DateTool.getCurrentDayBeginMillis() / 1000 + "", com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis() / 1000 + "");
         tv_crm.setText("本日工作动态统计");
-        beginAt = DateTool.getBeginAt_ofDay();
-        endAt = DateTool.getEndAt_ofDay();
+        beginAt = com.loyo.oa.common.utils.DateTool.getCurrentDayBeginMillis();
+        endAt = com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis();
         tv_time.setText(app.df4.format(beginAt));
         mSelectType = WorkReport.DAY;
     }
@@ -460,7 +462,7 @@ public class WorkReportAddActivity extends BaseActivity {
             return;
         }
         isDelayed = false;
-        openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
+        openDynamic(com.loyo.oa.common.utils.DateTool.getCurrentWeekBeginMillis() / 1000 + "", com.loyo.oa.common.utils.DateTool.getCurrentWeekEndMillis() / 1000 + "");
         tv_crm.setText("本周工作动态统计");
         beginAt = weeksDialog.getNowBeginandEndAt()[0];
         endAt = weeksDialog.getNowBeginandEndAt()[1];
@@ -478,10 +480,10 @@ public class WorkReportAddActivity extends BaseActivity {
         }
         isDelayed = false;
         currentValue = pastThreeMonth[0];
-        openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
+        openDynamic(com.loyo.oa.common.utils.DateTool.getCurrentMonthBeginMillis() / 1000 + "", com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis() / 1000 + "");
         tv_crm.setText("本月工作动态统计");
-        beginAt = DateTool.getEndAt_ofMonth();//DateTool.getBeginAt_ofMonth()
-        endAt = DateTool.getEndAt_ofMonth();
+        beginAt = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis();//DateTool.getBeginAt_ofMonth()
+        endAt = com.loyo.oa.common.utils.DateTool.getCurrentMonthEndMillis();
         DateTool.calendar = Calendar.getInstance();
         int year = DateTool.calendar.get(Calendar.YEAR);
         int month = DateTool.calendar.get(Calendar.MONTH);
@@ -742,11 +744,14 @@ public class WorkReportAddActivity extends BaseActivity {
         wv.setOffset(2);//为了界面好看，故意将index多加2条，因此取item下标时，要-2
         wv.setItems(Arrays.asList(arrlst));
         //wv.setSeletion(3);
+        //TODO 为什么要用监听改变的方式,不懂,用户点击了以后,不滑动,不会调用,不会改成默认值。后面改一下,直接获取选中的就可以了 ——Mr.Jie
         wv.setOnWheelViewListener(new SingleRowWheelView.OnWheelViewListener() {
             @Override
             public void onSelected(int selectedIndex, String item) {
                 currentValue = item;
-                retroIndex = selectedIndex - 2;
+                retroIndex = selectedIndex - 1;
+                Log.i("temptest", "onSelec" +
+                        "ted: retroIndex:"+retroIndex);
             }
         });
         return outerView;
@@ -764,20 +769,21 @@ public class WorkReportAddActivity extends BaseActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (mSelectType) {
                             case 1:
-                                currentValue = pastSevenDay[retroIndex];
-                                beginAt = DateTool.getSomeDayBeginAt(retroIndex);
-                                endAt = DateTool.getSomeDayEndAt(retroIndex);
+                                currentValue = pastSevenDay[retroIndex-1];
+                                beginAt = com.loyo.oa.common.utils.DateTool.getSomeDayBeginMillis(retroIndex);
+                                endAt = com.loyo.oa.common.utils.DateTool.getSomeDayEndMillis(retroIndex);
                                 break;
 
                             case 3:
-                                currentValue = pastThreeMonth[retroIndex];
-                                beginAt = DateTool.getSomeMonthBeginAt(retroIndex);
-                                endAt = DateTool.getSomeMonthEndAt(retroIndex);
+                                Log.i("temptest", "onClick: "+retroIndex+"->"+pastThreeMonth[retroIndex-1]);
+                                currentValue = pastThreeMonth[retroIndex-1];
+                                beginAt = com.loyo.oa.common.utils.DateTool.getSomeMonthBeginMillis(retroIndex);
+                                endAt = com.loyo.oa.common.utils.DateTool.getSomeMonthEndMillis(retroIndex);
                                 break;
                         }
 
                         tv_time.setText(currentValue + "(补签)");
-                        retroIndex = 0;
+                        retroIndex = 1;
                         openDynamic(beginAt / 1000 + "", endAt / 1000 + "");
                     }
                 })

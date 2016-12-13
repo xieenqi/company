@@ -114,8 +114,10 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
         if (null != planEstimateList) {
             editData();
         } else {
-            tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
-            estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+//            tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
+//            estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+            estimatedTime= com.loyo.oa.common.utils.DateTool.getStamp(false);
+            tv_time.setText(com.loyo.oa.common.utils.DateTool.getDate(estimatedTime));
         }
     }
 
@@ -253,8 +255,12 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
                 int year = datePicker.getYear();
                 int month = datePicker.getMonth();
                 int day = datePicker.getDayOfMonth();
-                tv_time.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
-                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+//                tv_time.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
+//                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+                estimatedTime= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day);
+                tv_time.setText(com.loyo.oa.common.utils.DateTool.getDate(estimatedTime));
+
+
             }
         });
 

@@ -244,21 +244,21 @@ public class WfinEditViewGroup extends LinearLayout {
         @Override
         public void onClick(View v) {
             if (!ClickTool.isDoubleClick()) {
-                DateTool.calendar = Calendar.getInstance();
-                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(
-                        textView);
-                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
-                    @Override
-                    public boolean onClick_onDateSet() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onClick_onTimeSet() {
-                        map_Values.put(lstData.get(position).getId(), dateListener.strDate + dateListener.strTime);
-                        return false;
-                    }
-                });
+//                DateTool.calendar = Calendar.getInstance();
+//                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(
+//                        textView);
+//                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
+//                    @Override
+//                    public boolean onClick_onDateSet() {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onClick_onTimeSet() {
+//                        map_Values.put(lstData.get(position).getId(), dateListener.strDate + dateListener.strTime);
+//                        return false;
+//                    }
+//                });
 
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(context, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {

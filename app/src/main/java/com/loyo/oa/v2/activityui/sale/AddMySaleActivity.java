@@ -32,7 +32,6 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.ContactAddforExtraData;
@@ -273,8 +272,11 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
                 int year = datePicker.getYear();
                 int month = datePicker.getMonth();
                 int day = datePicker.getDayOfMonth();
-                tv_estimate.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
-                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_estimate.getText().toString(), "yyyy.MM.dd"));
+//                tv_estimate.setText(year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day));
+//                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_estimate.getText().toString(), "yyyy.MM.dd"));
+                int time=com.loyo.oa.common.utils.DateTool.getStamp(year,month,day);
+                estimatedTime= time;
+                tv_estimate.setText(com.loyo.oa.common.utils.DateTool.getDate(time));
             }
         });
 

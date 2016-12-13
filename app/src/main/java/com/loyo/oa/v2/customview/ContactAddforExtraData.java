@@ -417,18 +417,18 @@ public class ContactAddforExtraData extends LinearLayout {
         @Override
         public void onClick(View v) {
             if (!ClickTool.isDoubleClick()) {
-                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(textView);
-                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
-                    @Override
-                    public boolean onClick_onDateSet() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onClick_onTimeSet() {
-                        return false;
-                    }
-                });
+//                final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(textView);
+//                dateListener.setOnClick_callback(new DateTool.DateSetListener_Datetool.OnClick_Callback() {
+//                    @Override
+//                    public boolean onClick_onDateSet() {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onClick_onTimeSet() {
+//                        return false;
+//                    }
+//                });
 
                 if (isBrith) {
                     pickDate(extra, textView);
@@ -437,10 +437,16 @@ public class ContactAddforExtraData extends LinearLayout {
                     dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                         @Override
                         public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
-                            String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                            textView.setText(str);
-                            String times = DateTool.getDataOne(str, DateTool.DATE_FORMATE_SPLITE_BY_POINT);
-                            extra.val = times;
+//                            String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                            textView.setText(str);
+//                            String times = DateTool.getDataOne(str, DateTool.DATE_FORMATE_SPLITE_BY_POINT);
+//                            extra.val = times;
+                            //获取时间戳
+                            int time = com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,min,0);
+                            extra.val=time+"";
+                            //把时间戳转换成便于阅读格式
+                            textView.setText(com.loyo.oa.common.utils.DateTool.getDateTime(time));
+
                         }
 
                         @Override

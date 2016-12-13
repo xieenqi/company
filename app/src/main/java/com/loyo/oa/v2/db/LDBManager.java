@@ -147,7 +147,7 @@ public class LDBManager {
      * @return
      */
     public List<LocateData> getAllLocateDatas() {
-        return getLocateData(DateTool.getCurrentMoringMillis(), DateTool.getNextMoringMillis(), null);
+        return getLocateData(com.loyo.oa.common.utils.DateTool.getCurrentDayBeginMillis(), com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis(), null);
     }
 
     /**

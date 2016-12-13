@@ -19,7 +19,6 @@ import com.loyo.oa.v2.activityui.commonview.CommonImageView;
 import com.loyo.oa.v2.activityui.commonview.CommonTextVew;
 import com.loyo.oa.v2.activityui.commonview.MapSingleView;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.model.ImgAndText;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
@@ -34,7 +33,6 @@ import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Record;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -318,7 +316,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         tv_address.setText(TextUtils.isEmpty(mSigninDelModel.address) ? "无地址数据" : mSigninDelModel.address);
         tv_customer_name.setText(mSigninDelModel.customerName);
         tv_position.setText(mSigninDelModel.position);
-        tv_time.setText(DateTool.getDiffTime(mSigninDelModel.createdAt));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(mSigninDelModel.createdAt,true));
 
         /** 备注内容 */
         if (null != mSigninDelModel.memo && !TextUtils.isEmpty(mSigninDelModel.memo)) {

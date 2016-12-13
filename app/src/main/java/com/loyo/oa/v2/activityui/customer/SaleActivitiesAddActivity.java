@@ -186,7 +186,8 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 map.put("content", content);
                 map.put("typeId", tagItemIds);
                 if (!tv_remain_time.getText().toString().isEmpty() || !tv_remain_time.getText().toString().equals("不提醒")) {
-                    map.put("remindAt", DateTool.getDateToTimestamp(tv_remain_time.getText().toString().trim(), app.df2) / 1000);
+//                    map.put("remindAt", DateTool.getDateToTimestamp(tv_remain_time.getText().toString().trim(), app.df2) / 1000);
+                    map.put("remindAt", com.loyo.oa.common.utils.DateTool.getSecondStamp(tv_remain_time.getText().toString().trim()) / 1000);
                 }
                 if (!TextUtils.isEmpty(contactId)) {
                     map.put("contactId", contactId);
