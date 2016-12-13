@@ -252,7 +252,7 @@ public class ProjectAddActivity extends BaseActivity {
         app.getRestAdapter().create(IProject.class).Create(obj, new RCallback<Project>() {
             @Override
             public void success(final Project project, final Response response) {
-                HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkCommitSus("项目创建",response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -280,7 +280,7 @@ public class ProjectAddActivity extends BaseActivity {
         app.getRestAdapter().create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
             @Override
             public void success(final Project project, final Response response) {
-                HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkCommitSus("项目编辑",response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

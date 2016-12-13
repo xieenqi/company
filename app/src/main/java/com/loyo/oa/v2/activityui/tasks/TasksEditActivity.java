@@ -527,7 +527,7 @@ public class TasksEditActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateTask(mTask.getId(), map, new RCallback<Task>() {
             @Override
             public void success(final Task task, Response response) {
-                HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkCommitSus("任务编辑",response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

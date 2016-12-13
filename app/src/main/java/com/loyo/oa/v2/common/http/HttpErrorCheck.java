@@ -231,12 +231,12 @@ public class HttpErrorCheck {
     /**
      * 所有提交,成功检查(2.7.4新版提交方案)
      * */
-    public static void checkCommitSus(Response response) {
+    public static void checkCommitSus(String tag,Response response) {
         DialogHelp.successStatusLoad();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
-            LogUtil.d(" 接口成功result：" + result);
-            LogUtil.d(" 接口成功URL：" + response.getUrl());
+            LogUtil.d(tag+" 接口成功result：" + result);
+            LogUtil.d(tag+" 接口成功URL：" + response.getUrl());
             checkResponseError(result);
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -365,7 +366,7 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
      * 创建销售机会 到服务器
      */
     private void addSaleOpportunitty() {
-        showLoading("");
+        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         if (isEdit) {
             map.put("id", chanceId);
@@ -538,15 +539,25 @@ public class AddMySaleActivity extends BaseActivity implements AddMySaleContract
 
     @Override
     public void creatSaleAction() {
-        Toast("创建成功");
-        app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE_STAGE, new Intent());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                cancelStatusLoading();
+                app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE_STAGE, new Intent());
+            }
+        },1000);
     }
 
     @Override
     public void editSaleAction() {
-        Toast("修改成功");
-        Intent mIntent = new Intent();
-        mIntent.putExtra(ExtraAndResult.RESULT_ID, ActionCode.SALE_DETAILS_EDIT);
-        app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                cancelStatusLoading();
+                Intent mIntent = new Intent();
+                mIntent.putExtra(ExtraAndResult.RESULT_ID, ActionCode.SALE_DETAILS_EDIT);
+                app.finishActivity(AddMySaleActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+            }
+        },1000);
     }
 }

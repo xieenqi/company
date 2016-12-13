@@ -281,7 +281,7 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(id, map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance, final Response response) {
-                HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkCommitSus("编辑审批",response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.clue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
 import android.view.View;
@@ -202,7 +203,7 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
      * 新建编辑 线索
      * */
     private void addDataInfo() {
-        showLoading("");
+        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", et_name.getText().toString());
         map.put("companyName", et_company.getText().toString());
@@ -217,19 +218,25 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IClue.class)
                     .addClue(map, new Callback<ClueDetailWrapper>() {
                         @Override
-                        public void success(ClueDetailWrapper clueDetailWrapper, Response response) {
-                            HttpErrorCheck.checkResponse("新建线索：", response);
-                            if(clueDetailWrapper.errcode != 0){
-                                Toast(clueDetailWrapper.errmsg);
-                                return;
-                            }else if(clueDetailWrapper.errcode == 0){
-                                app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
-                            }
+                        public void success(final ClueDetailWrapper clueDetailWrapper, Response response) {
+                            HttpErrorCheck.checkCommitSus("新建线索",response);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    cancelStatusLoading();
+                                    if(clueDetailWrapper.errcode != 0){
+                                        Toast(clueDetailWrapper.errmsg);
+                                        return;
+                                    }else if(clueDetailWrapper.errcode == 0){
+                                        app.finishActivity(ClueAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                                    }
+                                }
+                            },1000);
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
+                            HttpErrorCheck.checkCommitEro(error);
                         }
                     });
         } else {
@@ -237,13 +244,18 @@ public class ClueAddActivity extends BaseActivity implements View.OnClickListene
                     .editClue(clueId, map, new Callback<Object>() {
                         @Override
                         public void success(Object o, Response response) {
-                            HttpErrorCheck.checkResponse("【编辑】线索：", response);
-                            onBackPressed();
+                            HttpErrorCheck.checkCommitSus("编辑线索",response);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onBackPressed();
+                                }
+                            },1000);
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
+                            HttpErrorCheck.checkCommitEro(error);
                         }
                     });
         }

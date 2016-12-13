@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.worksheet.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetWrapper;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttachmentBatch;
 import com.loyo.oa.v2.beans.AttachmentForNew;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -131,7 +133,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
                 break;
             case R.id.img_title_right:
                 uuid = StringUtil.getUUID();
-                showLoading("");
+                showStatusLoading(false);
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
                 break;
@@ -169,7 +171,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         String orderName = mActivity.selectedOrder.title;
         String templateId = mActivity.selectedType.id;
 
-
+        showStatusLoading(false);
         final HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("title", title);
         map.put("orderId", orderId);
@@ -185,26 +187,32 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(IWorksheet.class).addWorksheet(map, new Callback<WorksheetWrapper>() {
             @Override
-            public void success(WorksheetWrapper wrapper, Response response) {
+            public void success(final WorksheetWrapper wrapper, Response response) {
+                HttpErrorCheck.checkCommitSus("新建工单",response);
                 if (wrapper.errcode == 0) {
-                    Intent intent = new Intent();
-                    intent.putExtra(ExtraAndResult.EXTRA_BOOLEAN, true);
-
-                    Worksheet ws = wrapper.data;
-                    if (ws == null) {
-                        ws = new Worksheet();
-                    }
-                    AppBus.getInstance().post(ws);
-
-                    app.finishActivity(getActivity(), MainApp.ENTER_TYPE_LEFT, 0, intent);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            cancelStatusLoading();
+                            Intent intent = new Intent();
+                            intent.putExtra(ExtraAndResult.EXTRA_BOOLEAN, true);
+                            Worksheet ws = wrapper.data;
+                            if (ws == null) {
+                                ws = new Worksheet();
+                            }
+                            AppBus.getInstance().post(ws);
+                            app.finishActivity(getActivity(), MainApp.ENTER_TYPE_LEFT, 0, intent);
+                        }
+                    },1000);
                 } else {
+                    cancelStatusLoading();
                     Toast("" + wrapper.errmsg);
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -228,26 +236,22 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
      * 上传附件信息
      */
     public void postAttaData() {
-
+        showStatusLoading(false);
         buildAttachment();
-
         IAttachment service = RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class);
-
         service.setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
             @Override
             public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                HttpErrorCheck.checkResponse("上传附件信息", response);
-
-                // TODO:
+                HttpErrorCheck.checkCommitSus("上传附件信息",response);
+                cancelStatusLoading();
                 commitWorksheet();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
-        showLoading("");
     }
 
     @Override
@@ -287,7 +291,7 @@ public class WorksheetAddStep2Fragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelLoading();
+        cancelStatusLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
             Toast(count + "个附件上传失败，请重试或者删除");

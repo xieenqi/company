@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.other;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -205,6 +206,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      * */
     @Override
     public void verifySuccess(String title,String content) {
+        showStatusLoading(false);
         controller.startUpload();
         controller.notifyCompletionIfNeeded();
     }
@@ -214,7 +216,6 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
      * */
     @Override
     public void onSuccess(Bulletin mBulletin) {
-        Toast("提交成功");
         Intent intent = new Intent();
         intent.putExtra("data", mBulletin);
         setResult(RESULT_OK, intent);
@@ -269,25 +270,32 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
     }
 
     private void commitAttachment() {
-        showLoading("");
+        showStatusLoading(false);
         buildAttachment();
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
                 .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
                     @Override
-                    public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        HttpErrorCheck.checkResponse("上传附件信息", response);
+                    public void success(final ArrayList<AttachmentForNew> attachmentForNew, Response response) {
+                        //HttpErrorCheck.checkCommitSus("上传附件信息",response);
                         if (attachmentForNew != null) {
-                            BulletinAddActivity.this.attachmentForNew = attachmentForNew;
-                            commitAnnouncement();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    cancelStatusLoading();
+                                    BulletinAddActivity.this.attachmentForNew = attachmentForNew;
+                                    commitAnnouncement();
+                                }
+                            },1000);
                         }
                         else {
+                            cancelStatusLoading();
                             Toast("提交失败");
                         }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }
@@ -336,7 +344,7 @@ public class BulletinAddActivity extends BaseActivity implements BulletinAddView
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelLoading();
+        cancelStatusLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
             Toast(count + "个附件上传失败，请重试或者删除");
