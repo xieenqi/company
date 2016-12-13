@@ -22,6 +22,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.customview.PaymentPopView;
+import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.tool.BaseFragment;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
@@ -69,6 +70,9 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DashborardType.COMMON.setTttle("增量 存量");
                 DashborardType.COMMON.setPermission(BusinessOperation.AUGMENTER_STOCK);
+                if(!checkPermission(DashborardType.COMMON)){
+                    return;
+                }
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("type", DashborardType.COMMON);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
@@ -152,32 +156,55 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
                 break;
 
             case R.id.ll_dashboard_followup:
+                if(!checkPermission(DashborardType.CUS_FOLLOWUP)){
+                    return;
+                }
                 Bundle bdFollowup = new Bundle();
                 bdFollowup.putSerializable("type", DashborardType.CUS_FOLLOWUP);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdFollowup);
                 break;
             case R.id.ll_dashboard_signin:
+                if(!checkPermission(DashborardType.CUS_SIGNIN)){
+                    return;
+                }
                 Bundle bdSignin = new Bundle();
                 bdSignin.putSerializable("type", DashborardType.CUS_SIGNIN);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdSignin);
                 break;
             case R.id.ll_dashboard_record:
+                if(!checkPermission(DashborardType.CUS_CELL_RECORD)){
+                    return;
+                }
                 Bundle bdRecord = new Bundle();
                 bdRecord.putSerializable("type", DashborardType.CUS_CELL_RECORD);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdRecord);
                 break;
             case R.id.ll_dashboard_order_number:
+                if(!checkPermission(DashborardType.ORDER_NUMBER)){
+                    return;
+                }
                 Bundle bdOrderNumber = new Bundle();
                 bdOrderNumber.putSerializable("type", DashborardType.ORDER_NUMBER);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdOrderNumber);
                 break;
             case R.id.ll_dashboard_order_money:
+                if(!checkPermission(DashborardType.ORDER_MONEY)){
+                    return;
+                }
                 Bundle bdOrderMoney = new Bundle();
                 bdOrderMoney.putSerializable("type", DashborardType.ORDER_MONEY);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bdOrderMoney);
                 break;
 
         }
+    }
+
+    private boolean checkPermission(DashborardType per){
+        if(!PermissionManager.getInstance().hasPermission(per.getaPermission())){
+            Toast("无数据查看权限!");
+            return false;
+        }
+        return true;
     }
 
     @Override
