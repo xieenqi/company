@@ -58,7 +58,7 @@ android {
         multiDexEnabled = true
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 2016120801
         versionName '1.4.6t'
     }
