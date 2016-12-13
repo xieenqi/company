@@ -18,6 +18,7 @@ import com.loyo.oa.v2.activityui.dashboard.presenter.impl.HomeDashboardPresenter
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomerListView;
+import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 import me.itangqi.waveloadingview.WaveLoadingView;
@@ -64,8 +65,10 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         lv_stocklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DashborardType.COMMON.setTttle("增量 存量");
+                DashborardType.COMMON.setPermission(BusinessOperation.AUGMENTER_STOCK);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("type", DashborardType.ORDER_MONEY);
+                bundle.putSerializable("type", DashborardType.COMMON);
                 app.startActivity(mActivity, DashboardDetailActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
             }
         });
