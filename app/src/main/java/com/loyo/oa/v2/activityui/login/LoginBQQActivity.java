@@ -80,6 +80,11 @@ public class LoginBQQActivity extends BaseActivity implements LoginBqqView{
 
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String msg) {
         showLoading(msg);
     }

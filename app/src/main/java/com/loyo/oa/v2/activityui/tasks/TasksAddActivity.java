@@ -310,7 +310,7 @@ public class TasksAddActivity extends BaseActivity {
     void requestCommitTask() {
         if (pickPhots.size() == 0) {
             //showLoading("正在提交");
-            showDialogLoading(false);
+            showStatusLoading(false);
         }
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
@@ -354,7 +354,7 @@ public class TasksAddActivity extends BaseActivity {
                 //HttpErrorCheck.checkResponse(response);
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
-                        DialogHelp.cancelStatusLoading();
+                        cancelStatusLoading();
                         //不需要保存
                         isSave = false;
                         Intent intent = new Intent();
@@ -372,12 +372,6 @@ public class TasksAddActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkCommitEro(error);
-                /*new Handler().postDelayed(new Runnable(){
-                    public void run() {
-                        DialogHelp.cancelStatusLoading();
-                    }
-                }, 1000);*/
-                //HttpErrorCheck.checkError(error);
             }
         });
     }

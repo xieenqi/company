@@ -61,11 +61,11 @@ public class Player implements OnBufferingUpdateListener, OnCompletionListener,
                  * TODO:
                  */
                 catch (IllegalStateException e) {
-                    if (mediaPlayer != null) {
-                        mediaPlayer.stop();
-                        mediaPlayer.release();
-                        mediaPlayer = null;
-                    }
+//                    if (mediaPlayer != null) {
+//                        mediaPlayer.stop();
+//                        mediaPlayer.release();
+//                        mediaPlayer = null;
+//                    }
                     mediaPlayer = new MediaPlayer();
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     mediaPlayer.setOnBufferingUpdateListener(Player.this);

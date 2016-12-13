@@ -149,6 +149,11 @@ public class SigninSelectCustomerActivity extends BaseLoadingActivity implements
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading("");
     }

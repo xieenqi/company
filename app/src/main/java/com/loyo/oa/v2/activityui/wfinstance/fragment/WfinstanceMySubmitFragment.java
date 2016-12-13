@@ -201,6 +201,11 @@ public class WfinstanceMySubmitFragment extends BaseFragment implements View.OnC
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String msg) {
         showLoading(msg);
     }

@@ -25,10 +25,7 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                >
-
+                android:layout_height="wrap_content">
                 <View
                     android:id="@+id/view_ack"
                     android:layout_width="8dp"
@@ -43,7 +40,6 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/view_ack"
                     android:ellipsize="end"
-                    android:singleLine="true"
                     android:text="标题"
                     android:textColor="@color/text33"
                     android:textSize="16sp"/>

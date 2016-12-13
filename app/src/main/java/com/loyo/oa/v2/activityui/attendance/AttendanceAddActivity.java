@@ -379,6 +379,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String msg) {
 
     }

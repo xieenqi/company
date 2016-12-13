@@ -150,6 +150,11 @@ public class WfinstanceMyApproveFragment extends BaseFragment implements View.On
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String msg) {
         showLoading(msg);
     }

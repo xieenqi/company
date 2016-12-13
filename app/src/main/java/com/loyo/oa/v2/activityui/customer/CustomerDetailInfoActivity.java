@@ -643,6 +643,11 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading(message);
     }
