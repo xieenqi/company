@@ -269,7 +269,7 @@ public class ChildTaskAddActivity extends BaseActivity {
         MainApp.getMainApp().getRestAdapter().create(ICheckPoint.class).createChildTask(mTask.getId(), map, new RCallback<TaskCheckPoint>() {
             @Override
             public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
-                HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkCommitSus("新建子任务",response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

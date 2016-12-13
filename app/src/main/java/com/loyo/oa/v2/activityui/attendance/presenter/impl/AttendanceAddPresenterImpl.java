@@ -233,8 +233,6 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         map.put("lateMin", lateMin);
         map.put("earlyMin", earlyMin);
 
-
-
         if (isPopup) {
             if (outKind == 1) {
                 map.put("extraChooseState", 1);
@@ -245,21 +243,23 @@ public class AttendanceAddPresenterImpl implements AttendanceAddPresenter {
         if (mAttachment.size() != 0) {
             map.put("attachementuuid", uuid);
         }
-        DialogHelp.showLoading(mActivity, "请稍后", true);
+        DialogHelp.showStatusLoading(false,mContext);
         MainApp.getMainApp().getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                try {
-                    crolView.attendanceSuccess();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                HttpErrorCheck.checkCommitSus("确认打卡",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        DialogHelp.cancelStatusLoading();
+                        crolView.attendanceSuccess();
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }

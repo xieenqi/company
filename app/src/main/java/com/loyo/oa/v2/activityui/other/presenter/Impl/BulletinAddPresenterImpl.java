@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.other.presenter.Impl;
 
 import android.content.Context;
+import android.os.Handler;
 import android.text.TextUtils;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -11,6 +12,7 @@ import com.loyo.oa.v2.beans.AttachmentForNew;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.RCallback;
@@ -119,7 +121,7 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
      * */
     @Override
     public void requestBulletinAdd(String title, String content, String uuid, ArrayList<AttachmentForNew> attachments) {
-
+        DialogHelp.showStatusLoading(false,mContext);
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
@@ -132,18 +134,19 @@ public class BulletinAddPresenterImpl implements BulletinAddPresenter {
         MainApp.getMainApp().getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
             @Override
             public void success(final Bulletin mBulletin, final Response response) {
-                HttpErrorCheck.checkResponse("通知", response);
-                if (mBulletin != null) {
-                    mBulletinAddView.onSuccess(mBulletin);
-                } else {
-                    mBulletinAddView.onError();
-                }
+                HttpErrorCheck.checkCommitSus("新建公告",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        DialogHelp.cancelStatusLoading();
+                        mBulletinAddView.onSuccess(mBulletin);
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                mBulletinAddView.onError();
+                HttpErrorCheck.checkCommitEro(error);
                 super.failure(error);
             }
         });

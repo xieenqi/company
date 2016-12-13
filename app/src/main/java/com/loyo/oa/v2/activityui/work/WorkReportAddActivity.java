@@ -641,8 +641,7 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport workReport, final Response response) {
-                //HttpErrorCheck.checkResponse(response);
-                HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkCommitSus("编辑报告",response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -668,8 +667,7 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport workReport, final Response response) {
-                //HttpErrorCheck.checkResponse(response);
-                HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkCommitSus("新建报告",response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

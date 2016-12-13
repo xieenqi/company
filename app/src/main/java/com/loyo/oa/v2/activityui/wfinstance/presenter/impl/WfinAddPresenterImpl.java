@@ -183,8 +183,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance, final Response response) {
-                //HttpErrorCheck.checkResponse("新建审批cg", response);
-                HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkCommitSus("新建审批",response);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

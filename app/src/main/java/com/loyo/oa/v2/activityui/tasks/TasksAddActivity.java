@@ -350,7 +350,7 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                HttpErrorCheck.checkCommitSus(response);
+                HttpErrorCheck.checkCommitSus("任务创建",response);
                 //HttpErrorCheck.checkResponse(response);
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
