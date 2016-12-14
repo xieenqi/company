@@ -50,9 +50,9 @@ public class DialogHelp {
     /**
      * 失败
      * */
-    public static void errorStatusLoading(){
+    public static void errorStatusLoading(String message){
         if (loadStatusDialog != null) {
-            loadStatusDialog.animErrorEmbl();
+            loadStatusDialog.animErrorEmbl(message);
         }
     }
 

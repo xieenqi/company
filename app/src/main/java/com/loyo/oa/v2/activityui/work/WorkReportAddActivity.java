@@ -540,6 +540,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 //没有附件
+                showStatusLoading(false);
                 if (pickPhots.size() == 0) {
                     requestCommitWork();
                     //有附件
@@ -830,10 +831,9 @@ public class WorkReportAddActivity extends BaseActivity {
      * 提交报告
      */
     private void requestCommitWork() {
-        if (pickPhots.size() == 0) {
+        /*if (pickPhots.size() == 0) {
             showStatusLoading(false);
-            //showLoading("正在提交");
-        }
+        }*/
 
         bizExtData = new PostBizExtData();
         if (type == TYPE_EDIT) {
@@ -880,7 +880,6 @@ public class WorkReportAddActivity extends BaseActivity {
      * 批量上传附件
      */
     private void newUploadAttachement() {
-        showLoading("正在提交");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -905,7 +904,7 @@ public class WorkReportAddActivity extends BaseActivity {
                                     @Override
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
-                                        HttpErrorCheck.checkError(error);
+                                        HttpErrorCheck.checkCommitEro(error);
                                     }
                                 });
                     }

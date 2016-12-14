@@ -246,7 +246,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //来自订单详情 新建回款
             case OrderEstimateListActivity.ODET_EST_ADD:
 
-                showLoading("");
+                showStatusLoading(false);
                 map = new HashMap<>();
                 if (null == uuid || TextUtils.isEmpty(uuid)) {
                     map.put("attachmentUUId", StringUtil.getUUID());
@@ -268,13 +268,19 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                         .addPayEstimate(map, new Callback<EstimateAdd>() {
                             @Override
                             public void success(EstimateAdd orderAdd, Response response) {
-                                HttpErrorCheck.checkResponse("新建回款记录", response);
-                                app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                HttpErrorCheck.checkCommitSus("新建回款记录", response);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        cancelStatusLoading();
+                                        app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                    }
+                                },1000);
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
-                                HttpErrorCheck.checkError(error);
+                                HttpErrorCheck.checkCommitEro(error);
                             }
                         });
 
@@ -283,7 +289,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //来自订单详情 编辑
             case OrderEstimateListActivity.ODET_EST_EDIT:
 
-                showLoading("");
+                showStatusLoading(false);
                 map = new HashMap<>();
                 map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
                 map.put("attachmentCount", attamentSize);
@@ -302,12 +308,18 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                             @Override
                             public void success(EstimateAdd orderAdd, Response response) {
                                 HttpErrorCheck.checkResponse("新建回款记录", response);
-                                app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        cancelStatusLoading();
+                                        app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                    }
+                                },1000);
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
-                                HttpErrorCheck.checkError(error);
+                                HttpErrorCheck.checkCommitEro(error);
                             }
                         });
                 break;
@@ -315,7 +327,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             //来自计划生成 新建
             case OrderEstimateListActivity.ORDER_PLAN:
 
-                showLoading("");
+                showStatusLoading(false);
                 map = new HashMap<>();
                 map.put("attachmentUUId", mEstimateAdd.attachmentUUId);
                 map.put("payeeMethod", mEstimateAdd.payeeMethod);
@@ -333,13 +345,20 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                         .addPayEstimate(map, new Callback<EstimateAdd>() {
                             @Override
                             public void success(EstimateAdd orderAdd, Response response) {
-                                HttpErrorCheck.checkResponse("新建回款记录", response);
-                                app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                HttpErrorCheck.checkCommitSus("新建回款记录", response);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        cancelStatusLoading();
+                                        app.finishActivity(OrderAddEstimateActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                    }
+                                },1000);
+
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
-                                HttpErrorCheck.checkError(error);
+                                HttpErrorCheck.checkCommitEro(error);
                             }
                         });
 
