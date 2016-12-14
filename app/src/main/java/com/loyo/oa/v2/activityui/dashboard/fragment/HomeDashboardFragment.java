@@ -1,12 +1,16 @@
 package com.loyo.oa.v2.activityui.dashboard.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.dashboard.DashboardDetailActivity;
@@ -15,15 +19,15 @@ import com.loyo.oa.v2.activityui.dashboard.common.DashborardType;
 import com.loyo.oa.v2.activityui.dashboard.presenter.HomeDashboardPresenter;
 import com.loyo.oa.v2.activityui.dashboard.presenter.impl.HomeDashboardPresenterImpl;
 import com.loyo.oa.v2.activityui.dashboard.viewcontrol.HomeDashBoardView;
-import com.loyo.oa.v2.activityui.worksheet.WorksheetAddActivity;
-import com.loyo.oa.v2.activityui.worksheet.bean.WorksheetTemplate;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.permission.BusinessOperation;
-import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.permission.PermissionManager;
+import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.tool.BaseFragment;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
@@ -52,7 +56,11 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (null == mView) {
-            mView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+            /*final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppStartLoadTranslucent);
+            LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+            mView =  localInflater.inflate(R.layout.fragment_dashboard, container, false);*/
+
+            mView =  inflater.inflate(R.layout.fragment_dashboard, container, false);
         }
         initUI();
         return mView;
@@ -119,6 +127,33 @@ public class HomeDashboardFragment extends BaseFragment implements View.OnClickL
         bindAdapter();
     }
 
+
+    private void showPopupWindow() {
+
+        // 一个自定义的布局，作为显示的内容
+        View contentView = LayoutInflater.from(getActivity()).inflate(
+                R.layout.paymentpopview, null);
+
+        final PopupWindow popupWindow = new PopupWindow(contentView,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+        popupWindow.setTouchable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                return false;
+                // 这里如果返回true的话，touch事件将被拦截
+                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+            }
+        });
+
+
+        // 设置好参数之后再show
+        popupWindow.showAtLocation(contentView, Gravity.CENTER,0,0);
+
+    }
 
     @Override
     public void onClick(View view) {

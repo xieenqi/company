@@ -54,6 +54,7 @@ public class HomeDashboardPresenterImpl implements HomeDashboardPresenter{
 
     @Override
     public void screenControlView(String[] list,String title) {
+
         final PaymentPopView popViewKind = new PaymentPopView(mContext, list, title);
         popViewKind.show();
         popViewKind.setCanceledOnTouchOutside(true);

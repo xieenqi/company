@@ -86,7 +86,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
                 if (childAnims.get(idx) instanceof AlphaAnimation) {
                     break;
                 }
-            }
+            } 
             if (idx < childAnims.size()) {
                 childAnims.remove(idx);
             }
