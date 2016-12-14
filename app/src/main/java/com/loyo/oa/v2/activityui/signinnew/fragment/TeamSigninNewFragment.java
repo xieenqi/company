@@ -252,6 +252,9 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         } else {
             mAdapter.notifyDataSetChanged();
         }
+        ll_loading.setStatus(LoadingLayout.Success);
+        if (isPullOrDown && listModel.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
 
@@ -355,8 +358,6 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         listView.onRefreshComplete();
         if (isPullOrDown) {
             listModel.clear();
-            if (paginationX != null && PaginationX.isEmpty(paginationX.data))
-                ll_loading.setStatus(LoadingLayout.Empty);
         }
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());

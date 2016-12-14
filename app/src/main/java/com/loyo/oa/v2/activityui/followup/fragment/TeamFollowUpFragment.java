@@ -379,6 +379,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
+        ll_loading.setStatus(LoadingLayout.Success);
         if (isPullOrDown && listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
     }
