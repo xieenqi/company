@@ -99,7 +99,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
 
     @Override
     public void getPageData() {
-        getData(false);
+        getData(true);
     }
 
     @Override
@@ -187,7 +187,7 @@ public class ClueFollowUpListActivity extends BaseLoadingActivity implements Pul
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("salesId", clueId);

@@ -213,7 +213,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("timeType", Integer.parseInt(menuTimekey));
@@ -269,7 +269,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     private void initPageData() {
         mPagination.setPageIndex(1);
         isPullOrDown = true;
-        getData(false);
+        getData(true);
     }
 
     @Subscribe

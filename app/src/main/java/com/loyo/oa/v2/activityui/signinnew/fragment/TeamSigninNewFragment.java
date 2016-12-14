@@ -62,7 +62,7 @@ import java.util.List;
  */
 public class TeamSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
-//    private ArrayList<Tag> mTags;
+    //    private ArrayList<Tag> mTags;
     private String menuTimekey = "0";        /*时间*/
     private String menuSortkey = "0";        /*排序*/
     private String departmentId = "";        /*部门id*/
@@ -110,7 +110,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     @Override
     public void onPause() {
         super.onPause();
-        if(null != voiceView)
+        if (null != voiceView)
             audioPlayer.audioPause(voiceView);
     }
 
@@ -235,11 +235,13 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         });
         initPageData();
     }
+
     private void initPageData() {
         mPagination.setPageIndex(1);
         isPullOrDown = true;
-        getData(false);
+        getData(true);
     }
+
     /**
      * 数据绑定
      */
@@ -266,6 +268,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
+
     /**
      * 评论语音
      */
@@ -278,12 +281,13 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
         mPresenter.requestComment(map);
     }
+
     /**
      * 获取Self列表数据
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("timeType", Integer.parseInt(menuTimekey));
@@ -421,7 +425,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
         }
 
         audioPlayer.initPlayer();
-        if(audioPlayer.isPlaying()){
+        if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
@@ -434,7 +438,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;

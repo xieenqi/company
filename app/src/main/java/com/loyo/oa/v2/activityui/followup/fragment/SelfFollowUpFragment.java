@@ -219,7 +219,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         ll_loading.setStatus(LoadingLayout.Loading);
         mPagination.setPageIndex(1);
         isPullOrDown = true;
-        getData(false);
+        getData(true);
     }
 
 
@@ -267,7 +267,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", MainApp.user.id);//我的传id,团队则空着
