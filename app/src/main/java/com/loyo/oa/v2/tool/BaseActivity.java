@@ -11,12 +11,9 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -46,7 +43,7 @@ import java.util.TimerTask;
  * activity 基类
  */
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     protected MainApp app;
     protected boolean isNeedLogin = true;
