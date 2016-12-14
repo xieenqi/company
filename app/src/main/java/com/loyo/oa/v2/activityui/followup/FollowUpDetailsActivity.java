@@ -247,7 +247,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         tv_name.setText(mFollowUpDelModel.creator.name);
         tv_contact.setText(mFollowUpDelModel.contactName);
         tv_customername.setText(mFollowUpDelModel.customerName);
-        tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(mFollowUpDelModel.createAt,true));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mFollowUpDelModel.createAt));
 
         /** 设置跟进内容 */
         if(null != mFollowUpDelModel.content && !TextUtils.isEmpty(mFollowUpDelModel.content)){

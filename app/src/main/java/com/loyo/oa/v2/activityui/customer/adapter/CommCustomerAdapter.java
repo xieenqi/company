@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -97,7 +98,8 @@ public class CommCustomerAdapter extends BaseAdapter {
 
         tv_title.setText(customer.name);
         String tagItems = Utils.getTagItems(customer);
-        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
+//        String lastActivityAt = MainApp.getMainApp().df3.format(new Date(customer.lastActAt * 1000));
+        String lastActivityAt = DateTool.getDateTimeFriendly(customer.lastActAt);
         img_public.setVisibility(View.INVISIBLE);
         permissionTest(img_public);
         layout_go_where.setVisibility(View.GONE);

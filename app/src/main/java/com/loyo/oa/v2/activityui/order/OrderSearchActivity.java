@@ -270,7 +270,7 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshLi
                 tv_money.setText(Utils.setValueDouble(item.dealMoney));
                 tv_customer.setText(item.customerName);
                 tv_product.setText(item.proName);
-                tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(Long.valueOf(item.createdAt + ""),true));
+                tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(item.createdAt + "")));
             }
         }
     }

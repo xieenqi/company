@@ -73,7 +73,7 @@ public class ClueFollowUpGroupAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         if (crolView.getBottomMenuLayout().getVisibility() == View.GONE) {
-            holder.tv_title.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(Long.parseLong(groupModel.timeStamp),false));
+            holder.tv_title.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(Long.parseLong(groupModel.timeStamp)));
             if (null != groupModel.activities && groupModel.activities.size() > 0) {
                 mAdapter = new ClueFollowUpListAdapter(mContext, groupModel.activities, crolView, audioCb);
                 holder.layout_listview.setAdapter(mAdapter);

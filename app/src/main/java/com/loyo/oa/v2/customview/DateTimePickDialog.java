@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.DateTool;
 
@@ -173,7 +174,8 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                 timePicker.getCurrentMinute());
         SimpleDateFormat sdf = new SimpleDateFormat(defaultFromat);
 
-        dateTime = sdf.format(calendar.getTime());
+//        dateTime = sdf.format(calendar.getTime());
+        dateTime = DateFormatSet.minuteSdf.format(calendar.getTime());
         ad.setTitle(dateTime);
 
     }

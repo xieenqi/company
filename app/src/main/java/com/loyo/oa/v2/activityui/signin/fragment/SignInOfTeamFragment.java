@@ -33,7 +33,6 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ILegwork;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -109,7 +108,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
 
             dataSelectInit();
 //            duration = DateTool.timet(dataSelects.get(0).mapOftime, "yyyy-MM-dd");
-            duration = com.loyo.oa.common.utils.DateTool.getDate(Long.parseLong(dataSelects.get(0).mapOftime));
+            duration = com.loyo.oa.common.utils.DateTool.getDateFriendly(Long.parseLong(dataSelects.get(0).mapOftime));
             endAt = com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis();
             onPullDownToRefresh(lv);
         }
@@ -143,7 +142,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                 dataSelectAdapter.notifyDataSetChanged();
                 data_time_tv.setText(dataSelects.get(position).yearMonDay);
                 endAt = Long.valueOf(dataSelects.get(position).mapOftime);
-                duration = com.loyo.oa.common.utils.DateTool.getDate(Long.parseLong(dataSelects.get(position).mapOftime));
+                duration = com.loyo.oa.common.utils.DateTool.getDateFriendly(Long.parseLong(dataSelects.get(position).mapOftime));
                 onPullDownToRefresh(lv);
                 defaultPosition = position;
             }

@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.model.User;
@@ -326,7 +327,8 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 //            TextView name = ViewHolder.get(view, R.id.tv_discuss_sender);
 //            TextView content = ViewHolder.get(view, R.id.tv_discuss_content);
 
-            holder.time.setText(TimeFormatUtil.toMd_Hm(discussion.getCreatedAt()));
+//            holder.time.setText(TimeFormatUtil.toMd_Hm(discussion.getCreatedAt()));
+            holder.time.setText(DateTool.getDateTimeReal(discussion.getCreatedAt()));
             holder.name.setText(discussion.getCreator().name);
             holder.content.setText(discussion.getContent());
             ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, holder.iv);

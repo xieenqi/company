@@ -153,7 +153,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private long beginAt, endAt;
     private boolean isDelayed = false;
     private int mSelectType = WorkReport.DAY;
-    private int retroIndex=1;//蛋疼的兼容原来的1序
+    private int retroIndex = 1;//蛋疼的兼容原来的1序
     private int bizType = 1;
     private int uploadSize;
     private int uploadNum;
@@ -449,7 +449,8 @@ public class WorkReportAddActivity extends BaseActivity {
         tv_crm.setText("本日工作动态统计");
         beginAt = com.loyo.oa.common.utils.DateTool.getCurrentDayBeginMillis();
         endAt = com.loyo.oa.common.utils.DateTool.getCurrentDayEndMillis();
-        tv_time.setText(app.df4.format(beginAt));
+//        tv_time.setText(app.df4.format(beginAt));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(beginAt / 1000));
         mSelectType = WorkReport.DAY;
     }
 
@@ -487,7 +488,8 @@ public class WorkReportAddActivity extends BaseActivity {
         DateTool.calendar = Calendar.getInstance();
         int year = DateTool.calendar.get(Calendar.YEAR);
         int month = DateTool.calendar.get(Calendar.MONTH);
-        tv_time.setText(year + "." + String.format("%02d", (month + 1)));
+//        tv_time.setText(year + "." + String.format("%02d", (month + 1)));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getYearMonth(System.currentTimeMillis()/1000));
         mSelectType = WorkReport.MONTH;
 
     }
@@ -557,9 +559,8 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
 
             /*点评人*/
-            case R.id.layout_reviewer:
-            {
-                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer!=null?mReviewer.user:null);
+            case R.id.layout_reviewer: {
+                StaffMemberCollection collection = Compat.convertNewUserToStaffCollection(mReviewer != null ? mReviewer.user : null);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
                 if (collection != null) {
@@ -571,11 +572,10 @@ public class WorkReportAddActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
 
             /*抄送人*/
-            case R.id.layout_toUser:
-            {
+            case R.id.layout_toUser: {
                 StaffMemberCollection collection = Compat.convertMembersToStaffCollection(members);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, false);
@@ -588,7 +588,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
 
             case R.id.layout_del:
                 users.clear();
@@ -700,7 +700,8 @@ public class WorkReportAddActivity extends BaseActivity {
         for (int i = 0; i < 7; i++) {
             Calendar cl = Calendar.getInstance();
             cl.add(Calendar.DAY_OF_MONTH, -(i + 1));
-            String time = app.df4.format(cl.getTime());
+//            String time = app.df4.format(cl.getTime());
+            String time = com.loyo.oa.common.utils.DateTool.getDateFriendly(cl.getTimeInMillis() / 1000);
             pastSevenDay[i] = time;
         }
 
@@ -714,21 +715,24 @@ public class WorkReportAddActivity extends BaseActivity {
                 case 0:
                     cl = Calendar.getInstance();
                     cl.add(Calendar.DAY_OF_MONTH, -30);
-                    month = app.df15.format(cl.getTime());
+//                    month = app.df15.format(cl.getTime());
+                    month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
 
                 case 1:
                     cl = Calendar.getInstance();
                     cl.add(Calendar.DAY_OF_MONTH, -60);
-                    month = app.df15.format(cl.getTime());
+//                    month = app.df15.format(cl.getTime());
+                    month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
 
                 case 2:
                     cl = Calendar.getInstance();
                     cl.add(Calendar.DAY_OF_MONTH, -90);
-                    month = app.df15.format(cl.getTime());
+//                    month = app.df15.format(cl.getTime());
+                    month = com.loyo.oa.common.utils.DateTool.getYearMonth(cl.getTimeInMillis() / 1000);
                     pastThreeMonth[i] = month;
                     break;
             }
@@ -751,7 +755,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 currentValue = item;
                 retroIndex = selectedIndex - 1;
                 Log.i("temptest", "onSelec" +
-                        "ted: retroIndex:"+retroIndex);
+                        "ted: retroIndex:" + retroIndex);
             }
         });
         return outerView;
@@ -769,14 +773,14 @@ public class WorkReportAddActivity extends BaseActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (mSelectType) {
                             case 1:
-                                currentValue = pastSevenDay[retroIndex-1];
+                                currentValue = pastSevenDay[retroIndex - 1];
                                 beginAt = com.loyo.oa.common.utils.DateTool.getSomeDayBeginMillis(retroIndex);
                                 endAt = com.loyo.oa.common.utils.DateTool.getSomeDayEndMillis(retroIndex);
                                 break;
 
                             case 3:
-                                Log.i("temptest", "onClick: "+retroIndex+"->"+pastThreeMonth[retroIndex-1]);
-                                currentValue = pastThreeMonth[retroIndex-1];
+                                Log.i("temptest", "onClick: " + retroIndex + "->" + pastThreeMonth[retroIndex - 1]);
+                                currentValue = pastThreeMonth[retroIndex - 1];
                                 beginAt = com.loyo.oa.common.utils.DateTool.getSomeMonthBeginMillis(retroIndex);
                                 endAt = com.loyo.oa.common.utils.DateTool.getSomeMonthEndMillis(retroIndex);
                                 break;
@@ -949,18 +953,17 @@ public class WorkReportAddActivity extends BaseActivity {
         if (FinalVariables.PICK_RESPONSIBLE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             NewUser user = Compat.convertStaffCollectionToNewUser(collection);
-            if (user == null){
+            if (user == null) {
                 return;
             }
             mReviewer = new Reviewer(user);
             tv_reviewer.setText(user.getRealname());
-        }
-        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+        } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             members = Compat.convertStaffCollectionToMembers(collection);
             joinName = new StringBuffer();
             joinUserId = new StringBuffer();
-            if (members==null ||( members.users.size() == 0 && members.depts.size() == 0)) {
+            if (members == null || (members.users.size() == 0 && members.depts.size() == 0)) {
                 tv_toUser.setText("无抄送人");
                 joinUserId.reverse();
             } else {

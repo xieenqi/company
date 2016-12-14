@@ -96,10 +96,10 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                 /*是否超时判断*/
                 if (wse.isOvertime) {
                     tv_deadline.setTextColor(mContext.getResources().getColor(R.color.red1));
-                    tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(wse.endTime,true));
+                    tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wse.endTime));
                     tv_endtime_tag.setVisibility(View.VISIBLE);
                 } else {
-                    tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(wse.endTime,true));
+                    tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wse.endTime));
                 }
             } else {
                 tv_deadline.setText("--");
@@ -111,7 +111,7 @@ public class ResponsableWorksheetsAdapter extends BaseGroupsDataAdapter {
                 tv_time.setText("" + wse.daysLater + "天以后触发");
                 tv_time.setVisibility(View.INVISIBLE);
             } else {
-                tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(wse.startTime,true));
+                tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wse.startTime));
                 tv_time.setVisibility(View.VISIBLE);
             }
 

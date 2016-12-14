@@ -81,7 +81,7 @@ public class TeamOrderAdapter extends BaseAdapter {
         holder.tv_money.setText(Utils.setValueDouble(mData.dealMoney));
         holder.tv_customer.setText(mData.customerName);
         holder.tv_product.setText(mData.proName);
-        holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(Long.valueOf(mData.createdAt + ""),true));
+        holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(mData.createdAt + "")));
         return convertView;
     }
 

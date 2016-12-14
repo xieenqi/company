@@ -51,46 +51,57 @@ public class TrackLocationRule {
 
     public boolean timeEnable(Date date) {
 
-        boolean isInTimeRange= false; /* 是否在开始和结束时间之间，打卡时间范围内 */
-        SimpleDateFormat sdf = MainApp.getMainApp().df6;
-        String currentDate = sdf.format(date);
-        try {
-            Date currDate = sdf.parse(currentDate);
-            Date startDate = sdf.parse(startTime);
-            Date endDate = sdf.parse(endTime);
+//        boolean isInTimeRange= false; /* 是否在开始和结束时间之间，打卡时间范围内 */
+//        SimpleDateFormat sdf = MainApp.getMainApp().df6;
+//        String currentDate = sdf.format(date);
+//        try {
+//            Date currDate = sdf.parse(currentDate);
+//            Date startDate = sdf.parse(startTime);
+//            Date endDate = sdf.parse(endTime);
+//
+//            if (currDate.after(startDate) && currDate.before(endDate)) {
+//                isInTimeRange = true;
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return isInTimeRange;
+        //获取类似时间戳,用来比较时间先后顺序,主要是避免直接使用SimpleDateFormat,造成修改困难
+        long start= com.loyo.oa.common.utils.DateTool.getHourMinStamp(startTime);
+        long end= com.loyo.oa.common.utils.DateTool.getHourMinStamp(endTime);
+        String curTime=com.loyo.oa.common.utils.DateTool.getHourMinute(date.getTime()/1000); //获取当前时间 eg 12:12
+        long cur= com.loyo.oa.common.utils.DateTool.getHourMinStamp(curTime);
 
-            if (currDate.after(startDate) && currDate.before(endDate)) {
-                isInTimeRange = true;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(cur>=start&&cur<=end){
+            return true;
+        }else{
+            return false;
         }
-
-        return isInTimeRange;
     }
 
-    public boolean needTracking(Date date) {
-
-        return enable && weekdayEnable(date) /* && timeEnable(date)*/;
-    }
-
-    public long alarmDelay(Date date) {
-        SimpleDateFormat sdf = MainApp.getMainApp().df6;
-        String currentDate = sdf.format(date);
-        try {
-            Date currDate = sdf.parse(currentDate);
-            Date startDate = sdf.parse(startTime);
-            if (currDate.after(startDate)) {
-                return -1;
-            }
-            else {
-                return startDate.getTime() - currDate.getTime();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
+//    public boolean needTracking(Date date) {
+//
+//        return enable && weekdayEnable(date) /* && timeEnable(date)*/;
+//    }
+//
+//    public long alarmDelay(Date date) {
+//        SimpleDateFormat sdf = MainApp.getMainApp().df6;
+//        String currentDate = sdf.format(date);
+//        try {
+//            Date currDate = sdf.parse(currentDate);
+//            Date startDate = sdf.parse(startTime);
+//            if (currDate.after(startDate)) {
+//                return -1;
+//            }
+//            else {
+//                return startDate.getTime() - currDate.getTime();
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return -1;
+//    }
 }

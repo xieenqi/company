@@ -21,7 +21,6 @@ import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -106,7 +105,7 @@ public class ContactInfoExtraData extends LinearLayout {
                 }
                 try{
 //                    tv_content.setText(DateTool.timet(customerExtra.getVal(),DateTool.DATE_FORMATE_SPLITE_BY_POINT));
-                    tv_content.setText(com.loyo.oa.common.utils.DateTool.getDateTime(Long.parseLong(customerExtra.getVal())));
+                    tv_content.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.parseLong(customerExtra.getVal())));
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                     tv_content.setText(customerExtra.getVal());

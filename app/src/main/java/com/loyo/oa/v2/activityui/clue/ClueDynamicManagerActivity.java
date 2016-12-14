@@ -264,7 +264,7 @@ public class ClueDynamicManagerActivity extends BaseActivity implements View.OnC
 //            TextView tv_follow_name = ViewHolder.get(convertView, R.id.tv_follow_name);
 //            TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
 //            ImageView iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
-            holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(saleActivity.getCreateAt(),true));
+            holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(saleActivity.getCreateAt()));
             if (!saleActivity.getContent().contains("<p>")) {
                 holder.tv_content.setVisibility(View.VISIBLE);
                 holder.tv_content.setText(saleActivity.getContent());

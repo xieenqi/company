@@ -1,19 +1,13 @@
 package com.loyo.oa.common.utils;
 
-import android.util.Log;
-
 import com.loyo.oa.v2.activityui.attendance.model.DataSelect;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
-import java.util.Locale;
 
 /**
  * 时间格式化,截取等工具类都在这里面..原来的工具类在package com.loyo.oa.v2.tool.DateTool;
@@ -21,7 +15,7 @@ import java.util.Locale;
  */
 public class DateTool {
     private static String TAG = "DateTool";
-       private static String weeks = new String("日一二三四五六");//用来处理星期几
+    private static String weeks = new String("日一二三四五六");//用来处理星期几
 
 
     public static ArrayList<DataSelect> getYearMonth(int startYear, int endYear) {
@@ -86,7 +80,6 @@ public class DateTool {
     }
 
 
-
     /**
      * 通用的把字符串的时间,转换成时间戳
      *
@@ -106,10 +99,11 @@ public class DateTool {
 
     /**
      * 获取月份和天,eg:12.01
+     *
      * @param time 要格式化的时间戳
      * @return 返回月份和天 eg:12.01
      */
-    public static String getMonthDay(long time){
+    public static String getMonthDay(long time) {
         return DateFormatSet.daySdf.format(new Date(time));
     }
 
@@ -118,60 +112,73 @@ public class DateTool {
      * 1、今天、昨天不显示年和月： 今天 15:30   昨天 15:30
      * 2、本年不显示年：03-04 15:30
      * 3、非本年显示完整的年月日时分：2016-03-04 15:30
-     * @param seconds 时间
+     *
+     * @param seconds     时间
      * @param includeTime 是否显示详细的时间 eg  false:今天   true:今天 14:90
      * @return
      */
-    public static String getFriendlyTime(long seconds,boolean includeTime) {
-        seconds*=1000;//这里要乘1000,把秒转换成毫秒
+    private static String getFriendlyTime(long seconds, boolean includeTime) {
+        seconds *= 1000;//这里要乘1000,把秒转换成毫秒
         Date time = new Date(seconds);
-//        Calendar cal = Calendar.getInstance();
-        Date curTime=new Date();
-        String day=null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(time);
+        String day = null;
+
         //判断是不是同一天
-        if (DateFormatSet.dateSdf.format((seconds)).equals(DateFormatSet.dateSdf.format((curTime.getTime())))){
-            day="今天";
-        }else {
-            //不是同一天
-            int dayMillis=24*3600*1000;
-            long timeDiff=(curTime.getTime()- time.getTime());//差距的毫秒
-            if(timeDiff<=dayMillis&&timeDiff>0){
-                //昨天
-                day="昨天";
-            }else if(timeDiff>-dayMillis&&timeDiff<0){
-                //明天
-                day="明天";
-            }else{
-                //本年不显示年  eg：03-04 15:30
-                if(getYear(time).equals(getYear(curTime))){//同一年
-                    return DateFormatSet.dateNoYear.format(time);
-                }else{
-                    return DateFormatSet.minuteSdf.format(time);
+        if (getDateReal(cal.getTimeInMillis() / 1000).equals(getDateReal(System.currentTimeMillis() / 1000))) {
+            day = "今天";
+        } else {
+            //不是今天
+            cal.add(Calendar.DAY_OF_MONTH, 1);//加一天
+            if (getDateReal(cal.getTimeInMillis() / 1000).equals(getDateReal(System.currentTimeMillis() / 1000))) {
+                day = "昨天";
+            } else {
+                cal.add(Calendar.DAY_OF_MONTH, -2);//前面+1天,这里-2天
+                if (getDateReal(cal.getTimeInMillis() / 1000).equals(getDateReal(System.currentTimeMillis() / 1000))) {
+                    day="明天";
                 }
             }
         }
-        return includeTime?day+" "+DateFormatSet.dateHourMinute.format(time):day;
-
+        if (null==day){//为空就不直接格式化时间显示
+            if (includeTime) {//如果包括时分秒
+                if (getYear(time).equals(getYear())) {//同一年
+                    return DateFormatSet.dateNoYear.format(time);
+                } else {
+                    return DateFormatSet.minuteSdf.format(time);
+                }
+            }else{
+                //本年不显示年  eg：03-04
+                if (getYear(time).equals(getYear())) {//同一年
+                    return DateFormatSet.dateMonthDay.format(time);
+                } else {
+                    return DateFormatSet.dateSdf.format(time);
+                }
+            }
+        }else{
+            return includeTime ? day + " " + DateFormatSet.dateHourMinute.format(time) : day;
+        }
     }
 
 
     /**
      * 判断一个时间,是否已经过期了
-     * @param date 时间
+     *
+     * @param date       时间
      * @param dateNumber 过期的天数
-     * @return 没有过期,返回true,否则返回false
+     * @return 没有过期, 返回true, 否则返回false
      */
-    public static boolean isDateInTime(long date,int dateNumber){
-        Date time=new Date(date);
-        Date curTime=new Date();
+    public static boolean isDateInTime(long date, int dateNumber) {
+        Date time = new Date(date);
+        Date curTime = new Date();
         //时间相差的天数
-        long dayDiff=(curTime.getTime()- time.getTime())/(24*3600*1000);
-        return dayDiff<dateNumber?true:false;
+        long dayDiff = (curTime.getTime() - time.getTime()) / (24 * 3600 * 1000);
+        return dayDiff < dateNumber ? true : false;
     }
 
 
     /**
      * 获取当天的开始的时间戳 也就是当天的0点
+     *
      * @return
      */
     public static long getCurrentDayBeginMillis() {
@@ -179,7 +186,7 @@ public class DateTool {
     }
 
     /**
-     *获取当天结束的时间戳 也就是当天的23:59:59.999
+     * 获取当天结束的时间戳 也就是当天的23:59:59.999
      *
      * @return
      */
@@ -189,6 +196,7 @@ public class DateTool {
 
     /**
      * 获取某一天开始的时间,从今天开始算,前index天的开始时间 eg:如果是0,就表示今天,1就是昨天,-1就是明天
+     *
      * @param index
      * @return
      */
@@ -211,26 +219,26 @@ public class DateTool {
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND,999);
+        calendar.set(Calendar.MILLISECOND, 999);
         return calendar.getTime().getTime();
     }
 
 
-
-
     /**
      * 获取当月的开始时间戳
+     *
      * @return
      */
-    public static long getCurrentMonthBeginMillis(){
+    public static long getCurrentMonthBeginMillis() {
         return getSomeMonthBeginMillis(0);
     }
 
     /**
      * 获取当月的结束时间戳
+     *
      * @return
      */
-    public static long getCurrentMonthEndMillis(){
+    public static long getCurrentMonthEndMillis() {
         return getSomeMonthEndMillis(0);
     }
 
@@ -255,7 +263,7 @@ public class DateTool {
     public static long getSomeMonthEndMillis(int index) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(calendar.MONTH, -index);//防止下标为0
-        calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMaximum(Calendar.DAY_OF_MONTH));//当月最后一天
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));//当月最后一天
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
@@ -264,13 +272,12 @@ public class DateTool {
     }
 
 
-
-
     /**
      * 获取当周的开始时间戳
+     *
      * @return
      */
-    public static long getCurrentWeekBeginMillis(){
+    public static long getCurrentWeekBeginMillis() {
         Calendar calendar = Calendar.getInstance();
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -283,9 +290,10 @@ public class DateTool {
 
     /**
      * 获取当周的结束时间戳
+     *
      * @return
      */
-    public static long getCurrentWeekEndMillis(){
+    public static long getCurrentWeekEndMillis() {
         Calendar calendar = Calendar.getInstance();
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -322,9 +330,6 @@ public class DateTool {
     }
 
 
-
-
-
     /**
      * 获取完整的到秒的时间戳
      *
@@ -337,6 +342,7 @@ public class DateTool {
 
     /**
      * 获取到分钟的时间错
+     *
      * @param timeStr
      * @return
      */
@@ -346,6 +352,7 @@ public class DateTool {
 
     /**
      * 获取到day的时间戳
+     *
      * @param timeStr
      * @return
      */
@@ -355,6 +362,7 @@ public class DateTool {
 
     /**
      * 获取特殊格式 MM.dd的时间戳
+     *
      * @param timeStr
      * @return
      */
@@ -363,13 +371,24 @@ public class DateTool {
     }
 
     /**
+     * 用于把 12:12 这种格式的时间,转换成时间戳的形式,转换以后的结果无意义,仅仅用来比较两个时间的先后顺序
+     *
+     * @param timeStr 时间字符串 eg:12:12
+     * @return 无意义的数字, 但是可以比较时间的先后顺序 eg:-28740000、14460000,数值大的靠后
+     */
+    public static Long getHourMinStamp(String timeStr) {
+        return getTimeStamp(timeStr, DateFormatSet.dateHourMinute);
+    }
+
+    /**
      * 时间格式转换
+     *
      * @param dateString 时间的字符串
-     * @param sdf2 目标格式
+     * @param sdf2       目标格式
      * @return 转换以后的时间
      */
     public static String convertDate(String dateString,
-                                 DateFormat sdf2) {
+                                     DateFormat sdf2) {
         String strDate = "";
         try {
             Date date = DateFormatSet.serverApiSdf.parse(dateString);
@@ -380,7 +399,15 @@ public class DateTool {
         return strDate;
     }
 
-
+    /**
+     * 把时间戳转换成 yyyy-MM的格式 eg 2016-12
+     *
+     * @param time 十位的秒级时间戳
+     * @return eg:2016-12
+     */
+    public static String getYearMonth(long time) {
+        return DateFormatSet.dateYearMonth.format(time * 1000);
+    }
 
     /**
      * 获取制定时间的年份
@@ -468,117 +495,144 @@ public class DateTool {
 
     /**
      * 获取当前的星期,返回的是数字,eg:1 2 3 4 5 6 7
+     *
      * @return 返回星期的数字, eg:1 2 3 4 5 6 7
      */
-    public static int getWeek(){
+    public static int getWeek() {
         return getWeek(new Date());
     }
 
 
     /**
-     * 把自定义的时间格式转换成秒为单位的时间戳
-     * @param time 要格式化的时间
-     * @param sdr 源时间的格式
-     * @return 返回10位的时间戳
+     * 把时间格式化成 时分的形式, eg: 12:00
+     *
+     * @param time 时间戳 10位的秒级时间戳
+     * @return eg:  12:00
      */
-    public static String date2StampByFormat(String time,SimpleDateFormat sdr) {
-        Date date;
-        String times = null;
-        try {
-            date = sdr.parse(time);
-            long l = date.getTime();
-            String stf = String.valueOf(l);
-            times = stf.substring(0, 10);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return times;
+    public static String getHourMinute(long time) {
+        return DateFormatSet.dateHourMinute.format(time * 1000);
     }
 
     /**
      * 获取当前的日期时间的时间戳,秒级(10位),比如获取:2016-12-12 2:2:3的时间戳
+     *
      * @param hasTime 是否包括时分秒的时间戳
      * @return
      */
-    public static int getStamp(boolean hasTime){
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(Calendar.MILLISECOND,0);
-        if(!hasTime){
-            calendar.set(Calendar.HOUR_OF_DAY,0);
-            calendar.set(Calendar.MINUTE,0);
-            calendar.set(Calendar.SECOND,0);
+    public static long getStamp(boolean hasTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MILLISECOND, 0);
+        if (!hasTime) {
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
         }
-        return (int)(calendar.getTimeInMillis()/1000);
-    }
-
-    /**
-     * 获取当前的日期
-     * @return eg:2012-12-12
-     */
-    public static int getDateStamp(){
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(Calendar.MILLISECOND,0);
-        return (int) (calendar.getTimeInMillis()/1000);
+        return (int) (calendar.getTimeInMillis() / 1000);
     }
 
     /**
      * 根据年月日 时分秒来生成对应时间的时间戳
+     *
      * @param year
      * @param month
      * @param day
      * @param hour
      * @param minute
      * @param second
-     * @return 对应时间的时间戳,秒级(10位)
+     * @return 对应时间的时间戳, 秒级(10位)
      */
-    public static int getStamp(int year,int month,int day,int hour,int minute,int second){
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(Calendar.YEAR,year);
-        calendar.set(Calendar.MONTH,month);
-        calendar.set(Calendar.DAY_OF_MONTH,day);
-        calendar.set(Calendar.HOUR_OF_DAY,hour);
-        calendar.set(Calendar.MINUTE,minute);
-        calendar.set(Calendar.SECOND,second);
-        calendar.set(Calendar.MILLISECOND,0);
-        return (int) (calendar.getTimeInMillis()/1000);
+    public static long getStamp(int year, int month, int day, int hour, int minute, int second) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return (int) (calendar.getTimeInMillis() / 1000);
     }
+
     /**
      * 根据年月日 来生成对应时间的时间戳
+     *
      * @param year
      * @param month
      * @param day
-     * @return 对应时间的时间戳,秒级(10位)
+     * @return 对应时间的时间戳, 秒级(10位)
      */
-    public static int getStamp(int year,int month,int day){
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(Calendar.YEAR,year);
-        calendar.set(Calendar.MONTH,month);
-        calendar.set(Calendar.DAY_OF_MONTH,day);
-        return getStamp(year,month,day,0,0,0);
+    public static long getStamp(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        return getStamp(year, month, day, 0, 0, 0);
     }
 
     /**
      * 根据把时间戳,转换成方便阅读的时间  eg:2016-12-12 2:2:3
+     *
      * @param time 对应时间的时间戳,秒级(10位)
      * @return
      */
-    public static String getDateTime(long time){
-        return getFriendlyTime(time,true);//友好的显示时间
+    public static String getDateTimeFriendly(long time) {
+        return getFriendlyTime(time, true);//友好的显示时间
 //        return DateFormatSet.minuteSdf.format(new Date(time*1000));//完整显示
     }
 
     /**
      * 根据把时间戳,转换成方便阅读的时间  eg:2016-12-12
+     *
      * @param time 对应时间的时间戳,秒级(10位)
      * @return
      */
-    public static String getDate(long time){
-        return getFriendlyTime(time,false);//友好的显示时间
+    public static String getDateFriendly(long time) {
+        return getFriendlyTime(time, false);//友好的显示时间
 //        return DateFormatSet.dateSdf.format(new Date(time*1000));//完整显示
     }
 
     /**
+     * 获取当前的时间 eg:2016-12-12 2:2:3
+     *
+     * @return eg:2016-12-12 2:2:3
+     */
+    public static String getDateTime() {
+        return getDateTimeReal(getStamp(true));
+    }
+
+    /**
+     * 获取当前的日期 eg:2016-12-12
+     *
+     * @return eg:2016-12-12
+     */
+    public static String getDate() {
+        return getDateReal(getStamp(true));
+    }
+
+    /**
+     * 完整显示时间 2016-12-12 2:2:3
+     *
+     * @param time
+     * @return
+     */
+    public static String getDateTimeReal(long time) {
+        return DateFormatSet.minuteSdf.format(new Date(time * 1000));
+    }
+
+    /**
+     * 完整显示日期:2016-12-12
+     *
+     * @param time
+     * @return
+     */
+    public static String getDateReal(long time) {
+        return DateFormatSet.dateSdf.format(new Date(time * 1000));
+    }
+
+
+    /**
      * 把毫秒转换成：1:20:30这里形式,一般用于声音视频的播放
+     *
      * @param timeMs 毫秒
      * @return
      */
@@ -594,6 +648,15 @@ public class DateTool {
         return mFormatter.format("%02d:%02d:%02d", hours, minutes, seconds).toString();
     }
 
+
+    /**
+     * 根据时间生成一个文件名
+     *
+     * @return 返回的是文件名 eg:20161212_112436
+     */
+    public static String getFileNameByTime() {
+        return DateFormatSet.fileNameSdf.format(System.currentTimeMillis());
+    }
 
 }
 

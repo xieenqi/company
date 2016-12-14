@@ -121,7 +121,7 @@ public class SigninNewListAdapter extends BaseAdapter {
         holder.tv_name.setText(signinNewListModel.creator.name);
         holder.tv_contact.setText(signinNewListModel.contactName);
         holder.tv_position.setText(signinNewListModel.address);
-        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(signinNewListModel.createdAt,true));
+        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(signinNewListModel.createdAt));
 
 
         /** 偏差距离,当未知显示红色 */

@@ -253,7 +253,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
             holder.tv_name.setText(mData.directorName);
 
             holder.tv_product.setText(mData.proName);
-            holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(Long.valueOf(mData.createdAt + ""),true));
+            holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(mData.createdAt + "")));
             return convertView;
         }
 

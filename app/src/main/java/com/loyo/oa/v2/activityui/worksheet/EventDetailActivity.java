@@ -212,8 +212,8 @@ public class EventDetailActivity extends BaseActivity implements View.OnClickLis
         tv_type.setText("触发方式：" + (mData.triggerMode == 1 ? "自动流转" : "定时触发"));
         tv_worksheet.setText("所属工单：" + mData.title);
         tv_day.setText("限时：" + (mData.daysDeadline == 0 ? "不限时" : mData.daysDeadline + "天"));
-        String endTimeText = (mData.endTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getFriendlyTime(Long.valueOf(mData.endTime + ""),true) + "截止");
-        tv_startTime.setText((mData.startTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getFriendlyTime(Long.valueOf(mData.startTime + ""),true)) + " | ");
+        String endTimeText = (mData.endTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(mData.endTime + "")) + "截止");
+        tv_startTime.setText((mData.startTime == 0 ? "--" : com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.valueOf(mData.startTime + ""))) + " | ");
         if (mData.isOvertime) {
             tv_endTime.setTextColor(getResources().getColor(R.color.red1));
             tv_endTime.setText(endTimeText + "(超时)");

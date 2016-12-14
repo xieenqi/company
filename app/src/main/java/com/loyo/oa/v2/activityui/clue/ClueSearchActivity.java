@@ -28,7 +28,6 @@ import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
@@ -270,7 +269,7 @@ public class ClueSearchActivity extends BaseActivity implements PullToRefreshLis
             holder.tv_customer.setText(clueListItem.name);
             if (clueListItem.lastActAt != 0) {
 //                holder.tv_time.setText(DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd HH:mm"));
-                holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTime(clueListItem.lastActAt));
+                holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(clueListItem.lastActAt));
             } else {
                 holder.tv_time.setText("--");
             }

@@ -16,6 +16,7 @@ import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
@@ -45,7 +46,6 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -267,7 +267,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
         if (!TextUtils.isEmpty(chanceData.memo)) {
             wfList.add("备注：" + chanceData.memo);
         }
-        wfList.add("创建时间：" + app.df3.format(Long.valueOf(chanceData.createdAt + "") * 1000));
+//        wfList.add("创建时间：" + app.df3.format(Long.valueOf(chanceData.createdAt + "") * 1000));
+        wfList.add("创建时间：" + DateTool.getDateTimeFriendly(chanceData.createdAt));
 
         for (String text : wfList) {
             View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
@@ -324,7 +325,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         paymentList.add("对应订单：" + payment.orderTitle);
         paymentList.add("对应客户：" + payment.customerName);
 //        paymentList.add("回款时间：" + DateTool.timet(payment.receivedAt + "", "yyyy.MM.dd"));
-        paymentList.add("回款时间：" + com.loyo.oa.common.utils.DateTool.getDate(payment.receivedAt));
+        paymentList.add("回款时间：" + com.loyo.oa.common.utils.DateTool.getDateFriendly(payment.receivedAt));
         paymentList.add("回款金额：" + "￥" + payment.receivedMoney);
         paymentList.add("开票金额：" + "￥" + payment.billingMoney);
         paymentList.add("收款人：" + payment.payeeUser.name);
@@ -417,7 +418,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
             return;
         }
         try {
-            tv_time_creator.setText(mWfInstance.creator.name + " " + app.df3.format(new Date(mWfInstance.createdAt * 1000)) + " 提交");
+//            tv_time_creator.setText(mWfInstance.creator.name + " " + app.df3.format(new Date(mWfInstance.createdAt * 1000)) + " 提交");
+            tv_time_creator.setText(mWfInstance.creator.name + " " +DateTool.getDateTimeFriendly(mWfInstance.createdAt) + " 提交");
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

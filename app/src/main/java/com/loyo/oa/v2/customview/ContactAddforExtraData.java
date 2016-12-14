@@ -27,7 +27,6 @@ import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import java.util.ArrayList;
@@ -442,10 +441,10 @@ public class ContactAddforExtraData extends LinearLayout {
 //                            String times = DateTool.getDataOne(str, DateTool.DATE_FORMATE_SPLITE_BY_POINT);
 //                            extra.val = times;
                             //获取时间戳
-                            int time = com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,min,0);
+                            long time = com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,min,0);
                             extra.val=time+"";
                             //把时间戳转换成便于阅读格式
-                            textView.setText(com.loyo.oa.common.utils.DateTool.getDateTime(time));
+                            textView.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time));
 
                         }
 

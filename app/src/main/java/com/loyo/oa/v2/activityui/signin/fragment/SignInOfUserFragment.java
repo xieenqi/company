@@ -31,7 +31,6 @@ import com.loyo.oa.v2.customview.CustomRecyclerView;
 import com.loyo.oa.v2.point.ILegwork;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -169,7 +168,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 //        startTime = DateTool.getDataOne(startTimestr, DateTool.DATE_FORMATE_ALL);
 //        endTime = DateTool.getDataOne(endTimestr,DateTool.DATE_FORMATE_ALL);
         long posTime=Long.parseLong(dataSelects.get(position).mapOftime);
-        String date=com.loyo.oa.common.utils.DateTool.getDate(posTime);//取得这一天的日期
+        String date=com.loyo.oa.common.utils.DateTool.getDateFriendly(posTime);//取得这一天的日期
         //TODO 这里的时间格式化里面 'T' 是因为其他地方都有,统一构造,后面有时间整理
         startTime= com.loyo.oa.common.utils.DateTool.getSecondStamp(date+"'T' 00:00:00")+"";//获取开始时间
         endTime= com.loyo.oa.common.utils.DateTool.getSecondStamp(date+"'T' 23:59:59")+"";

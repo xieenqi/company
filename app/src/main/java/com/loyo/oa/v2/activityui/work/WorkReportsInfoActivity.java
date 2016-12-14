@@ -17,6 +17,7 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
@@ -34,7 +35,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -243,24 +243,29 @@ public class WorkReportsInfoActivity extends BaseActivity {
         }
         StringBuilder title = new StringBuilder(mWorkReport.creator.name + "提交 ");
         String reportDate = "";
-        String date = app.df3.format(new Date(mWorkReport.createdAt * 1000));
+//        String date = app.df3.format(new Date(mWorkReport.createdAt * 1000));
+        String date = DateTool.getDateFriendly(mWorkReport.createdAt);
         String reportType = "";
         String crmName = "";
         switch (mWorkReport.type) {
             case WorkReport.DAY:
                 reportType = " 日报";
                 crmName = "本日工作动态统计";
-                reportDate = app.df4.format(new Date(mWorkReport.beginAt * 1000));
+//                reportDate = app.df4.format(new Date(mWorkReport.beginAt * 1000));
+                reportDate = DateTool.getDateFriendly(mWorkReport.beginAt);
                 break;
             case WorkReport.WEEK:
                 reportType = " 周报";
                 crmName = "本周工作动态统计";
-                reportDate = app.df7.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df7.format(new Date(mWorkReport.endAt * 1000));
+
+//                reportDate = app.df7.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df7.format(new Date(mWorkReport.endAt * 1000));
+                reportDate = DateTool.getMonthDay(mWorkReport.beginAt) + "-" + DateTool.getMonthDay(mWorkReport.endAt);
                 break;
             case WorkReport.MONTH:
                 reportType = " 月报";
                 crmName = "本月工作动态统计";
-                reportDate = app.df8.format(new Date(mWorkReport.beginAt * 1000));
+//                reportDate = app.df8.format(new Date(mWorkReport.beginAt * 1000));
+                reportDate = DateTool.getYearMonth(mWorkReport.beginAt);
                 break;
             default:
                 break;
@@ -306,7 +311,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.user.getName());
 //            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.reviewedAt + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
-            tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTime(mWorkReport.reviewer.reviewedAt));
+            tv_review_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorkReport.reviewer.reviewedAt));
             btn_workreport_review.setVisibility(View.GONE);
             ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.score)).intValue() / 20);
 

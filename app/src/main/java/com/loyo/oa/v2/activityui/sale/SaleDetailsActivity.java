@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
@@ -31,7 +32,6 @@ import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -168,7 +168,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         ll_product.setEnabled(true);
 
         boolean showActionsheet = getEditPriority() || canGenerateOrder();
-        img_title_right.setVisibility(showActionsheet?View.VISIBLE: View.INVISIBLE);
+        img_title_right.setVisibility(showActionsheet ? View.VISIBLE : View.INVISIBLE);
 
         //已通过的审批 任何人都不能删除
         if (mSaleDetails.wfState == 0 && mSaleDetails.prob == 100) {
@@ -178,7 +178,8 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
         salesAmount.setText("" + Utils.setValueDouble(mSaleDetails.estimatedAmount));
-        estimatedAmount.setText(mSaleDetails.estimatedTime != 0 ? app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)) : "无");
+//        estimatedAmount.setText(mSaleDetails.estimatedTime != 0 ? app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)) : "无");
+        estimatedAmount.setText(mSaleDetails.estimatedTime != 0 ? DateTool.getDateFriendly(mSaleDetails.estimatedTime) : "无");
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());
@@ -188,8 +189,10 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
             director.setText("无");
         }
         creator.setText(mSaleDetails.getCreatorName());
-        creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt() + "") * 1000)));
-        updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt() + "") * 1000)));
+//        creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt() + "") * 1000)));
+        creatorTime.setText(DateTool.getDateTimeFriendly(mSaleDetails.getCreatedAt()));
+//        updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt() + "") * 1000)));
+        updateTime.setText(DateTool.getDateTimeFriendly(mSaleDetails.getUpdatedAt()));
         text_stagename.setText(mSaleDetails.getStageName());
         productBuffer = new StringBuffer();
         if (null != mSaleDetails.getProInfos()) {
@@ -237,17 +240,17 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                     break;
                 case 4:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);
-                    winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTime(mSaleDetails.getWinTime()));
+                    winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSaleDetails.getWinTime()));
                     sale_wintime.setVisibility(View.VISIBLE);
                     break;
                 case 5:
                     iv_wfstatus.setImageResource(R.drawable.img_task_status_finish);
-                    winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTime(mSaleDetails.getWinTime()));
+                    winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSaleDetails.getWinTime()));
                     sale_wintime.setVisibility(View.VISIBLE);
                     break;
             }
         } else if (0 == mSaleDetails.wfState && mSaleDetails.stageName.contains("赢单")) {
-            winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTime(mSaleDetails.getUpdatedAt()));
+            winTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSaleDetails.getUpdatedAt()));
             sale_wintime.setVisibility(View.VISIBLE);
         }
         //计算产品总金额
@@ -314,7 +317,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 (100 != mSaleDetails.prob                                         /*未赢单*/
                         || (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5 /*赢单未通过*/
                         && mSaleDetails.wfState != 0 /*赢单需要审核*/
-                        && mSaleDetails.wfState!=1 && mSaleDetails.wfState!=2  ) // 待审核,审核中
+                        && mSaleDetails.wfState != 1 && mSaleDetails.wfState != 2) // 待审核,审核中
                 )
                 &&
                 (MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/
@@ -329,7 +332,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 (100 != mSaleDetails.prob                                         /*未赢单*/
                         || (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5/*赢单未通过*/
                         && mSaleDetails.wfState != 0 /*赢单需要审核*/
-                        && mSaleDetails.wfState!=1 && mSaleDetails.wfState!=2  ) // 待审核,审核中
+                        && mSaleDetails.wfState != 1 && mSaleDetails.wfState != 2) // 待审核,审核中
                 )
                 && MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/;
         return canEdit;
@@ -341,7 +344,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                 (100 == mSaleDetails.prob                                         /*未赢单*/
                         && (mSaleDetails.wfState != 4 && mSaleDetails.wfState != 5/*赢单未通过*/
                         && mSaleDetails.wfState != 0 /*赢单需要审核*/
-                        && mSaleDetails.wfState!=1 && mSaleDetails.wfState!=2  ) // 待审核,审核中
+                        && mSaleDetails.wfState != 1 && mSaleDetails.wfState != 2) // 待审核,审核中
                 )
                 && MainApp.user.id.equals(mSaleDetails.creatorId) /*自己的销售机会*/;
         return canEdit;

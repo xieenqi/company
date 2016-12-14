@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.DayofAttendance;
@@ -134,7 +136,8 @@ public class AttendanceListAdapter extends BaseAdapter {
 
                 tv_state.setTextColor(mContext.getResources().getColor(R.color.red1));
                 tv_state.setText("迟到");
-                tv_time.setText(MainApp.getMainApp().df6.format(new Date(recordIn.getCreatetime() * 1000)));
+//                tv_time.setText(MainApp.getMainApp().df6.format(new Date(recordIn.getCreatetime() * 1000)));
+                tv_time.setText(DateTool.getHourMinute(recordIn.getCreatetime()));
                 iv_recordIn_type.setVisibility(View.VISIBLE);
                 tv_state.setVisibility(View.VISIBLE);
 
@@ -142,7 +145,8 @@ public class AttendanceListAdapter extends BaseAdapter {
 
                 tv_state.setTextColor(mContext.getResources().getColor(R.color.text99));
                 tv_state.setText("已打卡");
-                tv_time.setText(MainApp.getMainApp().df6.format(new Date(recordIn.getCreatetime() * 1000)));
+//                tv_time.setText(MainApp.getMainApp().df6.format(new Date(recordIn.getCreatetime() * 1000)));
+                tv_time.setText(DateTool.getHourMinute(recordIn.getCreatetime()));
                 iv_recordIn_type.setVisibility(View.VISIBLE);
                 tv_state.setVisibility(View.VISIBLE);
 
@@ -204,7 +208,8 @@ public class AttendanceListAdapter extends BaseAdapter {
 
                 tv_result.setTextColor(mContext.getResources().getColor(R.color.text99));
                 tv_result.setText("已打卡");
-                tv_time1.setText(MainApp.getMainApp().df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
+//                tv_time1.setText(MainApp.getMainApp().df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
+                tv_time1.setText(DateTool.getHourMinute(recordOut.getCreatetime()));//打卡时间
                 iv_recordOut_type.setVisibility(View.VISIBLE);
                 tv_result.setVisibility(View.VISIBLE);
 
@@ -213,7 +218,8 @@ public class AttendanceListAdapter extends BaseAdapter {
 
                 tv_result.setTextColor(mContext.getResources().getColor(R.color.red1));
                 tv_result.setText("早退");
-                tv_time1.setText(MainApp.getMainApp().df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
+//                tv_time1.setText(MainApp.getMainApp().df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
+                tv_time1.setText(DateTool.getHourMinute(recordOut.getCreatetime()));//打卡时间
                 iv_recordOut_type.setVisibility(View.VISIBLE);
                 tv_result.setVisibility(View.VISIBLE);
 

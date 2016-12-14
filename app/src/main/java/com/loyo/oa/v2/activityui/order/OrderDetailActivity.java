@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
@@ -328,7 +329,8 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
         tv_worksheet.setText("工单" + "(" + mData.worksheetNum + ")");
         tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
-        tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
+//        tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
+        tv_creator_time.setText(DateTool.getDateTimeFriendly(mData.createdAt));
         tv_plan_value.setText(mData.planMoney + "");
         OrderCommon.getOrderDetailsStatus(tv_status, mData.status);
         if (!TextUtils.isEmpty(mData.wfName)) {//是否关联审批

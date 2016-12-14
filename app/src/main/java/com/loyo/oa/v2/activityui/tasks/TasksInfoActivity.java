@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -480,7 +481,8 @@ public class TasksInfoActivity extends BaseActivity {
             }
 
             if (!TextUtils.isEmpty(reviewer.reviewedAt + "")) {
-                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.reviewedAt * 1000L)));
+//                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.reviewedAt * 1000L)));
+                tv_reviewtime.setText(DateTool.getDateTimeFriendly(reviewer.reviewedAt));
             }
 
             if (!TextUtils.isEmpty(reviewer.comment)) {
@@ -540,7 +542,8 @@ public class TasksInfoActivity extends BaseActivity {
 
         if (mTask.getCreator() != null && mTask.getCreatedAt() > 0) {
             tv_sub_title.setText(String.format("%s %s 提交", mTask.getCreator().getRealname(),
-                    app.df2.format(new Date(mTask.getCreatedAt()))));
+//                    app.df2.format(new Date(mTask.getCreatedAt()))));
+                    DateTool.getDateTimeFriendly(mTask.getCreatedAt()/1000)));
         }
 
         if (mTask.getBizExtData() != null){
@@ -554,7 +557,8 @@ public class TasksInfoActivity extends BaseActivity {
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
-            String s = MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)) + " 截止";
+//            String s = MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)) + " 截止";
+            String s = DateTool.getDateTimeFriendly(mTask.getPlanEndAt()) + " 截止";
             if (mTask.getRemindTime() > 0) {
                 s += "," + Task.GetRemindText(mTask.getRemindTime());
             }

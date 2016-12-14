@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.*;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
@@ -436,7 +437,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 if (wfInstance.title != null) {
                     title.setText(wfInstance.title);
                 }
-                time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
+//                time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
+                time.setText("提交时间: " + DateTool.getDateTimeFriendly(wfInstance.createdAt));
                 if (null != wfInstance.nextExecutorName) {
                     content.setText(String.format("申请人 %s", wfInstance.nextExecutorName));
                 }
@@ -450,7 +452,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     if (task.planendAt == 0) {
                         time.setText("任务截止时间: 无");
                     } else {
-                        time.setText("任务截止时间: " + MainApp.getMainApp().df3.format(new Date(task.planendAt * 1000)) + "");
+//                        time.setText("任务截止时间: " + MainApp.getMainApp().df3.format(new Date(task.planendAt * 1000)) + "");
+                        time.setText("任务截止时间: " + DateTool.getDateTimeFriendly(task.planendAt));
                     }
                 } catch (Exception e) {
                     Global.ProcException(e);
@@ -488,7 +491,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     reportTitle.append(" (补签)");
                 }
                 title.setText(reportTitle);
-                String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
+//                String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
+                String end = "提交时间: " + DateTool.getDateTimeFriendly(workReport.createdAt);
                 time.setText(end);
                 //ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
 
@@ -497,7 +501,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             else if (o instanceof Project) {
                 Project project = (Project) o;
                 try {
-                    time.setText("提交时间: " + app.df9.format(new Date(project.getCreatedAt())));
+//                    time.setText("提交时间: " + app.df9.format(new Date(project.getCreatedAt())));
+                    time.setText("提交时间: " + DateTool.getDateTimeFriendly(project.getCreatedAt()/1000));
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
@@ -510,7 +515,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             else if (o instanceof Customer) {
 
                 customer = (Customer) o;
-                time.setText("跟进时间：" + app.df3.format(new Date(customer.lastActAt * 1000)));
+//                time.setText("跟进时间：" + app.df3.format(new Date(customer.lastActAt * 1000)));
+                time.setText("跟进时间：" + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(customer.lastActAt));
                 title.setText(customer.name);
                 content.setText("标签" + Utils.getTagItems(customer));
 
@@ -526,7 +532,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     time.setText("--");
                 } else {
 //                    time.setText("跟进时间：" + DateTool.timet(clueListItem.lastActAt + "", "yyyy-MM-dd"));
-                    time.setText("跟进时间：" + com.loyo.oa.common.utils.DateTool.getDate(clueListItem.lastActAt));
+                    time.setText("跟进时间：" + com.loyo.oa.common.utils.DateTool.getDateFriendly(clueListItem.lastActAt));
                 }
                 title.setText(clueListItem.name);
                 content.setText("公司名称" + clueListItem.companyName);

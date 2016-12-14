@@ -175,10 +175,11 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         }
 
         holder.tv_title.setText(attachment.getOriginalName());
-//        holder.tv_creator.setText(String.format("%s %s 上传", attachment.getCreator().getRealname(), DateTool.getDate(attachment.getCreatedAt(), app.df_api_get, app.df3)));
+//        holder.tv_creator.setText(String.format("%s %s 上传", attachment.getCreator().getRealname(), DateTool.getDateFriendly(attachment.getCreatedAt(), app.df_api_get, app.df3)));
         holder.tv_creator.setText(String.format("%s %s 上传", attachment.getCreator().getRealname(), com.loyo.oa.common.utils.DateTool.convertDate(attachment.getCreatedAt(), DateFormatSet.specialMinuteSdf)));
 
-        holder.tv_time.setText(MainApp.getMainApp().df14.format(new Date(Integer.parseInt(attachment.getCreatedAt()) * 1000L)));
+//        holder.tv_time.setText(MainApp.getMainApp().df14.format(new Date(Integer.parseInt(attachment.getCreatedAt()) * 1000L)));
+        holder.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.parseLong(attachment.getCreatedAt())));
         holder.img_attachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {

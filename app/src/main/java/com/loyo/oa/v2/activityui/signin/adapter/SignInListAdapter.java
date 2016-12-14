@@ -87,7 +87,7 @@ public class SignInListAdapter extends BaseAdapter {
             tv_address.setText("地址: " + legWork.position);
         }
         tv_position.setText("签到: "+legWork.address);
-        tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(legWork.getCreatedAt(),true));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(legWork.getCreatedAt()));
 
         return view;
     }

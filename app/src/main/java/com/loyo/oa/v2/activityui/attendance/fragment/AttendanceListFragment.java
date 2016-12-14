@@ -232,10 +232,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         checkdateTime = mills;
         switch (type) {
             case 1:
-                time = app.df13.format(new Date(mills));
+//                time = app.df13.format(new Date(mills));
+                time= com.loyo.oa.common.utils.DateTool.getYearMonth(mills/1000);
                 break;
             case 2:
-                time = app.df12.format(new Date(mills));
+//                time = app.df12.format(new Date(mills));
+                time= com.loyo.oa.common.utils.DateTool.getDateFriendly(mills/1000);
                 break;
         }
         // 顶部显示的 当前时间

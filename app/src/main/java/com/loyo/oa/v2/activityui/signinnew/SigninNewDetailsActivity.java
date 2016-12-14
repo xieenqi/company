@@ -316,7 +316,7 @@ public class SigninNewDetailsActivity extends BaseActivity implements View.OnCli
         tv_address.setText(TextUtils.isEmpty(mSigninDelModel.address) ? "无地址数据" : mSigninDelModel.address);
         tv_customer_name.setText(mSigninDelModel.customerName);
         tv_position.setText(mSigninDelModel.position);
-        tv_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(mSigninDelModel.createdAt,true));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mSigninDelModel.createdAt));
 
         /** 备注内容 */
         if (null != mSigninDelModel.memo && !TextUtils.isEmpty(mSigninDelModel.memo)) {

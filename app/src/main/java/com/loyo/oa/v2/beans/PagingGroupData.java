@@ -60,37 +60,38 @@ public class PagingGroupData<T extends BaseBeans> implements Serializable {
         Collections.sort(records, comparator);
         ArrayList<PagingGroupData<T>> groupData = new ArrayList<>();
 
-        Date todayDate = new Date();
-        Date yesterDate = new Date();
-
-        Calendar today = Calendar.getInstance();    //今天
-        today.setTime(todayDate);
-        todayDate = today.getTime();
-
-        Calendar yesterday = Calendar.getInstance();
-        yesterday.setTime(yesterDate);
-        yesterday.add(yesterday.DATE, -1);
-        yesterDate = yesterday.getTime();
-
-        String strToday = app.df7.format(todayDate);
-        String strYesterday = app.df7.format(yesterDate);
+//        Date todayDate = new Date();
+//        Date yesterDate = new Date();
+//
+//        Calendar today = Calendar.getInstance();    //今天
+//        today.setTime(todayDate);
+//        todayDate = today.getTime();
+//
+//        Calendar yesterday = Calendar.getInstance();
+//        yesterday.setTime(yesterDate);
+//        yesterday.add(yesterday.DATE, -1);
+//        yesterDate = yesterday.getTime();
+//
+//        String strToday = app.df7.format(todayDate);
+//        String strYesterday = app.df7.format(yesterDate);
 
         for (T item : records) {
 
             String gTime = null;
-            if (item.getOrderStr() == null) {
-                Calendar c = Calendar.getInstance();
-                gTime = app.df7.format(c.getTime());
-            } else {
-//                gTime = DateTool.getDate(item.getOrderStr(), app.df_api_get, app.df7);
-                gTime = com.loyo.oa.common.utils.DateTool.convertDate(item.getOrderStr(), DateFormatSet.daySdf);
-
-                if (gTime.equals(strToday)) {
-                    gTime = "今天";
-                } else if (gTime.equals(strYesterday)) {
-                    gTime = "昨天";
-                }
-            }
+//            if (item.getOrderStr() == null) {
+//                Calendar c = Calendar.getInstance();
+//                gTime = app.df7.format(c.getTime());
+//            } else {
+////                gTime = DateTool.getDateFriendly(item.getOrderStr(), app.df_api_get, app.df7);
+//                gTime = com.loyo.oa.common.utils.DateTool.convertDate(item.getOrderStr(), DateFormatSet.daySdf);
+//
+//                if (gTime.equals(strToday)) {
+//                    gTime = "今天";
+//                } else if (gTime.equals(strYesterday)) {
+//                    gTime = "昨天";
+//                }
+//            }
+            gTime=com.loyo.oa.common.utils.DateTool.getDateFriendly(System.currentTimeMillis()/1000);
 
             boolean isExist = false;
 

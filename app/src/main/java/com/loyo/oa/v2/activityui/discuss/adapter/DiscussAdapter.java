@@ -71,7 +71,7 @@ public class DiscussAdapter extends BaseAdapter {
         }
         HttpDiscussItem info = datas.get(position);
         holder.tv_title.setText(info.title);
-        holder.tv_time.setText(info.newUpdatedAt != 0 ? com.loyo.oa.common.utils.DateTool.getFriendlyTime(info.newUpdatedAt,true) : info.updatedAt.substring(11, 19));
+        holder.tv_time.setText(info.newUpdatedAt != 0 ? com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(info.newUpdatedAt) : info.updatedAt.substring(11, 19));
         holder.tv_content.setText(info.creator.name + ":" + info.content);
         holder.openItem(datas.get(position));
         return convertView;
@@ -115,7 +115,9 @@ public class DiscussAdapter extends BaseAdapter {
                 case 1:
                     iv_icon.setImageResource(R.drawable.ic_disuss_report);
                     tv_dateTime.setVisibility(View.VISIBLE);
-                    tv_dateTime.setText(MainApp.getMainApp().df11.format(new Date(System.currentTimeMillis())));
+                    //TODO 这里没有严格替换
+//                    tv_dateTime.setText(MainApp.getMainApp().df11.format(new Date(System.currentTimeMillis())));
+                    tv_dateTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(System.currentTimeMillis()));
                     break;
                 case 2:
                     iv_icon.setImageResource(R.drawable.ic_discuss_task);

@@ -122,7 +122,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
         } else {
             tv_boom.setText("定时触发");
         }
-        tv_commit_info.setText(mWorksheetInfo.data.creatorName + " " + com.loyo.oa.common.utils.DateTool.getFriendlyTime(mWorksheetInfo.data.createdAt,true) + " 提交");
+        tv_commit_info.setText(mWorksheetInfo.data.creatorName + " " + com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorksheetInfo.data.createdAt) + " 提交");
         tv_track_content.setText(mWorksheetInfo.data.content);
         tv_related_order.setText(mWorksheetInfo.data.orderName);
         tv_related_customer.setText(mWorksheetInfo.data.customerName);
@@ -130,7 +130,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
         if (mWorksheetInfo.data.confirmedAt != 0) {
             ll_assignment_time.setVisibility(View.VISIBLE);
-            tv_assignment_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(mWorksheetInfo.data.confirmedAt,true));
+            tv_assignment_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorksheetInfo.data.confirmedAt));
         } else {
             tv_assignment_time.setText("--");
             ll_assignment_time.setVisibility(View.GONE);
@@ -138,7 +138,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
         if (mWorksheetInfo.data.completedAt != 0) {
             ll_finish_time.setVisibility(View.VISIBLE);
-            tv_finish_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(mWorksheetInfo.data.completedAt,true));
+            tv_finish_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorksheetInfo.data.completedAt));
         } else {
             tv_finish_time.setText("--");
             ll_finish_time.setVisibility(View.GONE);
@@ -146,7 +146,7 @@ public class WorksheetInfoActivity extends BaseActivity implements View.OnClickL
 
         if (mWorksheetInfo.data.interruptAt != 0) {
             ll_termination_time.setVisibility(View.VISIBLE);
-            tv_termination_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(mWorksheetInfo.data.interruptAt,true));
+            tv_termination_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mWorksheetInfo.data.interruptAt));
         } else {
             tv_termination_time.setText("--");
             ll_termination_time.setVisibility(View.GONE);

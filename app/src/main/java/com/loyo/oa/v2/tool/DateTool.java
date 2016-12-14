@@ -168,7 +168,7 @@ public class DateTool {
 //    }
 
 //    //最好改用formateServerDate
-//    public static String getDate(String dateString, DateFormat sdf1,
+//    public static String getDateFriendly(String dateString, DateFormat sdf1,
 //                                 DateFormat sdf2) {
 //        String strDate = "";
 //        try {
@@ -304,7 +304,7 @@ public class DateTool {
 //     * @param dateNUmber
 //     * @return
 //     */
-//    public static boolean getDate(long date, int dateNUmber) {
+//    public static boolean getDateFriendly(long date, int dateNUmber) {
 //        SimpleDateFormat format = null;
 //        String strTime = "";
 //        // 今天午夜00:00:00的毫秒数-日期毫秒数

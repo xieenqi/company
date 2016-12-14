@@ -235,6 +235,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
      * 检查定位权限是否打开
      */
     private void permissionLocation() {
+        //TODO 权限可以完善
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
         } else {

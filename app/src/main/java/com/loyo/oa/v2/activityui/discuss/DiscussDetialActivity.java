@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -740,7 +741,8 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             final HttpDiscussDet info = datas.get(position);
             if (holder.getClass() == DiscussDetMineViewHolder.class) {
                 DiscussDetMineViewHolder mineHolder = (DiscussDetMineViewHolder) holder;
-                mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+//                mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+                mineHolder.tvMineTime.setText(DateTool.getDateTimeFriendly(info.createdAt));
 //                mineHolder.tvContent.setAutoLinkMask(0x01);
                 try {
                     mineHolder.tvContent.setText(info.content);
@@ -762,7 +764,8 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-                otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+//                otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+                otherHolder.mTvOtherTime.setText(DateTool.getDateTimeFriendly(info.createdAt));
                 ImageLoader.getInstance().displayImage(info.creator.avatar, otherHolder.mIvOtherAvatar);
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
                 otherHolder.mIvOtherAvatar.setTag(selectUser);

@@ -39,7 +39,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerListView;
 import com.loyo.oa.v2.customview.RoundImageView;
-import com.loyo.oa.v2.tool.DateTool;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -122,7 +121,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(model.avatar, holder.iv_heading);
         holder.tv_name.setText(model.creatorName);
         holder.tv_address.setText(TextUtils.isEmpty(model.addr) ? "无定位信息" : model.addr);
-        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getFriendlyTime(model.createAt,true));
+        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(model.typeName) ? "无" : "# "+model.typeName);
         holder.tv_contact.setText(TextUtils.isEmpty(model.contactName) ? "无联系人信息" : model.contactName);
 
@@ -156,7 +155,7 @@ public class ClueFollowUpListAdapter extends BaseAdapter {
         if(model.remindAt != 0){
             holder.layout_lasttime.setVisibility(View.VISIBLE);
 //            holder.tv_last_time.setText(DateTool.timet(model.remindAt+"","yyyy-MM-dd HH:mm"));
-            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTime(model.remindAt));
+            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(model.remindAt));
 
         }else{
             holder.layout_lasttime.setVisibility(View.GONE);

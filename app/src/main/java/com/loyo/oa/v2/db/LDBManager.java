@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 
+import com.loyo.oa.common.utils.DateFormatSet;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LocateData;
 import com.loyo.oa.v2.common.Global;
@@ -115,7 +116,8 @@ public class LDBManager {
         try {
             ContentValues values = new ContentValues();
             values.put(BASE_RECORD_TIME_KEY, data.getRecordTime());
-            values.put(BASE_RECORD_DATE_KEY, app.df_api_get2.format(new Date(data.getRecordTime())));
+//            values.put(BASE_RECORD_DATE_KEY, app.df_api_get2.format(new Date(data.getRecordTime())));
+            values.put(BASE_RECORD_DATE_KEY, DateFormatSet.LDBSdf.format(new Date(data.getRecordTime())));
             values.put(BASE_LOCATE_ACCURACY_KEY, data.getAccuracy());
             values.put(BASE_LOCATE_PROVIDER_KEY, data.getProvider());
             values.put(BASE_LOCATE_LATITUDE_KEY, data.getLat());

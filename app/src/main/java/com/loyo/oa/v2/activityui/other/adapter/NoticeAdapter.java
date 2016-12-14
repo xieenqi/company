@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.model.User;
@@ -72,7 +74,8 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.BulletinVi
     @Override
     public void onBindViewHolder(final BulletinViewHolder holder, final int position) {
         final Bulletin bulletin = mBulletins.get(position);
-        holder.tv_time.setText(MainApp.getMainApp().df3.format(new Date(bulletin.createdAt * 1000)));
+//        holder.tv_time.setText(MainApp.getMainApp().df3.format(new Date(bulletin.createdAt * 1000)));
+        holder.tv_time.setText(DateTool.getDateTimeFriendly(bulletin.createdAt));
         holder.tv_title.setText(bulletin.title);
         holder.tv_content.setText(bulletin.content);
 
