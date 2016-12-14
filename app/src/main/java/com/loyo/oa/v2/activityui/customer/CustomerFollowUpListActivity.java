@@ -96,7 +96,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
     public void getPageData() {
         isPullOrDown = true;
         mPagination.setPageIndex(1);
-        getData(false);
+        getData(true);
     }
 
     @Override
@@ -186,7 +186,7 @@ public class CustomerFollowUpListActivity extends BaseLoadingActivity implements
             return;
         }
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);

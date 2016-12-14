@@ -74,7 +74,7 @@ public class SelfSigninListFragPresenterImpl implements SelfSigninListFragPresen
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).selfSignin(map, new RCallback<BaseBeanT<PaginationX<SigninNewListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<SigninNewListModel>> paginationX, Response response) {
-                HttpErrorCheck.checkResponse("我的拜访", response, crolView.getLoadingView());
+                HttpErrorCheck.checkResponse("我的拜访", response);
                 crolView.getListDataSuccesseEmbl(paginationX);
             }
 

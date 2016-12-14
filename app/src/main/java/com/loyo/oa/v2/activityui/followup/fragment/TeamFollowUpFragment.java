@@ -147,7 +147,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
             }
         });
 //        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
-        mTags= FolloUpConfig.getFolloUpStageCache();
+        mTags = FolloUpConfig.getFolloUpStageCache();
         for (int i = 0; i < mTags.size(); i++) {//过滤掉跟进方式
             if (mTags.get(i).fieldName.contains("activity")) {
                 mTags.remove(i);
@@ -253,11 +253,12 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         });
         initPageData();
     }
+
     private void initPageData() {
         ll_loading.setStatus(LoadingLayout.Loading);
         mPagination.setPageIndex(1);
         isPullOrDown = true;
-        getData(false);
+        getData(true);
     }
 
     /**
@@ -303,7 +304,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", userId);
@@ -378,6 +379,7 @@ public class TeamFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
+        ll_loading.setStatus(LoadingLayout.Success);
         if (isPullOrDown && listModel.size() == 0)
             ll_loading.setStatus(LoadingLayout.Empty);
     }

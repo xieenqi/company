@@ -82,7 +82,7 @@ public class FollowUpFragPresenterImpl implements FollowUpFragPresenter {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).followUp(map, new RCallback<BaseBeanT<PaginationX<FollowUpListModel>>>() {
             @Override
             public void success(BaseBeanT<PaginationX<FollowUpListModel>> paginationX, Response response) {
-                HttpErrorCheck.checkResponse("跟进列表", response, crolView.getLoadingLayout());
+                HttpErrorCheck.checkResponse("跟进列表", response);
                 crolView.getListDataSuccesseEmbl(paginationX);
             }
 

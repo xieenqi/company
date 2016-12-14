@@ -101,7 +101,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     public void getPageData() {
         isPullOrDown = true;
         mPagination.setPageIndex(1);
-        getData(false);
+        getData(true);
     }
 
     @Override
@@ -196,7 +196,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
      */
     private void getData(boolean isPullOrDown) {
         if (!isPullOrDown) {
-            ll_loading.setStatus(LoadingLayout.Loading);
+            showLoading("");
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);
