@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg"
+    android:background="@color/order_activity_bg"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
@@ -130,7 +130,6 @@
                         android:layout_marginLeft="@dimen/order_common_arrow_margin_left"
                         android:scaleType="center"
                         android:src="@drawable/order_right_arrow" />
-
                 </LinearLayout>
 
                 <include layout="@layout/include_solid_line_space" />

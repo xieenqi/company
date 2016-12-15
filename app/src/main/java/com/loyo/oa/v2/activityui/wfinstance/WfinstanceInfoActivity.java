@@ -71,7 +71,7 @@ import retrofit.client.Response;
  * 【审批详情】
  */
 
-@EActivity(R.layout.activity_wfinstance_info)
+@EActivity(R.layout.activity_wfinstance_info_new)
 public class WfinstanceInfoActivity extends BaseActivity {
 
     @ViewById

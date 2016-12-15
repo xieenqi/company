@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="order_line_text_main">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColorHint">#666666</item>
