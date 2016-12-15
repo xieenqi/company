@@ -65,7 +65,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class SigninNewDetailsActivity extends BaseLoadingActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
+public class SigninDetailsActivity extends BaseLoadingActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
     private ScrollView layout_scrollview;
@@ -483,10 +483,10 @@ public class SigninNewDetailsActivity extends BaseLoadingActivity implements Vie
         layout.removeAllViews();
         for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
             if (ele.type.startsWith("img")) {
-                CommonImageView img = new CommonImageView(SigninNewDetailsActivity.this, ele.data);
+                CommonImageView img = new CommonImageView(SigninDetailsActivity.this, ele.data);
                 layout.addView(img);
             } else {
-                CommonTextVew tex = new CommonTextVew(SigninNewDetailsActivity.this, ele.data);
+                CommonTextVew tex = new CommonTextVew(SigninDetailsActivity.this, ele.data);
                 layout.addView(tex);
             }
         }

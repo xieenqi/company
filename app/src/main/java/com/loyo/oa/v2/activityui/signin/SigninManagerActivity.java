@@ -33,7 +33,7 @@ import java.util.List;
  * 【拜访列表】fragment管理类
  * Created by yyy on 16/11/10
  */
-public class SigninNewManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class SigninManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
 
 
     private LinearLayout img_title_left, ll_category;
@@ -222,7 +222,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
 
                 /*搜索*/
             case R.id.img_title_search_right:
-                Intent mIntent = new Intent(SigninNewManagerActivity.this, SigninNewDetailsActivity.class);
+                Intent mIntent = new Intent(SigninManagerActivity.this, SigninDetailsActivity.class);
                 mIntent.putExtra("id", "583535f4608e4f5326000031");
                 startActivity(mIntent);
                 break;
