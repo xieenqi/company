@@ -65,7 +65,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【我fu'ze】列表
+ * 【我负责】列表
  * Created by yyy on 16/6/1.
  */
 public class MyResponFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, MyCustomerFragView {
@@ -350,6 +350,10 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
      */
     @Override
     public void intentAutoInsert(PopupWindow popupWindow) {
+        if(!Utils.isNetworkAvailable(getActivity())){
+            Toast("请检查您的网络连接");
+            return;
+        }
         popupWindow.dismiss();
         Intent mIntent = new Intent();
         mIntent.setClass(getActivity(), MyContactMailList.class);
@@ -363,6 +367,10 @@ public class MyResponFragment extends BaseFragment implements PullToRefreshBase.
      */
     @Override
     public void intentHandInsert(PopupWindow popupWindow) {
+        if(!Utils.isNetworkAvailable(getActivity())){
+            Toast("请检查您的网络连接");
+            return;
+        }
         popupWindow.dismiss();
         mIntent = new Intent();
         mIntent.setClass(getActivity(), CustomerAddActivity_.class);
