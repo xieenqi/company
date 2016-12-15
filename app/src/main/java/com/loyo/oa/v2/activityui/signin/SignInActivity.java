@@ -45,19 +45,12 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CountTextWatcher;
-import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
-import com.loyo.oa.v2.tool.CommonSubscriber;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.UMengTools;
@@ -67,16 +60,12 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -168,7 +157,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             ll_contact.setVisibility(View.VISIBLE);
             tv_customer_address.setVisibility(View.VISIBLE);
             tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
-            getDefaultContact(mCustomer.contacts);
+            tv_contact_name.setText(presenter.getDefaultContact(mCustomer.contacts));
             contactList = mCustomer.contacts;
         }
     }
@@ -463,20 +452,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      */
     private void getAttachments() {
         presenter.getAttachment(uuid);
-//        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-//            @Override
-//            public void success(final ArrayList<Attachment> attachments, final Response response) {
-//                HttpErrorCheck.checkResponse(response);
-//                lstData_Attachment = attachments;
-//                init_gridView_photo();
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-//                Toast("获取附件失败");
-//            }
-//        });
     }
 
     @Override
@@ -507,18 +482,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                             if (newFile.exists()) {
                                 /**上传附件*/
                                 presenter.uploadAttachment(uuid, newFile, this);
-//                                Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
-//                                    @Override
-//                                    public void onNext(final Serializable serializable) {
-//                                        getAttachments();
-//                                        pcitureNumber++;
-//                                    }
-//
-//                                    @Override
-//                                    public void onError(Throwable e) {
-//                                        super.onError(e);
-//                                    }
-//                                });
                             }
                         }
                     }
@@ -535,21 +498,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     map.put("bizType", 0);
                     map.put("uuid", uuid);
                     presenter.deleteAttachment(map, delAttachment);
-//                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-//                        @Override
-//                        public void success(final Attachment attachment, final Response response) {
-//                            Toast("删除附件成功!");
-//                            lstData_Attachment.remove(delAttachment);
-//                            init_gridView_photo();
-//                            pcitureNumber--;
-//                        }
-//
-//                        @Override
-//                        public void failure(final RetrofitError error) {
-//                            Toast("删除附件失败!");
-//                            super.failure(error);
-//                        }
-//                    });
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
@@ -565,7 +513,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 }
                 if (contactList != null && contactList.size() > 0) {
                     ll_contact.setVisibility(View.VISIBLE);
-                    getDefaultContact(contactList);
+                    tv_contact_name.setText(presenter.getDefaultContact(contactList));
                 } else {
                     ll_contact.setVisibility(View.GONE);
                     tv_contact_name.setText("");
@@ -587,9 +535,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void distanceInfo(Location loc) {
-
         if (loc != null && loc.loc != null && loc.loc.size() > 0 && loc.loc.get(0) > 0) {
-            tv_distance_deviation.setText(getDeviationDistance(loc.loc.get(0), loc.loc.get(1)));
+            tv_distance_deviation.setText(presenter.getDeviationDistance(loc.loc.get(0), loc.loc.get(1), laPosition, loPosition));
             tv_distance_deviation.setTextColor(Color.parseColor("#666666"));
             isLocation = true;
         } else {
@@ -599,36 +546,21 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    /**
-     * 获取客户的默认联系人
-     *
-     * @param data
-     */
-    private void getDefaultContact(ArrayList<Contact> data) {
-        for (Contact ele : data) {
-            if (!ele.isDefault()) {
-                continue;
-            } else {
-                tv_contact_name.setText(ele.getName());
-            }
-        }
-    }
-
-    private String getDeviationDistance(double la, double lo) {
-        LatLng ll = new LatLng(laPosition, loPosition);
-        LatLng llCustomer = new LatLng(lo, la);// 地点的纬度，在-90 与90 之间的double 型数值。、地点的经度，在-180 与180 之间的double 型数值。
-        LogUtil.d("偏差距离:" + AMapUtils.calculateLineDistance(ll, llCustomer));
-        Double distance = Double.valueOf(Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer)));
-        DecimalFormat df = new DecimalFormat("0.00");
-        String distanceText;
-        if (distance <= 1000) {
-            distanceText = Utils.setValueDouble2(distance) + "m";
-        } else {
-            distanceText = df.format(distance / 1000) + "km";
-        }
-
-        return distanceText;
-    }//  104.073255,30.689493
+//    private String getDeviationDistance(double la, double lo) {
+//        LatLng ll = new LatLng(laPosition, loPosition);
+//        LatLng llCustomer = new LatLng(lo, la);// 地点的纬度，在-90 与90 之间的double 型数值。、地点的经度，在-180 与180 之间的double 型数值。
+//        LogUtil.d("偏差距离:" + AMapUtils.calculateLineDistance(ll, llCustomer));
+//        Double distance = Double.valueOf(Utils.setValueDouble2(AMapUtils.calculateLineDistance(ll, llCustomer)));
+//        DecimalFormat df = new DecimalFormat("0.00");
+//        String distanceText;
+//        if (distance <= 1000) {
+//            distanceText = Utils.setValueDouble2(distance) + "m";
+//        } else {
+//            distanceText = df.format(distance / 1000) + "km";
+//        }
+//
+//        return distanceText;
+//    }//  104.073255,30.689493
 
     @Override
     protected void onPause() {

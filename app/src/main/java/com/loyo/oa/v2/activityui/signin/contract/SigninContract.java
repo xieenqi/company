@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.signin.contract;
 import android.app.Activity;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.common.BaseView;
@@ -49,6 +50,10 @@ public interface SigninContract {
         void deleteAttachment(HashMap<String, Object> map, Attachment delAttachment);
 
         void deleteAttachmentSuccess(Attachment delAttachment);
+
+        String getDefaultContact(ArrayList<Contact> data);
+
+        String getDeviationDistance(double la, double lo, double laPosition, double loPosition);
 
     }
 
