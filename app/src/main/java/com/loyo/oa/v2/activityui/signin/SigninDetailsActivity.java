@@ -43,7 +43,7 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ISigninNeworFollowUp;
+import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -65,7 +65,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class SigninNewDetailsActivity extends BaseLoadingActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
+public class SigninDetailsActivity extends BaseLoadingActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
     private ScrollView layout_scrollview;
@@ -246,7 +246,7 @@ public class SigninNewDetailsActivity extends BaseLoadingActivity implements Vie
      * 评论删除
      */
     private void deleteComment(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -272,7 +272,7 @@ public class SigninNewDetailsActivity extends BaseLoadingActivity implements Vie
         map.put("bizzType", 1);   //1拜访 2跟进
         //map.put("audioInfo", "");//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -298,7 +298,7 @@ public class SigninNewDetailsActivity extends BaseLoadingActivity implements Vie
         map.put("bizzType", 1);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -455,7 +455,7 @@ public class SigninNewDetailsActivity extends BaseLoadingActivity implements Vie
 //        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("split", true);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getSigninDetails(id, map, new RCallback<BaseBeanT<SigninNewListModel>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).getSigninDetails(id, map, new RCallback<BaseBeanT<SigninNewListModel>>() {
             @Override
             public void success(BaseBeanT<SigninNewListModel> signinNewListModel, Response response) {
                 HttpErrorCheck.checkResponse("拜访详情", response, ll_loading);
@@ -483,10 +483,10 @@ public class SigninNewDetailsActivity extends BaseLoadingActivity implements Vie
         layout.removeAllViews();
         for (final ImgAndText ele : CommonHtmlUtils.Instance().checkContentList(content)) {
             if (ele.type.startsWith("img")) {
-                CommonImageView img = new CommonImageView(SigninNewDetailsActivity.this, ele.data);
+                CommonImageView img = new CommonImageView(SigninDetailsActivity.this, ele.data);
                 layout.addView(img);
             } else {
-                CommonTextVew tex = new CommonTextVew(SigninNewDetailsActivity.this, ele.data);
+                CommonTextVew tex = new CommonTextVew(SigninDetailsActivity.this, ele.data);
                 layout.addView(tex);
             }
         }

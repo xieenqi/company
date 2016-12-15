@@ -33,7 +33,7 @@ import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
-import com.loyo.oa.v2.activityui.signin.event.SigninNewRushEvent;
+import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -456,7 +456,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     public void run() {
                         cancelStatusLoading();
                         if (!TextUtils.isEmpty(legWork.getId())) {
-                            AppBus.getInstance().post(new SigninNewRushEvent());
+                            AppBus.getInstance().post(new SigninRushEvent());
                             finish();
                         }
                     }

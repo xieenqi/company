@@ -9,7 +9,7 @@ import com.loyo.oa.v2.beans.PaginationX;
  * Created by yyy on 16/11/14.
  */
 
-public interface SigninNewListView {
+public interface SigninListView {
 
     /*评论操作*/
     void commentEmbl(int position);

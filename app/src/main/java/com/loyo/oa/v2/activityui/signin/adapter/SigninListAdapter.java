@@ -25,7 +25,7 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
-import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninNewListView;
+import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -49,11 +49,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by yyy on 16/11/12.
  */
 
-public class SigninNewListAdapter extends BaseAdapter {
+public class SigninListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<SigninNewListModel> listModel;
-    private SigninNewListView viewCrol;
+    private SigninListView viewCrol;
     private AudioPlayCallBack audioPlayCallBack;
 
     private ListOrDetailsGridViewAdapter gridViewAdapter;  /* 九宫格图片 */
@@ -63,7 +63,7 @@ public class SigninNewListAdapter extends BaseAdapter {
     private DecimalFormat df = new DecimalFormat("0.0");
 
 
-    public SigninNewListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, SigninNewListView viewCrol,AudioPlayCallBack audioPlayCallBack) {
+    public SigninListAdapter(Context mContext, ArrayList<SigninNewListModel> listModel, SigninListView viewCrol, AudioPlayCallBack audioPlayCallBack) {
         this.mContext = mContext;
         this.listModel = listModel;
         this.viewCrol = viewCrol;

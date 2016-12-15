@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
-import com.loyo.oa.v2.activityui.signin.fragment.SelfSigninNewFragment;
-import com.loyo.oa.v2.activityui.signin.fragment.TeamSigninNewFragment;
+import com.loyo.oa.v2.activityui.signin.fragment.SelfSigninFragment;
+import com.loyo.oa.v2.activityui.signin.fragment.TeamSigninFragment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -33,7 +33,7 @@ import java.util.List;
  * 【拜访列表】fragment管理类
  * Created by yyy on 16/11/10
  */
-public class SigninNewManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class SigninManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
 
 
     private LinearLayout img_title_left, ll_category;
@@ -165,11 +165,11 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
             if ("我的拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
 //                b.putSerializable("tag", mTags1);
-                fragment = (BaseFragment) Fragment.instantiate(this, SelfSigninNewFragment.class.getName(), b);
+                fragment = (BaseFragment) Fragment.instantiate(this, SelfSigninFragment.class.getName(), b);
             } else if ("团队拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
 //                b.putSerializable("tag", mTags1);
-                fragment = (BaseFragment) Fragment.instantiate(this, TeamSigninNewFragment.class.getName(), b);
+                fragment = (BaseFragment) Fragment.instantiate(this, TeamSigninFragment.class.getName(), b);
             }
             fragments.add(fragment);
         }
@@ -222,7 +222,7 @@ public class SigninNewManagerActivity extends BaseFragmentActivity implements Vi
 
                 /*搜索*/
             case R.id.img_title_search_right:
-                Intent mIntent = new Intent(SigninNewManagerActivity.this, SigninNewDetailsActivity.class);
+                Intent mIntent = new Intent(SigninManagerActivity.this, SigninDetailsActivity.class);
                 mIntent.putExtra("id", "583535f4608e4f5326000031");
                 startActivity(mIntent);
                 break;

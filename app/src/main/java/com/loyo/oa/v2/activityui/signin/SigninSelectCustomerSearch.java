@@ -20,8 +20,7 @@ import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ISigninNeworFollowUp;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -131,7 +130,7 @@ public class SigninSelectCustomerSearch extends BaseLoadingActivity implements P
         params.put("pageIndex", page);
         params.put("pageSize", 20);
         params.put("keyWords", edt_search.getText().toString().trim());
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(ISigninNeworFollowUp.class).
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS()).create(ISigninOrFollowUp.class).
                 signinSearchCutomer(params, new Callback<BaseBeanT<PaginationX<SigninSelectCustomer>>>() {
                     @Override
                     public void success(final BaseBeanT<PaginationX<SigninSelectCustomer>> customerPaginationX, final Response response) {

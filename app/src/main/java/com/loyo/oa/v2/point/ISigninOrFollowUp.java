@@ -27,7 +27,7 @@ import retrofit.http.QueryMap;
  * Created by yyy on 16/11/12.
  */
 
-public interface ISigninNeworFollowUp {
+public interface ISigninOrFollowUp {
 
 
     /**
