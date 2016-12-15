@@ -1,8 +1,7 @@
-package com.loyo.oa.v2.activityui.signinnew.presenter.impl;
+package com.loyo.oa.v2.activityui.signin.persenter;
 
-import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
-import com.loyo.oa.v2.activityui.signinnew.presenter.TeamSigninListFragPresenter;
-import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
+import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
+import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

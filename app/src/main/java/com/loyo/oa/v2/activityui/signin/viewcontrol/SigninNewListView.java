@@ -1,7 +1,7 @@
-package com.loyo.oa.v2.activityui.signinnew.viewcontrol;
+package com.loyo.oa.v2.activityui.signin.viewcontrol;
 
 import com.library.module.widget.loading.LoadingLayout;
-import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
+import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 

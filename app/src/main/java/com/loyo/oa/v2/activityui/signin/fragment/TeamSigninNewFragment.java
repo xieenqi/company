@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.signinnew.fragment;
+package com.loyo.oa.v2.activityui.signin.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -28,13 +28,12 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.other.model.Tag;
-import com.loyo.oa.v2.activityui.signinnew.adapter.SigninNewListAdapter;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
-import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
-import com.loyo.oa.v2.activityui.signinnew.presenter.TeamSigninListFragPresenter;
-import com.loyo.oa.v2.activityui.signinnew.presenter.impl.TeamSigninListFragPresenterImpl;
-import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
+import com.loyo.oa.v2.activityui.signin.adapter.SigninNewListAdapter;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
+import com.loyo.oa.v2.activityui.signin.persenter.TeamSigninListFragPresenter;
+import com.loyo.oa.v2.activityui.signin.persenter.TeamSigninListFragPresenterImpl;
+import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninNewListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -237,6 +236,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
     }
 
     private void initPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
         mPagination.setPageIndex(1);
         isPullOrDown = true;
         getData(true);

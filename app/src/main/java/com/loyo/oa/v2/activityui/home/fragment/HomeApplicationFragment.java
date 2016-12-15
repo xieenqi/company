@@ -325,7 +325,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                         "跟进动态", "com.loyo.oa.v2.activityui.followup.FollowUpManagerActivity",
                         BusinessOperation.VISIT_TIMELINE, 0),
                 new HomeItem(R.drawable.newmain_sagin,
-                        "客户拜访", "com.loyo.oa.v2.activityui.signinnew.SigninNewManagerActivity",
+                        "客户拜访", "com.loyo.oa.v2.activityui.signin.SigninNewManagerActivity",
                         BusinessOperation.CUSTOMER_VISIT, 1),
                 new HomeItem(R.drawable.newmain_sale,
                         "销售机会", "com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity",

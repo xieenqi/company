@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.signinnew.model;
+package com.loyo.oa.v2.activityui.signin.bean;
 
 
 

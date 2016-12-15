@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.signinnew;
+package com.loyo.oa.v2.activityui.signin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,28 +17,17 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
-import com.loyo.oa.v2.activityui.other.model.Tag;
-import com.loyo.oa.v2.activityui.signinnew.fragment.SelfSigninNewFragment;
-import com.loyo.oa.v2.activityui.signinnew.fragment.TeamSigninNewFragment;
+import com.loyo.oa.v2.activityui.signin.fragment.SelfSigninNewFragment;
+import com.loyo.oa.v2.activityui.signin.fragment.TeamSigninNewFragment;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【拜访列表】fragment管理类

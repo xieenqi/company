@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.signinnew.adapter;
+package com.loyo.oa.v2.activityui.signin.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -10,8 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
-import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;

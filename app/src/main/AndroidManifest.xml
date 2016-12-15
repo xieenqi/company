@@ -73,7 +73,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <!-- android:theme="@style/AppStartLoadTranslucent" -->
@@ -175,16 +175,6 @@
         <activity
             android:name=".activityui.customer.NearByCustomersMapActivity"
             android:screenOrientation="portrait" />
-        <!--<activity-->
-            <!--android:name=".activityui.signin.LegworksListActivity_"-->
-            <!--android:launchMode="standard"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:windowSoftInputMode="stateHidden|adjustResize" />-->
-        <!--<activity-->
-            <!--android:name=".activityui.signin.SignInListActivity_"-->
-            <!--android:launchMode="standard"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:windowSoftInputMode="stateHidden|adjustResize" />-->
         <activity
             android:name=".activityui.customer.CustomerDetailInfoActivity_"
             android:launchMode="standard"
@@ -247,16 +237,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/FragmentActivityTheme"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <!--<activity-->
-            <!--android:name=".activityui.signin.SignInfoActivity"-->
-            <!--android:launchMode="singleTop"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:windowSoftInputMode="adjustUnspecified|stateHidden" />-->
-        <!--<activity-->
-            <!--android:name=".activityui.signin.SignInManagerActivity_"-->
-            <!--android:launchMode="singleTop"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:windowSoftInputMode="stateAlwaysHidden" />-->
         <activity
             android:name=".activityui.other.BulletinManagerActivity_"
             android:launchMode="singleTop"
@@ -774,7 +754,7 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
 
         <activity
-            android:name=".activityui.signinnew.SigninNewManagerActivity"
+            android:name=".activityui.signin.SigninNewManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -784,7 +764,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".activityui.signinnew.SigninNewDetailsActivity"
+            android:name=".activityui.signin.SigninNewDetailsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />

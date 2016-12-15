@@ -1,5 +1,7 @@
-package com.loyo.oa.v2.activityui.signinnew.model;
+package com.loyo.oa.v2.activityui.signin.bean;
 
+
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 
 /**
  * 【评论】

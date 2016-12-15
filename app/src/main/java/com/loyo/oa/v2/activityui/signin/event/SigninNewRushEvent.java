@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activityui.signinnew.event;
+package com.loyo.oa.v2.activityui.signin.event;
 
 import com.loyo.oa.v2.common.event.CommonEvent;
 
