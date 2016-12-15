@@ -152,10 +152,8 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                 }
             }
         }
-        if (pickPhots.size() == 0) {
-            //crolView.showProgress("");
-            crolView.showStatusProgress();
-        }
+
+        crolView.showStatusProgress();
         crolView.requestAddWfinVeriSuccess(workflowValues);
     }
 
@@ -249,7 +247,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
      */
     @Override
     public void newUploadAttachement(String uuid, int bizType, final ArrayList<ImageInfo> pickPhots) {
-        crolView.showProgress("");
+        crolView.showStatusProgress();
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -266,6 +264,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
+                                            DialogHelp.cancelStatusLoading();
                                             crolView.uploadSuccessEmbl(pickPhots);
                                         }
                                     }
@@ -273,7 +272,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter {
                                     @Override
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
-                                        HttpErrorCheck.checkError(error);
+                                        HttpErrorCheck.checkCommitEro(error);
                                     }
                                 });
                     }

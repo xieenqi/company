@@ -308,10 +308,9 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
-        if (pickPhots.size() == 0) {
-            //showLoading("正在提交");
+        /*if (pickPhots.size() == 0) {
             showStatusLoading(false);
-        }
+        }*/
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
         HashMap<String, Object> map = new HashMap<>();
@@ -351,7 +350,6 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void success(final Task task, final Response response) {
                 HttpErrorCheck.checkCommitSus("任务创建",response);
-                //HttpErrorCheck.checkResponse(response);
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
                         cancelStatusLoading();
@@ -425,6 +423,7 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
                 //没有附件
+                showStatusLoading(false);
                 if (pickPhots.size() == 0) {
                     requestCommitTask();
                     //有附件
@@ -660,7 +659,6 @@ public class TasksAddActivity extends BaseActivity {
      * 批量上传附件
      */
     private void newUploadAttachement() {
-        showLoading("正在提交");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -676,6 +674,7 @@ public class TasksAddActivity extends BaseActivity {
                                 new RCallback<Attachment>() {
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
+                                        //cancelStatusLoading();
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
                                             requestCommitTask();
@@ -685,7 +684,7 @@ public class TasksAddActivity extends BaseActivity {
                                     @Override
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
-                                        HttpErrorCheck.checkError(error);
+                                        HttpErrorCheck.checkCommitEro(error);
                                         img_title_right.setEnabled(true);
                                     }
                                 });

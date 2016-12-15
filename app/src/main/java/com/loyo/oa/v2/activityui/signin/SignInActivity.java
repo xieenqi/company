@@ -456,7 +456,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     public void run() {
                         cancelStatusLoading();
                         if (!TextUtils.isEmpty(legWork.getId())) {
-                            Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                             AppBus.getInstance().post(new SigninNewRushEvent());
                             finish();
                         }

@@ -56,7 +56,6 @@ public class BaseActivity extends Activity {
     public Intent rushTokenIntent;
     private int mTouchViewGroupId;
     public SweetAlertDialogView sweetAlertDialogView;
-    public LoadStatusView loadView;
 
     /**
      * 搜索跳转分类
