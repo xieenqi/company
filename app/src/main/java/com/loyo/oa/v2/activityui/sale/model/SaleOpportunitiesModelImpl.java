@@ -26,7 +26,7 @@ public class SaleOpportunitiesModelImpl implements SaleOpportunitiesContract.Mod
 
     @Override
     public void getStageData() {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(I2Customer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
 //            @Override
 //            public void success(final ArrayList<SaleStage> saleStages, final Response response) {
 //                HttpErrorCheck.checkResponse("销售机会 model销售阶段:", response);
