@@ -256,8 +256,11 @@ public class ContactInfoExtraData extends LinearLayout {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
 
-                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                        textView.setText(str);
+//                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                        textView.setText(str);
+//                        extra.setVal(str);
+                        long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
+                        String str= com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time);
                         extra.setVal(str);
                     }
 

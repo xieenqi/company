@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
@@ -259,9 +260,13 @@ public class CustomerInfoExtraData extends LinearLayout {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
 
-                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                        textView.setText(str);
+//                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                        textView.setText(str);
+//                        extra.setVal(str);
+                        long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
+                        String str= DateTool.getDateTimeFriendly(time);
                         extra.setVal(str);
+                        textView.setText(str);
                     }
 
                     @Override

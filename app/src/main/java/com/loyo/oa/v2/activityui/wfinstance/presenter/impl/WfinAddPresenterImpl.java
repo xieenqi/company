@@ -148,7 +148,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
                 endTimelong= com.loyo.oa.common.utils.DateTool.getMinuteStamp(endTimeDate);
 
 
-                if (startTimelong > endTimelong) {
+                if (startTimelong >= endTimelong) {
                     crolView.showMsg("开始时间不能大于结束时间");
                     return;
                 }

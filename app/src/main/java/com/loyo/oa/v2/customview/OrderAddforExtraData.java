@@ -232,9 +232,12 @@ public class OrderAddforExtraData extends LinearLayout {
 
                 age = Utils.getAge(year + "");
                 if (age > 0) {
-                    birthStr = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day);
-                    extra.val = birthStr;
-                    textView.setText(birthStr);
+//                    birthStr = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day);
+//                    extra.val = birthStr;
+//                    textView.setText(birthStr);
+                    long time = com.loyo.oa.common.utils.DateTool.getStamp(year, month, day);
+                    extra.val = com.loyo.oa.common.utils.DateTool.getDateReal(time);
+                    textView.setText(extra.val);
                 } else {
                     Toast.makeText(mContext, "出生日期不能是未来时间，请重新设置", Toast.LENGTH_SHORT).show();
                 }

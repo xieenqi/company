@@ -234,10 +234,13 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
                     @Override
                     public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
 
-                        String str = year + "-" + String.format("%02d", (month + 1)) + "-"
-                                + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                        textView.setText(str);
-                        map_Values.put(lstData.get(position).getId(), str);
+//                        String str = year + "-" + String.format("%02d", (month + 1)) + "-"
+//                                + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                        textView.setText(str);
+//                        map_Values.put(lstData.get(position).getId(), str);
+
+                        long time= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,hour,min);
+                        map_Values.put(lstData.get(position).getId(), com.loyo.oa.common.utils.DateTool.getDateTimeReal(time));
 
                     }
 
