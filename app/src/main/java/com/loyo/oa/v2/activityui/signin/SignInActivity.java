@@ -33,6 +33,7 @@ import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
+import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonIdName;
@@ -81,7 +82,7 @@ import retrofit.client.Response;
 /**
  * 【 拜访签到 】 页面
  */
-public class SignInActivity extends BaseActivity implements View.OnClickListener {
+public class SignInActivity extends BaseActivity implements View.OnClickListener,SigninContract.View {
 
     private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address,
             tv_at_text, tv_distance_deviation, tv_contact_name;
@@ -708,5 +709,30 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
+    public void showProgress(String message) {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void showMsg(String message) {
+
+    }
+
+    @Override
+    public void setIsPhoto() {
+
     }
 }

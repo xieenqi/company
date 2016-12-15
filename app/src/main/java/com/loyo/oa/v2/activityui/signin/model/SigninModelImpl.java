@@ -7,4 +7,8 @@ import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 
 public class SigninModelImpl implements SigninContract.Model{
 
+    @Override
+    public void isPhotoSend() {
+
+    }
 }
