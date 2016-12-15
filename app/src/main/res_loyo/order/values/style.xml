@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="order_line_text_main">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColorHint">#666666</item>
+        <item name="android:textColor">#333333</item>
+    </style>
+    <style name="order_line_text_second">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:textColorHint">#999999</item>
+    </style>
+    <style name="order_line_text_other_1">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#999999</item>
+    </style>
+</resources>

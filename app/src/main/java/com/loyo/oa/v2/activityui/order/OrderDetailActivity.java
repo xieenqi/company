@@ -91,7 +91,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             switch (msg.what) {
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
                     if (attachmentSize != 0) {
-                        tv_enclosure.setText("附件(" + attachmentSize + ")");
+                        tv_enclosure.setText("附件（"+ attachmentSize + "）");
                     }
                     break;
             }
@@ -102,7 +102,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_detail);
+        setContentView(R.layout.activity_order_detail_new);
         getIntentData();
         initView();
     }
@@ -208,7 +208,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(OrderDetailActivity.this, IntentionProductActivity.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
-            case R.id.ll_record://回款记录  mData.backMoney + "(" + mData.ratePayment + "%)");
+            case R.id.ll_record://回款记录  mData.backMoney + "（"+ mData.ratePayment + "%)");
                 Bundle mBundle = new Bundle();
                 mBundle.putInt("fromPage", OrderEstimateListActivity.ORDER_DETAILS);
                 mBundle.putString("price", tv_money.getText().toString());
@@ -325,11 +325,11 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_product.setText(mData.proName);
         tv_responsible_name.setText(mData.directorName);
         tv_creator_name.setText(mData.creatorName);
-        tv_plan.setText("回款计划（" + mData.planNum + "）");
-        tv_record.setText("回款记录（" + mData.recordNum + "）");
-        tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
-        tv_worksheet.setText("工单" + "(" + mData.worksheetNum + ")");
-        if(attachmentSize==0)tv_enclosure.setText("附件（" + mData.attachmentCount + "）");//避免上传附件回来,把原来的数值抹掉了
+        tv_plan.setText("回款计划（"+ mData.planNum + "）");
+        tv_record.setText("回款记录（"+ mData.recordNum + "）");
+        tv_record_value.setText("¥" + mData.backMoney + "（"+ mData.ratePayment + "%)");
+        tv_worksheet.setText("工单" + "（"+ mData.worksheetNum + "）");
+        if(attachmentSize==0)tv_enclosure.setText("附件（"+ mData.attachmentCount + "）");//避免上传附件回来,把原来的数值抹掉了
 //        tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_creator_time.setText(DateTool.getDateTimeFriendly(mData.createdAt));
         tv_plan_value.setText(mData.planMoney + "");

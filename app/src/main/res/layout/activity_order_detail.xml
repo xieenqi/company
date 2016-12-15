@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--已经用新的布局替换,不再需要了-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,10 +23,10 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_10"
+                android:layout_marginBottom="@dimen/margin_other_view"
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
-                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_marginTop="@dimen/margin_other_view"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -39,7 +40,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/dimen_10"
-                        android:layout_weight="1"
                         android:textColor="@color/text33"
                         android:textSize="@dimen/text_sp16" />
 
@@ -47,54 +47,58 @@
                         android:id="@+id/tv_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_10"
                         android:gravity="center"
-                        android:paddingLeft="@dimen/dimen_2"
-                        android:paddingRight="@dimen/dimen_2"
+                        android:paddingBottom="@dimen/dimen_1"
+                        android:paddingLeft="@dimen/dimen_4"
+                        android:paddingRight="@dimen/dimen_5"
+                        android:paddingTop="@dimen/dimen_2"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_sp11" />
+                        android:textSize="@dimen/text_sp10" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_3"
+                    android:layout_marginTop="@dimen/dimen_12"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="对应客户: "
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textColor="@color/suodesilei"
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_customer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/title_bg1"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textColor="#209AFF"
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_4"
+                    android:layout_marginTop="@dimen/dimen_12"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="21dp"
                         android:text="成交金额: ¥"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/suodesilei"
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/tv_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textColor="@color/suodesilei"
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -107,21 +111,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_plan"
-                    style="@style/text_item1"
+                    style="@style/order_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
-                    android:text="回款计划"
-                    android:textSize="15sp" />
+                    android:text="回款计划" />
 
                 <TextView
                     android:id="@+id/tv_plan_value"
-                    style="@style/text_item1"
+                    style="@style/order_line_text_second"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -129,14 +133,13 @@
                     android:hint=""
                     android:textColor="@color/text66"
                     android:textColorHint="@color/text99"
-                    android:textSize="15sp" />
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
+                    android:layout_height="wrap_content"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow" />
+                    android:src="@drawable/order_right_arrow" />
 
             </LinearLayout>
 
@@ -147,36 +150,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_record"
-                    style="@style/text_item1"
+                    style="@style/order_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
-                    android:text="回款记录"
-                    android:textSize="15sp" />
+                    android:text="回款记录" />
 
                 <TextView
                     android:id="@+id/tv_record_value"
-                    style="@style/text_item1"
+                    style="@style/order_line_text_second"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:hint=""
-                    android:textColor="@color/text66"
-                    android:textColorHint="@color/text99"
-                    android:textSize="15sp" />
+                    android:gravity="right|center_vertical" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow" />
+                    android:src="@drawable/order_right_arrow" />
 
             </LinearLayout>
 
@@ -187,36 +185,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_worksheet"
-                    style="@style/text_item1"
+                    style="@style/order_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
-                    android:text="工单"
-                    android:textSize="15sp" />
+                    android:text="工单" />
 
                 <TextView
                     android:id="@+id/tv_worksheet_value"
-                    style="@style/text_item1"
+                    style="@style/order_line_text_second"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:hint=""
-                    android:textColor="@color/text66"
-                    android:textColorHint="@color/text99"
-                    android:textSize="15sp" />
+                    android:gravity="right|center_vertical" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow" />
+                    android:src="@drawable/order_right_arrow" />
 
             </LinearLayout>
 
@@ -226,37 +219,33 @@
                 android:id="@+id/ll_product"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
+                android:paddingRight="14dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/text_item1"
+
+                    style="@style/order_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
-                    android:text="购买产品"
-                    android:textSize="15sp" />
+                    android:text="购买产品" />
 
 
                 <TextView
                     android:id="@+id/tv_product"
-                    style="@style/text_item1"
+                    style="@style/order_line_text_second"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:hint=""
-                    android:textColor="@color/text66"
-                    android:textColorHint="@color/text99"
-                    android:textSize="15sp" />
+                    android:gravity="right|center_vertical"/>
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow" />
+                    android:src="@drawable/order_right_arrow" />
 
             </LinearLayout>
 
@@ -267,17 +256,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_enclosure"
-                    style="@style/text_item1"
+                    style="@style/order_line_text_main"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/dimen_8"
-                    android:text="附件"
-                    android:textSize="15sp" />
+                    android:text="附件"/>
 
                 <View
                     android:layout_width="wrap_content"
@@ -285,11 +274,10 @@
                     android:layout_weight="1" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow" />
+                    android:src="@drawable/order_right_arrow" />
 
             </LinearLayout>
 
@@ -445,4 +433,12 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    <View
+        style="@style/view_split"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/activity_bg"
+        >
+    </View>
 </LinearLayout>
