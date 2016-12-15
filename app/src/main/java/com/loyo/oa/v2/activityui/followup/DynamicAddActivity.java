@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.followup;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -330,7 +331,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
      */
     public void commitDynamic() {
         cancelLoading();
-        showLoading("");
+        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         if (isCustom) {
             map.put("customerId", mCustomer.getId());
@@ -359,17 +360,21 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
             @Override
             public void success(final SaleActivity saleActivity, final Response response) {
-                HttpErrorCheck.checkResponse("新建跟进动态", response);
-                AppBus.getInstance().post(new FollowUpRushEvent());
-                app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
-                cancelLoading();
+                HttpErrorCheck.checkCommitSus("新建跟进动态",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        AppBus.getInstance().post(new FollowUpRushEvent());
+                        app.finishActivity(DynamicAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
-                cancelLoading();
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -378,19 +383,20 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
      * 上传附件信息
      */
     public void postAttaData() {
-        showLoading("");
+        showStatusLoading(false);
         buildAttachment();
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class)
                 .setAttachementData(attachment, new Callback<ArrayList<AttachmentForNew>>() {
                     @Override
                     public void success(ArrayList<AttachmentForNew> attachmentForNew, Response response) {
-                        HttpErrorCheck.checkResponse("上传附件信息", response);
+                        HttpErrorCheck.checkCommitSus("上传附件信息",response);
+                        cancelStatusLoading();
                         commitDynamic();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }
@@ -484,7 +490,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
                     return;
                 }
 
-                showLoading("");
+                showStatusLoading(false);
                 controller.startUpload();
                 controller.notifyCompletionIfNeeded();
 
@@ -727,7 +733,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onAllUploadTasksComplete(UploadController controller, ArrayList<UploadTask> taskList) {
-        cancelLoading();
+        cancelStatusLoading();
         int count = controller.failedTaskCount();
         if (count > 0) {
             Toast(count + "个附件上传失败，请重试或者删除");

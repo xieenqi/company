@@ -343,6 +343,11 @@ public class WfInEditActivity extends BaseActivity implements WfinEditView{
     }
 
     @Override
+    public void showStatusProgress() {
+        showStatusLoading(false);
+    }
+
+    @Override
     public void showProgress(String msg) {
         showLoading(msg);
     }

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.discuss.bean.Discussion;
 import com.loyo.oa.v2.activityui.other.model.User;
@@ -63,6 +64,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     private TextView tv_send;
     public ViewGroup layout_discuss_action;
     private HaitHelper mHaitHelper;
+    private LoadingLayout ll_loading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,15 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         if (null == mView) {
             mInflater = inflater;
             mView = inflater.inflate(R.layout.fragment_discussion, container, false);
+            ll_loading = (LoadingLayout) mView.findViewById(R.id.ll_loading);
+            ll_loading.setStatus(LoadingLayout.Loading);
+            ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+                @Override
+                public void onReload(View v) {
+                    ll_loading.setStatus(LoadingLayout.Loading);
+                    getData();
+                }
+            });
             lv_discuss = (PullToRefreshListView) mView.findViewById(R.id.lv_discussion);
             et_comment = (EditText) mView.findViewById(R.id.et_comment);
             tv_send = (TextView) mView.findViewById(R.id.tv_send);
@@ -99,7 +110,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
     @Override
     public void onDestroy() {
-        if (mHaitHelper !=null) {
+        if (mHaitHelper != null) {
             mHaitHelper.clean();
         }
         super.onDestroy();
@@ -174,11 +185,14 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                 }
                 lv_discuss.onRefreshComplete();
                 scrollToBottom();
+                ll_loading.setStatus(LoadingLayout.Success);
+                if (isTopAdd && discussions.size() == 0)
+                    ll_loading.setStatus(LoadingLayout.Empty);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
                 super.failure(error);
                 lv_discuss.onRefreshComplete();
             }
@@ -314,7 +328,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
                     holder.content = (TextView) view.findViewById(R.id.tv_other_content);
                     try {
                         holder.content.setAutoLinkMask(Linkify.ALL);
-                    }catch (NullPointerException e){
+                    } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
                     view.setTag(holder);

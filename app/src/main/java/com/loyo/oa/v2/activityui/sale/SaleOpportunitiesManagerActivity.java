@@ -16,10 +16,10 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonCategoryAdapter;
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
 import com.loyo.oa.v2.activityui.sale.fragment.MySaleFragment;
 import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.activityui.sale.presenter.SaleOpportunitiesPresenterImpl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -99,15 +99,19 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
             img_title_arrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
         }
-        showProgress("");
-        mPersenter.getPageData();
+//        showProgress("");
+//        mPersenter.getPageData();
+        SaleStageConfig.getSaleStage(true);
+//        setSaleStgesData(SaleStageConfig.getSaleStageCache());
+        initTitleItem();
+        initChildren();
     }
 
-    @Override
-    public void setSaleStgesData(ArrayList<SaleStage> saleStages) {
-        initTitleItem();
-        initChildren(saleStages);
-    }
+//    @Override
+//    public void setSaleStgesData(ArrayList<SaleStage> saleStages) {
+////        initTitleItem();
+////        initChildren();
+//    }
 
     @Override
     public void closePageView() {
@@ -131,16 +135,16 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     /**
      * 初始化子片段
      */
-    private void initChildren(ArrayList<SaleStage> saleStages) {
+    private void initChildren() {
         for (int i = 0; i < SaleItemStatus.length; i++) {
             BaseFragment fragment = null;
             if (i == 0) {
                 Bundle b = new Bundle();
-                b.putSerializable("stage", saleStages);
+//                b.putSerializable("stage", saleStages);
                 fragment = (BaseFragment) Fragment.instantiate(this, MySaleFragment.class.getName(), b);
             } else {
                 Bundle b = new Bundle();
-                b.putSerializable("stage", saleStages);
+//                b.putSerializable("stage", saleStages);
                 fragment = (BaseFragment) Fragment.instantiate(this, TeamSaleFragment.class.getName(), b);
             }
             fragments.add(fragment);
@@ -211,6 +215,11 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void showStatusProgress() {
+
     }
 
     @Override

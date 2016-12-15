@@ -56,7 +56,7 @@ public class AttendanceListPresenterImpl implements AttendanceListPresenter {
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkErrorForAttendance(error);
+                HttpErrorCheck.checkError(error,crolView.getLoading());
                 super.failure(error);
             }
         });

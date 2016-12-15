@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.activityui.other.adapter.AttachmentSwipeAdapter;
@@ -70,6 +71,8 @@ public class AttachmentActivity extends BaseActivity {
     SwipeListView mListViewAttachment;
     @ViewById(R.id.tv_upload)
     TextView tv_upload;
+    @ViewById
+    LoadingLayout ll_loading;
 
     private ArrayList<Attachment> mListAttachment;
     private AttachmentSwipeAdapter adapter;
@@ -86,7 +89,14 @@ public class AttachmentActivity extends BaseActivity {
                 tv_upload.setVisibility(View.GONE);
             }
         }
-//        setTouchView(NO_SCROLL);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getAttachments();
+            }
+        });
         getAttachments();
     }
 
@@ -106,7 +116,7 @@ public class AttachmentActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error,ll_loading);
                 finish();
             }
         });
@@ -117,6 +127,7 @@ public class AttachmentActivity extends BaseActivity {
      */
     void bindAttachment() {
         if (ListUtil.IsEmpty(mListAttachment)) {
+            ll_loading.setStatus(LoadingLayout.Empty);
             return;
         }
 
@@ -143,6 +154,7 @@ public class AttachmentActivity extends BaseActivity {
             DialogHelp.cancelLoading();
         }
         adapter.refreshData();
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
 

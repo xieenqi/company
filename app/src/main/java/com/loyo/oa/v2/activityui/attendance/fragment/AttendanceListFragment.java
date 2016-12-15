@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activityui.attendance.AttendanceDetailsActivity_;
@@ -56,7 +57,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * 【考勤列表】我的和团队
  * Restruture by yyy on 16/10/11.
  */
-public class AttendanceListFragment extends BaseFragment implements View.OnClickListener, LocationUtilGD.AfterLocation,AttendanceListView {
+public class AttendanceListFragment extends BaseFragment implements View.OnClickListener, LocationUtilGD.AfterLocation, AttendanceListView {
 
     private Boolean inEnable;
     private Boolean outEnable;
@@ -77,35 +78,35 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private ValidateInfo validateInfo = new ValidateInfo();
     private AttendanceListAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private CustomerDataManager customerDataManager;
+    //    private CustomerDataManager customerDataManager;
     private DataSelectAdapter dataSelectAdapter;
     private ArrayList<DataSelect> dataSelects;
     private AttendanceListPresenterImpl mPresenter;
 
-    private int scorllW;
     private int windowW;
     private int qtime, page = 1;
     private int type;                    //我的考勤【1】 团队考勤【2】
     private boolean isPullDowne = true;  //是否下拉刷新 默认是
     private boolean isAttAdd = false;
     private int outKind;                 //0上班  1下班  2加班
-    private long checkdateTime;
+    //    private long checkdateTime;
     private Calendar cal;
     private View mView;
+    private LoadingLayout ll_loading;
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (isAttAdd) {
-            LogUtil.dee("onResume");
-            getData(page);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (isAttAdd) {
+//            LogUtil.dee("onResume");
+//            getData(page);
+//        }
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//    }
 
     @Nullable
     @Override
@@ -124,6 +125,16 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     }
 
     private void initUI() {
+        ll_loading = (LoadingLayout) mView.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                page = 1;
+                getData(page);
+            }
+        });
         mPresenter = new AttendanceListPresenterImpl(mActivity, this);
         recyclerView = (CustomRecyclerView) mView.findViewById(R.id.recy_data_select);
         tv_count_title = (TextView) mView.findViewById(R.id.tv_count_title);
@@ -212,6 +223,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 dataSelectAdapter.notifyDataSetChanged();
                 data_time_tv.setText(dataSelects.get(position).yearMonDay);
                 qtime = Integer.parseInt(dataSelects.get(position).mapOftime);
+                ll_loading.setStatus(LoadingLayout.Loading);
                 getData(page);
             }
 
@@ -229,7 +241,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      */
     private void initTimeStr(long mills) {
         String time = "";
-        checkdateTime = mills;
+//        checkdateTime = mills;
         switch (type) {
             case 1:
 //                time = app.df13.format(new Date(mills));
@@ -291,8 +303,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
-        intent.putExtra("lateMin",attendanceRecords.getLateMin());
-        intent.putExtra("earlyMin",attendanceRecords.getEarlyMin());
+        intent.putExtra("lateMin", attendanceRecords.getLateMin());
+        intent.putExtra("earlyMin", attendanceRecords.getEarlyMin());
 
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -458,7 +470,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         attendances.clear();
         attendances.addAll(result.records.getAttendances());
         if (null == adapter) {
-            adapter = new AttendanceListAdapter(attendances,this,getActivity(),mActivity,type);
+            adapter = new AttendanceListAdapter(attendances, this, getActivity(), mActivity, type);
             lv.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
@@ -470,6 +482,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 return false;
             }
         });
+        ll_loading.setStatus(LoadingLayout.Success);
+        if (attendances.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     /**
@@ -477,19 +492,19 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      */
     private void getData(final int page) {
         isAttAdd = false;
-        showLoading("请稍后");
+//        showLoading("请稍后");
         mPresenter.getListData(type, qtime, page);
     }
 
     /**
      * 位置信息回调
-     * */
+     */
     @Override
     public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
         UMengTools.sendLocationInfo(address, longitude, latitude);
         map.put("originalgps", longitude + "," + latitude);
         showLoading("");
-        mPresenter.checkAttendance(map,address);
+        mPresenter.checkAttendance(map, address);
         LocationUtilGD.sotpLocation();
     }
 
@@ -508,14 +523,16 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if (type == 1) {
             attendanceList = result.records;
             initStatistics();
+
         } else {
             mPresenter.getTeamData(qtime);
         }
         bindData(result);
+
     }
 
     /**
-     * 获取团队数据成功处理
+     * 获取团队数据成功处理 统计数据
      */
     @Override
     public void getTeamDataEmbl(AttendanceList mAttendanceList) {
@@ -560,7 +577,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     /**
      * 跳转考勤详情操作
-     * */
+     */
     @Override
     public void previewAttendance(int inOrOut, DayofAttendance attendance, String overTime) {
         if (type == 1) {
@@ -576,9 +593,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     /**
      * 考勤信息检查成功处理
-     * */
+     */
     @Override
-    public void checkAttendanceEmbl(AttendanceRecord attendanceRecord,String address) {
+    public void checkAttendanceEmbl(AttendanceRecord attendanceRecord, String address) {
         if (null == attendanceRecord) {
             Toast("没有获取到考勤信息");
             return;
@@ -590,5 +607,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         } else {
             intentValue();
         }
+    }
+
+    @Override
+    public LoadingLayout getLoading() {
+        return ll_loading;
     }
 }

@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.common.http;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -191,7 +192,22 @@ public class HttpErrorCheck {
             e.printStackTrace();
         }
     }
-
+    public static void checkResponse(String tag, Response response,LoadingLayout loadingLayout) {
+        DialogHelp.cancelLoading();
+        try {
+            String result = Utils.convertStreamToString(response.getBody().in());
+            LogUtil.d(tag + " 接口成功result：" + result);
+            LogUtil.d(tag + " 接口成功URL：" + response.getUrl());
+            checkResponseError(result,loadingLayout);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            LogUtil.d("Body空response:" + response.getUrl());
+            e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+    }
     public static void checkResponse(Response response) {
         DialogHelp.cancelLoading();
         try {
@@ -213,14 +229,14 @@ public class HttpErrorCheck {
 
 
     /**
-     * 所有提交,成功检查
+     * 所有提交,成功检查(2.7.4新版提交方案)
      * */
-    public static void checkCommitSus(Response response) {
+    public static void checkCommitSus(String tag,Response response) {
         DialogHelp.successStatusLoad();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
-            LogUtil.d(" 接口成功result：" + result);
-            LogUtil.d(" 接口成功URL：" + response.getUrl());
+            LogUtil.d(tag+" 接口成功result：" + result);
+            LogUtil.d(tag+" 接口成功URL：" + response.getUrl());
             checkResponseError(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -233,13 +249,12 @@ public class HttpErrorCheck {
     }
 
     /**
-     * 所有提交,失败检查
+     * 所有提交,失败检查(2.7.4新版提交方案)
      * */
     public static void checkCommitEro(RetrofitError error) {
-        DialogHelp.cancelLoading();
+        String errorMsg = "提交失败!";
         LogUtil.d("网络异常" + error.getMessage());
         LogUtil.d("error接口URL：" + error.getUrl());
-
         try {
             String msg = Utils.
                     convertStreamToString(error.
@@ -249,23 +264,29 @@ public class HttpErrorCheck {
             LogUtil.d("error获得的：", msg);
             JSONObject job = new JSONObject(msg);
             if (500 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
+                //Toast(job.getString("error"));
+                errorMsg = job.getString("error");
             } else if (401 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
+                //Toast(job.getString("error"));
+                errorMsg = job.getString("error");
             } else if (404 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
+                //Toast(job.getString("error"));
+                errorMsg = job.getString("error");
             } else if (406 == error.getResponse().getStatus()) {
-                Toast(job.getString("error"));
+                //Toast(job.getString("error"));
+                errorMsg = job.getString("error");
                 //到侧边栏 退出系统到登录界面
                 Intent in = new Intent();
                 in.setAction(ExtraAndResult.ACTION_USER_VERSION);
                 in.putExtra(ExtraAndResult.EXTRA_DATA, "exite");
                 LocalBroadcastManager.getInstance(MainApp.getMainApp()).sendBroadcast(in);
             } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                Toast("请检查您的网络连接");
+                //Toast("请检查您的网络连接");
+                errorMsg = "请检查您的网络连接";
             } else {
                 String errorInfo = job.getString("error");
-                Toast(errorInfo);
+                //Toast(errorInfo);
+                errorMsg = "errorInfo";
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
@@ -273,11 +294,20 @@ public class HttpErrorCheck {
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
             e.printStackTrace();
-            Toast("连接服务器失败");
+            //Toast("连接服务器失败");
+            errorMsg = "连接服务器失败";
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
-            Toast("服务端数据异常");
+            //Toast("服务端数据异常");
+            errorMsg = "服务端数据异常";
             e.printStackTrace();
+        }finally {
+            DialogHelp.errorStatusLoading(errorMsg);
+            new Handler().postDelayed(new Runnable(){
+                public void run() {
+                    DialogHelp.cancelStatusLoading();
+                }
+            }, 1500);
         }
     }
 
@@ -308,6 +338,38 @@ public class HttpErrorCheck {
                 }
             }
         }
-
+    }
+    /**
+     * 检查response 的错误信息
+     *
+     * @param result
+     */
+    private static void checkResponseError(String result,LoadingLayout loadingLayout) throws JsonSyntaxException {
+        BaseBean data = MainApp.gson.fromJson(result, BaseBean.class);
+        switch (data.errcode) {
+            case 0:
+                loadingLayout.setStatus(LoadingLayout.Success);
+                break;
+            case 1:
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText("非常抱歉,服务器错误");
+                break;
+            case 2:
+                loadingLayout.setStatus(LoadingLayout.No_Network);
+                loadingLayout.setNoNetworkText("请求参数错误");
+                break;
+            default: {
+                String msg;
+                if (!TextUtils.isEmpty(data.errmsg)) {
+                    msg = data.errmsg;
+                } else {
+                    msg = "服务器出错";
+                }
+                if (data.errcode != 0) {
+                    loadingLayout.setStatus(LoadingLayout.No_Network);
+                    loadingLayout.setNoNetworkText(msg);
+                }
+            }
+        }
     }
 }

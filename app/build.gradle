@@ -126,6 +126,7 @@ android {
         compile "com.android.support:design:$supportLibVersion"
         compile "com.android.support:support-annotations:$supportLibVersion"
         compile "org.androidannotations:androidannotations-api:$AAVersion"
+        compile "com.android.support:percent:$supportLibVersion"//百分比布局
         compile 'com.google.code.gson:gson:2.3'
         compile 'com.squareup.retrofit:retrofit:1.9.0'
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
@@ -140,7 +141,10 @@ android {
         compile 'com.github.instacart.truetime-android:library:1.5'
         compile 'org.jsoup:jsoup:1.10.1'//解析HTML
         compile "com.andkulikov:transitionseverywhere:1.7.0"
+        compile 'me.itangqi.waveloadingview:library:0.3.1'
 
+        //compile 'cn.fanrunqi:waveprogress:1.0.0'
+        //compile 'com.lai.weavey:loadinglayout:1.2'//loading加载库
         //compile 'cn.pedant.sweetalert:library:1.3'
         //compile 'com.squareup.okhttp3:okhttp:3.2.0'
         /*compile files('libs/android-async-http-1.4.6.jar')

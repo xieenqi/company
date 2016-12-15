@@ -1,10 +1,11 @@
 package com.loyo.oa.v2.activityui.signin.persenter;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.signin.bean.SigninSelectCustomer;
 import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninSelectCustomerVControl;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ISigninNeworFollowUp;
+import com.loyo.oa.v2.point.ISigninOrFollowUp;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -38,7 +39,7 @@ public class SigninSelectCustomerPControl implements SigninSelectCustomerPersent
     public void oneGetNearCustomer(double longitude, double latitude) {
         this.longitude = longitude;
         this.latitude = latitude;
-        vControl.showProgress("");
+//        vControl.showProgress("");
         getPageData(page);
     }
 
@@ -55,18 +56,18 @@ public class SigninSelectCustomerPControl implements SigninSelectCustomerPersent
         params.put("x", longitude);
         params.put("y", latitude);
         params.put("dis", dis);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).
                 getSiginiNearCustomer(params, new Callback<BaseBeanT<ArrayList<SigninSelectCustomer>>>() {
                     @Override
                     public void success(BaseBeanT<ArrayList<SigninSelectCustomer>> result, Response response) {
-                        HttpErrorCheck.checkResponse("拜访签到客户选择", response);
+                        HttpErrorCheck.checkResponse("拜访签到客户选择", response, vControl.getLoadingLayout());
 
                         if (null == result.data || result.data.size() == 0) {
                             if (isPull) {
                                 vControl.showMsg("没有更多数据了!");
                             } else {
                                 listData.clear();
-//                                vControl.setEmptyView();
+                                vControl.getLoadingLayout().setStatus(LoadingLayout.Empty);
                             }
                             vControl.getDataComplete();
                         } else {
@@ -84,7 +85,7 @@ public class SigninSelectCustomerPControl implements SigninSelectCustomerPersent
                     @Override
                     public void failure(RetrofitError error) {
                         vControl.getDataComplete();
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
                     }
                 });
     }

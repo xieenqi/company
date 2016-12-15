@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activityui.attendance.viewcontrol;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceList;
 import com.loyo.oa.v2.activityui.attendance.model.AttendanceRecord;
 import com.loyo.oa.v2.activityui.attendance.model.DayofAttendance;
@@ -28,6 +29,8 @@ public interface AttendanceListView {
     void previewAttendance(int inOrOut, DayofAttendance attendance, String overTime);
 
     /*检查考勤信息处理*/
-    void checkAttendanceEmbl(AttendanceRecord attendanceRecord,String address);
+    void checkAttendanceEmbl(AttendanceRecord attendanceRecord, String address);
+
+    LoadingLayout getLoading();
 
 }

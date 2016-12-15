@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -72,9 +74,9 @@ import retrofit.client.Response;
 public class CustomerInfoActivity extends BaseFragmentActivity {
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
-    public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
+    //    public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
     public static final int REQUEST_CUSTOMER_UPDATE_CONTRACT = 7;
-    public static final int REQUEST_CUSTOMER_FOLLOW = 8;
+//    public static final int REQUEST_CUSTOMER_FOLLOW = 8;
     public static final int REQUEST_CUSTOMER_EDIT_BASEINFO = 9;
 
     @ViewById
@@ -119,8 +121,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     ImageView img_del_join_users;
     @ViewById
     EditText edt_address_details;
+    @ViewById
+    LoadingLayout ll_loading;
 
-    @Extra("Customer")
     Customer mCustomer;
     @Extra("CustomerId")
     String mCustomerId;
@@ -152,6 +155,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
 
     @AfterViews
     void initUI() {
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getCustomer();
+            }
+        });
         containerRe = (LinearLayout) findViewById(R.id.layout_customer_required_info);
         layout_rushpackger = (LinearLayout) findViewById(R.id.layout_rushpackger);
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -178,16 +189,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void success(final ArrayList<CustomerExtraData> customerExtraDatas, final Response response) {
                         HttpErrorCheck.checkResponse("客户动态字段", response);
+                        ll_loading.setStatus(LoadingLayout.Success);
                         mCustomerExtraDatas = customerExtraDatas;
                         initData();
-                        Utils.dialogDismiss();
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                        Utils.dialogDismiss();
+                        HttpErrorCheck.checkError(error,ll_loading);
                         finish();
                     }
                 });
@@ -222,7 +232,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                Utils.dialogDismiss();
             }
         });
     }
@@ -231,9 +240,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 获取用户信息
      */
     void getCustomer() {
-        Utils.dialogShow(this, "请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getCustomerById(null == mCustomer ? mCustomerId : mCustomer.getId(), new RCallback<BaseResponse<Customer>>() {
+                getCustomerById(mCustomerId, new RCallback<BaseResponse<Customer>>() {
                     @Override
                     public void success(final BaseResponse<Customer> customerResp, final Response response) {
                         HttpErrorCheck.checkResponse("客户信息", response);
@@ -247,8 +255,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                        Utils.dialogDismiss();
+                        HttpErrorCheck.checkError(error,ll_loading);
                         finish();
                     }
                 });
@@ -299,10 +306,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             }
 
             /*分离必填与非必填字段*/
-            for(ExtraData ext : extDatas){
-                if(ext.getProperties().isRequired()){
+            for (ExtraData ext : extDatas) {
+                if (ext.getProperties().isRequired()) {
                     reextDatasModel.add(ext);
-                }else{
+                } else {
                     opextDatasModel.add(ext);
                 }
             }
@@ -416,9 +423,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     }
 
     void updateUiWithEditAuth(boolean canEdit) {
-        img_refresh_address.setVisibility(canEdit?View.VISIBLE:View.GONE);
-        img_title_right.setVisibility(canEdit?View.VISIBLE:View.GONE);
-        layout_rushpackger.setVisibility(canEdit?View.VISIBLE:View.GONE);
+        img_refresh_address.setVisibility(canEdit ? View.VISIBLE : View.GONE);
+        img_title_right.setVisibility(canEdit ? View.VISIBLE : View.GONE);
+        layout_rushpackger.setVisibility(canEdit ? View.VISIBLE : View.GONE);
         tv_customer_name.setEnabled(canEdit);
         tv_address.setEnabled(canEdit);
         edt_customer_memo.setEnabled(canEdit);
@@ -433,8 +440,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_address.setTextColor(getResources().getColor(R.color.text33));
             tv_district.setTextColor(getResources().getColor(R.color.title_bg1));
             tv_labels.setTextColor(getResources().getColor(R.color.title_bg1));
-        }
-        else {
+        } else {
             tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
             tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
             tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
@@ -449,8 +455,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         layout_customer_responser.setEnabled(canChangeResponser);
         if (canChangeResponser) {
             tv_customer_responser.setTextColor(getResources().getColor(R.color.title_bg1));
-        }
-        else {
+        } else {
             tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
         }
 
@@ -461,8 +466,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         layout_customer_join_users.setEnabled(canChangeMember);
         if (canChangeMember) {
             tv_customer_join_users.setTextColor(getResources().getColor(R.color.title_bg1));
-        }
-        else {
+        } else {
             tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
         }
 
@@ -472,19 +476,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
      * 显示修改负责任 对话框
      */
     private void showLeaveDialog() {
-
-//        sweetAlertDialogView.alertHandle(new SweetAlertDialog.OnSweetClickListener() {
-//            @Override
-//            public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                dismissSweetAlert();
-//            }
-//        }, new SweetAlertDialog.OnSweetClickListener() {
-//            @Override
-//            public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                dismissSweetAlert();
-//
-//            }
-//        },"提示",getString(R.string.app_userdetalis_message));
 
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContactPickerActivity.SINGLE_SELECTION_KEY, true);
@@ -512,7 +503,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
         extDatas.addAll(opextDatasModel);
         extDatas.addAll(reextDatasModel);
 
-        if(null != extDatas){
+        if (null != extDatas) {
             for (ExtraData ext : extDatas) {
                 if (ext.getProperties().isRequired() && ext.getProperties().isEnabled()) {
                     LogUtil.d("动态字段必填:" + ext.getProperties().isRequired());
@@ -546,9 +537,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 break;
 
             case R.id.layout_customer_label:
-                mIntent = new Intent(CustomerInfoActivity.this,CustomerLabelCopyActivity.class);
+                mIntent = new Intent(CustomerInfoActivity.this, CustomerLabelCopyActivity.class);
                 mIntent.putExtra("canEdit", canEdit);
-                mIntent.putExtra("fromPage",1);
+                mIntent.putExtra("fromPage", 1);
                 if (null != mTagItems) {
                     mIntent.putExtra("tagitems", Utils.convertTagItems(mTagItems));
                     mIntent.putExtra("customerId", mCustomer.getId());
@@ -582,10 +573,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 showLeaveDialog();
                 break;
             /*选参与人*/
-            case R.id.layout_customer_join_users:
-            {
+            case R.id.layout_customer_join_users: {
                 Members selectedMembers = new Members();
-                for (Member m:members){
+                for (Member m : members) {
                     selectedMembers.users.add(m.getUser());
                 }
 
@@ -602,7 +592,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
             /*地区选择*/
             case R.id.layout_customer_district:
                 loadAreaCodeTable();
@@ -642,7 +632,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             adrDetailsData.addr = addressDetails;
         }
 
-        showLoading("");
+        showStatusLoading(false);
         mLocate.addr = customerAddress;
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", customerName);
@@ -660,18 +650,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer customer, final Response response) {
-                        HttpErrorCheck.checkResponse("更新客户信息", response);
-                        app.isCutomerEdit = true;
-                        customer.loc = mLocate;
-                        AppBus.getInstance().post(new EditCustomerEvent());
-                        finish();
-
+                        HttpErrorCheck.checkCommitSus("更新客户信息", response);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                app.isCutomerEdit = true;
+                                customer.loc = mLocate;
+                                AppBus.getInstance().post(new EditCustomerEvent());
+                                finish();
+                            }
+                        },1000);
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }
@@ -686,7 +681,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
     }
 
     @Subscribe
-    public void onCustomerLabelRushEvent(CustomerLabelRushEvent event){
+    public void onCustomerLabelRushEvent(CustomerLabelRushEvent event) {
         Bundle bundle = event.bundle;
         mTagItems = (ArrayList<NewTag>) bundle.getSerializable("data");
         tv_labels.setText(appendTagItem(mTagItems));
@@ -705,15 +700,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             NewUser user = Compat.convertStaffCollectionToNewUser(collection);
             if (user == null) {
                 return;
-            }
-            else {
+            } else {
                 owner.id = user.getId();
                 owner.name = user.getName();
                 owner.avatar = user.getAvatar();
                 tv_customer_responser.setText(user.getName());
             }
-        }
-        else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
+        } else if (FinalVariables.PICK_INVOLVE_USER_REQUEST.equals(event.request)) {
             StaffMemberCollection collection = event.data;
             Members selectedMembers = Compat.convertStaffCollectionToMembers(collection);
             if (selectedMembers == null) {

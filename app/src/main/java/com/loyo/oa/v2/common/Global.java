@@ -17,8 +17,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.view.Gravity;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -284,7 +284,16 @@ public final class Global {
         File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + DateTool.getFileNameByTime()
                 + ".jpg");
 
-        return Uri.fromFile(mediaFile);
+        // bugfix
+        Uri photoFile ;
+        if (android.os.Build.VERSION.SDK_INT >= 24/*Build.VERSION_CODES.N*/) {
+            String authority = MainApp.getMainApp().getApplicationInfo().packageName + ".provider";
+            photoFile = FileProvider.getUriForFile(MainApp.getMainApp().getApplicationContext(), authority, mediaFile);
+        } else {
+            photoFile = Uri.fromFile(mediaFile);
+        }
+
+        return photoFile;
     }
 
     //压缩图片,并旋转图片

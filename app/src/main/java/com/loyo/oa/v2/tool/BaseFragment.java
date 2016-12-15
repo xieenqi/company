@@ -104,6 +104,20 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     }
 
     /**
+     * 展示带成功失败动画加载框
+     * */
+    public void showStatusLoading(boolean outTouch){
+        DialogHelp.showStatusLoading(outTouch,mActivity);
+    }
+
+    /**
+     * 关闭带成功失败动画加载框
+     * */
+    public void cancelStatusLoading(){
+        DialogHelp.cancelStatusLoading();
+    }
+
+    /**
      * 关闭软键盘
      */
     public void hideInputKeyboard(EditText et) {

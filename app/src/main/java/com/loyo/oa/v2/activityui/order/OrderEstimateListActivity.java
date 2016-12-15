@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.adapter.OrderEstimateListAdapter;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
@@ -20,6 +21,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -34,7 +36,7 @@ import retrofit.client.Response;
  * 订单【回款记录】
  * Created by yyy on 16/8/2.
  */
-public class OrderEstimateListActivity extends BaseActivity implements View.OnClickListener {
+public class OrderEstimateListActivity extends BaseLoadingActivity implements View.OnClickListener {
 
     /**
      * *****************来自【订单详情】********************
@@ -130,8 +132,17 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_orderestimate);
         initUI();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_orderestimate);
+    }
+
+    @Override
+    public void getPageData() {
+        getData();
     }
 
     public void initUI() {
@@ -160,7 +171,7 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
         lv_listview = (ListView) findViewById(R.id.lv_listview);
         tv_title.setText("回款记录");
         if (null != dealPrice)
-            if(fromPage == OADD_EST_ADD || fromPage == OADD_EST_EDIT){
+            if (fromPage == OADD_EST_ADD || fromPage == OADD_EST_EDIT) {
                 tv_dealprice.setText("￥" + Utils.setValueDouble(dealPrice));
             }
         if (null != mData && mData.size() > 0)
@@ -175,8 +186,10 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
 
         //如果来自详情，则请求回款记录
         if (fromPage == ORDER_DETAILS) {
-            getData();
+            getPageData();
             ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
+        }else {
+            ll_loading.setStatus(LoadingLayout.Success);
         }
         mAdapter = new OrderEstimateListAdapter(this, mData, mHandler, orderId, fromPage, isAdd);
         mAdapter.setOrderStatus(orderStatus);
@@ -215,12 +228,12 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
      * 获取收款记录列表
      */
     public void getData() {
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .getPayEstimate(orderId, new Callback<EstimateList>() {
                     @Override
                     public void success(EstimateList estimateList, Response response) {
                         HttpErrorCheck.checkResponse("回款记录列表", response);
+                        ll_loading.setStatus(LoadingLayout.Success);
                         if (null != estimateList) {
                             mEstimateList = estimateList;
                             if (null != estimateList.records) {
@@ -228,13 +241,18 @@ public class OrderEstimateListActivity extends BaseActivity implements View.OnCl
                                 mData.addAll(estimateList.records);
                                 rushAdapter();
                                 mHandler.sendEmptyMessage(ExtraAndResult.MSG_SEND);
+                                if (mData.size() == 0)
+                                    ll_loading.setStatus(LoadingLayout.Empty);
                             }
+                        } else {
+                            ll_loading.setStatus(LoadingLayout.No_Network);
+                            ll_loading.setNoNetworkText("没有获取到数据");
                         }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
     }

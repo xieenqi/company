@@ -149,6 +149,11 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         Toast(message);
     }
 
+    @Override
+    public void showStatusProgress() {
+
+    }
+
     /**
      * 展示Loading
      */
@@ -171,7 +176,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     @Override
     public void bindListData() {
         managerPresenter.bindListData(lv_notice);
-        ll_loading.setStatus(LoadingLayout.Success);
+//        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     /**

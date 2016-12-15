@@ -8,6 +8,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attendance.model.HttpAttendanceDetial;
 import com.loyo.oa.v2.activityui.attendance.presenter.impl.AttendanceDetailsPresenterImpl;
@@ -28,21 +30,24 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Date;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * 【考勤详情】
- *  Restruture by yyy on 16/10/12
+ * Restruture by yyy on 16/10/12
  */
 @EActivity(R.layout.activity_attendance_info)
-public class AttendanceDetailsActivity extends BaseActivity implements AttendanceDetailsView{
+public class AttendanceDetailsActivity extends BaseActivity implements AttendanceDetailsView {
 
     @ViewById
     ViewGroup layout_back;
@@ -78,6 +83,8 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
     TextView tv_explain;
     @ViewById
     TextView tv_message;
+    @ViewById
+    LoadingLayout ll_loading;
 
     @Extra("overTime")
     String overTime;
@@ -96,12 +103,19 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
 
     @AfterViews
     void initViews() {
-//        setTouchView(NO_SCROLL);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                mPresenter.getData(attendanceId);
+            }
+        });
         layout_back.setOnTouchListener(Global.GetTouch());
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("考勤详情");
         tv_tag = (TextView) findViewById(R.id.tv_tag);
-        mPresenter = new AttendanceDetailsPresenterImpl(this,AttendanceDetailsActivity.this);
+        mPresenter = new AttendanceDetailsPresenterImpl(this, AttendanceDetailsActivity.this);
         initGridView(attachments);
         mPresenter.getData(attendanceId);
     }
@@ -135,7 +149,7 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
                 dismissSweetAlert();
                 mPresenter.confirmOutAttendance(attendanceId, type);
             }
-        },"提示",str);
+        }, "提示", str);
     }
 
     /**
@@ -154,15 +168,20 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
 
     /**
      * 初始化详情数据
-     * */
+     */
     @Override
     public void initDetails(HttpAttendanceDetial mAttendanceDetails) {
         initData(mAttendanceDetails);
     }
 
+    @Override
+    public LoadingLayout getLoading() {
+        return ll_loading;
+    }
+
     /**
      * 确认外勤加班处理
-     * */
+     */
     @Override
     public void confirmOutEmbl() {
         btn_confirm.setVisibility(View.GONE);
@@ -185,14 +204,14 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
         final User user = mAttendanceDetails.user;
         tv_name.setText(user.getRealname());
 
-        LogUtil.dee("user:"+MainApp.gson.toJson(user.depts));
+        LogUtil.dee("user:" + MainApp.gson.toJson(user.depts));
 
         StringBuffer roleBuffer = new StringBuffer();
-        for(UserInfo userInfo:user.depts){
-            roleBuffer.append(userInfo.getShortDept().getName()+":"+userInfo.getShortPosition().getName() +" | ");
+        for (UserInfo userInfo : user.depts) {
+            roleBuffer.append(userInfo.getShortDept().getName() + ":" + userInfo.getShortPosition().getName() + " | ");
         }
 
-        tv_role.setText(roleBuffer.toString().substring(0,roleBuffer.toString().length() - 3));
+        tv_role.setText(roleBuffer.toString().substring(0, roleBuffer.toString().length() - 3));
 
         /*确认加班*/
         if (mAttendanceDetails.extraState == 2) {
@@ -203,16 +222,16 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
         }
         /*确认外勤*/
         else if (mAttendanceDetails.extraState == 0 && mAttendanceDetails.outstate == 2) {
-                iv_type.setImageResource(R.drawable.icon_field_work_confirm);
-                iv_type.setVisibility(View.VISIBLE);
-                btn_confirm.setVisibility(View.VISIBLE);
-                btn_confirm.setText("确认外勤");
-                type = 2;
-                strMessage = "是否确定该员工的外勤?\n" + "确认后将无法取消！";
-            } else if (mAttendanceDetails.outstate == 1) {
-                iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
-                iv_type.setVisibility(View.VISIBLE);
-            }
+            iv_type.setImageResource(R.drawable.icon_field_work_confirm);
+            iv_type.setVisibility(View.VISIBLE);
+            btn_confirm.setVisibility(View.VISIBLE);
+            btn_confirm.setText("确认外勤");
+            type = 2;
+            strMessage = "是否确定该员工的外勤?\n" + "确认后将无法取消！";
+        } else if (mAttendanceDetails.outstate == 1) {
+            iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
+            iv_type.setVisibility(View.VISIBLE);
+        }
 
          /*加班处理*/
         if (mAttendanceDetails.state == 5 && inOrOut == 3) {
@@ -221,32 +240,32 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
 
             String time= com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mAttendanceDetails.extraWorkStartTime )+"-"+ com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mAttendanceDetails.extraWorkEndTime);
             tv_info.setText("加班时间: " + time);
-            tv_tag.setText("加班时长: "+overTime);
+            tv_tag.setText("加班时长: " + overTime);
             tv_explain.setText("加班原因");
         }
         /*上班下班处理*/
         else {
-            String tag  = "";
+            String tag = "";
             String info = "";
 
-            if(inOrOut == 1/*上班*/){
+            if (inOrOut == 1/*上班*/) {
                 info = "上班时间: ";
-                tag  = "上班时间正常";
+                tag = "上班时间正常";
 
-            }else if(inOrOut == 2/*下班*/){
+            } else if (inOrOut == 2/*下班*/) {
                 info = "下班时间: ";
-                tag  = "下班时间正常";
+                tag = "下班时间正常";
             }
 
             if (mAttendanceDetails.state == AttendanceRecord.STATE_BE_LATE) {
-                tag  = "上班迟到: " + mAttendanceDetails.lateMin / 60 + "小时" + mAttendanceDetails.lateMin % 60 + "分";
+                tag = "上班迟到: " + mAttendanceDetails.lateMin / 60 + "小时" + mAttendanceDetails.lateMin % 60 + "分";
                 tv_tag.setText(Utils.modifyTextColor(tag, getResources().getColor(R.color.red1), 0, tag.length()));
                 tv_explain.setText("迟到原因");
             } else if (mAttendanceDetails.state == AttendanceRecord.STATE_LEAVE_EARLY) {
-                tag  = "下班早退: " + mAttendanceDetails.earlyMin / 60 + "小时" + mAttendanceDetails.earlyMin % 60 + "分";
+                tag = "下班早退: " + mAttendanceDetails.earlyMin / 60 + "小时" + mAttendanceDetails.earlyMin % 60 + "分";
                 tv_tag.setText(Utils.modifyTextColor(tag, getResources().getColor(R.color.red1), 0, tag.length()));
                 tv_explain.setText("早退原因");
-            } else if(mAttendanceDetails.state == AttendanceRecord.STATE_NORMAL){
+            } else if (mAttendanceDetails.state == AttendanceRecord.STATE_NORMAL) {
                 tv_tag.setText(tag);
             }
 
@@ -269,12 +288,14 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
         String comfirmTime = "";
 
         /*确认考勤的信息:confirmuser,确认加班的信息:extraConfirmUser*/
-        if(null != mAttendanceDetails.confirmuser){
+        if (null != mAttendanceDetails.confirmuser) {
             names = mAttendanceDetails.confirmuser.name;
             deptNames = mAttendanceDetails.confirmuser.depts.get(0).getShortDept().getName();
             roleNames = mAttendanceDetails.confirmuser.depts.get(0).getTitle();
+
             comfirmTime = com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mAttendanceDetails.confirmtime);
         }else if(null != mAttendanceDetails.extraConfirmUser){
+
             names = mAttendanceDetails.extraConfirmUser.name;
             deptNames = mAttendanceDetails.extraConfirmUser.depts.get(0).getShortDept().getName();
             roleNames = mAttendanceDetails.extraConfirmUser.depts.get(0).getTitle();
@@ -283,27 +304,28 @@ public class AttendanceDetailsActivity extends BaseActivity implements Attendanc
         }
 
         /*确认考勤*/
-        if(mAttendanceDetails.outstate == 1 && mAttendanceDetails.extraState != 1){
+        if (mAttendanceDetails.outstate == 1 && mAttendanceDetails.extraState != 1) {
             ll_confirm.setVisibility(View.VISIBLE);
-            tv_confirmDept.setText(deptNames+" "+roleNames);
+            tv_confirmDept.setText(deptNames + " " + roleNames);
             tv_confirmName.setText(names);
             tv_confirmTime.setText(comfirmTime);
         }
         /*确认加班*/
-        else if(mAttendanceDetails.extraState == 1 && mAttendanceDetails.outstate != 1){
+        else if (mAttendanceDetails.extraState == 1 && mAttendanceDetails.outstate != 1) {
             ll_confirm.setVisibility(View.VISIBLE);
             tv_message.setText("确认加班");
-            tv_confirmDept.setText(deptNames+" "+roleNames);
+            tv_confirmDept.setText(deptNames + " " + roleNames);
             tv_confirmName.setText(names);
             tv_confirmTime.setText(comfirmTime);
         }
         /*既是加班又是考勤,优先显示确认加班*/
-        else if(mAttendanceDetails.extraState == 1 && mAttendanceDetails.outstate == 1){
+        else if (mAttendanceDetails.extraState == 1 && mAttendanceDetails.outstate == 1) {
             ll_confirm.setVisibility(View.VISIBLE);
             tv_message.setText("确认加班");
-            tv_confirmDept.setText(deptNames+" "+roleNames);
+            tv_confirmDept.setText(deptNames + " " + roleNames);
             tv_confirmName.setText(names);
             tv_confirmTime.setText(comfirmTime);
         }
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 }

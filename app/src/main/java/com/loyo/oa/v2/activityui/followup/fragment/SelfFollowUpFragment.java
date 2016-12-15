@@ -9,11 +9,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -25,6 +26,7 @@ import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.adapter.FollowUpListAdapter;
 import com.loyo.oa.v2.activityui.followup.event.FollowUpRushEvent;
+import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
 import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.activityui.followup.common.FollowFilterMenuModel;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
@@ -32,7 +34,7 @@ import com.loyo.oa.v2.activityui.followup.persenter.impl.FollowUpFragPresenterIm
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.FollowUpListView;
 import com.loyo.oa.v2.activityui.followup.DynamicSelectActivity;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -45,7 +47,9 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +63,6 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
 
     private View mView;
     private Button btn_add;
-    private ViewStub emptyView;
     private TextView voiceView;
     private DropDownMenu filterMenu;
     private PullToRefreshListView listView;
@@ -86,6 +89,7 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     private AudioPlayer audioPlayer;
     private TextView lastView;
     private String lastUrl = "";
+    private LoadingLayout ll_loading;
 
 
     @SuppressLint("InflateParams")
@@ -130,18 +134,25 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     }
 
     public void initView(View view) {
-        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                initPageData();
+            }
+        });
+//        mTags = (ArrayList<FollowFilter>) getArguments().getSerializable("tag");
+        mTags = FolloUpConfig.getFolloUpStageCache();
         mPresenter = new FollowUpFragPresenterImpl(this, getActivity());
         audioPlayer = new AudioPlayer(getActivity());
         audioPlayer.initPlayer();
         btn_add = (Button) view.findViewById(R.id.btn_add);
-        emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
 
         layout_bottom_menu = (LinearLayout) view.findViewById(R.id.layout_bottom_menu);
         layout_bottom_voice = (LinearLayout) view.findViewById(R.id.layout_bottom_voice);
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
-        listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
         btn_add.setOnClickListener(this);
@@ -196,12 +207,20 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
                         }
                         break;
                 }
-                isPullOrDown = true;
-                getData(false);
+                initPageData();
             }
         });
-        getData(false);
+        initPageData();
     }
+
+
+    private void initPageData() {
+        ll_loading.setStatus(LoadingLayout.Loading);
+        mPagination.setPageIndex(1);
+        isPullOrDown = true;
+        getData(true);
+    }
+
 
     /**
      * 数据绑定
@@ -338,6 +357,9 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         bindData();
+        ll_loading.setStatus(LoadingLayout.Success);
+        if (isPullOrDown && listModel.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     /**
@@ -346,6 +368,11 @@ public class SelfFollowUpFragment extends BaseFragment implements PullToRefreshB
     @Override
     public void getListDataErrorEmbl() {
         listView.onRefreshComplete();
+    }
+
+    @Override
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 
 

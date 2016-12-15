@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -32,7 +33,7 @@ import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
-import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
+import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -429,10 +430,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      */
     private void addSignIn() {
 
-
+        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         map.put("gpsInfo", loPosition + "," + laPosition);//当前定位信息
-//        map.put("address", mAddress.trim());//客户地址
+//      map.put("address", mAddress.trim());//客户地址
         map.put("position", tv_address.getText().toString());//当前定位地址
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
@@ -446,26 +447,26 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             map.put("memo", edt_memo.getText().toString());
         }
         LogUtil.d(" 新增拜访传递数据：" + MainApp.gson.toJson(map));
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
             @Override
             public void success(final LegWork legWork, final Response response) {
-                HttpErrorCheck.checkResponse(" 新增拜访传result：", response);
-                if (legWork != null) {
-                    if (!TextUtils.isEmpty(legWork.getId())) {
-                        Toast(getString(R.string.sign) + getString(R.string.app_succeed));
-                        AppBus.getInstance().post(new SigninNewRushEvent());
-                        finish();
+                HttpErrorCheck.checkCommitSus("新建拜访", response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        if (!TextUtils.isEmpty(legWork.getId())) {
+                            AppBus.getInstance().post(new SigninRushEvent());
+                            finish();
+                        }
                     }
-                } else {
-                    Toast("提交失败" + response.getStatus());
-                }
+                }, 1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }

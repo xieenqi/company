@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -26,6 +27,7 @@ import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
@@ -44,7 +46,7 @@ import retrofit.client.Response;
  * 客户详情 【订单】列表
  * Created by xeq on 16/8/8.
  */
-public class CustomerOrderList extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class CustomerOrderList extends BaseLoadingActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private ViewGroup img_title_left, layout_add;
     private TextView tv_add;
@@ -59,8 +61,6 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setTouchView(NO_SCROLL);
-        setContentView(R.layout.activity_demands_manage);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
@@ -74,12 +74,24 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_demands_manage);
+    }
+
+    @Override
+    public void getPageData() {
+        isPullDown = true;
+        page = 1;
+        getData();
+    }
+
     private void initUI() {
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
         tv_add = (TextView) findViewById(R.id.tv_add);
         tv_add.setText("新增订单");
-        layout_add.setVisibility(canAdd?View.VISIBLE:View.GONE);
+        layout_add.setVisibility(canAdd ? View.VISIBLE : View.GONE);
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add.setOnClickListener(this);
@@ -92,7 +104,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
         listView_demands.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (! PermissionManager.getInstance()
+                if (!PermissionManager.getInstance()
                         .hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
                     return;
@@ -116,7 +128,7 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.layout_add:
 
-                if (! PermissionManager.getInstance()
+                if (!PermissionManager.getInstance()
                         .hasPermission(BusinessOperation.ORDER_MANAGEMENT)) {
                     sweetAlertDialogView.alertIcon(null, "此功能权限已关闭\n请联系管理员开启后再试!");
 
@@ -138,6 +150,8 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        isPullDown = true;
+        page = 1;
         getData();
     }
 
@@ -164,11 +178,14 @@ public class CustomerOrderList extends BaseActivity implements View.OnClickListe
                             listData = resultData.records;
                         }
                         listAdapter.setData(listData);
+                        ll_loading.setStatus(LoadingLayout.Success);
+                        if (isPullDown && listData.size() == 0)
+                            ll_loading.setStatus(LoadingLayout.Empty);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, ll_loading);
                         listView_demands.onRefreshComplete();
                         super.failure(error);
                     }

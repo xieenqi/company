@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.order.OrderAddActivity;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -48,7 +50,7 @@ import retrofit.client.Response;
  * 【机会详情】
  * Created by yyy on 16/5/19.
  */
-public class SaleDetailsActivity extends BaseActivity implements View.OnClickListener, SaleDetailContract.View {
+public class SaleDetailsActivity extends BaseLoadingActivity implements View.OnClickListener, SaleDetailContract.View {
 
     private LinearLayout img_title_left;
     private LinearLayout layout_losereson;
@@ -89,10 +91,19 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_saledetails);
         mPersenter = new SaleDetailPresenterImpl(this);
         setTitle("机会详情");
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_saledetails);
+    }
+
+    @Override
+    public void getPageData() {
+        mPersenter.getPageData(selectId);
     }
 
     public void initView() {
@@ -126,7 +137,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
         Global.SetTouchView(ll_stage, ll_product, img_title_right, img_title_left, iv_wfstatus);
         iv_wfstatus.setOnClickListener(this);
         getIntenData();
-        mPersenter.getPageData(selectId);
+        getPageData();
     }
 
     private void getIntenData() {
@@ -484,6 +495,11 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading(message);
     }
@@ -512,5 +528,10 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void editSaleStageSuccessUI() {
         mPersenter.getPageData(selectId);
+    }
+
+    @Override
+    public LoadingLayout getLoadingUI() {
+        return ll_loading;
     }
 }

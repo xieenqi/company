@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.activityui.project.HttpProject;
@@ -172,11 +173,14 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                         changeAdapter();
                     }
                 }
+                ll_loading.setStatus(LoadingLayout.Success);
+                if (isTopAdd && lstData.size() == 0)
+                    ll_loading.setStatus(LoadingLayout.Empty);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
                 super.failure(error);
                 if (null != mExpandableListView) {
                     mExpandableListView.onRefreshComplete();

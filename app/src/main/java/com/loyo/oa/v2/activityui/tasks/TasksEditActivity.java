@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -414,61 +416,7 @@ public class TasksEditActivity extends BaseActivity {
                     Toast("负责人" + getString(R.string.app_no_null));
                     break;
                 }
-
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("title", title);
-                map.put("content", content);
-                map.put("responsiblePerson", newUser);
-                map.put("members", member);
-                map.put("attachmentUUId", uuid);
-                map.put("customerId", mTask.getCustomerId());
-                map.put("customerName", mTask.getCustomerName());
-
-                if (switch_approve.getState() == 4) {
-                    isState = true;
-                } else if (switch_approve.getState() == 1) {
-                    isState = false;
-                }
-
-                if (!TextUtils.isEmpty(mTask.getProjectId())) {
-                    map.put("projectId", mTask.getProjectId());
-                }
-
-                if (isKind) {
-                    map.put("cornBody", mTask.getCornBody());
-                } else if (!isKind) {
-                    map.put("planendAt", mTask.getPlanEndAt());
-                    map.put("remindflag", mTask.getRemindTime() > 0);
-                    map.put("remindtime", mTask.getRemindTime());
-                    map.put("reviewFlag", isState);
-                }
-
-                LogUtil.d("任务编辑 发送的数据:" + MainApp.gson.toJson(map));
-                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).update(mTask.getId(), map)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<Task>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(final Throwable e) {
-                                e.printStackTrace();
-                                Toast("编辑失败");
-                            }
-
-                            @Override
-                            public void onNext(final Task task) {
-                                task.setViewed(true);
-                                Toast("编辑成功");
-                                Intent intent = new Intent();
-                                intent.putExtra("data", task);
-                                setResult(Activity.RESULT_OK, intent);
-                                onBackPressed();
-                            }
-                        });
-
+                requestCommitTask(title,content);
                 break;
 
 
@@ -547,6 +495,60 @@ public class TasksEditActivity extends BaseActivity {
         }
     }
 
+    void requestCommitTask(String title,String content){
+        showStatusLoading(false);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("title", title);
+        map.put("content", content);
+        map.put("responsiblePerson", newUser);
+        map.put("members", member);
+        map.put("attachmentUUId", uuid);
+        map.put("customerId", mTask.getCustomerId());
+        map.put("customerName", mTask.getCustomerName());
+
+        if (switch_approve.getState() == 4) {
+            isState = true;
+        } else if (switch_approve.getState() == 1) {
+            isState = false;
+        }
+
+        if (!TextUtils.isEmpty(mTask.getProjectId())) {
+            map.put("projectId", mTask.getProjectId());
+        }
+
+        if (isKind) {
+            map.put("cornBody", mTask.getCornBody());
+        } else if (!isKind) {
+            map.put("planendAt", mTask.getPlanEndAt());
+            map.put("remindflag", mTask.getRemindTime() > 0);
+            map.put("remindtime", mTask.getRemindTime());
+            map.put("reviewFlag", isState);
+        }
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateTask(mTask.getId(), map, new RCallback<Task>() {
+            @Override
+            public void success(final Task task, Response response) {
+                HttpErrorCheck.checkCommitSus("任务编辑",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        task.setViewed(true);
+                        Intent intent = new Intent();
+                        intent.putExtra("data", task);
+                        setResult(Activity.RESULT_OK, intent);
+                        onBackPressed();
+                    }
+                },1000);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkCommitEro(error);
+            }
+        });
+    }
 
     void setDeadLine() {
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);

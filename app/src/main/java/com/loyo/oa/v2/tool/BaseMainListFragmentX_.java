@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;
@@ -19,6 +21,7 @@ import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
+
 import java.util.ArrayList;
 
 public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, View.OnTouchListener {
@@ -27,19 +30,18 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     protected ViewGroup layout_add;
     protected LayoutInflater mInflater;
     protected TextView tv_add;
-    private ViewStub emptyView;
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
     protected PaginationX<T> pagination = new PaginationX<>(20);
     protected PullToRefreshExpandableListView mExpandableListView;
     protected ArrayList<PagingGroupData_<T>> pagingGroupDatas = new ArrayList<>();
-    protected ArrayList<T> lstData;
+    protected ArrayList<T> lstData=new ArrayList<>();
+    public LoadingLayout ll_loading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mInflater = LayoutInflater.from(getActivity());
-        GetData(false, false);
     }
 
     @Override
@@ -51,8 +53,15 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_common_manager1, container, false);
-            emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
-
+            ll_loading = (LoadingLayout) mView.findViewById(R.id.ll_loading);
+            ll_loading.setStatus(LoadingLayout.Loading);
+            ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+                @Override
+                public void onReload(View v) {
+                    ll_loading.setStatus(LoadingLayout.Loading);
+                    GetData(true, false);
+                }
+            });
             layout_add = (ViewGroup) mView.findViewById(R.id.layout_add);
             tv_add = (TextView) mView.findViewById(R.id.tv_add);
             //layout_add.setOnTouchListener(Global.GetTouch());
@@ -65,10 +74,9 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
 
             mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
             mExpandableListView.setOnRefreshListener(this);
-            mExpandableListView.setEmptyView(emptyView);
-
             init();
         }
+        GetData(true, false);
         return mView;
     }
 
@@ -140,11 +148,11 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == 0x09){
+        if (resultCode == 0x09) {
             GetData(true, false);
         }
 
-        if(null == data){
+        if (null == data) {
             return;
         }
 

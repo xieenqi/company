@@ -544,6 +544,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 //没有附件
+                showStatusLoading(false);
                 if (pickPhots.size() == 0) {
                     requestCommitWork();
                     //有附件
@@ -643,15 +644,21 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport workReport, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
-                dealResult(workReport);
+                HttpErrorCheck.checkCommitSus("编辑报告",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        dealResult(workReport);
+                    }
+                },1000);
+
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -663,15 +670,20 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport workReport, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-                dealResult(workReport);
+                HttpErrorCheck.checkCommitSus("新建报告",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        dealResult(workReport);
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -829,9 +841,9 @@ public class WorkReportAddActivity extends BaseActivity {
      * 提交报告
      */
     private void requestCommitWork() {
-        if (pickPhots.size() == 0) {
-            showLoading("正在提交");
-        }
+        /*if (pickPhots.size() == 0) {
+            showStatusLoading(false);
+        }*/
 
         bizExtData = new PostBizExtData();
         if (type == TYPE_EDIT) {
@@ -878,7 +890,6 @@ public class WorkReportAddActivity extends BaseActivity {
      * 批量上传附件
      */
     private void newUploadAttachement() {
-        showLoading("正在提交");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -903,7 +914,7 @@ public class WorkReportAddActivity extends BaseActivity {
                                     @Override
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
-                                        HttpErrorCheck.checkError(error);
+                                        HttpErrorCheck.checkCommitEro(error);
                                     }
                                 });
                     }

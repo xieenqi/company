@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.wfinstance.presenter.impl;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,6 +14,7 @@ import com.loyo.oa.v2.activityui.wfinstance.presenter.WfinEditPresenter;
 import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinEditView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfInstance;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.customview.WfinEditViewGroup;
@@ -269,7 +271,8 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
      * */
     @Override
     public void requestEditWfin(String id,String title,String deptId,ArrayList<HashMap<String, Object>> workflowValues,String projectId,String memo) {
-        crolView.showProgress("");
+        //crolView.showProgress("");
+        crolView.showStatusProgress();
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);                               //自定义标题
@@ -281,17 +284,19 @@ public class WfinEditPresenterImpl implements WfinEditPresenter{
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(id, map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance, final Response response) {
-                HttpErrorCheck.checkResponse("新建审批cg", response);
-                if (wfInstance != null) {
-                    crolView.requestEditWfinEmbl(wfInstance);
-                } else {
-                    crolView.showMsg("服务器错误");
-                }
+                HttpErrorCheck.checkCommitSus("编辑审批",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        DialogHelp.cancelStatusLoading();
+                        crolView.requestEditWfinEmbl(wfInstance);
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
                 super.failure(error);
             }
         });

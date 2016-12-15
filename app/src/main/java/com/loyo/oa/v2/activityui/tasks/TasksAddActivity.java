@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -303,10 +305,9 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
-        if (pickPhots.size() == 0) {
-            showLoading("正在提交");
-            //showDialogLoading(false);
-        }
+        /*if (pickPhots.size() == 0) {
+            showStatusLoading(false);
+        }*/
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
         HashMap<String, Object> map = new HashMap<>();
@@ -345,24 +346,27 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
-                //HttpErrorCheck.checkCommitSus(response);
-                HttpErrorCheck.checkResponse(response);
-                //不需要保存
-                cancelLoading();
-                isSave = false;
-                Intent intent = new Intent();
-                intent.putExtra("data", task);
-                setResult(0x09, intent);
-                onBackPressed();
-                if (isCopy)
-                    TasksInfoActivity.instance.finish();
+                HttpErrorCheck.checkCommitSus("任务创建",response);
+                new Handler().postDelayed(new Runnable(){
+                    public void run() {
+                        cancelStatusLoading();
+                        //不需要保存
+                        isSave = false;
+                        Intent intent = new Intent();
+                        intent.putExtra("data", task);
+                        setResult(0x09, intent);
+                        onBackPressed();
+                        if (isCopy)
+                            TasksInfoActivity.instance.finish();
+                    }
+                }, 1000);
+
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                //HttpErrorCheck.checkCommitEro(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -416,6 +420,7 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
                 //没有附件
+                showStatusLoading(false);
                 if (pickPhots.size() == 0) {
                     requestCommitTask();
                     //有附件
@@ -656,7 +661,6 @@ public class TasksAddActivity extends BaseActivity {
      * 批量上传附件
      */
     private void newUploadAttachement() {
-        showLoading("正在提交");
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -672,6 +676,7 @@ public class TasksAddActivity extends BaseActivity {
                                 new RCallback<Attachment>() {
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
+                                        //cancelStatusLoading();
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
                                             requestCommitTask();
@@ -681,7 +686,7 @@ public class TasksAddActivity extends BaseActivity {
                                     @Override
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
-                                        HttpErrorCheck.checkError(error);
+                                        HttpErrorCheck.checkCommitEro(error);
                                         img_title_right.setEnabled(true);
                                     }
                                 });

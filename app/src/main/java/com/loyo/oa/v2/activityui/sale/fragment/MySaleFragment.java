@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -20,13 +21,14 @@ import com.loyo.oa.dropdownmenu.filtermenu.SaleStageMenuModel;
 import com.loyo.oa.dropdownmenu.model.FilterModel;
 import com.loyo.oa.dropdownmenu.model.MenuModel;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.AddMySaleActivity;
 import com.loyo.oa.v2.activityui.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.activityui.sale.adapter.AdapterMySaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
+import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.MySaleFrgmentContract;
+import com.loyo.oa.v2.activityui.sale.model.SaleStageConfig;
 import com.loyo.oa.v2.activityui.sale.presenter.MySaleFrgmentPresenterImpl;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -56,12 +58,12 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
     private View mView;
     private Button btn_add;
-    private Intent mIntent;
     private PullToRefreshListView listView;
     private AdapterMySaleList adapter;
     private DropDownMenu filterMenu;
     private ArrayList<SaleStage> mSaleStages;
     private MySaleFrgmentPresenterImpl mPersenter;
+    private LoadingLayout ll_loading;
 
     @Nullable
     @Override
@@ -77,18 +79,25 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
     }
 
     private void initView(View view) {
-        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
+//        mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
+        mSaleStages= SaleStageConfig.getSaleStageCache();
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(click);
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                mPersenter.getData();
+            }
+        });
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
-        listView.setEmptyView((ViewStub) view.findViewById(R.id.vs_nodata));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mIntent = new Intent();
+                Intent mIntent = new Intent();
                 mIntent.putExtra(ExtraAndResult.IS_TEAM, false);
                 mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
                 mIntent.setClass(getActivity(), SaleDetailsActivity.class);
@@ -149,6 +158,12 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
             adapter.setData(recordData);
         }
     }
+
+    @Override
+    public LoadingLayout getLoadingUI() {
+        return ll_loading;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -172,7 +187,7 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
 
                 //新建机会
                 case R.id.btn_add:
-                    mIntent = new Intent();
+                    Intent  mIntent = new Intent();
                     mIntent.setClass(getActivity(), AddMySaleActivity.class);
                     startActivityForResult(mIntent, mActivity.RESULT_FIRST_USER);
                     mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
@@ -184,6 +199,11 @@ public class MySaleFragment extends BaseFragment implements PullToRefreshBase.On
             }
         }
     };
+
+    @Override
+    public void showStatusProgress() {
+
+    }
 
     @Override
     public void showProgress(String message) {

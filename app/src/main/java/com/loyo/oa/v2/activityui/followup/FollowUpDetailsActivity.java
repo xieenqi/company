@@ -29,8 +29,8 @@ import com.loyo.oa.v2.activityui.followup.adapter.ListOrDetailsOptionsAdapter;
 import com.loyo.oa.v2.activityui.followup.model.FollowUpListModel;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
-import com.loyo.oa.v2.activityui.signinnew.adapter.ListOrDetailsAudioAdapter;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
+import com.loyo.oa.v2.activityui.signin.adapter.ListOrDetailsAudioAdapter;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.Record;
@@ -45,8 +45,8 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ISigninNeworFollowUp;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.point.ISigninOrFollowUp;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -67,7 +67,7 @@ import retrofit.client.Response;
  * Created by yyy on 16/11/10.
  */
 
-public class FollowUpDetailsActivity extends BaseActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
+public class FollowUpDetailsActivity extends BaseLoadingActivity implements View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
     private ScrollView layout_scrollview;
@@ -129,8 +129,17 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_followup_details);
         initUI();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_followup_details);
+    }
+
+    @Override
+    public void getPageData() {
+        requestDetails();
     }
 
     @Override
@@ -142,7 +151,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
     @Override
     public void onPause() {
         super.onPause();
-        if(null != voiceView)
+        if (null != voiceView)
             audioPlayer.audioPause(voiceView);
     }
 
@@ -234,7 +243,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
         layout_bottom_menu.addView(msgAudiomMenu);
-        requestDetails();
+        getPageData();
     }
 
     private void bindData() {
@@ -250,41 +259,41 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mFollowUpDelModel.createAt));
 
         /** 设置跟进内容 */
-        if(null != mFollowUpDelModel.content && !TextUtils.isEmpty(mFollowUpDelModel.content)){
-            if(mFollowUpDelModel.content.contains("<p>")){
+        if (null != mFollowUpDelModel.content && !TextUtils.isEmpty(mFollowUpDelModel.content)) {
+            if (mFollowUpDelModel.content.contains("<p>")) {
                 setContent(ll_web, mFollowUpDelModel.content);
-            }else{
+            } else {
                 tv_memo.setVisibility(View.VISIBLE);
                 tv_memo.setText(mFollowUpDelModel.content);
             }
         }
 
         /** @通知人员 */
-        if(null != mFollowUpDelModel.atNameAndDepts && !TextUtils.isEmpty(mFollowUpDelModel.atNameAndDepts)){
+        if (null != mFollowUpDelModel.atNameAndDepts && !TextUtils.isEmpty(mFollowUpDelModel.atNameAndDepts)) {
             tv_toast.setVisibility(View.VISIBLE);
-            tv_toast.setText("@"+mFollowUpDelModel.atNameAndDepts);
+            tv_toast.setText("@" + mFollowUpDelModel.atNameAndDepts);
         }
 
         /** 线索 */
-        if(null != mFollowUpDelModel.salesleadCompanyName && !TextUtils.isEmpty(mFollowUpDelModel.salesleadCompanyName)){
+        if (null != mFollowUpDelModel.salesleadCompanyName && !TextUtils.isEmpty(mFollowUpDelModel.salesleadCompanyName)) {
             layout_clue.setVisibility(View.VISIBLE);
             tv_clue.setText(mFollowUpDelModel.salesleadCompanyName);
             tv_clue.setOnTouchListener(Global.GetTouch());
         }
 
         /** 客户姓名 */
-        if(null != mFollowUpDelModel.customerName && !TextUtils.isEmpty(mFollowUpDelModel.customerName)){
+        if (null != mFollowUpDelModel.customerName && !TextUtils.isEmpty(mFollowUpDelModel.customerName)) {
             layout_customer.setVisibility(View.VISIBLE);
             tv_customername.setText(mFollowUpDelModel.customerName);
             tv_customername.setOnTouchListener(Global.GetTouch());
         }
 
         /** 客户地址 */
-        if(null != mFollowUpDelModel.location.addr && !TextUtils.isEmpty(mFollowUpDelModel.location.addr)){
+        if (null != mFollowUpDelModel.location.addr && !TextUtils.isEmpty(mFollowUpDelModel.location.addr)) {
             layout_address.setVisibility(View.VISIBLE);
             tv_address.setText(mFollowUpDelModel.location.addr);
             tv_address.setOnTouchListener(Global.GetTouch());
-        }else{
+        } else {
             layout_address.setVisibility(View.GONE);
         }
 
@@ -333,14 +342,14 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         tv_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(null != mFollowUpDelModel.location.loc){
+                if (null != mFollowUpDelModel.location.loc) {
                     Intent mIntent = new Intent(mContext, MapSingleView.class);
                     mIntent.putExtra("la", Double.valueOf(mFollowUpDelModel.location.loc[1]));
                     mIntent.putExtra("lo", Double.valueOf(mFollowUpDelModel.location.loc[0]));
-                    mIntent.putExtra("address",mFollowUpDelModel.location.addr);
+                    mIntent.putExtra("address", mFollowUpDelModel.location.addr);
                     mContext.startActivity(mIntent);
-                }else{
-                    Toast.makeText(mContext,"GPS坐标不全!",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "GPS坐标不全!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -383,7 +392,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         });
 
         /** 电话录音设置 */
-        if(null != mFollowUpDelModel.audioUrl && !TextUtils.isEmpty(mFollowUpDelModel.audioUrl)){
+        if (null != mFollowUpDelModel.audioUrl && !TextUtils.isEmpty(mFollowUpDelModel.audioUrl)) {
             layout_phonely.setVisibility(View.VISIBLE);
             tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(mFollowUpDelModel.audioLength * 1000));
             int audioLength = mFollowUpDelModel.audioLength;
@@ -413,7 +422,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
                 AudioModel audioModel = new AudioModel();
                 audioModel.url = mFollowUpDelModel.audioUrl;
                 audioModel.length = 10;
-                playVoice(audioModel,iv_phone_call);
+                playVoice(audioModel, iv_phone_call);
             }
         });
     }
@@ -422,7 +431,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
      * 评论删除
      */
     private void deleteComment(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).deleteComment(id, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).deleteComment(id, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -445,10 +454,10 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", id);
         map.put("split", true);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).getFollowUpDetails(map, new RCallback<BaseBeanT<FollowUpListModel>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).getFollowUpDetails(map, new RCallback<BaseBeanT<FollowUpListModel>>() {
             @Override
             public void success(BaseBeanT<FollowUpListModel> followuplistmodel, Response response) {
-                HttpErrorCheck.checkResponse("跟进详情", response);
+                HttpErrorCheck.checkResponse("跟进详情", response,ll_loading);
                 if (followuplistmodel.errcode != 0) {
                     Toast("获取拜访详情出错!");
                     finish();
@@ -460,7 +469,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error,ll_loading);
                 super.failure(error);
             }
         });
@@ -478,7 +487,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         map.put("bizzType", 2);   //1拜访 2跟进
 //        map.put("audioInfo", "");//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -504,7 +513,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
         map.put("bizzType", 2);   //1拜访 2跟进
         map.put("audioInfo", record);//语音信息
         LogUtil.dee("评论参数:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).requestComment(map, new RCallback<Object>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).requestComment(map, new RCallback<Object>() {
             @Override
             public void success(Object object, Response response) {
                 HttpErrorCheck.checkResponse("评论", response);
@@ -585,7 +594,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
                 MainApp.getMainApp().stopAnim(lastView);
         }
 
-        if(audioPlayer.isPlaying()){
+        if (audioPlayer.isPlaying()) {
             /*点击同一条则暂停播放*/
             if (lastView == textView) {
                 LogUtil.dee("同一条");
@@ -598,7 +607,7 @@ public class FollowUpDetailsActivity extends BaseActivity implements View.OnClic
                 lastUrl = audioModel.url;
                 lastView = textView;
             }
-        }else{
+        } else {
             audioPlayer.audioStart(textView);
             audioPlayer.threadPool(audioModel, textView);
             lastUrl = audioModel.url;

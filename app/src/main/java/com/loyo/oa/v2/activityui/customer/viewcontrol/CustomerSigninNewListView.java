@@ -6,6 +6,7 @@ package com.loyo.oa.v2.activityui.customer.viewcontrol;
 
 import android.view.ViewGroup;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -35,5 +36,7 @@ public interface CustomerSigninNewListView {
     void getListDataErrorEmbl();
 
     ViewGroup getBottomMenuLayout();
+
+    LoadingLayout getLoading();
 
 }

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
@@ -27,6 +28,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -42,7 +44,7 @@ import retrofit.client.Response;
  * 【销售机会搜索】
  */
 
-public class SaleSearchActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback<SaleList> {
+public class SaleSearchActivity extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, Callback<SaleList> {
 
     public static final int TEAM_SALE_SEARCH = 20;//团队机会搜索
     public static final int MY_SALE_SEARCH = 30;//我的机会搜索
@@ -53,7 +55,6 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
     private ArrayList<SaleRecord> listData = new ArrayList<>();
     private CommonSearchAdapter adapter;
     private LayoutInflater mInflater;
-    private ViewStub emptyView;
     private int fromPage;
     private int page = 1;
     private boolean isPullDown = true;
@@ -62,8 +63,17 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_search);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_public_search);
+    }
+
+    @Override
+    public void getPageData() {
+        doSearch();
     }
 
     /**
@@ -73,8 +83,6 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
         Bundle mBundle = getIntent().getExtras();
         fromPage = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
         mInflater = LayoutInflater.from(this);
-        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
-
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +131,6 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
 
         ListView expandableListView = expandableListView_search.getRefreshableView();
         adapter = new CommonSearchAdapter();
-        expandableListView.setEmptyView(emptyView);
         expandableListView.setAdapter(adapter);
 
         /**列表监听器*/
@@ -141,6 +148,7 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
         });
 
         showInputKeyboard(edt_search);
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
     /**
@@ -181,6 +189,8 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
                 listData = saleList.records;
             }
             adapter.setAdapter();
+            if (listData.size() == 0)
+                ll_loading.setStatus(LoadingLayout.Empty);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -189,7 +199,7 @@ public class SaleSearchActivity extends BaseActivity implements PullToRefreshLis
     @Override
     public void failure(RetrofitError error) {
         expandableListView_search.onRefreshComplete();
-        HttpErrorCheck.checkError(error);
+        HttpErrorCheck.checkError(error, ll_loading);
     }
 
 

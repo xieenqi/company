@@ -10,6 +10,7 @@ import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.dropdownmenu.DropDownMenu;
 import com.loyo.oa.dropdownmenu.adapter.DefaultMenuAdapter;
 import com.loyo.oa.dropdownmenu.callback.OnMenuModelsSelected;
@@ -68,11 +69,13 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     private String typeParam = "";    /* 工单类型Param */
 
     private Button btn_add;
-    private ViewStub emptyView;
     private View mView;
     private DropDownMenu filterMenu;
 
     private Intent mIntent;
+    private Permission permission;
+    private LoadingLayout ll_loading;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +94,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
     public void refresh() {
         isPullDown = true;
         page = 1;
-        showLoading("");
+        ll_loading.setStatus(LoadingLayout.Loading);
         getData();
     }
 
@@ -112,11 +115,17 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(this);
         btn_add.setVisibility(View.GONE);
-        emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
-
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                getData();
+            }
+        });
         mExpandableListView = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView);
         mExpandableListView.setOnRefreshListener(this);
-        mExpandableListView.setEmptyView(emptyView);
 
         setupExpandableListView(
                 new ExpandableListView.OnGroupClickListener() {
@@ -145,8 +154,6 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
 
         Utils.btnHideForListView(expandableListView, btn_add);
         filterMenu = (DropDownMenu) view.findViewById(R.id.drop_down_menu);
-
-        showLoading("加载中...");
         getData();
     }
 
@@ -165,8 +172,7 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                 == Permission.TEAM) {
             depts.addAll(OrganizationManager.shareManager().currentUserDepartments());
             title = "本部门";
-        }
-        else {
+        } else {
             title = "我";
             depts.add(OrganizationFilterModel.selfDepartment());
         }
@@ -192,16 +198,13 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
                     if (model.getClass().equals(OrganizationFilterModel.DepartmentMenuModel.class)) {
                         xpath = model.getKey();
                         userId = "";
-                    }
-                    else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
+                    } else if (model.getClass().equals(OrganizationFilterModel.UserMenuModel.class)) {
                         xpath = "";
                         userId = model.getKey();
                     }
-                }
-                else if (menuIndex == 1) {
+                } else if (menuIndex == 1) {
                     statusParam = key;
-                }
-                else if (menuIndex == 2) {
+                } else if (menuIndex == 2) {
                     typeParam = key;
                 }
                 refresh();
@@ -245,18 +248,20 @@ public class TeamWorksheetFragment extends BaseGroupsDataFragment implements Vie
             @Override
             public void success(WorksheetListWrapper listWrapper, Response response) {
                 mExpandableListView.onRefreshComplete();
+                HttpErrorCheck.checkResponse("团队工单列表：", response, ll_loading);
 
                 if (isPullDown) {
                     groupsData.clear();
+                    if (listWrapper != null && listWrapper.isEmpty())
+                        ll_loading.setStatus(LoadingLayout.Empty);
                 }
                 loadData(listWrapper.data.records);
-                HttpErrorCheck.checkResponse("团队工单列表：", response);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 mExpandableListView.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
             }
         });
 

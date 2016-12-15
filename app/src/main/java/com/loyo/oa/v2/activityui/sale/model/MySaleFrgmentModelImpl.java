@@ -29,14 +29,14 @@ public class MySaleFrgmentModelImpl implements MySaleFrgmentContract.Model {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleMyList(map, new RCallback<SaleList>() {
             @Override
             public void success(SaleList saleMyLists, Response response) {
-                HttpErrorCheck.checkResponse("销售机会 客户列表:", response);
+                HttpErrorCheck.checkResponse("销售机会 客户列表:", response, presenter.getLoadingView());
                 presenter.bindPageData(saleMyLists);
                 presenter.refreshComplete();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, presenter.getLoadingView());
                 presenter.refreshComplete();
             }
         });

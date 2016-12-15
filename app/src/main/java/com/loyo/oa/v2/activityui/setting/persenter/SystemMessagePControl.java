@@ -44,7 +44,7 @@ public class SystemMessagePControl implements SystemMesssagePersenter {
                 getSystemMessage(map, new Callback<PaginationX<SystemMessageItem>>() {
                     @Override
                     public void success(PaginationX<SystemMessageItem> result, Response response) {
-                        HttpErrorCheck.checkResponse("系统消息:", response);
+                        HttpErrorCheck.checkResponse("系统消息:", response, vControl.getLoadingLayout());
                         if (null == result.records || result.records.size() == 0) {
                             if (isPull) {
                                 vControl.showMsg("没有更多数据了!");
@@ -67,7 +67,7 @@ public class SystemMessagePControl implements SystemMesssagePersenter {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, vControl.getLoadingLayout());
                     }
                 });
 

@@ -21,8 +21,8 @@ import com.loyo.oa.v2.tool.LogUtil;
  */
 public class DialogHelp {
 
-    public static LoadStatusView loadStatusDialog; //带成功失败的loading
-    public static Dialog loadingDialog;    //加载loading
+    public static LoadStatusView loadStatusDialog; // 带成功失败的loading(2.7.4)
+    public static Dialog loadingDialog;            // 加载loading(老版)
     public static TextView tipTextView;
 
     public static void showLoading(Context context, String msg) {
@@ -32,7 +32,7 @@ public class DialogHelp {
     /**
      * 带成功,失败的加载Dialog
      * */
-    public static void showStatusLoading(Context context,boolean outTouch){
+    public static void showStatusLoading(boolean outTouch,Context context){
         loadStatusDialog = new LoadStatusView(context);
         loadStatusDialog.setCanceledOnTouchOutside(outTouch);
         loadStatusDialog.show();
@@ -42,7 +42,7 @@ public class DialogHelp {
      * 成功
      * */
     public static void successStatusLoad(){
-        if (loadingDialog != null) {
+        if (loadStatusDialog != null) {
             loadStatusDialog.animSuccessEmbl();
         }
     }
@@ -50,10 +50,14 @@ public class DialogHelp {
     /**
      * 失败
      * */
-    public static void errorStatusLoading(){
+    public static void errorStatusLoading(String message){
         if (loadStatusDialog != null) {
-            loadStatusDialog.animErrorEmbl();
+            loadStatusDialog.animErrorEmbl(message);
         }
+    }
+
+    public static void cancelStatusLoading(){
+        loadStatusDialog.dismiss();
     }
 
     /**

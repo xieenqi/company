@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activityui.sale.model;
 
 
+import android.os.Handler;
+
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
@@ -70,13 +72,13 @@ public class AddMySaleModelImpl implements AddMySaleContract.Model {
                 create(ISale.class).addSaleOpportunity(map, new Callback<SaleOpportunityAdd>() {
             @Override
             public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
-                HttpErrorCheck.checkResponse("创建销售机会", response);
+                HttpErrorCheck.checkCommitSus("创建销售机会",response);
                 mPersenter.creatSaleSuccess();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -87,13 +89,13 @@ public class AddMySaleModelImpl implements AddMySaleContract.Model {
                 create(ISale.class).updateSaleOpportunity(map, chanceId, new Callback<SaleOpportunityAdd>() {
             @Override
             public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
-                HttpErrorCheck.checkResponse("修改销售机会", response);
+                HttpErrorCheck.checkCommitSus("编辑销售机会",response);
                 mPersenter.editSaleSuccess();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }

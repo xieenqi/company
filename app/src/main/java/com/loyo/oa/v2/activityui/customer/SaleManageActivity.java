@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -24,6 +25,7 @@ import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
@@ -40,7 +42,7 @@ import retrofit.client.Response;
  * 【销售机会】客户详情中新增
  */
 
-public class SaleManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class SaleManageActivity extends BaseLoadingActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private ViewGroup img_title_left, layout_add;
     private TextView tv_add;
@@ -58,8 +60,6 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setTouchView(NO_SCROLL);
-        setContentView(R.layout.activity_demands_manage);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
@@ -71,6 +71,18 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
         super.setTitle("销售机会");
         initUI();
 
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_demands_manage);
+    }
+
+    @Override
+    public void getPageData() {
+        isTopAdd = true;
+        page = 1;
+        getData();
     }
 
     void initUI() {
@@ -119,7 +131,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,ll_loading);
                         listView_demands.onRefreshComplete();
                         super.failure(error);
                     }
@@ -136,6 +148,9 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
             listView_demands.setMode(PullToRefreshBase.Mode.BOTH);
             listView_demands.setOnRefreshListener(this);
         }
+        ll_loading.setStatus(LoadingLayout.Success);
+        if(isTopAdd&&listData.size()==0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     @Override

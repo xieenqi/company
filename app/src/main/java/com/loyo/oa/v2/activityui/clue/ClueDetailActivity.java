@@ -40,6 +40,7 @@ import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IClue;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -58,7 +59,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ClueDetailActivity extends BaseActivity implements View.OnClickListener {
+public class ClueDetailActivity extends BaseLoadingActivity implements View.OnClickListener {
 
     /*  Navigation Bar */
     ViewGroup img_title_left /* 返回按钮 */,
@@ -109,16 +110,25 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_clue_detail);
         setTitle("线索详情");
         setupViews();
         getIntenData();
     }
 
     @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_clue_detail);
+    }
+
+    @Override
+    public void getPageData() {
+        getClueDetail();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        getClueDetail();
+        getPageData();
     }
 
     private void setupViews() {
@@ -237,27 +247,20 @@ public class ClueDetailActivity extends BaseActivity implements View.OnClickList
         if (clueId == null) {
             return;
         }
-
-        showLoading("");
         RestAdapterFactory.getInstance()
                 .build(Config_project.API_URL_CUSTOMER())
                 .create(IClue.class)
                 .getClueDetail(clueId, new Callback<BaseBeanT<ClueDetailWrapper.ClueDetail>>() {
                     @Override
                     public void success(BaseBeanT<ClueDetailWrapper.ClueDetail> detail, Response response) {
-                        HttpErrorCheck.checkResponse("线索详情：", response);
-                        if(detail.errcode != 0){
-                            Toast("没有获取到数据");
-                            onBackPressed();
-                        }else{
-                            data = detail.data;
-                            bindData();
-                        }
+                        HttpErrorCheck.checkResponse("线索详情：", response, ll_loading);
+                        data = detail.data;
+                        bindData();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error, ll_loading);
                     }
                 });
     }

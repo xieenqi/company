@@ -542,7 +542,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     }
                 }*/
 
-                showLoading("");
+                showStatusLoading(false);
                 requestCommitTask();
                 break;
 
@@ -726,22 +726,28 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkResponse("新建客户", response);
-                //没有附件
-                if (customer == null || customer.id == null) {
-                    return;
-                }
-                if (pickPhots.size() == 0) {
-                    customerSendSucess(customer);
-                } else {
-                    newUploadAttachement(customer);
-                }
+                HttpErrorCheck.checkCommitSus("新建客户",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        //没有附件
+                        if (customer == null || customer.id == null) {
+                            return;
+                        }
+                        if (pickPhots.size() == 0) {
+                            customerSendSucess(customer);
+                        } else {
+                            newUploadAttachement(customer);
+                        }
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }

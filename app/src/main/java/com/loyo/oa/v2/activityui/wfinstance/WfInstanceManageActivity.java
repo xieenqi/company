@@ -59,7 +59,7 @@ public class WfInstanceManageActivity extends BaseFragmentActivity implements Vi
         setContentView(R.layout.activity_wfinstance_manager);
         getIntentData();
         initView();
-        initUI();
+//        initUI();
     }
 
     private void getIntentData() {

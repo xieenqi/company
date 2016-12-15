@@ -26,7 +26,7 @@ public class LoadStatusView extends Dialog{
     private TextView  text;
     private Context mContext;
 
-    private Button btn1,btn2;
+    private String errorMsg;
 
     AnimationDrawable waitAnim; //等待
     AnimationDrawable sucsAnim; //成功
@@ -45,7 +45,7 @@ public class LoadStatusView extends Dialog{
 
                 /*失败动画*/
                 case 0x02:
-                    erroAnim();
+                    erroAnim(errorMsg);
                     break;
 
             }
@@ -64,33 +64,15 @@ public class LoadStatusView extends Dialog{
         setContentView(R.layout.customer_loadview);
         image = (ImageView) findViewById(R.id.image);
         text  = (TextView) findViewById(R.id.text);
-
-        btn1 = (Button) findViewById(R.id.btn1);
-        btn2 = (Button) findViewById(R.id.btn2);
-
         waitAnim();
-
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sucsAnim();
-            }
-        });
-
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                erroAnim();
-            }
-        });
-
     }
 
     public void animSuccessEmbl(){
         mHandler.sendEmptyMessage(0x01);
     }
 
-    public void animErrorEmbl(){
+    public void animErrorEmbl(String message){
+        errorMsg = message;
         mHandler.sendEmptyMessage(0x02);
     }
 
@@ -119,11 +101,10 @@ public class LoadStatusView extends Dialog{
         image.setBackgroundDrawable(sucsAnim);
         sucsAnim.start();
         text.setText("提交成功!");
-        dismiss();
     }
 
     /*失败动画*/
-    void erroAnim(){
+    void erroAnim(String message){
         erroAnim = new AnimationDrawable();
         for (int i = 1; i <= 10; i++) {
             int id = mContext.getResources().getIdentifier("loaderro"+i,"drawable", mContext.getPackageName());
@@ -133,7 +114,6 @@ public class LoadStatusView extends Dialog{
         erroAnim.setOneShot(true);
         image.setBackgroundDrawable(erroAnim);
         erroAnim.start();
-        text.setText("提交失败!");
-        dismiss();
+        text.setText(message);
     }
 }

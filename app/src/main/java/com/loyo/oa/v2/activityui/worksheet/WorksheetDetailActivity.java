@@ -36,6 +36,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -55,7 +56,7 @@ import retrofit.client.Response;
  * 【 工单详情 】  页面
  * Created by xeq on 16/8/27.
  */
-public class WorksheetDetailActivity extends BaseActivity implements View.OnClickListener {
+public class WorksheetDetailActivity extends BaseLoadingActivity implements View.OnClickListener {
     private static String PICK_USER_SESSION = "com.loyo.WorksheetDetailActivity.PICK_USER_SESSION";
     private LinearLayout img_title_left;
     private LinearLayout ll_worksheet_info;
@@ -96,7 +97,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
-                    break;
+                break;
                 case ExtraAndResult.WORKSHEET_EVENT_REDO://事件重做
                 {
                     eventId = (String) msg.obj;
@@ -105,7 +106,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     mBundle.putInt(ExtraAndResult.EXTRA_DATA, 0x01 /*提交完成:0x02,打回重做0x01*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
                 }
-                    break;
+                break;
                 case ExtraAndResult.WORKSHEET_EVENT_FINISH://事件提交完成
                 {
                     eventId = (String) msg.obj;
@@ -114,7 +115,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                     bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
                     app.startActivity(WorksheetDetailActivity.this, WorksheetSubmitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bd);
                 }
-                    break;
+                break;
             }
         }
     };
@@ -122,9 +123,18 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_worksheet_detial);
         getIntentData();
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_worksheet_detial);
+    }
+
+    @Override
+    public void getPageData() {
+        getData();
     }
 
     private void getIntentData() {
@@ -157,8 +167,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
         bt_confirm.setOnClickListener(this);
         bt_confirm.setOnTouchListener(Global.GetTouch());
         ll_wran = (LinearLayout) findViewById(R.id.ll_wran);
-        showLoading("");
-        getData();
+        getPageData();
     }
 
     private void getData() {
@@ -166,19 +175,20 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 getWorksheetDetail(worksheetId, new Callback<BaseBeanT<WorksheetDetail>>() {
                     @Override
                     public void success(BaseBeanT<WorksheetDetail> result, Response response) {
-                        HttpErrorCheck.checkResponse("工单详情：", response);
+                        HttpErrorCheck.checkResponse("工单详情：", response,ll_loading);
                         if (result.errcode == 0) {
                             detail = result.data;
                             loadData();
-                        } else {
-                            Toast("" + result.errmsg);
                         }
+//                        else {
+//                            Toast("" + result.errmsg);
+//                        }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        onBackPressed();
-                        HttpErrorCheck.checkError(error);
+//                        onBackPressed();
+                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
 
@@ -199,7 +209,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 bundle.putSerializable(ExtraAndResult.CC_USER_ID, detail.id);
                 app.startActivityForResult(this, WorksheetInfoActivity.class, 0, this.RESULT_FIRST_USER, bundle);
             }
-                break;
+            break;
             case R.id.tv_setting://批量设置
                 eventId = "";
             {
@@ -211,7 +221,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-                break;
+            break;
             case R.id.bt_confirm://提交完成
                 stopWorksheet(4);
                 break;
@@ -312,7 +322,7 @@ public class WorksheetDetailActivity extends BaseActivity implements View.OnClic
                         stopWorksheet(5);
                         dismissSweetAlert();
                     }
-                },"提示","意外终止后不可恢复，此工单将无法进行任何操作。\n" +
+                }, "提示", "意外终止后不可恢复，此工单将无法进行任何操作。\n" +
                         "您确定要终止吗？");
 
 /*                final GeneralPopView warn = showGeneralDialog(true, true, "意外终止后不可恢复，此工单将无法进行任何操作。\n" +

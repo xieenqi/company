@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activityui.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -247,23 +248,26 @@ public class ProjectAddActivity extends BaseActivity {
      * 项目创建
      */
     void createProject(final ProjectTransObj obj) {
-        LogUtil.d(" 创建项目传递数据： " + MainApp.gson.toJson(obj));
-        showLoading("");
+        showStatusLoading(false);
         app.getRestAdapter().create(IProject.class).Create(obj, new RCallback<Project>() {
             @Override
             public void success(final Project project, final Response response) {
-                Global.ToastLong("新增项目成功");
-                cancelLoading();
-                Intent intent = new Intent();
-                intent.putExtra("data", project);
-                app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
+                HttpErrorCheck.checkCommitSus("项目创建",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        Intent intent = new Intent();
+                        intent.putExtra("data", project);
+                        app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }
@@ -272,22 +276,25 @@ public class ProjectAddActivity extends BaseActivity {
      * 项目编辑
      */
     void updateProject(final ProjectTransObj obj) {
-        LogUtil.d(" 编辑项目传递数据: " + MainApp.gson.toJson(obj));
-        showLoading("");
+        showStatusLoading(false);
         app.getRestAdapter().create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
             @Override
             public void success(final Project project, final Response response) {
-                Global.ToastLong("编辑项目成功");
-                cancelLoading();
-                Intent intent = new Intent();
-                intent.putExtra("data", project);
-                app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                HttpErrorCheck.checkCommitSus("项目编辑",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cancelStatusLoading();
+                        Intent intent = new Intent();
+                        intent.putExtra("data", project);
+                        app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                    }
+                },1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
-                cancelLoading();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
             }
         });
     }

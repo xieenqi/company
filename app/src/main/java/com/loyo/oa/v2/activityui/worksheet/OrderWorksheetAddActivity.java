@@ -298,6 +298,11 @@ public class OrderWorksheetAddActivity extends BaseActivity implements View.OnCl
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading(message);
     }

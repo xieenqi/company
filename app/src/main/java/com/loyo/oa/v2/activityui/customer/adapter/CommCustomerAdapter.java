@@ -41,11 +41,13 @@ public class CommCustomerAdapter extends BaseAdapter {
     private ArrayList<Customer> mCustomers;
     private Context mContext;
     private Handler mHandler;
+    private LayoutInflater inflater;
 
     public CommCustomerAdapter(final Context context, ArrayList<Customer> customers, Handler mHandler) {
         this.mHandler = mHandler;
         mCustomers = customers;
         mContext = context;
+        inflater = LayoutInflater.from(mContext);
     }
 
     public void permissionTest(ImageView img) {
@@ -74,7 +76,7 @@ public class CommCustomerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Customer customer = mCustomers.get(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_common_customer, null, false);
+            convertView = inflater.inflate(R.layout.item_common_customer, null, false);
         }
 
         TextView tv_title = ViewHolder.get(convertView, R.id.tv_title);

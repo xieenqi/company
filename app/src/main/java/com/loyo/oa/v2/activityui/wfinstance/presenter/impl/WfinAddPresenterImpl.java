@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activityui.wfinstance.presenter.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
@@ -15,6 +16,7 @@ import com.loyo.oa.v2.activityui.wfinstance.viewcontrol.WfinAddView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.WfInstance;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.customview.WfinAddViewGroup;
@@ -46,7 +48,7 @@ import retrofit.mime.TypedString;
  * Created by yyy on 16/10/18.
  */
 
-public class WfinAddPresenterImpl implements WfinAddPresenter{
+public class WfinAddPresenterImpl implements WfinAddPresenter {
 
     private int uploadSize;
     private int uploadNum;
@@ -66,7 +68,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
     private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
 
 
-    public WfinAddPresenterImpl(Activity mActivity,Context mContext,WfinAddView crolView,BizForm mBizForm){
+    public WfinAddPresenterImpl(Activity mActivity, Context mContext, WfinAddView crolView, BizForm mBizForm) {
         this.mContext = mContext;
         this.crolView = crolView;
         this.mBizForm = mBizForm;
@@ -75,9 +77,9 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
 
     /**
      * 新建审批验证
-     * */
+     */
     @Override
-    public void addWfinVeri(String deptId,ArrayList<ImageInfo> pickPhots) {
+    public void addWfinVeri(String deptId, ArrayList<ImageInfo> pickPhots) {
         if (submitData.isEmpty()) {
             crolView.showMsg("请输入审批内容");
             return;
@@ -154,18 +156,16 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
                 }
             }
         }
-        LogUtil.dee("5");
-        if (pickPhots.size() == 0) {
-            crolView.showProgress("");
-        }
+
+        crolView.showStatusProgress();
         crolView.requestAddWfinVeriSuccess(workflowValues);
     }
 
     /**
      * 新建审批请求
-     * */
+     */
     @Override
-    public void requestAddWfin(String title,String deptId,ArrayList<HashMap<String, Object>> workflowValues,String mTemplateId,String projectId,String uuid,String memo,ArrayList<ImageInfo> pickPhots) {
+    public void requestAddWfin(String title, String deptId, ArrayList<HashMap<String, Object>> workflowValues, String mTemplateId, String projectId, String uuid, String memo, ArrayList<ImageInfo> pickPhots) {
         bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizformId", mBizForm.getId());              //表单Id
@@ -185,17 +185,19 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance, final Response response) {
-                HttpErrorCheck.checkResponse("新建审批cg", response);
-                if (wfInstance != null) {
-                    crolView.requestAddWfinSuccessEmbl(wfInstance);
-                } else {
-                    crolView.showMsg("服务器错误");
-                }
+                HttpErrorCheck.checkCommitSus("新建审批",response);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        DialogHelp.cancelStatusLoading();
+                        crolView.requestAddWfinSuccessEmbl(wfInstance);
+                    }
+                }, 1000);
             }
 
             @Override
             public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkCommitEro(error);
                 super.failure(error);
             }
         });
@@ -246,10 +248,10 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
 
     /**
      * 上传附件
-     * */
+     */
     @Override
     public void newUploadAttachement(String uuid, int bizType, final ArrayList<ImageInfo> pickPhots) {
-        crolView.showProgress("");
+        crolView.showStatusProgress();
         try {
             uploadSize = 0;
             uploadNum = pickPhots.size();
@@ -266,6 +268,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
                                         if (uploadSize == uploadNum) {
+                                            DialogHelp.cancelStatusLoading();
                                             crolView.uploadSuccessEmbl(pickPhots);
                                         }
                                     }
@@ -273,7 +276,7 @@ public class WfinAddPresenterImpl implements WfinAddPresenter{
                                     @Override
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
-                                        HttpErrorCheck.checkError(error);
+                                        HttpErrorCheck.checkCommitEro(error);
                                     }
                                 });
                     }

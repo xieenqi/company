@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
@@ -197,7 +198,7 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
 //            Toast("请选择付款方式！");
 //            return;
 //        }
-        showLoading("");
+        showStatusLoading(false);
         map.put("orderId", orderId);
         map.put("planAt", estimatedTime);
 
@@ -212,13 +213,19 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
                     .addPlanEstimate(map, new Callback<EstimatePlanAdd>() {
                         @Override
                         public void success(EstimatePlanAdd estimatePlanAdd, Response response) {
-                            HttpErrorCheck.checkResponse("创建计划回款", response);
-                            app.finishActivity(OrderAddPlanActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                            HttpErrorCheck.checkCommitSus("创建计划回款", response);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    cancelStatusLoading();
+                                    app.finishActivity(OrderAddPlanActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                }
+                            },1000);
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
+                            HttpErrorCheck.checkCommitEro(error);
                         }
                     });
         } else {    //编辑
@@ -227,13 +234,19 @@ public class OrderAddPlanActivity extends BaseActivity implements View.OnClickLi
                     .editPlanEsstimate(planEstimateList.id, map, new Callback<EstimatePlanAdd>() {
                         @Override
                         public void success(EstimatePlanAdd estimatePlanAdd, Response response) {
-                            HttpErrorCheck.checkResponse("编辑计划回款", response);
-                            app.finishActivity(OrderAddPlanActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                            HttpErrorCheck.checkCommitSus("编辑计划回款", response);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    cancelStatusLoading();
+                                    app.finishActivity(OrderAddPlanActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                                }
+                            },1000);
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
+                            HttpErrorCheck.checkCommitEro(error);
                         }
                     });
         }

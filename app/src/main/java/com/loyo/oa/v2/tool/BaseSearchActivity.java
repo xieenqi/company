@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.common.utils.*;
 import com.loyo.oa.common.utils.DateTool;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueDetailActivity;
 import com.loyo.oa.v2.activityui.clue.model.ClueListItem;
@@ -59,24 +60,20 @@ import retrofit.client.Response;
  *
  * @param <T>
  */
-public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback {
+public class BaseSearchActivity<T extends BaseBeans> extends BaseLoadingActivity implements PullToRefreshListView.OnRefreshListener2, Callback {
     public static final int REQUEST_SEARCH = 1100;
 
     protected String strSearch;
     protected EditText edt_search;
-    //protected TextView tv_search;
     private ImageView iv_clean;
-    protected View vs_nodata;
     protected View headerView;
     protected PullToRefreshListView expandableListView_search;
     protected ArrayList<T> lstData = new ArrayList<>();
     protected CommonSearchAdapter adapter;
     protected PaginationX paginationX = new PaginationX(20);
     public Customer customer;
-    public Bundle mBundle;
-    public LayoutInflater mInflater;
     public RelativeLayout headerViewBtn;
-
+    public Bundle mBundle;//子类在用
     protected int customerType;
     protected int befromPage;
     protected boolean isTopAdd = true;
@@ -85,17 +82,30 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_search);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_public_search);
+    }
+
+    @Override
+    public void getPageData() {
+        if (befromPage == SIGNIN_ADD || befromPage == TASKS_ADD || befromPage == TASKS_ADD_CUSTOMER ||
+                befromPage == WFIN_ADD || befromPage == WORK_ADD || befromPage == DYNAMIC_MANAGE) {
+            getData();
+        } else {
+            ll_loading.setStatus(LoadingLayout.Success);
+        }
     }
 
     /**
      * 初始化
      */
     void initView() {
-        vs_nodata = findViewById(R.id.vs_nodata);
         mBundle = getIntent().getExtras();
-        mInflater = LayoutInflater.from(this);
+        LayoutInflater mInflater = LayoutInflater.from(this);
         headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
         headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
 
@@ -103,10 +113,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         customerType = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
         befromPage = mBundle.getInt("from");
         switchPage(befromPage);
-        if (befromPage == SIGNIN_ADD || befromPage == TASKS_ADD || befromPage == TASKS_ADD_CUSTOMER ||
-                befromPage == WFIN_ADD || befromPage == WORK_ADD || befromPage == DYNAMIC_MANAGE) {
-            getData();
-        }
+        getPageData();
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -305,7 +312,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     }
 
     void showNoData() {
-        vs_nodata.setVisibility(View.VISIBLE);
+        ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     @Override
@@ -350,12 +357,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     @Override
     public void success(Object o, Response response) {
-        Utils.dialogDismiss();
-        HttpErrorCheck.checkResponse(response);
+        HttpErrorCheck.checkResponse("公用搜索基类: ", response, ll_loading);
         expandableListView_search.onRefreshComplete();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         //imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
+        ll_loading.setStatus(LoadingLayout.Success);
         if (null == o) {
             if (isTopAdd) {
                 showNoData();
@@ -381,7 +387,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             }
             lstData.addAll(lstDataTemp);
         }
-        vs_nodata.setVisibility(View.GONE);
         changeAdapter();
 
     }
@@ -389,17 +394,20 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     @Override
     public void failure(RetrofitError error) {
-        Utils.dialogDismiss();
-        HttpErrorCheck.checkError(error);
+        HttpErrorCheck.checkError(error, ll_loading);
     }
 
     protected void changeAdapter() {
         adapter.notifyDataSetChanged();
     }
 
-    protected abstract void openDetail(int position);
+    protected void openDetail(int position) {
+    }
 
-    public abstract void getData();
+    ;
+
+    public void getData() {
+    }
 
     public class CommonSearchAdapter extends BaseAdapter {
 

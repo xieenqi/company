@@ -30,14 +30,14 @@ public class TeamSaleFragmentModelImpl implements TeamSaleFragmentContract.Model
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleTeamList(map, new RCallback<SaleList>() {
             @Override
             public void success(SaleList saleTeamList, Response response) {
-                HttpErrorCheck.checkResponse("团队线索列表", response);
+                HttpErrorCheck.checkResponse("团队线索列表", response, mPersenter.getLoadingView());
                 mPersenter.bindPageData(saleTeamList);
                 mPersenter.refreshComplete();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, mPersenter.getLoadingView());
                 mPersenter.refreshComplete();
             }
         });

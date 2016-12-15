@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.sale.model;
 
-import com.loyo.oa.v2.activityui.other.model.SaleStage;
 import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
@@ -27,20 +26,20 @@ public class SaleOpportunitiesModelImpl implements SaleOpportunitiesContract.Mod
 
     @Override
     public void getStageData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
-            @Override
-            public void success(final ArrayList<SaleStage> saleStages, final Response response) {
-                HttpErrorCheck.checkResponse("销售机会 model销售阶段:", response);
-                presenter.sendPageData(saleStages);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                presenter.closePage();
-            }
-        });
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
+//            @Override
+//            public void success(final ArrayList<SaleStage> saleStages, final Response response) {
+//                HttpErrorCheck.checkResponse("销售机会 model销售阶段:", response);
+//                presenter.sendPageData(saleStages);
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//                presenter.closePage();
+//            }
+//        });
     }
 
 }

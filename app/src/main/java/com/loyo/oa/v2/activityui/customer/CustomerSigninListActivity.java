@@ -9,24 +9,21 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewGroupAdapter;
-import com.loyo.oa.v2.activityui.customer.adapter.CustomerSigninNewListAdapter;
-import com.loyo.oa.v2.activityui.customer.model.FollowUpGroupModel;
 import com.loyo.oa.v2.activityui.customer.model.SigninNewGroupModel;
 import com.loyo.oa.v2.activityui.customer.presenter.SigninListFragPresenter;
 import com.loyo.oa.v2.activityui.customer.presenter.impl.SigninListFragPresenterImpl;
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
-import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
-import com.loyo.oa.v2.activityui.signinnew.model.AudioModel;
-import com.loyo.oa.v2.activityui.signinnew.model.SigninNewListModel;
-import com.loyo.oa.v2.activityui.signinnew.viewcontrol.SigninNewListView;
+import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -38,7 +35,7 @@ import com.loyo.oa.v2.customview.ActionSheetDialog;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -53,7 +50,7 @@ import java.util.HashMap;
  * Created by yyy on 16/11/18.
  */
 
-public class CustomerSigninListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
+public class CustomerSigninListActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2, CustomerSigninNewListView, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack, View.OnClickListener {
 
     private ViewGroup layout_back;
     private TextView tv_title;
@@ -87,8 +84,19 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_signin);
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_customer_signin);
+    }
+
+    @Override
+    public void getPageData() {
+        isPullOrDown = true;
+        mPagination.setPageIndex(1);
+        getData(true);
     }
 
     @Override
@@ -155,7 +163,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
                     layout_add,
                     layout_bottom_menu, msgAudiomMenu.getEditComment());
         }
-        getData(false);
+        getPageData();
     }
 
     @Override
@@ -173,6 +181,9 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         } else {
             mAdapter.notifyDataSetChanged();
         }
+        ll_loading.setStatus(LoadingLayout.Success);
+        if (isPullOrDown && listModel.size() == 0)
+            ll_loading.setStatus(LoadingLayout.Empty);
     }
 
     /**
@@ -218,7 +229,7 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     }
 
     @Subscribe
-    public void onSigninNewRushEvent(SigninNewRushEvent event) {
+    public void onSigninNewRushEvent(SigninRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);
@@ -301,10 +312,10 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
         mPagination = paginationX.data;
         listModel.addAll(paginationX.data.getRecords());
         String dateIndex = "";
-        for(int i = 0;i<listModel.size();i++){
+        for (int i = 0; i < listModel.size(); i++) {
             SigninNewGroupModel model = listModel.get(i);
-            if(dateIndex.equals(model.date)){
-                listModel.get(i-1).activities.addAll(model.activities);
+            if (dateIndex.equals(model.date)) {
+                listModel.get(i - 1).activities.addAll(model.activities);
                 listModel.remove(model);
             }
             dateIndex = model.date;
@@ -323,6 +334,11 @@ public class CustomerSigninListActivity extends BaseActivity implements PullToRe
     @Override
     public ViewGroup getBottomMenuLayout() {
         return layout_bottom_menu;
+    }
+
+    @Override
+    public LoadingLayout getLoading() {
+        return ll_loading;
     }
 
     @Override

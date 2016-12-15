@@ -352,6 +352,11 @@ public class AddIntentionProductActivity extends BaseActivity implements AddInte
     }
 
     @Override
+    public void showStatusProgress() {
+
+    }
+
+    @Override
     public void showProgress(String message) {
         showLoading(message);
     }

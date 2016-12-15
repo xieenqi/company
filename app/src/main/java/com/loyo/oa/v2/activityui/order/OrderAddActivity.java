@@ -312,7 +312,7 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
             }
         }
 
-        showLoading("");
+        showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         if (fromPage == OrderDetailActivity.ORDER_EDIT) {
             map.put("id", mOrderDetail.id);
@@ -346,18 +346,23 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 编辑订单
      */
     public void editOrderData(HashMap<String, Object> map) {
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .editOrder(mOrderDetail.id, map, new Callback<OrderAdd>() {
                     @Override
                     public void success(OrderAdd orderAdd, Response response) {
-                        HttpErrorCheck.checkResponse("编辑订单", response);
-                        app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                        HttpErrorCheck.checkCommitSus("编辑订单",response);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
+                            }
+                        },1000);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
 
@@ -367,18 +372,23 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
      * 新建订单
      */
     public void addOrderData(HashMap<String, Object> map) {
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .addOrder(map, new Callback<OrderAdd>() {
                     @Override
                     public void success(OrderAdd orderAdd, Response response) {
-                        HttpErrorCheck.checkResponse("创建订单", response);
-                        app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                        HttpErrorCheck.checkCommitSus("创建订单",response);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                app.finishActivity(OrderAddActivity.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, new Intent());
+                            }
+                        },1000);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkCommitEro(error);
                     }
                 });
     }

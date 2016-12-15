@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -44,6 +45,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshRecycleView;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -68,7 +70,7 @@ import retrofit.client.Response;
  * create by libo 2016/03/10
  */
 
-public class DiscussDetialActivity extends BaseActivity implements View.OnLayoutChangeListener, View.OnClickListener {
+public class DiscussDetialActivity extends BaseLoadingActivity implements View.OnLayoutChangeListener, View.OnClickListener {
 
     private static final char SCANNER_HAIT_TRIM = '\u2005';
     public static final String REQUEST_GET_USER = "com.loyo.oa.DiscussDetialActivity.GET_USER";
@@ -125,10 +127,19 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE /*| WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN*/);
-        setContentView(R.layout.activity_discuss_det);
         initData();
         initView();
         initListener();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_discuss_det);
+    }
+
+    @Override
+    public void getPageData() {
+        loadMessage(true);
     }
 
     private void initData() {
@@ -190,7 +201,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
 
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
         bindDiscussion();
-        loadMessage(true);
+        getPageData();
     }
 
     private void assignViews() {
@@ -330,7 +341,7 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
      * @param isPull 是否是上拉
      */
     private void loadMessage(final boolean isPull) {
-        showLoading("");
+//        showLoading("");
         HashMap<String, Object> body = new HashMap<>();
         body.put("pageIndex", pageIndex + "");
         body.put("pageSize", 5);
@@ -340,9 +351,9 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
             @Override
             public void success(final PaginationX<HttpDiscussDet> d, final Response response) {
                 HttpErrorCheck.checkResponse("讨论详情：", response);
-                if (d == null || d.getRecords().size() == 0) {
-                    Toast("没有更多信息");
-                }
+//                if (d == null || d.getRecords().size() == 0) {
+//                    Toast("没有更多信息");
+//                }
                 Collections.reverse(d.getRecords());
                 if (isPull) {
                     mPageDiscussion.getRecords().clear();
@@ -352,12 +363,18 @@ public class DiscussDetialActivity extends BaseActivity implements View.OnLayout
                 }
                 bindDiscussion();
                 lv_notice.onRefreshComplete();
+                if (d != null && d.getRecords().size() == 0 && isPull) {
+                    ll_loading.setStatus(LoadingLayout.Empty);
+                } else {
+                    ll_loading.setStatus(LoadingLayout.Success);
+                }
+
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 lv_notice.onRefreshComplete();
-                HttpErrorCheck.checkError(error);
+                HttpErrorCheck.checkError(error, ll_loading);
                 super.failure(error);
             }
         });

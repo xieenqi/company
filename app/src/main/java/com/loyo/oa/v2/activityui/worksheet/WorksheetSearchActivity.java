@@ -14,6 +14,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.worksheet.adapter.ResponsableWorksheetsAdapter;
 import com.loyo.oa.v2.activityui.worksheet.adapter.WorksheetListAdapter;
@@ -33,6 +34,7 @@ import com.loyo.oa.pulltorefresh.PullToRefreshBase;
 import com.loyo.oa.pulltorefresh.PullToRefreshExpandableListView;
 import com.loyo.oa.v2.point.IWorksheet;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -50,12 +52,11 @@ import retrofit.client.Response;
  * 【工单搜索】
  */
 
-public class WorksheetSearchActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
+public class WorksheetSearchActivity extends BaseLoadingActivity implements PullToRefreshBase.OnRefreshListener2 {
 
     private EditText edt_search;
     private ImageView iv_clean;
     private PullToRefreshExpandableListView expandableListView;
-    private ViewStub emptyView;
 
     private WorksheetListType searchType;
     private int page = 1;
@@ -66,15 +67,22 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
 
     private BaseGroupsDataAdapter adapter;
 
-    private LayoutInflater mInflater;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_worksheet_search);
         groupsData = new GroupsData();
         initView();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_worksheet_search);
+    }
+
+    @Override
+    public void getPageData() {
+        doSearch();
     }
 
     /**
@@ -83,8 +91,6 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
     void initView() {
         mBundle = getIntent().getExtras();
         searchType = (WorksheetListType) mBundle.getSerializable(ExtraAndResult.EXTRA_TYPE);
-        mInflater = LayoutInflater.from(this);
-        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,16 +135,14 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
         });
         edt_search.requestFocus();
 
-        expandableListView = (PullToRefreshExpandableListView)findViewById(R.id.expandableListView);
+        expandableListView = (PullToRefreshExpandableListView) findViewById(R.id.expandableListView);
         expandableListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         expandableListView.setOnRefreshListener(this);
-        expandableListView.setEmptyView(emptyView);
 
         ExpandableListView innerListView = expandableListView.getRefreshableView();
         if (searchType != WorksheetListType.RESPONSABLE) {
-            adapter = new WorksheetListAdapter(this, groupsData,false,false);
-        }
-        else {
+            adapter = new WorksheetListAdapter(this, groupsData, false, false);
+        } else {
             adapter = new ResponsableWorksheetsAdapter(this, groupsData, WorksheetEventFinishAction.FROM_SEARCH_LIST);
         }
 
@@ -157,11 +161,10 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
 
                 String wsId = null;
                 if (searchType == WorksheetListType.RESPONSABLE) {
-                    WorksheetEvent wse =(WorksheetEvent) groupsData.get(groupPosition, childPosition);
-                    wsId = wse.wsId != null? wse.wsId:wse.workSheetId;
-                }
-                else {
-                    Worksheet ws =(Worksheet) groupsData.get(groupPosition, childPosition);
+                    WorksheetEvent wse = (WorksheetEvent) groupsData.get(groupPosition, childPosition);
+                    wsId = wse.wsId != null ? wse.wsId : wse.workSheetId;
+                } else {
+                    Worksheet ws = (Worksheet) groupsData.get(groupPosition, childPosition);
                     wsId = ws.id;
                 }
                 if (wsId == null) {
@@ -175,9 +178,11 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
                 return true;
             }
         });
+        //首次进来不加载数据 默认成功
+        ll_loading.setStatus(LoadingLayout.Success);
     }
 
-    public void finishEvent(WorksheetEvent event){
+    public void finishEvent(WorksheetEvent event) {
         Bundle bd = new Bundle();
         bd.putString(ExtraAndResult.CC_USER_ID, event.id /*事件id*/);
         bd.putInt(ExtraAndResult.EXTRA_DATA, 0x02 /*提交完成:0x02,打回重做0x01*/);
@@ -207,14 +212,14 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
         getData();
     }
 
-    protected  void getData() {
+    protected void getData() {
 
         if (searchType == WorksheetListType.SELF_CREATED || searchType == WorksheetListType.ASSIGNABLE) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", page);
             map.put("pageSize", 15);
             map.put("type", searchType == WorksheetListType.SELF_CREATED
-                    ?1/* 我创建的 */ :2/* 我分派的 */);
+                    ? 1/* 我创建的 */ : 2/* 我分派的 */);
             map.put("keyword", strSearch);
 
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
@@ -222,22 +227,22 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
                 @Override
                 public void success(WorksheetListWrapper listWrapper, Response response) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkResponse("我的工单列表：", response);
+                    HttpErrorCheck.checkResponse("我的工单列表：", response,ll_loading);
                     if (isPullDown) {
                         groupsData.clear();
+                        if (listWrapper != null && listWrapper.isEmpty())
+                            ll_loading.setStatus(LoadingLayout.Empty);
                     }
                     loadData(listWrapper.data.records);
-                    expandableListView.setEmptyView(emptyView);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error);
+                    HttpErrorCheck.checkError(error,ll_loading);
                 }
             });
-        }
-        else if (searchType == WorksheetListType.RESPONSABLE){
+        } else if (searchType == WorksheetListType.RESPONSABLE) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", page);
             map.put("pageSize", 15);
@@ -248,23 +253,23 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
                 @Override
                 public void success(WorksheetEventListWrapper listWrapper, Response response) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkResponse("我负责的工单列表：", response);
+                    HttpErrorCheck.checkResponse("我负责的工单列表：", response,ll_loading);
                     if (isPullDown) {
                         groupsData.clear();
+                        if (listWrapper != null && listWrapper.isEmpty())
+                            ll_loading.setStatus(LoadingLayout.Empty);
                     }
                     loadWorksheetEvents(listWrapper.data.records);
-                    expandableListView.setEmptyView(emptyView);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error);
+                    HttpErrorCheck.checkError(error,ll_loading);
                 }
             });
 
-        }
-        else if (searchType == WorksheetListType.TEAM){
+        } else if (searchType == WorksheetListType.TEAM) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", page);
             map.put("pageSize", 15);
@@ -275,18 +280,19 @@ public class WorksheetSearchActivity extends BaseActivity implements PullToRefre
                 @Override
                 public void success(WorksheetListWrapper listWrapper, Response response) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkResponse("团队工单列表：", response);
+                    HttpErrorCheck.checkResponse("团队工单列表：", response,ll_loading);
                     if (isPullDown) {
                         groupsData.clear();
+                        if (listWrapper != null && listWrapper.isEmpty())
+                            ll_loading.setStatus(LoadingLayout.Empty);
                     }
                     loadData(listWrapper.data.records);
-                    expandableListView.setEmptyView(emptyView);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     expandableListView.onRefreshComplete();
-                    HttpErrorCheck.checkError(error);
+                    HttpErrorCheck.checkError(error,ll_loading);
                 }
             });
         }

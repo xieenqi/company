@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.common.utils.DateTool;
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.order.bean.EstimateAdd;
 import com.loyo.oa.v2.activityui.order.bean.EstimatePlanAdd;
@@ -23,6 +24,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseLoadingActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -39,7 +41,7 @@ import retrofit.client.Response;
  * 【回款计划】 列表页面
  * Created by xeq on 16/8/4.
  */
-public class OrderPlanListActivity extends BaseActivity implements View.OnClickListener {
+public class OrderPlanListActivity extends BaseLoadingActivity implements View.OnClickListener {
 
     private TextView tv_title;
     private LinearLayout ll_back, ll_add;
@@ -51,16 +53,25 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
     private int status;
     private int pagForm;//1 审批过来
     private boolean isAdd;//需要编辑就传true
-    private LinearLayout ll_state;
-    private ViewStub emptyView;
+//    private LinearLayout ll_state;
+//    private ViewStub emptyView;
 
     private ArrayList<PlanEstimateList> mPlanEstimateList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_plan_list);
         init();
+    }
+
+    @Override
+    public void setLayoutView() {
+        setContentView(R.layout.activity_order_plan_list);
+    }
+
+    @Override
+    public void getPageData() {
+        getPlanList();
     }
 
     private void init() {
@@ -68,7 +79,7 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         mIntent = getIntent();
         if (null != mIntent) {
             orderId = mIntent.getStringExtra("orderId");
-            status  = mIntent.getIntExtra("status",0);
+            status = mIntent.getIntExtra("status", 0);
             pagForm = mIntent.getIntExtra(ExtraAndResult.TOKEN_START, 0);
             isAdd = mIntent.getBooleanExtra(ExtraAndResult.EXTRA_ADD, false);
         }
@@ -82,17 +93,18 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         ll_add.setOnTouchListener(Global.GetTouch());
         ll_add.setOnClickListener(this);
         lv_list = (ListView) findViewById(R.id.lv_list);
-        ll_state = (LinearLayout) findViewById(R.id.ll_state_baebae);
-        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
+//        ll_state = (LinearLayout) findViewById(R.id.ll_state_baebae);
+//        emptyView = (ViewStub) findViewById(R.id.vs_nodata);
 
-        getPlanList();
-        if(status == 1 || status == 2){
-            ll_state.setVisibility(isAdd ? View.GONE : View.VISIBLE);
-        }else if(status == 4 || status == 5){
-            lv_list.setEmptyView(emptyView);
-        }else{
-            ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
-        }
+
+//        if (status == 1 || status == 2) {
+////            ll_state.setVisibility(isAdd ? View.GONE : View.VISIBLE);
+//        } else if (status == 4 || status == 5) {
+////            lv_list.setEmptyView(emptyView);
+//        }
+
+        ll_add.setVisibility(isAdd ? View.VISIBLE : View.GONE);
+        getPageData();
     }
 
 
@@ -132,20 +144,28 @@ public class OrderPlanListActivity extends BaseActivity implements View.OnClickL
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("orderId", orderId);
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(IOrder.class)
                 .getPlanEstimateList(map, new Callback<ArrayList<PlanEstimateList>>() {
                     @Override
                     public void success(ArrayList<PlanEstimateList> planEstimateList, Response response) {
+                        ll_loading.setStatus(LoadingLayout.Success);
                         HttpErrorCheck.checkResponse("计划回款列表", response);
                         mPlanEstimateList.clear();
                         mPlanEstimateList.addAll(planEstimateList);
+                        if (status == 1 || status == 2) {
+                            ll_loading.setStatus(LoadingLayout.Empty);
+                            ll_loading.setEmptyText("订单待审核或未通过，无法添加回款计划");
+                            return;
+                        }
+                        if (mPlanEstimateList.size() == 0)
+                            ll_loading.setStatus(LoadingLayout.Empty);
+
                         rushAdapter();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        HttpErrorCheck.checkError(error,ll_loading);
                     }
                 });
     }

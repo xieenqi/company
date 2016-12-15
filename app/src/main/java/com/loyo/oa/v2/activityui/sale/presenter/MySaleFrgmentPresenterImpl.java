@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activityui.sale.presenter;
 
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.activityui.sale.bean.SaleList;
 import com.loyo.oa.v2.activityui.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activityui.sale.contract.MySaleFrgmentContract;
@@ -29,14 +30,21 @@ public class MySaleFrgmentPresenterImpl implements MySaleFrgmentContract.Present
 
     @Override
     public void getData() {
+        getLoadingView().setStatus(LoadingLayout.Loading);
         pullDown();
     }
 
     @Override
     public void getScreenData(String stageId, String sortType) {
+        getLoadingView().setStatus(LoadingLayout.Loading);
         this.stageId = stageId;
         this.sortType = sortType;
         pullDown();
+    }
+
+    @Override
+    public LoadingLayout getLoadingView() {
+        return mView.getLoadingUI();
     }
 
     @Override
@@ -57,6 +65,7 @@ public class MySaleFrgmentPresenterImpl implements MySaleFrgmentContract.Present
                 mView.showMsg("没有更多数据了!");
             } else {
                 recordData.clear();
+                getLoadingView().setStatus(LoadingLayout.Empty);
             }
         } else {
             if (isPullUp) {

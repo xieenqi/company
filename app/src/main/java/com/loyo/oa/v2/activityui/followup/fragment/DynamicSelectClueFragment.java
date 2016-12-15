@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.clue.ClueSearchActivity;
 import com.loyo.oa.v2.activityui.clue.ClueTypeEnum;
@@ -38,6 +39,7 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
     private PullToRefreshListView lv_list;
     private DynamicSelectCustomerAndCuleFragmentPCersener pCersener;
     private MyClueAdapter adapter;
+    private LoadingLayout ll_loading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,15 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
     }
 
     private void initView(View view) {
+        ll_loading = (LoadingLayout) view.findViewById(R.id.ll_loading);
+        ll_loading.setStatus(LoadingLayout.Loading);
+        ll_loading.setOnReloadListener(new LoadingLayout.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                ll_loading.setStatus(LoadingLayout.Loading);
+                pCersener.getPageData();
+            }
+        });
         pCersener = new DynamicSelectCustomerAndCuleFragmentPCersener(this, DynamicSelectCustomerAndCuleFragmentPCersener.SELECT_CULE);
         ll_search = (LinearLayout) view.findViewById(R.id.ll_search);
         lv_list = (PullToRefreshListView) view.findViewById(R.id.lv_list);
@@ -81,6 +92,11 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
         });
         adapter = new MyClueAdapter(mActivity);
         lv_list.setAdapter(adapter);
+    }
+
+    @Override
+    public void showStatusProgress() {
+
     }
 
     @Override
@@ -122,6 +138,11 @@ public class DynamicSelectClueFragment extends BaseFragment implements DynamicSe
     @Override
     public void getDataComplete() {
         lv_list.onRefreshComplete();
+    }
+
+    @Override
+    public LoadingLayout getLoadingLayout() {
+        return ll_loading;
     }
 
     @Override
