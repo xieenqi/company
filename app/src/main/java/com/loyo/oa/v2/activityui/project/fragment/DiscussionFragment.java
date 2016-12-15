@@ -328,7 +328,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 //            TextView content = ViewHolder.get(view, R.id.tv_discuss_content);
 
 //            holder.time.setText(TimeFormatUtil.toMd_Hm(discussion.getCreatedAt()));
-            holder.time.setText(DateTool.getDateTimeReal(discussion.getCreatedAt()));
+            holder.time.setText(DateTool.getDateTimeFriendly(discussion.getCreatedAt()));
             holder.name.setText(discussion.getCreator().name);
             holder.content.setText(discussion.getContent());
             ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, holder.iv);

@@ -117,7 +117,7 @@ public class DiscussAdapter extends BaseAdapter {
                     tv_dateTime.setVisibility(View.VISIBLE);
                     //TODO 这里没有严格替换
 //                    tv_dateTime.setText(MainApp.getMainApp().df11.format(new Date(System.currentTimeMillis())));
-                    tv_dateTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(System.currentTimeMillis()));
+                    tv_dateTime.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(System.currentTimeMillis()/1000));
                     break;
                 case 2:
                     iv_icon.setImageResource(R.drawable.ic_discuss_task);

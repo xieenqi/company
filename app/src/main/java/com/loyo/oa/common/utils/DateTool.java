@@ -100,11 +100,11 @@ public class DateTool {
     /**
      * 获取月份和天,eg:12.01
      *
-     * @param time 要格式化的时间戳
+     * @param time 要格式化的时间戳 十位时间戳 秒为单位
      * @return 返回月份和天 eg:12.01
      */
     public static String getMonthDay(long time) {
-        return DateFormatSet.daySdf.format(new Date(time));
+        return DateFormatSet.daySdf.format(new Date(time*1000));
     }
 
     /**

@@ -244,7 +244,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         StringBuilder title = new StringBuilder(mWorkReport.creator.name + "提交 ");
         String reportDate = "";
 //        String date = app.df3.format(new Date(mWorkReport.createdAt * 1000));
-        String date = DateTool.getDateFriendly(mWorkReport.createdAt);
+        String date = DateTool.getDateTimeFriendly(mWorkReport.createdAt);
         String reportType = "";
         String crmName = "";
         switch (mWorkReport.type) {

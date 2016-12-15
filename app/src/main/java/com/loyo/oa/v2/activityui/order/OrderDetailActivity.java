@@ -32,6 +32,7 @@ import com.loyo.oa.v2.permission.PermissionManager;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -328,7 +329,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tv_record.setText("回款记录（" + mData.recordNum + "）");
         tv_record_value.setText("¥" + mData.backMoney + "(" + mData.ratePayment + "%)");
         tv_worksheet.setText("工单" + "(" + mData.worksheetNum + ")");
-        tv_enclosure.setText("附件（" + mData.attachmentCount + "）");
+        if(attachmentSize==0)tv_enclosure.setText("附件（" + mData.attachmentCount + "）");//避免上传附件回来,把原来的数值抹掉了
 //        tv_creator_time.setText(app.df3.format(new Date(Long.valueOf(mData.createdAt + "") * 1000)));
         tv_creator_time.setText(DateTool.getDateTimeFriendly(mData.createdAt));
         tv_plan_value.setText(mData.planMoney + "");

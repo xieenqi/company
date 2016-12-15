@@ -36,7 +36,7 @@ android {
                            'src/main/res_loyo/customer',
                            'src/main/res_loyo/saleopportunity',
                            'src/main/res_loyo/setting',
-                           'src/main/res_loyo/worksheet']
+                           'src/main/res_loyo/worksheet', 'src/main/res_loyo/order']
         }
     }
     signingConfigs {
