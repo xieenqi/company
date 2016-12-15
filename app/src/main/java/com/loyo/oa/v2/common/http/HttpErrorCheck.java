@@ -126,6 +126,11 @@ public class HttpErrorCheck {
         }
     }
 
+    /**
+     * loading 报错 error信息走Error返回的
+     * @param error
+     * @param loadingLayout
+     */
     public static void checkError(RetrofitError error, LoadingLayout loadingLayout) {
 //        DialogHelp.cancelLoading();
         LogUtil.d("loading网络异常: " + error.getMessage());
@@ -192,6 +197,13 @@ public class HttpErrorCheck {
             e.printStackTrace();
         }
     }
+
+    /**
+     * loading 报错 error信息走success返回的
+     * @param tag
+     * @param response
+     * @param loadingLayout
+     */
     public static void checkResponse(String tag, Response response,LoadingLayout loadingLayout) {
         DialogHelp.cancelLoading();
         try {
@@ -340,7 +352,7 @@ public class HttpErrorCheck {
         }
     }
     /**
-     * 检查response 的错误信息
+     * 检查response 的错误信息loading 报错 error信息走success返回的
      *
      * @param result
      */

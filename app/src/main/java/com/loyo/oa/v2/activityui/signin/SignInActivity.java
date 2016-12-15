@@ -32,9 +32,9 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
-import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
 import com.loyo.oa.v2.activityui.signin.contract.SigninContract;
 import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
+import com.loyo.oa.v2.activityui.signin.presenter.SigninPresenterImpl;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
@@ -82,7 +82,7 @@ import retrofit.client.Response;
 /**
  * 【 拜访签到 】 页面
  */
-public class SignInActivity extends BaseActivity implements View.OnClickListener,SigninContract.View {
+public class SignInActivity extends BaseActivity implements View.OnClickListener, SigninContract.View {
 
     private TextView tv_customer_name, tv_reset_address, tv_address, wordcount, tv_customer_address,
             tv_at_text, tv_distance_deviation, tv_contact_name;
@@ -91,7 +91,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private GridView gridView_photo;
     private ImageView iv_at_delete;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-    private String uuid = StringUtil.getUUID(), mAddress, customerId = "", customerName, customerAddress;
+    private String uuid = StringUtil.getUUID(), customerId = "", customerName, customerAddress;
     private SignInGridViewAdapter signInGridViewAdapter;
     private double laPosition, loPosition;
     boolean mLocationFlag = false;  //是否定位完成的标记
@@ -105,13 +105,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private ArrayList<Record> audioInfo = new ArrayList<>();//录音数据
     private List<CommonIdName> atDepts = new ArrayList<>();//@的部门
     private List<String> atUserIds = new ArrayList<>();//@的人员
-
+    private SigninContract.Presenter presenter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         super.setTitle("拜访签到");
+        presenter = new SigninPresenterImpl(this);
         Intent intent = getIntent();
         if (null != intent && intent.hasExtra("data")) {
             mCustomer = (Customer) intent.getSerializableExtra("data");
@@ -120,7 +121,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             customerAddress = mCustomer.loc.addr;
         }
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
-        getIsPhoto();
+        presenter.getIsPhoto();
         initUI();
     }
 
@@ -146,7 +147,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         tv_at_text = (TextView) findViewById(R.id.tv_at_text);
         tv_distance_deviation = (TextView) findViewById(R.id.tv_distance_deviation);
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
-
         ll_contact.setOnClickListener(this);
         tv_address = (TextView) findViewById(R.id.tv_address);
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
@@ -170,8 +170,55 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             tv_customer_address.setText(TextUtils.isEmpty(customerAddress) ? "未知地址" : customerAddress);
             getDefaultContact(mCustomer.contacts);
             contactList = mCustomer.contacts;
-
         }
+    }
+
+    /**
+     * 图片适配器绑定
+     */
+    void init_gridView_photo() {
+        if (signInGridViewAdapter != null) {
+            signInGridViewAdapter = null;
+            System.gc();
+        }
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, 0);
+        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
+    }
+
+    void startLocation() {
+        mLocationFlag = false;
+        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
+            @Override
+            public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
+                animation.reset();
+                laPosition = latitude;
+                loPosition = longitude;
+                app.address = address;
+                tv_address.setText(address);
+                LocationUtilGD.sotpLocation();
+                UMengTools.sendLocationInfo(address, longitude, latitude);
+                //此处是客户详情在定位成功过后再计算偏差
+                if (mCustomer != null && mCustomer.position != null) {
+                    List<Double> locList = new ArrayList<>();
+                    for (Double ele : mCustomer.position.loc) {
+                        locList.add(ele);
+                    }
+                    Location loc = new Location(locList, mCustomer.position.addr);
+                    distanceInfo(loc);
+                }
+            }
+
+            @Override
+            public void OnLocationGDFailed() {
+                animation.reset();
+                boolean gpsOpen = Utils.isGPSOPen(mContext);
+                if (!gpsOpen) {
+                    Global.ToastLong("建议开启GPS,重新定位");
+                }
+                Toast("定位失败,请在网络和GPS信号良好时重试");
+                LocationUtilGD.sotpLocation();
+            }
+        });
     }
 
     /**
@@ -270,74 +317,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mfmodule.setPictureIcon(R.drawable.icon_picture_photo);
     }
 
-    /**
-     * 获取签到是否需要传递图片
-     */
-    private void getIsPhoto() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("key", "need_pictures_switcher");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSetInfo(map, new Callback<SigninPictures>() {
-            @Override
-            public void success(SigninPictures result, Response response) {
-                HttpErrorCheck.checkResponse("签到时必须操作？？？", response);
-                if (result.value.equals("1")) {
-                    isPicture = true;
-                } else {
-                    isPicture = false;
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-//                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
-
-    void startLocation() {
-        mLocationFlag = false;
-        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
-            @Override
-            public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
-                animation.reset();
-                laPosition = latitude;
-                loPosition = longitude;
-                app.address = address;
-                tv_address.setText(address);
-                LocationUtilGD.sotpLocation();
-                UMengTools.sendLocationInfo(address, longitude, latitude);
-                //此处是客户详情在定位成功过后再计算偏差
-                if (mCustomer != null && mCustomer.position != null) {
-                    List<Double> locList = new ArrayList<>();
-                    for (Double ele : mCustomer.position.loc) {
-                        locList.add(ele);
-                    }
-                    Location loc = new Location(locList, mCustomer.position.addr);
-                    distanceInfo(loc);
-                }
-            }
-
-            @Override
-            public void OnLocationGDFailed() {
-                animation.reset();
-                boolean gpsOpen = Utils.isGPSOPen(mContext);
-                if (!gpsOpen) {
-                    Global.ToastLong("建议开启GPS,重新定位");
-                }
-                Toast("定位失败,请在网络和GPS信号良好时重试");
-                LocationUtilGD.sotpLocation();
-            }
-        });
-    }
-
-    /**
-     * 图片适配器绑定
-     */
-    void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, 0);
-        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
-    }
-
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
@@ -406,8 +385,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             Toast("请选择客户");
             return false;
         }
-        mAddress = tv_address.getText().toString();
-        if (TextUtils.isEmpty(mAddress)) {
+        if (TextUtils.isEmpty(tv_address.getText().toString())) {
             Global.ToastLong("无效地址!请刷新地址后重试");
             return false;
         }
@@ -430,7 +408,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 新增签到
      */
     private void addSignIn() {
-
         showStatusLoading(false);
         HashMap<String, Object> map = new HashMap<>();
         map.put("gpsInfo", loPosition + "," + laPosition);//当前定位信息
@@ -443,33 +420,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("atUserIds", atUserIds);
         map.put("contactName", tv_contact_name.getText().toString());
         map.put("isCusPosition", isCusPosition);//是否把签到地址设为客户定位地址
-
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
         LogUtil.d(" 新增拜访传递数据：" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
-            @Override
-            public void success(final LegWork legWork, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建拜访", response);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        cancelStatusLoading();
-                        if (!TextUtils.isEmpty(legWork.getId())) {
-                            AppBus.getInstance().post(new SigninRushEvent());
-                            finish();
-                        }
-                    }
-                }, 1000);
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+        presenter.creatSignin(map);
     }
 
     /**
@@ -507,37 +462,28 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 获取附件
      */
     private void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                lstData_Attachment = attachments;
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
-            }
-        });
+        presenter.getAttachment(uuid);
+//        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
+//            @Override
+//            public void success(final ArrayList<Attachment> attachments, final Response response) {
+//                HttpErrorCheck.checkResponse(response);
+//                lstData_Attachment = attachments;
+//                init_gridView_photo();
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
+//                Toast("获取附件失败");
+//            }
+//        });
     }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-
         if (null == data) {
             return;
         }
-
-        /*地图微调，数据回调*/
-/*        if (resultCode == MapModifyView.SERACH_MAP) {
-            positionResultItem = (PositionResultItem) data.getSerializableExtra("data");
-            laPosition = positionResultItem.laPosition;
-            loPosition = positionResultItem.loPosition;
-            tv_address.setText(positionResultItem.address);
-        }*/
-
         switch (requestCode) {
             //地图微调，数据回到
             case MapModifyView.SERACH_MAP:
@@ -560,18 +506,19 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
                                 /**上传附件*/
-                                Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
-                                    @Override
-                                    public void onNext(final Serializable serializable) {
-                                        getAttachments();
-                                        pcitureNumber++;
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        super.onError(e);
-                                    }
-                                });
+                                presenter.uploadAttachment(uuid, newFile, this);
+//                                Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
+//                                    @Override
+//                                    public void onNext(final Serializable serializable) {
+//                                        getAttachments();
+//                                        pcitureNumber++;
+//                                    }
+//
+//                                    @Override
+//                                    public void onError(Throwable e) {
+//                                        super.onError(e);
+//                                    }
+//                                });
                             }
                         }
                     }
@@ -587,21 +534,22 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     HashMap<String, Object> map = new HashMap<String, Object>();
                     map.put("bizType", 0);
                     map.put("uuid", uuid);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                        @Override
-                        public void success(final Attachment attachment, final Response response) {
-                            Toast("删除附件成功!");
-                            lstData_Attachment.remove(delAttachment);
-                            init_gridView_photo();
-                            pcitureNumber--;
-                        }
-
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            Toast("删除附件失败!");
-                            super.failure(error);
-                        }
-                    });
+                    presenter.deleteAttachment(map, delAttachment);
+//                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
+//                        @Override
+//                        public void success(final Attachment attachment, final Response response) {
+//                            Toast("删除附件成功!");
+//                            lstData_Attachment.remove(delAttachment);
+//                            init_gridView_photo();
+//                            pcitureNumber--;
+//                        }
+//
+//                        @Override
+//                        public void failure(final RetrofitError error) {
+//                            Toast("删除附件失败!");
+//                            super.failure(error);
+//                        }
+//                    });
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
@@ -632,8 +580,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             case ExtraAndResult.REQUEST_CODE_STAGE:
                 Contact contact = (Contact) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                 if (null != contact) {
-//                    contactId = contact.getId();
-//                    contactName = contact.getName();
                     tv_contact_name.setText(contact.getName());
                 }
                 break;
@@ -663,8 +609,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             if (!ele.isDefault()) {
                 continue;
             } else {
-//                contactId = ele.getId();
-//                contactName = ele.getName();
                 tv_contact_name.setText(ele.getName());
             }
         }
@@ -728,11 +672,45 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void showMsg(String message) {
-
+        Toast(message);
     }
 
     @Override
-    public void setIsPhoto() {
+    public void setIsPhoto(boolean isPicture) {
+        this.isPicture = isPicture;
+    }
 
+    @Override
+    public void creatSuccessUI(final LegWork legWork) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                cancelStatusLoading();
+                if (!TextUtils.isEmpty(legWork.getId())) {
+                    AppBus.getInstance().post(new SigninRushEvent());
+                    onBackPressed();
+                }
+            }
+        }, 1000);
+    }
+
+    @Override
+    public void uploadAttachmentSuccessUI() {
+        getAttachments();
+        pcitureNumber++;
+    }
+
+    @Override
+    public void getAttachmentSuccessUI(ArrayList<Attachment> attachments) {
+        lstData_Attachment = attachments;
+        init_gridView_photo();
+    }
+
+    @Override
+    public void deleteAttachmentSuccessUI(Attachment delAttachment) {
+        Toast("删除附件成功!");
+        lstData_Attachment.remove(delAttachment);
+        init_gridView_photo();
+        pcitureNumber--;
     }
 }
