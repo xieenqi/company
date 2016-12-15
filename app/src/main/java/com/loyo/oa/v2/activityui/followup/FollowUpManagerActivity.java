@@ -20,26 +20,15 @@ import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
 import com.loyo.oa.v2.activityui.followup.fragment.SelfFollowUpFragment;
 import com.loyo.oa.v2.activityui.followup.fragment.TeamFollowUpFragment;
 import com.loyo.oa.v2.activityui.followup.model.FolloUpConfig;
-import com.loyo.oa.v2.activityui.followup.model.FollowFilter;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ISigninNeworFollowUp;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * 【跟进列表】fragment管理类
@@ -111,7 +100,7 @@ public class FollowUpManagerActivity extends BaseFragmentActivity implements Vie
 //     */
 //    public void getStageData() {
 //        showLoading("");
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninNeworFollowUp.class).
+//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISigninOrFollowUp.class).
 //                getFollupFilters(new RCallback<ArrayList<FollowFilter>>() {
 //                    @Override
 //                    public void success(ArrayList<FollowFilter> tags, Response response) {
