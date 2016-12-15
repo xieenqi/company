@@ -111,7 +111,7 @@ public class OrderDetailActivity extends BaseLoadingActivity implements View.OnC
 
     @Override
     public void setLayoutView() {
-        setContentView(R.layout.activity_order_detail);
+        setContentView(R.layout.activity_order_detail_new);
     }
 
     @Override
