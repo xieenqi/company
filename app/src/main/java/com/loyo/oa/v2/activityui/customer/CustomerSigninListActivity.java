@@ -22,7 +22,7 @@ import com.loyo.oa.v2.activityui.customer.presenter.impl.SigninListFragPresenter
 import com.loyo.oa.v2.activityui.customer.viewcontrol.CustomerSigninNewListView;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
-import com.loyo.oa.v2.activityui.signin.event.SigninNewRushEvent;
+import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
@@ -229,7 +229,7 @@ public class CustomerSigninListActivity extends BaseLoadingActivity implements P
     }
 
     @Subscribe
-    public void onSigninNewRushEvent(SigninNewRushEvent event) {
+    public void onSigninNewRushEvent(SigninRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
         msgAudiomMenu = new MsgAudiomMenu(mContext, this, uuid);

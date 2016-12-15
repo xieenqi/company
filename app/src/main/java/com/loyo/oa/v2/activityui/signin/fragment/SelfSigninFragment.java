@@ -28,13 +28,13 @@ import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
 import com.loyo.oa.v2.activityui.signin.SignInActivity;
-import com.loyo.oa.v2.activityui.signin.adapter.SigninNewListAdapter;
-import com.loyo.oa.v2.activityui.signin.event.SigninNewRushEvent;
+import com.loyo.oa.v2.activityui.signin.adapter.SigninListAdapter;
+import com.loyo.oa.v2.activityui.signin.event.SigninRushEvent;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signin.persenter.SelfSigninListFragPresenter;
 import com.loyo.oa.v2.activityui.signin.persenter.SelfSigninListFragPresenterImpl;
-import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninNewListView;
+import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -60,7 +60,7 @@ import java.util.List;
  * Created by yyy on 16/11/10.
  */
 
-public class SelfSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
+public class SelfSigninFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
 
     //    private ArrayList<Tag> mTags;
@@ -79,7 +79,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
 
     private PaginationX<SigninNewListModel> mPagination = new PaginationX<>(20);
     private ArrayList<SigninNewListModel> listModel = new ArrayList<>();
-    private SigninNewListAdapter mAdapter;
+    private SigninListAdapter mAdapter;
     private SelfSigninListFragPresenter mPresenter;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
@@ -139,7 +139,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new SigninNewListAdapter(getActivity(), listModel, this, this);
+            mAdapter = new SigninListAdapter(getActivity(), listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -275,7 +275,7 @@ public class SelfSigninNewFragment extends BaseFragment implements PullToRefresh
     }
 
     @Subscribe
-    public void onSigninNewRushEvent(SigninNewRushEvent event) {
+    public void onSigninNewRushEvent(SigninRushEvent event) {
         LogUtil.dee("onFollowUpRushEvent");
         msgAudiomMenu = null;
         msgAudiomMenu = new MsgAudiomMenu(getActivity(), this, uuid);

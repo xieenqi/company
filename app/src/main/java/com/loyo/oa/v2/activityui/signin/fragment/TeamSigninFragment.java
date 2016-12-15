@@ -28,12 +28,12 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.commonview.AudioPlayer;
 import com.loyo.oa.v2.activityui.commonview.MsgAudiomMenu;
 import com.loyo.oa.v2.activityui.followup.viewcontrol.AudioPlayCallBack;
-import com.loyo.oa.v2.activityui.signin.adapter.SigninNewListAdapter;
+import com.loyo.oa.v2.activityui.signin.adapter.SigninListAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
 import com.loyo.oa.v2.activityui.signin.persenter.TeamSigninListFragPresenter;
 import com.loyo.oa.v2.activityui.signin.persenter.TeamSigninListFragPresenterImpl;
-import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninNewListView;
+import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninListView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -59,7 +59,7 @@ import java.util.List;
  * 【团队拜访】列表
  * Created by yyy on 16/11/10.
  */
-public class TeamSigninNewFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninNewListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
+public class TeamSigninFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, SigninListView, View.OnClickListener, MsgAudiomMenu.MsgAudioMenuCallBack, AudioPlayCallBack {
 
     //    private ArrayList<Tag> mTags;
     private String menuTimekey = "0";        /*时间*/
@@ -80,7 +80,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
 
     private PaginationX<SigninNewListModel> mPagination = new PaginationX<>(20);
     private ArrayList<SigninNewListModel> listModel = new ArrayList<>();
-    private SigninNewListAdapter mAdapter;
+    private SigninListAdapter mAdapter;
     private TeamSigninListFragPresenter mPresenter;
     private MsgAudiomMenu msgAudiomMenu;
     private String uuid = StringUtil.getUUID();
@@ -247,7 +247,7 @@ public class TeamSigninNewFragment extends BaseFragment implements PullToRefresh
      */
     public void bindData() {
         if (null == mAdapter) {
-            mAdapter = new SigninNewListAdapter(getActivity(), listModel, this, this);
+            mAdapter = new SigninListAdapter(getActivity(), listModel, this, this);
             listView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();

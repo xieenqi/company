@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.activityui.signin.persenter;
 
 import com.loyo.oa.v2.activityui.signin.bean.SigninNewListModel;
-import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninNewListView;
+import com.loyo.oa.v2.activityui.signin.viewcontrol.SigninListView;
 import com.loyo.oa.v2.beans.BaseBeanT;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -19,9 +19,9 @@ import retrofit.client.Response;
 
 public class TeamSigninListFragPresenterImpl implements TeamSigninListFragPresenter {
 
-    private SigninNewListView crolView;
+    private SigninListView crolView;
 
-    public TeamSigninListFragPresenterImpl(SigninNewListView crolView){
+    public TeamSigninListFragPresenterImpl(SigninListView crolView){
         this.crolView = crolView;
     }
 

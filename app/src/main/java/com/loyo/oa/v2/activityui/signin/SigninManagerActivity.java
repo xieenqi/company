@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.adapter.CustomerCategoryAdapter;
-import com.loyo.oa.v2.activityui.signin.fragment.SelfSigninNewFragment;
-import com.loyo.oa.v2.activityui.signin.fragment.TeamSigninNewFragment;
+import com.loyo.oa.v2.activityui.signin.fragment.SelfSigninFragment;
+import com.loyo.oa.v2.activityui.signin.fragment.TeamSigninFragment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
@@ -165,11 +165,11 @@ public class SigninManagerActivity extends BaseFragmentActivity implements View.
             if ("我的拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
 //                b.putSerializable("tag", mTags1);
-                fragment = (BaseFragment) Fragment.instantiate(this, SelfSigninNewFragment.class.getName(), b);
+                fragment = (BaseFragment) Fragment.instantiate(this, SelfSigninFragment.class.getName(), b);
             } else if ("团队拜访".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
 //                b.putSerializable("tag", mTags1);
-                fragment = (BaseFragment) Fragment.instantiate(this, TeamSigninNewFragment.class.getName(), b);
+                fragment = (BaseFragment) Fragment.instantiate(this, TeamSigninFragment.class.getName(), b);
             }
             fragments.add(fragment);
         }
