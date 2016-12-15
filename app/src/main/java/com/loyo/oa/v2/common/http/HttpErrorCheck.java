@@ -295,7 +295,7 @@ public class HttpErrorCheck {
             LogUtil.d("Body空err:" + error.getUrl());
             e.printStackTrace();
             //Toast("连接服务器失败");
-            errorMsg = "连接服务器失败";
+            errorMsg = "提交失败!";
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
             //Toast("服务端数据异常");

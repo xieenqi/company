@@ -400,7 +400,11 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
 
             //提交
             case R.id.iv_submit:
-                commitOrder();
+                if(Utils.isNetworkAvailable(mContext)){
+                    commitOrder();
+                }else{
+                    Toast("请检查您的网路连接");
+                }
                 break;
 
             //后退
