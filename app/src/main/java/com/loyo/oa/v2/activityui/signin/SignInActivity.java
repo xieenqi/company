@@ -33,7 +33,7 @@ import com.loyo.oa.v2.activityui.customer.FollowContactSelectActivity;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
-import com.loyo.oa.v2.activityui.signinnew.event.SigninNewRushEvent;
+import com.loyo.oa.v2.activityui.signin.event.SigninNewRushEvent;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonIdName;
 import com.loyo.oa.v2.activityui.customer.model.Customer;

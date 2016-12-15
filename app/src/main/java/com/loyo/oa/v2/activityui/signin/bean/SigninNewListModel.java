@@ -1,6 +1,8 @@
-package com.loyo.oa.v2.activityui.signinnew.model;
+package com.loyo.oa.v2.activityui.signin.bean;
 
 import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.signin.bean.AudioModel;
+import com.loyo.oa.v2.activityui.signin.bean.CommentModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
