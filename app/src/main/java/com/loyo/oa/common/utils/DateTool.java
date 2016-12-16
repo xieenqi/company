@@ -119,7 +119,10 @@ public class DateTool {
      * @return
      */
     private static String getFriendlyTime(long seconds, boolean includeTime) {
-
+        if(0==seconds||10!=(seconds+"").length()){
+            //时间格式不合法
+            return "--";
+        }
         seconds *= 1000;//这里要乘1000,把秒转换成毫秒
         Date time = new Date(seconds);
         Calendar cal = Calendar.getInstance();
