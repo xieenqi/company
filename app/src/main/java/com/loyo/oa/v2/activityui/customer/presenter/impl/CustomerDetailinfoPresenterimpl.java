@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CallPhoneBackActivity;
 import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
@@ -19,11 +20,11 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CallPhonePopView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
-import com.loyo.oa.v2.network.model.BaseResponse;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.point.IClue;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -64,17 +65,19 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void toPublic(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).toPublic(id, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer newCustomer, final Response response) {
-                crolView.toPublicEmbl();
-            }
+        CustomerService.dumpCustomer(id)
+                .subscribe(new DefaultSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    @Override
+                    public void onNext(Customer customer) {
+                        super.onNext(customer);
+                        crolView.toPublicEmbl();
+                    }
+                });
     }
 
     /**
@@ -82,18 +85,20 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void delete(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(id, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer newCustomer, final Response response) {
-                crolView.deleteEmbl();
-            }
+        CustomerService.deleteCustomer(id)
+                .subscribe(new DefaultSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        crolView.showMsg("删除客户失败");
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                crolView.showMsg("删除客户失败");
-            }
-        });
+                    @Override
+                    public void onNext(Customer customer) {
+                        super.onNext(customer);
+                        crolView.deleteEmbl();
+                    }
+                });
     }
 
     /**
@@ -101,18 +106,17 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void getMembersRoot() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getMembersRoot(new RCallback<MembersRoot>() {
+        CustomerService.getMembersRoot()
+                .subscribe(new DefaultSubscriber<MembersRoot>() {
                     @Override
-                    public void success(MembersRoot membersRoot, Response response) {
-                        HttpErrorCheck.checkResponse("参与人权限", response);
-                        crolView.getMembersRootEmbl(membersRoot);
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        crolView.getLoadigLayout().setStatus(LoadingLayout.Error);
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error,crolView.getLoadigLayout());
+                    public void onNext(MembersRoot membersRoot) {
+                        crolView.getMembersRootEmbl(membersRoot);
                     }
                 });
     }
@@ -122,24 +126,19 @@ public class CustomerDetailinfoPresenterimpl implements CustomerDetailInfoPresen
      */
     @Override
     public void getData(String id) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<BaseResponse<Customer>>() {
-            @Override
-            public void success(final BaseResponse<Customer> customerResp, final Response response) {
-                HttpErrorCheck.checkResponse("客户详情-->", response);
-                if (customerResp == null || customerResp.data == null) {
-//                    crolView.showMsg("获取数据失败");
-                    crolView.getDataErrorEmle();
-                    return;
-                }
-                crolView.getDataSuccessEmbl(customerResp.data);
-            }
+        CustomerService.getCustomerDetailById(id)
+                .subscribe(new DefaultSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        crolView.getDataErrorEmle();
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                crolView.getDataErrorEmle();
-            }
-        });
+                    @Override
+                    public void onNext(Customer customer) {
+                        crolView.getDataSuccessEmbl(customer);
+                    }
+                });
     }
 
     /**

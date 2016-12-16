@@ -11,10 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loyo.oa.common.utils.DateTool;
-
 import com.library.module.widget.loading.LoadingLayout;
-
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activityui.commonview.CommonHtmlUtils;
@@ -35,16 +33,13 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.ActionSheetDialog;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.CustomerAction;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -55,11 +50,8 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
@@ -360,20 +352,21 @@ public class CustomerDetailInfoActivity extends BaseActivity implements Customer
 
             /*挑入*/
             case R.id.img_public:
+                CustomerService.pickInCustomer(id)
+                        .subscribe(new DefaultSubscriber<Customer>() {
+                            @Override
+                            public void onError(Throwable e) {
+                                super.onError(e);
+                                // TODO: 挑入失败，提醒
+                                finish();
+                            }
 
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
-                    @Override
-                    public void success(final Customer newCustomer, final Response response) {
-                        AppBus.getInstance().post(new MyCustomerListRushEvent());
-                        finish();
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                        finish();
-                    }
-                });
+                            @Override
+                            public void onNext(Customer customer) {
+                                AppBus.getInstance().post(new MyCustomerListRushEvent());
+                                finish();
+                            }
+                        });
 
                 break;
             /*联系人*/

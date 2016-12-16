@@ -4,6 +4,7 @@ import com.loyo.oa.v2.activityui.customer.model.CallBackCallid;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
+import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import retrofit.http.Path;
 import rx.Observable;
 
 /**
@@ -163,6 +165,43 @@ public class CustomerService {
                         .create(I2Customer.class)
                         .updateContact(id, consid, map)
                         .compose(RetrofitAdapterFactory.<Contact>compatApplySchedulers());
+    }
+
+    public static Observable<Customer> getCustomerDetailById(String id) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getCustomerById(id)
+                        .compose(RetrofitAdapterFactory.<Customer>applySchedulers());
+    }
+
+    public static Observable<MembersRoot> getMembersRoot() {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .getMembersRoot()
+                        .compose(RetrofitAdapterFactory.<MembersRoot>compatApplySchedulers());
+
+    }
+
+    public static Observable<Customer> deleteCustomer(String id) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .delete(id)
+                        .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
+    }
+
+    public static Observable<Customer> dumpCustomer(@Path("id") String id) {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .toPublic(id)
+                        .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
     }
 
 
