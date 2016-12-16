@@ -19,14 +19,14 @@
         android:id="@+id/ll_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/layout_bottom_menu"
+        android:layout_below="@+id/contact_manage_top"
         app:isFirstVisible="true">
 
         <ScrollView
             android:id="@+id/layout_scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/layout_bottom_menu"
-            android:layout_below="@+id/contact_manage_top"
             android:scrollbars="none">
 
             <LinearLayout
