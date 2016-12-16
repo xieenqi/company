@@ -7,6 +7,7 @@ import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerExtraData;
 import com.loyo.oa.v2.activityui.customer.model.MembersRoot;
 import com.loyo.oa.v2.activityui.customer.model.NearCount;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.network.RetrofitAdapterFactory;
@@ -221,6 +222,15 @@ public class CustomerService {
                         .create(I2Customer.class)
                         .updateCustomer(id, map)
                         .compose(RetrofitAdapterFactory.<Customer>compatApplySchedulers());
+    }
+
+    public static Observable<ArrayList<Tag>> getCustomerTags() {
+        return
+                RetrofitAdapterFactory.getInstance()
+                        .build(/*TODO:*/Config_project.API_URL_CUSTOMER())
+                        .create(I2Customer.class)
+                        .GetTags()
+                        .compose(RetrofitAdapterFactory.<ArrayList<Tag>>compatApplySchedulers());
     }
 
 

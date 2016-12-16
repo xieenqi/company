@@ -12,6 +12,7 @@ import com.loyo.oa.v2.activityui.customer.model.NearCount;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.customer.model.Product;
 import com.loyo.oa.v2.activityui.order.bean.OrderListItem;
+import com.loyo.oa.v2.activityui.other.model.Tag;
 import com.loyo.oa.v2.activityui.sale.bean.CommonTag;
 import com.loyo.oa.v2.activityui.sale.bean.SaleStage;
 import com.loyo.oa.v2.activityui.signin.bean.SigninPictures;
@@ -75,7 +76,7 @@ public interface I2Customer {
      * 获取客户标签
      */
     @GET("/customer/tags")
-    Observable<Customer> GetTags();
+    Observable<ArrayList<Tag>> GetTags();
 
     /**
      * 获取客户详情
