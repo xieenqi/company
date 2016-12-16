@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.activityui.other.model.User;
@@ -54,7 +55,8 @@ public class ProjectDescriptionActivity extends BaseActivity {
             onBackPressed();
             return;
         }
-        tv_extra.setText(project.creator.getRealname() + " " + MainApp.getMainApp().df2.format(new Date(project.getCreatedAt())) + " 发布");
+//        tv_extra.setText(project.creator.getRealname() + " " + MainApp.getMainApp().df2.format(new Date(project.getCreatedAt())) + " 发布");
+        tv_extra.setText(project.creator.getRealname() + " " + DateTool.getDateTimeFriendly(project.getCreatedAt()/1000) + " 发布");
         tv_title.setText(project.title);
         tv_content.setText(project.content);
         ArrayList<HttpProject.ProjectManaer> responsers = project.managers;

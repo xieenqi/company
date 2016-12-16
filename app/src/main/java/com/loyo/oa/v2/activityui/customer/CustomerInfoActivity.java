@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.library.module.widget.loading.LoadingLayout;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
@@ -404,7 +405,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity {
             tv_district.setText(regional.province + " " + regional.city + " " + regional.county + " ");
         }
         edt_customer_memo.setText(mCustomer.summary);
-        tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.createdAt * 1000)));
+//        tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.createdAt * 1000)));
+        tv_customer_create_at.setText(DateTool.getDateTimeFriendly(mCustomer.createdAt));
 
         if (mCustomer.tags != null && mCustomer.tags.size() > 0) {
             mTagItems = mCustomer.tags;

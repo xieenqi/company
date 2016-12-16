@@ -41,7 +41,6 @@ import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.SweetAlertDialogView;
 import com.loyo.oa.v2.permission.BusinessOperation;
 import com.loyo.oa.v2.permission.PermissionManager;
-import com.loyo.oa.v2.tool.DateTool;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -128,13 +127,13 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(followUpListModel.avatar, holder.iv_heading);
         holder.tv_name.setText(followUpListModel.creatorName);
         holder.tv_contact.setText(TextUtils.isEmpty(followUpListModel.contactName) ? "无联系人信息" : followUpListModel.contactName);
-        holder.tv_create_time.setText(DateTool.getDiffTime(followUpListModel.createAt));
+        holder.tv_create_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(followUpListModel.createAt));
         holder.tv_kind.setText(TextUtils.isEmpty(followUpListModel.typeName) ? "无" : "# "+followUpListModel.typeName);
 
         /** 电话录音设置 */
         if(null != followUpListModel.audioUrl && !TextUtils.isEmpty(followUpListModel.audioUrl)){
             holder.layout_phonely.setVisibility(View.VISIBLE);
-            holder.tv_audio_length.setText(DateTool.stringForTime(followUpListModel.audioLength * 1000));
+            holder.tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(followUpListModel.audioLength * 1000));
             int audioLength = followUpListModel.audioLength;
             if (audioLength > 0 && audioLength <= 60) {
                 holder.iv_phone_call.setText("000");
@@ -160,7 +159,8 @@ public class CustomerFollowUpListAdapter extends BaseAdapter {
         /** 下次跟进时间 */
         if(followUpListModel.remindAt != 0){
             holder.layout_lasttime.setVisibility(View.VISIBLE);
-            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt+"","yyyy-MM-dd HH:mm"));
+//            holder.tv_last_time.setText(DateTool.timet(followUpListModel.remindAt+"","yyyy-MM-dd HH:mm"));
+            holder.tv_last_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(followUpListModel.remindAt));
         }else{
             holder.layout_lasttime.setVisibility(View.GONE);
         }

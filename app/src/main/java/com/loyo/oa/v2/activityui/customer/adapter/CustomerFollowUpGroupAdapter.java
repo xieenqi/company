@@ -70,13 +70,12 @@ public class CustomerFollowUpGroupAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         if (crolView.getBottomMenuLayout().getVisibility() == View.GONE) {
-            holder.tv_title.setText(DateTool.getDiffNoMs(Long.parseLong(groupModel.timeStamp)));
+            holder.tv_title.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(Long.parseLong(groupModel.timeStamp)));
             if (null != groupModel.activities && groupModel.activities.size() > 0) {
                 mAdapter = new CustomerFollowUpListAdapter(mContext, groupModel.activities, crolView, audioCb);
                 holder.layout_listview.setAdapter(mAdapter);
             }
         }
-
         return convertView;
     }
 

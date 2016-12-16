@@ -256,7 +256,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         tv_name.setText(mFollowUpDelModel.creator.name);
         tv_contact.setText(mFollowUpDelModel.contactName);
         tv_customername.setText(mFollowUpDelModel.customerName);
-        tv_time.setText(DateTool.getDiffTime(mFollowUpDelModel.createAt));
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(mFollowUpDelModel.createAt));
 
         /** 设置跟进内容 */
         if (null != mFollowUpDelModel.content && !TextUtils.isEmpty(mFollowUpDelModel.content)) {
@@ -394,7 +394,7 @@ public class FollowUpDetailsActivity extends BaseLoadingActivity implements View
         /** 电话录音设置 */
         if (null != mFollowUpDelModel.audioUrl && !TextUtils.isEmpty(mFollowUpDelModel.audioUrl)) {
             layout_phonely.setVisibility(View.VISIBLE);
-            tv_audio_length.setText(DateTool.stringForTime(mFollowUpDelModel.audioLength * 1000));
+            tv_audio_length.setText(com.loyo.oa.common.utils.DateTool.int2time(mFollowUpDelModel.audioLength * 1000));
             int audioLength = mFollowUpDelModel.audioLength;
             if (audioLength > 0 && audioLength <= 60) {
                 iv_phone_call.setText("000");

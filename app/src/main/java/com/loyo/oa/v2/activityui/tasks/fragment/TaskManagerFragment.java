@@ -45,7 +45,8 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<TaskRecord> 
         map.put("joinType", typeParam);
         map.put("status", statusParam);
         map.put("endAt", System.currentTimeMillis() / 1000);
-        map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+//        map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+        map.put("startAt", com.loyo.oa.common.utils.DateTool.getDateStamp("2014-01-01")/ 1000);
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasksData(map, this);
     }
 

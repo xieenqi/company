@@ -538,7 +538,7 @@ public final class Common {
         String startTimeText = SharedUtil.get(MainApp.getMainApp().getBaseContext(), ExtraAndResult.TOKEN_START);
         if (!TextUtils.isEmpty(startTimeText)) {
             long startTime = Long.parseLong(startTimeText);
-            if (DateTool.getDate(startTime, 10)) {
+            if (!com.loyo.oa.common.utils.DateTool.isDateInTime(startTime, 10)) {
                 RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<Token>() {
                     @Override
                     public void success(Token token, Response response) {

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -207,8 +208,8 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
             ll_track.setVisibility(View.VISIBLE);
             tv_track_content.setText(data.activity.content.contains("<p>") ?
                     CommonHtmlUtils.Instance().checkContent(data.activity.content) : data.activity.content);
-            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.activity.createAt + "") * 1000))
-                    + "  " + data.activity.creatorName + " # " + data.activity.typeName);
+//            tv_track_time.setText(app.df3.format(new Date(Long.valueOf(data.activity.createAt + "") * 1000))+ "  " + data.activity.creatorName + " # " + data.activity.typeName);
+            tv_track_time.setText(DateTool.getDateTimeFriendly(data.activity.createAt)+ "  " + data.activity.creatorName + " # " + data.activity.typeName);
         }
         tv_visit_number.setText("(" + sales.saleActivityCount + ")");
 
@@ -223,8 +224,11 @@ public class ClueDetailActivity extends BaseLoadingActivity implements View.OnCl
         /* 分区4 */
         responsible_name.setText(sales.responsorName);
         creator_name.setText(sales.creatorName);
-        create_time.setText(app.df3.format(new Date(Long.valueOf(sales.createdAt + "") * 1000)));
-        update_time.setText(app.df3.format(new Date(Long.valueOf(sales.updatedAt + "") * 1000)));
+//        create_time.setText(app.df3.format(new Date(Long.valueOf(sales.createdAt + "") * 1000)));
+//        update_time.setText(app.df3.format(new Date(Long.valueOf(sales.updatedAt + "") * 1000)));
+
+        create_time.setText(DateTool.getDateTimeFriendly(sales.createdAt));
+        update_time.setText(DateTool.getDateTimeFriendly(sales.updatedAt));
     }
 
     private void getIntenData() {

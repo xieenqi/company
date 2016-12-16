@@ -344,7 +344,7 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
             map.put("uuid", uuid);
         }
         if (!tv_remain_time.getText().toString().isEmpty() || !tv_remain_time.getText().toString().equals("不提醒")) {
-            map.put("remindAt", DateTool.getDateToTimestamp(tv_remain_time.getText().toString().trim(), app.df2) / 1000);
+            map.put("remindAt", com.loyo.oa.common.utils.DateTool.getMinuteStamp(tv_remain_time.getText().toString().trim()) / 1000);
         }
         if (!TextUtils.isEmpty(contactId)) {
             map.put("contactId", contactId);
@@ -426,8 +426,11 @@ public class DynamicAddActivity extends BaseActivity implements View.OnClickList
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-                String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                tv_remain_time.setText(str);
+//                String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                tv_remain_time.setText(str);
+                long time= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,hour,min);
+                tv_remain_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time));
+
             }
 
             @Override

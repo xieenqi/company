@@ -88,7 +88,6 @@ public class OrderAddActivity extends BaseActivity implements View.OnClickListen
     private int attamentSize = 0;
     private String uuid;
     public  static String orderTitle;
-
     private OrderDetail mOrderDetail;
     private OrderAddforExtraData orderAddforExtra;
 

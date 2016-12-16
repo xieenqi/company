@@ -33,7 +33,6 @@ import com.loyo.oa.v2.customview.PaymentPopView;
 import com.loyo.oa.v2.point.IOrder;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -73,7 +72,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
     private ImageView iv_submit;
 
     private int fromPage;
-    private int estimatedTime = 0;
+    private long estimatedTime = 0;
     private int paymentState;
 
     private String uuid;
@@ -155,8 +154,11 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         if (attamentSize != 0) {
             tv_attachment.setText("附件(" + attamentSize + ")");
         }
-        tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
-        estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+
+//        tv_time.setText(DateTool.getNowTime("yyyy.MM.dd"));
+//        estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+        estimatedTime = Integer.parseInt(com.loyo.oa.common.utils.DateTool.getDateStamp(tv_time.getText().toString()) + "");
+        tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(com.loyo.oa.common.utils.DateTool.getStamp(false)));
 
         if (fromPage == OrderEstimateListActivity.OADD_EST_EDIT || fromPage == OrderEstimateListActivity.ODET_EST_EDIT) {
             tv_title.setText("编辑回款记录");
@@ -182,7 +184,9 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
             uuid = mEstimateAdd.attachmentUUId;
             estimatedTime = mEstimateAdd.receivedAt;
             paymentState = mEstimateAdd.payeeMethod;
-            tv_time.setText(DateTool.timet(mEstimateAdd.receivedAt + "", "yyyy.MM.dd"));
+//            tv_time.setText(DateTool.timet(mEstimateAdd.receivedAt + "", "yyyy.MM.dd"));
+            tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(mEstimateAdd.receivedAt));
+
             et_estprice.setText(mEstimateAdd.receivedMoney + "");
             et_kaiprice.setText(mEstimateAdd.billingMoney + "");
             tv_priceer.setText(mEstimateAdd.payeeUser.name);
@@ -202,7 +206,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         if (null != mEstimateAdd) {
             estimatedTime = mEstimateAdd.receivedAt;
             paymentState = mEstimateAdd.payeeMethod;
-            tv_time.setText(DateTool.timet(mEstimateAdd.receivedAt + "", "yyyy.MM.dd"));
+            tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(mEstimateAdd.receivedAt));
             et_estprice.setText(mEstimateAdd.receivedMoney + "");
             et_remake.setText(mEstimateAdd.remark);
             setPayeeMethod(mEstimateAdd.payeeMethod);
@@ -394,7 +398,7 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
 
                 mIntent = new Intent();
                 mEstimateAdd = new EstimateAdd();
-                mEstimateAdd.receivedAt = estimatedTime;
+                mEstimateAdd.receivedAt = (int) estimatedTime;
                 mEstimateAdd.receivedMoney = Integer.parseInt(et_estprice.getText().toString().trim());
                 //如果开票金额没写，则默认为0
                 if (TextUtils.isEmpty(et_kaiprice.getText().toString())) {
@@ -474,10 +478,17 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-                String str = year + "." + String.format("%02d", (month + 1)) + "." +
-                        String.format("%02d", day);
+//                String str = year + "." + String.format("%02d", (month + 1)) + "." +
+//                        String.format("%02d", day);
+//
+//                tv_time.setText(str);
+//                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+
+                long time= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day,hour,min,0);
+                String str= com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time);
                 tv_time.setText(str);
-                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+                estimatedTime=time;
+
             }
 
             @Override
@@ -504,8 +515,11 @@ public class OrderAddEstimateActivity extends BaseActivity implements View.OnCli
                 int year = datePicker.getYear();
                 int month = datePicker.getMonth();
                 int day = datePicker.getDayOfMonth();
-                tv_time.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
-                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+//                tv_time.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
+//                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_time.getText().toString(), "yyyy.MM.dd"));
+                estimatedTime= com.loyo.oa.common.utils.DateTool.getStamp(year,month,day);
+                tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateFriendly(estimatedTime));
+
             }
         });
 

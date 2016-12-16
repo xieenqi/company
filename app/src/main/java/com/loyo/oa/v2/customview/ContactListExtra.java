@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
-import com.loyo.oa.v2.tool.DateTool;
+
 import java.util.ArrayList;
 
 /**
@@ -94,7 +94,8 @@ public class ContactListExtra extends LinearLayout {
                  * */
                 if("long".equals(contactLeftExtras.type)){
                     try{
-                        tv_content.setText(DateTool.timet(contactLeftExtras.val, DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+//                        tv_content.setText(DateTool.timet(contactLeftExtras.val, DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                        tv_content.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(Long.parseLong(contactLeftExtras.val)));
                     }catch (NumberFormatException e){
                         e.printStackTrace();
                         tv_content.setText(contactLeftExtras.val);

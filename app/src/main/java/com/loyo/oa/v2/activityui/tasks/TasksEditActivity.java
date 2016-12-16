@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.contactpicker.ContactPickerActivity;
 import com.loyo.oa.contactpicker.model.event.ContactPickedEvent;
 import com.loyo.oa.contactpicker.model.result.StaffMemberCollection;
@@ -48,7 +49,6 @@ import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ImageInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -188,7 +188,8 @@ public class TasksEditActivity extends BaseActivity {
         savePostData();
         tv_toUsers.setText(joinName.toString());
         if (mTask.getPlanEndAt() != 0) {
-            tv_deadline.setText(MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)));
+//            tv_deadline.setText(MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)));
+            tv_deadline.setText(DateTool.getDateTimeFriendly(mTask.getPlanEndAt()));
         }
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
         switch_approve.setState(mTask.isReviewFlag());
@@ -554,10 +555,16 @@ public class TasksEditActivity extends BaseActivity {
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-                String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
-                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                tv_deadline.setText(str);
-                mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str, "yyyy-MM-dd HH:mm")));
+//                String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
+//                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+//                tv_deadline.setText(str);
+//                mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str, "yyyy-MM-dd HH:mm")));
+
+                long time= com.loyo.oa.common.utils.DateTool.getStamp(year, month, day,hour,min,0);
+                tv_deadline.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(time));
+                mTask.setPlanEndAt(time);
+
+
                 isKind = false;
                 layout_retask.setVisibility(View.GONE);
                 layout_retask_view.setVisibility(View.GONE);
