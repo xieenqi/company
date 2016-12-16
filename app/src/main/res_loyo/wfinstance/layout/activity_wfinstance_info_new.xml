@@ -154,11 +154,14 @@
                             android:id="@+id/layout_wfinstance_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="@dimen/wfinstance_layout_padding"
                             android:layout_marginLeft="@dimen/wfinstance_layout_padding"
                             android:layout_marginRight="@dimen/wfinstance_layout_padding"
                             android:animateLayoutChanges="true"
-                            android:orientation="vertical"/>
+                            android:visibility="gone"
+                            android:paddingBottom="@dimen/wfinstance_layout_padding"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
                         <!-- 订单审批-->
                         <LinearLayout
                             android:id="@+id/ll_order_layout"
@@ -280,6 +283,7 @@
                                 android:layout_height="wrap_content"
                                 android:animateLayoutChanges="true"
                                 android:orientation="vertical"
+                                android:paddingBottom="@dimen/wfinstance_layout_padding"
                                 android:padding="@dimen/wfinstance_layout_padding"/>
 
 
@@ -302,8 +306,10 @@
                                 android:orientation="horizontal">
 
                                 <ImageView
-                                    style="@style/image_label"
-                                    android:src="@drawable/icon_attendance_explanation" />
+                                    android:layout_height="match_parent"
+                                    android:layout_width="wrap_content"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/icon_attendance_explanation_new" />
 
                                 <TextView
                                     android:layout_marginLeft="10dp"

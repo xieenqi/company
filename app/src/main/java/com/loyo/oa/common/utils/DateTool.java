@@ -114,11 +114,12 @@ public class DateTool {
      * 2、本年不显示年：03-04 15:30
      * 3、非本年显示完整的年月日时分：2016-03-04 15:30
      *
-     * @param seconds     时间
+     * @param seconds     时间 10位,秒级别的
      * @param includeTime 是否显示详细的时间 eg  false:今天   true:今天 14:90
      * @return
      */
     private static String getFriendlyTime(long seconds, boolean includeTime) {
+
         seconds *= 1000;//这里要乘1000,把秒转换成毫秒
         Date time = new Date(seconds);
         Calendar cal = Calendar.getInstance();

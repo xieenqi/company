@@ -94,7 +94,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
             if (wfInstanceStatus == 4) {
                 item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree_new);
                 item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                item_info.tv_content.setText(actionName + ":" + (TextUtils.isEmpty(actionInfo) ? "同意" : actionInfo));
+                item_info.tv_content.setText(actionName + "：" + (TextUtils.isEmpty(actionInfo) ? "同意" : actionInfo));
                 item_info.tv_time.setVisibility(View.VISIBLE);
 //                item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
                 item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));
@@ -111,7 +111,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                     if (wfNodes.isApproveFlag()) {
                         item_info.img_left.setImageResource(wfNodes.isNeedApprove() ? R.drawable.img_wfinstance_agree_new : R.drawable.img_wfinstance_complete_new);
                         item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                        item_info.tv_content.setText(actionName + ":" + (TextUtils.isEmpty(actionInfo) ? (wfNodes.isNeedApprove() ? "同意" : "已办结") :
+                        item_info.tv_content.setText(actionName + "：" + (TextUtils.isEmpty(actionInfo) ? (wfNodes.isNeedApprove() ? "同意" : "已办结") :
                                 actionInfo));
                         item_info.tv_time.setVisibility(View.VISIBLE);
 //                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
@@ -119,7 +119,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                     } else {
                         item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree_new);
                         item_info.tv_content.setTextColor(Color.parseColor("#333333"));
-                        item_info.tv_content.setText(actionName + ":" + actionInfo);
+                        item_info.tv_content.setText(actionName + "：" + actionInfo);
                         item_info.tv_time.setVisibility(View.VISIBLE);
 //                        item_info.tv_time.setText(DateTool.timet(wfNodes.getUpdateAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
                         item_info.tv_time.setText(com.loyo.oa.common.utils.DateTool.getDateTimeFriendly(wfNodes.getUpdateAt()));

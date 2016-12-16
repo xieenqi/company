@@ -260,6 +260,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         SaleDetails chanceData = wfData.chance;
         saleId = chanceData.id;
         ll_sale.setVisibility(View.VISIBLE);
+        layout_wfinstance_content.setVisibility(View.GONE);
         ll_sale.setOnTouchListener(Global.GetTouch());
         tv_sale.setText(chanceData.name);
         List<String> wfList = new ArrayList<>();
@@ -288,6 +289,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             tv_key.setText(text);
             layout_wfinstance_content.addView(view_value);
         }
+        layout_wfinstance_content.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -517,8 +519,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     //tv_value.setEnabled(false);
                     //tv_value.setText(wfinstanceInfoValue(jsonObject.get(field.getId())));
                     TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-                    tv_key.setText(field.getName() + ":" + wfinstanceInfoValue(jsonObject.get(field.getId())));
+                    tv_key.setText(field.getName() + "：" + wfinstanceInfoValue(jsonObject.get(field.getId())));
                     layout_wfinstance_content.addView(view_value);
+                    layout_wfinstance_content.setVisibility(View.VISIBLE);
                 }
             }
         }
