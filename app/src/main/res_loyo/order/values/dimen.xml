@@ -7,5 +7,6 @@
     <dimen name="order_common_line_space">14dp</dimen>
     <dimen name="order_common_text_line_space_1">10dp</dimen>
     <dimen name="order_common_arrow_margin_left">9dp</dimen>
+    <dimen name="order_common_status_radius">3dp</dimen>
 
 </resources>
