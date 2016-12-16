@@ -5,8 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.loyo.oa.common.utils.DateTool;
 import com.loyo.oa.v2.activityui.customer.model.Customer;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.Utils;
 
 /**
@@ -21,7 +21,7 @@ public class CommonMethod {
             if (customer.activityRecycleAt != 0) {
                 tView1.setVisibility(View.VISIBLE);
                 String tt1 = "无跟进丢公海：";
-                String time = DateTool.getDiffTime(customer.activityRecycleAt);
+                String time = DateTool.getDateTimeFriendly(customer.activityRecycleAt);
                 tView1.setText(isOutCurrentTime(customer.orderRemindAt) ?
                         Utils.modifyTextColor(tt1 + time, Color.parseColor("#f5625a"), tt1.length(), (tt1 + time).length())
                         : tt1 + time);
@@ -31,7 +31,7 @@ public class CommonMethod {
             if (customer.orderRecycleAt != 0) {
                 tView2.setVisibility(View.VISIBLE);
                 String tt2 = "无订单丢公海：";
-                String time = DateTool.getDiffTime(customer.orderRecycleAt);
+                String time = DateTool.getDateTimeFriendly(customer.orderRecycleAt);
                 tView2.setText(isOutCurrentTime(customer.orderRemindAt) ?
                         Utils.modifyTextColor(tt2 + time, Color.parseColor("#f5625a"), tt2.length(), (tt2 + time).length())
                         : tt2 + time);
