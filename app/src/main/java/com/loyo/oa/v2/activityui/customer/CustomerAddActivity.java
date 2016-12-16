@@ -26,6 +26,7 @@ import com.loyo.oa.v2.activityui.commonview.bean.PositionResultItem;
 import com.loyo.oa.v2.activityui.customer.event.MyCustomerListRushEvent;
 import com.loyo.oa.v2.activityui.customer.model.Contact;
 import com.loyo.oa.v2.activityui.customer.model.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.activityui.customer.model.CustomerRegional;
 import com.loyo.oa.v2.activityui.customer.model.ExtraData;
 import com.loyo.oa.v2.activityui.customer.model.ExtraProperties;
@@ -34,18 +35,18 @@ import com.loyo.oa.v2.activityui.customer.model.Locate;
 import com.loyo.oa.v2.activityui.customer.model.NewTag;
 import com.loyo.oa.v2.activityui.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.activityui.customer.model.Customer;
 import com.loyo.oa.v2.beans.Location;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.event.AppBus;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customermanagement.api.CustomerService;
 import com.loyo.oa.v2.customview.CusGridView;
 import com.loyo.oa.v2.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.customview.SelectCityView;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.network.DefaultSubscriber;
 import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ImageInfo;
@@ -609,40 +610,42 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getAddCustomerJur(map, new RCallback<ArrayList<ContactLeftExtras>>() {
-            @Override
-            public void success(final ArrayList<ContactLeftExtras> cuslist, final Response response) {
-                HttpErrorCheck.checkResponse("获取新建客户权限", response);
-                mCustomerExtraDatas = cuslist;
-                for (ContactLeftExtras customerJur : cuslist) {
-                    if (customerJur.label.contains("联系人") && customerJur.required) {
-                        cusGuys = true;
-                        edt_contract.setHint("请输入联系人姓名(必填)");
-                    } else if (customerJur.label.contains("手机") && customerJur.required) {
-                        cusPhone = true;
-                        edt_contract_tel1.setHint("限数字,如13912345678(必填)");
-                    } else if (customerJur.label.contains("座机") && customerJur.required) {
-                        cusMobile = true;
-                        edt_contract_telnum1.setHint("限数字,如02812345678(必填)");
-                    } else if (customerJur.label.contains("定位") && customerJur.required) {
-                        cusLocation = true;//定位必填
-                    } else if (customerJur.label.contains("客户地址") && customerJur.required) {
-                        cusDetialAdress = true;//详细地址必填
-                        edit_address_details.setHint("请输入客户详细地址(必填)");
-                    } else if (customerJur.label.contains("简介") && customerJur.required){
-                        cusMemo = true;
-                        edt_content.setHint("客户简介(必填)");
+        CustomerService.getAddCustomerJur(map)
+                .subscribe(new DefaultSubscriber<ArrayList<ContactLeftExtras>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelLoading();
                     }
-                }
-                initExtra(true);
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    @Override
+                    public void onNext(ArrayList<ContactLeftExtras> contactLeftExtrasArrayList) {
+                        super.onNext(contactLeftExtrasArrayList);
+                        cancelLoading();
+                        mCustomerExtraDatas = contactLeftExtrasArrayList;
+                        for (ContactLeftExtras customerJur : contactLeftExtrasArrayList) {
+                            if (customerJur.label.contains("联系人") && customerJur.required) {
+                                cusGuys = true;
+                                edt_contract.setHint("请输入联系人姓名(必填)");
+                            } else if (customerJur.label.contains("手机") && customerJur.required) {
+                                cusPhone = true;
+                                edt_contract_tel1.setHint("限数字,如13912345678(必填)");
+                            } else if (customerJur.label.contains("座机") && customerJur.required) {
+                                cusMobile = true;
+                                edt_contract_telnum1.setHint("限数字,如02812345678(必填)");
+                            } else if (customerJur.label.contains("定位") && customerJur.required) {
+                                cusLocation = true;//定位必填
+                            } else if (customerJur.label.contains("客户地址") && customerJur.required) {
+                                cusDetialAdress = true;//详细地址必填
+                                edit_address_details.setHint("请输入客户详细地址(必填)");
+                            } else if (customerJur.label.contains("简介") && customerJur.required){
+                                cusMemo = true;
+                                edt_content.setHint("客户简介(必填)");
+                            }
+                        }
+                        initExtra(true);
+                    }
+                });
     }
 
     public void getTelNum(EditText editText, ArrayList<String> arrayList) {
@@ -729,33 +732,35 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         map.put("regional", regional);
 
         LogUtil.dee("新建客户map:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
-            @Override
-            public void success(final Customer customer, final Response response) {
-                HttpErrorCheck.checkCommitSus("新建客户",response);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        cancelStatusLoading();
-                        //没有附件
-                        if (customer == null || customer.id == null) {
-                            return;
-                        }
-                        if (pickPhots.size() == 0) {
-                            customerSendSucess(customer);
-                        } else {
-                            newUploadAttachement(customer);
-                        }
-                    }
-                },1000);
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkCommitEro(error);
-            }
-        });
+        CustomerService.addNewCustomer(map)
+                .subscribe(new DefaultSubscriber<Customer>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        cancelStatusLoading();
+                    }
+
+                    @Override
+                    public void onNext(final Customer customer) {
+                        super.onNext(customer);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelStatusLoading();
+                                //没有附件
+                                if (customer == null || customer.id == null) {
+                                    return;
+                                }
+                                if (pickPhots.size() == 0) {
+                                    customerSendSucess(customer);
+                                } else {
+                                    newUploadAttachement(customer);
+                                }
+                            }
+                        },1000);
+                    }
+                });
     }
 
     /**
