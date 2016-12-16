@@ -1,16 +1,6 @@
 package com.loyo.oa.v2.activityui.sale.model;
 
 import com.loyo.oa.v2.activityui.sale.contract.SaleOpportunitiesContract;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.RestAdapterFactory;
-
-import java.util.ArrayList;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by xeq on 2016/11/28
